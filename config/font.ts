@@ -1,4 +1,4 @@
-import { Poppins, Inter } from "@next/font/google";
+import { Poppins, Inter } from "next/font/google";
 
 const header = Poppins({
   weight: ["700"],

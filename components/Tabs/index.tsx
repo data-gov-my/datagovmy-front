@@ -127,4 +127,5 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
 Tabs.Panel = Panel;
 Tabs.List = List;
 
+export { Panel };
 export default Tabs;
