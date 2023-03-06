@@ -1,0 +1,110 @@
+.home-banner {
+  background: url("/static/images/home-hero.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.data-catalogue-banner {
+  background: url("/static/images/banner/data-catalogue.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.gdp-banner {
+  background: url("/static/images/banner/gdp.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.labour-market-banner {
+  background: url("/static/images/banner/labour-market.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.composite-index-banner {
+  background: url("/static/images/banner/composite-index.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.wholesale-retail-banner {
+  background: url("/static/images/banner/wholesale-retail.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.industrial-production-banner {
+  background: url("/static/images/banner/industrial-production.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.consumer-prices-banner {
+  background: url("/static/images/banner/consumer-prices.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.producer-prices-banner {
+  background: url("/static/images/banner/producer-prices.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.rubber-banner {
+  background: url("/static/images/banner/rubber.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.currency-in-circulation-banner {
+  background: url("/static/images/banner/currency-in-circulation.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.money-supply-banner {
+  background: url("/static/images/banner/money-supply.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.reserve-money-banner {
+  background: url("/static/images/banner/reserve-money.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.interest-rates-banner {
+  background: url("/static/images/banner/interest-rates.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.pdrm-banner {
+  background: url("/static/images/banner/pdrm-banner.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.drug-addiction-banner {
+  background: url("/static/images/banner/drug-addiction.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.organ-banner {
+  background: url("/static/images/banner/organ.png") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+.exchange-rates-banner {
+  background: url("/static/images/banner/exchange-rates.jpeg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
+
+.kawasanku-banner {
+  background: linear-gradient(
+    180deg,
+    rgba(237, 248, 237, 1) 0%,
+    rgba(237, 248, 237, 1) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+@media only screen and (min-width: 768px) {
+  .kawasanku-banner {
+    background: linear-gradient(
+      90deg,
+      rgba(237, 248, 237, 1) 0%,
+      rgba(237, 248, 237, 1) 58%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+}
