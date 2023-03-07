@@ -130,21 +130,13 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
 
   return (
     <>
-      <Hero background="producer-prices-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3>{t("producer_prices.header")}</h3>
-          <p className="text-dim">{t("producer_prices.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="producer-prices-banner"
+        category={[t("nav.megamenu.categories.economy"), "text-primary"]}
+        header={[t("producer_prices.header")]}
+        description={[t("producer_prices.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* How is the CPI trending? */}

@@ -175,21 +175,13 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
 
   return (
     <>
-      <Hero background="consumer-prices-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-green-700">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3>{t("consumer_prices.header")}</h3>
-          <p className="text-dim">{t("consumer_prices.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="consumer-prices-banner"
+        category={[t("nav.megamenu.categories.economy"), "text-green-700"]}
+        header={[t("consumer_prices.header")]}
+        description={[t("consumer_prices.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* Chart-builder: Inflation trends for specific items */}

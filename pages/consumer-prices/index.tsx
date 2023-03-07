@@ -32,14 +32,12 @@ const ConsumerPrices = ({
   );
 };
 
-// Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
 
   const { data } = await get("/dashboard", { dashboard: "consumer_price_index" });
 
   return {
-    notFound: true,
     props: {
       ...i18n,
       last_updated: new Date().valueOf(),

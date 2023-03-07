@@ -40,6 +40,9 @@ module.exports = {
         13: "repeat(13, minmax(0, 1fr))",
         14: "repeat(14, minmax(0, 1fr))",
       },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(ellipse at top, var(--tw-gradient-stops))",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/line-clamp")],

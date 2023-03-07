@@ -166,21 +166,13 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
 
   return (
     <>
-      <Hero background="gdp-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.national_accounts")}
-          </span>
-          <h3>{t("gdp.header")}</h3>
-          <p className="text-dim">{t("gdp.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="gdp-banner"
+        category={[t("nav.megamenu.categories.economy"), "text-primary"]}
+        header={[t("gdp.header")]}
+        description={[t("gdp.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* How is GDP trending? */}
