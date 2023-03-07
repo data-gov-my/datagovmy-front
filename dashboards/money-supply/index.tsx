@@ -226,21 +226,13 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
 
   return (
     <>
-      <Hero background="money-supply-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.financial_sector")}
-          </span>
-          <h3>{t("moneysupply.header")}</h3>
-          <p className="text-dim">{t("moneysupply.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        className="bg-teal-50/25"
+        category={[t("nav.megamenu.categories.financial_sector")]}
+        header={[t("moneysupply.header")]}
+        description={[t("moneysupply.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* What are the various ways to measure the supply of money in Malaysia? */}
