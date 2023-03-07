@@ -101,11 +101,13 @@
     "dosm": "Department of Statistics Malaysia",
     "gov": "Government of Malaysia",
     "open_source": "Open Source",
-    "frontend": "Frontend Repo (NextJS)",
-    "backend": "Backend Repo (Django)",
+    "frontend": "Frontend Repo: NextJS",
+    "backend": "Backend Repo: Django",
+    "mampu_dosm": "MAMPU × DOSM",
     "open_data": "Open Data",
-    "github": "DOSM GitHub",
-    "data_catalogue": "DOSM Data Catalogue"
+    "public_open_data": "Public Sector Open Data",
+    "guiding_principles": "Guiding Principles",
+    "terms_of_use": "Terms of Use"
   },
   "home": {
     "category": "Malaysia's official open data portal",

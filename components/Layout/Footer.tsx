@@ -17,10 +17,11 @@ const Footer = () => {
           </div>
           <div>
             <div className="mb-2 uppercase">
-              <p className="text-base font-bold">{t("nav.dosm")}</p>
+              <p className="text-base font-bold">{t("nav.mampu_dosm")}</p>
+              <p className="text-base font-bold">{t("nav.gov")}</p>
             </div>
             <p className="text-dim">
-              © {new Date().getFullYear()} {t("nav.dosm")} (DOSM)
+              © {new Date().getFullYear()} {t("nav.public_open_data")}
             </p>
           </div>
         </div>
@@ -29,18 +30,10 @@ const Footer = () => {
           <div className="flex w-full flex-col gap-2 md:w-auto">
             <p className="font-bold">{t("nav.open_source")}</p>
 
-            <a
-              className="text-footer-link"
-              href="https://github.com/dosm-malaysia/aksara-front"
-              target="_blank"
-            >
+            <a className="text-footer-link" href="#" target="_blank">
               {t("nav.frontend")}
             </a>
-            <a
-              className="text-footer-link"
-              href="https://github.com/dosm-malaysia/aksara-back"
-              target="_blank"
-            >
+            <a className="text-footer-link" href="#" target="_blank">
               {t("nav.backend")}
             </a>
           </div>
@@ -48,11 +41,11 @@ const Footer = () => {
           <div className="flex w-full flex-col gap-2 md:w-auto">
             <p className="font-bold">{t("nav.open_data")}</p>
 
-            <a className="text-footer-link" href="https://github.com/dosm-malaysia" target="_blank">
-              {t("nav.github")}
+            <a className="text-footer-link" href="#" target="_blank">
+              {t("nav.guiding_principles")}
             </a>
-            <At className="text-footer-link" href="/data-catalogue">
-              {t("nav.data_catalogue")}
+            <At className="text-footer-link" href="#">
+              {t("nav.terms_of_use")}
             </At>
           </div>
         </div>
