@@ -157,21 +157,13 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
 
   return (
     <>
-      <Hero background="interest-rates-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.financial_sector")}
-          </span>
-          <h3>{t("interest_rates.header")}</h3>
-          <p className="text-dim">{t("interest_rates.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        className="bg-teal-50/25"
+        category={[t("nav.megamenu.categories.financial_sector")]}
+        header={[t("interest_rates.header")]}
+        description={[t("interest_rates.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* How is interest rates trending? */}

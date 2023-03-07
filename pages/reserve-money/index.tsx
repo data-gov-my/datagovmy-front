@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const { data } = await get("/dashboard", { dashboard: "reserves" });
 
   return {
-    notFound: true,
+    notFound: false,
     props: {
       ...i18n,
       last_updated: new Date().valueOf(),

@@ -34,22 +34,23 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
     {
       title: t("nav.megamenu.categories.economy"),
       list: [
-        { title: t("nav.megamenu.dashboards.labour_market"), link: routes.LABOUR_MARKET },
-        { title: t("nav.megamenu.dashboards.composite_index"), link: routes.COMPOSITE_INDEX },
-        { title: t("nav.megamenu.dashboards.wholesale_retail"), link: routes.WHOLESALE_RETAIL },
-        {
-          title: t("nav.megamenu.dashboards.industrial_production"),
-          link: routes.INDUSTRIAL_PRODUCTION,
-        },
+        // { title: t("nav.megamenu.dashboards.labour_market"), link: routes.LABOUR_MARKET },
+        // { title: t("nav.megamenu.dashboards.composite_index"), link: routes.COMPOSITE_INDEX },
+        // { title: t("nav.megamenu.dashboards.wholesale_retail"), link: routes.WHOLESALE_RETAIL },
+        // {
+        //   title: t("nav.megamenu.dashboards.industrial_production"),
+        //   link: routes.INDUSTRIAL_PRODUCTION,
+        // },
         {
           title: t("nav.megamenu.dashboards.consumer_prices"),
           link: routes.CONSUMER_PRICES,
         },
-        {
-          title: t("nav.megamenu.dashboards.producer_prices"),
-          link: routes.PRODUCER_PRICES,
-        },
+        // {
+        //   title: t("nav.megamenu.dashboards.producer_prices"),
+        //   link: routes.PRODUCER_PRICES,
+        // },
         { title: t("nav.megamenu.dashboards.exchange_rate"), link: routes.EXCHANGE_RATE },
+        { title: t("nav.megamenu.dashboards.gdp"), link: routes.GDP },
         // Menu hidden until further notice
         // {
         //   title: t("nav.megamenu.dashboards.rubber"),
@@ -82,21 +83,21 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
         },
       ],
     },
-    {
-      title: t("nav.megamenu.categories.social"),
-      list: [
-        { title: t("nav.megamenu.dashboards.crime"), link: routes.CRIME },
-        { title: t("nav.megamenu.dashboards.drug"), link: routes.DRUG },
-      ],
-    },
-    {
-      title: t("nav.megamenu.categories.national_accounts"),
-      list: [{ title: t("nav.megamenu.dashboards.gdp"), link: routes.GDP }],
-    },
-    {
-      title: t("nav.megamenu.categories.demography"),
-      list: [{ title: t("nav.megamenu.dashboards.kawasanku"), link: routes.KAWASANKU }],
-    },
+    // {
+    //   title: t("nav.megamenu.categories.social"),
+    //   list: [
+    //     { title: t("nav.megamenu.dashboards.crime"), link: routes.CRIME },
+    //     { title: t("nav.megamenu.dashboards.drug"), link: routes.DRUG },
+    //   ],
+    // },
+    // {
+    //   title: t("nav.megamenu.categories.national_accounts"),
+    //   list: [{ title: t("nav.megamenu.dashboards.gdp"), link: routes.GDP }],
+    // },
+    // {
+    //   title: t("nav.megamenu.categories.demography"),
+    //   list: [{ title: t("nav.megamenu.dashboards.kawasanku"), link: routes.KAWASANKU }],
+    // },
   ];
 
   return (
@@ -118,23 +119,14 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
               </div>
             </Link>
             <Nav isTabletNavOpen={isTabletNavOpen}>
-              <NavItem
-                title={t("nav.home")}
-                link="/"
-                icon={<HomeIcon className="h-5 w-5 text-black" />}
-                onClick={() => setIsTabletNavOpen(false)}
-              />
+              <NavItem title={t("nav.home")} link="/" onClick={() => setIsTabletNavOpen(false)} />
               <NavItem
                 title={t("nav.catalogue")}
                 link="/data-catalogue"
-                icon={<ChartBarSquareIcon className="h-5 w-5 text-black" />}
                 onClick={() => setIsTabletNavOpen(false)}
               />
               {/* DASHBOARD MEGA MENU */}
-              <MegaMenu
-                title={t("nav.dashboards")}
-                icon={<RectangleGroupIcon className="h-5 w-5 text-black" />}
-              >
+              <MegaMenu title={t("nav.dashboards")}>
                 <Container className="relative grid max-h-[70vh] grid-cols-2 gap-8 overflow-auto py-3 lg:grid-cols-3 lg:gap-12 lg:py-6">
                   {megaMenuItems.map(item => (
                     <div key={item.title} className="text-sm">

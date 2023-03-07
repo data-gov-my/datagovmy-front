@@ -78,21 +78,13 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
 
   return (
     <>
-      <Hero background="exchange-rates-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-green-300">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3 className="text-white">{t("exchangerate.header")}</h3>
-          <p className="whitespace-pre-line text-white">{t("exchangerate.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="bg-gradient-radial from-[#ffffff] to-slate-50 dark:from-slate-700 dark:to-[#1b1b1d]"
+        category={[t("nav.megamenu.categories.economy"), "text-green-300"]}
+        header={[t("exchangerate.header"), "dark:text-white"]}
+        description={[t("exchangerate.description"), "dark:text-white"]}
+        last_updated={last_updated}
+      />
 
       <Container className="start-h-screen">
         {/* A snapshot of the Ringgit's performance against major trade partners */}

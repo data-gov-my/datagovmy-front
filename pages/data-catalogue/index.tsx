@@ -36,7 +36,7 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
       ])
   );
 };
-// Disabled
+
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
 
@@ -48,7 +48,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
   const collection = recurSort(data.dataset);
 
   return {
-    notFound: true,
     props: {
       ...i18n,
       query: query ?? {},

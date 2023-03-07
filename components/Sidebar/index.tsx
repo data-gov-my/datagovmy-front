@@ -15,7 +15,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
   const [selected, setSelected] = useState<string>();
   const [show, setShow] = useState<boolean>(false);
   const styles = {
-    base: "px-4 lg:px-5 py-2 w-full rounded-none",
+    base: "px-4 lg:px-5 py-1.5 w-full rounded-none leading-tight",
     active: "border-l-2 border-black bg-washed text-black font-medium",
     default: "text-dim",
   };
@@ -24,8 +24,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
     <>
       <div className="flex w-full flex-row">
         {/* Desktop */}
-        <div className="hidden border-r lg:block lg:w-1/5 ">
-          <ul className="sticky top-14 flex h-[90vh] flex-col gap-0.5 overflow-auto pt-3">
+        <div className="hidden border-r lg:block lg:w-1/5">
+          <ul className="sticky top-14 flex h-[90vh] flex-col gap-2 overflow-auto pt-3">
             <li>
               <h5 className={styles.base}>{t("catalogue.category")}</h5>
             </li>
@@ -44,7 +44,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                   >
                     {category}
                   </Button>
-                  <ul className="ml-5">
+                  <ul className="ml-5 space-y-1">
                     {subcategory.length &&
                       subcategory.map(title => (
                         <li key={title} title={title}>

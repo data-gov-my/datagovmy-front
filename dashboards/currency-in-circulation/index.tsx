@@ -154,21 +154,13 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
 
   return (
     <>
-      <Hero background="currency-in-circulation-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.financial_sector")}
-          </span>
-          <h3>{t("currencyincirculation.header")}</h3>
-          <p className="text-dim">{t("currencyincirculation.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        className="bg-teal-50/25"
+        category={[t("nav.megamenu.categories.financial_sector")]}
+        header={[t("currencyincirculation.header")]}
+        description={[t("currencyincirculation.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* A snapshot of currency currently in circulation */}

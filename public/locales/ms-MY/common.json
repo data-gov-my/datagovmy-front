@@ -101,11 +101,13 @@
     "dosm": "Jabatan Perangkaan Malaysia",
     "gov": "Kerajaan Malaysia",
     "open_source": "Sumber Terbuka",
-    "frontend": "Repo 'Frontend' (NextJS)",
-    "backend": "Repo 'Backend' (Django)",
+    "frontend": "Repo 'Frontend': NextJS",
+    "backend": "Repo 'Backend': Django",
+    "mampu_dosm": "MAMPU × DOSM",
     "open_data": "Data Terbuka",
-    "github": "GitHub DOSM",
-    "data_catalogue": "Katalog Data DOSM"
+    "public_open_data": "Data Terbuka Sektor Awam",
+    "guiding_principles": "Prinsip Panduan",
+    "terms_of_use": "Syarat Penggunaan"
   },
   "home": {
     "title": "Data: Asas kepada pentadbiran cekap",

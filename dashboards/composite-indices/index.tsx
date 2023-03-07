@@ -115,31 +115,19 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
 
   return (
     <>
-      <Hero background="composite-index-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-blue-300">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3 className="text-white">{t("compositeindex.header")}</h3>
-          <p className="text-white">{t("compositeindex.description")}</p>
-
-          <p className="text-sm text-white">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="composite-index-banner"
+        category={[t("nav.megamenu.categories.economy"), "text-blue-300"]}
+        header={[t("compositeindex.header")]}
+        description={[t("compositeindex.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* How are the Malaysian Economic Indicators trending? */}
         <Section
           title={t("compositeindex.section_1.title")}
-          description={
-            <p className="whitespace-pre-line text-dim">
-              {t("compositeindex.section_1.description")}
-            </p>
-          }
+          description={t("compositeindex.section_1.description")}
           date={timeseries.data_as_of}
         >
           <div className="space-y-8">

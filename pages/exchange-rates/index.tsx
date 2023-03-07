@@ -31,14 +31,13 @@ const ExchangeRates: Page = ({
     </>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
 
   const { data } = await get("/dashboard", { dashboard: "exchange_rates" });
 
   return {
-    notFound: true,
     props: {
       ...i18n,
       last_updated: new Date().valueOf(),

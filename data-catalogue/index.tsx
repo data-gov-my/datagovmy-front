@@ -60,7 +60,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 
   return (
     <div>
-      <Hero background="data-catalogue-banner">
+      <Hero>
         <div className="space-y-4 xl:w-2/3">
           <h3 className="text-black">{t("catalogue.header")}</h3>
           <p className="text-dim">{t("catalogue.description")}</p>
@@ -184,7 +184,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 lg:pl-2">
       <div className="flex-grow">
         <Input
           className="border-0 pl-10"

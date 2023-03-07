@@ -33,6 +33,7 @@ import {
   InflationIcon,
 } from "@components/Icon";
 import { track } from "@lib/mixpanel";
+import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
@@ -42,7 +43,6 @@ const Home: Page = ({
   timeseries_callouts,
   analytics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const windowWidth = useWindowWidth();
   const { t, i18n } = useTranslation();
 
   const { data, setData } = useData({
@@ -71,7 +71,7 @@ const Home: Page = ({
 
   const PANELS = [
     {
-      name: t("home.section_2.today"),
+      name: t("home.section_2.past_24h"),
       data: analytics.today,
     },
     {
@@ -171,102 +171,29 @@ const Home: Page = ({
     // });
   }, []);
 
-  const dashboard_dummy = [
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "JPN",
-      title: "Birthday explorer",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "JPN",
-      title: "Name explorer",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "MoE",
-      title: "Sekolahku",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "MoH",
-      title: "Blood donation",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "DOSM",
-      title: "Kawasanku",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "DOSM",
-      title: "Kawasanku",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "DOSM",
-      title: "Kawasanku",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "DOSM",
-      title: "Kawasanku",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "DOSM",
-      title: "Kawasanku",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-    {
-      icon: <RetailTradeIcon className="h-5 w-5" />,
-      agency: "DOSM",
-      title: "Kawasanku",
-      views: numFormat(5000, "compact").concat("+ views"),
-    },
-  ];
-
   return (
     <>
       <Metadata keywords={"opendosm data negara inflasi"} />
 
-      <Hero
-
-      // className="relative flex min-h-[300px] flex-col items-center justify-center text-left md:text-center"
-      >
+      <Hero>
         <div className="space-y-6 xl:w-2/3">
           <span className="text-base font-medium normal-case tracking-normal text-primary">
-            Malaysia's official open data portal
+            {t("home.category")}
           </span>
 
           <div className="space-y-3">
-            <h2>High frequency. High granularity. High impact.</h2>
-            <p className="text-dim">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-              dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-              mollit anim id est laborum.
-            </p>
+            <h2>{t("home.title")}</h2>
+            <p className="text-dim">{t("home.description")}</p>
           </div>
 
-          <div className="flex gap-3">
-            <At className="btn btn-primary text-sm" href="#">
+          <div className="flex flex-wrap gap-3">
+            <At className="btn btn-primary text-sm" href="#" enableIcon>
               Dashboards
             </At>
-            <At className="btn btn-default text-sm" href="#">
+            <At className="btn btn-default text-sm" href="#" enableIcon>
               Data Catalogue
             </At>
-            <At className="btn btn-default text-sm" href="#">
+            <At className="btn text-sm" href="#" enableIcon>
               API Docs
             </At>
           </div>
@@ -291,21 +218,7 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                {/* <div className="grid grid-cols-2 gap-3 lg:grid-cols-5"> */}
-                <div className=" flex w-full gap-3 overflow-auto">
-                  {dashboard_dummy.map(({ icon, agency, title, views }) => (
-                    <Card className="min-w-[256px] space-y-3 p-3">
-                      <div className="flex items-center gap-4">
-                        {icon}
-                        <p className="text-sm text-dim">{agency}</p>
-                      </div>
-                      <div>
-                        <p className="">{title}</p>
-                        <p className="text-dim">{views}</p>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                <Ranking ranks={panel.data.dashboard_views} />
               </Tabs.Panel>
             ))}
           </Tabs>
@@ -331,20 +244,7 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-                  {dashboard_dummy.map(({ icon, agency, title, views }) => (
-                    <Card className="space-y-3 p-3">
-                      <div className="flex items-center gap-4">
-                        {icon}
-                        <p className="text-sm text-dim">{agency}</p>
-                      </div>
-                      <div>
-                        <p>{title}</p>
-                        <p className="text-dim">{views}</p>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                <Ranking ranks={panel.data.dataset_views} />
               </Tabs.Panel>
             ))}
           </Tabs>
@@ -430,39 +330,37 @@ type RankItem = {
   name_en: string;
 };
 interface RankingProps {
-  type: "catalogue" | "dashboard";
-  title: [icon: ReactNode, title: ReactNode];
   ranks: RankItem[];
-  icon: ReactNode;
 }
 
-const Ranking = ({ title, ranks, type = "catalogue", icon }: RankingProps) => {
+const Ranking = ({ ranks }: RankingProps) => {
   const { i18n } = useTranslation();
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   return (
     <>
-      <h4 className="flex gap-3 text-base">
-        <span>{title[0]}</span>
-        {title[1]}
-      </h4>
-      <ol className="list-inside space-y-3">
-        {ranks.map((item: RankItem, index: number) => (
-          <li className="flex items-start justify-between" key={item.id}>
-            <At
-              href={type === "catalogue" ? `/data-catalogue/${item.id}` : item.id}
-              className="flex gap-5"
-            >
-              <span className="text-dim">{index + 1}</span>
-              <span className="hover:underline">{item[`name_${lang}`]}</span>
-            </At>
-            <p className="flex items-center gap-2">
-              {icon}
-              <span>{numFormat(item.count, "compact", 2)}</span>
-            </p>
-          </li>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+        {ranks.map((item: RankItem) => (
+          <At href={item.id}>
+            <Card className="group w-full space-y-3 p-3 transition-colors hover:border-primary hover:bg-primary/5">
+              <div className="relative flex items-center gap-4">
+                <div className="h-4 w-4 rounded-full bg-outline" />
+                <p className="text-sm text-dim">agency_name</p>
+                <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+              </div>
+              <div className="relative overflow-hidden">
+                <p className="truncate font-medium">{item[`name_${lang as "en" | "bm"}`]}</p>
+                <p className="text-dim transition-transform group-hover:translate-y-6">
+                  {numFormat(item.count, "compact")} views
+                </p>
+                <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6">
+                  Click to explore
+                </p>
+              </div>
+            </Card>
+          </At>
         ))}
-      </ol>
+      </div>
     </>
   );
 };
