@@ -101,17 +101,21 @@
     "dosm": "Department of Statistics Malaysia",
     "gov": "Government of Malaysia",
     "open_source": "Open Source",
-    "frontend": "Frontend Repo (NextJS)",
-    "backend": "Backend Repo (Django)",
+    "frontend": "Frontend Repo: NextJS",
+    "backend": "Backend Repo: Django",
+    "mampu_dosm": "MAMPU × DOSM",
     "open_data": "Open Data",
-    "github": "DOSM GitHub",
-    "data_catalogue": "DOSM Data Catalogue"
+    "public_open_data": "Public Sector Open Data",
+    "guiding_principles": "Guiding Principles",
+    "terms_of_use": "Terms of Use"
   },
   "home": {
-    "title": "Data: The backbone of effective governance",
-    "description": "data.gov.my is a platform that catalogs, visualises, and analyses DOSM's wealth of data. Everything on this site is open-sourced and freely available for the nation's benefit. If data is the new oil, then openness is the pipeline that maximises its value.",
+    "category": "Malaysia's official open data portal",
+    "title": "High frequency. High granularity. High impact.",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "section_1": {
-      "title": "Malaysia at a Glance",
+      "title": "Explore our hottest dashboards",
+      "description": "Explore how you compare to the national data",
       "stats": {
         "population": "Current Population",
         "economic_growth": "Economic Growth",
@@ -124,9 +128,9 @@
       }
     },
     "section_2": {
-      "title": "Check out the hottest datasets on data.gov.my:",
-      "description": "This data is intended to help you get a sense of how other users interact with our site. However, if you know what you're looking for, head on over to our Data Catalog to find the most relevant data for you!",
-      "today": "Today",
+      "title": "Study our most popular datasets",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "past_24h": "Past 24h",
       "past_month": "Past 1 month",
       "all_time": "All-time",
       "dashboards": "Dashboards",

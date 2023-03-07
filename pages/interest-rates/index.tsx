@@ -105,7 +105,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   data.timeseries_opr.data["recession"] = data.timeseries.data.recession;
 
   return {
-    notFound: true,
+    notFound: false,
     props: {
       ...i18n,
       last_updated: new Date().valueOf(),

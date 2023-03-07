@@ -121,21 +121,13 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
 
   return (
     <>
-      <Hero background="industrial-production-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3>{t("industry.header")}</h3>
-          <p className="text-dim">{t("industry.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="industrial-production-banner"
+        category={[t("nav.megamenu.categories.economy"), "text-primary"]}
+        header={[t("industry.header")]}
+        description={[t("industry.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* How are the Malaysian Economic Indicators trending? */}

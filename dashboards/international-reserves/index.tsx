@@ -78,21 +78,13 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
 
   return (
     <>
-      <Hero background="money-supply-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.financial_sector")}
-          </span>
-          <h3>{t("international_reserves.header")}</h3>
-          <p className="text-black lg:text-dim">{t("international_reserves.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        className="bg-teal-50/25"
+        category={[t("nav.megamenu.categories.financial_sector")]}
+        header={[t("international_reserves.header")]}
+        description={[t("international_reserves.description")]}
+        last_updated={last_updated}
+      />
 
       <Container className="min-h-screen">
         {/* Key measures of BNM’s international reserves */}

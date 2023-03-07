@@ -1,5 +1,6 @@
 import mixpanel from "mixpanel-browser";
 import type { EventType } from "@lib/types";
+import config from "@config/mixpanel";
 
 /**
  * Mixpanel track events.
@@ -7,6 +8,7 @@ import type { EventType } from "@lib/types";
  * @param prop Object
  */
 export const track = (event: EventType, prop?: Record<string, any>): void => {
+  if (!config.id) return;
   mixpanel.track(event, prop);
 };
 
@@ -14,6 +16,7 @@ export const track = (event: EventType, prop?: Record<string, any>): void => {
  * Mixpanel track session period.
  */
 export const init_session = (): void => {
+  if (!config.id) return;
   mixpanel.time_event("page_view");
 };
 

@@ -37,11 +37,12 @@ const Error: FunctionComponent<ErrorProps> = ({ title, description, code, reason
               />
             </div>
             <div className="p-4.5 font-mono text-sm text-white">
-              <span className="font-bold text-green-600">dosm:~/ $</span> cat {code}-error.log
+              <span className="font-bold text-green-600">data.gov.my:~/ $</span> cat {code}
+              -error.log
               <br />
               {reason}
               <br />
-              <span className="font-bold text-green-600">dosm:~/ $</span>
+              <span className="font-bold text-green-600">data.gov.my:~/ $</span>
             </div>
           </div>
 

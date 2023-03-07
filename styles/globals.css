@@ -42,11 +42,13 @@
 
 @layer components {
   .btn {
-    @apply rounded-md border px-3 py-1.5 font-medium;
+    @apply rounded-md border border-transparent px-3 py-1.5 font-medium;
   }
+
   .btn-primary {
-    @apply bg-gradient-to-t from-primary to-[#3E7AFF] text-white;
+    @apply bg-gradient-to-t from-primary to-[#3E7AFF] text-white hover:to-primary hover:shadow;
   }
+
   .btn-default {
     @apply border-outline bg-white text-black;
   }
