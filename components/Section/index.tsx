@@ -1,6 +1,5 @@
 import { toDate } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode, forwardRef, LegacyRef, ForwardedRef, useMemo } from "react";
 import { DateTime } from "luxon";
 interface SectionProps {
@@ -18,18 +17,17 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
     { title, className = "border-b py-12", description, children, date, menu },
     ref: LegacyRef<HTMLElement> | undefined
   ) => {
-    const { t } = useTranslation();
-    const router = useRouter();
+    const { t, i18n } = useTranslation();
 
     const displayDate = useMemo((): string => {
       if (date === undefined || date === null) return "";
 
       if (typeof date === "string") {
         if (DateTime.fromSQL(date).isValid && date.length > 4)
-          return toDate(date, "dd MMM yyyy, HH:mm", router.locale);
+          return toDate(date, "dd MMM yyyy, HH:mm", i18n.language);
         else return date;
       }
-      return toDate(date, "dd MMM yyyy, HH:mm", router.locale);
+      return toDate(date, "dd MMM yyyy, HH:mm", i18n.language);
     }, [date]);
     return (
       <section className={className} ref={ref}>
@@ -60,7 +58,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
             </div>
           )}
         </div>
-        <div className="py-6">{children}</div>
+        <div className="pt-6">{children}</div>
       </section>
     );
   }

@@ -165,11 +165,11 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
             range: (
               <>
                 <div className="relative w-full py-4">
-                  <div className="relative h-2 w-full">
+                  <div className="group relative h-2 w-full">
                     <div className="absolute top-0 left-0 h-2 w-full rounded-xl bg-[#E2E8F0]"></div>
                     {/* Active Range */}
                     <div
-                      className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-primary"
+                      className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-primary transition-colors group-hover:bg-primary md:bg-dim"
                       style={{
                         left: position?.active.left,
                         right: position?.active.right,
@@ -178,13 +178,13 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
 
                     {/* Thumb Left */}
                     <span
-                      className=" absolute left-0 -top-1 h-4 w-4 cursor-pointer rounded-full border border-primary bg-white shadow-xl"
+                      className="absolute left-0 -top-1.5 h-5 w-5 cursor-pointer rounded-full border border-dim bg-white shadow-xl group-hover:ring-4 group-hover:ring-primary"
                       style={{ left: position?.thumb.left }}
                     />
 
                     {/* Thumb Right */}
                     <span
-                      className="absolute  -top-1 -ml-2 h-4 w-4 cursor-pointer rounded-full border border-primary bg-white shadow-xl"
+                      className="absolute -top-1.5 -ml-2 h-5 w-5 cursor-pointer rounded-full border border-dim bg-white shadow-xl group-hover:ring-4 group-hover:ring-primary"
                       style={{ right: position?.thumb.right }}
                     />
 
@@ -207,7 +207,7 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
                     </div>
 
                     <input
-                      className="pointer-events-none absolute -top-1 left-0 z-20 m-0 w-full"
+                      className="pointer-events-none absolute -top-1 left-0 z-20 m-0 w-full cursor-grab active:cursor-grabbing"
                       type="range"
                       min={0}
                       max={data.length - 1}
@@ -219,7 +219,7 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
                     />
 
                     <input
-                      className="pointer-events-none absolute -top-1 z-20 m-0 w-full"
+                      className="pointer-events-none absolute -top-1 z-20 m-0 w-full cursor-grab active:cursor-grabbing"
                       type="range"
                       min={0}
                       max={data.length - 1}

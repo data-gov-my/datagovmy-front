@@ -118,23 +118,14 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
               </div>
             </Link>
             <Nav isTabletNavOpen={isTabletNavOpen}>
-              <NavItem
-                title={t("nav.home")}
-                link="/"
-                icon={<HomeIcon className="h-5 w-5 text-black" />}
-                onClick={() => setIsTabletNavOpen(false)}
-              />
+              <NavItem title={t("nav.home")} link="/" onClick={() => setIsTabletNavOpen(false)} />
               <NavItem
                 title={t("nav.catalogue")}
                 link="/data-catalogue"
-                icon={<ChartBarSquareIcon className="h-5 w-5 text-black" />}
                 onClick={() => setIsTabletNavOpen(false)}
               />
               {/* DASHBOARD MEGA MENU */}
-              <MegaMenu
-                title={t("nav.dashboards")}
-                icon={<RectangleGroupIcon className="h-5 w-5 text-black" />}
-              >
+              <MegaMenu title={t("nav.dashboards")}>
                 <Container className="relative grid max-h-[70vh] grid-cols-2 gap-8 overflow-auto py-3 lg:grid-cols-3 lg:gap-12 lg:py-6">
                   {megaMenuItems.map(item => (
                     <div key={item.title} className="text-sm">
