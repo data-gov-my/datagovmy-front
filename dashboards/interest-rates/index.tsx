@@ -44,8 +44,8 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
   const { t, i18n } = useTranslation(["common", "dasboard-interest-rates"]);
 
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("reservemoney.keys.no_shade"), value: "no_shade" },
-    { label: t("reservemoney.keys.recession"), value: "recession" },
+    { label: t("dashboard-reserve-money:keys.no_shade"), value: "no_shade" },
+    { label: t("dashboard-reserve-money:keys.recession"), value: "recession" },
   ];
 
   const { data, setData } = useData({
