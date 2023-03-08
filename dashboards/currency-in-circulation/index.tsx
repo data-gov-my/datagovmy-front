@@ -40,17 +40,17 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-currency-in-circulation"]);
   const { theme } = useTheme();
   const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data).map((key: string) => ({
-    label: t(`currencyincirculation.keys.${key}`),
+    label: t(`dashboard-currency-in-circulation:keys.${key}`),
     value: key,
   }));
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("currencyincirculation.keys.no_shade"), value: "no_shade" },
-    { label: t("currencyincirculation.keys.recession"), value: "recession" },
-    { label: t("currencyincirculation.keys.eid"), value: "eid" },
-    { label: t("currencyincirculation.keys.cny"), value: "cny" },
+    { label: t("dashboard-currency-in-circulation:keys.no_shade"), value: "no_shade" },
+    { label: t("dashboard-currency-in-circulation:keys.recession"), value: "recession" },
+    { label: t("dashboard-currency-in-circulation:keys.eid"), value: "eid" },
+    { label: t("dashboard-currency-in-circulation:keys.cny"), value: "cny" },
   ];
 
   const { data, setData } = useData({
@@ -159,25 +159,28 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
-        header={[t("currencyincirculation.header")]}
-        description={[t("currencyincirculation.description")]}
+        header={[t("dashboard-currency-in-circulation:header")]}
+        description={[t("dashboard-currency-in-circulation:description")]}
         last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
         {/* A snapshot of currency currently in circulation */}
-        <Section title={t("currencyincirculation.section_1.title")} date={bar.data_as_of}>
+        <Section
+          title={t("dashboard-currency-in-circulation:section_1.title")}
+          date={bar.data_as_of}
+        >
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
             <BarMeter
-              title={t("currencyincirculation.section_1.bar1_header")}
+              title={t("dashboard-currency-in-circulation:section_1.bar1_header")}
               data={sortByDenoName(bar.data.note_proportion)}
               layout="horizontal"
               unit="%"
               formatY={y => numFormat(y, "compact", [1, 1], "short", i18n.language)}
-              formatX={x => t(`currencyincirculation.keys.${x}`)}
+              formatX={x => t(`dashboard-currency-in-circulation:keys.${x}`)}
             />
             <BarMeter
-              title={t("currencyincirculation.section_1.bar2_header")}
+              title={t("dashboard-currency-in-circulation:section_1.bar2_header")}
               data={sortByDenoName(bar.data.note_number)}
               layout="horizontal"
               className="flex-col"
@@ -186,18 +189,18 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 0
               )}
               formatY={y => numFormat(y, "compact", [1, 1], "long", i18n.language)}
-              formatX={x => t(`currencyincirculation.keys.${x}`)}
+              formatX={x => t(`dashboard-currency-in-circulation:keys.${x}`)}
             />
             <BarMeter
-              title={t("currencyincirculation.section_1.bar3_header")}
+              title={t("dashboard-currency-in-circulation:section_1.bar3_header")}
               layout="horizontal"
               unit="%"
               data={sortByDenoName(bar.data.coin_proportion)}
               formatY={y => numFormat(y, "compact", [1, 1], "short", i18n.language)}
-              formatX={x => t(`currencyincirculation.keys.${x}`)}
+              formatX={x => t(`dashboard-currency-in-circulation:keys.${x}`)}
             />
             <BarMeter
-              title={t("currencyincirculation.section_1.bar4_header")}
+              title={t("dashboard-currency-in-circulation:section_1.bar4_header")}
               layout="horizontal"
               data={sortByDenoName(bar.data.coin_number)}
               max={bar.data.coin_number.reduce(
@@ -205,13 +208,16 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 0
               )}
               formatY={y => numFormat(y, "compact", [1, 1], "long", i18n.language)}
-              formatX={x => t(`currencyincirculation.keys.${x}`)}
+              formatX={x => t(`dashboard-currency-in-circulation:keys.${x}`)}
             />
           </div>
         </Section>
 
         {/* How is currency in circulation trending? */}
-        <Section title={t("currencyincirculation.section_2.title")} date={timeseries.data_as_of}>
+        <Section
+          title={t("dashboard-currency-in-circulation:section_2.title")}
+          date={timeseries.data_as_of}
+        >
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
@@ -236,7 +242,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
               onChange={e => setData("minmax", e)}
             />
             <Timeseries
-              title={t("currencyincirculation.keys.overall")}
+              title={t("dashboard-currency-in-circulation:keys.overall")}
               className="h-[350px] w-full"
               interval="month"
               displayNumFormat={(value, type, precision) =>
@@ -263,7 +269,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   {
                     type: "line",
                     data: coordinate.total,
-                    label: t("currencyincirculation.keys.overall"),
+                    label: t("dashboard-currency-in-circulation:keys.overall"),
                     borderColor: AKSARA_COLOR.PRIMARY,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderWidth: 1.5,
@@ -284,7 +290,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
 
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
               <Timeseries
-                title={t("currencyincirculation.keys.rm1_notes")}
+                title={t("dashboard-currency-in-circulation:keys.rm1_notes")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -310,7 +316,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.note_1"),
+                      label: t("dashboard-currency-in-circulation:keys.note_1"),
                       data: coordinate.note_1,
                       borderColor: MYR_COLOR.RM1,
                       backgroundColor: MYR_COLOR.RM1_H,
@@ -330,7 +336,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.rm5_notes")}
+                title={t("dashboard-currency-in-circulation:keys.rm5_notes")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -356,7 +362,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.note_5"),
+                      label: t("dashboard-currency-in-circulation:keys.note_5"),
                       data: coordinate.note_5,
                       borderColor: MYR_COLOR.RM5,
                       backgroundColor: MYR_COLOR.RM5_H,
@@ -376,7 +382,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.rm10_notes")}
+                title={t("dashboard-currency-in-circulation:keys.rm10_notes")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -402,7 +408,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.note_10"),
+                      label: t("dashboard-currency-in-circulation:keys.note_10"),
                       data: coordinate.note_10,
                       borderColor: MYR_COLOR.RM10,
                       backgroundColor: MYR_COLOR.RM10_H,
@@ -422,7 +428,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.rm20_notes")}
+                title={t("dashboard-currency-in-circulation:keys.rm20_notes")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -448,7 +454,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.note_20"),
+                      label: t("dashboard-currency-in-circulation:keys.note_20"),
                       data: coordinate.note_20,
                       borderColor: MYR_COLOR.RM20,
                       backgroundColor: MYR_COLOR.RM20_H,
@@ -468,7 +474,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.rm50_notes")}
+                title={t("dashboard-currency-in-circulation:keys.rm50_notes")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -494,7 +500,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.note_50"),
+                      label: t("dashboard-currency-in-circulation:keys.note_50"),
                       data: coordinate.note_50,
                       borderColor: MYR_COLOR.RM50,
                       backgroundColor: MYR_COLOR.RM50_H,
@@ -514,7 +520,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.rm100_notes")}
+                title={t("dashboard-currency-in-circulation:keys.rm100_notes")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -540,7 +546,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.note_100"),
+                      label: t("dashboard-currency-in-circulation:keys.note_100"),
                       data: coordinate.note_100,
                       borderColor: MYR_COLOR.RM100,
                       backgroundColor: MYR_COLOR.RM100_H,
@@ -560,7 +566,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.10_sen_coins")}
+                title={t("dashboard-currency-in-circulation:keys.10_sen_coins")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -586,7 +592,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.coin_10"),
+                      label: t("dashboard-currency-in-circulation:keys.coin_10"),
                       data: coordinate.coin_10,
                       borderColor: MYR_COLOR.SEN10,
                       backgroundColor: MYR_COLOR.SEN10_H,
@@ -606,7 +612,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.20_sen_coins")}
+                title={t("dashboard-currency-in-circulation:keys.20_sen_coins")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -632,7 +638,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.coin_20"),
+                      label: t("dashboard-currency-in-circulation:keys.coin_20"),
                       data: coordinate.coin_20,
                       borderColor: MYR_COLOR.SEN20,
                       backgroundColor: MYR_COLOR.SEN20_H,
@@ -652,7 +658,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 ]}
               />
               <Timeseries
-                title={t("currencyincirculation.keys.50_sen_coins")}
+                title={t("dashboard-currency-in-circulation:keys.50_sen_coins")}
                 className="h-[350px] w-full"
                 interval="month"
                 displayNumFormat={(value, type, precision) =>
@@ -678,7 +684,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("currencyincirculation.keys.coin_50"),
+                      label: t("dashboard-currency-in-circulation:keys.coin_50"),
                       data: coordinate.coin_50,
                       borderColor: MYR_COLOR.SEN50,
                       backgroundColor: MYR_COLOR.SEN50_H,
