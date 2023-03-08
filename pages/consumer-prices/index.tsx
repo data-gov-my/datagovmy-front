@@ -12,13 +12,13 @@ const ConsumerPrices = ({
   timeseries_callouts,
   choropleth,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "dashboard-consumer-prices"]);
 
   return (
     <>
       <Metadata
         title={t("nav.megamenu.dashboards.consumer_prices")}
-        description={t("consumer_prices.description")}
+        description={t("dashboard-consumer-prices:description")}
         keywords={""}
       />
       <ConsumerPricesDashboard
@@ -33,7 +33,7 @@ const ConsumerPrices = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-consumer-prices"]);
 
   const { data } = await get("/dashboard", { dashboard: "consumer_price_index" });
 
