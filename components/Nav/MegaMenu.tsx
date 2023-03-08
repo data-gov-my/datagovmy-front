@@ -50,7 +50,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
           className="relative"
         >
           <>
-            <Popover.Button className="button-dashboard flex items-center gap-2 rounded-md bg-white px-2 py-[6px] text-sm font-medium hover:cursor-pointer hover:bg-washed focus:outline-none">
+            <Popover.Button className="button-dashboard flex items-center gap-2 rounded-md  px-2 py-[6px] text-sm font-medium hover:cursor-pointer hover:bg-washed focus:outline-none dark:hover:bg-washed-dark">
               {icon}
               {title}
               {isOpen ? (
@@ -75,7 +75,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="fixed left-0 z-10 mt-0 w-screen overflow-hidden border bg-white shadow-lg md:mt-2.5">
+              <Popover.Panel className="fixed left-0 z-10 mt-0 w-screen overflow-hidden border bg-white shadow-lg dark:border-washed-dark dark:bg-black md:mt-2.5">
                 {children}
               </Popover.Panel>
             </Transition>

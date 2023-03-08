@@ -54,17 +54,20 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
   ): any => {
     if (isOptions(options)) {
       return (
-        <div className="relative w-full bg-white" key={key}>
+        <div
+          className="relative w-full bg-white dark:border-outlineHover-dark dark:bg-black"
+          key={key}
+        >
           {key && <h5 className="sticky top-0 z-10 bg-washed py-1.5 px-4 text-sm">{key}</h5>}
           <div>
             {options.map(option => (
               <Listbox.Option
                 key={option.value}
                 className={[
-                  "relative flex cursor-default select-none items-center gap-2 py-2 pr-4 transition-all hover:bg-washed",
+                  "relative flex cursor-default select-none items-center gap-2 py-2 pr-4 transition-all hover:bg-washed dark:hover:bg-washed-dark",
                   multiple ? "pl-10" : "pl-8",
                   selected.some((item: OptionType) => item.value == option.value)
-                    ? "bg-washed"
+                    ? "bg-washed dark:bg-washed-dark"
                     : "bg-inherit",
                 ].join(" ")}
                 onClick={() => (multiple ? handleChange(option) : null)}
@@ -123,7 +126,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
             <div className={["relative text-sm", disabled ? "cursor-not-allowed" : ""].join(" ")}>
               <Listbox.Button
                 className={[
-                  "relative flex w-full flex-col items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm lg:w-fit lg:flex-row lg:items-center",
+                  "relative flex w-full flex-col items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:border-washed-dark dark:bg-black lg:w-fit lg:flex-row lg:items-center",
                   className,
                   disabled
                     ? "pointer-events-none bg-outline text-dim"

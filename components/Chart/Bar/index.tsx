@@ -15,7 +15,8 @@ import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import type { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
 import { useWindowWidth } from "@hooks/useWindowWidth";
-import { BREAKPOINTS } from "@lib/constants";
+import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
+import { useTheme } from "next-themes";
 
 interface BarProps extends ChartHeaderProps {
   className?: string;
@@ -69,6 +70,7 @@ const Bar: FunctionComponent<BarProps> = ({
   const isVertical = useMemo(() => layout === "vertical", [layout]);
   const windowWidth = useWindowWidth();
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
+  const { theme } = useTheme();
 
   const display = (
     value: number,
@@ -138,6 +140,7 @@ const Bar: FunctionComponent<BarProps> = ({
           display: enableGridX,
           borderWidth: 1,
           borderDash: [5, 10],
+          color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
           drawTicks: true,
           drawBorder: true,
         },
@@ -176,6 +179,7 @@ const Bar: FunctionComponent<BarProps> = ({
           drawTicks: false,
           drawBorder: false,
           offset: false,
+          color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
           borderDash(ctx) {
             if (ctx.tick.value === 0) return [0, 0];
             return [5, 5];

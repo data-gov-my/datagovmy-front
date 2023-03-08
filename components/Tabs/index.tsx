@@ -39,7 +39,9 @@ const List: FunctionComponent<ListProps> = ({ options, current, onChange }) => {
           key={option}
           className={[
             "cursor-pointer rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
-            current === index ? "bg-outline font-medium text-black" : "bg-transparent text-dim",
+            current === index
+              ? "bg-outline font-medium text-black dark:bg-washed-dark dark:text-white"
+              : "bg-transparent text-dim hover:text-black dark:hover:text-white",
           ].join(" ")}
           onClick={() => onChange(index)}
         >
@@ -99,7 +101,9 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
                   className={({ selected }) =>
                     [
                       "rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
-                      selected ? "bg-outline font-medium text-black" : "bg-transparent text-dim",
+                      selected
+                        ? "bg-outline font-medium text-black dark:bg-washed-dark dark:text-white"
+                        : "bg-transparent text-dim hover:text-black dark:hover:text-white",
                     ].join(" ")
                   }
                 >

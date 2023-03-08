@@ -7,10 +7,10 @@
 }
 
 .table th {
-  @apply w-auto pb-2 font-normal text-dim md:whitespace-nowrap;
+  @apply w-auto pb-2 font-normal text-dim dark:text-white md:whitespace-nowrap;
 }
 .table tbody tr {
-  @apply border-b-[0.5px] border-l-[0.5px] border-l-black;
+  @apply border-b-[0.5px] border-l-[0.5px] border-l-black dark:border-washed-dark;
 }
 
 .table tbody tr:first-child {
@@ -18,7 +18,7 @@
 }
 
 .table tbody tr:last-child {
-  @apply border-b-[0.5px] border-b-black;
+  @apply border-b-[0.5px] border-b-black dark:border-washed-dark;
 }
 
 .table td {
@@ -63,15 +63,15 @@
 }
 
 .table tr:first-child {
-  @apply border-t-black;
+  @apply border-t-black dark:border-t-washed-dark;
 }
 
 .table-stripe tr:nth-child(even) {
-  @apply bg-outline;
+  @apply bg-outline dark:bg-outlineHover-dark;
 }
 
 .table-stripe tbody tr:nth-child(odd) {
-  @apply bg-white;
+  @apply bg-white dark:bg-black;
 }
 
 .table-default th:first-child {
@@ -93,10 +93,10 @@
   @apply border-t-[0.5px];
 }
 .table-slate tbody tr:first-child td {
-  @apply border-t-[0.5px] border-t-outlineHover bg-white font-bold text-black;
+  @apply border-t-[0.5px] border-t-outlineHover bg-white font-bold text-black dark:border-washed-dark;
 }
 .table-slate tbody tr:last-child {
-  @apply border-b-[0.5px] border-b-outline;
+  @apply border-b-[0.5px] border-b-outline dark:border-washed-dark;
 }
 .table-slate td {
   @apply py-4 text-black;
@@ -105,7 +105,7 @@
   @apply w-min;
 }
 .table-slate tr:first-child {
-  @apply border-t-outline;
+  @apply border-t-outline dark:border-washed-dark;
 }
 .table-default-slate th:first-child > div {
   @apply text-left;

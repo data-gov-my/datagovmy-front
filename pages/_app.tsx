@@ -2,12 +2,13 @@ import "../styles/globals.css";
 import { appWithTranslation } from "next-i18next";
 import { AppPropsLayout } from "@lib/types";
 import { Layout } from "@components/index";
-import { useEffect, ReactNode } from "react";
+import { useEffect, ReactNode, useState, createContext } from "react";
 import { useRouter } from "next/router";
 import mixpanel from "mixpanel-browser";
 import mixpanelConfig from "@config/mixpanel";
 import { ga_track, init_session } from "@lib/mixpanel";
 import Fonts from "@config/font";
+import { ThemeProvider } from "next-themes";
 import "@formatjs/intl-numberformat/polyfill";
 import "@formatjs/intl-numberformat/locale-data/en";
 
@@ -35,10 +36,22 @@ function App({ Component, pageProps }: AppPropsLayout) {
     // };
   }, [router.events]);
 
-  return layout(
-    <div className={[Fonts.body.variable, Fonts.header.variable, "font-sans"].join(" ")}>
-      <Component {...pageProps} />
-    </div>
+  return (
+    <>
+      <ThemeProvider attribute="class">
+        {layout(
+          <div
+            className={[
+              Fonts.body.variable,
+              Fonts.header.variable,
+              "font-sans dark:bg-background-dark",
+            ].join(" ")}
+          >
+            <Component {...pageProps} />
+          </div>
+        )}
+      </ThemeProvider>
+    </>
   );
 }
 

@@ -34,6 +34,8 @@ import { chunkSplit, numFormat } from "@lib/helpers";
 import "chartjs-adapter-luxon";
 import { ChartCrosshairOption } from "@lib/types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { useTheme } from "next-themes";
+import { AKSARA_COLOR } from "@lib/constants";
 
 export type Periods =
   | false
@@ -128,6 +130,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     CrosshairPlugin,
     AnnotationPlugin
   );
+
+  const { theme } = useTheme();
 
   const display = (
     value: number,
@@ -235,7 +239,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ? {
               line: {
                 width: 0,
-                color: "#000",
+                color: theme === "light" ? "#000" : "#FFF",
                 dashPattern: [6, 4],
               },
               zoom: {
@@ -297,6 +301,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
             drawTicks: false,
             drawBorder: false,
+            color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
             offset: false,
             lineWidth(ctx) {
               if (ctx.tick.value === 0) return 2;
@@ -342,7 +347,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
         ...axisY,
       },
     };
-  }, [data, interval]);
+  }, [data, interval, theme]);
 
   const autoScale = useMemo(
     () => data.labels && (data.labels.length > 200 ? "month" : "day"),
@@ -435,7 +440,7 @@ const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
               )}
             </Tooltip>
           ) : (
-            value && <p className="text-lg font-medium">{value}</p>
+            value && <p className="text-lg font-medium dark:text-white">{value}</p>
           )}
         </div>
       ))}

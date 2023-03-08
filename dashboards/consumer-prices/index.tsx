@@ -17,6 +17,7 @@ import InflationTrends from "./inflation-trends";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
 import { useWatch } from "@hooks/useWatch";
+import { useTheme } from "next-themes";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -52,6 +53,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   choropleth,
 }) => {
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
   const CPI_OPTIONS: Array<OptionType> = ["headline", "core"].map((key: string) => ({
     label: t(`consumer_prices.keys.${key}`),
     value: key,
@@ -100,7 +102,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
@@ -176,10 +178,10 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   return (
     <>
       <Hero
-        background="consumer-prices-banner"
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.economy"), "text-green-700"]}
         header={[t("consumer_prices.header")]}
-        description={[t("consumer_prices.description")]}
+        description={[t("consumer_prices.description"), "dark:text-white"]}
         last_updated={last_updated}
       />
 

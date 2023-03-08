@@ -16,7 +16,7 @@ const NavItem: FunctionComponent<NavItemProps> = ({ icon, title, link, onClick, 
       scroll={false}
       onClick={onClick}
       className={[
-        "flex items-center gap-2 rounded-md bg-white px-2 py-2 text-sm font-medium hover:cursor-pointer hover:bg-washed md:py-[6px]",
+        "flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium transition hover:cursor-pointer hover:bg-washed dark:hover:bg-washed-dark md:py-[6px]",
         className,
       ].join(" ")}
     >

@@ -60,17 +60,19 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 
   return (
     <div>
-      <Hero>
-        <div className="space-y-4 xl:w-2/3">
-          <h3 className="text-black">{t("catalogue.header")}</h3>
-          <p className="text-dim">{t("catalogue.description")}</p>
-
-          <p className="flex items-center gap-2 text-sm text-dim">
-            <ArrowTrendingUpIcon className="h-4 w-4" />
-            <span>{t("catalogue.dataset_count", { count: total })}</span>
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        header={[t("catalogue.header")]}
+        description={
+          <>
+            <p className="text-dim">{t("catalogue.description")}</p>
+            <p className="flex items-center gap-2 text-sm text-dim">
+              <ArrowTrendingUpIcon className="h-4 w-4" />
+              <span>{t("catalogue.dataset_count", { count: total })}</span>
+            </p>
+          </>
+        }
+      />
 
       <Container className="min-h-screen lg:px-0">
         <Sidebar
@@ -184,7 +186,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:border-washed-dark dark:bg-background-dark lg:pl-2">
       <div className="flex-grow">
         <Input
           className="border-0 pl-10"
