@@ -41,7 +41,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
   timeseries_opr,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dasboard-interest-rates"]);
 
   const SHADE_OPTIONS: Array<OptionType> = [
     { label: t("reservemoney.keys.no_shade"), value: "no_shade" },
@@ -136,9 +136,9 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
   );
   const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
     sectionHeaders.map(chartName => ({
-      title: t(`interest_rates.keys.${chartName}`),
+      title: t(`dashboard-interest-rates:keys.${chartName}`),
       unitY: configs(chartName).unit,
-      label: t(`interest_rates.keys.${chartName}`),
+      label: t(`dashboard-interest-rates:keys.${chartName}`),
       data: non_opr_coordinate[chartName],
       fill: configs(chartName).fill,
       callout: configs(chartName).callout,
@@ -160,16 +160,16 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
-        header={[t("interest_rates.header")]}
-        description={[t("interest_rates.description")]}
+        header={[t("dashboard-interest-rates:header")]}
+        description={[t("dashboard-interest-rates:description")]}
         last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
         {/* How is interest rates trending? */}
         <Section
-          title={t("interest_rates.section_1.title")}
-          description={t("interest_rates.section_1.description")}
+          title={t("dashboard-interest-rates:section_1.title")}
+          description={t("dashboard-interest-rates:section_1.description")}
           date={timeseries_opr.data_as_of}
         >
           <div className="space-y-8">
@@ -193,7 +193,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
               }}
             />
             <Timeseries
-              title={t("interest_rates.keys.opr")}
+              title={t("dashboard-interest-rates:keys.opr")}
               className="h-[350px] w-full"
               interval="month"
               unitY={oprConfigs("opr").unit}
@@ -217,7 +217,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
                   {
                     type: "line",
                     data: opr_coordinate.opr,
-                    label: t("interest_rates.keys.opr"),
+                    label: t("dashboard-interest-rates:keys.opr"),
                     borderColor: AKSARA_COLOR.PRIMARY,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderWidth: 1.5,
