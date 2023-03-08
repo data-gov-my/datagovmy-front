@@ -60,11 +60,11 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-money-supply"]);
 
   const tableData = table_summary.data.map(row => ({
     index: row.index + 1,
-    component: t(`moneysupply.keys.${row.type}`),
+    component: t(`dashboard-money-supply:keys.${row.type}`),
     m1: row.data.m1 ? numFormat(row.data.m1, "compact", 2) : "-",
     m2: row.data.m2 ? numFormat(row.data.m2, "compact", 2) : "-",
     m3: row.data.m3 ? numFormat(row.data.m3, "compact", 2) : "-",
@@ -79,34 +79,34 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
     },
     {
       id: "component",
-      header: t(`moneysupply.section_1.component_col_name`),
+      header: t(`dashboard-money-supply:section_1.component_col_name`),
       accessorKey: "component",
       className: "text-left",
     },
     {
       id: "m1",
-      header: t(`moneysupply.section_1.m1_col_name`),
+      header: t(`dashboard-money-supply:section_1.m1_col_name`),
       accessorKey: "m1",
     },
     {
       id: "m2",
-      header: t(`moneysupply.section_1.m2_col_name`),
+      header: t(`dashboard-money-supply:section_1.m2_col_name`),
       accessorKey: "m2",
     },
     {
       id: "m3",
-      header: t(`moneysupply.section_1.m3_col_name`),
+      header: t(`dashboard-money-supply:section_1.m3_col_name`),
       accessorKey: "m3",
     },
   ];
 
   const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data).map((key: string) => ({
-    label: t(`moneysupply.keys.${key}`),
+    label: t(`dashboard-money-supply:keys.${key}`),
     value: key,
   }));
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("moneysupply.keys.no_shade"), value: "no_shade" },
-    { label: t("moneysupply.keys.recession"), value: "recession" },
+    { label: t("dashboard-money-supply:keys.no_shade"), value: "no_shade" },
+    { label: t("dashboard-money-supply:keys.recession"), value: "recession" },
   ];
 
   const AXIS_Y = {
@@ -190,9 +190,9 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
 
   const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
     sectionHeaders.map(chartName => ({
-      title: t(`moneysupply.keys.${chartName}`),
+      title: t(`dashboard-money-supply:keys.${chartName}`),
       unitY: configs(chartName).unit,
-      label: t(`moneysupply.keys.${chartName}`),
+      label: t(`dashboard-money-supply:keys.${chartName}`),
       data: coordinate[chartName],
       fill: configs(chartName).fill,
       callout: configs(chartName).callout,
@@ -229,16 +229,16 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
-        header={[t("moneysupply.header")]}
-        description={[t("moneysupply.description")]}
+        header={[t("dashboard-money-supply:header")]}
+        description={[t("dashboard-money-supply:description")]}
         last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
         {/* What are the various ways to measure the supply of money in Malaysia? */}
         <Section
-          title={t("moneysupply.section_1.title")}
-          description={t("moneysupply.section_1.description")}
+          title={t("dashboard-money-supply:section_1.title")}
+          description={t("dashboard-money-supply:section_1.description")}
           date={table_summary.data_as_of}
         >
           <div className="mx-auto lg:max-w-screen-md">
@@ -246,7 +246,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
           </div>
         </Section>
         {/* How is the money supply trending? */}
-        <Section title={t("moneysupply.section_2.title")} date={timeseries.data_as_of}>
+        <Section title={t("dashboard-money-supply:section_2.title")} date={timeseries.data_as_of}>
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
@@ -313,7 +313,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
           </div>
         </Section>
         {/* A deeper look at M1 (narrow money) */}
-        <Section title={t("moneysupply.section_3.title")} date={timeseries.data_as_of}>
+        <Section title={t("dashboard-money-supply:section_3.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             {section3ChartData.map(chartData => (
               <Timeseries
@@ -355,7 +355,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
           </div>
         </Section>
         {/* A deeper look at M2 (quasi money) */}
-        <Section title={t("moneysupply.section_4.title")} date={timeseries.data_as_of}>
+        <Section title={t("dashboard-money-supply:section_4.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             {section4ChartData.map(chartData => (
               <Timeseries
