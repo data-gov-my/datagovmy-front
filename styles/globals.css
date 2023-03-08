@@ -14,18 +14,18 @@
   }
 
   h2 {
-    @apply font-header text-3xl font-bold leading-[38px];
+    @apply font-header text-3xl font-bold leading-[38px] dark:text-white;
   }
 
   h3 {
-    @apply font-header text-2xl font-bold leading-[32px];
+    @apply font-header text-2xl font-bold leading-[32px] dark:text-white;
   }
 
   h4 {
-    @apply font-header text-xl font-bold leading-[28px];
+    @apply font-header text-xl font-bold leading-[28px] dark:text-white;
   }
   h5 {
-    @apply text-lg font-bold tracking-normal;
+    @apply text-lg font-bold tracking-normal dark:text-white;
   }
 
   h6 {

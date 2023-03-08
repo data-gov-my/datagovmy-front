@@ -175,7 +175,7 @@ const Home: Page = ({
     <>
       <Metadata keywords={"opendosm data negara inflasi"} />
 
-      <Hero>
+      <Hero background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black">
         <div className="space-y-6 xl:w-2/3">
           <span className="text-base font-medium normal-case tracking-normal text-primary">
             {t("home.category")}
@@ -341,15 +341,17 @@ const Ranking = ({ ranks }: RankingProps) => {
     <>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         {ranks.map((item: RankItem) => (
-          <At href={item.id}>
-            <Card className="group w-full space-y-3 p-3 transition-colors hover:border-primary hover:bg-primary/5">
+          <At href={item.id} key={item.id}>
+            <Card className="group w-full space-y-3 p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-primary">
               <div className="relative flex items-center gap-4">
                 <div className="h-4 w-4 rounded-full bg-outline" />
                 <p className="text-sm text-dim">agency_name</p>
                 <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative overflow-hidden">
-                <p className="truncate font-medium">{item[`name_${lang as "en" | "bm"}`]}</p>
+                <p className="truncate font-medium dark:text-white">
+                  {item[`name_${lang as "en" | "bm"}`]}
+                </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
                   {numFormat(item.count, "compact")} views
                 </p>

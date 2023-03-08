@@ -1,17 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FunctionComponent, ReactElement, useState } from "react";
+import { FunctionComponent, ReactElement, useState, Fragment, useEffect, useContext } from "react";
 import { useTranslation } from "@hooks/useTranslation";
-import {
-  HomeIcon,
-  Bars3BottomRightIcon,
-  ChartBarSquareIcon,
-  RectangleGroupIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
-
+import { Bars3BottomRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { SunIcon, MoonIcon } from "@heroicons/react/20/solid";
+import { Transition } from "@headlessui/react";
 import { languages } from "@lib/options";
-
+import { useTheme } from "next-themes";
 import { routes } from "@lib/routes";
 import { useLanguage } from "@hooks/useLanguage";
 import Nav from "@components/Nav";
@@ -19,6 +14,7 @@ import NavItem from "@components/Nav/Item";
 import Dropdown from "@components/Dropdown";
 import Container from "@components/Container";
 import MegaMenu from "@components/Nav/MegaMenu";
+import Button from "@components/Button";
 
 interface HeaderProps {
   stateSelector?: ReactElement;
@@ -101,8 +97,8 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 z-30 w-full">
-      <Container background="bg-white" className="flex items-center gap-4 border-b py-[11px]">
+    <div className="fixed top-0 left-0 z-30 w-full border-b dark:border-washed-dark">
+      <Container background="bg-white dark:bg-black" className="flex items-center gap-4  py-[11px]">
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
@@ -140,7 +136,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                         {item.list.map((li, index) => (
                           <li
                             key={item.title.concat(index.toString())}
-                            className="text-footer-link"
+                            className="text-dim hover:text-black dark:hover:text-white"
                           >
                             <Link href={li.link} onClick={() => setIsTabletNavOpen(false)}>
                               {li.title}
@@ -175,6 +171,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
           </div>
           <div className="flex items-center gap-4">
             {stateSelector}
+            <ThemeToggle />
             {/* LANGUAGE DROPDOWN */}
             <Dropdown selected={language} onChange={onLanguageChange} options={languages} />
             {/* MOBILE NAV ICONS */}
@@ -193,6 +190,41 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
         </div>
       </Container>
     </div>
+  );
+};
+
+const ThemeToggle = () => {
+  const { theme, setTheme } = useTheme();
+  return (
+    <>
+      <Button
+        className="group relative overflow-hidden hover:bg-washed dark:hover:bg-washed-dark"
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      >
+        <Transition
+          show={theme === "light"}
+          enter="delay-200 transition ease-out duration-150"
+          enterFrom=" opacity-0 translate-y-1"
+          enterTo=" opacity-100 translate-y-0"
+          leave="duration-150"
+          leaveFrom="absolute opacity-100 translate-y-0"
+          leaveTo="absolute opacity-0 translate-y-1"
+        >
+          <MoonIcon className=" h-4 w-4 text-dim  group-hover:text-black " />
+        </Transition>
+        <Transition
+          show={theme !== "light"}
+          enter="delay-200 transition ease-out duration-150"
+          enterFrom="opacity-0 translate-y-1"
+          enterTo="opacity-100 translate-y-0"
+          leave="duration-150"
+          leaveFrom="absolute  opacity-100 translate-y-0"
+          leaveTo="absolute  opacity-0 translate-y-1"
+        >
+          <SunIcon className="-m-0.5 h-5 w-5 text-dim dark:group-hover:text-white" />
+        </Transition>
+      </Button>
+    </>
   );
 };
 

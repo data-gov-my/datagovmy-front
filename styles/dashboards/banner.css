@@ -9,7 +9,7 @@
   background-position: center right;
 }
 .gdp-banner {
-  background: url("/static/images/banner/gdp.jpeg") no-repeat;
+  background-image: url("/static/images/banner/gdp.jpeg");
   background-size: cover;
   background-position: center right;
 }
@@ -34,7 +34,7 @@
   background-position: center right;
 }
 .consumer-prices-banner {
-  background: url("/static/images/banner/consumer-prices.jpeg") no-repeat;
+  background-image: url("/static/images/banner/consumer-prices.jpeg");
   background-size: cover;
   background-position: center right;
 }

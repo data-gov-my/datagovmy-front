@@ -2,6 +2,7 @@
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
 module.exports = {
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -24,17 +25,20 @@ module.exports = {
         header: ["var(--font-header)"],
       },
       colors: {
-        "black": "#0F172A", // Slate 900
+        "black": "#18181B", // Zinc 900
         "primary": "#2563EB",
         "primary-dark": "#0C204E",
         "success": "#22C55E", // Green 500
         "danger": "#DC2626", // Red 600
         "warning": "#FBBF24", // Amber 400
-        "dim": "#64748B", // Slate 500
+        "dim": "#71717A", // Zinc 500
         "washed": "#F1F5F9", // Slate 100
+        "washed-dark": "#27272A", // Zinc 800
         "outline": "#E2E8F0", // Slate 200
         "outlineHover": "#94A3B8", // Slate 400
+        "outlineHover-dark": "#3F3F46", // Zinc 700
         "background": "#F8FAFC", // Slate 500
+        "background-dark": "#121212", // Slate 500
       },
       gridTemplateColumns: {
         13: "repeat(13, minmax(0, 1fr))",

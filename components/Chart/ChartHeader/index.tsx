@@ -22,7 +22,7 @@ const ChartHeader: FunctionComponent<ChartHeaderProps> = ({
       <div className={`flex flex-wrap items-start justify-between gap-2 ${className}`}>
         <div>
           {title && typeof title === "string" ? (
-            <span className="text-base font-bold">{title}</span>
+            <span className="text-base font-bold dark:text-white">{title}</span>
           ) : (
             title
           )}

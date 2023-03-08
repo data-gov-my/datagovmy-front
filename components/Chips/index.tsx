@@ -26,7 +26,7 @@ const Chips: FunctionComponent<ChipsProps> = ({
         return (
           <Button
             key={item.value}
-            className="border bg-washed py-1 px-2 text-start text-sm font-medium leading-6"
+            className="border bg-washed py-1 px-2 text-start text-sm font-medium dark:border-black dark:bg-washed-dark"
             icon={<XMarkIcon className="h-4 w-4" onClick={() => onRemove(item.value)} />}
           >
             <>

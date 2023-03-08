@@ -12,6 +12,7 @@ import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
+import { useTheme } from "next-themes";
 
 /**
  * Currency in Circulation Dashboard
@@ -40,6 +41,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
   const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data).map((key: string) => ({
     label: t(`currencyincirculation.keys.${key}`),
     value: key,
@@ -72,7 +74,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
@@ -155,7 +157,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
   return (
     <>
       <Hero
-        className="bg-teal-50/25"
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("currencyincirculation.header")]}
         description={[t("currencyincirculation.description")]}

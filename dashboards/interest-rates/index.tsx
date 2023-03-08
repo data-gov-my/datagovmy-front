@@ -158,7 +158,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
   return (
     <>
       <Hero
-        className="bg-teal-50/25"
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("interest_rates.header")]}
         description={[t("interest_rates.description")]}

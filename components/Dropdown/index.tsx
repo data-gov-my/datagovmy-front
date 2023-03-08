@@ -30,7 +30,7 @@ type ConditionalProps<L, V> =
     }
   | {
       multiple?: false;
-      selected?: any;
+      selected?: OptionType;
       title?: never;
       placeholder?: ReactNode;
       onChange: (selected: any) => void;
@@ -74,7 +74,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
 
     const added = options;
     if (!isSelected(added)) {
-      selected ? onChange([...selected, options]) : onChange([options]);
+      selected && Array.isArray(selected) ? onChange([...selected, options]) : onChange([options]);
     } else {
       onChange(handleDeselect(added));
     }
@@ -94,7 +94,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
         <div className={`relative text-sm ${disabled ? "cursor-not-allowed" : ""}`}>
           <Listbox.Button
             className={[
-              "relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm lg:items-center",
+              "relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:border-washed-dark dark:bg-black lg:items-center",
               className,
               width,
               darkMode
@@ -112,9 +112,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               )}
               {enableFlag && selected && (
                 <Image
-                  src={`/static/images/states/${
-                    selected.code ?? (selected as OptionType<L, V>).value
-                  }.jpeg`}
+                  src={`/static/images/states/${(selected as OptionType<L, V>).value}.jpeg`}
                   width={20}
                   height={12}
                   alt={(selected as OptionType<L, V>).label as string}
@@ -144,7 +142,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
           >
             <Listbox.Options
               className={[
-                "absolute z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+                "absolute z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
                 darkMode ? "border border-outline/10 bg-black" : "bg-white",
               ].join(" ")}
@@ -159,9 +157,12 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                     [
                       "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
                       multiple ? "pl-10" : "pl-4",
-                      darkMode ? "hover:bg-washed/10" : "hover:bg-washed",
-                      multiple && selected.some((item: OptionType) => item.value == option.value)
-                        ? "bg-washed"
+                      darkMode ? "hover:bg-washed/10" : "hover:bg-washed dark:hover:bg-washed-dark",
+                      multiple &&
+                      selected &&
+                      Array.isArray(selected) &&
+                      selected.some((item: OptionType) => item.value == option.value)
+                        ? "bg-washed dark:bg-washed-dark"
                         : "bg-inherit",
                     ].join(" ")
                   }
@@ -201,8 +202,8 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               {multiple && (
                 <button
                   onClick={() => onChange([])}
-                  className="group relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4 pl-10 text-dim hover:bg-washed disabled:cursor-not-allowed disabled:opacity-50"
-                  disabled={selected.length === 0}
+                  className="group relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4 pl-10 text-dim hover:bg-washed disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-washed-dark"
+                  disabled={Array.isArray(selected) && selected.length === 0}
                 >
                   <p>Clear</p>
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3">

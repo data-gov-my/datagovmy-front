@@ -156,7 +156,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
   return (
     <>
       <Hero
-        className="bg-teal-50/25"
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("reservemoney.header")]}
         description={[t("reservemoney.description")]}

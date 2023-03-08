@@ -69,11 +69,11 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
               </p>
             </div>
 
-            <div className="flex h-2.5 w-full overflow-x-hidden bg-washed">
+            <div className="flex h-2.5 w-full overflow-x-hidden bg-washed dark:bg-black">
               <div
-                className="h-full items-center overflow-hidden"
+                className="h-full items-center overflow-hidden bg-[#0F172A] dark:bg-primary"
                 style={{
-                  backgroundColor: color,
+                  //   backgroundColor: color,
                   width: percentFill(item.y),
                 }}
               />
@@ -103,11 +103,11 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
                 {(item.y as number).toFixed(1)}
                 {unit}
               </p>
-              <div className="h-2.5 flex-grow overflow-x-hidden bg-washed">
+              <div className="h-2.5 flex-grow overflow-x-hidden bg-washed dark:bg-black">
                 <div
-                  className="h-full items-center overflow-hidden"
+                  className="h-full items-center overflow-hidden bg-[#0F172A] dark:bg-primary-dark"
                   style={{
-                    backgroundColor: color,
+                    // backgroundColor: color,
                     width: percentFill(item.y),
                   }}
                 />
@@ -127,7 +127,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
                 {(item.y as number).toFixed(1)}
                 {unit}
               </p>
-              <div className="relative flex h-[80%] w-8 overflow-x-hidden bg-washed">
+              <div className="relative flex h-[80%] w-8 overflow-x-hidden bg-washed dark:bg-black">
                 <div
                   className="absolute bottom-0 w-full items-center overflow-hidden"
                   style={{

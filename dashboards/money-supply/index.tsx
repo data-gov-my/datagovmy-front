@@ -227,7 +227,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
   return (
     <>
       <Hero
-        className="bg-teal-50/25"
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("moneysupply.header")]}
         description={[t("moneysupply.description")]}
@@ -242,7 +242,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
           date={table_summary.data_as_of}
         >
           <div className="mx-auto lg:max-w-screen-md">
-            <Table className="table-stripe" data={tableData} config={tableConfig} />
+            <Table className="table-stripe table" data={tableData} config={tableConfig} />
           </div>
         </Section>
         {/* How is the money supply trending? */}

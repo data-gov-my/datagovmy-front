@@ -206,11 +206,11 @@ const Table: FunctionComponent<TableProps> = ({
                           }}
                         >
                           <div>
-                            <p className="font-medium text-black">
+                            <p className="font-medium text-black dark:text-white">
                               {flexRender(header.column.columnDef.header, header.getContext())}
                             </p>
                             {header.column.columnDef?.subheader && (
-                              <p className="text-left text-dim">
+                              <p className="text-left text-dim dark:text-white">
                                 {header.column.columnDef?.subheader}
                               </p>
                             )}
@@ -221,9 +221,11 @@ const Table: FunctionComponent<TableProps> = ({
                               title={sortTooltip(header.column.getIsSorted())}
                             >
                               {{
-                                asc: <ArrowUpIcon className="inline-block h-4 w-auto text-black" />,
+                                asc: (
+                                  <ArrowUpIcon className="inline-block h-4 w-auto text-black dark:text-white" />
+                                ),
                                 desc: (
-                                  <ArrowDownIcon className="inline-block h-4 w-auto text-black" />
+                                  <ArrowDownIcon className="inline-block h-4 w-auto text-black dark:text-white" />
                                 ),
                               }[header.column.getIsSorted() as string] ?? null}
                               {header.column.getCanSort() && !header.column.getIsSorted() ? (

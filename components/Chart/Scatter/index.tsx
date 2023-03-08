@@ -12,6 +12,7 @@ import { Scatter as ScatterCanvas } from "react-chartjs-2";
 import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import { AKSARA_COLOR } from "@lib/constants";
+import { useTheme } from "next-themes";
 
 interface ScatterProps extends ChartHeaderProps {
   className?: string;
@@ -49,6 +50,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   maxY,
 }) => {
   ChartJS.register(CategoryScale, LinearScale, PointElement, ChartTooltip);
+  const { theme } = useTheme();
 
   const display = (
     value: number,
@@ -61,7 +63,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   const titleConfig = (axis: string | undefined) => ({
     display: Boolean(axis),
     text: axis,
-    color: AKSARA_COLOR.BLACK,
+    color: theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.DIM,
     font: {
       size: 14,
       family: "Inter",
