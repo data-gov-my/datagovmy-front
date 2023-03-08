@@ -69,7 +69,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
   useEffect(() => {
     track("page_view", {
       type: "dashboard",
-      id: "dashboard-exchange-rates:header",
+      id: "exchangerate.header",
       name_en: "Exchange Rates",
       name_bm: "Kadar Pertukaran",
       route: routes.EXCHANGE_RATE,

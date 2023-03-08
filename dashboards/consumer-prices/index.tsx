@@ -165,7 +165,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   useEffect(() => {
     track("page_view", {
       type: "dashboard",
-      id: "dashboard-consumer-prices:header",
+      id: "consumer_prices.header",
       name_en: "Consumer Prices",
       name_bm: "Harga Pengguna",
       route: routes.CONSUMER_PRICES,
