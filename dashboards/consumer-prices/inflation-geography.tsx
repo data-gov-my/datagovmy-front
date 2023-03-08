@@ -18,7 +18,7 @@ interface InflationGeographyProps {
 }
 
 const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "dashboard-consumer-prices"]);
   const periods = ["yoy", "mom"];
   const { data, setData } = useData({
     active_state: "mys",
@@ -70,11 +70,11 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
       <div>
         <Tabs
-          title={t("consumer_prices.section_1.inflation_by_state")}
+          title={t("dashboard-consumer-prices:section_1.inflation_by_state")}
           onChange={index => setData("period_state", index)}
         >
           {periods.map(period => (
-            <Panel name={t(`consumer_prices.section_1.${period}`)}>
+            <Panel name={t(`dashboard-consumer-prices:section_1.${period}`)}>
               <Bar
                 className="h-[400px] w-full lg:h-[550px]"
                 layout="horizontal"
@@ -86,7 +86,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                   labels: sortStateData(period).x,
                   datasets: [
                     {
-                      label: t("consumer_prices.section_1.inflation_by_state"),
+                      label: t("dashboard-consumer-prices:section_1.inflation_by_state"),
                       data: sortStateData(period).y,
                       backgroundColor(ctx) {
                         return ctx.dataIndex === data.active_index
@@ -110,12 +110,12 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       </div>
       <div>
         <Tabs
-          title={t("consumer_prices.section_1.inflation_by_category", {
+          title={t("dashboard-consumer-prices:section_1.inflation_by_category", {
             state: CountryAndStates[data.active_state],
           })}
         >
           {periods.map(period => (
-            <Panel name={t(`consumer_prices.section_1.${period}`)}>
+            <Panel name={t(`dashboard-consumer-prices:section_1.${period}`)}>
               <Bar
                 className="h-[400px] w-full lg:h-[550px]"
                 layout="horizontal"
@@ -123,12 +123,12 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                 type="category"
                 unitY="%"
                 enableStep
-                formatX={key => t(`consumer_prices.section_1.short_categories.${key}`)}
+                formatX={key => t(`dashboard-consumer-prices:section_1.short_categories.${key}`)}
                 data={{
                   labels: sortCategoryData(period).x,
                   datasets: [
                     {
-                      label: t("consumer_prices.section_1.inflation_by_category", {
+                      label: t("dashboard-consumer-prices:section_1.inflation_by_category", {
                         state: CountryAndStates[data.active_state],
                       }),
                       data: sortCategoryData(period).y,

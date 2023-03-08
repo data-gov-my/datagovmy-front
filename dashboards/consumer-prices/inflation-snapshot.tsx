@@ -20,20 +20,20 @@ import { FunctionComponent, useCallback } from "react";
 const Scatter = dynamic(() => import("@components/Chart/Scatter"), { ssr: false });
 
 const InflationSnapshot: FunctionComponent = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-consumer-prices"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
   const HIGHLIGHT_COLOR = ["#DC2626", "#2563EB", "#FBBF24"];
 
   const AXES_OPTIONS: Array<OptionType> = Array(5)
     .fill(0)
     .map((_, index: number) => ({
-      label: t(`consumer_prices.keys.y${index + 1}`),
+      label: t(`dashboard-consumer-prices:keys.y${index + 1}`),
       value: `y${index + 1}`,
     }));
 
   const GRANULAR_OPTIONS: Array<OptionType> = [
-    { label: t("consumer_prices.keys.broad_categories"), value: "2d" },
-    { label: t("consumer_prices.keys.narrow_categories"), value: "4d" },
+    { label: t("dashboard-consumer-prices:keys.broad_categories"), value: "2d" },
+    { label: t("dashboard-consumer-prices:keys.narrow_categories"), value: "4d" },
   ];
 
   const { data, setData } = useData({
@@ -131,14 +131,14 @@ const InflationSnapshot: FunctionComponent = ({}) => {
       <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
         <Dropdown
           anchor="left"
-          sublabel={t("consumer_prices.section_4.select_axis", { axis: "X" }) + ":"}
+          sublabel={t("dashboard-consumer-prices:section_4.select_axis", { axis: "X" }) + ":"}
           selected={data.x_axis}
           options={AXES_OPTIONS}
           onChange={e => setData("x_axis", e)}
         />
         <Dropdown
           anchor="right-0 lg:left-0"
-          sublabel={t("consumer_prices.section_4.select_axis", { axis: "Y" }) + ":"}
+          sublabel={t("dashboard-consumer-prices:section_4.select_axis", { axis: "Y" }) + ":"}
           selected={data.y_axis}
           options={AXES_OPTIONS}
           onChange={e => setData("y_axis", e)}
@@ -149,7 +149,7 @@ const InflationSnapshot: FunctionComponent = ({}) => {
           <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
             <Dropdown
               anchor="left"
-              sublabel={t("consumer_prices.section_4.select_granularity") + ":"}
+              sublabel={t("dashboard-consumer-prices:section_4.select_granularity") + ":"}
               selected={data.granular_type}
               options={GRANULAR_OPTIONS}
               onChange={e => setData("granular_type", e)}
@@ -157,9 +157,9 @@ const InflationSnapshot: FunctionComponent = ({}) => {
 
             <Select
               anchor="left"
-              sublabel={t("consumer_prices.section_4.select_highlight") + ":"}
+              sublabel={t("dashboard-consumer-prices:section_4.select_highlight") + ":"}
               disabled={data.snapshot_ys.length >= 3}
-              placeholder={t("consumer_prices.section_4.select_upto3")}
+              placeholder={t("dashboard-consumer-prices:section_4.select_upto3")}
               selected={data.snapshot_ys}
               multiple
               options={data.snapshot_options_2d}
