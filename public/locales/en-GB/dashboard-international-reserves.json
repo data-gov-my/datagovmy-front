@@ -1,0 +1,26 @@
+{
+    "header": "International Reserves",
+    "description": "Under the Central Bank of Malaysia Act 2009 (CBA 2009), BNM is entrusted to hold and manage international reserves for the purpose of ensuring financial and monetary stability, as well as maintaining public confidence. The management of international reserves by BNM is subject to a strict governance and risk management framework established pursuant to the CBA 2009. This dashboards tracks the 3 primary measures of international reserve adequacy announced by BNM twice per month.",
+    "section_1": {
+        "title": "Key measures of BNM's international reserves",
+        "months": " months",
+        "months_of_import": "months of imports",
+        "short_term_external_debt": "short-term external debt"
+    },
+    "section_2": {
+        "title": "I want to understand more about BNM’s international reserves",
+        "description_part_1": "BNM has published an in-depth explainer on its international reserves, available ",
+        "ir_explainer": "here",
+        "ir_explainer_url": "https://www.bnm.gov.my/documents/20124/3026128/ar2020_en_box1_reserves.pdf",
+        "description_part_2": ". You may also access the latest granular data on BNM’s international reserves via ",
+        "official_bnm_site": "the official BNM site"
+    },
+    "keys": {
+        "growth_yoy": "YoY Growth",
+        "no_shade": "No shading",
+        "recession": "Recession",
+        "reserves_usd": "International Reserves (USD bil)",
+        "import_months": "Months of Imports Financeable",
+        "ed_scale": "Size relative to External Debt"
+    }
+}
