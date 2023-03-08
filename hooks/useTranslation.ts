@@ -7,7 +7,7 @@ import { interpolate } from "@lib/helpers";
  * @param namespace i18n Translation file
  * @returns t, i18n
  */
-export const useTranslation = (namespace: string = "common") => {
+export const useTranslation = (namespace: string[] | string = "common") => {
   const { t, i18n } = _useTranslation(namespace);
   const _t = (key: string, params?: any): string | any => {
     return interpolate(t(key, params));
