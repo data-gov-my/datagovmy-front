@@ -94,7 +94,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             _collection.map(([title, datasets]) => {
               return (
                 <Section
-                  title={title}
+                  title={<p className="text-lg font-bold">{title}</p>}
                   key={title}
                   ref={ref => (scrollRef.current[title] = ref)}
                   className="p-2 pt-14 pb-8 lg:p-8"
@@ -104,7 +104,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
                       <li key={index}>
                         <At
                           href={`/data-catalogue/${item.id}`}
-                          className="text-primary underline hover:no-underline"
+                          className="text-primary no-underline hover:underline dark:text-primary-dark"
                         >
                           {item.catalog_name}
                         </At>
@@ -186,7 +186,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:border-washed-dark dark:bg-background-dark lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:border-washed-dark dark:bg-black lg:pl-2">
       <div className="flex-grow">
         <Input
           className="border-0 pl-10"
@@ -204,10 +204,10 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
           trigger={open => (
             <Button
               onClick={open}
-              className="mr-3 block self-center border border-outline px-3 py-1.5 shadow-sm"
+              className="mr-3 block self-center border border-outline px-3 py-1.5 shadow-sm dark:border-washed-dark"
             >
               <span>{t("catalogue.filter")}</span>
-              <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white">
+              <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-white dark:text-black">
                 {actives.length}
               </span>
             </Button>
@@ -215,13 +215,13 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
           title={
             <Label
               label={t("catalogue.filter") + ":"}
-              className="block text-sm font-medium text-black"
+              className="block text-sm font-medium text-black dark:text-white"
             />
           }
           fullScreen
         >
           {close => (
-            <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28">
+            <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28 dark:divide-outlineHover-dark">
               <Radio
                 label={t("catalogue.period")}
                 name="period"
@@ -270,16 +270,16 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
                 onChange={e => setFilter("source", e)}
               />
 
-              <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2">
+              <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2 dark:bg-black">
                 <Button
-                  className="w-full justify-center bg-black text-white"
+                  className="btn btn-primary w-full justify-center"
                   disabled={!actives.length}
                   onClick={reset}
                 >
                   {t("common.reset")}
                 </Button>
                 <Button
-                  className="w-full justify-center bg-outline py-1.5"
+                  className="btn w-full justify-center"
                   icon={<XMarkIcon className="h-4 w-4" />}
                   onClick={close}
                 >

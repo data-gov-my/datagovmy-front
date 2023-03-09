@@ -63,19 +63,16 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
           <div className="space-y-1 pb-2" key={item.x.concat(`_${index}`)}>
             <div className="flex justify-between">
               <p>{formatX ? formatX(item.x) : item.x}</p>
-              <p className="text-dim">
+              <p className="text-dim dark:text-white">
                 {formatY ? formatY(item.y) : numFormat(item.y, "standard", 1)}
                 {unit}
               </p>
             </div>
 
-            <div className="flex h-2.5 w-full overflow-x-hidden bg-washed dark:bg-black">
+            <div className="flex h-2.5 w-full overflow-x-hidden rounded-full bg-washed dark:bg-washed-dark">
               <div
-                className="h-full items-center overflow-hidden bg-[#0F172A] dark:bg-primary"
-                style={{
-                  //   backgroundColor: color,
-                  width: percentFill(item.y),
-                }}
+                className="h-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
+                style={{ width: percentFill(item.y) }}
               />
             </div>
           </div>
@@ -95,7 +92,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
                 height={12}
                 alt={CountryAndStates[item.x]}
               />
-              <p className="text-sm text-dim">{CountryAndStates[item.x]}</p>
+              <p className="text-sm text-dim dark:text-white">{CountryAndStates[item.x]}</p>
             </div>
 
             <div className="flex flex-grow items-center gap-2">
@@ -103,13 +100,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
                 {(item.y as number).toFixed(1)}
                 {unit}
               </p>
-              <div className="h-2.5 flex-grow overflow-x-hidden bg-washed dark:bg-black">
+              <div className="flex h-2.5 w-full overflow-x-hidden rounded-full bg-washed dark:bg-washed-dark">
                 <div
-                  className="h-full items-center overflow-hidden bg-[#0F172A] dark:bg-primary-dark"
-                  style={{
-                    // backgroundColor: color,
-                    width: percentFill(item.y),
-                  }}
+                  className="h-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
+                  style={{ width: percentFill(item.y) }}
                 />
               </div>
             </div>

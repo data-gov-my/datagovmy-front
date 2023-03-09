@@ -42,7 +42,7 @@
 
 @layer components {
   .btn {
-    @apply rounded-md border border-transparent px-3 py-1.5 font-medium;
+    @apply rounded-md border border-transparent px-3 py-1.5 font-medium transition;
   }
 
   .btn-primary {
@@ -50,7 +50,7 @@
   }
 
   .btn-default {
-    @apply border-outline bg-white text-black;
+    @apply border-outline bg-white text-black hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark dark:active:bg-washed-dark dark:active:text-white;
   }
 
   .text-link {

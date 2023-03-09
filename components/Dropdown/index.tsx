@@ -142,7 +142,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
           >
             <Listbox.Options
               className={[
-                "absolute z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+                "absolute z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:border-washed-dark dark:bg-black",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
                 darkMode ? "border border-outline/10 bg-black" : "bg-white",
               ].join(" ")}
