@@ -17,4 +17,5 @@ export const routes = {
   CRIME: "/violent-property-crime",
   DRUG: "/drug-addiction",
   EXCHANGE_RATE: "/exchange-rates",
+  BLOOD_DONTATION: "/blood-donation",
 } as const;

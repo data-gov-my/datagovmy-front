@@ -73,7 +73,8 @@
         "financial_sector": "Financial Sector",
         "social": "Social",
         "national_accounts": "National Accounts",
-        "high_frequency": "High-Frequency Data"
+        "high_frequency": "High-Frequency Data",
+        "healthcare": "Healthcare Programs"
       },
       "dashboards": {
         "kawasanku": "Kawasanku",
@@ -93,7 +94,8 @@
         "crime": "Violent & Property Crime",
         "drug": "Drug Addiction",
         "exchange_rate": "Exchange Rates",
-        "daily_price": "Daily Prices"
+        "daily_price": "Daily Prices",
+        "blood_donation": "Blood Donation"
       }
     },
     "about": "About",
