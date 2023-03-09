@@ -30,11 +30,11 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-international-reserves"]);
 
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("international_reserves.keys.no_shade"), value: "no_shade" },
-    { label: t("international_reserves.keys.recession"), value: "recession" },
+    { label: t("dashboard-international-reserves:keys.no_shade"), value: "no_shade" },
+    { label: t("dashboard-international-reserves:keys.recession"), value: "recession" },
   ];
 
   const { data, setData } = useData({
@@ -81,14 +81,17 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
-        header={[t("international_reserves.header")]}
-        description={[t("international_reserves.description")]}
+        header={[t("dashboard-international-reserves:header")]}
+        description={[t("dashboard-international-reserves:description")]}
         last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
         {/* Key measures of BNM’s international reserves */}
-        <Section title={t("international_reserves.section_1.title")} date={timeseries.data_as_of}>
+        <Section
+          title={t("dashboard-international-reserves:section_1.title")}
+          date={timeseries.data_as_of}
+        >
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
@@ -109,7 +112,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
 
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
               <Timeseries
-                title={t("international_reserves.keys.reserves_usd")}
+                title={t("dashboard-international-reserves:keys.reserves_usd")}
                 className="h-[350px] w-full"
                 precision={[1, 1]}
                 interval="month"
@@ -134,7 +137,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("international_reserves.keys.reserves_usd"),
+                      label: t("dashboard-international-reserves:keys.reserves_usd"),
                       data: coordinate["reserves_usd"],
                       borderColor: AKSARA_COLOR.DARK_BLUE,
                       backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
@@ -160,12 +163,12 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 ]}
               />
               <Timeseries
-                title={t("international_reserves.keys.import_months")}
+                title={t("dashboard-international-reserves:keys.import_months")}
                 className="h-[350px] w-full"
                 interval="month"
                 precision={[1, 1]}
                 tooltipFormat="dd MMM yyyy"
-                unitY={t("international_reserves.section_1.months")}
+                unitY={t("dashboard-international-reserves:section_1.months")}
                 axisY={{
                   y2: {
                     display: false,
@@ -184,7 +187,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("international_reserves.keys.import_months"),
+                      label: t("dashboard-international-reserves:keys.import_months"),
                       data: coordinate["import_months"],
                       borderColor: AKSARA_COLOR.DARK_BLUE,
                       backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
@@ -203,12 +206,12 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                       timeseries_callouts.data["import_months"].callout,
                       "standard",
                       [1, 1]
-                    )} ${t("international_reserves.section_1.months_of_import")}`,
+                    )} ${t("dashboard-international-reserves:section_1.months_of_import")}`,
                   },
                 ]}
               />
               <Timeseries
-                title={t("international_reserves.keys.ed_scale")}
+                title={t("dashboard-international-reserves:keys.ed_scale")}
                 className="h-[350px] w-full"
                 interval="month"
                 precision={[1, 1]}
@@ -232,7 +235,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("international_reserves.keys.ed_scale"),
+                      label: t("dashboard-international-reserves:keys.ed_scale"),
                       data: coordinate["ed_scale"],
                       borderColor: AKSARA_COLOR.DARK_BLUE,
                       backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
@@ -251,7 +254,9 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                       timeseries_callouts.data["ed_scale"].callout,
                       "standard",
                       [1, 1]
-                    )}x ${t("international_reserves.section_1.short_term_external_debt")}`,
+                    )}x ${t(
+                      "dashboard-international-reserves:section_1.short_term_external_debt"
+                    )}`,
                   },
                 ]}
               />
@@ -261,21 +266,21 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         {/* I want to understand more about BNM’s international reserves */}
         <Section
           className="py-12"
-          title={t("international_reserves.section_2.title")}
+          title={t("dashboard-international-reserves:section_2.title")}
           description={
             <p className="whitespace-pre-line text-base text-dim">
-              {t("international_reserves.section_2.description_part_1")}
+              {t("dashboard-international-reserves:section_2.description_part_1")}
               {
                 <a
                   className="cursor-pointer underline hover:text-black hover:underline"
-                  href={t("international_reserves.section_2.ir_explainer_url")}
+                  href={t("dashboard-international-reserves:section_2.ir_explainer_url")}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t("international_reserves.section_2.ir_explainer")}
+                  {t("dashboard-international-reserves:section_2.ir_explainer")}
                 </a>
               }
-              {t("international_reserves.section_2.description_part_2")}
+              {t("dashboard-international-reserves:section_2.description_part_2")}
               {
                 <a
                   className="cursor-pointer underline hover:text-black hover:underline"
@@ -283,7 +288,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t("international_reserves.section_2.official_bnm_site")}
+                  {t("dashboard-international-reserves:section_2.official_bnm_site")}
                 </a>
               }
               .

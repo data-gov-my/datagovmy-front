@@ -42,7 +42,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-gdp"]);
   const INDEX_OPTIONS: Array<OptionType> = [
     "growth_real_yoy",
     "growth_nominal_yoy",
@@ -52,12 +52,12 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
     "real_sa",
     "nominal",
   ].map((key: string) => ({
-    label: t(`gdp.keys.${key}`),
+    label: t(`dashboard-gdp:keys.${key}`),
     value: key,
   }));
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("gdp.keys.no_shade"), value: "no_shade" },
-    { label: t("gdp.keys.recession"), value: "recession" },
+    { label: t("dashboard-gdp:keys.no_shade"), value: "no_shade" },
+    { label: t("dashboard-gdp:keys.recession"), value: "recession" },
   ];
 
   const { data, setData } = useData({
@@ -121,10 +121,10 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
 
   const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
     sectionHeaders.map(chartName => ({
-      title: t(`gdp.keys.${chartName}`),
+      title: t(`dashboard-gdp:keys.${chartName}`),
       prefix: configs(chartName).prefix,
       unitY: configs(chartName).unit,
-      label: t(`gdp.keys.${chartName}`),
+      label: t(`dashboard-gdp:keys.${chartName}`),
       data: coordinate[chartName],
       fill: configs(chartName).fill,
       callout: configs(chartName).callout,
@@ -169,14 +169,14 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.economy"), "text-primary"]}
-        header={[t("gdp.header")]}
-        description={[t("gdp.description"), "dark:text-white"]}
+        header={[t("dashboard-gdp:header")]}
+        description={[t("dashboard-gdp:description"), "dark:text-white"]}
         last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
         {/* How is GDP trending? */}
-        <Section title={t("gdp.section_1.title")} date={timeseries.data_as_of}>
+        <Section title={t("dashboard-gdp:section_1.title")} date={timeseries.data_as_of}>
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
@@ -201,7 +201,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
               onChange={e => setData("minmax", e)}
             />
             <Timeseries
-              title={t("gdp.keys.overall")}
+              title={t("dashboard-gdp:keys.overall")}
               className="h-[350px] w-full"
               interval="quarter"
               displayNumFormat={value =>
@@ -234,7 +234,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                   {
                     type: "line",
                     data: coordinate.overall,
-                    label: t("gdp.keys.overall"),
+                    label: t("dashboard-gdp:keys.overall"),
                     borderColor: AKSARA_COLOR.PRIMARY,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderWidth: 1.5,
@@ -255,7 +255,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
           </div>
         </Section>
         {/* A deeper look at GDP by economic sector */}
-        <Section title={t("gdp.section_2.title")} date={timeseries.data_as_of}>
+        <Section title={t("dashboard-gdp:section_2.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             {section2ChartData.map(chartData => (
               <Timeseries
@@ -314,7 +314,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
           </div>
         </Section>
         {/* A deeper look at GDP by expenditure category */}
-        <Section title={t("gdp.section_3.title")} date={timeseries.data_as_of}>
+        <Section title={t("dashboard-gdp:section_3.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             {section3ChartData.map(chartData => {
               const chart = (

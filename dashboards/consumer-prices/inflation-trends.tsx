@@ -23,12 +23,12 @@ import { FunctionComponent, useCallback } from "react";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 const InflationTrends: FunctionComponent = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-consumer-prices"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   const GRANULAR_OPTIONS: Array<OptionType> = [
-    { label: t("consumer_prices.keys.broad_categories"), value: "2d" },
-    { label: t("consumer_prices.keys.narrow_categories"), value: "4d" },
+    { label: t("dashboard-consumer-prices:keys.broad_categories"), value: "2d" },
+    { label: t("dashboard-consumer-prices:keys.narrow_categories"), value: "4d" },
   ];
 
   const { data, setData } = useData({
@@ -152,7 +152,7 @@ const InflationTrends: FunctionComponent = ({}) => {
         <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
           <Dropdown
             anchor="left"
-            sublabel={t("consumer_prices.section_3.select_granularity") + ":"}
+            sublabel={t("dashboard-consumer-prices:section_3.select_granularity") + ":"}
             selected={data.granular_type}
             options={GRANULAR_OPTIONS}
             onChange={e => setData("granular_type", e)}
@@ -160,9 +160,9 @@ const InflationTrends: FunctionComponent = ({}) => {
 
           <Select
             anchor="left"
-            sublabel={t("consumer_prices.section_3.select_items") + ":"}
+            sublabel={t("dashboard-consumer-prices:section_3.select_items") + ":"}
             disabled={data.inflation_ys.length >= 6}
-            placeholder={t("consumer_prices.section_3.select_upto6")}
+            placeholder={t("dashboard-consumer-prices:section_3.select_upto6")}
             multiple
             selected={data.inflation_ys}
             options={

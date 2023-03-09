@@ -11,13 +11,13 @@ const MoneySupply = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "dashboard-money-supply"]);
 
   return (
     <>
       <Metadata
         title={t("nav.megamenu.dashboards.money_supply")}
-        description={t("moneysupply.description")}
+        description={t("dashboard-money-supply:description")}
         keywords={""}
       />
       <MoneySupplyDashboard
@@ -31,7 +31,7 @@ const MoneySupply = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-money-supply"]);
 
   const { data } = await get("/dashboard", { dashboard: "money_measures" });
 

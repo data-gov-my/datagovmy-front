@@ -13,13 +13,13 @@ const DailyPrices: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "dashboard-exchange-rates"]);
 
   return (
     <>
       <Metadata
         title={t("nav.megamenu.dashboards.exchange_rate")}
-        description={t("exchangerate.description")}
+        description={t("dashboard-exchange-rates:description")}
         keywords={""}
       />
       <DailyPricesDashboard
@@ -33,7 +33,7 @@ const DailyPrices: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-exchange-rates"]);
 
   // [WIP] Pending Daily Prices Figma
   return {

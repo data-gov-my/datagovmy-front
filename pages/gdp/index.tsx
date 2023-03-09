@@ -10,13 +10,13 @@ const GDP = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "dashboard-gdp"]);
 
   return (
     <>
       <Metadata
         title={t("nav.megamenu.dashboards.gdp")}
-        description={t("gdp.description")}
+        description={t("dashboard-gdp:description")}
         keywords={""}
       />
       <GDPDashboard
@@ -29,7 +29,7 @@ const GDP = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-gdp"]);
 
   const { data } = await get("/dashboard", { dashboard: "gross_domestic_product" });
 

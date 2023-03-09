@@ -12,13 +12,13 @@ const InternationalReserves: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "dashboard-international-reserves"]);
 
   return (
     <>
       <Metadata
         title={t("nav.megamenu.dashboards.international_reserves")}
-        description={t("international_reserves.description")}
+        description={t("dashboard-international-reserves:description")}
         keywords={""}
       />
       <InternationalReservesDashboard
@@ -31,7 +31,10 @@ const InternationalReserves: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, [
+    "common",
+    "dashboard-international-reserves",
+  ]);
 
   const { data } = await get("/dashboard", { dashboard: "international_reserves" });
 

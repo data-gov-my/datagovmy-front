@@ -40,10 +40,10 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-consumer-prices"]);
   const INDEX_OPTIONS: Array<OptionType> = ["growth_yoy", "growth_mom", "value"].map(
     (key: string) => ({
-      label: t(`consumer_prices.keys.${key}`),
+      label: t(`dashboard-consumer-prices:keys.${key}`),
       value: key,
     })
   );
