@@ -17,6 +17,8 @@ import { useRouter } from "next/router";
 import { useWatch } from "@hooks/useWatch";
 import BarMeter from "@components/Chart/BarMeter";
 import { CountryAndStates } from "@lib/constants";
+import { routes } from "@lib/routes";
+
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
@@ -93,13 +95,26 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     },
   ];
 
+  const description = (
+    <>
+      <p className={"text-dim"}>{t("dashboard-blood-donation:description")}</p>
+      <div className="pt-6">
+        <StateDropdown
+          url={routes.BLOOD_DONATION}
+          currentState={currentState}
+          exclude={["pjy", "pls", "lbn", "kvy"]}
+        />
+      </div>
+    </>
+  );
+
   return (
     <>
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.healthcare"), "text-red-400"]}
         header={[t("dashboard-blood-donation:header")]}
-        description={[t("dashboard-blood-donation:description"), "dark:text-white"]}
+        description={description}
         last_updated={last_updated}
       />
 
