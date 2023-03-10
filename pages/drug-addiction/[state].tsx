@@ -76,6 +76,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
+  return { notFound: true };
   const i18n = await serverSideTranslations(locale!, ["common"]);
   const state = params!.state as string;
   const { data } = await get("/dashboard", { dashboard: "drugs" });

@@ -31,6 +31,7 @@ const WholesaleRetail: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return { notFound: true };
   const i18n = await serverSideTranslations(locale!, ["common"]);
 
   const { data } = await get("/dashboard", { dashboard: "wholesale_retail_trade" });
