@@ -7,8 +7,8 @@ import {
   Panel,
   Section,
   Tabs,
-  Tooltip,
   StateDropdown,
+  Button,
 } from "@components/index";
 import dynamic from "next/dynamic";
 import { useData } from "@hooks/useData";
@@ -16,11 +16,17 @@ import Slider, { SliderRef } from "@components/Chart/Slider";
 import { useRouter } from "next/router";
 import { useWatch } from "@hooks/useWatch";
 import BarMeter from "@components/Chart/BarMeter";
-import { CountryAndStates } from "@lib/constants";
+import { BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
+import LeftRightCard from "@components/LeftRightCard";
+import { useWindowWidth } from "@hooks/useWindowWidth";
+import Empty from "@components/Chart/Empty";
+import { ArrowPathIcon, MapPinIcon } from "@heroicons/react/24/solid";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const OSMapWrapper = dynamic(() => import("@components/OSMapWrapper"), { ssr: false });
 
 interface BloodDonationDashboardProps {
   last_updated: number;
@@ -55,6 +61,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
   const router = useRouter();
   const currentState = (router.query.state as string) ?? "mys";
+  const windowWidth = useWindowWidth();
+  const isMobile = windowWidth < BREAKPOINTS.MD;
 
   const sliderRef = useRef<SliderRef>(null);
   const { data, setData } = useData({
@@ -75,6 +83,11 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     };
   };
   const filtered_timeline = useCallback(filterTimeline, [data.minmax, timeseries_all]);
+
+  const handleClearSelection = () => {
+    setData("zoom_state", undefined);
+    setData("zoom_facility", undefined);
+  };
 
   useWatch(() => {
     sliderRef.current && sliderRef.current.reset();
@@ -108,6 +121,166 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     </>
   );
 
+  const section2left = (
+    <Section
+      title={t("dashboard-blood-donation:section_2.title")}
+      description={t("dashboard-blood-donation:section_2.description")}
+      date={last_updated}
+      className="gap-6 p-8"
+    />
+  );
+
+  const section2right = (
+    <div>
+      <Choropleth
+        className={(isMobile ? "h-[400px] w-auto" : "h-[500px] w-full").concat(" rounded-b")}
+        enableScale={false}
+        // colorScale="CHOROPLETH_BLUE_SCALE"
+        colorScale="reds"
+        borderColor="#000"
+        borderWidth={0.5}
+        data={choropleth_malaysia_blood_donation.data.map((item: any) => ({
+          id: CountryAndStates[item.state],
+          state: CountryAndStates[item.state],
+          value: item.data.perc === null ? -1 : item.data.perc,
+        }))}
+        unitY="%"
+        graphChoice="state"
+      />
+    </div>
+  );
+
+  const section5left = (
+    <div className="grid gap-12 p-8">
+      <div className="w-full space-y-3">
+        <div className="flex flex-wrap justify-between">
+          <div className="flex flex-row items-center gap-4">
+            <MapPinIcon className="h-5 w-auto text-dim" />
+            <h4>{t("common.zoom")}</h4>
+          </div>
+          <Button
+            onClick={handleClearSelection}
+            disabled={!data.zoom_state}
+            icon={<ArrowPathIcon className="h-4 w-4" />}
+          >
+            {t("common.clear_selection")}
+          </Button>
+        </div>
+        <StateDropdown
+          currentState={data.zoom_state}
+          onChange={selected => {
+            setData("zoom_facility", undefined);
+            setData("zoom_state", selected.value);
+          }}
+          exclude={["kvy", "lbn", "pls", "pjy", "mys"]}
+          width="w-full"
+        />
+        <Dropdown
+          placeholder={t("placeholder.facility")}
+          onChange={item => setData("zoom_facility", item)}
+          selected={data.zoom_facility}
+          disabled={!data.zoom_state}
+          options={
+            data.zoom_state !== undefined
+              ? Object.keys(map_facility.data[data.zoom_state]).map((facility, index) => {
+                  return {
+                    label: facility,
+                    value: index,
+                  };
+                })
+              : []
+          }
+          width="w-full"
+        />
+        {timeseries_facility.data?.[data.zoom_state]?.[data.zoom_facility?.label] ? (
+          <div className="w-full pt-7">
+            <Timeseries
+              className="h-[300px] w-full pt-4"
+              title={t("dashboard-blood-donation:bar3_title")}
+              state={
+                <p className="pt-4 text-sm text-dim">
+                  {t("common.data_for", {
+                    state: `${data.zoom_facility?.label}, ${CountryAndStates[data.zoom_state]}`,
+                  })}
+                </p>
+              }
+              //menu={<MenuDropdown />}
+              data={{
+                labels: timeseries_facility.data[data.zoom_state!][data.zoom_facility.label].x,
+                datasets: [
+                  {
+                    type: "line",
+                    label: `${t("dashboard-blood-donation:bar3_tooltips1")}`,
+                    data: timeseries_facility.data[data.zoom_state!][data.zoom_facility.label].line,
+                    borderWidth: 1.5,
+                  },
+                  {
+                    type: "bar",
+                    label: `${t("dashboard-blood-donation:bar3_tooltips2")}`,
+                    data: timeseries_facility.data[data.zoom_state!][data.zoom_facility.label]
+                      .daily,
+                  },
+                ],
+              }}
+              enableGridX={false}
+            />
+          </div>
+        ) : (
+          <Empty
+            title={t("dashboard-blood-donation:bar3_title")}
+            type="timeseries"
+            className="h-[300px] w-full pt-7"
+            placeholder={t("placeholder.facility")}
+          />
+        )}
+      </div>
+    </div>
+  );
+
+  const section5right = (
+    <>
+      {data.zoom_facility && data.zoom_state ? (
+        <OSMapWrapper
+          className="h-full w-full rounded-r"
+          zoom={data.zoom_facility ? 8 : 5}
+          position={
+            data.zoom_facility && data.zoom_state
+              ? [
+                  map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
+                  map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
+                ]
+              : undefined
+          }
+          markers={
+            data.zoom_facility && data.zoom_state
+              ? [
+                  {
+                    name: `${data.zoom_facility.label}, ${CountryAndStates[data.zoom_state]}`,
+                    position: [
+                      map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
+                      map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
+                    ],
+                  },
+                ]
+              : []
+          }
+        />
+      ) : isMobile ? (
+        <img
+          src="/static/images/osm_placeholder_mobile.png"
+          className="rounded-r-xl"
+          alt="Map view of the selected area"
+        />
+      ) : (
+        <img
+          src="/static/images/osm_placeholder.png"
+          className="rounded-r-xl"
+          alt="Map view of the selected area"
+        />
+      )}
+    </>
+  );
+
   return (
     <>
       <Hero
@@ -138,8 +311,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                   type: "line",
                   data: filterTimeline().line_daily,
                   label: t("dashboard-blood-donation:combine_tooltip1"),
-                  borderColor: "#FF0000",
+                  // borderColor: "#FF0000",
                   borderWidth: 1.5,
+                  // backgroundColor: "#FF0000",
+                  fill: true,
                 },
               ],
             }}
@@ -156,8 +331,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           </div>
         </Section>
 
-        {/* TODO: New component - Card with choropleth*/}
-        <Section></Section>
+        <Section>
+          <LeftRightCard left={section2left} right={section2right}></LeftRightCard>
+        </Section>
 
         {/* A breakdown of donations by key variables */}
         <Section
@@ -313,7 +489,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         <Section
           title={t("dashboard-blood-donation:section_5.title")}
           description={t("dashboard-blood-donation:section_5.description")}
-        ></Section>
+        >
+          <LeftRightCard left={section5left} right={section5right} />
+        </Section>
       </Container>
     </>
   );
