@@ -20,9 +20,9 @@ import { BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import LeftRightCard from "@components/LeftRightCard";
 import { useWindowWidth } from "@hooks/useWindowWidth";
-import Empty from "@components/Chart/Empty";
 import { ArrowPathIcon, MapPinIcon } from "@heroicons/react/24/solid";
 
+const Empty = dynamic(() => import("@components/Chart/Empty"), { ssr: false });
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
@@ -60,9 +60,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   const { t, i18n } = useTranslation(["common", "dashboard-blood-donation"]);
 
   const router = useRouter();
-  const currentState = (router.query.state as string) ?? "mys";
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < BREAKPOINTS.MD;
+  const currentState = (router.query.state as string) ?? "mys";
 
   const sliderRef = useRef<SliderRef>(null);
   const { data, setData } = useData({
