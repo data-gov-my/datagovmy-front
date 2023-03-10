@@ -110,7 +110,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
   const description = (
     <>
-      <p className={"text-dim"}>{t("dashboard-blood-donation:description")}</p>
+      <p className={"text-dim"}>{t("dashboard-blood-donation:title_description")}</p>
       <div className="pt-6">
         <StateDropdown
           url={routes.BLOOD_DONATION}
@@ -123,8 +123,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
   const section2left = (
     <Section
-      title={t("dashboard-blood-donation:section_2.title")}
-      description={t("dashboard-blood-donation:section_2.description")}
+      title={t("dashboard-blood-donation:choro_header")}
+      description={t("dashboard-blood-donation:choro_description")}
       date={last_updated}
       className="gap-6 p-8"
     />
@@ -285,8 +285,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     <>
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
-        category={[t("nav.megamenu.categories.healthcare"), "text-red-400"]}
-        header={[t("dashboard-blood-donation:header")]}
+        category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
+        header={[t("dashboard-blood-donation:title_header")]}
         description={description}
         last_updated={last_updated}
       />
@@ -294,8 +294,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
       <Container className="min-h-screen">
         {/* What are the latest blood donation trends in Malaysia? */}
         <Section
-          title={t("dashboard-blood-donation:section_1.title")}
-          description={t("dashboard-blood-donation:section_1.description")}
+          title={t("dashboard-blood-donation:combine_header", {
+            state: CountryAndStates[currentState],
+          })}
+          description={t("dashboard-blood-donation:combine_description")}
           date={timeseries_all.date_as_of}
         >
           <Timeseries
@@ -337,8 +339,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
         {/* A breakdown of donations by key variables */}
         <Section
-          title={t("dashboard-blood-donation:section_3.title")}
-          description={t("dashboard-blood-donation:barmeter_description")}
+          title={t("dashboard-blood-donation:barmeter_header")}
+          description={t("dashboard-blood-donation:barmeter_description", {
+            state: CountryAndStates[currentState],
+          })}
           date={t(barchart_variables.date_as_of)}
         >
           <Tabs className="pb-4">
@@ -400,8 +404,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
         {/* How strong is new donor recruitment in Malaysia? */}
         <Section
-          title={t("dashboard-blood-donation:section_4.title")}
-          description={t("dashboard-blood-donation:section_4.description")}
+          title={t("dashboard-blood-donation:bar1_header", {
+            state: CountryAndStates[currentState],
+          })}
+          description={t("dashboard-blood-donation:bar1_description")}
           date={barchart_time.date_as_of}
         >
           <div className="grid w-full grid-cols-1 gap-12 xl:grid-cols-2">
@@ -487,8 +493,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
         {/* How is this data collected? */}
         <Section
-          title={t("dashboard-blood-donation:section_5.title")}
-          description={t("dashboard-blood-donation:section_5.description")}
+          title={t("dashboard-blood-donation:map_header")}
+          description={t("dashboard-blood-donation:map_description")}
         >
           <LeftRightCard left={section5left} right={section5right} />
         </Section>

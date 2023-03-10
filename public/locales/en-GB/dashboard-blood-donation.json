@@ -1,26 +1,8 @@
 {
-    "header": "Blood Donation",
-    "description": "A stable and high supply of blood is critical for a well-functioning public healthcare system. This dashboard, which gives you near real-time updates on key indicators related to blood transfusion services, is brought to you by the National Blood Centre. The data is collected via the Blood Bank Information System v2 (BBISv2), a vein-to-vein blood-tracking system used by 22 main blood collection sites under MoH - and covers the majority of blood donations in Malaysia.",
-    "section_1": {
-        "title": "What are the latest blood donation trends in Malaysia?",
-        "description": "Blood compromises 3 main components - red blood cells, platelets, and plasma. Although plasma can be stored for up to 3 years, red blood cells can be only stored for up to 42 days, and platelets only for up to 5 days. Therefore, it is vital to maintain a high and stable level of blood donations; when blood donation activity is low or volatile, healthcare services that depend upon blood transfusions may be negatively affected."
-    },
-    "section_2": {
-        "title": "How do blood donor rates differ across the country?",
-        "description": "This data shows the % of the population aged 17-65 in each state which has donated at least once in the past year. \n\n The data for W.P. Kuala Lumpur may be higher than the true donor rate (and Selangor lower) due to data from the National Blood Centre's mobile campaigns around Selangor and W.P. Putrajaya being recorded as data for W.P. Kuala Lumpur."
-    },
-    "section_3": {
-        "title": "A breakdown of donations by key variables",
-        "description": ""
-    },
-    "section_4": {
-        "title": "How strong is new donor recruitment in Malaysia?",
-        "description": "Recruitment of new donors is vital to replace donors who reach their golden years and stop donating, as well as to support a growing population."
-    },
-    "section_5": {
-        "title": "How is this data collected?",
-        "description": "The data is collected via the Blood Bank Information System v2 (BBISv2), a vein-to-vein blood-tracking system used by 22 main blood collection sites under MoH - and covers the majority of blood donations in Malaysia. There are several collection sites which have not yet been integrated into BBISv2."
-    },
+    "title": "Healthcare Programs",
+    "title_header": "Blood Donation",
+    "title_description": "A stable and high supply of blood is critical for a well-functioning public healthcare system. This dashboard, which gives you near real-time updates on key indicators related to blood transfusion services, is brought to you by the National Blood Centre. The data is collected via the Blood Bank Information System v2 (BBISv2), a vein-to-vein blood-tracking system used by 22 main blood collection sites under MoH - and covers the majority of blood donations in Malaysia.",
+    "title_link": "",
     "zoom": "Zoom into",
     "table_header": "Is {{ state }}'s current blood stock sufficient?",
     "table_title": "Blood Stock by States",
@@ -57,7 +39,7 @@
     "blood_a_perc": "A",
     "blood_o_perc": "O",
     "barmeter_header": "A breakdown of donations by key variables",
-    "barmeter_description": "",
+    "barmeter_description": "Data for {{state}}",
     "barmeter1_title": "Blood Group",
     "barmeter1_title_tooltip": "This data largely reflects the population prevalence of each blood type, rather than certain blood groups being more likely to donate.",
     "barmeter2_title": "Donation Type",
