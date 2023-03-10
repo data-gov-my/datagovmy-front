@@ -29,6 +29,7 @@ const ProducerPrices = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return { notFound: true };
   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-consumer-prices"]);
 
   const { data } = await get("/dashboard", { dashboard: "producer_price_index" });
