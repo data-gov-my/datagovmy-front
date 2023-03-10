@@ -16,7 +16,7 @@ import Slider, { SliderRef } from "@components/Chart/Slider";
 import { useRouter } from "next/router";
 import { useWatch } from "@hooks/useWatch";
 import BarMeter from "@components/Chart/BarMeter";
-import { BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import LeftRightCard from "@components/LeftRightCard";
 import { useWindowWidth } from "@hooks/useWindowWidth";
@@ -213,12 +213,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                     label: `${t("dashboard-blood-donation:bar3_tooltips1")}`,
                     data: timeseries_facility.data[data.zoom_state!][data.zoom_facility.label].line,
                     borderWidth: 1.5,
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("dashboard-blood-donation:bar3_tooltips2")}`,
-                    data: timeseries_facility.data[data.zoom_state!][data.zoom_facility.label]
-                      .daily,
+                    fill: true,
+                    backgroundColor: AKSARA_COLOR.DANGER_H,
+                    borderColor: AKSARA_COLOR.DANGER,
                   },
                 ],
               }}
@@ -313,9 +310,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                   type: "line",
                   data: filterTimeline().line_daily,
                   label: t("dashboard-blood-donation:combine_tooltip1"),
-                  // borderColor: "#FF0000",
+                  borderColor: AKSARA_COLOR.DANGER,
                   borderWidth: 1.5,
-                  // backgroundColor: "#FF0000",
+                  backgroundColor: AKSARA_COLOR.DANGER_H,
                   fill: true,
                 },
               ],
@@ -350,51 +347,55 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               return (
                 <Panel key={name} name={name}>
                   <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-3">
-                    <BarMeter
-                      title={t("dashboard-blood-donation:barmeter1_title")}
-                      className="flex-col"
-                      state={currentState}
-                      data={data.blood_group}
-                      layout="horizontal"
-                      unit="%"
-                      sort="desc"
-                    />
-                    <BarMeter
-                      title={t("dashboard-blood-donation:barmeter2_title")}
-                      className="flex-col"
-                      state={currentState}
-                      data={data.donation_type}
-                      layout="horizontal"
-                      unit="%"
-                      sort="desc"
-                    />
-                    <BarMeter
-                      title={t("dashboard-blood-donation:barmeter3_title")}
-                      className="flex-col"
-                      state={currentState}
-                      data={data.location}
-                      layout="horizontal"
-                      unit="%"
-                      sort="desc"
-                    />
-                    <BarMeter
-                      title={t("dashboard-blood-donation:barmeter4_title")}
-                      className="flex-col"
-                      state={currentState}
-                      data={data.donation_regularity}
-                      layout="horizontal"
-                      unit="%"
-                      sort="desc"
-                    />
-                    <BarMeter
-                      title={t("dashboard-blood-donation:barmeter5_title")}
-                      className="flex-col"
-                      state={currentState}
-                      data={data.social_group}
-                      layout="horizontal"
-                      unit="%"
-                      sort="desc"
-                    />
+                    <div className="lg:self-stretch">
+                      <BarMeter
+                        title={t("dashboard-blood-donation:barmeter1_title")}
+                        className="col-span-2"
+                        state={currentState}
+                        data={data.blood_group}
+                        layout="horizontal"
+                        unit="%"
+                        sort="desc"
+                      />
+                    </div>
+                    <div className="grid gap-12 lg:col-span-2 lg:grid-cols-2">
+                      <BarMeter
+                        title={t("dashboard-blood-donation:barmeter2_title")}
+                        className="flex-col"
+                        state={currentState}
+                        data={data.donation_type}
+                        layout="horizontal"
+                        unit="%"
+                        sort="desc"
+                      />
+                      <BarMeter
+                        title={t("dashboard-blood-donation:barmeter3_title")}
+                        className="flex-col"
+                        state={currentState}
+                        data={data.location}
+                        layout="horizontal"
+                        unit="%"
+                        sort="desc"
+                      />
+                      <BarMeter
+                        title={t("dashboard-blood-donation:barmeter4_title")}
+                        className="flex-col"
+                        state={currentState}
+                        data={data.donation_regularity}
+                        layout="horizontal"
+                        unit="%"
+                        sort="desc"
+                      />
+                      <BarMeter
+                        title={t("dashboard-blood-donation:barmeter5_title")}
+                        className="flex-col"
+                        state={currentState}
+                        data={data.social_group}
+                        layout="horizontal"
+                        unit="%"
+                        sort="desc"
+                      />
+                    </div>
                   </div>
                 </Panel>
               );
