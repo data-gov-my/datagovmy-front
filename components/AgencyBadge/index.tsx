@@ -27,7 +27,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
 
           <ArrowUpRightIcon className="absolute -right-6 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
 
-          <div>
+          <div className="relative overflow-hidden">
             <p className=" text-xs text-dim transition-transform group-hover:-translate-y-6">
               Brought to you by
             </p>
