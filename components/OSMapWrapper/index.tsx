@@ -21,7 +21,7 @@ type MarkerProp = {
 };
 
 const OSMapWrapper: FunctionComponent<OSMapWrapperProps> = ({
-  className = "h-[400px] w-full",
+  className = "h-full w-full",
   title,
   date,
   position = [5.1420589, 109.618149], // default - Malaysia
@@ -32,13 +32,14 @@ const OSMapWrapper: FunctionComponent<OSMapWrapperProps> = ({
 }) => {
   return (
     <div className={className}>
-      <div className="flex items-baseline justify-between pb-5">
+      {/* <div className="flex items-baseline justify-between pb-5">
         <h4>{title}</h4>
         {date && <p className="text-sm text-dim">{date}</p>}
-      </div>
+      </div> */}
 
       <MapContainer
-        className={["rounded-xl", className].join(" ")}
+        // className={["rounded-xl", className].join(" ")}
+        className={className}
         center={position}
         zoom={zoom}
         zoomControl={enableZoom}

@@ -39,7 +39,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
     return (
       <section className={className} ref={ref}>
         <div className="space-y-2">
-          <div className="flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col flex-wrap items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
             {title && typeof title === "string" ? <h4>{title}</h4> : title}
             {date && date !== null && (
               <span className="text-right text-sm text-dim">

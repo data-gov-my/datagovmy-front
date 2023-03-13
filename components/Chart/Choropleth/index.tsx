@@ -109,7 +109,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
         projectionTranslation:
           windowWidth < BREAKPOINTS.MD
             ? ([0.5, 0.9] as [number, number])
-            : ([0.6, 1.0] as [number, number]),
+            : ([0.63, 1.0] as [number, number]),
         margin:
           windowWidth < BREAKPOINTS.MD
             ? { top: -30, right: 0, bottom: 0, left: 0 }
@@ -167,7 +167,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
       <ChartHeader title={title} menu={menu} controls={controls} />
 
       <div
-        className={`border border-outline border-opacity-0 transition-all active:border-opacity-100 ${className}`}
+        className={`border border-outline border-opacity-0 transition-all active:border-opacity-100 dark:active:border-outlineHover-dark ${className}`}
         ref={zoomRef}
         // onWheel={onWheel}
         onMouseMove={onMove}
@@ -196,18 +196,21 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
       </div>
       {enableZoom && (
         <div className="absolute right-1 top-1 z-10 flex w-fit justify-end gap-2">
-          <button className="rounded border bg-white p-1 active:bg-outline" onClick={onReset}>
+          <button
+            className="rounded border bg-white p-1 active:bg-outline dark:border-outlineHover-dark dark:bg-washed-dark"
+            onClick={onReset}
+          >
             <ArrowPathIcon className="h-4 w-4 p-0.5" />
           </button>
           <div>
             <button
-              className="rounded rounded-r-none border bg-white p-1 active:bg-outline"
+              className="rounded rounded-r-none border bg-white p-1 active:bg-outline dark:border-outlineHover-dark dark:bg-washed-dark"
               onClick={zoomIn}
             >
               <PlusSmallIcon className="h-4 w-4" />
             </button>
             <button
-              className="rounded rounded-l-none border border-l-0 bg-white p-1 active:bg-outline"
+              className="rounded rounded-l-none border border-l-0 bg-white p-1 active:bg-outline dark:border-outlineHover-dark dark:bg-washed-dark"
               onClick={zoomOut}
             >
               <MinusSmallIcon className="h-4 w-4" />
