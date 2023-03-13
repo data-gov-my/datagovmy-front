@@ -12,6 +12,7 @@ import Slider, { SliderRef } from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
+import AgencyBadge from "@components/AgencyBadge";
 
 /**
  * GDP Dashboard
@@ -172,6 +173,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
         header={[t("dashboard-gdp:header")]}
         description={[t("dashboard-gdp:description"), "dark:text-white"]}
         last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="DOSM" link="https://open.dosm.gov.my/" />}
       />
 
       <Container className="min-h-screen">
