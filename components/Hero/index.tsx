@@ -10,6 +10,7 @@ type ConditionalHeroProps =
       header?: never;
       category?: never;
       description?: never;
+      agencyBadge?: never;
     }
   | HeroDefault;
 
@@ -19,6 +20,7 @@ type HeroDefault = {
   header?: [string, string?]; // [text, className]
   category?: [string, string?]; // [text, className]
   description?: [string, string?] | ReactNode;
+  agencyBadge?: ReactNode;
 };
 
 type HeroProps = {
@@ -34,6 +36,7 @@ const Hero: FunctionComponent<HeroProps> = ({
   header,
   description,
   last_updated,
+  agencyBadge,
 }) => {
   const { t, i18n } = useTranslation();
   return (
@@ -41,16 +44,19 @@ const Hero: FunctionComponent<HeroProps> = ({
       {children ? (
         children
       ) : (
-        <div className="space-y-6 xl:w-2/3">
-          {category && (
-            <span
-              className={["text-sm font-bold uppercase tracking-widest", category[1] ?? ""].join(
-                " "
-              )}
-            >
-              {category[0]}
-            </span>
-          )}
+        <div className="space-y-6 xl:w-full">
+          <div className="flex justify-between">
+            {category && (
+              <span
+                className={["text-sm font-bold uppercase tracking-widest", category[1] ?? ""].join(
+                  " "
+                )}
+              >
+                {category[0]}
+              </span>
+            )}
+            {agencyBadge}
+          </div>
 
           {(header || description) && (
             <div className="space-y-3">

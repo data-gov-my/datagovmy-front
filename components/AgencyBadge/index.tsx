@@ -3,11 +3,11 @@ import Card from "@components/Card";
 import ArrowUpRightIcon from "@heroicons/react/24/solid/ArrowUpRightIcon";
 import { FunctionComponent, ReactNode } from "react";
 
-interface AgencyBadgeProps {
+export interface AgencyBadgeProps {
   agency: string;
   link: string;
-  icon: ReactNode;
-  disabled: boolean;
+  icon?: ReactNode;
+  disabled?: boolean;
 }
 
 const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
@@ -23,7 +23,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
       bg-white transition-[width] duration-75 hover:w-[214px] hover:border-slate-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:bg-zinc-800"
       >
         <div className="relative flex items-center gap-2 pl-2">
-          {icon}
+          {icon || <div className="h-8 w-8 rounded-full bg-outline" />}
 
           <ArrowUpRightIcon className="absolute -right-6 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
 
