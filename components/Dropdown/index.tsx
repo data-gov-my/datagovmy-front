@@ -1,10 +1,16 @@
 import type { OptionType } from "@components/types";
 import { default as Image } from "next/image";
 import { default as Label, LabelProps } from "@components/Label";
-import { Fragment, ReactElement, ReactNode } from "react";
+import { Fragment, ReactElement, ReactNode, useMemo, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import {
+  CheckCircleIcon,
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
+import { Input } from "..";
+import { useTranslation } from "next-i18next";
 
 type CommonProps<L, V> = {
   className?: string;
@@ -13,24 +19,26 @@ type CommonProps<L, V> = {
   description?: string;
   icon?: ReactNode;
   width?: string;
-  enableFlag?: boolean | string;
   label?: string;
   sublabel?: ReactNode;
   darkMode?: boolean;
   anchor?: "left" | "right" | string;
+  enableSearch?: boolean;
+  enableFlag?: boolean;
+  enableClear?: boolean;
 };
 
 type ConditionalProps<L, V> =
   | {
       multiple?: true;
-      selected?: any[];
+      selected?: OptionType<L, V>[];
       title: string;
       placeholder?: never;
-      onChange: (selected: any[]) => void;
+      onChange: (selected: any) => void;
     }
   | {
       multiple?: false;
-      selected?: OptionType;
+      selected?: OptionType<L, V>;
       title?: never;
       placeholder?: ReactNode;
       onChange: (selected: any) => void;
@@ -46,16 +54,20 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
   options,
   selected,
   onChange,
+  enableSearch,
   title,
   description,
   anchor = "right",
   placeholder,
   width = "w-full lg:w-fit",
-  enableFlag = false,
   label,
   sublabel,
   darkMode = false,
+  enableFlag = false,
+  enableClear = false,
 }: DropdownProps<L, V>) => {
+  const [search, setSearch] = useState<string>("");
+  const { t } = useTranslation();
   const isSelected = (option: OptionType<L, V>): boolean => {
     return (
       multiple &&
@@ -79,6 +91,14 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
       onChange(handleDeselect(added));
     }
   };
+
+  const availableOptions = useMemo<OptionType<L, V>[]>(() => {
+    if (!enableSearch) return options;
+
+    return options.filter(
+      option => !option.label.toString().toLowerCase().search(search.toLowerCase())
+    );
+  }, [options, search]);
 
   return (
     <div className={["space-y-2", width].join(" ")}>
@@ -107,9 +127,15 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
             ].join(" ")}
           >
             <>
+              {/* Icon */}
+              {icon}
+
+              {/* Sublabel */}
               {sublabel && (
                 <span className="block w-fit min-w-min truncate text-dim">{sublabel}</span>
               )}
+
+              {/* Flag (selected) */}
               {enableFlag && selected && (
                 <Image
                   src={`/static/images/states/${(selected as OptionType<L, V>).value}.jpeg`}
@@ -118,17 +144,21 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                   alt={(selected as OptionType<L, V>).label as string}
                 />
               )}
-              <span className={["block w-full truncate lg:w-auto", label ? "" : ""].join(" ")}>
+
+              {/* Label */}
+              <span className="block w-full truncate text-black dark:text-white lg:w-auto">
                 {multiple
                   ? title
                   : (selected as OptionType<L, V>)?.label || placeholder || "Select"}
               </span>
-              {/* NUMBER OF OPTIONS SELECTED (MULTIPLE = TRUE) */}
+              {/* Label (multiple) */}
               {multiple && (selected as OptionType<L, V>[])?.length > 0 && (
-                <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white">
+                <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-primary-dark ">
                   {selected && (selected as OptionType<L, V>[]).length}
                 </span>
               )}
+
+              {/* ChevronDown Icon */}
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
                 <ChevronDownIcon className="h-5 w-5 text-dim" aria-hidden="true" />
               </span>
@@ -142,70 +172,96 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
           >
             <Listbox.Options
               className={[
-                "absolute z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:border-washed-dark dark:bg-black",
+                "absolute z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black dark:ring-washed-dark",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
                 darkMode ? "border border-outline/10 bg-black" : "bg-white",
               ].join(" ")}
             >
-              {/* DESCRIPTION */}
+              {/* Description - optional*/}
               {description && <p className="py-1 px-4 text-xs text-dim">{description}</p>}
-              {/* OPTIONS */}
-              {options.map((option, index) => (
+
+              {/* Search - optional*/}
+              {enableSearch && (
+                <Input
+                  type="search"
+                  icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
+                  className="w-full min-w-[200px] border-0 border-b border-outline text-sm dark:border-washed-dark"
+                  placeholder={t("common:placeholder.search") + " ..."}
+                  onChange={value => setSearch(value)}
+                />
+              )}
+              {/* Options */}
+              {availableOptions.map((option, index) => (
                 <Listbox.Option
                   key={index}
-                  className={({ active }) =>
-                    [
-                      "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
-                      multiple ? "pl-10" : "pl-4",
-                      darkMode ? "hover:bg-washed/10" : "hover:bg-washed dark:hover:bg-washed-dark",
-                      multiple &&
-                      selected &&
-                      Array.isArray(selected) &&
-                      selected.some((item: OptionType) => item.value == option.value)
-                        ? "bg-washed dark:bg-washed-dark"
-                        : "bg-inherit",
-                    ].join(" ")
-                  }
+                  className={[
+                    "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
+                    multiple ? "pl-10" : "pl-4",
+                    darkMode
+                      ? "text-white hover:bg-washed/10"
+                      : "text-black hover:bg-washed dark:text-white dark:hover:bg-washed-dark",
+                    multiple &&
+                    selected &&
+                    Array.isArray(selected) &&
+                    selected.some((item: OptionType<L, V>) => item.value == option.value)
+                      ? "bg-washed dark:bg-washed-dark"
+                      : "bg-inherit",
+                  ].join(" ")}
                   onClick={() => (multiple ? handleChange(option) : null)}
                   value={option}
                 >
-                  {enableFlag && (
-                    <Image
-                      src={`/static/images/states/${option.value}.jpeg`}
-                      width={20}
-                      height={12}
-                      alt={option.label as string}
-                    />
-                  )}
-                  <span
-                    className={`block truncate ${
-                      option === selected ? "font-medium" : "font-normal"
-                    }`}
-                  >
-                    {option.label}
-                  </span>
-                  {multiple && (
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                      <input
-                        type="checkbox"
-                        checked={
-                          selected &&
-                          (selected as OptionType<L, V>[]).some(item => item.value === option.value)
-                        }
-                        className="h-4 w-4 rounded border-outline text-dim focus:ring-0"
+                  {/* State flag - optional */}
+                  <div className="flex w-full items-center justify-between gap-2">
+                    {enableFlag && (
+                      <Image
+                        src={`/static/images/states/${option.value}.jpeg`}
+                        width={20}
+                        height={12}
+                        alt={option.label as string}
                       />
+                    )}
+                    {/* Option label */}
+                    <span
+                      className={[
+                        "block truncate",
+                        option === selected ? "font-medium" : "font-normal",
+                      ].join(" ")}
+                    >
+                      {option.label}
                     </span>
-                  )}
+
+                    {/* Checkbox (multiple mode) */}
+                    {multiple && (
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <input
+                          type="checkbox"
+                          checked={
+                            selected &&
+                            (selected as OptionType<L, V>[]).some(
+                              item => item.value === option.value
+                            )
+                          }
+                          className="h-4 w-4 rounded border-outline text-primary focus:ring-0 dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark"
+                        />
+                      </span>
+                    )}
+
+                    {/* Checkmark */}
+                    {!multiple && selected && (selected as OptionType).value === option.value && (
+                      <CheckCircleIcon className="h-4 w-4 text-primary dark:text-primary-dark" />
+                    )}
+                  </div>
                 </Listbox.Option>
               ))}
-              {/* CLEAR ALL (MULTIPLE = TRUE) */}
-              {multiple && (
+
+              {/* Clear / Reset */}
+              {enableClear && (
                 <button
-                  onClick={() => onChange([])}
+                  onClick={() => (multiple ? onChange([]) : onChange(undefined))}
                   className="group relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4 pl-10 text-dim hover:bg-washed disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-washed-dark"
                   disabled={Array.isArray(selected) && selected.length === 0}
                 >
-                  <p>Clear</p>
+                  <p>{t("common.clear")}</p>
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                     <XMarkIcon className="h-5 w-5" />
                   </span>

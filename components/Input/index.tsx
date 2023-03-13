@@ -15,7 +15,7 @@ interface InputProps extends LabelProps {
 const Input: FunctionComponent<InputProps> = ({
   name,
   label,
-  className = "px-4",
+  className = "px-4 w-full rounded-md border-outline text-sm placeholder:text-dim dark:bg-inherit dark:text-white md:text-base",
   type = "text",
   value,
   placeholder,
@@ -34,9 +34,10 @@ const Input: FunctionComponent<InputProps> = ({
     <div className="relative flex w-full flex-col gap-2">
       {label && <Label name={name} label={label} />}
       <div
-        className={`absolute left-2 h-full text-dim ${
-          !label ? "translate-y-[25%]" : "translate-y-[65%]"
-        }`}
+        className={[
+          "absolute left-2 h-full text-dim",
+          !label ? "translate-y-[25%]" : "translate-y-[65%]",
+        ].join(" ")}
       >
         {icon && icon}
       </div>
@@ -45,8 +46,12 @@ const Input: FunctionComponent<InputProps> = ({
         id={name}
         ref={ref}
         autoFocus={autoFocus}
-        type={type as string}
-        className={`w-full rounded-md border-outline text-sm outline-none placeholder:text-dim focus:outline-none focus:ring-0 dark:bg-inherit dark:text-white md:text-base ${className}`}
+        type={type as HTMLInputTypeAttribute}
+        className={[
+          "outline-none focus:outline-none focus:ring-0 dark:bg-inherit dark:text-white",
+          icon ? "pl-10" : "",
+          className,
+        ].join(" ")}
         placeholder={placeholder}
         value={value}
         required={required}
