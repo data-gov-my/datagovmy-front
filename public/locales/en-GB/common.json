@@ -34,6 +34,7 @@
     "next_update": "Next update {{ date }}",
     "slider": "",
     "zoom": "Zoom into my area",
+    "clear": "Clear",
     "clear_selection": "Clear selection",
     "clear_all": "Clear all",
     "reset": "Reset",
@@ -535,10 +536,11 @@
       "other_noncitizen": "Non-Citizen"
     },
     "period": "Period",
-    "geographic": "Geographic",
+    "geography": "Geography",
     "begin": "Begin",
     "end": "End",
     "source": "Data Source",
+    "source_placeholder": "Select ministry or agency",
     "search_placeholder": "Search for dataset",
     "image": {
       "title": "Image (PNG)",

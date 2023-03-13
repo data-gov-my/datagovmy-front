@@ -342,20 +342,23 @@ const Ranking = ({ ranks }: RankingProps) => {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         {ranks.map((item: RankItem) => (
           <At href={item.id} key={item.id}>
-            <Card className="group w-full space-y-3 p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-primary">
+            <Card className="group w-full space-y-3 p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
               <div className="relative flex items-center gap-4">
                 <div className="h-4 w-4 rounded-full bg-outline" />
                 <p className="text-sm text-dim">agency_name</p>
                 <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative overflow-hidden">
-                <p className="truncate font-medium dark:text-white">
+                <p
+                  className="truncate font-medium dark:text-white"
+                  title={item[`name_${lang as "en" | "bm"}`]}
+                >
                   {item[`name_${lang as "en" | "bm"}`]}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
                   {numFormat(item.count, "compact")} views
                 </p>
-                <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6">
+                <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
                   Click to explore
                 </p>
               </div>
