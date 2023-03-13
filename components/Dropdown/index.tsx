@@ -118,7 +118,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               className,
               width,
               darkMode
-                ? "border-outline/10 active:bg-washed/10"
+                ? "border-outline/10 text-white active:bg-washed/10"
                 : "border-outline bg-white active:bg-washed",
               ,
               disabled
@@ -146,7 +146,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               )}
 
               {/* Label */}
-              <span className="block w-full truncate text-black dark:text-white lg:w-auto">
+              <span className="block w-full truncate dark:text-white lg:w-auto">
                 {multiple
                   ? title
                   : (selected as OptionType<L, V>)?.label || placeholder || "Select"}
@@ -199,7 +199,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                     multiple ? "pl-10" : "pl-4",
                     darkMode
                       ? "text-white hover:bg-washed/10"
-                      : "text-black hover:bg-washed dark:text-white dark:hover:bg-washed-dark",
+                      : "hover:bg-washed dark:text-white dark:hover:bg-washed-dark",
                     multiple &&
                     selected &&
                     Array.isArray(selected) &&
