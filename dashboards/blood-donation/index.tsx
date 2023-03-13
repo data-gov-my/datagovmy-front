@@ -267,13 +267,15 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
       ) : isMobile ? (
         <img
           src="/static/images/osm_placeholder_mobile.png"
-          className="rounded-r-xl"
+          className="w-full rounded-r-xl object-cover"
+          loading="lazy"
           alt="Map view of the selected area"
         />
       ) : (
         <img
-          src="/static/images/osm_placeholder.png"
-          className="rounded-r-xl"
+          src="/static/images/osm_placeholder_long.png"
+          className="w-full rounded-r-xl object-cover"
+          loading="lazy"
           alt="Map view of the selected area"
         />
       )}
@@ -509,6 +511,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         <Section
           title={t("dashboard-blood-donation:map_header")}
           description={t("dashboard-blood-donation:map_description")}
+          className="py-12"
         >
           <LeftRightCard left={section5left} right={section5right} />
         </Section>
