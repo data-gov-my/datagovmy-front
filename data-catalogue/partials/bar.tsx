@@ -131,7 +131,12 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 
   const _datasets = useMemo<ChartDataset<"bar", any[]>[]>(() => {
     const sets = Object.entries(dataset.chart);
-    const colors = [AKSARA_COLOR.PRIMARY, AKSARA_COLOR.DIM, AKSARA_COLOR.DANGER]; // [blue, red]
+    const colors = [
+      AKSARA_COLOR.PRIMARY,
+      AKSARA_COLOR.DIM,
+      AKSARA_COLOR.DANGER,
+      AKSARA_COLOR.WARNING,
+    ]; // [blue, red]
 
     return sets
       .filter(([key, _]) => key !== "x")
