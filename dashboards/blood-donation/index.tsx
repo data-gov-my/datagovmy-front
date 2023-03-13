@@ -57,7 +57,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   map_facility,
   choropleth_malaysia_blood_donation,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-blood-donation"]);
+  const { t } = useTranslation(["common", "dashboard-blood-donation"]);
 
   const router = useRouter();
   const windowWidth = useWindowWidth();
@@ -73,6 +73,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     zoom_state: currentState === "mys" ? undefined : currentState,
     zoom_facility: undefined,
     minmax: [timeseries_all.data.x.length - 182, timeseries_all.data.x.length - 1],
+    tabs_section_3: 0,
   });
 
   const filterTimeline = () => {
@@ -124,10 +125,11 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   const section2left = (
     <Section
       title={t("dashboard-blood-donation:choro_header")}
-      description={t("dashboard-blood-donation:choro_description")}
       date={last_updated}
       className="gap-6 p-8"
-    />
+    >
+      <p className="text-dim">{t("dashboard-blood-donation:choro_description")}</p>
+    </Section>
   );
 
   const section2right = (
@@ -193,7 +195,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           width="w-full"
         />
         {timeseries_facility.data?.[data.zoom_state]?.[data.zoom_facility?.label] ? (
-          <div className="w-full pt-7">
+          <div className="w-full pt-4">
             <Timeseries
               className="h-[300px] w-full pt-4"
               title={t("dashboard-blood-donation:bar3_title")}
@@ -340,9 +342,20 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           description={t("dashboard-blood-donation:barmeter_description", {
             state: CountryAndStates[currentState],
           })}
+          menu={
+            <Tabs.List
+              options={KEY_VARIABLES_SCHEMA.map(item => item.name)}
+              current={data.tabs_section_3}
+              onChange={index => setData("tabs_section_3", index)}
+            />
+          }
           date={t(barchart_variables.date_as_of)}
         >
-          <Tabs className="pb-4">
+          <Tabs
+            hidden
+            current={data.tabs_section_3}
+            onChange={index => setData("tabs_section_2", index)}
+          >
             {KEY_VARIABLES_SCHEMA.map(({ name, data }) => {
               return (
                 <Panel key={name} name={name}>

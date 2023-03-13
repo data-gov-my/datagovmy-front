@@ -223,7 +223,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                     {/* Option label */}
                     <span
                       className={[
-                        "block truncate",
+                        "block flex-grow truncate",
                         option === selected ? "font-medium" : "font-normal",
                       ].join(" ")}
                     >
