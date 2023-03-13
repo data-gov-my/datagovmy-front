@@ -34,6 +34,7 @@
     "next_update": "Kemaskini seterusnya pada {{ date }}",
     "slider": "",
     "zoom": "Pilih kawasan saya",
+    "clear": "Kosongkan",
     "clear_selection": "Kosongkan pilihan",
     "clear_all": "Kosongkan semua",
     "reset": "Set semula",
@@ -536,10 +537,11 @@
       "bar": {}
     },
     "period": "Tempoh",
-    "geographic": "Kawasan",
+    "geography": "Kawasan",
     "begin": "Dari",
     "end": "Hingga",
     "source": "Sumber Data",
+    "source_placeholder": "Pilih kementerian atau agensi",
     "search_placeholder": "Cari dataset",
     "image": {
       "title": "Gambar (PNG)",

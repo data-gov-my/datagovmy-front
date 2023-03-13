@@ -16,7 +16,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
   const [show, setShow] = useState<boolean>(false);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none leading-tight",
-    active: "border-l-2 border-black bg-washed text-black font-medium",
+    active:
+      "border-l-2 border-black bg-washed text-black font-medium dark:bg-washed-dark dark:text-white dark:border-white",
     default: "text-dim",
   };
 
@@ -78,7 +79,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
           <>
             <div className="pointer-events-none absolute top-20 block h-full lg:hidden">
               <Button
-                className="pointer-events-auto sticky top-36 z-10 flex border bg-white font-medium"
+                className="btn btn-default pointer-events-auto sticky top-36 z-10"
                 icon={<Bars3BottomLeftIcon className="h-4 w-4" />}
                 onClick={() => setShow(true)}
               >
@@ -88,7 +89,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
             <Transition
               show={show}
               as="div"
-              className="fixed top-14 left-0 z-30 flex h-screen w-2/3 flex-col border border-l-0 bg-white shadow-md"
+              className="fixed top-14 left-0 z-30 flex h-screen w-2/3 flex-col border border-l-0 bg-white shadow-md dark:border-washed-dark dark:bg-black"
               enter="transition-opacity duration-75"
               enterFrom="opacity-0"
               enterTo="opacity-100"
@@ -100,7 +101,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                 <li className="flex items-baseline justify-between">
                   <h5 className={styles.base}>{t("catalogue.category")}</h5>
                   <Button
-                    className="mr-3 border text-sm"
+                    className="btn btn-default mr-3 border text-sm"
                     icon={<XMarkIcon className="h-4 w-4" />}
                     onClick={() => setShow(false)}
                   >

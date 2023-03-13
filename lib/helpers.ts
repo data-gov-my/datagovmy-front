@@ -230,7 +230,11 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
     const [text, url] = match;
     return createElement(
       "a",
-      { href: url, className: "text-primary hover:underline inline", target: "_blank" },
+      {
+        href: url,
+        className: "text-primary dark:text-primary-dark hover:underline inline",
+        target: "_blank",
+      },
       text
     );
   }) as ReactElement[];
