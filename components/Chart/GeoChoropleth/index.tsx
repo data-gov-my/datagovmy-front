@@ -1,7 +1,6 @@
-import { ResponsiveChoropleth } from "@nivo/geo";
 import { Chart } from "react-chartjs-2";
 import * as ChartGeo from "chartjs-chart-geo";
-import { FunctionComponent, useMemo, useRef, useEffect, ForwardedRef, forwardRef } from "react";
+import { FunctionComponent, useMemo, useRef, useEffect, forwardRef, ForwardedRef } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import ParliamentDesktop from "@lib/geojson/parlimen_desktop.json";
 import ParliamentMobile from "@lib/geojson/parlimen_mobile.json";
@@ -18,15 +17,14 @@ import { useTranslation } from "@hooks/useTranslation";
 import { useZoom } from "@hooks/useZoom";
 import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import type { ChoroplethColors } from "@lib/types";
-import ChoroplethScale from "./scale";
 import { Chart as ChartJS, Tooltip, ChartTypeRegistry } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 /**
- * Choropleth component
+ *GeoChoropleth component
  */
 
-interface ChoroplethProps extends ChartHeaderProps {
+interface GeoChoroplethProps extends ChartHeaderProps {
   className?: string;
   data?: any;
   prefixY?: string;
@@ -42,10 +40,9 @@ interface ChoroplethProps extends ChartHeaderProps {
   projectionTranslation?: any;
   projectionScaleSetting?: number;
   onReady?: (status: boolean) => void;
-  ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
 }
 
-const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
+const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
   (
     {
       className = "h-[460px]",
@@ -68,22 +65,13 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
     ref: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>
   ) => {
     const { t } = useTranslation();
-    // const chartRef = useRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>(null);
+    const chartRef = useRef<ChartJS>(null);
     const zoomRef = useRef(null);
     const { onWheel, onMove, onDown, onUp, onReset, zoomIn, zoomOut } = useZoom(
       enableZoom,
       zoomRef
     );
-    const domain: [number, number] = [
-      Math.min.apply(
-        Math,
-        data.map((item: any) => item.value)
-      ),
-      Math.max.apply(
-        Math,
-        data.map((item: any) => item.value)
-      ),
-    ];
+
     ChartJS.register(
       Tooltip,
       ChartGeo.ChoroplethController,
@@ -91,6 +79,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
       ChartGeo.ColorScale,
       ChartGeo.GeoFeature
     );
+
     const windowWidth = useWindowWidth();
     const presets = useMemo(
       () => ({
@@ -151,33 +140,6 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
       }),
       [colorScale, borderWidth, borderColor, windowWidth]
     );
-
-    const tooltip = (y: number, x?: string) => {
-      if (!x) return <></>;
-      if (!y)
-        return (
-          <div className="nivo-tooltip">
-            {x} : {t("common.no_data")}
-          </div>
-        );
-
-      const special_code: Record<string, any> = {
-        "-1": ": " + t("common.no_data"),
-        "-1.1": <></>,
-      };
-      return (
-        <div className="nivo-tooltip">
-          {x}
-          {hideValue ? (
-            <></>
-          ) : special_code[y.toString()] ? (
-            special_code[y.toString()]
-          ) : (
-            `: ${prefixY ?? ""}${numFormat(y, "standard", precision)}${unitY ?? ""}`
-          )}
-        </div>
-      );
-    };
 
     const getOrCreateTooltip = (chart: any) => {
       let tooltipEl = chart.canvas.parentNode.querySelector("div");
@@ -348,49 +310,10 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
         //       `: ${prefixY ?? ""}${numFormat(item.raw.value, "standard", precision)}${unitY ?? ""}`
         //     )}`
         // },
-        //     // title() {
-        //     //   // Title doesn't make sense for scatter since we format the data as a point
-        //     //   return "";
-        //     // },
-        // label: function (item: any) {
-        //   const lav = item.raw.label
-        //   const val = item.parsed.r
-        //   // {console.log(data, !lav, !val, hideValue)}
-        //   if (!lav) return <></>;
-        //   if (!val)
-        //     return (
-        //       <div>
-        //          {/* className="nivo-tooltip"> */}
-        //         {lav} : {t("common.no_data")}
-        //       </div>
-        //     );
-
-        //   const special_code: Record<string, any> = {
-        //     "-1": ": " + t("common.no_data"),
-        //     "-1.1": <></>,
-        //   };
-
-        //   return (
-        //     <div>
-        //        {/* className="nivo-tooltip"> */}
-        //       {lav}
-        //       {hideValue ? (
-        //         <></>
-        //       ) : special_code[val.toString()] ? (
-        //         special_code[val.toString()]
-        //       ) : (
-        //         `: ${prefixY ?? ""}${numFormat(val, "standard", precision)}${unitY ?? ""}`
-        //       )}
-        //     </div>
-        //   );
-        // },
-        //   },
-        // },
       },
       scales: {
         xy: {
           projection: "mercator",
-          // projectionScale: config.projectionScale,
           projectionOffset: config.projectionTranslation,
           padding: config.margin,
         },
@@ -427,7 +350,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
           // onMouseOut={onUp}
         >
           <Chart
-            ref={ref}
+            ref={chartRef}
             type="choropleth"
             data={{
               labels: config.feature.map((d: any) => d.id),
@@ -438,7 +361,6 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
                   borderColor: config.borderColor,
                   outline: config.feature,
                   data: data.map((d: any, index: number) => ({
-                    label: d.id,
                     feature: config.feature[index],
                     value: d.value,
                   })),
@@ -447,21 +369,6 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
             }}
             options={options}
           />
-          {/* <ResponsiveChoropleth
-          data={data}
-          features={config.feature}
-          margin={config.margin}
-          colors={config.colors}
-          domain={domain}
-          unknownColor="#fff"
-          projectionType="mercator"
-          projectionScale={config.projectionScale}
-          projectionTranslation={config.projectionTranslation}
-          projectionRotation={[-114, 0, 0]}
-          borderWidth={config.borderWidth}
-          borderColor={config.borderColor}
-          tooltip={({ feature: { data } }) => tooltip(data?.value, data?.id)}
-        /> */}
         </div>
         {enableZoom && (
           <div className="absolute right-1 top-1 z-10 flex w-fit justify-end gap-2">
@@ -484,12 +391,11 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
             </div>
           </div>
         )}
-
-        {/* {enableScale && <ChoroplethScale colors={colorScale} domain={domain} />} */}
       </div>
     );
   }
 );
+
 const dummyData = [
   {
     id: "MYS",
@@ -497,4 +403,4 @@ const dummyData = [
   },
 ];
 
-export default Choropleth;
+export default GeoChoropleth;

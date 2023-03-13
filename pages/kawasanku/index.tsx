@@ -48,7 +48,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   });
 
   return {
-    notFound: true,
+    // notFound: true,
     props: {
       ...i18n,
       bar: data.bar_chart,

@@ -7,7 +7,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useData } from "@hooks/useData";
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
+import type { ChartDataset, ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
 import Slider, { SliderRef } from "@components/Chart/Slider";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { track } from "@lib/mixpanel";
@@ -18,6 +18,7 @@ import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
 import { useWatch } from "@hooks/useWatch";
 import { useTheme } from "next-themes";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -36,6 +37,10 @@ interface TimeseriesChartData {
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+
+const timeseriesRef1 = useRef();
+const timeseriesRef2 = useRef();
+const choroplethRef = useRef();
 
 interface ConsumerPricesDashboardProps {
   last_updated: number;
@@ -91,9 +96,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     data.minmax
   );
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -235,6 +238,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               onChange={e => setData("minmax", e)}
             />
             <Timeseries
+              ref={timeseriesRef1}
               title={t("dashboard-consumer-prices:keys.overall")}
               className="h-[350px] w-full"
               interval="month"
@@ -283,6 +287,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
               {section1ChartData.map(chartData => (
                 <Timeseries
+                  ref={timeseriesRef2}
                   key={chartData.title}
                   title={chartData.title}
                   className="h-[350px] w-full"
@@ -373,6 +378,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               onChange={e => setData("coicop_type", e)}
             />
             <Choropleth
+              ref={choroplethRef}
               data={choropleth.data[data.coicop_type.value].map((item: any) => ({
                 ...item,
                 value: item.value !== null ? item.value : -1,

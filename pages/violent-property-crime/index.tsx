@@ -52,7 +52,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const { data } = await get("/dashboard", { dashboard: "crime" });
 
   return {
-    notFound: true,
+    // notFound: true,
     props: {
       ...i18n,
       last_updated: new Date().valueOf(),
