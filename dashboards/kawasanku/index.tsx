@@ -363,7 +363,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
           </small>
         </Section>
         <Section
-          title={"A geographic visualisation of selected indicators"}
+          title={"A geography visualisation of selected indicators"}
           date={choropleth.data_as_of}
         >
           <Tabs

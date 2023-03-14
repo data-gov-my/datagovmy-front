@@ -12,6 +12,8 @@ import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
+import AgencyBadge from "@components/AgencyBadge";
+import { BankNegaraIcon } from "@components/Icon";
 
 /**
  * Reserve Money Dashboard
@@ -161,6 +163,13 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
         header={[t("dashboard-reserve-money:header")]}
         description={[t("dashboard-reserve-money:description")]}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency="Bank Negara"
+            link="https://www.bnm.gov.my/publications/mhs"
+            icon={<BankNegaraIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">

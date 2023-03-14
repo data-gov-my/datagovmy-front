@@ -104,6 +104,10 @@ const Bar: FunctionComponent<BarProps> = ({
     plugins: {
       legend: {
         display: enableLegend,
+        labels: {
+          usePointStyle: true,
+          pointStyle: "rect",
+        },
         position: "top",
         align: "start",
       },

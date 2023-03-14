@@ -13,6 +13,8 @@ import type { TableConfig } from "@components/Chart/Table";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
+import AgencyBadge from "@components/AgencyBadge";
+import { BankNegaraIcon } from "@components/Icon";
 
 /**
  * Money Supply Dashboard
@@ -232,6 +234,13 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
         header={[t("dashboard-money-supply:header")]}
         description={[t("dashboard-money-supply:description")]}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency="Bank Negara"
+            link="https://www.bnm.gov.my/publications/mhs"
+            icon={<BankNegaraIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">

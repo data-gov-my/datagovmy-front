@@ -11,6 +11,7 @@ import Section from "@components/Section";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { closestIndex, getColor } from "@lib/schema/exchange-rates";
+import AgencyBadge from "@components/AgencyBadge";
 
 /**
  * Exchange Rates Dashboard
@@ -84,6 +85,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         header={[t("dashboard-exchange-rates:header"), "dark:text-white"]}
         description={[t("dashboard-exchange-rates:description"), "dark:text-white"]}
         last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="MAMPU" link="https://www.mampu.gov.my/en/" />}
       />
 
       <Container className="start-h-screen">

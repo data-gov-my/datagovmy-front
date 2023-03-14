@@ -13,6 +13,8 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import { useTheme } from "next-themes";
+import AgencyBadge from "@components/AgencyBadge";
+import { BankNegaraIcon } from "@components/Icon";
 
 /**
  * Currency in Circulation Dashboard
@@ -162,6 +164,13 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
         header={[t("dashboard-currency-in-circulation:header")]}
         description={[t("dashboard-currency-in-circulation:description")]}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency="Bank Negara"
+            link="https://www.bnm.gov.my/publications/mhs"
+            icon={<BankNegaraIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">

@@ -265,7 +265,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         return (
           <>
             {Boolean(item.uid) ? (
-              <At href={`/data-catalogue/${item.uid}`} className="hover:underline">
+              <At href={`/data-catalogue/${item.uid}`} className="hover:underline dark:text-white">
                 {item.name}
               </At>
             ) : (
@@ -493,7 +493,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     </ul>
                     <div className="hidden md:block">
                       <Table
-                        className="table-slate table-default-slate text-dim"
+                        className="table-slate table-default-slate table"
                         data={metadata.definitions.map((item: any) => {
                           const raw = item[`desc_${lang}`];
                           const [type, definition] = [
@@ -547,7 +547,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     <li key={url as string}>
                       <a
                         href={url as string}
-                        className="break-all text-primary underline hover:no-underline"
+                        className="break-all text-primary hover:underline dark:text-primary-dark"
                         onClick={() =>
                           track("file_download", {
                             uid: dataset.meta.unique_id.concat("_", key),
@@ -571,7 +571,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <p className="text-dim">
                   {t("catalogue.license_text")}{" "}
                   <a
-                    className="lowercase text-primary underline"
+                    className="lowercase text-primary hover:underline dark:text-primary-dark"
                     target="_blank"
                     rel="noopener"
                     href="https://creativecommons.org/licenses/by/4.0/"
@@ -634,7 +634,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         <Section
           title={t("catalogue.code")}
           description={t("catalogue.code_desc")}
-          className="mx-auto w-full border-b py-12"
+          className="mx-auto w-full py-12"
         >
           <CatalogueCode type={dataset.type} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
         </Section>
@@ -664,7 +664,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
   return typeof href === "string" ? (
     // .csv & .parquet
     <a href={href} download onClick={() => track("file_download", meta)}>
-      <Card className="rounded-md border border-outline bg-background px-4.5 py-5">
+      <Card type="gray">
         <div className="flex items-center gap-4.5">
           {image && (
             <Image
@@ -686,7 +686,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
     </a>
   ) : (
     // .png & svg
-    <Card className="rounded-md border border-outline bg-background px-4.5 py-5" onClick={href}>
+    <Card type="gray" onClick={href}>
       <div className="flex items-center gap-4.5">
         {image && (
           <img

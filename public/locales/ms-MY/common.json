@@ -34,6 +34,7 @@
     "next_update": "Kemaskini seterusnya pada {{ date }}",
     "slider": "",
     "zoom": "Pilih kawasan saya",
+    "clear": "Kosongkan",
     "clear_selection": "Kosongkan pilihan",
     "clear_all": "Kosongkan semua",
     "reset": "Set semula",
@@ -73,7 +74,8 @@
         "financial_sector": "Sektor Kewangan",
         "social": "Sosial",
         "national_accounts": "Akaun Kebangsaan",
-        "high_frequency": "Data Kekerapan Tinggi"
+        "high_frequency": "Data Kekerapan Tinggi",
+        "healthcare": "Program Kesihatan"
       },
       "dashboards": {
         "kawasanku": "Kawasanku",
@@ -93,7 +95,8 @@
         "crime": "Jenayah Kekerasan & Harta Benda",
         "drug": "Penagihan Dadah",
         "exchange_rate": "Kadar Pertukaran",
-        "daily_price": "Daily Prices"
+        "daily_price": "Harga Harian",
+        "blood_donation": "Pendermaan Darah"
       }
     },
     "about": "Tentang",
@@ -536,10 +539,11 @@
       "bar": {}
     },
     "period": "Tempoh",
-    "geographic": "Kawasan",
+    "geography": "Kawasan",
     "begin": "Dari",
     "end": "Hingga",
     "source": "Sumber Data",
+    "source_placeholder": "Pilih kementerian atau agensi",
     "search_placeholder": "Cari dataset",
     "image": {
       "title": "Gambar (PNG)",
