@@ -187,3 +187,23 @@ export const BankNegaraIcon: FunctionComponent<IconProps> = ({ className }) => {
     </svg>
   );
 };
+
+export const PusatDarahNegaraIcon: FunctionComponent<IconProps> = ({ className }) => {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_421_6838)">
+        <circle cx="16" cy="16" r="16" fill="#DC2626" />
+        <path
+          d="M11.5895 16.8211L16 8L20.4105 16.8211C21.3597 18.7195 20.9877 21.0123 19.4868 22.5132C17.5611 24.4389 14.4389 24.4389 12.5132 22.5132C11.0123 21.0123 10.6403 18.7195 11.5895 16.8211Z"
+          stroke="white"
+          stroke-width="2"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_421_6838">
+          <rect width="32" height="32" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
