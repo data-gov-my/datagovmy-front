@@ -80,7 +80,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
   return (
     <>
       <Hero
-        background="bg-gradient-radial from-[#ffffff] to-slate-50 dark:from-slate-700 dark:to-[#1b1b1d]"
+        background="bg-gradient-radial dark:bg-dark-gradient-radial border-b dark:border-zinc-800 from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.economy"), "text-green-300"]}
         header={[t("dashboard-exchange-rates:header"), "dark:text-white"]}
         description={[t("dashboard-exchange-rates:description"), "dark:text-white"]}

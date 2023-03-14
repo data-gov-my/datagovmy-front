@@ -73,7 +73,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   return (
     <div>
       <Hero
-        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial dark:bg-dark-gradient-radial border-b dark:border-zinc-800 from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         header={[t("catalogue.header")]}
         description={
           <>

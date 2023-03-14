@@ -159,7 +159,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
   return (
     <>
       <Hero
-        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial dark:bg-dark-gradient-radial border-b dark:border-zinc-800 from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-currency-in-circulation:header")]}
         description={[t("dashboard-currency-in-circulation:description")]}
