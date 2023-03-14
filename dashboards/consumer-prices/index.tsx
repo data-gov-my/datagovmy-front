@@ -18,7 +18,6 @@ import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
 import { useWatch } from "@hooks/useWatch";
 import { useTheme } from "next-themes";
-import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -37,10 +36,6 @@ interface TimeseriesChartData {
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-
-const timeseriesRef1 = useRef();
-const timeseriesRef2 = useRef();
-const choroplethRef = useRef();
 
 interface ConsumerPricesDashboardProps {
   last_updated: number;
@@ -238,7 +233,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               onChange={e => setData("minmax", e)}
             />
             <Timeseries
-              ref={timeseriesRef1}
               title={t("dashboard-consumer-prices:keys.overall")}
               className="h-[350px] w-full"
               interval="month"
@@ -287,7 +281,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
               {section1ChartData.map(chartData => (
                 <Timeseries
-                  ref={timeseriesRef2}
                   key={chartData.title}
                   title={chartData.title}
                   className="h-[350px] w-full"
@@ -378,7 +371,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               onChange={e => setData("coicop_type", e)}
             />
             <Choropleth
-              ref={choroplethRef}
               data={choropleth.data[data.coicop_type.value].map((item: any) => ({
                 ...item,
                 value: item.value !== null ? item.value : -1,

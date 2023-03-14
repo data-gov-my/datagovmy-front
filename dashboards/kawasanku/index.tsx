@@ -21,7 +21,7 @@ import { routes } from "@lib/routes";
 import { track } from "@lib/mixpanel";
 import Tooltip from "@components/Tooltip";
 import Chips from "@components/Chips";
-import { AKSARA_COLOR, CHOROPLETH_YELLOW_GREEN_BLUE_SCALE } from "@lib/constants";
+import { AKSARA_COLOR } from "@lib/constants";
 import Tabs, { Panel } from "@components/Tabs";
 import type { ChoroplethColors } from "@lib/types";
 
@@ -140,8 +140,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
     if (data.indicator_type.value === "treecover") return "greens";
     if (data.indicator_type.value === "water") return "blues";
     if (["max_elevation", "gini", "poverty"].includes(data.indicator_type.value)) return "reds";
-    if (["nightlights", "electricity"].includes(data.indicator_type.value))
-      return CHOROPLETH_YELLOW_GREEN_BLUE_SCALE;
+    if (["nightlights", "electricity"].includes(data.indicator_type.value)) return "YlGnBu";
 
     return "RdPu";
   }, [data.indicator_type]);

@@ -16,36 +16,80 @@ import { useWindowWidth } from "@hooks/useWindowWidth";
 import { useTranslation } from "@hooks/useTranslation";
 import { useZoom } from "@hooks/useZoom";
 import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import type { ChoroplethColors } from "@lib/types";
-import { Chart as ChartJS, Tooltip, ChartTypeRegistry } from "chart.js";
+import type { ChoroplethColors, ChartCrosshairOption } from "@lib/types";
+import { Chart as ChartJS, ChartTypeRegistry } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 /**
  *GeoChoropleth component
  */
 
+export type GeoChoroplethData = {
+  labels: string[];
+  values: number[];
+};
+
 interface GeoChoroplethProps extends ChartHeaderProps {
   className?: string;
-  data?: any;
+  data?: GeoChoroplethData;
   prefixY?: string;
   unitY?: string;
   precision?: number | [number, number];
   enableZoom?: boolean;
   enableScale?: boolean;
   graphChoice?: "state" | "parlimen" | "dun" | "district";
-  colorScale?: ChoroplethColors | "white" | string[];
+  colorScale?:
+    | "blues"
+    | "brBG"
+    | "buGn"
+    | "buPu"
+    | "cividis"
+    | "cool"
+    | "cubehelixDefault"
+    | "gnBu"
+    | "greens"
+    | "greys"
+    | "inferno"
+    | "magma"
+    | "orRd"
+    | "oranges"
+    | "pRGn"
+    | "piYG"
+    | "plasma"
+    | "puBu"
+    | "puBuGn"
+    | "puOr"
+    | "puRd"
+    | "purples"
+    | "rainbow"
+    | "rdBu"
+    | "rdGy"
+    | "rdPu"
+    | "rdYlBu"
+    | "rdYlGn"
+    | "reds"
+    | "sinebow"
+    | "spectral"
+    | "turbo"
+    | "viridis"
+    | "warm"
+    | "ylGn"
+    | "ylGnBu"
+    | "ylOrBr"
+    | "ylOrRd";
   hideValue?: boolean;
   borderWidth?: any;
   borderColor?: any;
   projectionTranslation?: any;
   projectionScaleSetting?: number;
   onReady?: (status: boolean) => void;
+  _ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
 }
 
 const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
   (
     {
-      className = "h-[460px]",
+      className = "w-full h-[460px]",
       controls,
       menu,
       title,
@@ -54,7 +98,6 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
       precision = 1,
       unitY,
       graphChoice = "state",
-      enableScale = false,
       colorScale,
       borderWidth = 0.25,
       borderColor = "#13293d",
@@ -62,10 +105,9 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
       hideValue = false,
       onReady,
     },
-    ref: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>
+    _ref: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>
   ) => {
     const { t } = useTranslation();
-    const chartRef = useRef<ChartJS>(null);
     const zoomRef = useRef(null);
     const { onWheel, onMove, onDown, onUp, onReset, zoomIn, zoomOut } = useZoom(
       enableZoom,
@@ -73,7 +115,6 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
     );
 
     ChartJS.register(
-      Tooltip,
       ChartGeo.ChoroplethController,
       ChartGeo.ProjectionScale,
       ChartGeo.ColorScale,
@@ -86,43 +127,14 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
         parlimen: {
           feature:
             windowWidth < BREAKPOINTS.MD ? ParliamentMobile.features : ParliamentDesktop.features,
-          projectionScale: windowWidth < BREAKPOINTS.MD ? 1800 : 3400,
-          projectionTranslation:
-            windowWidth < BREAKPOINTS.MD
-              ? ([0.5, 0.9] as [number, number])
-              : ([0.67, 1.05] as [number, number]),
-          margin: { top: 0, right: 0, bottom: 0, left: 0 },
         },
-        dun: {
-          feature: windowWidth < BREAKPOINTS.MD ? DunMobile.features : DunDesktop.features,
-          projectionScale: windowWidth < BREAKPOINTS.MD ? 1800 : 3400,
-          projectionTranslation:
-            windowWidth < BREAKPOINTS.MD
-              ? ([0.5, 0.9] as [number, number])
-              : ([0.67, 1.05] as [number, number]),
-          margin: { top: 0, right: 0, bottom: 0, left: 0 },
-        },
+        dun: { feature: windowWidth < BREAKPOINTS.MD ? DunMobile.features : DunDesktop.features },
         district: {
           feature:
             windowWidth < BREAKPOINTS.MD ? DistrictMobile.features : DistrictDesktop.features,
-          projectionScale: windowWidth < BREAKPOINTS.MD ? windowWidth * 4.5 : 3500,
-          projectionTranslation:
-            windowWidth < BREAKPOINTS.MD
-              ? ([0.5, 0.9] as [number, number])
-              : ([0.6, 1.0] as [number, number]),
-          margin: { top: 0, right: 0, bottom: 0, left: 0 },
         },
         state: {
           feature: windowWidth < BREAKPOINTS.MD ? StateMobile.features : StateDesktop.features,
-          projectionScale: windowWidth < BREAKPOINTS.MD ? windowWidth * 4.5 : 3500,
-          projectionTranslation:
-            windowWidth < BREAKPOINTS.MD
-              ? ([0.5, 0.9] as [number, number])
-              : ([0.6, 1.0] as [number, number]),
-          margin:
-            windowWidth < BREAKPOINTS.MD
-              ? { top: -30, right: 0, bottom: 0, left: 0 }
-              : { top: 0, right: 0, bottom: 0, left: 0 },
         },
       }),
       [windowWidth]
@@ -131,10 +143,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
     const config = useMemo(
       () => ({
         feature: presets[graphChoice].feature,
-        colors: colorScale === "white" ? ["#fff"] : colorScale,
-        margin: presets[graphChoice].margin,
-        projectionScale: presets[graphChoice].projectionScale,
-        projectionTranslation: presets[graphChoice].projectionTranslation,
+        colors: colorScale,
         borderWidth: borderWidth,
         borderColor: borderColor,
       }),
@@ -272,7 +281,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
       tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
     };
 
-    const options: any = {
+    const options: ChartCrosshairOption<"choropleth"> = {
       elements: {
         geoFeature: {
           outlineBorderColor: "black",
@@ -284,48 +293,45 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
         legend: {
           display: false,
         },
-        // tooltip: {
-        // enabled: false,
-        // external: externalTooltipHandler,
-        // bodyFont: {
-        //   family: "Inter",
-        // },
-        // callbacks: {
-        //   label: function (item: any) {
-        //     {console.log(item, hideValue)};
-        //     if (!item.raw.label) return "";
-        //     if (!item.raw.value) return `${item.raw.id}: ${t("common.no_data")}`;
+        tooltip: {
+          // enabled: false,
+          // external: externalTooltipHandler,
+          animation: {
+            duration: 0,
+          },
+          bodyFont: {
+            family: "Inter",
+          },
+          callbacks: {
+            label: function (item: any) {
+              if (!item.raw.feature.id) return "";
+              if (!item.raw.value) return ` ${item.raw.feature.id}: ${t("common.no_data")}`;
+              const special_code: Record<string, any> = {
+                "-1.1": "",
+              };
 
-        //     const special_code: Record<string, any> = {
-        //       "-1": ": " + t("common.no_data"),
-        //       "-1.1": <></>,
-        //     };
-
-        //     return `${item.raw.label}
-        //     ${hideValue ? (
-        //       ""
-        //     ) : special_code[item.raw.value.toString()] ? (
-        //       special_code[item.raw.value.toString()]
-        //     ) : (
-        //       `: ${prefixY ?? ""}${numFormat(item.raw.value, "standard", precision)}${unitY ?? ""}`
-        //     )}`
-        // },
+              return ` ${item.raw.feature.id}${
+                hideValue
+                  ? ""
+                  : special_code[item.raw.value.toString()]
+                  ? special_code[item.raw.value.toString()]
+                  : `: ${prefixY ?? ""}${numFormat(item.raw.value, "standard", precision)}${
+                      unitY ?? ""
+                    }`
+              }`;
+            },
+          },
+        },
+        crosshair: false,
       },
       scales: {
         xy: {
           projection: "mercator",
-          projectionOffset: config.projectionTranslation,
-          padding: config.margin,
         },
         color: {
-          display: true,
+          display: false,
           interpolate: colorScale,
           missing: "#fff",
-          quantize: 10,
-          legend: {
-            position: "bottom-right",
-            align: "bottom",
-          },
         },
       },
     };
@@ -350,19 +356,19 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
           // onMouseOut={onUp}
         >
           <Chart
-            ref={chartRef}
+            ref={_ref}
             type="choropleth"
             data={{
-              labels: config.feature.map((d: any) => d.id),
+              labels: data.labels,
               datasets: [
                 {
-                  label: "Parliament Constituencies",
+                  label: "",
                   borderWidth: config.borderWidth,
                   borderColor: config.borderColor,
                   outline: config.feature,
-                  data: data.map((d: any, index: number) => ({
-                    feature: config.feature[index],
-                    value: d.value,
+                  data: config.feature.map((feature: any, index: number) => ({
+                    feature: feature,
+                    value: data.values[index] === -1 ? Number.NaN : data.values[index],
                   })),
                 },
               ],
@@ -396,11 +402,26 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
   }
 );
 
-const dummyData = [
-  {
-    id: "MYS",
-    value: 416502,
-  },
-];
+const dummyData = {
+  labels: [
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Pulau Pinang",
+    "Perak",
+    "Perlis",
+    "Selangor",
+    "Terengganu",
+    "Sabah",
+    "Sarawak",
+    "W.P. Kuala Lumpur",
+    "W.P. Labuan",
+    "W.P. Putrajaya",
+  ],
+  values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+};
 
 export default GeoChoropleth;

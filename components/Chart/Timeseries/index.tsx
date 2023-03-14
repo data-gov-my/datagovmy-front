@@ -82,7 +82,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
     precision: number | [min: number, max: number]
   ) => string;
-  ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
+  _ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
 }
 
 const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
@@ -116,7 +116,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
       maxY,
       displayNumFormat = numFormat,
     },
-    ref: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>
+    _ref: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>
   ) => {
     ChartJS.register(
       CategoryScale,
@@ -369,7 +369,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
         {stats && <Stats data={stats}></Stats>}
         {subheader && <div>{subheader}</div>}
         <div className={className}>
-          <Chart ref={ref} data={data} options={options()} type={type} />
+          <Chart ref={_ref} data={data} options={options()} type={type} />
         </div>
         {description && <p className="pt-4 text-sm text-dim">{description}</p>}
       </div>
