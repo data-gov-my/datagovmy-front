@@ -11,7 +11,8 @@ import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
-
+import AgencyBadge from "@components/AgencyBadge";
+import { BankNegaraIcon } from "@components/Icon";
 /**
  * Interest Rates Dashboard
  * @overview Status: Live
@@ -163,6 +164,13 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
         header={[t("dashboard-interest-rates:header")]}
         description={[t("dashboard-interest-rates:description")]}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency="Bank Negara"
+            link="https://www.bnm.gov.my/publications/mhs"
+            icon={<BankNegaraIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">

@@ -11,6 +11,8 @@ import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
+import AgencyBadge from "@components/AgencyBadge";
+import { BankNegaraIcon } from "@components/Icon";
 
 /**
  * International Reserves Dashboard
@@ -84,6 +86,13 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         header={[t("dashboard-international-reserves:header")]}
         description={[t("dashboard-international-reserves:description")]}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency="Bank Negara"
+            link="https://www.bnm.gov.my/publications/mhs"
+            icon={<BankNegaraIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">
