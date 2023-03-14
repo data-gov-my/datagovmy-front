@@ -402,6 +402,24 @@
       "none": "No education"
     }
   },
+  "dashboard": {
+    "header": "Dashboards",
+    "description": "Your one-stop interface to browse our wealth of open data. This page is primarily meant to catalogue data published by DOSM, and aims to grow in depth and breadth every single day, providing richer and more varied data from the various divisions of DOSM.",
+    "demographics": "Demographics",
+    "source_placeholder": "Select Agency",
+    "section1_title": "Most Popular Dashboards",
+    "section1_description": "Explore popular dashboards",
+    "section2_title": "Recommended for you",
+    "index_filters": {
+      "sex": "Sex",
+      "ethnicity": "Ethnicity",
+      "age": "Age",
+      "religion": "Religion",
+      "nationality": "Nationality",
+      "disability_status": "Disability Status",
+      "marital_status": "Marital Status"
+    }
+  },
   "catalogue": {
     "header": "Data Catalogue",
     "description": "Your one-stop interface to browse our wealth of open data. This page is primarily meant to catalogue data published by DOSM, and aims to grow in depth and breadth every single day, providing richer and more varied data from the various divisions of DOSM.",
