@@ -15,9 +15,8 @@ import { useWindowWidth } from "@hooks/useWindowWidth";
 import { useTranslation } from "@hooks/useTranslation";
 import { useZoom } from "@hooks/useZoom";
 import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import type { ChoroplethColors, ChartCrosshairOption } from "@lib/types";
-import ChoroplethScale from "./scale";
-import { Chart as ChartJS, ChartTypeRegistry } from "chart.js";
+import type { ChoroplethColors } from "@lib/types";
+import { ChartTypeRegistry } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 /**
@@ -119,7 +118,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
           projectionTranslation:
             windowWidth < BREAKPOINTS.MD
               ? ([0.5, 0.9] as [number, number])
-              : ([0.6, 1.0] as [number, number]),
+              : ([0.63, 1.0] as [number, number]),
           margin:
             windowWidth < BREAKPOINTS.MD
               ? { top: -30, right: 0, bottom: 0, left: 0 }
