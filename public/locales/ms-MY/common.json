@@ -26,6 +26,7 @@
     "next": "Seterusnya",
     "in": " di ",
     "yr": "thn",
+    "views": "tontonan",
     "page_of": "{{ current }} daripada {{ total }}",
     "data_for": "Data untuk {{ state }}",
     "data_of": "Data setakat {{ date }}",
@@ -112,6 +113,21 @@
     "guiding_principles": "Prinsip Panduan",
     "terms_of_use": "Syarat Penggunaan"
   },
+  "components": {
+    "brought_by": "Brought to you by",
+    "visit_portal": "Visit our portal",
+    "click_to_explore": "Click to explore"
+  },
+  "agency": {
+    "bnm": "Bank Negara Malaysia",
+    "mampu": "Unit Pemodenan Tadbiran dan Perancangan Pengurusan Malaysia",
+    "dosm": "Jabatan Perangkaan Malaysia"
+  },
+  "agency_abbr": {
+    "bnm": "BNM",
+    "mampu": "MAMPU",
+    "dosm": "DOSM"
+  },
   "home": {
     "title": "Data: Asas kepada pentadbiran cekap",
     "description": "data.gov.my adalah platform yang mengkatalog, memberi visualisasi, dan menganalisis pelbagai jenis data daripada Jabatan Perangkaan Malaysia. Segala data yang dipaparkan di platform ini adalah sumber terbuka dan percuma demi manfaat negara. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya.",
@@ -152,252 +168,6 @@
       "users": "Pengguna Harian",
       "views": "Paparan Harian",
       "downloads": "Muat turun Data Harian"
-    }
-  },
-  "labour": {
-    "header": "Pasaran Buruh",
-    "description": "",
-    "section_1": {
-      "title": "Apakah tren pengangguran?",
-      "description": ""
-    },
-    "section_2": {
-      "title": "Apakah tren penunjuk pasaran buruh lain?"
-    },
-    "section_3": {
-      "title": "Butiran pasaran buruh terkini",
-      "bar1_header": "Peratus Pekerja mengikut Status",
-      "bar2_header": "Peratus Penganggur mengikut Status",
-      "bar3_header": "Luar Tenaga Buruh mengikut Sebab"
-    },
-    "section_4": {
-      "title": "Apakah perbezaan penunjuk pasaran buruh utama mengikut negeri?"
-    },
-    "keys": {
-      "labour_force_participation": "Kadar Penyertaan Tenaga Buruh",
-      "unemployment_rate": "Kadar Pengangguran",
-      "unemployed_persons": "Penganggur",
-      "own_account_workers": "Pekerja Sendiri",
-      "outside_labour_force": "Luar Tenaga Buruh",
-      "under_employment_rate": "Kadar Guna Tenaga Tak Penuh",
-      "employment_population_ratio": "Nisbah Pekerja ke Penduduk",
-      "employee": "Pekerja",
-      "employer": "Majikan",
-      "own_account": "Pekerja Sendiri",
-      "unpaid": "Pekerja Keluarga Tidak Bergaji",
-      "active": "Penganggur Aktif",
-      "inactive": "Penganggur Tak Aktif",
-      "reason1": "[reason 1]",
-      "reason2": "[reason 2]",
-      "reason3": "[reason 3]",
-      "reason4": "[reason 4]",
-      "p_rate": "[p_rate]",
-      "u_rate": "[u_rate]",
-      "outside": "[outside]",
-      "ep_ratio": "[ep_ratio]",
-      "under_rate": "[under_rate]",
-      "unemployed": "Menganggur",
-      "income_mean": "Purata Pendapatan (RM)",
-      "labour_prate": "Kadar Penyertaan Tenaga Buruh",
-      "labour_urate": "Kadar Pengangguran",
-      "agegroup_working": "Peratus Penduduk Umur Bekerja (%)"
-    }
-  },
-  "compositeindex": {
-    "header": "Indeks Komposit",
-    "description": "Papan pemuka ini memaparkan Penunjuk Ekonomi Malaysia (MEI) iaitu set indeks komposit yang diterbitkan secara bulanan oleh DOSM, dan merangkumi indikator Pelopor, Serentak, dan Susulan yang menggambarkan pergerakan ekonomi di Malaysia. Indeks tersebut dihasilkan berdasarkan garis panduan \"2017 Handbook on Cycle Composite Indicators\" yang disarankan oleh Eurostat.",
-    "section_1": {
-      "title": "Apakah tren Penunjuk Ekonomi Malaysia (MEI)?",
-      "description": "Indeks Pelopor menunjukkan arah pergerakan ekonomi. \nIndeks Serentak menggambarkan keadaan ekonomi semasa. \nIndeks Susulan mengesahkan isyarat Indeks Pelopor dan Serentak."
-    },
-    "section_2": {
-      "title": "Indeks Resapan: pandangan sudut lain Penunjuk Ekonomi Malaysia",
-      "description": "Indeks Resapan ialah penunjuk penyebaran aktiviti ekonomi dari satu industri ke satu industri yang lain. Berdasarkan daripada 7 penunjuk Indeks Duluan dan 6 penunjuk Indeks Berkebetulan, indeks ini menggambarkan satu kenaikan atau kejatuhan siri indeks duluan atau berkebetulan dalam sesuatu jeda masa. Jika bilangan siri yang mengalami kejatuhan, maka indeks ini lebih tinggi daripada 50, dan sebaliknya."
-    },
-    "mom_growth": "Pertumbuhan Bulanan",
-    "yoy_growth": "Pertumbuhan Tahunan",
-    "keys": {
-      "index": "Indeks",
-      "growth_mom": "Pertumbuhan Bulanan",
-      "growth_yoy": "Pertumbuhan Tahunan",
-      "no_shade": "Tiada lorekan",
-      "recession_growth": "Penurunan (kitaran pertumbuhan)",
-      "recession_business": "Kemelesetan (kitaran perniagaan)",
-      "leading": "Indeks Pelopor",
-      "coincident": "Indeks Serentak",
-      "lagging": "Indeks Susulan",
-      "leading_diffusion": "Indeks Pelopor (Difusi)",
-      "coincident_diffusion": "Indeks Serentak (Difusi)"
-    }
-  },
-  "wholesaleretail": {
-    "header": "Perdagangan Borong dan Runcit",
-    "description": "Papan pemuka ini memaparkan prestasi perdagangan borong dan runcit (termasuk perdagangan kenderaan bermotor) di Malaysia. Data ini merupakan terbitan bulanan DOSM dan menggunakan pengelasan industri berdasarkan Piawaian Klasifikasi Industri Malaysia (MSIC) 2008, Versi 1.0., yang berasaskan kepada International Standard Industrial Classification of All Economic Activities Revision 4 terbitan United Nations Statistics Division.",
-    "section_1": {
-      "title": "Apakah tren perdagangan borong dan runcit?"
-    },
-    "mom_growth": "Pertumbuhan Bulanan {{ date }}",
-    "yoy_growth": "Pertumbuhan Tahunan {{ date }}",
-    "keys": {
-      "index": "Indeks",
-      "sales": "Jualan (RM)",
-      "index_sa": "Indeks (sa)",
-      "no_shade": "Tiada lorekan",
-      "growth_index_yoy": "Pertumbuhan Tahunan (volum)",
-      "growth_sales_yoy": "Pertumbuhan Bulanan (jualan)",
-      "growth_momsa": "Pertumbuhan Bulanan (volum)",
-      "recession": "Kemelesetan",
-      "total": "Keseluruhan",
-      "wholesale": "Perdagangan Borong",
-      "retail": "Perdagangan Runcit",
-      "motor": "Kenderaan Bermotor"
-    }
-  },
-  "industry": {
-    "header": "Pengeluaran Perindustrian",
-    "description": "Papan pemuka ini memaparkan prestasi pengeluaran perindustrian di Malaysia yang terdiri daripada sektor pengeluaran perlombongan, pembuatan, dan elektrik. Data ini merupakan terbitan bulanan DOSM dan menggunakan pengelasan industri berdasarkan Piawaian Klasifikasi Industri Malaysia (MSIC) 2008, Versi 1.0., yang berasaskan kepada International Standard Industrial Classification of All Economic Activities Revision 4 terbitan United Nations Statistics Division.",
-    "section_1": {
-      "title": "Apakah tren pengeluaran perindustrian?"
-    },
-    "section_2": {
-      "title": "Butiran subsektor utama pembuatan"
-    },
-    "keys": {
-      "recession": "Kemelesetan",
-      "index": "Indeks",
-      "index_sa": "Indeks (sa)",
-      "no_shade": "Tiada lorekan",
-      "growth_yoy": "Pertumbuhan Tahunan",
-      "growth_momsa": "Pertumbuhan Bulanan (tsm)",
-      "overall": "Keseluruhan",
-      "mining": "Perlombongan",
-      "mfg": "Pembuatan",
-      "electric": "Elektrik",
-      "mfg_food": "Makanan, Minuman dan Tembakau",
-      "mfg_wood": "Kayu, Perabot, Kertas dan Percetakan",
-      "mfg_electric": "Elektrik dan Elektronik",
-      "mfg_textiles": "Tekstil, Pakaian, Kulit dan Kasut",
-      "mfg_petroleum": "Petroleum, Bahan Kimia, Getah dan Plastik",
-      "mfg_transport": "Kelengkapan Pengangkutan dan Lain-lain"
-    }
-  },
-  "producer_prices": {
-    "header": "Harga Pengeluar",
-    "description": "IHP memantau harga yang dikenakan ke atas pengguna, iaitu harga yang anda bayar semasa membeli barang dapur, perkakasan rumah serta barangan dan perkhidmatan lain. Akan tetapi, harga tersebut mungkin sudah terherot oleh cukai seperti SST, duti eksais, subsidi dan kos pengangkutan. Maka, untuk mendapatkan pandangan dari sudut lain terhadap harga barangan dalam ekonomi Malaysia, DOSM memantau harga yang diterima pengeluar untuk 1,063 item ketika tahap pertama pemerdagangan berlaku. Data ini diterbit dan dikenali sebagai Indeks Harga Pengeluar (IHPR).",
-    "section_1": {
-      "title": "Apakah tren IHPR?",
-      "description": "Carta di bawah menunjukkan trend keseluruhan IHPRT berserta 5 sektor pengeluaran."
-    },
-    "keys": {
-      "value": "Indeks",
-      "growth_mom": "Pertumbuhan Bulanan",
-      "growth_yoy": "Pertumbuhan Tahunan",
-      "no_shade": "Tiada lorekan",
-      "recession": "Kemelesetan",
-      "overall": "Keseluruhan",
-      "agriculture": "Pertanian, Perhutanan & Perikanan",
-      "mining": "Perlombongan",
-      "manufacturing": "Pembuatan",
-      "electricity": "Bekalan Elektrik & Gas",
-      "water": "Bekalan Air"
-    }
-  },
-  "rubber": {
-    "header": "Getah",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "section_1": {
-      "title": "[section_1]",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    },
-    "keys": {
-      "value_rm": "Nilai (RM)",
-      "growth_mom": "Pertumbuhan Bulanan",
-      "growth_yoy": "Pertumbuhan Tahunan",
-      "no_shade": "Tiada lorekan",
-      "recession": "Kemelesetan",
-      "demand": "[demand]",
-      "export": "[export]",
-      "import": "[import]",
-      "supply": "[supply]",
-      "stock_end": "[stock_end]",
-      "production": "[production]",
-      "consumption": "[consumption]",
-      "stock_start": "[stock_start]"
-    }
-  },
-  "crime": {
-    "header": "Jenayah Kekerasan dan Harta Benda",
-    "description": "Polis Diraja Malaysia (PDRM) menyenggara pangkalan data transaksi semua jenayah yang dilaporkan di Malaysia dan bekerjasama dengan DOSM untuk menerbitkan statistik jenayah tersebut setiap tahun. Walaupun data jenayah DOSM merangkumi pelbagai jenis jenayah lain seperti jenayah alam sekitar dan jenayah kolar putih, namun papan pemuka ini lebih tertumpu kepada jenayah kekerasan dan jenayah harta benda dek persepsi awam terhadapnya yang lebih sensitif.\n\n Data jenayah W.P. Labuan termasuk dalam kiraan data Sabah, dan data jenayah W.P. Putrajaya termasuk dalam kiraan jenayah W.P. Kuala Lumpur.",
-    "section_1": {
-      "title": "Apakah tren jenayah kekerasan dan harta benda?",
-      "description": "Jenayah kekerasan merupakan jenayah dimana mangsa dicederakan atau diugut dengan kekerasan berupa bunuh, rogol, rompak atau serangan. Jenayah harta benda berlaku apabila harta mangsa dicuri atau dimusnahkan tanpa penggunaan dan ancaman kekerasan terhadap mangsa. 2 carta di bawah menunjukkan statistik buat 2 jenayah ini, dan seksyen di bawah membutirkan maklumat tersebut."
-    },
-    "section_2": {
-      "title": "Apakah perbezaan kadar perlakuan jenayah (per kapita) mengikut negeri?"
-    },
-    "section_3": {
-      "title": "Butiran jenayah kekerasan"
-    },
-    "section_4": {
-      "title": "Butiran jenayah harta benda",
-      "description": "Data di bawah terkecuali daripada keadaan dimana ugutan atau kekerasan digunakan ke atas mangsa walaupun situasinya berupa jenayah harta benda. Contohnya, mangsa ragut yang juga mengalami kecederaan tidak dikira sebagai jenayah ragut, sebaliknya ia dianggap sebagai jenayah rompak."
-    },
-    "crime": "Jenayah",
-    "keys": {
-      "violent": "Jenayah Kekerasan",
-      "property": "Jenayah Harta Benda",
-      "violent_murder": "Pembunuhan",
-      "violent_rape": "Rogol",
-      "violent_injury": "Kes yang menyebabkan kecederaan",
-      "violent_robbery": "Rompak",
-      "property_break_in": "Pecah Masuk",
-      "property_snatch": "Ragut",
-      "property_vehicle_lorry": "Kecurian Kenderaan - Lori",
-      "property_vehicle_motorcar": "Kecurian Kenderaan - Kereta",
-      "property_vehicle_motorcycle": "Kecurian Kenderaan - Motosikal dan Skuter",
-      "property_other": "Jenayah Harta Benda Lain"
-    }
-  },
-  "drug": {
-    "header": "Penagihan Dadah",
-    "description": "Setiap tahun, DOSM bekerjasama dengan Agensi Antidadah Kebangsaan (AADK) untuk menerbitkan statistik berkenaan penagihan dadah yang merupakan sebahagian daripada penerbitan statistik jenayah tahunan. Papan pemuka ini memaparkan data penagihan dadah pada peringkat negeri dan kebangsaan. Ia bertujuan untuk meneliti trend penagihan dadah yang dipecahkan mengikut demografik dengan tujuan membantu meningkatkan kesedaran dan pemahaman awam terhadap masalah dadah di Malaysia.",
-    "section_1": {
-      "title": "Apakah perubahan penagihan dadah di {{ state }}?",
-      "description": "Agensi Antidadah Kebangsaan (AADK) merupakan sebuah agensi di bawah Kementerian Dalam Negeri yang menjadi agensi peneraju membanteras penyalahgunaan dadah dan substan di Malaysia. Data berikut berasal dari data yang dikumpul daripada data pusat rawatan dan rehabilitasi di bawah pengendalian AADK."
-    },
-    "section_2": {
-      "title": "Butiran penagihan dadah di {{ state }}"
-    },
-    "keys": {
-      "age": "Jumlah Penagih Dadah mengikut Umur",
-      "job": "Jumlah Penagih Dadah mengikut Status Pekerjaan",
-      "sex": "Jumlah Penagih Dadah mengikut Jantina",
-      "drug": "Jumlah Penagih Dadah mengikut Jenis Dadah",
-      "ethnicity": "Jumlah Penagih Dadah mengikut Kaum",
-      "schooling": "Jumlah Penagih Dadah mengikut Tahap Pendidikan Tertinggi",
-      "male": "Lelaki",
-      "female": "Perempuan",
-      "total": "Keseluruhan",
-      "parttime": "Pekerja Separuh Masa",
-      "student": "Pelajar",
-      "fulltime": "Pekerja Sepenuh Masa",
-      "unemployed": "Penganggur",
-      "opiate": "Heroin dan morphin",
-      "methpill": "Methamphetamine (pil)",
-      "methcrystal": "Methamphetamine (berhablur)",
-      "ganja": "Kanabis (ganja)",
-      "ats": "Perangsang jenis Amphetamine (ATS)",
-      "opium": "Opium",
-      "psychotropic": "Pil Psikotropik",
-      "chinese": "Cina",
-      "bumiputera": "Bumiputera",
-      "other": "Lain-lain",
-      "indian": "India",
-      "primary": "Sekolah rendah",
-      "secondary": "Sekolah menengah",
-      "tertiary": "Pendidikan tinggi",
-      "diploma": "Diploma",
-      "none": "Tiada pendidikan"
     }
   },
   "catalogue": {
@@ -588,133 +358,5 @@
       "geojson_3": "# nyah komen di bawah untuk memadatkan peta dengan bentuk segi empat sama ('square')"
     },
     "license_text": "Data ini adalah data terbuka di bawah lesen Creative Commons Attribution 4.0 International (CC BY 4.0). Penerangan lesen tersebut boleh didapati di "
-  },
-  "kawasanku": {
-    "header": "Kenali kawasan anda!",
-    "description": "Adakah kawasanku lebih baik berbanding kawasan lain? Apakah ciri-ciri demografinya? Bagaimanakah keadaan tenaga buruhnya? Adakah kemudahan awam mencukupi? \n\n DOSM mempunyai misi untuk memastikan jawapan kepada persoalan sebegini di hujung jari rakyat. Menerusi kejayaan Banci Penduduk dan Perumahan Malaysia 2020 (MyCensus 2020), DOSM buat pertama kali dalam sejarah menerbitkan data populasi penduduk di peringkat Parlimen dan Dewan Undangan Negeri (DUN). Dashboard Kawasanku bertujuan untuk membolehkan rakyat, penggubal dasar dan komuniti antarabangsa menerokai set data tersebut.",
-    "action": "Cari kawasanku",
-    "section_1": {
-      "title": "Apakah ciri-ciri populasi di {{ area }}?"
-    },
-    "section_2": {
-      "title": "Perbandingan indikator penting antara {{ type }}.",
-      "note": "Nota: Julat bagi setiap pembolehubah tidak boleh dibandingkan secara mutlak."
-    },
-    "geofilter": "Jenis kawasan",
-    "area_types": {
-      "district": "Daerah",
-      "districts": "Daerah",
-      "dun": "Dewan Undangan Negeri (DUN)",
-      "duns": "Dewan Undangan Negeri (DUN)",
-      "parlimen": "Parlimen",
-      "parlimens": "Parlimen",
-      "state": "Negeri",
-      "states": "Negeri"
-    },
-    "median": "Median antara {{ type }}",
-    "below_median": "Kurang daripada penengah",
-    "above_median": "Melebihi penengah",
-    "sex": "Jantina",
-    "agegroup": "Kumpulan umur",
-    "nationality": "Kewarganegaraan",
-    "ethnicity": "Kaum",
-    "religion": "Agama",
-    "marital": "Status Perkahwinan",
-    "geography": "Geografi",
-    "population": "Penduduk dan Demografi",
-    "economy": "Ekonomi",
-    "gender_distribution": "Taburan umur & jantina",
-    "public_services": "Kemudahan Awam",
-    "housing": "Rumah yang didiami",
-    "labour": "Status tenaga buruh",
-    "keys": {
-      "male": "Lelaki",
-      "female": "Perempuan",
-      "working": "Umur bekerja",
-      "child": "Umur muda",
-      "elderly": "Umur tua",
-      "local": "Warganegara",
-      "foreign": "Bukan warganegara",
-      "bumi": "Bumiputera",
-      "chinese": "Cina",
-      "indian": "India",
-      "other": "Lain-lain",
-      "muslim": "Muslim",
-      "buddhist": "Buddha",
-      "hindu": "Hindu",
-      "christian": "Kristian",
-      "atheist": "Tiada agama",
-      "married": "Berkahwin",
-      "never_married": "Tidak berkahwin",
-      "widowed": "Balu/Duda",
-      "divorced": "Bercerai/Berpisah",
-      "total_area": "Keluasan tanah",
-      "max_elevation": "Ketinggian maksimum",
-      "ruggedness": "Indeks Kelarasan Rupa Bumi",
-      "watercover": "% permukaan diliputi air",
-      "treecover": "% permukaan diliputi hutan",
-      "treeloss": "Penyahhutanan antara 2000 hingga 2021",
-      "nightlights": "Keamatan lampu maksima pada waktu malam",
-      "population_density": "Kepadatan penduduk",
-      "female_male": "Nisbah jantina (lelaki bagi setiap 100 perempuan)",
-      "household_size": "Purata saiz isi rumah",
-      "birth_rate": "Kelahiran hidup bagi setiap 1000 penduduk",
-      "death_rate": "Kadar kematian",
-      "dep_young": "Nisbah tanggungan umur muda",
-      "dep_old": "Nisbah tanggungan umur tua",
-      "income_mean": "Pendapatan isi rumah",
-      "expenditure_mean": "Perbelanjaan isi rumah",
-      "gini": "Ketidaksamaan (Pekali Gini)",
-      "poverty": "Kadar kemiskinan",
-      "labour_urate": "Kadar pengangguran",
-      "labour_prate": "Kadar penyertaan tenaga buruh",
-      "agegroup_working": "% populasi pada umur bekerja",
-      "electricity": "Akses kepada bekalan elektrik",
-      "water": "Akses kepada air paip di rumah",
-      "hospital": "Hospital bagi setiap 1000 penduduk",
-      "clinic": "Klinik kesihatan bagi setiap 1000 penduduk",
-      "school": "Sekolah bagi setiap 1000 kanak-kanak",
-      "police_fire": "Balai polis dan balai bomba bagi setiap 1000 penduduk",
-      "grocery": "Kedai runcit bagi setiap 1000 penduduk",
-      "unemployed": "Menganggur",
-      "out": "Luar tenaga buruh",
-      "owned": "Dimiliki",
-      "rented": "Disewa",
-      "quarters": "Kuarters"
-    },
-    "tips": {
-      "total_area": "",
-      "max_elevation": "Data topobathy diperolehi daripada data terbuka 'Global Multi-resolution Terrain Elevation Data 2010' (GMTED2010), pada resolusi 7.5 arka-saat. Analisa geospatial telah dijalankan oleh DOSM.",
-      "ruggedness": "Kekasaran rupa bumi menunjukkan berapa rata atau bergunung-ganang sesuatu kawasan secara purata. Indeks dikira mengikut Riley et. al (1999) dengan menggunakan data terbuka GMTED2010 pada resolusi 30 arka-saat. Analisa geospatial telah dijalankan oleh DOSM.",
-      "watercover": "Data topobathy diperolehi daripada data terbuka 'Global Surface Water' yang dihasilkan oleh EC JRC dan Google di bawah naungan Program Copernicus (Pekel et al., 2016). Analisa geospatial telah dijalankan oleh DOSM.",
-      "treecover": "Data liputan hutan telah diperolehi daripada data terbuka 'Global Forest Change' yang dihasilkan oleh UMD, Google, USGS dan NASA (Hansan et al., 2013). Analisa geospatial telah dijalankan oleh DOSM.",
-      "treeloss": "Data liputan hutan telah diperolehi daripada data terbuka 'Global Forest Change' yang dihasilkan oleh UMD, Google, USGS dan NASA (Hansan et al., 2013). Analisa geospatial telah dijalankan oleh DOSM.",
-      "nightlights": "Data keamatan lampu telah diperolehi daripada data terbuka 'VIIRS Nighttime Light' (Elvidge et al., 2010). Analisa geospatial telah dijalankan oleh DOSM.",
-      "population_density": "",
-      "female_male": "",
-      "household_size": "",
-      "birth_rate": "",
-      "death_rate": "",
-      "dep_young": "Nisbah populasi umur muda (0-14) kepada umur bekerja (15-64)",
-      "dep_old": "Nisbah populasi umur tua (65+) kepada umur bekerja (15-64)",
-      "income_mean": "Anggaran berdasarkan data Survei Pendapatan, Perbelanjaan Isi Rumah dan Kemudahan Asas (HIES/BA). Mungkin terdapat ralat piawaian yang agak tinggi di kawasan pilihan raya tertentu.",
-      "expenditure_mean": "",
-      "gini": "",
-      "poverty": "Individu atau isi rumah dikelaskan sebagai miskin sekiranya pendapatan mereka berada di bawah Pendapatan Garis Kemiskinan 2019.",
-      "labour_urate": "Indikator tenaga buruh mengikut kawasan pilihan raya dianggarkan berdasarkan dapatan Survei Tenaga Buruh (STB) dan anggaran faktor populasi untuk 2020. Data ini harus digunakan secara berhati-hati kerana ralat piawaian yang agak tinggi untuk kawasan pilihan raya tertentu.",
-      "labour_prate": "",
-      "agegroup_working": "",
-      "electricity": "Termasuk kedua-duanya bekalan 24 jam dan bekalan sementara",
-      "water": "",
-      "hospital": "Termasuk semua hospital awam dan swasta yang beroperasi setakat 1 Mei 2022. Data berikut diperoleh daripada Kementerian Kesihatan Malaysia (KKM). Analisa geospatial telah dilaksanakan oleh DOSM.",
-      "clinic": "Termasuk semua klinik awam dan swasta yang beroperasi setakat 1 Mei 2022. Data berikut diperoleh daripada Kementerian Kesihatan Malaysia (KKM). Analisa geospatial telah dilaksanakan oleh DOSM.",
-      "school": "Termasuk semua sekolah yang beroperasi setakat 1 Mei 2022. Data berikut diperoleh daripada Kementerian Pendidikan Malaysia (KPM). Analisa geospatial telah dilaksanakan oleh DOSM.",
-      "police_fire": "Termasuk balai polis dan bomba yang beroperasi setakat 1 Mei 2022. Data berikut diperoleh daripada Polis Diraja Malaysia (PDRM) dan Jabatan Bomba dan Penyelamat Malaysia. Analisa geospatial telah dilaksanakan oleh DOSM.",
-      "grocery": "Termasuk kedai runcit milikan awam dan swasta. Bersamaan dengan Kedai Runcit berdasarkan Piawaian Klasifikasi Industri Malaysia 2008 Ver. 1.0."
-    }
-  },
-  "dailyprice": {
-    "header": "Harga Harian",
-    "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos quasi eum inventore vero quo, molestias reiciendis reprehenderit numquam, optio ipsum repellendus? Ipsum ab quisquam nisi sed libero aliquid assumenda quidem?"
   }
 }

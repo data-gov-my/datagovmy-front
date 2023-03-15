@@ -334,7 +334,7 @@ interface RankingProps {
 }
 
 const Ranking = ({ ranks }: RankingProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   return (
@@ -342,7 +342,7 @@ const Ranking = ({ ranks }: RankingProps) => {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         {ranks.map((item: RankItem) => (
           <At href={item.id} key={item.id}>
-            <Card className="group w-full space-y-3 p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
+            <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
               <div className="relative flex items-center gap-4">
                 <div className="h-4 w-4 rounded-full bg-outline" />
                 <p className="text-sm text-dim">agency_name</p>
@@ -356,10 +356,10 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {item[`name_${lang as "en" | "bm"}`]}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {numFormat(item.count, "compact")} views
+                  {numFormat(item.count, "compact")} {t("common.views")}
                 </p>
                 <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
-                  Click to explore
+                  {t("components.click_to_explore")}
                 </p>
               </div>
             </Card>
