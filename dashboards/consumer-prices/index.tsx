@@ -7,7 +7,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useData } from "@hooks/useData";
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
+import type { ChartDataset, ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
 import Slider, { SliderRef } from "@components/Chart/Slider";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { track } from "@lib/mixpanel";
@@ -92,9 +92,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     data.minmax
   );
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -180,7 +178,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   return (
     <>
       <Hero
-        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.economy"), "text-green-700"]}
         header={[t("dashboard-consumer-prices:header")]}
         description={[t("dashboard-consumer-prices:description"), "dark:text-white"]}

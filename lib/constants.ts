@@ -156,18 +156,6 @@ export const AKSARA_COLOR = {
   DARK_BLUE_H: "#0C32841A",
 } as const;
 
-export const CHOROPLETH_YELLOW_GREEN_BLUE_SCALE: string[] = [
-  "#061E58",
-  "#215FA8",
-  "#215FA8",
-  "#1D91C0",
-  "#41B6C4",
-  "#7FCDBB",
-  "#C7E9B4",
-  "#EDF8B1",
-  "#FFFFD9",
-];
-
 /**
  * Convert locale code to shorter code. Used in reference to AKSARA's API
  * @example SHORT_LANG["ms-MY"] -> "bm"

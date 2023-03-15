@@ -34,6 +34,8 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }
             {/* Agency name */}
             <p className="truncate text-sm font-medium dark:text-white">{agency}</p>
           </div>
+
+          <ArrowUpRightIcon className="h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
         </div>
       </Card>
     </At>

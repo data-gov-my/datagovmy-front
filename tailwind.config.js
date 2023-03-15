@@ -45,7 +45,8 @@ module.exports = {
         14: "repeat(14, minmax(0, 1fr))",
       },
       backgroundImage: {
-        "gradient-radial": "radial-gradient(ellipse at top, var(--tw-gradient-stops))",
+        "gradient-radial":
+          "radial-gradient(59.1% 166.02% at 50% -66.02%, var(--tw-gradient-stops))",
       },
     },
   },
