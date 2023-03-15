@@ -26,6 +26,7 @@
     "next": "Next",
     "in": " in ",
     "yr": "yr",
+    "views": "views",
     "page_of": "{{ current }} of {{ total }}",
     "data_for": "Data for {{ state }}",
     "data_of": "Data as of {{ date }}",
@@ -112,6 +113,21 @@
     "guiding_principles": "Guiding Principles",
     "terms_of_use": "Terms of Use"
   },
+  "components": {
+    "brought_by": "Brought to you by",
+    "visit_portal": "Visit our portal",
+    "click_to_explore": "Click to explore"
+  },
+  "agency": {
+    "bnm": "Bank Negara Malaysia",
+    "mampu": "Malaysian Administrative Modernisation and Management Planning Unit",
+    "dosm": "Department of Statistics Malaysia"
+  },
+  "agency_abbr": {
+    "bnm": "BNM",
+    "mampu": "MAMPU",
+    "dosm": "DOSM"
+  },
   "home": {
     "category": "Malaysia's official open data portal",
     "title": "High frequency. High granularity. High impact.",
@@ -154,252 +170,6 @@
       "users": "Daily Users",
       "views": "Daily Views",
       "downloads": "Daily Data Downloads"
-    }
-  },
-  "labour": {
-    "header": "Labour Markets",
-    "description": "This dashboard summarises data from the monthly Labour Force Report, which presents statistics of the labour force, employment and unemployment obtained from the Labour Force Survey (LFS). This data is a vital input for labour market analysis and formulation of policy related to human resource development, and serves as an essential reference for research related to employment and the labour market. ",
-    "section_1": {
-      "title": "How is unemployment trending?",
-      "description": "An unemployed person is anyone who did not work during the period of the survey, but was willing to work and looking for a job."
-    },
-    "section_2": {
-      "title": "How are other key labour market indicators trending?"
-    },
-    "section_3": {
-      "title": "A deeper look at the latest labour market snapshot",
-      "bar1_header": "Employed Persons by Status",
-      "bar2_header": "Unemployed Persons by Status",
-      "bar3_header": "Outside Labour Force by Reason"
-    },
-    "section_4": {
-      "title": "How do key labour market indicators vary across states?"
-    },
-    "keys": {
-      "labour_force_participation": "Labour Force Participation Rate",
-      "unemployment_rate": "Unemployment Rate",
-      "unemployed_persons": "Unemployed Persons",
-      "own_account_workers": "Own-Account Workers",
-      "outside_labour_force": "Outside Labour Force",
-      "under_employment_rate": "Underemployment Rate",
-      "employment_population_ratio": "Employment-to-Population Ratio",
-      "employee": "Employees",
-      "employer": "Employers",
-      "own_account": "Own-account workers",
-      "unpaid": "Unpaid family workers",
-      "active": "Actively unemployed",
-      "inactive": "Inactively unemployed",
-      "reason1": "[reason 1]",
-      "reason2": "[reason 2]",
-      "reason3": "[reason 3]",
-      "reason4": "[reason 4]",
-      "p_rate": "[p_rate]",
-      "u_rate": "[u_rate]",
-      "outside": "[outside]",
-      "ep_ratio": "[ep_ratio]",
-      "under_rate": "[under_rate]",
-      "unemployed": "Unemployed",
-      "income_mean": "Mean Income (RM)",
-      "labour_prate": "Participation Rate",
-      "labour_urate": "Unemployment Rate",
-      "agegroup_working": "Working-Age Population Percentage (%)"
-    }
-  },
-  "compositeindex": {
-    "header": "Composite Indices",
-    "description": "This dashboard presents the Malaysian Economic Indicators (MEI), a set of composite indices published monthly by DOSM, which provide Leading, Coincident and Lagging signals on economic movement in Malaysia. The indices are compiled based on the guidelines of the 2017 Handbook on Cycle Composite Indicators, recommended by Eurostat.",
-    "section_1": {
-      "title": "How are the Malaysian Economic Indicators trending?",
-      "description": "The Leading Index broadly tells us where the economy is going. \n The Coincident Index broadly tells us where the economy is now. \n The Lagging Index validates the signal of the Leading and Coincident Indices."
-    },
-    "section_2": {
-      "title": "Diffusion indices: A different perspective on the Malaysian Economic Indicators",
-      "description": "The leading index is comprised of 7 indicators. The coincident index is comprised of 6 indicators. A diffusion index tells us what proportion of these indicators increased. A value of 100% indicates that all indicators forming the index increased; a value of 50% indicates that only half the indicators increased; a value of 0% indicates that none of the component indicators increased. For this reason, a diffusion index is helpful in determining whether the overall trend is broad-based, or being driven by a minority of the components."
-    },
-    "mom_growth": "MoM Growth",
-    "yoy_growth": "YoY Growth",
-    "keys": {
-      "index": "Index",
-      "growth_mom": "MoM Growth",
-      "growth_yoy": "YoY Growth",
-      "no_shade": "No shading",
-      "recession_growth": "Downswing (growth cycle)",
-      "recession_business": "Recession (business cycle)",
-      "leading": "Leading Index",
-      "coincident": "Coincident Index",
-      "lagging": "Lagging Index",
-      "leading_diffusion": "Leading Index (Diffusion)",
-      "coincident_diffusion": "Coincident Index (Diffusion)"
-    }
-  },
-  "wholesaleretail": {
-    "header": "Wholesale and Retail Trade",
-    "description": "This dashboard highlights the performance of wholesale and retail trade (including trade of motor vehicles) in Malaysia. The data is published by DOSM on a monthly basis and uses the detailed classification of industries per the Malaysia Standard Industrial Classification (MSIC) 2008, Version 1.0. This classification is in line with the International Standard Industrial Classification of All Economic Activities Revision 4, published by the United Nations Statistics Division.",
-    "section_1": {
-      "title": "How is wholesale and retail trade trending?"
-    },
-    "mom_growth": "MoM Growth {{ date }}",
-    "yoy_growth": "YoY Growth {{ date }}",
-    "keys": {
-      "index": "Index",
-      "sales": "Sales (RM)",
-      "index_sa": "Index (sa)",
-      "no_shade": "No shading",
-      "growth_index_yoy": "YoY Growth (volume)",
-      "growth_sales_yoy": "YoY Growth (sales)",
-      "growth_momsa": "MoM Growth (volume)",
-      "recession": "Recession",
-      "total": "Overall",
-      "wholesale": "Wholesale Trade",
-      "retail": "Retail Trade",
-      "motor": "Motor Vehicles"
-    }
-  },
-  "industry": {
-    "header": "Industrial Production",
-    "description": "This dashboard highlights the performance of industrial production in Malaysia, comprising the mining, manufacturing, and electricity production sectors. The data is published by DOSM on a monthly basis and uses the detailed classification of industries per the Malaysia Standard Industrial Classification (MSIC) 2008, Version 1.0. This classification is in line with the International Standard Industrial Classification of All Economic Activities Revision 4, published by the United Nations Statistics Division.",
-    "section_1": {
-      "title": "How is industrial production trending?"
-    },
-    "section_2": {
-      "title": "A deeper look at key manufacturing sub-sectors"
-    },
-    "keys": {
-      "recession": "Recession",
-      "index": "Index",
-      "index_sa": "Index (sa)",
-      "no_shade": "No shading",
-      "growth_yoy": "YoY Growth",
-      "growth_momsa": "MoM Growth (sa)",
-      "overall": "Overall",
-      "mining": "Mining",
-      "mfg": "Manufacturing",
-      "electric": "Electricity",
-      "mfg_food": "Food, Beverages and Tobacco",
-      "mfg_wood": "Wood, Furniture, Paper and Printing",
-      "mfg_electric": "Electrics and Electronics",
-      "mfg_textiles": "Textiles, Apparel, Leather and Footwear",
-      "mfg_petroleum": "Petroleum, Chemical, Rubber and Plastic",
-      "mfg_transport": "Transport Equipment and Others"
-    }
-  },
-  "producer_prices": {
-    "header": "Producer Prices",
-    "description": "The CPI tracks the prices charged to consumers, i.e. the prices you pay when you buy groceries, household supplies, and other goods and services. However, these prices may be distorted by taxes (e.g. SST), excise duties, subsidies, and transport costs. Therefore, to get a different view on the cost of goods in the Malaysian economy, DOSM tracks the prices received by producers for 1,063 items, at the first stage of commercialization. This data is published as the Producer Price Index.",
-    "section_1": {
-      "title": "How is the PPI trending?",
-      "description": "The charts below show the trend of the overall PPI, as well as the 5 main production sectors."
-    },
-    "keys": {
-      "value": "Index",
-      "growth_mom": "MoM Growth",
-      "growth_yoy": "YoY Growth",
-      "no_shade": "No shading",
-      "recession": "Recession",
-      "overall": "Overall",
-      "agriculture": "Agriculture, Forestry & Fishing",
-      "mining": "Mining",
-      "manufacturing": "Manufacturing",
-      "electricity": "Electricity & Gas Supply",
-      "water": "Water Supply"
-    }
-  },
-  "rubber": {
-    "header": "Rubber Statistics",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "section_1": {
-      "title": "[section_1]",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    },
-    "keys": {
-      "value_rm": "Value (RM)",
-      "growth_mom": "MoM Growth",
-      "growth_yoy": "YoY Growth",
-      "no_shade": "No shading",
-      "recession": "Recession",
-      "demand": "[demand]",
-      "export": "[export]",
-      "import": "[import]",
-      "supply": "[supply]",
-      "stock_end": "[stock_end]",
-      "production": "[production]",
-      "consumption": "[consumption]",
-      "stock_start": "[stock_start]"
-    }
-  },
-  "crime": {
-    "header": "Violent and Property Crime",
-    "description": "The Royal Malaysian Police (PDRM), maintains a transactional database of all reported crimes in Malaysia, and works with DOSM to publish crime statistics annually. Although DOSM's complete crime dataset contains detail on other areas of crime (e.g. environmental and white-collar crime), this dashboard focuses on violent and property crimes, which are perceived more viscerally.\n\n For administrative regions, data for Sabah includes crimes committed in W.P. Labuan, while data for W.P. Kuala Lumpur includes crimes committed in W.P. Putrajaya.",
-    "section_1": {
-      "title": "How are violent and property crimes trending?",
-      "description": "Violent crimes are any crime where the victim is harmed by or threatened with violence, such as murder, rape, robbery, and assault. Property crimes are instances where the victim's property is stolen or destroyed, without the use or threat of force against the victim. The two charts below present headline statistics on these two categories of crime, while the sections below provide further detail."
-    },
-    "section_2": {
-      "title": "How does the incidence of crimes (per capita) vary across states?"
-    },
-    "section_3": {
-      "title": "A deeper look at violent crimes"
-    },
-    "section_4": {
-      "title": "A deeper look at property crimes",
-      "description": "It is important to note that data below does not include instances where threat or force is used against the victim, even if the circumstances are similar, as these would be classified as violent crimes. For example, the data on snatch theft does not include instances where the victim is injured, as this would then be classified as a robbery."
-    },
-    "crime": "Crime",
-    "keys": {
-      "violent": "Violent Crimes",
-      "property": "Property Crimes",
-      "violent_murder": "Murders",
-      "violent_rape": "Rapes",
-      "violent_injury": "Cases of Causing Injury",
-      "violent_robbery": "Robberies",
-      "property_break_in": "Breaking-in",
-      "property_snatch": "Snatch Theft",
-      "property_vehicle_lorry": "Vehicular Theft - Lorries",
-      "property_vehicle_motorcar": "Vehicular Theft - Cars",
-      "property_vehicle_motorcycle": "Vehicular Theft - Motorcycles and Scooters",
-      "property_other": "Other Property Crimes"
-    }
-  },
-  "drug": {
-    "header": "Drug Addiction",
-    "description": "Every year, DOSM works with the National Anti-Drugs Agency (NADA) to release statistics on drug addiction as part of the annual crime statistics release. This dashboard, which presents data on drug addiction at national and state level, provides critical insights on drug addiction trends, as well as demographic breakdowns to facilitate a deeper understanding of drug addiction in Malaysia.",
-    "section_1": {
-      "title": "How has drug addiction in {{ state }} changed over time?",
-      "description": "The National Anti-Drugs Agency (NADA) is the lead agency under the purview of the Ministry of Home Affairs in combating drugs and substance abuse in Malaysia. The data below is collected via the various treatment and rehabilitation centres run by NADA."
-    },
-    "section_2": {
-      "title": "A deeper look at drug addiction in {{ state }}"
-    },
-    "keys": {
-      "age": "Drug Addicts by Age",
-      "job": "Drug Addicts by Employment Status",
-      "sex": "Drug Addicts by Sex",
-      "drug": "Drug Addicts by Type of Drug Addiction",
-      "ethnicity": "Drug Addicts by Ethnicity",
-      "schooling": "Drug Addicts by Highest Education Level",
-      "male": "Male",
-      "female": "Female",
-      "total": "Total",
-      "parttime": "Part-time worker",
-      "student": "Student",
-      "fulltime": "Full-time worker",
-      "unemployed": "Unemployed",
-      "opiate": "Heroin and morphine",
-      "methpill": "Methamphetamine (pills)",
-      "methcrystal": "Methamphetamine (crystalline)",
-      "ganja": "Cannabis (ganja)",
-      "ats": "Amphetamine-type stimulants (ATS)",
-      "opium": "Opium",
-      "psychotropic": "Psychotropic pills",
-      "chinese": "Chinese",
-      "bumiputera": "Bumiputera",
-      "other": "Others",
-      "indian": "Indian",
-      "primary": "Primary school",
-      "secondary": "Secondary school",
-      "tertiary": "Tertiary education",
-      "diploma": "Diploma",
-      "none": "No education"
     }
   },
   "catalogue": {
@@ -585,133 +355,5 @@
       "geojson_3": "# Uncomment below to change from rectangular --> square, for a more compact visual"
     },
     "license_text": "This data is made open under the Creative Commons Attribution 4.0 International License (CC BY 4.0). A human-readable copy of the license is available "
-  },
-  "kawasanku": {
-    "header": "Learn more about your area today!",
-    "description": "How does my area shape up against other areas? What are its demographics? What are labour conditions like? Does it have adequate public services? \n\n It is DOSM's mission to bring the answers to these questions to the rakyat's fingertips. Following the completion of Population and Housing Census of Malaysia 2020 (MyCensus 2020), DOSM released population data at Parliament Constituency and State Legislative Assembly level for the first time in history. The Kawasanku dashboard is intended to give citizens, policymakers, and the international community an accessible way to explore the dataset.",
-    "action": "Find my area",
-    "section_1": {
-      "title": "What does the population of {{ area }} look like?"
-    },
-    "section_2": {
-      "title": "A comparison of key variables across {{ type }}.",
-      "note": "Note: Dispersions across variables are not intended to be perfectly comparable"
-    },
-    "geofilter": "Geofilter",
-    "area_types": {
-      "district": "District",
-      "districts": "Districts",
-      "dun": "State Legislative Assembly (DUN)",
-      "duns": "State Legislative Assemblies (DUNs)",
-      "parlimen": "Parliament Constituency",
-      "parlimens": "Parliament Constituencies",
-      "state": "State",
-      "states": "States"
-    },
-    "median": "Median among {{ type }}",
-    "below_median": "Below median",
-    "above_median": "Above median",
-    "sex": "Sex",
-    "agegroup": "Age group",
-    "nationality": "Nationality",
-    "ethnicity": "Ethnicity",
-    "religion": "Religion",
-    "marital": "Marital Status",
-    "geography": "Geography",
-    "population": "Population",
-    "economy": "Economy",
-    "gender_distribution": "Gender and Age Distribution",
-    "public_services": "Public Services",
-    "housing": "Occupied dwellings",
-    "labour": "Employment status",
-    "keys": {
-      "male": "Male",
-      "female": "Female",
-      "working": "Working",
-      "child": "Children",
-      "elderly": "Elderly",
-      "local": "Citizen",
-      "foreign": "Non-citizen",
-      "bumi": "Bumiputera",
-      "chinese": "Chinese",
-      "indian": "Indian",
-      "other": "Others",
-      "muslim": "Muslim",
-      "buddhist": "Buddhist",
-      "hindu": "Hindu",
-      "christian": "Christian",
-      "atheist": "Atheist",
-      "married": "Married",
-      "never_married": "Never married",
-      "widowed": "Widowed",
-      "divorced": "Divorced",
-      "total_area": "Land area",
-      "max_elevation": "Max elevation",
-      "ruggedness": "Terrain Ruggedness Index",
-      "watercover": "Surface covered in water",
-      "treecover": "Surface covered in forest",
-      "treeloss": "Forest loss between 2000 to 2021",
-      "nightlights": "Maximum intensity of lights at night",
-      "population_density": "Population density",
-      "female_male": "Sex ratio (males per 100 females)",
-      "household_size": "Average household size",
-      "birth_rate": "Live births per 1000 people",
-      "death_rate": "Death rate per 1000 people",
-      "dep_young": "Young-age dependency ratio",
-      "dep_old": "Old-age dependency ratio",
-      "income_mean": "Household income",
-      "expenditure_mean": "Household expenditure",
-      "gini": "Inequality (Gini coefficient)",
-      "poverty": "Incidence of poverty",
-      "labour_urate": "Unemployment rate",
-      "labour_prate": "Labour force participation rate",
-      "agegroup_working": "Working age population %",
-      "electricity": "Access to electricity",
-      "water": "Access to piped water at home",
-      "hospital": "Hospitals per 1000 people",
-      "clinic": "Health clinics per 1000 people",
-      "school": "Schools per 1000 children",
-      "police_fire": "Police and fire stations per 1000 people",
-      "grocery": "Grocery stores per 1000 people",
-      "unemployed": "Unemployed",
-      "out": "Out of labour force",
-      "owned": "Owned",
-      "rented": "Rented",
-      "quarters": "Quarters"
-    },
-    "tips": {
-      "total_area": "",
-      "max_elevation": "Topobathy data was derived from the freely available Global Multi-resolution Terrain Elevation Data 2010 (GMTED2010) dataset, at 7.5 arc-second resolution. Geospatial analysis was conducted by DOSM.",
-      "ruggedness": "Terrain ruggedness indicates how jagged or flat an area is, on average. TRI was computed following Riley et al. (1999), using the freely available GMTED2010 dataset at 30 arc-second resolution. Geospatial analysis was conducted by DOSM.",
-      "watercover": "Water cover data was derived from EC JRC and Google's freely available Global Surface Water dataset under the Copernicus Programme (Pekel et al., 2016). Geospatial analysis was conducted by DOSM.",
-      "treecover": "Tree cover data was derived from UMD, Google, USGS and NASA's freely available Global Forest Change dataset (Hansen et al., 2013). Geospatial analysis was conducted by DOSM.",
-      "treeloss": "Tree loss data was derived from UMD, Google, USGS and NASA's freely available Global Forest Change dataset (Hansen et al., 2013). Geospatial analysis was conducted by DOSM.",
-      "nightlights": "Night lights intensity data was derived from the freely available global VIIRS Nighttime Light dataset (Elvidge et al., 2020). Geospatial analysis was conducted by DOSM.",
-      "population_density": "",
-      "female_male": "",
-      "household_size": "",
-      "birth_rate": "",
-      "death_rate": "",
-      "dep_young": "Ratio of young-age (0-14) to working age (15-64) population",
-      "dep_old": "Ratio of old-age (65+) to working age (15-64) population",
-      "income_mean": "Estimated based on the 2020 Household Income, Expenditure and Basic Amenities (HIES/BA) Survey data. There may be relatively high standard errors for certain electoral areas.",
-      "expenditure_mean": "",
-      "gini": "",
-      "poverty": "A person or household was classified as poor if their income fell below the 2019 Poverty Line Income.",
-      "labour_urate": "Labour force indicators by electoral area were estimated based on 2020 Labour Force Survey data and the estimated population factors for 2020. This data should be used with caution due to relatively high standard errors for certain electoral areas.",
-      "labour_prate": "",
-      "agegroup_working": "",
-      "electricity": "Includes both 24-hour supply and intermittent supply",
-      "water": "",
-      "hospital": "Includes all public and private hospitals in operation as of 1 May 2022. Data on hospitals was sourced from the Ministry of Health Malaysia. Geospatial analysis was conducted by DOSM.",
-      "clinic": "Includes all public and private clinics in operation as of 1 May 2022. Data on clinics was sourced from the Ministry of Health Malaysia. Geospatial analysis was conducted by DOSM.",
-      "school": "Includes all public schools in operation as of 1 May 2022. Data on schools was sourced from the Ministry of Education. Geospatial analysis was conducted by DOSM.",
-      "police_fire": "Includes police and fire stations in operation as of 1 May 2022. Data on police and fire stations were sourced from the Royal Malaysian Police and the Fire and Rescue Department of Malaysia respectively. Geospatial analysis was conducted by DOSM.",
-      "grocery": "Includes both publicly and privately owned grocery stores. Equivalent to Provision Stores based on the Malaysia Standard Industrial Classification (MSIC) 2008 Ver 1.0."
-    }
-  },
-  "dailyprice": {
-    "header": "Daily Prices",
-    "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos quasi eum inventore vero quo, molestias reiciendis reprehenderit numquam, optio ipsum repellendus? Ipsum ab quisquam nisi sed libero aliquid assumenda quidem?"
   }
 }

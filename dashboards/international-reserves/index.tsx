@@ -86,7 +86,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency="Bank Negara Malaysia"
+            agency={t("agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BankNegaraIcon />}
           />

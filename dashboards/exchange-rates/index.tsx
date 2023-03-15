@@ -85,7 +85,9 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         header={[t("dashboard-exchange-rates:header"), "dark:text-white"]}
         description={[t("dashboard-exchange-rates:description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="MAMPU" link="https://www.mampu.gov.my/en/" />}
+        agencyBadge={
+          <AgencyBadge agency={t("agency_abbr.mampu")} link="https://www.mampu.gov.my/en/" />
+        }
       />
 
       <Container className="start-h-screen">

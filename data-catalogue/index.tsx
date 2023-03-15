@@ -73,14 +73,17 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   return (
     <div>
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
-        header={[t("catalogue.header")]}
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        header={[
+          t("catalogue.header").concat(
+            filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
+          ),
+        ]}
         description={
-          <>
+          <div className="space-y-6">
             <p className="text-dim">{t("catalogue.description")}</p>
-
             {filterRef.current?.sourceFilter()}
-          </>
+          </div>
         }
       />
 
@@ -143,6 +146,7 @@ interface CatalogueFilterProps {
 }
 
 interface CatalogueFilterRef {
+  source?: string;
   sourceFilter: () => ReactNode;
 }
 
@@ -196,11 +200,11 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       setFilter("geography", []);
       setFilter("begin", undefined);
       setFilter("end", undefined);
-      //   setFilter("source", undefined);
     };
 
     useImperativeHandle(ref, () => {
       return {
+        source: filter.source?.value ?? "",
         sourceFilter: () => (
           <Dropdown
             icon={<BuildingLibraryIcon className="h-4 w-4 text-dim" />}
@@ -293,19 +297,13 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   />
                 </div>
 
-                <Checkbox
-                  label={t("catalogue.source")}
-                  className="space-y-4 px-1 pt-4"
-                  name="source"
-                  options={filterSources}
-                  value={filter.source}
-                  onChange={e => setFilter("source", e)}
-                />
-
                 <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2 dark:bg-black">
                   <Button
                     className="btn btn-primary w-full justify-center"
-                    disabled={!actives.length}
+                    disabled={
+                      actives.length === 0 ||
+                      actives.findIndex(active => active[0] === "source") === -1
+                    }
                     onClick={reset}
                   >
                     {t("common.reset")}
@@ -325,7 +323,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
 
         {/* Desktop */}
         <div className="hidden gap-2 pr-6 xl:flex">
-          {actives.length > 0 && (
+          {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
             <div>
               <Button
                 icon={<XMarkIcon className="h-4 w-4" />}
@@ -366,14 +364,6 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
               setFilter("end", undefined);
             }}
           />
-          {/* <Dropdown
-            enableSearch
-            placeholder={t("catalogue.source")}
-            anchor="left"
-            options={filterSources}
-            selected={filter.source}
-            onChange={e => setFilter("source", e)}
-          /> */}
         </div>
       </div>
     );

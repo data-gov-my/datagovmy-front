@@ -422,7 +422,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           )}
         </Section>
 
-        <div className="space-y-8 border-b py-12">
+        <div className="space-y-8 border-b py-12 dark:border-b-outlineHover-dark">
           {/* How is this data produced? */}
           <Section
             title={t("catalogue.header_1")}
@@ -445,7 +445,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             }
           />
 
-          {/* Key Publication using this Data */}
+          {/* Publication using this Data */}
           {Boolean(explanation[lang].publication) && (
             <Section
               title={t("catalogue.header_3")}
@@ -460,7 +460,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         </div>
 
         {/* Metadata */}
-        <Section title={"Metadata"} className="mx-auto w-full border-b py-12">
+        <Section
+          title={"Metadata"}
+          className="mx-auto border-b py-12 dark:border-b-outlineHover-dark"
+        >
           <Card type="gray">
             <div className="space-y-6">
               {/* Dataset description */}
@@ -585,7 +588,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         </Section>
 
         {/* Download */}
-        <Section title={t("catalogue.download")} className="mx-auto w-full border-b py-12 ">
+        <Section
+          title={t("catalogue.download")}
+          className="mx-auto border-b py-12 dark:border-b-outlineHover-dark "
+        >
           <div className="space-y-5">
             {downloads!.chart?.length > 0 && (
               <>
