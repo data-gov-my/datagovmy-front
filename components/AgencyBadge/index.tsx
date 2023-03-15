@@ -19,13 +19,11 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
   return (
     <At href={link} key={link}>
       <Card
-        className="group flex h-12 w-[186px] items-center overflow-hidden rounded-3xl 
-      bg-white transition-[width] duration-75 hover:w-[214px] hover:border-slate-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:bg-zinc-800"
+        className="group flex h-12 min-w-[186px] max-w-fit items-center overflow-hidden rounded-3xl 
+      bg-white transition-all duration-75 hover:min-w-[214px] hover:border-slate-400 hover:pr-5 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:bg-zinc-800"
       >
         <div className="relative flex items-center gap-2 pl-2">
           {icon || <div className="h-8 w-8 rounded-full bg-outline" />}
-
-          <ArrowUpRightIcon className="absolute -right-6 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
 
           <div className="relative overflow-hidden">
             <p className=" text-xs text-dim transition-transform group-hover:-translate-y-6">
@@ -34,8 +32,10 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
             <p className="absolute -top-6 text-xs text-primary transition-transform group-hover:translate-y-6">
               Visit our portal
             </p>
-            <p className="truncate text-sm dark:text-white">{agency}</p>
+            <p className="mr-4 truncate text-sm dark:text-white">{agency}</p>
           </div>
+
+          <ArrowUpRightIcon className="h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
         </div>
       </Card>
     </At>
