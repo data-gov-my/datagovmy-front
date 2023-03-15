@@ -14,7 +14,6 @@ import type { ChartDataset } from "chart.js";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 interface CatalogueBarProps {
-  className?: string;
   config: {
     precision: number;
   };
@@ -42,7 +41,6 @@ interface CatalogueBarProps {
 }
 
 const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
-  className = "h-[450px] lg:h-[350px] w-full",
   config,
   lang,
   dataset,
@@ -158,7 +156,11 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
     <>
       <Bar
         _ref={ref => setData("ctx", ref)}
-        className={className}
+        className={
+          bar_layout === "vertical"
+            ? "h-[450px] w-full lg:h-[350px]"
+            : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
+        }
         type="category"
         layout={bar_layout}
         enableGridX={bar_layout !== "vertical"}

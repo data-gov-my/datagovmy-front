@@ -45,17 +45,18 @@ const Hero: FunctionComponent<HeroProps> = ({
         children
       ) : (
         <div className="space-y-6 xl:w-full">
-          <div className="flex justify-between">
+          <div className="relative flex justify-between">
             {category && (
               <span
-                className={["text-sm font-bold uppercase tracking-widest", category[1] ?? ""].join(
-                  " "
-                )}
+                className={[
+                  "text-base font-medium normal-case tracking-normal",
+                  category[1] ?? "",
+                ].join(" ")}
               >
                 {category[0]}
               </span>
             )}
-            {agencyBadge}
+            <div className="absolute right-0 top-0">{agencyBadge}</div>
           </div>
 
           {(header || description) && (

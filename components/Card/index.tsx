@@ -7,11 +7,15 @@ interface CardProps {
   onClick?: () => void;
 }
 
-const Card: FunctionComponent<CardProps> = ({ type = "default", children, className, onClick }) => {
+const Card: FunctionComponent<CardProps> = ({
+  type = "default",
+  children,
+  className = "rounded-xl border border-outline transition",
+  onClick,
+}) => {
   return (
     <div
       className={[
-        "rounded-xl border border-outline transition",
         type === "gray"
           ? " bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
           : "",

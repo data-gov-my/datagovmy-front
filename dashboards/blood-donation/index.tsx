@@ -21,6 +21,8 @@ import { routes } from "@lib/routes";
 import LeftRightCard from "@components/LeftRightCard";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { ArrowPathIcon, MapPinIcon } from "@heroicons/react/24/solid";
+import AgencyBadge from "@components/AgencyBadge";
+import { PusatDarahNegaraIcon } from "@components/Icon";
 
 const Empty = dynamic(() => import("@components/Chart/Empty"), { ssr: false });
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
@@ -285,11 +287,18 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   return (
     <>
       <Hero
-        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial border-b dark:border-zinc-800 from-[#ffe1e1] to-background dark:from-[#492424] dark:to-black"
         category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
         header={[t("dashboard-blood-donation:title_header")]}
         description={description}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency="Pusat Darah Negara"
+            link="https://pdn.gov.my/v2/"
+            icon={<PusatDarahNegaraIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">
