@@ -74,7 +74,11 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
     <div>
       <Hero
         background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
-        header={[t("catalogue.header").concat(filterRef.current?.source ?? "")]}
+        header={[
+          t("catalogue.header").concat(
+            filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
+          ),
+        ]}
         description={
           <div className="space-y-6">
             <p className="text-dim">{t("catalogue.description")}</p>

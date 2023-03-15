@@ -27,15 +27,13 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }
             <p className="text-xs text-dim transition-transform duration-200 group-hover:-translate-y-6">
               {t("components.brought_by")}
             </p>
-            <p className="absolute -top-6 text-xs text-primary transition-transform group-hover:translate-y-6">
+            <p className="absolute -top-6 text-xs text-primary transition-transform group-hover:translate-y-6 dark:text-primary-dark">
               {t("components.visit_portal")}
             </p>
 
             {/* Agency name */}
             <p className="truncate text-sm font-medium dark:text-white">{agency}</p>
           </div>
-
-          <ArrowUpRightIcon className="h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
         </div>
       </Card>
     </At>
