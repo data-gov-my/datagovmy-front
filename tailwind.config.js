@@ -46,9 +46,7 @@ module.exports = {
       },
       backgroundImage: {
         "gradient-radial":
-          "radial-gradient(59.1% 166.02% at 50% -66.02%, #E2E8F0 0.01%, #F8FAFC 100%)",
-        "dark-gradient-radial":
-          "radial-gradient(59.1% 166.02% at 50% -66.02%, #3F3F46 0%, #18181B 100%)",
+          "radial-gradient(59.1% 166.02% at 50% -66.02%, var(--tw-gradient-stops))",
       },
     },
   },

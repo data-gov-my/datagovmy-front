@@ -229,7 +229,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
   return (
     <>
       <Hero
-        background="bg-gradient-radial dark:bg-dark-gradient-radial border-b dark:border-zinc-800 from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-money-supply:header")]}
         description={[t("dashboard-money-supply:description")]}
