@@ -7,7 +7,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useData } from "@hooks/useData";
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
@@ -58,9 +58,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
   const { coordinate: opr_coordinate } = useSlice(timeseries_opr.data, data.opr_minmax);
   const { coordinate: non_opr_coordinate } = useSlice(timeseries.data, data.non_opr_minmax);
 
-  const oprShader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const oprShader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -98,9 +96,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
 
   const LATEST_TIMESTAMP = timeseries.data.x[timeseries.data.x.length - 1];
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
