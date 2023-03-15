@@ -175,7 +175,7 @@ const Home: Page = ({
     <>
       <Metadata keywords={"opendosm data negara inflasi"} />
 
-      <Hero background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black">
+      <Hero background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black">
         <div className="space-y-6 xl:w-2/3">
           <span className="text-base font-medium normal-case tracking-normal text-primary">
             {t("home.category")}

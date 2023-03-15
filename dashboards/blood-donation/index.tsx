@@ -285,7 +285,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   return (
     <>
       <Hero
-        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial border-b dark:border-zinc-800 from-[#ffe1e1] to-background dark:from-[#492424] dark:to-black"
         category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
         header={[t("dashboard-blood-donation:title_header")]}
         description={description}
