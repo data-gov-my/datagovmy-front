@@ -7,23 +7,20 @@ import Dashboard from "@dashboards/index";
 import { get } from "@lib/api";
 
 const DashboardIndex: Page = ({
-  timeseries,
   analytics,
-}: // query,
-// collection,
-// total,
-// sources,
-InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  dashboards,
+  query,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["common"]);
 
   return (
     <>
       <Metadata title={t("nav.dashboards")} description={""} keywords={""} />
       <Dashboard
-        query={{}}
-        sources={["All Agencies", "Ministry of Transport", "Ministry of Health"]}
+        query={query}
+        sources={["DOSM", "MAMPU", "PDN", "BNM"]}
         analytics={analytics}
-        timeseries={timeseries}
+        dashboards={dashboards}
       />
     </>
   );
@@ -31,36 +28,30 @@ InferGetServerSidePropsType<typeof getServerSideProps>) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
-  const { data } = await get("/dashboard", { dashboard: "homepage" });
+
+  const { data } = await get("/dashboard/", { dashboard: "dashboards" });
 
   return {
     props: {
       ...i18n,
       query: query ?? {},
-      timeseries_callouts: data.statistics,
-      timeseries: data.timeseries,
-      highlights: data.highlight,
+      data: data,
+      timeseries: [],
       analytics: {
-        data_as_of: data.table_summary.data_as_of,
-        today: {
-          resource_views: data.metrics_stats.data.today.resource_views.count,
-          resource_downloads: data.metrics_stats.data.today.resource_downloads.count,
-          ...data.table_summary.data.today,
+        data_as_of: data.dashboards_top.data_as_of,
+        en: {
+          today: data.dashboards_top.data.en.today,
+          last_month: data.dashboards_top.data.en.last_month,
+          all_time: data.dashboards_top.data.en.all_time,
         },
-        last_month: {
-          resource_views: data.metrics_stats.data.last_month.resource_views.count,
-          resource_downloads: data.metrics_stats.data.last_month.resource_downloads.count,
-          ...data.table_summary.data.last_month,
-        },
-        all_time: {
-          resource_views: data.metrics_stats.data.all_time.resource_views.count,
-          resource_downloads: data.metrics_stats.data.all_time.resource_downloads.count,
-          ...data.table_summary.data.all_time,
-        },
-        total: {
-          catalogue: data.total_catalog,
+        bm: {
+          today: data.dashboards_top.data.bm.today,
+          last_month: data.dashboards_top.data.bm.last_month,
+          all_time: data.dashboards_top.data.bm.all_time,
         },
       },
+      data_as_of: data.dashboards_all.data_as_of,
+      dashboards: data.dashboards_all.data,
     },
   };
 };
