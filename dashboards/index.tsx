@@ -158,13 +158,6 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 {dashboards
                   .filter((dashboard: Dashboard) => {
-                    console.log("FILTER COMPARE: ", dashboard.agency, query["source"]);
-                    console.log(
-                      !query["source"],
-                      dashboard.agency === query["source"],
-                      !query["search"],
-                      dashboard.name === query["search"]
-                    );
                     return (
                       (!query["source"] || dashboard.agency === query["source"]) &&
                       (!query["search"] ||
