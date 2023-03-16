@@ -95,6 +95,16 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
     },
   ];
 
+  // for ALL dashboards
+  const _collection = useMemo<Array<[string, any]>>(() => {
+    let resultCollection: Array<[string, Dashboard[]]> = [];
+    Object.entries(dashboards[lang]).forEach(([category, dbs]) => {
+      resultCollection.push([category, dbs as Dashboard[]]);
+    });
+
+    return resultCollection;
+  }, [query]);
+
   return (
     <>
       <Hero
@@ -115,57 +125,73 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
       <Container className="min-h-screen">
         <DashboardFilter ref={filterRef} query={query} sources={sources} />
 
-        <Section
-          title={"Most Popular Dashboards"}
-          description="Explore the hottest dashboards now"
-          menu={
-            <Tabs.List
-              options={PANELS.map(item => item.name)}
+        {!query["search"] && !query["source"] && (
+          <Section
+            title={"Most Popular Dashboards"}
+            description="Explore the hottest dashboards now"
+            menu={
+              <Tabs.List
+                options={PANELS.map(item => item.name)}
+                current={data.tabs_section_1}
+                onChange={index => setData("tabs_section_1", index)}
+              />
+            }
+          >
+            <Tabs
+              hidden
               current={data.tabs_section_1}
               onChange={index => setData("tabs_section_1", index)}
-            />
-          }
-        >
-          <Tabs
-            hidden
-            current={data.tabs_section_1}
-            onChange={index => setData("tabs_section_1", index)}
-          >
-            {PANELS.map((panel, index) => (
-              <Tabs.Panel name={panel.name as string} key={index}>
-                <Ranking ranks={panel.data} />
-              </Tabs.Panel>
-            ))}
-          </Tabs>
-        </Section>
+            >
+              {PANELS.map((panel, index) => (
+                <Tabs.Panel name={panel.name as string} key={index}>
+                  <Ranking ranks={panel.data} />
+                </Tabs.Panel>
+              ))}
+            </Tabs>
+          </Section>
+        )}
 
         {/* Remaining sections for dashboard */}
-        {Object.keys(dashboards[lang])
-          .sort()
-          .map(category => (
+        {_collection.sort().map(([category, dashboards]) => {
+          return (
             <Section title={category}>
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-                {dashboards[lang][category]
-                  .sort((a, b) => {
+                {dashboards
+                  .filter((dashboard: Dashboard) => {
+                    console.log("FILTER COMPARE: ", dashboard.agency, query["source"]);
+                    console.log(
+                      !query["source"],
+                      dashboard.agency === query["source"],
+                      !query["search"],
+                      dashboard.name === query["search"]
+                    );
+                    return (
+                      (!query["source"] || dashboard.agency === query["source"]) &&
+                      (!query["search"] ||
+                        dashboard.name.toLowerCase().includes(query["search"].toLowerCase()))
+                    );
+                  })
+                  .sort((a: Dashboard, b: Dashboard) => {
                     return b.views - a.views;
                   })
-                  .map(dashboard => (
-                    <At href={dashboard.id} key={dashboard.id}>
+                  .map((item: Dashboard) => (
+                    <At href={item.id} key={item.id}>
                       <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
                         <div className="relative flex items-center gap-4">
                           <div className="h-4 w-4 rounded-full bg-outline" />
-                          <p className="text-sm text-dim">{dashboard.agency}</p>
+                          <p className="text-sm text-dim">{item.agency}</p>
                           <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
                         </div>
                         <div className="relative overflow-hidden">
-                          <p className="truncate font-medium dark:text-white">{dashboard.name}</p>
+                          <p className="truncate font-medium dark:text-white">{item.name}</p>
                         </div>
                       </Card>
                     </At>
                   ))}
               </div>
             </Section>
-          ))}
+          );
+        })}
       </Container>
     </>
   );
