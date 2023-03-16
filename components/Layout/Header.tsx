@@ -90,10 +90,16 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
     //   title: t("nav.megamenu.categories.national_accounts"),
     //   list: [{ title: t("nav.megamenu.dashboards.gdp"), link: routes.GDP }],
     // },
-    // {
-    //   title: t("nav.megamenu.categories.demography"),
-    //   list: [{ title: t("nav.megamenu.dashboards.kawasanku"), link: routes.KAWASANKU }],
-    // },
+    {
+      title: t("nav.megamenu.categories.demography"),
+      list: [
+        {
+          title: t("nav.megamenu.dashboards.birthday_popularity"),
+          link: routes.BIRTHDAY_POPULARITY,
+        },
+        //   { title: t("nav.megamenu.dashboards.kawasanku"), link: routes.KAWASANKU },
+      ],
+    },
     {
       title: t("nav.megamenu.categories.healthcare"),
       list: [{ title: t("nav.megamenu.dashboards.blood_donation"), link: routes.BLOOD_DONATION }],

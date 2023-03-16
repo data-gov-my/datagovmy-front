@@ -18,4 +18,5 @@ export const routes = {
   DRUG: "/drug-addiction",
   EXCHANGE_RATE: "/exchange-rates",
   BLOOD_DONATION: "/blood-donation",
+  BIRTHDAY_POPULARITY: "/birthday-popularity",
 } as const;

@@ -96,7 +96,8 @@
         "drug": "Drug Addiction",
         "exchange_rate": "Exchange Rates",
         "daily_price": "Daily Prices",
-        "blood_donation": "Blood Donation"
+        "blood_donation": "Blood Donation",
+        "birthday_popularity": "Birthday Popularity"
       }
     },
     "about": "About",
