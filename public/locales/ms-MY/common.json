@@ -97,7 +97,8 @@
         "drug": "Penagihan Dadah",
         "exchange_rate": "Kadar Pertukaran",
         "daily_price": "Harga Harian",
-        "blood_donation": "Pendermaan Darah"
+        "blood_donation": "Pendermaan Darah",
+        "name_popularity": "Popularity Nama"
       }
     },
     "about": "Tentang",
