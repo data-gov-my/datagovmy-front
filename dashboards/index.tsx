@@ -97,7 +97,17 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   const _collection = useMemo<Array<[string, any]>>(() => {
     let resultCollection: Array<[string, Dashboard[]]> = [];
     Object.entries(dashboards[lang]).forEach(([category, dbs]) => {
-      resultCollection.push([category, dbs as Dashboard[]]);
+      const dashboards = dbs
+        .filter((d: Dashboard) => {
+          return (
+            (!query["source"] || d.agency === query["source"]) &&
+            (!query["search"] || d.name.toLowerCase().includes(query["search"].toLowerCase()))
+          );
+        })
+        .sort((a: Dashboard, b: Dashboard) => {
+          return b.views - a.views;
+        });
+      resultCollection.push([category, dashboards as Dashboard[]]);
     });
 
     return resultCollection;
@@ -152,20 +162,10 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         {/* Remaining sections for dashboard */}
         {_collection.sort().map(([category, dashboards]) => {
           return (
-            <Section title={category}>
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-                {dashboards
-                  .filter((dashboard: Dashboard) => {
-                    return (
-                      (!query["source"] || dashboard.agency === query["source"]) &&
-                      (!query["search"] ||
-                        dashboard.name.toLowerCase().includes(query["search"].toLowerCase()))
-                    );
-                  })
-                  .sort((a: Dashboard, b: Dashboard) => {
-                    return b.views - a.views;
-                  })
-                  .map((item: Dashboard) => (
+            dashboards.length > 0 && (
+              <Section title={category}>
+                <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+                  {dashboards.map((item: Dashboard) => (
                     <At href={item.id} key={item.id}>
                       <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
                         <div className="relative flex items-center gap-4">
@@ -179,8 +179,9 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                       </Card>
                     </At>
                   ))}
-              </div>
-            </Section>
+                </div>
+              </Section>
+            )
           );
         })}
       </Container>
