@@ -6,6 +6,7 @@ import AgencyBadge from "@components/AgencyBadge";
 import { JabatanPendaftaranNegaraIcon } from "@components/Icon";
 import BarMeter from "@components/Chart/BarMeter";
 import Card from "@components/Card";
+import { useData } from "@hooks/useData";
 
 /**
  * Name Popularity Dashboard
@@ -13,15 +14,30 @@ import Card from "@components/Card";
  */
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface NamePopularityDashboardProps {
-  data: { name: string; total: number; decade: number[]; count: number[] };
+  // data: { name: string; total: number; decade: number[]; count: number[] };
+  name: string;
+  total: number;
+  decade: number[];
+  count: number[];
 }
 
-const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({ data }) => {
+const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({
+  name,
+  total,
+  decade,
+  count,
+}) => {
   const { t, i18n } = useTranslation(["common", "dashboard-name-popularity"]);
 
-  const barData = data.decade.map((x, i) => ({ x: x.toString(), y: data.count[i] }));
+  const barData = decade.map((x, i) => ({ x: x.toString(), y: count[i] }));
+
+  const { data, setData } = useData({
+    minMax: [],
+  });
+
   return (
     <>
       <Hero
@@ -46,12 +62,24 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               </Card>
             </div>
             <div className="col-span-3">
-              <BarMeter
+              <Timeseries
                 title={t("dashboard-name-popularity:bar_title", {
-                  name: data.name,
-                  total: data.total,
+                  name: name,
+                  total: total,
                 })}
-                data={barData}
+                interval="year"
+                data={{
+                  labels: decade,
+                  datasets: [
+                    {
+                      type: "bar",
+                      label: `${t("Similar names")}`,
+                      data: count,
+                    },
+                  ],
+                }}
+                enableGridX={false}
+                enableGridY={true}
               />
             </div>
           </div>

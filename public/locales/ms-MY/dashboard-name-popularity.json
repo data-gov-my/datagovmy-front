@@ -1,4 +1,5 @@
 {
-    "header": "Populariti Hari Jadi",
-    "description": "Papan pemuka ini"
+    "header": "Berapakah populariti nama anda?",
+    "description": "Memperkenalkan Pemeriksa Kepopularan Nama untuk Malaysia! Alat unik ini membolehkan anda mengesan kepopularan nama anda di Malaysia selama 66 tahun sejak kemerdekaan negara pada tahun 1957. Dengan papan pemuka ini, anda boleh memasukkan nama anda dan mendapatkan laporan menyeluruh yang menunjukkan trend kepopularan nama anda di Malaysia dari tahun ke tahun.",
+    "bar_title": "There are {{ total }} living Malaysians with the first name \"{{ name }}\""
 }

@@ -5,7 +5,12 @@ import { useTranslation } from "@hooks/useTranslation";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import NamePopularityDashboard from "@dashboards/name-popularity";
 
-const NamePopularity = ({ data }: InferGetServerSidePropsType<typeof getStaticProps>) => {
+const NamePopularity = ({
+  name,
+  total,
+  decade,
+  count,
+}: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-name-popularity"]);
   return (
     <>
@@ -14,7 +19,7 @@ const NamePopularity = ({ data }: InferGetServerSidePropsType<typeof getStaticPr
         description={t("dashboard-name-popularity:description")}
         keywords={""}
       />
-      <NamePopularityDashboard data={data} />
+      <NamePopularityDashboard name={name} total={total} decade={decade} count={count} />
     </>
   );
 };
@@ -31,9 +36,13 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
       ...i18n,
-      data: data,
+      name: data.name,
+      total: data.total,
+      decade: data.decade,
+      count: data.count,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    revalidate: 1,
   };
 };
 
