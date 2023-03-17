@@ -52,6 +52,7 @@ export type Dashboard = {
   name: string;
   views: number;
   agency: string;
+  description: string;
 };
 
 interface DashboardIndexProps {
@@ -60,10 +61,7 @@ interface DashboardIndexProps {
   //   total: number;
   analytics: any;
   sources: string[];
-  dashboards: Record<
-    string,
-    Record<string, { id: string; name: string; views: number; agency: string }[]>
-  >;
+  dashboards: Record<string, Record<string, Dashboard[]>>;
 }
 
 const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
@@ -278,6 +276,7 @@ type RankItem = {
   views: number;
   agency: string;
   name: string;
+  description: string;
 };
 interface RankingProps {
   ranks: RankItem[];
@@ -303,7 +302,7 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {item.name}
                 </p>
                 <p className="text-sm dark:text-white" title={item.name}>
-                  Short explaination of what this dashboard can provide for user.
+                  {item.description}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
                   {numFormat(item.views, "compact")} views
