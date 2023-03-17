@@ -60,9 +60,13 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
     [data]
   );
 
-  useWatch(() => {
-    search();
-  }, [data]);
+  useWatch(
+    () => {
+      search();
+    },
+    [data],
+    true
+  );
 
   return {
     filter: data,
