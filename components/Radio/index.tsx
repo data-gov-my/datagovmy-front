@@ -21,7 +21,7 @@ const Radio: FunctionComponent<RadioProps> = ({
 }) => {
   return (
     <div>
-      <Label label={label} />
+      {label && <Label label={label} />}
 
       <ul className={className}>
         {options.map((option: OptionType) => (

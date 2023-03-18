@@ -1,5 +1,5 @@
 import Metadata from "@components/Metadata";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps, GetStaticProps, InferGetServerSidePropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -8,9 +8,11 @@ import NamePopularityDashboard from "@dashboards/name-popularity";
 const NamePopularity = ({
   name,
   total,
+  type,
   decade,
   count,
-}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+  query,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["common", "dashboard-name-popularity"]);
   return (
     <>
@@ -19,30 +21,39 @@ const NamePopularity = ({
         description={t("dashboard-name-popularity:description")}
         keywords={""}
       />
-      <NamePopularityDashboard name={name} total={total} decade={decade} count={count} />
+      <NamePopularityDashboard
+        query={query}
+        name={name}
+        type={type}
+        total={total}
+        decade={decade}
+        count={count}
+      />
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-name-popularity"]);
 
+  const emptyQuery = Object.keys(query).length === 0;
+
+  // FIXME: fix behaviour if no query on initial render
   const { data } = await get("/explorer", {
-    explorer: "name_dashboard",
-    type: "first",
-    name: "roshen",
+    explorer: "NAME_POPULARITY",
+    type: emptyQuery ? "last" : query.type,
+    name: emptyQuery ? "lim" : query.name,
   });
+
+  console.log(data);
 
   return {
     props: {
       ...i18n,
-      name: data.name,
-      total: data.total,
-      decade: data.decade,
-      count: data.count,
+      query: query ?? {},
+      ...data,
+      type: emptyQuery ? "last" : query.type,
     },
-    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
-    revalidate: 1,
   };
 };
 
