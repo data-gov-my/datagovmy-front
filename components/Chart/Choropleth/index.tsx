@@ -21,17 +21,17 @@ import { Chart as ChartJS, ChartTypeRegistry } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 /**
- *GeoChoropleth component
+ *Choropleth component
  */
 
-export type GeoChoroplethData = {
+export type ChoroplethData = {
   labels: string[];
   values: number[];
 };
 
-interface GeoChoroplethProps extends ChartHeaderProps {
+interface ChoroplethProps extends ChartHeaderProps {
   className?: string;
-  data?: GeoChoroplethData;
+  data?: ChoroplethData;
   prefixY?: string;
   unitY?: string;
   precision?: number | [number, number];
@@ -86,7 +86,7 @@ interface GeoChoroplethProps extends ChartHeaderProps {
   _ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
 }
 
-const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
+const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
   (
     {
       className = "w-full h-[460px]",
@@ -217,15 +217,15 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = forwardRef(
 
         <div
           className={`border border-outline border-opacity-0 p-4 transition-all active:border-opacity-100 ${className}`}
-          ref={zoomRef}
-          // onWheel={onWheel}
-          onMouseMove={onMove}
-          onMouseDown={onDown}
-          onMouseUp={onUp}
-          onTouchStart={onDown}
-          onTouchEnd={onUp}
-          onTouchMove={onMove}
-          // onMouseOut={onUp}
+          //   ref={zoomRef}
+          //   onWheel={onWheel}
+          //   onMouseMove={onMove}
+          //   onMouseDown={onDown}
+          //   onMouseUp={onUp}
+          //   onTouchStart={onDown}
+          //   onTouchEnd={onUp}
+          //   onTouchMove={onMove}
+          //   onMouseOut={onUp}
         >
           <Chart
             ref={_ref}
@@ -296,4 +296,4 @@ const dummyData = {
   values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
 };
 
-export default GeoChoropleth;
+export default Choropleth;
