@@ -71,7 +71,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-[#A1BFFF] to-background dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial border-b dark:border-zinc-800 from-[#A1BFFF] to-background dark:from-[#203053] dark:to-black"
         category={[t("nav.megamenu.categories.demography"), "text-primary"]}
         header={[t("dashboard-name-popularity:header")]}
         description={[t("dashboard-name-popularity:description")]}
@@ -102,8 +102,16 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 </div>
                 <Input
                   type="search"
-                  className="rounded-md border border-slate-200 dark:border-zinc-700 dark:bg-zinc-800"
-                  placeholder="E.g. Anwar, Siew Fook, Sivakumar"
+                  className={"rounded-md border dark:focus:border-primary-dark".concat(
+                    data.validation
+                      ? " border-2 border-danger dark:border-danger"
+                      : " border-2 border-slate-200 dark:border-zinc-800 dark:bg-zinc-900"
+                  )}
+                  placeholder={
+                    data.type.value === "last"
+                      ? "E.g. Ibrahim, Loke, Veerapan"
+                      : "E.g. Anwar, Siew Fook, Sivakumar"
+                  }
                   autoFocus
                   value={data.name}
                   onChange={e => {

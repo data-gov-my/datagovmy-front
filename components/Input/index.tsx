@@ -57,7 +57,6 @@ const Input: FunctionComponent<InputProps> = ({
           "outline-none focus:outline-none focus:ring-0 dark:bg-inherit dark:text-white",
           icon ? "pl-10" : "",
           className,
-          isValidation ? "border-2 border-danger dark:border-danger" : "",
         ].join(" ")}
         placeholder={placeholder}
         value={value}
