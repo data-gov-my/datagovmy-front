@@ -18,6 +18,7 @@ const Footer = () => {
           <div>
             <div className="mb-2 uppercase">
               <p className="text-base font-bold">{t("nav.mampu")}</p>
+              <p className="text-base font-bold">{t("nav.gov")}</p>
             </div>
             <p className="text-dim">
               © {new Date().getFullYear()} {t("nav.public_open_data")}
