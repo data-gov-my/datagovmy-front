@@ -110,6 +110,9 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     setData("validation", false);
                     setData("name", e);
                   }}
+                  onKeyDown={e => {
+                    if (e.key === "Enter") searchHandler();
+                  }}
                   isValidation={data.validation}
                   validationText={`Please enter your ${data.type.value} name`}
                 />
