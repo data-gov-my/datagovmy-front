@@ -209,8 +209,6 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
       if (onReady) onReady(true);
     }, []);
 
-    console.log(data);
-
     return (
       <div className="relative">
         <ChartHeader title={title} menu={menu} controls={controls} />
@@ -238,9 +236,9 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
                   borderWidth: config.borderWidth,
                   borderColor: config.borderColor,
                   outline: config.feature,
-                  data: config.feature.map((feature: any, index: number) => ({
+                  data: config.feature.map((feature: any) => ({
                     feature: feature,
-                    value: data.values[index] === -1 ? Number.NaN : data.values[index],
+                    value: data.values[data.labels.indexOf(feature.properties?.state)],
                   })),
                 },
               ],
