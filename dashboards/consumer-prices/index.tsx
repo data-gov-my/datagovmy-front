@@ -375,10 +375,12 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               onChange={e => setData("coicop_type", e)}
             />
             <Choropleth
-              data={choropleth.data[data.coicop_type.value].map((item: any) => ({
-                ...item,
-                value: item.value !== null ? item.value : -1,
-              }))}
+              data={{
+                labels: choropleth.data[data.coicop_type.value].map(({ id }: { id: string }) => id),
+                values: choropleth.data[data.coicop_type.value].map(
+                  ({ value }: { value: number | null }) => value
+                ),
+              }}
               precision={[2, 2]}
               prefixY="RM"
               graphChoice="district"

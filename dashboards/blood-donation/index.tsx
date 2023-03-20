@@ -138,16 +138,17 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     <div>
       <Choropleth
         className={(isMobile ? "h-[400px] w-auto" : "h-[500px] w-full").concat(" rounded-b")}
-        enableScale={false}
-        // colorScale="CHOROPLETH_BLUE_SCALE"
         colorScale="reds"
         borderColor="#000"
         borderWidth={0.5}
-        data={choropleth_malaysia_blood_donation.data.map((item: any) => ({
-          id: CountryAndStates[item.state],
-          state: CountryAndStates[item.state],
-          value: item.data.perc === null ? -1 : item.data.perc,
-        }))}
+        data={{
+          labels: choropleth_malaysia_blood_donation.data.map(
+            ({ state }: { state: string }) => CountryAndStates[state]
+          ),
+          values: choropleth_malaysia_blood_donation.data.map(
+            ({ data: { perc } }: { data: { perc: number | null } }) => perc
+          ),
+        }}
         unitY="%"
         graphChoice="state"
       />

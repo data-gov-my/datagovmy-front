@@ -129,8 +129,11 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
       <div ref={onRefChange}>
         <Choropleth
           className="h-[350px] w-full lg:h-[600px]"
-          data={dataset.chart}
-          colorScale={config.color}
+          data={{
+            labels: dataset.chart.map(({ id }: ChoroPoint) => id),
+            values: dataset.chart.map(({ value }: ChoroPoint) => value),
+          }}
+          //   colorScale={config.color}
           graphChoice={config.geojson}
           onReady={e => setMounted(e)}
         />

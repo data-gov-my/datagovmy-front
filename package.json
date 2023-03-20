@@ -14,12 +14,9 @@
     "*.{js,ts,tsx,css,md}": "prettier --write"
   },
   "dependencies": {
-    "@formatjs/intl-locale": "^3.0.11",
-    "@formatjs/intl-numberformat": "^8.3.3",
     "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^2.0.11",
     "@nivo/core": "^0.79.0",
-    "@nivo/geo": "^0.79.1",
     "@nivo/heatmap": "^0.79.1",
     "@nivo/waffle": "^0.80.0",
     "@tanstack/match-sorter-utils": "^8.1.1",
@@ -37,7 +34,6 @@
     "luxon": "^3.0.3",
     "mixpanel-browser": "^2.45.0",
     "next": "^13.2.3",
-    "next-compose-plugins": "^2.2.1",
     "next-i18next": "^11.0.0",
     "next-pwa": "^5.6.0",
     "next-sitemap": "^3.1.23",
@@ -49,6 +45,7 @@
     "sharp": "^0.31.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^13.2.4",
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/line-clamp": "^0.4.0",
     "@types/d3-scale": "^4.0.2",
