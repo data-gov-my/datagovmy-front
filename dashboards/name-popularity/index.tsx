@@ -18,7 +18,7 @@ import { FaceFrownIcon } from "@heroicons/react/24/outline";
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
 interface NamePopularityDashboardProps {
   // data: { name: string; total: number; decade: number[]; count: number[] };
@@ -140,7 +140,8 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               {query.name && query.type ? (
                 total ? (
                   <div className="w-full">
-                    <Timeseries
+                    <Bar
+                      className="h-[460px]"
                       title={
                         <>
                           <p className="text-lg font-bold">
@@ -158,21 +159,19 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                           </p>
                         </>
                       }
-                      interval="year"
                       data={{
-                        labels: decade,
+                        labels: decade.map(x => x.toString().concat("s")),
                         datasets: [
                           {
-                            type: "bar",
-                            label: `${t("Similar names")}`,
                             data: count,
-                            backgroundColor:
-                              theme === "light" ? "rgba(113, 113, 122, 0.3)" : "#3F3F46",
+                            label: "Similar names",
+                            borderRadius: 12,
+                            barThickness: 12,
+                            backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                           },
                         ],
                       }}
                       enableGridX={false}
-                      enableGridY={true}
                     />
                   </div>
                 ) : (
