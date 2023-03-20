@@ -45,8 +45,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
     name: emptyQuery ? "lim" : query.name,
   });
 
-  console.log(data);
-
   return {
     props: {
       ...i18n,

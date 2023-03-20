@@ -10,6 +10,8 @@ interface InputProps extends LabelProps {
   onChange?: (value: string) => void;
   required?: boolean;
   autoFocus?: boolean;
+  isValidation?: boolean;
+  validationText?: string;
 }
 
 const Input: FunctionComponent<InputProps> = ({
@@ -22,6 +24,8 @@ const Input: FunctionComponent<InputProps> = ({
   icon,
   required = false,
   autoFocus = false,
+  isValidation = false,
+  validationText = "",
   onChange,
 }) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -51,12 +55,14 @@ const Input: FunctionComponent<InputProps> = ({
           "outline-none focus:outline-none focus:ring-0 dark:bg-inherit dark:text-white",
           icon ? "pl-10" : "",
           className,
+          isValidation ? "border-2 border-danger dark:border-danger" : "",
         ].join(" ")}
         placeholder={placeholder}
         value={value}
         required={required}
         onChange={e => onChange && onChange(e.target.value)}
       />
+      {isValidation ? <p className="text-xs text-danger">{validationText}</p> : <></>}
     </div>
   );
 };
