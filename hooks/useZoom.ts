@@ -16,7 +16,7 @@ type Viewbox = {
 };
 
 /**
- *
+ * @deprecated useZoom is only intended to work with SVG chart. All of our chart components are now Canvas-based
  * @param enableZoom true | false
  * @param ref ref to the <div> containing the subject
  * @returns { onWheel, onMove, onDown, onUp, onReset, zoomIn, zoomOut }

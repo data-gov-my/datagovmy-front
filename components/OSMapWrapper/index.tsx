@@ -1,8 +1,9 @@
 import { FunctionComponent, MutableRefObject, ReactElement, useEffect, useRef } from "react";
-import { LatLngExpression, Map } from "leaflet";
+import { LatLng, LatLngBounds, LatLngExpression, LatLngTuple, Map } from "leaflet";
 import { MapContainer, TileLayer, useMap, Marker, Popup, GeoJSON } from "react-leaflet";
 import type { GeoJsonObject } from "geojson";
 import bbox from "geojson-bbox";
+import { useTheme } from "next-themes";
 
 type OSMapWrapperProps = {
   className?: string;
@@ -30,6 +31,8 @@ const OSMapWrapper: FunctionComponent<OSMapWrapperProps> = ({
   markers,
   geojson,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <div className={className}>
       {/* <div className="flex items-baseline justify-between pb-5">
@@ -44,6 +47,9 @@ const OSMapWrapper: FunctionComponent<OSMapWrapperProps> = ({
         zoom={zoom}
         zoomControl={enableZoom}
         scrollWheelZoom={true}
+        minZoom={6}
+        maxBounds={new LatLngBounds(new LatLng(1, 97), new LatLng(10, 122))}
+        maxBoundsViscosity={1}
       >
         <OSMapControl position={position} zoom={zoom} geojson={geojson} />
         {geojson && (
@@ -58,8 +64,9 @@ const OSMapWrapper: FunctionComponent<OSMapWrapperProps> = ({
           />
         )}
         <TileLayer
+          key={theme}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url={`https://api.maptiler.com/maps/pastel/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_API_KEY}`}
+          url={`http://localhost:8080/styles/${theme}/{z}/{x}/{y}.png`}
         />
         {markers?.map((item: any) => (
           <Marker key={item.name} position={item.position} autoPan>
