@@ -273,7 +273,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
               </p>
             </Card>
             <div className="basis-2/3">
-              <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline px-8 pt-8 dark:border-washed-dark lg:flex-row">
+              <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline px-8 dark:border-washed-dark lg:flex-row">
                 {query.bday ? (
                   <>
                     <Card className="mx-auto flex h-auto min-w-full flex-col self-center rounded-xl border border-outline bg-background px-4 py-16 dark:border-washed-dark dark:bg-washed-dark lg:min-w-max">
