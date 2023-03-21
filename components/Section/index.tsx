@@ -38,34 +38,36 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
     }, [date]);
     return (
       <section className={className} ref={ref}>
-        <div className="space-y-2">
-          <div className="flex flex-col flex-wrap items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
-            {title && typeof title === "string" ? <h4>{title}</h4> : title}
-            {date && date !== null && (
-              <span className="text-right text-sm text-dim">
-                {t("common.data_of", { date: displayDate })}
-              </span>
+        <div className="flex flex-col gap-8">
+          <div className="space-y-2">
+            <div className="flex flex-col flex-wrap items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
+              {title && typeof title === "string" ? <h4>{title}</h4> : title}
+              {date && date !== null && (
+                <span className="text-right text-sm text-dim">
+                  {t("common.data_of", { date: displayDate })}
+                </span>
+              )}
+            </div>
+            {(description || menu) && (
+              <div className="flex flex-wrap gap-x-6 gap-y-3 md:flex-nowrap md:items-end md:justify-between">
+                {description && typeof description === "string" ? (
+                  <p
+                    className={[
+                      "whitespace-pre-line text-base text-dim",
+                      menu ? "md:max-w-[70%]" : "",
+                    ].join(" ")}
+                  >
+                    {description}
+                  </p>
+                ) : (
+                  description
+                )}
+                {menu && <div className="flex w-full justify-end gap-3 md:w-auto">{menu}</div>}
+              </div>
             )}
           </div>
-          {(description || menu) && (
-            <div className="flex flex-wrap gap-x-6 gap-y-3 md:flex-nowrap md:items-end md:justify-between">
-              {description && typeof description === "string" ? (
-                <p
-                  className={[
-                    "whitespace-pre-line text-base text-dim",
-                    menu ? "md:max-w-[70%]" : "",
-                  ].join(" ")}
-                >
-                  {description}
-                </p>
-              ) : (
-                description
-              )}
-              {menu && <div className="flex w-full justify-end gap-3 md:w-auto">{menu}</div>}
-            </div>
-          )}
+          <div>{children}</div>
         </div>
-        <div className="pt-6">{children}</div>
       </section>
     );
   }
