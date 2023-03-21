@@ -63,7 +63,7 @@ const BloodDonation = ({
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-blood-donation"]);
 
-  const { data } = await get("/dashboard", { dashboard: "blood_donation", state: "sgr" });
+  const { data } = await get("/dashboard", { dashboard: "blood_donation", state: "mys" });
 
   // transform:
   Object.values(data.heatmap_retention.data).forEach((item: any) => {

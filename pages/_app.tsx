@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import { appWithTranslation } from "next-i18next";
 import { AppPropsLayout } from "@lib/types";
-import { Layout } from "@components/index";
+import Layout from "@components/Layout";
 import { useEffect, ReactNode, useState, createContext } from "react";
 import { useRouter } from "next/router";
 import mixpanel from "mixpanel-browser";
@@ -9,8 +9,6 @@ import mixpanelConfig from "@config/mixpanel";
 import { ga_track, init_session } from "@lib/mixpanel";
 import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
-import "@formatjs/intl-numberformat/polyfill";
-import "@formatjs/intl-numberformat/locale-data/en";
 
 // Global settings
 mixpanel.init(mixpanelConfig.token, { debug: process.env.NODE_ENV === "development" });

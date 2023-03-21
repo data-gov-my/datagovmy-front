@@ -113,3 +113,23 @@ button[role="tab"][aria-selected="true"]::after {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Hides outline for GeoChoropleth onclick */
+g:focus {
+  outline: none;
+}
+
+path:focus {
+  outline: none;
+}
+
+.leaflet-tooltip-left,
+.leaflet-tooltip-right {
+  @apply border-0 bg-black/80 font-sans text-xs text-white;
+}
+.leaflet-tooltip-right::before {
+  @apply border-r-0 border-r-black/80;
+}
+.leaflet-tooltip-left::before {
+  @apply border-l-0 border-l-black/80;
+}
