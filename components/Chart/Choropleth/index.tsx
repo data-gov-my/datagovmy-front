@@ -1,23 +1,17 @@
-import { Chart } from "react-chartjs-2";
-import * as ChartGeo from "chartjs-chart-geo";
-import { FunctionComponent, useMemo, useRef, useEffect, forwardRef, ForwardedRef } from "react";
-import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
-import ParliamentDesktop from "@lib/geojson/parlimen_desktop.json";
-import ParliamentMobile from "@lib/geojson/parlimen_mobile.json";
-import DistrictDesktop from "@lib/geojson/district_desktop.json";
-import DistrictMobile from "@lib/geojson/district_mobile.json";
-import DunDesktop from "@lib/geojson/dun_desktop.json";
-import DunMobile from "@lib/geojson/dun_mobile.json";
-import StateDesktop from "@lib/geojson/state_desktop.json";
-import StateMobile from "@lib/geojson/state_mobile.json";
-import { numFormat } from "@lib/helpers";
-import { BREAKPOINTS } from "@lib/constants";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { useTranslation } from "@hooks/useTranslation";
-import { useZoom } from "@hooks/useZoom";
-import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import type { ChoroplethColors, ChartCrosshairOption } from "@lib/types";
+import { ChartHeaderProps, default as ChartHeader } from "@components/Chart/ChartHeader";
 import { Chart as ChartJS, ChartTypeRegistry } from "chart.js";
+import * as ChartGeo from "chartjs-chart-geo";
+import { ForwardedRef, forwardRef, FunctionComponent, useEffect, useMemo, useState } from "react";
+import { Chart } from "react-chartjs-2";
+
+import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "@hooks/useTranslation";
+import { useWindowWidth } from "@hooks/useWindowWidth";
+import { BREAKPOINTS } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
+import type { ChartCrosshairOption } from "@lib/types";
+import type { FeatureCollection } from "geojson";
+import type { Color } from "@hooks/useColor";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 /**
@@ -33,55 +27,11 @@ interface ChoroplethProps extends ChartHeaderProps {
   className?: string;
   data?: ChoroplethData;
   prefixY?: string;
-  unitY?: string;
+  unit?: string;
   precision?: number | [number, number];
   enableZoom?: boolean;
-  enableScale?: boolean;
-  graphChoice?: "state" | "parlimen" | "dun" | "district";
-  colorScale?:
-    | "blues"
-    | "brBG"
-    | "buGn"
-    | "buPu"
-    | "cividis"
-    | "cool"
-    | "cubehelixDefault"
-    | "gnBu"
-    | "greens"
-    | "greys"
-    | "inferno"
-    | "magma"
-    | "orRd"
-    | "oranges"
-    | "pRGn"
-    | "piYG"
-    | "plasma"
-    | "puBu"
-    | "puBuGn"
-    | "puOr"
-    | "puRd"
-    | "purples"
-    | "rainbow"
-    | "rdBu"
-    | "rdGy"
-    | "rdPu"
-    | "rdYlBu"
-    | "rdYlGn"
-    | "reds"
-    | "sinebow"
-    | "spectral"
-    | "turbo"
-    | "viridis"
-    | "warm"
-    | "ylGn"
-    | "ylGnBu"
-    | "ylOrBr"
-    | "ylOrRd";
-  hideValue?: boolean;
-  borderWidth?: any;
-  borderColor?: any;
-  projectionTranslation?: any;
-  projectionScaleSetting?: number;
+  type?: "state" | "parlimen" | "dun" | "district";
+  color?: Color;
   onReady?: (status: boolean) => void;
   _ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
 }
@@ -93,26 +43,20 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
       controls,
       menu,
       title,
+      type = "state",
       data = dummyData,
       prefixY,
       precision = 1,
-      unitY,
-      graphChoice = "state",
-      colorScale,
-      borderWidth = 0.25,
-      borderColor = "#13293d",
+      unit,
+      color,
       enableZoom = true,
-      hideValue = false,
       onReady,
     },
     _ref: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>
   ) => {
     const { t } = useTranslation();
-    const zoomRef = useRef(null);
-    const { onWheel, onMove, onDown, onUp, onReset, zoomIn, zoomOut } = useZoom(
-      enableZoom,
-      zoomRef
-    );
+    const windowWidth = useWindowWidth();
+    const [choromap, setChoromap] = useState<FeatureCollection | undefined>(undefined);
 
     ChartJS.register(
       ChartGeo.ChoroplethController,
@@ -121,34 +65,15 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
       ChartGeo.GeoFeature
     );
 
-    const windowWidth = useWindowWidth();
-    const presets = useMemo(
-      () => ({
-        parlimen: {
-          feature:
-            windowWidth < BREAKPOINTS.MD ? ParliamentMobile.features : ParliamentDesktop.features,
-        },
-        dun: { feature: windowWidth < BREAKPOINTS.MD ? DunMobile.features : DunDesktop.features },
-        district: {
-          feature:
-            windowWidth < BREAKPOINTS.MD ? DistrictMobile.features : DistrictDesktop.features,
-        },
-        state: {
-          feature: windowWidth < BREAKPOINTS.MD ? StateMobile.features : StateDesktop.features,
-        },
-      }),
-      [windowWidth]
-    );
+    const viewport = useMemo<"desktop" | "mobile">(() => {
+      return windowWidth < BREAKPOINTS.MD ? "mobile" : "desktop";
+    }, [windowWidth]);
 
-    const config = useMemo(
-      () => ({
-        feature: presets[graphChoice].feature,
-        colors: colorScale,
-        borderWidth: borderWidth,
-        borderColor: borderColor,
-      }),
-      [colorScale, borderWidth, borderColor, windowWidth]
-    );
+    useEffect(() => {
+      import(`@lib/geojson/${type}/_${viewport}`).then(item => {
+        setChoromap(item.default as unknown as FeatureCollection);
+      });
+    }, [type, viewport]);
 
     const options: ChartCrosshairOption<"choropleth"> = {
       elements: {
@@ -163,8 +88,6 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
           display: false,
         },
         tooltip: {
-          // enabled: false,
-          // external: externalTooltipHandler,
           animation: {
             duration: 0,
           },
@@ -174,20 +97,13 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
           callbacks: {
             label: function (item: any) {
               if (!item.raw.feature.id) return "";
-              if (!item.raw.value) return ` ${item.raw.feature.id}: ${t("common.no_data")}`;
-              const special_code: Record<string, any> = {
-                "-1.1": "",
-              };
+              if (!item.raw.value) return `${item.raw.feature.id}: ${t("common.no_data")}`;
 
-              return ` ${item.raw.feature.id}${
-                hideValue
-                  ? ""
-                  : special_code[item.raw.value.toString()]
-                  ? special_code[item.raw.value.toString()]
-                  : `: ${prefixY ?? ""}${numFormat(item.raw.value, "standard", precision)}${
-                      unitY ?? ""
-                    }`
-              }`;
+              return `${item.raw.feature.id}${`: ${prefixY ?? ""}${numFormat(
+                item.raw.value,
+                "standard",
+                precision
+              )}${unit ?? ""}`}`;
             },
           },
         },
@@ -199,7 +115,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
         },
         color: {
           display: false,
-          interpolate: colorScale,
+          interpolate: color,
           missing: "#fff",
         },
       },
@@ -225,26 +141,30 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
           //   onTouchMove={onMove}
           //   onMouseOut={onUp}
         >
-          <Chart
-            ref={_ref}
-            type="choropleth"
-            data={{
-              labels: data.labels,
-              datasets: [
-                {
-                  label: "",
-                  borderWidth: config.borderWidth,
-                  borderColor: config.borderColor,
-                  outline: config.feature,
-                  data: config.feature.map((feature: any) => ({
-                    feature: feature,
-                    value: data.values[data.labels.indexOf(feature.properties?.state)],
-                  })),
-                },
-              ],
-            }}
-            options={options}
-          />
+          {choromap && (
+            <Chart
+              ref={_ref}
+              type="choropleth"
+              data={{
+                labels: data.labels,
+                datasets: [
+                  {
+                    label: "",
+                    borderWidth: 0.25,
+                    borderColor: "#000",
+                    outline: choromap.features,
+                    data: choromap
+                      ? choromap.features.map((feature: any) => ({
+                          feature: feature,
+                          value: data.values[data.labels.indexOf(feature.properties?.state)],
+                        }))
+                      : [],
+                  },
+                ],
+              }}
+              options={options}
+            />
+          )}
         </div>
         {/* {enableZoom && (
           <div className="absolute right-1 top-1 z-10 flex w-fit justify-end gap-2">
