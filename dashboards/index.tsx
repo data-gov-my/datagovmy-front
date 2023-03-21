@@ -165,7 +165,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
           return (
             dashboards.length > 0 && (
               <Section title={category}>
-                <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+                <div className="grid  grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-5">
                   {dashboards.map((item: Dashboard) => (
                     <At href={item.id} key={item.id}>
                       <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
@@ -286,15 +286,14 @@ interface RankingProps {
 
 const Ranking = ({ ranks }: RankingProps) => {
   const { t, i18n } = useTranslation();
-  const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item: RankItem, i) => (
           <At href={item.id} key={item.id}>
-            <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
-              <div className="relative flex items-center gap-4">
+            <div className="group w-full space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
+              <div className="relative flex items-center gap-3">
                 <span className="text-sm font-bold text-primary">#{i + 1}</span>
                 <p className="text-sm text-dim">{item.agency}</p>
                 <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
@@ -307,13 +306,13 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {item.description}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {numFormat(item.views, "compact")} views
+                  {`${numFormat(item.views, "compact")} ${t("common.views")}`}
                 </p>
                 <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
                   {t("components.click_to_explore")}
                 </p>
               </div>
-            </Card>
+            </div>
           </At>
         ))}
       </div>
