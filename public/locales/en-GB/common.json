@@ -1,7 +1,7 @@
 {
   "site": {
     "name": "data.gov.my",
-    "description": "Your one-stop interface to browse DOSM's wealth of open data. If data is the new oil, then openness is the pipeline that maximises its value."
+    "description": "Your one-stop interface to browse Malaysia's wealth of open data. If data is the new oil, then openness is the pipeline that maximises its value."
   },
   "error": {
     "output": "Output",
@@ -108,7 +108,7 @@
     "open_source": "Open Source",
     "frontend": "Frontend Repo: NextJS",
     "backend": "Backend Repo: Django",
-    "mampu_dosm": "MAMPU × DOSM",
+    "mampu": "MAMPU",
     "open_data": "Open Data",
     "public_open_data": "Public Sector Open Data",
     "guiding_principles": "Guiding Principles",
@@ -175,7 +175,7 @@
   },
   "catalogue": {
     "header": "Data Catalogue",
-    "description": "Your one-stop interface to browse our wealth of open data. This page is primarily meant to catalogue data published by DOSM, and aims to grow in depth and breadth every single day, providing richer and more varied data from the various divisions of DOSM.",
+    "description": "Your one-stop interface to browse Malaysia's wealth of open data. This page will grow in depth and breadth every single day, providing richer and more varied data from all Malaysian government and state agencies.",
     "dataset_count": "{{ count }} data series, and counting",
     "download": "Download",
     "category": "Category",
