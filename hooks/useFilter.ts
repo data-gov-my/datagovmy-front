@@ -39,7 +39,7 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
   }, [data]);
 
   const search: Function = useCallback(
-    debounce(() => {
+    debounce(actives => {
       const query = actives.map(([key, value]: [string, unknown]) => [
         key,
         Array.isArray(value)
@@ -57,12 +57,12 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
         },
       });
     }, 500),
-    [data]
+    []
   );
 
   useWatch(
     () => {
-      search();
+      search(actives);
     },
     [data],
     true
