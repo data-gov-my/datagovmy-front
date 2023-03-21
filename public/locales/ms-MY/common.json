@@ -1,7 +1,7 @@
 {
   "site": {
     "name": "data.gov.my",
-    "description": "Terokailah pelbagai jenis data terbitan DOSM. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya."
+    "description": "Terokailah pelbagai jenis data terbitan Malaysia. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya."
   },
   "error": {
     "output": "Hasil",
@@ -107,7 +107,7 @@
     "open_source": "Sumber Terbuka",
     "frontend": "Repo 'Frontend': NextJS",
     "backend": "Repo 'Backend': Django",
-    "mampu_dosm": "MAMPU × DOSM",
+    "mampu": "MAMPU",
     "open_data": "Data Terbuka",
     "public_open_data": "Data Terbuka Sektor Awam",
     "guiding_principles": "Prinsip Panduan",
@@ -130,7 +130,7 @@
   },
   "home": {
     "title": "Data: Asas kepada pentadbiran cekap",
-    "description": "data.gov.my adalah platform yang mengkatalog, memberi visualisasi, dan menganalisis pelbagai jenis data daripada Jabatan Perangkaan Malaysia. Segala data yang dipaparkan di platform ini adalah sumber terbuka dan percuma demi manfaat negara. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya.",
+    "description": "data.gov.my adalah platform yang mengkatalog, memberi visualisasi, dan menganalisis pelbagai jenis data daripada pelbagai agensi kerajaan dan negeri Malaysia. Segala data yang dipaparkan di platform ini adalah sumber terbuka dan percuma demi manfaat negara. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya.",
     "section_1": {
       "title": "Malaysia secara Sepintas Lalu",
       "stats": {
@@ -172,7 +172,7 @@
   },
   "catalogue": {
     "header": "Katalog Data",
-    "description": "Layarilah segala data terbuka kami di sini. Laman ini terutamanya bertujuan untuk mengkatalog data yang diterbitkan oleh DOSM dan akan diperkembangkan dari semasa ke semasa, maka membekalkan data yang lebih mendalam dan luas daripada bahagian-bahagian di DOSM.",
+    "description": "Layarilah segala data terbuka Malaysia di sini. Laman ini akan berkembang dengan lebih mendalam dan luas setiap hari, menyediakan data yang lebih kaya dan berbagai dari semua agensi kerajaan dan negeri Malaysia.",
     "dataset_count": "{{ count }} siri data, dan semakin meningkat",
     "download": "Muat turun",
     "category": "Kategori",
