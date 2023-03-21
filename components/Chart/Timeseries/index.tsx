@@ -275,8 +275,10 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
               },
               tooltipFormat: tooltipFormat
                 ? tooltipFormat
-                : ["year", "month", "quarter"].includes(interval as string)
-                ? { quarter: "qQ yyyy", month: "MMM yyyy", year: "yyyy" }[interval as string]
+                : ["year", "month", "quarter", "day"].includes(interval as string)
+                ? { quarter: "qQ yyyy", month: "MMM yyyy", year: "yyyy", day: "dd MMM" }[
+                    interval as string
+                  ]
                 : "dd MMM yyyy",
             },
             grid: {

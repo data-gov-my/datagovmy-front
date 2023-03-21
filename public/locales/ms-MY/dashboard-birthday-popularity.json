@@ -1,4 +1,22 @@
 {
   "header": "Populariti Hari Jadi",
-  "description": "Papan pemuka ini"
+  "description": "Papan pemuka ini",
+  "search": "",
+  "enter_birthday": "Pilih Hari Jadi anda",
+  "choose_state": "Pilih negeri (tidak wajib)",
+  "privacy": "",
+  "start_search": "",
+  "section_1": {
+    "age": "Anda berumur {{ age }}",
+    "info1": "",
+    "info2": "",
+    "info3": "",
+    "info4": "",
+    "info5": "",
+    "info6": ""
+  },
+  "section_2": {
+    "title": "Jumlah orang yang dilahirkan pada setiap hari",
+    "births": "Kelahiran"
+  }
 }
