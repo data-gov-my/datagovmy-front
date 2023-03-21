@@ -23,10 +23,17 @@ const BirthdayPopularity = ({
   );
 };
 
+const isFutureDate = (date: Date) => {
+  return new Date().getTime() - date.getTime() < 0;
+};
+
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-popularity"]);
+
+  const date = new Date(String(query.bday));
+  const str: any = isFutureDate(date) ? (query = {}) : query.bday!;
+
   const emptyQuery = Object.keys(query).length === 0;
-  const str: any = query.bday!;
   const { data } = await get("/dashboard", {
     dashboard: "birthday_popularity",
     state: emptyQuery ? "mys" : query.state,

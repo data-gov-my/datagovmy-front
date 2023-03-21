@@ -93,6 +93,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     return result;
   };
 
+  const today = new Date().toISOString().split("T")[0];
   const getAge = (dateString: string) => {
     let years = 0;
     let months = 0;
@@ -137,14 +138,14 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
   };
   const highlightedArray = highlightBar(query.bday, barColourArray);
 
+  const birthYear = Number(query.bday.substring(0, query.bday.indexOf("-")));
+  console.log(birthYear);
   const { data, setData } = useData({
-    state: query.state ? query.state : undefined,
-    minmax: query.bday
-      ? [
-          Number(query.bday.substring(0, query.bday.indexOf("-"))) - oldest_year - 1,
-          Number(query.bday.substring(0, query.bday.indexOf("-"))) - oldest_year + 1,
-        ]
-      : [0, yearRange.length - 1],
+    state: query.state ? query.state : "mys",
+    minmax:
+      birthYear <= 2017 && birthYear >= oldest_year
+        ? [birthYear - oldest_year - 1, birthYear - oldest_year + 1]
+        : [0, yearRange.length - 1],
     colour: query.bday ? highlightedArray : barColourArray,
     bday: query.bday ? query.bday : undefined,
     string: query.bday ? query.bday : undefined,
@@ -166,6 +167,18 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     };
   };
   const filtered_timeline = useCallback(filterTimeline, [data.minmax, timeseries]);
+
+  const section1 = () => {
+    {
+      t("dashboard-birthday-popularity:section_1.info3");
+    }
+    <span className="mx-auto text-lg font-bold text-primary">{`${rank.data.births.toLocaleString(
+      "en-US"
+    )}`}</span>;
+    {
+      t("dashboard-birthday-popularity:section_1.info4");
+    }
+  };
 
   // const sliderRef = useRef<SliderRef>(null);
   // useWatch(() => {
@@ -211,18 +224,22 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                 name="date"
                 id="date"
                 data-placeholder="Date of birth"
-                value={query.bday}
+                value={data.string}
                 // placeholder="28 September 1993"
                 // required pattern="dd Month yyyy"
+                max={today}
+                required
                 onChange={selected => {
                   setData("string", selected.target.value);
                   // setData("bday", selected.target.valueAsDate);
                 }}
+                onKeyDown={e => {
+                  if (e.key === "Enter") handleClick();
+                }}
                 className={[
                   `relative flex w-full gap-[6px] rounded-md border border-outline bg-white py-[6px] pl-3 text-left text-sm hover:border-outlineHover
-                  focus:outline-none focus-visible:ring-0 active:bg-washed disabled:pointer-events-none disabled:bg-outline 
-                  disabled:text-dim dark:border-washed-dark dark:border-outline/10 dark:bg-black dark:text-white dark:active:bg-washed/10 lg:items-center 
-                  `,
+                  focus:outline-none focus-visible:ring-0 active:bg-washed dark:border-washed-dark dark:border-outline/10 dark:bg-black dark:text-white dark:active:bg-washed/10 lg:items-center 
+                   `,
                 ].join(" ")}
               ></input>
               <p className="mt-6 mb-3 text-sm font-medium text-black dark:text-white">
@@ -249,7 +266,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
               </p>
             </Card>
             <div className="basis-2/3">
-              <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:p-8">
+              <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline px-8 pt-8 dark:border-washed-dark lg:flex-row">
                 {query.bday ? (
                   <>
                     <Card className="mx-auto flex h-auto min-w-full flex-col self-center rounded-xl border border-outline bg-background px-4 py-16 dark:border-washed-dark dark:bg-washed-dark lg:min-w-max">
@@ -275,16 +292,13 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                         <span className="mx-auto text-lg font-bold text-primary">
                           {CountryAndStates[data.state]}
                         </span>
-                        {t("dashboard-birthday-popularity:section_1.info3")}
-                        <span className="mx-auto text-lg font-bold text-primary">{`${rank.data.births.toLocaleString(
-                          "en-US"
-                        )}`}</span>
-                        {t("dashboard-birthday-popularity:section_1.info4")}
-                        <span className="mx-auto text-lg font-bold text-primary">{`${rank.data.rank}th`}</span>
+                        {data.state !== "mys" ? section1 : <></>}
                         {t("dashboard-birthday-popularity:section_1.info5")}
+                        <span className="mx-auto text-lg font-bold text-primary">{`${rank.data.rank}th`}</span>
+                        {t("dashboard-birthday-popularity:section_1.info6")}
                       </p>
                       <p className="mx-auto font-medium text-black dark:text-white">
-                        {t("dashboard-birthday-popularity:section_1.info6")}
+                        {t("dashboard-birthday-popularity:section_1.info7")}
                       </p>
                     </div>
                   </>
