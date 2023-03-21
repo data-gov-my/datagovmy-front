@@ -138,14 +138,20 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
   };
   const highlightedArray = highlightBar(query.bday, barColourArray);
 
-  const birthYear = Number(query.bday.substring(0, query.bday.indexOf("-")));
-  console.log(birthYear);
+  const handleMinMax = (string: String) => {
+    return string &&
+      Number(string.substring(0, string.indexOf("-"))) < 2017 &&
+      Number(string.substring(0, string.indexOf("-"))) > oldest_year
+      ? [
+          Number(string.substring(0, string.indexOf("-"))) - oldest_year - 1,
+          Number(string.substring(0, string.indexOf("-"))) - oldest_year + 1,
+        ]
+      : [0, yearRange.length - 1];
+  };
+
   const { data, setData } = useData({
     state: query.state ? query.state : "mys",
-    minmax:
-      birthYear <= 2017 && birthYear >= oldest_year
-        ? [birthYear - oldest_year - 1, birthYear - oldest_year + 1]
-        : [0, yearRange.length - 1],
+    minmax: handleMinMax(query.bday),
     colour: query.bday ? highlightedArray : barColourArray,
     bday: query.bday ? query.bday : undefined,
     string: query.bday ? query.bday : undefined,
@@ -156,6 +162,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     setData("colour", barColourArray);
     setFilter("state", data.state);
     setFilter("bday", data.string);
+    setData("minmax", handleMinMax(data.string));
   };
 
   const filterTimeline = () => {
