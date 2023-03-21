@@ -324,8 +324,8 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
         {/* Number of people born on each day of the year */}
         <Section
           title={t("dashboard-birthday-popularity:section_2.title", {
-            start_year: yearRange[0],
-            end_year: yearRange[yearRange.length - 1],
+            start_year: yearRange[data.minmax[0]],
+            end_year: yearRange[data.minmax[1]],
           })}
           date={timeseries.data_as_of}
           className={[query.bday ? "opacity-100" : "opacity-20", "py-8"].join(" ")}
