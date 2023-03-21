@@ -135,14 +135,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
 
         {!query["search"] && !query["source"] && (
           <Section
-            title={"Most Popular Dashboards"}
-            description="Explore the hottest dashboards now"
-            menu={
-              <Tabs.List
-                options={PANELS.map(item => item.name)}
-                current={data.tabs_section_1}
-                onChange={index => setData("tabs_section_1", index)}
-              />
+            title={
+              <>
+                <h4>{t("dashboard.section1_title")}</h4>
+                <Tabs.List
+                  options={PANELS.map(item => item.name)}
+                  current={data.tabs_section_1}
+                  onChange={index => setData("tabs_section_1", index)}
+                />
+              </>
             }
           >
             <Tabs
@@ -298,7 +299,7 @@ const Ranking = ({ ranks }: RankingProps) => {
                 <p className="text-sm text-dim">{item.agency}</p>
                 <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
-              <div className="relative overflow-hidden lg:w-[224.67px]">
+              <div className="relative flex flex-col items-start gap-3 overflow-hidden">
                 <p className="truncate text-lg font-bold dark:text-white" title={item.name}>
                   {item.name}
                 </p>

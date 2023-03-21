@@ -173,8 +173,8 @@
     }
   },
   "dashboard": {
-    "header": "Dashboards",
-    "description": "Your one-stop interface to browse our wealth of open data. This page is primarily meant to catalogue data published by DOSM, and aims to grow in depth and breadth every single day, providing richer and more varied data from the various divisions of DOSM.",
+    "header": "A collection of Dashboards",
+    "description": "Your one-stop interface to browse Malaysia's wealth of open data.",
     "demographics": "Demographics",
     "source_placeholder": "Select Agency",
     "search_placeholder": "Search for dashboards",
