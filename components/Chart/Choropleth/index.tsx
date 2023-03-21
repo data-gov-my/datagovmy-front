@@ -4,7 +4,7 @@ import * as ChartGeo from "chartjs-chart-geo";
 import { ForwardedRef, forwardRef, FunctionComponent, useEffect, useMemo, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
-import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+// import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { BREAKPOINTS } from "@lib/constants";
@@ -130,16 +130,10 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
         <ChartHeader title={title} menu={menu} controls={controls} />
 
         <div
-          className={`border border-outline border-opacity-0 p-4 transition-all active:border-opacity-100 ${className}`}
-          //   ref={zoomRef}
-          //   onWheel={onWheel}
-          //   onMouseMove={onMove}
-          //   onMouseDown={onDown}
-          //   onMouseUp={onUp}
-          //   onTouchStart={onDown}
-          //   onTouchEnd={onUp}
-          //   onTouchMove={onMove}
-          //   onMouseOut={onUp}
+          className={[
+            "border border-outline border-opacity-0 p-4 transition-all active:border-opacity-100",
+            className,
+          ].join(" ")}
         >
           {choromap && (
             <Chart

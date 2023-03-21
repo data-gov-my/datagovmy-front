@@ -132,11 +132,6 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`http://localhost:8080/styles/${theme}/{z}/{x}/{y}.png`}
         />
-        {/* {markers?.map((item: any) => (
-          <Marker key={item.name} position={item.position} autoPan>
-            <Popup>{item.name}</Popup>
-          </Marker>
-        ))} */}
       </MapContainer>
     </div>
   );
