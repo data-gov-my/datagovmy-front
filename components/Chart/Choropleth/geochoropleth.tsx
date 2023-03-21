@@ -99,7 +99,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
         <>
           {data &&
             choromap?.features.map(feature => {
-              const value = data.values[data.labels.indexOf(feature.properties?.state)];
+              const value = data.values[data.labels.indexOf(feature.properties![type])];
 
               return (
                 <GeoJSON
@@ -118,7 +118,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
                   }}
                 >
                   <Tooltip sticky>
-                    {feature.properties?.state}:{" "}
+                    {feature.properties![type]}:{" "}
                     {value !== null
                       ? numFormat(value, "standard", precision).concat(unit ?? "")
                       : t("common.no_data")}

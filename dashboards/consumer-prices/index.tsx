@@ -382,9 +382,9 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                 ),
               }}
               precision={[2, 2]}
-              prefixY="RM"
-              graphChoice="district"
-              colorScale="reds"
+              prefix="RM"
+              type="district"
+              color="reds"
             />
           </div>
         </Section>

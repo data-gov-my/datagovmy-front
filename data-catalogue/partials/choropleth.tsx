@@ -1,11 +1,12 @@
-import type { ChoroplethColors, DownloadOptions } from "@lib/types";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
-import { default as dynamic } from "next/dynamic";
+import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import type { Color } from "@hooks/useColor";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
-import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download } from "@lib/helpers";
+import type { DownloadOptions } from "@lib/types";
 import { track } from "mixpanel-browser";
+import { default as dynamic } from "next/dynamic";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
   ssr: false,
@@ -18,7 +19,7 @@ type ChoroPoint = {
 
 interface CatalogueChoroplethProps {
   config: {
-    color: ChoroplethColors;
+    color: Color;
     geojson: "state" | "dun" | "parlimen" | "district";
     precision: number;
   };
@@ -133,8 +134,8 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
             labels: dataset.chart.map(({ id }: ChoroPoint) => id),
             values: dataset.chart.map(({ value }: ChoroPoint) => value),
           }}
-          //   colorScale={config.color}
-          graphChoice={config.geojson}
+          color={config.color}
+          type={config.geojson}
           onReady={e => setMounted(e)}
         />
       </div>

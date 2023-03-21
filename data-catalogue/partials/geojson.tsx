@@ -135,7 +135,7 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
       <div ref={onRefChange}>
         <Choropleth
           className="h-[350px] w-full lg:h-[600px]"
-          graphChoice={config.geojson}
+          type={config.geojson}
           onReady={e => setMounted(e)}
         />
       </div>

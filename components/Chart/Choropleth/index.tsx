@@ -26,7 +26,7 @@ export type ChoroplethData = {
 interface ChoroplethProps extends ChartHeaderProps {
   className?: string;
   data?: ChoroplethData;
-  prefixY?: string;
+  prefix?: string;
   unit?: string;
   precision?: number | [number, number];
   enableZoom?: boolean;
@@ -45,7 +45,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
       title,
       type = "state",
       data = dummyData,
-      prefixY,
+      prefix,
       precision = 1,
       unit,
       color,
@@ -99,7 +99,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
               if (!item.raw.feature.id) return "";
               if (!item.raw.value) return `${item.raw.feature.id}: ${t("common.no_data")}`;
 
-              return `${item.raw.feature.id}${`: ${prefixY ?? ""}${numFormat(
+              return `${item.raw.feature.id}${`: ${prefix ?? ""}${numFormat(
                 item.raw.value,
                 "standard",
                 precision
