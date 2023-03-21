@@ -1,28 +1,28 @@
-import { FunctionComponent, useCallback, useEffect, useRef } from "react";
-import { useTranslation } from "@hooks/useTranslation";
+import AgencyBadge from "@components/AgencyBadge";
+import BarMeter from "@components/Chart/BarMeter";
+import Slider, { SliderRef } from "@components/Chart/Slider";
+import { PusatDarahNegaraIcon } from "@components/Icon";
 import {
+  Button,
   Container,
   Dropdown,
   Hero,
   Panel,
   Section,
-  Tabs,
   StateDropdown,
-  Button,
+  Tabs,
 } from "@components/index";
-import dynamic from "next/dynamic";
+import LeftRightCard from "@components/LeftRightCard";
+import { ArrowPathIcon, MapPinIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
-import Slider, { SliderRef } from "@components/Chart/Slider";
-import { useRouter } from "next/router";
-import { useWatch } from "@hooks/useWatch";
-import BarMeter from "@components/Chart/BarMeter";
+import { useSlice } from "@hooks/useSlice";
+import { useTranslation } from "@hooks/useTranslation";
+import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
-import LeftRightCard from "@components/LeftRightCard";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { ArrowPathIcon, MapPinIcon } from "@heroicons/react/24/solid";
-import AgencyBadge from "@components/AgencyBadge";
-import { PusatDarahNegaraIcon } from "@components/Icon";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { FunctionComponent, useRef } from "react";
 
 const Empty = dynamic(() => import("@components/Chart/Empty"), { ssr: false });
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
@@ -78,23 +78,12 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     tabs_section_3: 0,
   });
 
-  const filterTimeline = () => {
-    return {
-      x: timeseries_all.data.x.slice(data.minmax[0], data.minmax[1] + 1),
-      daily: timeseries_all.data.daily.slice(data.minmax[0], data.minmax[1] + 1),
-      line_daily: timeseries_all.data.line_daily.slice(data.minmax[0], data.minmax[1] + 1),
-    };
-  };
-  const filtered_timeline = useCallback(filterTimeline, [data.minmax, timeseries_all]);
+  const { coordinate } = useSlice(timeseries_all.data, data.minmax);
 
   const handleClearSelection = () => {
     setData("zoom_state", undefined);
     setData("zoom_facility", undefined);
   };
-
-  useWatch(() => {
-    sliderRef.current && sliderRef.current.reset();
-  }, [timeseries_all.data]);
 
   const KEY_VARIABLES_SCHEMA = [
     {
@@ -115,11 +104,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     <>
       <p className={"text-dim"}>{t("dashboard-blood-donation:title_description")}</p>
       <div className="pt-6">
-        <StateDropdown
-          url={routes.BLOOD_DONATION}
-          currentState={currentState}
-          exclude={["pjy", "pls", "lbn", "kvy"]}
-        />
+        <StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />
       </div>
     </>
   );
@@ -175,7 +160,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
             setData("zoom_facility", undefined);
             setData("zoom_state", selected.value);
           }}
-          exclude={["kvy", "lbn", "pls", "pjy", "mys"]}
+          exclude={["lbn", "pls", "pjy", "mys"]}
           width="w-full"
         />
         <Dropdown
@@ -313,14 +298,13 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
             className="h-[350px] w-full"
             title={t("dashboard-blood-donation:combine_title")}
             state={currentState}
-            interval="month"
-            stats={null}
+            interval="auto"
             data={{
-              labels: filtered_timeline().x,
+              labels: coordinate.x,
               datasets: [
                 {
                   type: "line",
-                  data: filterTimeline().line_daily,
+                  data: coordinate.line_daily,
                   label: t("dashboard-blood-donation:combine_tooltip1"),
                   borderColor: AKSARA_COLOR.DANGER,
                   borderWidth: 1.5,
