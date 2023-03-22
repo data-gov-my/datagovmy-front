@@ -7,7 +7,7 @@
   "privacy": "We do not store your input - only you can see your search.",
   "start_search": "Start searching for your birthday.",
   "section_1": {
-    "age": "You are {{ age }} old",
+    "age": "You are {{ years }} years, {{ months }} months and {{ days }} days old",
     "info1": "On your birthday, there were ",
     "info2": " babies born in ",
     "info3": ", and ",
@@ -18,6 +18,9 @@
   },
   "section_2": {
     "title": "Number of babies born on each date, {{ start_year }} to {{ end_year }}",
+    "sameyear": "Number of babies born on each date in {{ year }}",
+    "description": "Note: There are no births on 29 Feb because there are no leap years between {{ start_year }} and {{ end_year }}.",
+    "desc_sameyear": "Note: There are no births on 29 Feb because there are no leap years in {{ year }}.",
     "births": "Births"
   }
 }

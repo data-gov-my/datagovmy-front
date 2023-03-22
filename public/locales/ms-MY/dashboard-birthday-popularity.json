@@ -18,6 +18,9 @@
   },
   "section_2": {
     "title": "Jumlah orang yang dilahirkan pada setiap hari",
+    "same_year": "",
+    "description": "",
+    "desc_sameyear": "",
     "births": "Kelahiran"
   }
 }
