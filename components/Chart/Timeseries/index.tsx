@@ -26,6 +26,7 @@ import {
   Filler,
   BarController,
   ChartDataset,
+  TickOptions,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
@@ -76,6 +77,8 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableLegend?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  tickOptionsX?: TickOptions;
+  gridOffsetX?: boolean;
   stats?: Array<StatProps> | null;
   displayNumFormat?: (
     value: number,
@@ -112,6 +115,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
       enableLegend = false,
       enableGridX = false,
       enableGridY = true,
+      tickOptionsX,
+      gridOffsetX = true,
       beginZero = false,
       maxY,
       displayNumFormat = numFormat,
@@ -282,20 +287,23 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
                 : "dd MMM yyyy",
             },
             grid: {
+              offset: gridOffsetX,
               display: enableGridX,
               borderWidth: 1,
               borderDash: [5, 10],
             },
-            ticks: {
-              major: {
-                enabled: true,
-              },
-              minRotation: 0,
-              maxRotation: 0,
-              font: {
-                family: "Inter",
-              },
-            },
+            ticks: tickOptionsX
+              ? tickOptionsX
+              : {
+                  major: {
+                    enabled: true,
+                  },
+                  minRotation: 0,
+                  maxRotation: 0,
+                  font: {
+                    family: "Inter",
+                  },
+                },
             stacked: mode === "stacked",
           },
           y: {
