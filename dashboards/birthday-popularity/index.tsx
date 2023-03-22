@@ -15,7 +15,6 @@ import {
 import Card from "@components/Card";
 import { useFilter } from "@hooks/useFilter";
 import { DateTimeFormatOptions } from "luxon";
-import { TickOptions } from "chart.js";
 
 /**
  * Birthday Popularity Dashboard
@@ -116,13 +115,10 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
       const daysInLastMonth = new Date(currentDate.getFullYear(), currentMonth, 0).getDate();
       console.log(daysInLastMonth);
       days = daysInLastMonth + currentDay - birthDay;
-      // if (isLeapYear(currentDate.getFullYear()) && currentMonth === 2) daysInLastMonth++;
-      // console.log(days)
       if (months < 0) {
         years--;
         months = 11;
       }
-      // if (isLeapYear(birthDate.getFullYear()) && birthMonth === 1 && birthDay === 29) days++;
     }
     return { years, months, days };
   };
@@ -203,7 +199,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
         background="bg-gradient-radial border-b dark:border-zinc-800 from-[#A1BFFF] to-background dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.demography"), "text-primary"]}
         header={[t("dashboard-birthday-popularity:header")]}
-        description={[t("dashboard-birthday-popularity:description"), "text-outline"]}
+        description={[t("dashboard-birthday-popularity:description"), "dark:text-outline"]}
         agencyBadge={
           <AgencyBadge
             agency="Jabatan Pendaftaran Negara"
@@ -239,7 +235,6 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                   required
                   onChange={selected => {
                     setData("string", selected.target.value);
-                    // setData("bday", selected.target.valueAsDate);
                   }}
                   onKeyDown={e => {
                     if (e.key === "Enter") handleClick();
