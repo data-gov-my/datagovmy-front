@@ -47,7 +47,7 @@ type ConditionalProps<L, V> =
 type DropdownProps<L, V> = CommonProps<L, V> & ConditionalProps<L, V> & LabelProps;
 
 const Dropdown = <L extends string | number | ReactElement | ReactElement[] = string, V = string>({
-  className = "flex-col lg:flex-row ",
+  className = "lg:flex-row ",
   disabled = false,
   multiple = false,
   icon,
@@ -137,12 +137,14 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
 
               {/* Flag (selected) */}
               {enableFlag && selected && (
-                <Image
-                  src={`/static/images/states/${(selected as OptionType<L, V>).value}.jpeg`}
-                  width={20}
-                  height={12}
-                  alt={(selected as OptionType<L, V>).label as string}
-                />
+                <div className="mt-1">
+                  <Image
+                    src={`/static/images/states/${(selected as OptionType<L, V>).value}.jpeg`}
+                    width={20}
+                    height={12}
+                    alt={(selected as OptionType<L, V>).label as string}
+                  />
+                </div>
               )}
 
               {/* Label */}
