@@ -77,14 +77,18 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   };
 
   const compareHandler = () => {
-    const name: string = compareData.name.trim().replace(/\b(\w)/g, (s: string) => s.toUpperCase());
+    const name: string = compareData.name
+      .toLowerCase()
+      .trim()
+      .replace(/\b(\w)/g, (s: string) => s.toUpperCase());
+
+    if (name.length > 0) {
+      compareData.names.findIndex(
+        (x: OptionType) => x.value.toLowerCase() === name.toLowerCase()
+      ) === -1 && compareData.names.push({ label: name, value: name });
+    }
 
     if (compareData.names.length > 1) {
-      if (name.length > 0) {
-        compareData.names.findIndex(
-          (x: OptionType) => x.value.toLowerCase() === name.toLowerCase()
-        ) === -1 && compareData.names.push({ label: name, value: name });
-      }
       setFilter("type", compareData.type.value === "compare_first" ? "first" : "last");
       setFilter(
         "name",
@@ -93,12 +97,16 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
       setCompareData("name", "");
       setFilter("compare_name", "true");
     } else {
-      setCompareData("validation", "Please enter more than one name for comparison");
+      setCompareData("name", "");
+      setCompareData("validation", "Please enter more than one name");
     }
   };
 
   const compareNameInputHandler = (e: string) => {
-    const name = e.split(",")[0].replace(/\b(\w)/g, s => s.toUpperCase());
+    const name = e
+      .toLowerCase()
+      .split(",")[0]
+      .replace(/\b(\w)/g, s => s.toUpperCase());
 
     if (name.length > 0) {
       compareData.names.findIndex(
@@ -197,70 +205,68 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
             </div>
             <div
               className={
-                "col-span-full flex h-[460px] place-content-center place-items-center lg:col-span-2"
+                "col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2"
               }
             >
               {query.name && query.type && query.compare_name !== "true" ? (
-                data.total ? (
-                  <div className="w-full">
-                    <Bar
-                      precision={0}
-                      suggestedMaxY={10}
-                      className="h-[460px]"
-                      title={
-                        <>
-                          <p className="text-lg font-bold">
-                            <span>
-                              {t("dashboard-name-popularity:bar_title", {
-                                count: data.total || 0,
-                                type: query.type,
-                              })}
-                            </span>
-                            <span className="capitalize">{`"${query.name}".`}</span>
-                          </p>
-                          <p className="text-sm text-dim">
-                            Here’s how many newborns were named{" "}
-                            <span className="capitalize">{query.name}</span> over the years:
-                          </p>
-                        </>
-                      }
-                      data={{
-                        labels: data.decade.map((x: number) => x.toString().concat("s")),
-                        datasets: [
-                          {
-                            data: data.count,
-                            label: "Similar names",
-                            borderRadius: 12,
-                            barThickness: 12,
-                            backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
-                          },
-                        ],
-                      }}
-                      enableGridX={false}
-                      // precision={0}
-                      // minY={0}
-                      // maxY={Math.max(10, ...(data.count + 5))}
-                    />
-                  </div>
-                ) : (
-                  <div className="flex h-fit w-fit items-center gap-2 rounded-md bg-slate-200 p-3 text-center text-sm dark:bg-zinc-800">
-                    <FaceFrownIcon className="h-4 w-4" />
-                    {t("dashboard-name-popularity:validation_text", {
-                      name: query.name,
-                      type: query.type,
-                    })}
-                  </div>
-                )
-              ) : (
-                // <Empty
-                // type="timeseries"
-                // placeholder={
-                <div className="flex h-fit w-fit items-center gap-2 rounded-md bg-slate-200 p-3 text-center text-sm dark:bg-zinc-800">
-                  <MagnifyingGlassIcon className=" h-4 w-4" />
-                  {t("dashboard-name-popularity:search_prompt")}
+                <div className="w-full">
+                  <Bar
+                    precision={0}
+                    suggestedMaxY={10}
+                    className="h-[460px]"
+                    title={
+                      <>
+                        <p className="text-lg font-bold">
+                          <span>
+                            {t("dashboard-name-popularity:bar_title", {
+                              count: data.total || 0,
+                              type: query.type,
+                            })}
+                          </span>
+                          <span className="capitalize">{`"${query.name}".`}</span>
+                        </p>
+                        <p className="text-sm text-dim">
+                          Here’s how many newborns were named{" "}
+                          <span className="capitalize">{query.name}</span> over the years:
+                        </p>
+                      </>
+                    }
+                    data={{
+                      labels: data.decade
+                        ? data.decade.map((x: number) => x.toString().concat("s"))
+                        : [
+                            "1920s",
+                            "1930s",
+                            "1940s",
+                            "1950s",
+                            "1960s",
+                            "1970s",
+                            "1980s",
+                            "1990s",
+                            "2000s",
+                            "2010s",
+                          ],
+                      datasets: [
+                        {
+                          data: data.count,
+                          label: "Similar names",
+                          borderRadius: 12,
+                          barThickness: 12,
+                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                    // precision={0}
+                    // minY={0}
+                    // maxY={Math.max(10, ...(data.count + 5))}
+                  />
                 </div>
-                // }
-                // />
+              ) : (
+                <Card className="hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
+                  <MagnifyingGlassIcon className=" h-4 w-4" />
+                  <p>{t("dashboard-name-popularity:search_prompt")}</p>
+                </Card>
               )}
             </div>
           </div>
@@ -270,64 +276,68 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="flex flex-col justify-start gap-6 rounded-xl border border-slate-200	bg-slate-50 p-6 shadow dark:border-zinc-800 dark:bg-zinc-800/50">
-                <div className="flex flex-col gap-4">
-                  <span className="text-sm font-medium">
-                    {t("dashboard-name-popularity:compare_radio")}
-                  </span>
-                  <Radio
-                    name="compare_type"
-                    className="inline-flex gap-4"
-                    options={compareFilterTypes}
-                    value={compareData.type}
-                    onChange={e => {
-                      setCompareData("type", e);
-                    }}
-                  />
-                </div>
-                <Input
-                  type="search"
-                  disabled={compareData.names.length > 7}
-                  className={"rounded-md border dark:focus:border-primary-dark".concat(
-                    compareData.validation
-                      ? " border-2 border-danger dark:border-danger"
-                      : compareData.names.length > 7
-                      ? " border border-outline bg-outline/50 text-dim"
-                      : " border-2 border-slate-200 dark:border-zinc-800 dark:bg-zinc-900"
-                  )}
-                  placeholder={
-                    compareData.type.value === "last"
-                      ? "E.g. Ibrahim, Loke, Veerapan"
-                      : "E.g. Anwar, Siew Fook, Sivakumar"
-                  }
-                  value={compareData.name}
-                  onChange={e => {
-                    setCompareData("validation", false);
-                    setCompareData("name", e !== "," ? e : "");
-                  }}
-                  onKeyDown={e => {
-                    if (e.key === "Enter") {
-                      compareHandler();
-                    } else if (e.key === ",") {
-                      compareNameInputHandler((e.target as HTMLInputElement).value);
-                      setCompareData("name", "");
-                    } else {
-                      setCompareData("validation", false);
+                <div className="flex flex-col justify-start gap-3">
+                  <div className="flex flex-col gap-4">
+                    <span className="text-sm font-medium">
+                      {t("dashboard-name-popularity:compare_radio")}
+                    </span>
+                    <Radio
+                      name="compare_type"
+                      className="inline-flex gap-4"
+                      options={compareFilterTypes}
+                      value={compareData.type}
+                      onChange={e => {
+                        setCompareData("type", e);
+                      }}
+                    />
+                  </div>
+                  <Input
+                    type="search"
+                    disabled={compareData.names.length > 9}
+                    className={"rounded-md border dark:focus:border-primary-dark".concat(
+                      compareData.validation
+                        ? " border-2 border-danger dark:border-danger"
+                        : compareData.names.length > 9
+                        ? " border border-outline bg-outline/50 text-dim"
+                        : " border-2 border-slate-200 dark:border-zinc-800 dark:bg-zinc-900"
+                    )}
+                    placeholder={
+                      compareData.type.value === "last"
+                        ? "E.g. Ibrahim, Loke, Veerapan"
+                        : "E.g. Anwar, Siew Fook, Sivakumar"
                     }
-                  }}
-                  isValidation={compareData.validation}
-                  validationText={compareData.validation}
-                />
-                <Chips
-                  data={compareData.names}
-                  onRemove={s => {
-                    setCompareData(
-                      "names",
-                      compareData.names.filter((item: OptionType) => s !== item.value)
-                    );
-                  }}
-                  onClearAll={() => setCompareData("names", [])}
-                ></Chips>
-                <div className="">
+                    value={compareData.name}
+                    onChange={e => {
+                      setCompareData("validation", false);
+                      setCompareData("name", e !== "," ? e : "");
+                    }}
+                    onKeyDown={e => {
+                      if (e.key === "Enter") {
+                        compareHandler();
+                      } else if (e.key === ",") {
+                        compareNameInputHandler((e.target as HTMLInputElement).value);
+                        setCompareData("name", "");
+                      } else {
+                        setCompareData("validation", false);
+                      }
+                    }}
+                    isValidation={compareData.validation}
+                    validationText={compareData.validation}
+                  />
+                  {compareData.names.length > 0 && (
+                    <Chips
+                      data={compareData.names}
+                      onRemove={s => {
+                        setCompareData(
+                          "names",
+                          compareData.names.filter((item: OptionType) => s !== item.value)
+                        );
+                      }}
+                      onClearAll={() => setCompareData("names", [])}
+                    />
+                  )}
+                </div>
+                <div>
                   <Button
                     icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
                     className="btn btn-primary"
@@ -378,13 +388,13 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                               )}
                             </td>
                             <td className="border-b border-b-outline p-2 dark:border-zinc-800">
-                              {item.total}
+                              {item.total.toLocaleString("en-US")}
                             </td>
                             <td className="border-b border-b-outline p-2 dark:border-zinc-800">
-                              {item.max}
+                              {item.max.toString().concat("s")}
                             </td>
                             <td className="border-b border-b-outline p-2 dark:border-zinc-800">
-                              {item.min}
+                              {item.min.toString().concat("s")}
                             </td>
                           </tr>
                         )
