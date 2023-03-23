@@ -12,6 +12,7 @@ interface StateDropdownProps {
   currentState?: string;
   onChange?: (selected: OptionType) => void;
   disabled?: boolean;
+  include?: { label: string; value: string };
   exclude?: string[];
   hideOnScroll?: boolean;
   width?: string;
@@ -24,6 +25,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   url,
   currentState,
   onChange,
+  include,
   exclude,
   width = "w-64",
   sublabel,
@@ -49,8 +51,16 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
       <Dropdown
         onChange={selected => (onChange ? onChange(selected) : redirect(selected))}
         disabled={disabled}
-        selected={statesOptions.find(state => state.value === currentState)}
-        options={statesOptions.filter(option => !exclude?.includes(option.value))}
+        selected={
+          include
+            ? statesOptions.concat(include!).find(state => state.value === currentState)
+            : statesOptions.find(state => state.value === currentState)
+        }
+        options={
+          include
+            ? statesOptions.concat(include!).filter(option => !exclude?.includes(option.value))
+            : statesOptions.filter(option => !exclude?.includes(option.value))
+        }
         placeholder={t("placeholder.state")}
         enableFlag
         darkMode={darkMode}

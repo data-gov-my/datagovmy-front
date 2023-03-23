@@ -137,7 +137,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
 
               {/* Flag (selected) */}
               {enableFlag && selected && (
-                <div className="mt-1">
+                <div className="self-center">
                   <Image
                     src={`/static/images/states/${(selected as OptionType<L, V>).value}.jpeg`}
                     width={20}
