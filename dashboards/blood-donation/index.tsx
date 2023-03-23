@@ -20,6 +20,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useRef } from "react";
@@ -79,6 +80,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   });
 
   const { coordinate } = useSlice(timeseries_all.data, data.minmax);
+
+  const { theme } = useTheme();
 
   const handleClearSelection = () => {
     setData("zoom_state", undefined);
@@ -430,8 +433,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                         {
                           label: `${t("dashboard-blood-donation:bar1_tooltip1")}`,
                           data: barchart_time.data.annual.y,
-                          backgroundColor: "#FF0000",
-                          borderWidth: 0,
+                          borderRadius: 12,
+                          barThickness: 12,
+                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                         },
                       ],
                     }}
@@ -447,8 +451,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                         {
                           label: `${t("dashboard-blood-donation:bar1_tooltip1")}`,
                           data: barchart_time.data.monthly.y,
-                          backgroundColor: "#FF0000",
-                          borderWidth: 0,
+                          borderRadius: 12,
+                          barThickness: 12,
+                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                         },
                       ],
                     }}
@@ -469,8 +474,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                         {
                           label: `${t("dashboard-blood-donation:bar2_tooltip1")}`,
                           data: barchart_age.data.past_year.y,
-                          backgroundColor: "#FF0000",
-                          borderWidth: 0,
+                          borderRadius: 12,
+                          barThickness: 12,
+                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                         },
                       ],
                     }}
@@ -486,8 +492,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                         {
                           label: `${t("dashboard-blood-donation:bar2_tooltip1")}`,
                           data: barchart_age.data.past_month.y,
-                          backgroundColor: "#FF0000",
-                          borderWidth: 0,
+                          borderRadius: 12,
+                          barThickness: 12,
+                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                         },
                       ],
                     }}

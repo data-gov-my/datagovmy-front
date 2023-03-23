@@ -49,13 +49,17 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
           : (value as OptionType).value,
       ]);
 
-      router.replace({
-        pathname: router.pathname,
-        query: {
-          ...params,
-          ...Object.fromEntries(query),
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...params,
+            ...Object.fromEntries(query),
+          },
         },
-      });
+        undefined,
+        { scroll: false }
+      );
     }, 500),
     []
   );
