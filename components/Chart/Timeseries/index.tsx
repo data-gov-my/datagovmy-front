@@ -27,6 +27,7 @@ import {
   BarController,
   ChartDataset,
   TickOptions,
+  TooltipOptions,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
@@ -79,6 +80,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableGridY?: boolean;
   tickOptionsX?: TickOptions;
   gridOffsetX?: boolean;
+  tooltipCallback?: TooltipOptions;
   stats?: Array<StatProps> | null;
   displayNumFormat?: (
     value: number,
@@ -117,6 +119,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
       enableGridY = true,
       tickOptionsX,
       gridOffsetX = true,
+      tooltipCallback,
       beginZero = false,
       maxY,
       displayNumFormat = numFormat,
@@ -174,15 +177,17 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
             },
             mode: "index",
             intersect: false,
-            callbacks: {
-              label: function (item) {
-                return `${item.dataset.label as string}: ${
-                  item.parsed.y !== undefined || item.parsed.y !== null
-                    ? display(item.parsed.y, "standard", precision)
-                    : "-"
-                }`;
-              },
-            },
+            callbacks: tooltipCallback
+              ? tooltipCallback
+              : {
+                  label: function (item) {
+                    return `${item.dataset.label as string}: ${
+                      item.parsed.y !== undefined || item.parsed.y !== null
+                        ? display(item.parsed.y, "standard", precision)
+                        : "-"
+                    }`;
+                  },
+                },
             filter: function (tooltipItem) {
               return !!tooltipItem.dataset.label;
             },
