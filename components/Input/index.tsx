@@ -13,6 +13,7 @@ interface InputProps extends LabelProps {
   autoFocus?: boolean;
   isValidation?: boolean;
   validationText?: string;
+  disabled?: boolean;
 }
 
 const Input: FunctionComponent<InputProps> = ({
@@ -29,6 +30,7 @@ const Input: FunctionComponent<InputProps> = ({
   validationText = "",
   onChange,
   onKeyDown,
+  disabled = false,
 }) => {
   const ref = useRef<HTMLInputElement>(null);
 
@@ -52,6 +54,7 @@ const Input: FunctionComponent<InputProps> = ({
         id={name}
         ref={ref}
         autoFocus={autoFocus}
+        disabled={disabled}
         type={type as HTMLInputTypeAttribute}
         className={[
           "outline-none focus:outline-none focus:ring-0 dark:bg-inherit dark:text-white",
