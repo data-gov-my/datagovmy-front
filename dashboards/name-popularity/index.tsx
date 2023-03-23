@@ -348,7 +348,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 <thead>
                   <tr className="md:text-md border-b-2 border-b-outline text-left text-sm dark:border-zinc-800 [&>*]:p-2">
                     <th className="md:w-[50px]">#</th>
-                    <th>{t("dashboard-name-popularity:table_name")}</th>
+                    <th>{query.type === "last" ? "Surname" : "First Name"}</th>
                     <th>{t("dashboard-name-popularity:table_total")}</th>
                     <th>{t("dashboard-name-popularity:table_most_popular")}</th>
                     <th>{t("dashboard-name-popularity:table_least_popular")}</th>
