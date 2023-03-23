@@ -366,11 +366,17 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                           count: birthsOnBirthDay,
                         })}
                       </span>
-                      {t("dashboard-birthday-popularity:section_1.info2", {
-                        count: birthsOnBirthDay,
-                      })}
+                      {query.state === "Overseas"
+                        ? t("dashboard-birthday-popularity:section_1.info2_overseas", {
+                            count: birthsOnBirthDay,
+                          })
+                        : t("dashboard-birthday-popularity:section_1.info2", {
+                            count: birthsOnBirthDay,
+                          })}
                       <span className="mx-auto text-lg font-bold text-primary">
-                        {CountryAndStates[query.state]}
+                        {query.state === "Overseas"
+                          ? t("dashboard-birthday-popularity:section_1.overseas")
+                          : CountryAndStates[query.state]}
                       </span>
                       {query.state !== "mys" ? section1 : <></>}
                       {t("dashboard-birthday-popularity:section_1.info5", {
@@ -415,12 +421,18 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
             data.minmax[0] === data.minmax[1]
               ? t("dashboard-birthday-popularity:section_2.sameyear", {
                   year: yearRange[data.minmax[0]],
-                  state: CountryAndStates[query.state ? query.state : "mys"],
+                  state:
+                    query.state === "Overseas"
+                      ? t("dashboard-birthday-popularity:section_1.overseas")
+                      : CountryAndStates[query.state ? query.state : "mys"],
                 })
               : t("dashboard-birthday-popularity:section_2.title", {
                   start_year: yearRange[data.minmax[0]],
                   end_year: yearRange[data.minmax[1]],
-                  state: CountryAndStates[query.state ? query.state : "mys"],
+                  state:
+                    query.state === "Overseas"
+                      ? t("dashboard-birthday-popularity:section_1.overseas")
+                      : CountryAndStates[query.state ? query.state : "mys"],
                 })
           }
           description={
