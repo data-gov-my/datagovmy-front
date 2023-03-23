@@ -6,12 +6,8 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import NamePopularityDashboard from "@dashboards/name-popularity";
 
 const NamePopularity = ({
-  name,
-  total,
-  type,
-  decade,
-  count,
   query,
+  data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["common", "dashboard-name-popularity"]);
   return (
@@ -21,14 +17,7 @@ const NamePopularity = ({
         description={t("dashboard-name-popularity:description")}
         keywords={""}
       />
-      <NamePopularityDashboard
-        query={query}
-        name={name}
-        type={type}
-        total={total}
-        decade={decade}
-        count={count}
-      />
+      <NamePopularityDashboard query={query} data={data} />
     </>
   );
 };
@@ -38,19 +27,21 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
 
   const emptyQuery = Object.keys(query).length === 0;
 
-  // FIXME: fix behaviour if no query on initial render
-  const { data } = await get("/explorer", {
+  const params = {
     explorer: "NAME_POPULARITY",
-    type: emptyQuery ? "last" : query.type,
-    name: emptyQuery ? "lim" : query.name,
-  });
+    type: emptyQuery ? "first" : query.type,
+    name: emptyQuery ? "" : query.name,
+    compare_name: emptyQuery ? "false" : query.compare_name,
+  };
+
+  // FIXME: fix behaviour if no query on initial render
+  let { data } = await get("/explorer", params);
 
   return {
     props: {
       ...i18n,
       query: query ?? {},
-      ...data,
-      type: emptyQuery ? "last" : query.type,
+      data: data,
     },
   };
 };

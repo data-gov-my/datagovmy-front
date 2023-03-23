@@ -1,7 +1,15 @@
 {
     "header": "How popular is your name?",
     "description": "Introducing the Name Popularity Checker for Malaysia! This unique tool allows you to track the popularity of your name in Malaysia over the past 66 years since the country's independence in 1957. With this dashboard, you can input your name and get a comprehensive report that shows the trend of your name's popularity in Malaysia over the years.",
-    "bar_title": "There are {{ total }} living Malaysians with the {{ type }} name ",
+    "bar_title_one": "There is {{count, number}} living Malaysian with the {{ type }} name ",
+    "bar_title_other": "There are {{count, number}} living Malaysians with the {{ type }} name ",
     "validation_text": "Time series data for this name is not made available, because there are too few Malaysians with the {{ type }} name: {{ name }}. Try again!",
-    "search_prompt": "Start search for name to see your name popularity!"
+    "search_prompt": "Start search for name to see your name popularity!",
+    "search_button": "Search name",
+    "compare_radio": "Compare up to 8 names (separate by comma)",
+    "table_name": "Name",
+    "table_total": "Total Malaysians",
+    "table_most_popular": "Most popular decade",
+    "table_least_popular": "Least popular decade",
+    "compare_button": "Compare names"
 }
