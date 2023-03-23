@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useRef, useState } from "react";
+import { FunctionComponent, useCallback, useMemo, useRef, useState } from "react";
 import { Container, Hero, Section, StateDropdown, Button } from "@components/index";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
@@ -15,6 +15,7 @@ import {
 import Card from "@components/Card";
 import { useFilter } from "@hooks/useFilter";
 import { DateTimeFormatOptions } from "luxon";
+import { numFormat } from "@lib/helpers";
 
 /**
  * Birthday Popularity Dashboard
@@ -85,7 +86,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     return result;
   };
 
-  const today = new Date().toISOString().split("T")[0];
+  // const today = new Date().toISOString().split("T")[0];
   const getAge = (dateString: string) => {
     let years = 0;
     let months = 0;
@@ -113,8 +114,15 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     } else {
       months--;
       const daysInLastMonth = new Date(currentDate.getFullYear(), currentMonth, 0).getDate();
-      console.log(daysInLastMonth);
       days = daysInLastMonth + currentDay - birthDay;
+      if (
+        isLeapYear(birthDate.getFullYear()) &&
+        birthMonth === 1 &&
+        birthDay === 29 &&
+        !isLeapYear(currentDate.getFullYear()) &&
+        currentMonth === 2
+      )
+        days++;
       if (months < 0) {
         years--;
         months = 11;
@@ -174,15 +182,76 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     };
   };
 
+  const birthDate = new Date(query.bday);
+  const birthYear = birthDate.getFullYear();
+  // const totalBirths = useMemo(() => groupValuesByDayOfYear(timeseries.data.x, timeseries.data.births), []);
+  const mysTimeseries = useMemo(() => timeseries.data, []);
+  const totalBirthsNationwide = groupValuesByDayOfYear(mysTimeseries.x, mysTimeseries.births);
+  console.log(totalBirthsNationwide[0]);
+  console.log(totalBirthsNationwide[1]);
+  const birthsNationwideOnBirthYear = groupValuesByDayOfYear(
+    mysTimeseries.x,
+    mysTimeseries.births,
+    [birthYear, birthYear]
+  );
+  console.log(birthsNationwideOnBirthYear[0]);
+  console.log(birthsNationwideOnBirthYear[1]);
+  const birthsOnBirthYear = groupValuesByDayOfYear(timeseries.data.x, timeseries.data.births, [
+    birthYear,
+    birthYear,
+  ]);
+  console.log(birthsOnBirthYear[0]);
+  console.log(birthsOnBirthYear[1]);
+  const birthsOnBirthDay = birthsOnBirthYear[getDayOfYear(birthDate) - 1];
+  const minBirths = Math.min(...birthsOnBirthYear);
+  const maxBirths = Math.max(...birthsOnBirthYear);
+
   const section1 = (
     <>
       {t("dashboard-birthday-popularity:section_1.info3")}
-      <span className="mx-auto text-lg font-bold text-primary">{`${rank.data.births.toLocaleString(
-        "en-US"
-      )}`}</span>
-      {t("dashboard-birthday-popularity:section_1.info4")}
+      <span className="mx-auto text-lg font-bold text-primary">
+        {t("dashboard-birthday-popularity:section_1.count2", {
+          count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
+        })}
+      </span>
+      {t("dashboard-birthday-popularity:section_1.info4", {
+        count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
+      })}
     </>
   );
+  function formatDayOfYear(dayOfYear: number): string {
+    const date = new Date(2000, 0, dayOfYear + 1);
+    const day = date.getDate();
+    const month = new Intl.DateTimeFormat("en-GB", { month: "long" }).format(date);
+    return `${day}${daySuffix(day)} ${month}`;
+  }
+
+  function daySuffix(day: number): string {
+    if (day > 3 && day < 21) return "th";
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  }
+
+  const tooltipCallback: any = () => {
+    return {
+      label: function (item: any) {
+        item.parsed.y === 1 ? (item.dataset.label = "Birth") : (item.dataset.label = "Births");
+        return `${item.dataset.label}: ${
+          item.parsed.y !== undefined || item.parsed.y !== null
+            ? numFormat(item.parsed.y, "standard", 1)
+            : "-"
+        }`;
+      },
+    };
+  };
 
   // const sliderRef = useRef<SliderRef>(null);
   // useWatch(() => {
@@ -231,7 +300,8 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                   value={data.string}
                   // placeholder="28 September 1993"
                   // required pattern="dd Month yyyy"
-                  max={today}
+                  min={new Date(1923, 0, 1).toISOString().split("T")[0]}
+                  max={new Date(2018, 0, 0).toISOString().split("T")[0]}
                   required
                   onChange={selected => {
                     setData("string", selected.target.value);
@@ -253,7 +323,8 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                   onChange={selected => {
                     setData("state", selected.value);
                   }}
-                  exclude={["kvy", "mys"]}
+                  include={{ label: "Malaysian born Overseas", value: "Overseas" }}
+                  exclude={["kvy"]}
                   width="w-full"
                 />
                 <Button
@@ -270,52 +341,70 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
               </p>
             </Card>
             <div className="basis-2/3">
-              <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
-                {query.bday ? (
-                  <>
-                    <Card className="my-0 flex h-fit w-full basis-1/3 flex-col self-center rounded-t-xl border border-outline bg-background px-4 py-8 dark:border-washed-dark dark:bg-washed-dark lg:my-8 lg:rounded-xl lg:py-16">
-                      <CakeIcon className="mx-auto h-10 w-10 text-primary" />
-                      <div className="mx-auto mt-4 text-center text-lg font-bold text-black dark:text-white">
-                        {new Date(query.bday).toLocaleDateString("en-GB", options)}
-                      </div>
-                      <div className="mx-auto mt-3 text-center text-sm text-dim">
-                        {t("dashboard-birthday-popularity:section_1.age", {
-                          years: years,
-                          months: months,
-                          days: days,
+              {query.bday ? (
+                <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
+                  <Card className="my-0 flex h-fit w-full basis-1/3 flex-col self-center rounded-t-xl border border-outline bg-background px-4 py-8 dark:border-washed-dark dark:bg-washed-dark lg:my-8 lg:rounded-xl lg:py-16">
+                    <CakeIcon className="mx-auto h-10 w-10 text-primary" />
+                    <div className="mx-auto mt-4 text-center text-lg font-bold text-black dark:text-white">
+                      {new Date(query.bday).toLocaleDateString("en-GB", options)}
+                    </div>
+                    <div className="mx-auto mt-3 text-center text-sm text-dim">
+                      {t("dashboard-birthday-popularity:section_1.age", {
+                        years: years,
+                        months: months,
+                        days: days,
+                      })}
+                    </div>
+                  </Card>
+                  <div className="flex basis-2/3 flex-col gap-3 self-center px-4 lg:py-8 lg:pl-0 lg:pr-8">
+                    <div className="mx-auto text-lg font-bold text-black dark:text-white">
+                      {t("dashboard-birthday-popularity:section_1.info1", {
+                        count: birthsOnBirthDay,
+                      })}
+                      <span className="mx-auto text-lg font-bold text-primary">
+                        {t("dashboard-birthday-popularity:section_1.count1", {
+                          count: birthsOnBirthDay,
                         })}
-                      </div>
-                    </Card>
-                    <div className="flex basis-2/3 flex-col gap-3 self-center px-4 lg:py-8 lg:pl-0 lg:pr-4">
-                      <p className="mx-auto text-lg font-bold text-black dark:text-white">
-                        {t("dashboard-birthday-popularity:section_1.info1")}
-                        <span className="mx-auto text-lg font-bold text-primary">
-                          {filtered_timeline().births[
-                            getDayOfYear(new Date(query.bday)) - 1
-                          ].toLocaleString("en-US")}
-                        </span>
-                        {t("dashboard-birthday-popularity:section_1.info2")}
-                        <span className="mx-auto text-lg font-bold text-primary">
-                          {CountryAndStates[query.state]}
-                        </span>
-                        {query.state !== "mys" ? section1 : <></>}
-                        {t("dashboard-birthday-popularity:section_1.info5")}
-                        <span className="mx-auto text-lg font-bold text-primary">{`${rank.data.rank}th`}</span>
+                      </span>
+                      {t("dashboard-birthday-popularity:section_1.info2", {
+                        count: birthsOnBirthDay,
+                      })}
+                      <span className="mx-auto text-lg font-bold text-primary">
+                        {CountryAndStates[query.state]}
+                      </span>
+                      {query.state !== "mys" ? section1 : <></>}
+                      {t("dashboard-birthday-popularity:section_1.info5", {
+                        count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
+                      })}
+                      <p className="mx-auto font-bold text-black dark:text-white">
                         {t("dashboard-birthday-popularity:section_1.info6")}
-                      </p>
-                      <p className="mx-auto font-medium text-black dark:text-white">
-                        {t("dashboard-birthday-popularity:section_1.info7")}
+                        <span className="mx-auto text-lg font-bold text-primary">
+                          {t("dashboard-birthday-popularity:section_1.info7", {
+                            rank: rank.data.rank,
+                            suffix: daySuffix(rank.data.rank),
+                          })}
+                        </span>
+                        {t("dashboard-birthday-popularity:section_1.info8", {
+                          popular: formatDayOfYear(birthsOnBirthYear.indexOf(maxBirths)),
+                          rare: formatDayOfYear(birthsOnBirthYear.indexOf(minBirths)),
+                        })}
                       </p>
                     </div>
-                  </>
-                ) : (
+                    <p className="mx-auto font-medium text-black dark:text-white">
+                      {t("dashboard-birthday-popularity:section_1.info9")}
+                    </p>
+                  </div>
+                </Card>
+              ) : windowWidth >= BREAKPOINTS.LG ? (
+                <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
                   <Card className="mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark">
                     <SearchIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />
                     <p>{t("dashboard-birthday-popularity:start_search")}</p>
                   </Card>
-                )}
-                <p></p>
-              </Card>
+                </Card>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </Section>
@@ -326,19 +415,21 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
             data.minmax[0] === data.minmax[1]
               ? t("dashboard-birthday-popularity:section_2.sameyear", {
                   year: yearRange[data.minmax[0]],
+                  state: CountryAndStates[query.state ? query.state : "mys"],
                 })
               : t("dashboard-birthday-popularity:section_2.title", {
                   start_year: yearRange[data.minmax[0]],
                   end_year: yearRange[data.minmax[1]],
+                  state: CountryAndStates[query.state ? query.state : "mys"],
                 })
           }
           description={
-            data.minmax[0] === data.minmax[1]
+            hasLeapYear([yearRange[data.minmax[0]], yearRange[data.minmax[1]]])
+              ? ""
+              : data.minmax[0] === data.minmax[1]
               ? t("dashboard-birthday-popularity:section_2.desc_sameyear", {
                   year: yearRange[data.minmax[0]],
                 })
-              : hasLeapYear([yearRange[data.minmax[0]], yearRange[data.minmax[1]]])
-              ? ""
               : t("dashboard-birthday-popularity:section_2.description", {
                   start_year: yearRange[data.minmax[0]],
                   end_year: yearRange[data.minmax[1]],
@@ -356,6 +447,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
             enableGridY={false}
             gridOffsetX={false}
             tickOptionsX={tickOptionsX}
+            tooltipCallback={tooltipCallback}
             data={{
               labels: daysOfYearInMillis,
               datasets: [
@@ -365,7 +457,12 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                   label: t("dashboard-birthday-popularity:section_2.births"),
                   backgroundColor: AKSARA_COLOR.PRIMARY_H,
                   borderColor: AKSARA_COLOR.PRIMARY,
-                  borderWidth: windowWidth <= BREAKPOINTS.LG ? 1.0 : 1.5,
+                  borderWidth:
+                    windowWidth <= BREAKPOINTS.MD
+                      ? 0.75
+                      : windowWidth <= BREAKPOINTS.LG
+                      ? 1.0
+                      : 1.5,
                   fill: true,
                 },
               ],

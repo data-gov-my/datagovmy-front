@@ -30,17 +30,23 @@ const isInvalidDate = (date: Date) => {
   return isNaN(date.valueOf());
 };
 
+const formatDate = (inputDate: Date): string => {
+  const month = String(inputDate.getMonth() + 1).padStart(2, "0");
+  const day = String(inputDate.getDate()).padStart(2, "0");
+  return `${month}-${day}`;
+};
+
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-popularity"]);
 
   const date = new Date(String(query.bday));
-  const str: any = isFutureDate(date) && isInvalidDate(date) ? (query = {}) : query.bday!;
+  const bday: any = isFutureDate(date) && isInvalidDate(date) ? (query = {}) : formatDate(date);
   const emptyQuery = Object.keys(query).length === 0;
 
   const { data } = await get("/dashboard", {
     dashboard: "birthday_popularity",
     state: emptyQuery ? "mys" : query.state,
-    bday: emptyQuery ? "01-01" : str.substring(str.length - 5),
+    bday: emptyQuery ? "01-01" : bday,
   });
 
   return {
