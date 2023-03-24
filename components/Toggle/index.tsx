@@ -18,19 +18,19 @@ const Toggle: FunctionComponent<ToggleProps> = ({
 
   return (
     <div className="flex flex-row items-center gap-1.5">
-      <input
-        disabled={disabled}
-        type="checkbox"
-        className=""
-        checked={toggled}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setToggled(prevToggled => !prevToggled);
-          onStateChanged(e.target.checked);
-        }}
-      />
-      <label className="text-sm text-black dark:text-white" htmlFor={label}>
-        {label}
+      <label className="relative inline-flex cursor-pointer items-center">
+        <input
+          type="checkbox"
+          className="peer sr-only"
+          checked={toggled}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setToggled(prevToggled => !prevToggled);
+            onStateChanged(e.target.checked);
+          }}
+        />
+        <span className="peer h-4 w-[26px] rounded-full bg-outline  after:absolute after:top-0.5 after:left-0.5 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-2.5 peer-focus:ring-blue-500 dark:bg-zinc-800 dark:after:bg-slate-100" />
       </label>
+      <span className="text-sm text-black dark:text-white">{label}</span>
     </div>
   );
 };

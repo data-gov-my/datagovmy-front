@@ -373,7 +373,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
             </div>
 
             <div className="col-span-full flex h-[460px] flex-col gap-3 lg:col-span-2">
-              <div className="flex flex-row justify-between">
+              <div className="flex flex-col gap-2 md:flex-row md:justify-between">
                 <p className="text-lg font-bold">
                   <span>{t("dashboard-name-popularity:compare_title")}</span>
                 </p>
