@@ -141,6 +141,22 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     2: "🥉",
   };
 
+  const placeholderData = {
+    decade: [
+      "1920s",
+      "1930s",
+      "1940s",
+      "1950s",
+      "1960s",
+      "1970s",
+      "1980s",
+      "1990s",
+      "2000s",
+      "2010s",
+    ],
+    count: [10004, 13409, 30904, 43434, 50694, 75443, 70530, 78667, 62537, 15519],
+  };
+
   return (
     <>
       <Hero
@@ -253,18 +269,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                       data={{
                         labels: searchData.data.decade
                           ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
-                          : [
-                              "1920s",
-                              "1930s",
-                              "1940s",
-                              "1950s",
-                              "1960s",
-                              "1970s",
-                              "1980s",
-                              "1990s",
-                              "2000s",
-                              "2010s",
-                            ],
+                          : placeholderData.decade,
                         datasets: [
                           {
                             data: searchData.data.count,
@@ -280,8 +285,24 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   )}
                 </div>
               ) : (
-                <div className="hidden h-[460px] items-center justify-center lg:flex">
-                  <Card className="hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
+                <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
+                  <Bar
+                    className="absolute top-0 z-0 h-[460px] w-full opacity-30"
+                    data={{
+                      labels: placeholderData.decade,
+                      datasets: [
+                        {
+                          data: placeholderData.count,
+                          borderRadius: 12,
+                          barThickness: 12,
+                          backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                    tooltipEnabled={false}
+                  />
+                  <Card className="hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 opacity-100 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
                     <MagnifyingGlassIcon className=" h-4 w-4" />
                     <p>{t("dashboard-name-popularity:search_prompt")}</p>
                   </Card>

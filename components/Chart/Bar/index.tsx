@@ -39,6 +39,7 @@ interface BarProps extends ChartHeaderProps {
   enableStack?: boolean;
   enableStep?: boolean;
   interactive?: boolean;
+  tooltipEnabled?: boolean;
   _ref?: ForwardedRef<ChartJSOrUndefined<"bar", any[], string | number>>;
 }
 
@@ -66,6 +67,7 @@ const Bar: FunctionComponent<BarProps> = ({
   minY,
   maxY,
   suggestedMaxY,
+  tooltipEnabled = true,
   _ref,
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
@@ -114,6 +116,7 @@ const Bar: FunctionComponent<BarProps> = ({
         align: "start",
       },
       tooltip: {
+        enabled: tooltipEnabled,
         bodyFont: {
           family: "Inter",
         },
