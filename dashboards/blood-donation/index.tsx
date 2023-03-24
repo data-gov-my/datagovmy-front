@@ -186,7 +186,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         {timeseries_facility.data?.[data.zoom_state]?.[data.zoom_facility?.label] ? (
           <div className="w-full pt-4">
             <Timeseries
-              className="h-[300px] w-full pt-4"
+              className="h-[250px] w-full pt-4"
               title={t("dashboard-blood-donation:bar3_title")}
               state={
                 <p className="pt-4 text-sm text-dim">
@@ -217,7 +217,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           <Empty
             title={t("dashboard-blood-donation:bar3_title")}
             type="timeseries"
-            className="h-[300px] w-full pt-7"
+            className="h-[250px] w-full pt-10"
             placeholder={t("placeholder.facility")}
           />
         )}
@@ -227,47 +227,31 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
   const section5right = (
     <>
-      {data.zoom_facility && data.zoom_state ? (
-        <OSMapWrapper
-          className="h-full w-full rounded-r"
-          zoom={data.zoom_facility ? 8 : 5}
-          position={
-            data.zoom_facility && data.zoom_state
-              ? [
-                  map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
-                  map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
-                ]
-              : undefined
-          }
-          markers={
-            data.zoom_facility && data.zoom_state
-              ? [
-                  {
-                    name: `${data.zoom_facility.label}, ${CountryAndStates[data.zoom_state]}`,
-                    position: [
-                      map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
-                      map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
-                    ],
-                  },
-                ]
-              : []
-          }
-        />
-      ) : isMobile ? (
-        <img
-          src="/static/images/osm_placeholder_mobile.png"
-          className="w-full rounded-r-xl object-cover"
-          loading="lazy"
-          alt="Map view of the selected area"
-        />
-      ) : (
-        <img
-          src="/static/images/osm_placeholder_long.png"
-          className="w-full rounded-r-xl object-cover"
-          loading="lazy"
-          alt="Map view of the selected area"
-        />
-      )}
+      <OSMapWrapper
+        className="h-full w-full rounded-r"
+        zoom={data.zoom_facility ? 9 : 6}
+        position={
+          data.zoom_facility && data.zoom_state
+            ? [
+                map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
+                map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
+              ]
+            : undefined
+        }
+        markers={
+          data.zoom_facility && data.zoom_state
+            ? [
+                {
+                  name: `${data.zoom_facility.label}, ${CountryAndStates[data.zoom_state]}`,
+                  position: [
+                    map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
+                    map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
+                  ],
+                },
+              ]
+            : []
+        }
+      />
     </>
   );
 
