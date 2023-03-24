@@ -378,7 +378,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   <span>{t("dashboard-name-popularity:compare_title")}</span>
                 </p>
                 <Toggle
-                  enabled={true}
+                  enabled={false}
                   onStateChanged={checked => setCompareData("order", checked)}
                   label={t("dashboard-name-popularity:compare_toggle")}
                 />
@@ -400,8 +400,8 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         a.total == 0
                           ? Number.MIN_VALUE
                           : compareData.order
-                          ? a.total - b.total
-                          : b.total - a.total
+                          ? b.total - a.total
+                          : a.total - b.total
                       )
                       .map(
                         (
