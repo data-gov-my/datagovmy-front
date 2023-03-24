@@ -11,5 +11,6 @@
     "table_total": "Total Malaysians",
     "table_most_popular": "Most popular decade",
     "table_least_popular": "Least popular decade",
-    "compare_button": "Compare names"
+    "compare_button": "Compare names",
+    "compare_prompt": "Start entering names to compare popularity!"
 }

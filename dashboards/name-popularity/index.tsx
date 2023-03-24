@@ -3,17 +3,15 @@ import { Button, Container, Hero, Input, Radio, Section } from "@components/inde
 import dynamic from "next/dynamic";
 import { useTranslation } from "@hooks/useTranslation";
 import AgencyBadge from "@components/AgencyBadge";
-import { JabatanPendaftaranNegaraIcon } from "@components/Icon";
+import { JabatanPendaftaranNegaraIcon, SpinnerIcon } from "@components/Icon";
 import Card from "@components/Card";
 import { useData } from "@hooks/useData";
 import { OptionType } from "@components/types";
-import { useFilter } from "@hooks/useFilter";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useTheme } from "next-themes";
-import Empty from "@components/Chart/Empty";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import Chips from "@components/Chips";
-
+import { get } from "@lib/api";
+import { useWatch } from "@hooks/useWatch";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
@@ -21,31 +19,55 @@ import Chips from "@components/Chips";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
-interface NamePopularityDashboardProps {
-  // data: { name: string; total: number; decade: number[]; count: number[] };
-  query: any;
-  data: any;
-}
+interface NamePopularityDashboardProps {}
 
-const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({
-  query,
-  data,
-}) => {
+const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
   const { t, i18n } = useTranslation(["common", "dashboard-name-popularity"]);
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: "First Name", value: "first" },
     name: "",
     validation: false,
+    params: {},
+    data: null,
+    loading: false,
   });
 
   const { data: compareData, setData: setCompareData } = useData({
     type: { label: "First Name", value: "compare_first" },
     name: "",
+    names: [],
     validation: false,
     compare_name: "true",
-    names: [],
+    params: {},
+    data: null,
+    loading: false,
   });
+
+  const { theme } = useTheme();
+
+  // trigger API calls when parameters (user inputs) are updated
+  useWatch(() => {
+    setSearchData("loading", true);
+    get("/explorer", searchData.params)
+      .then(({ data }) => {
+        setSearchData("data", data);
+      })
+      .then(() => setSearchData("loading", false));
+  }, [searchData.params]);
+
+  useWatch(() => {
+    setCompareData("loading", true);
+    get("/explorer", compareData.params)
+      .then(({ data }) => {
+        setCompareData("data", data);
+      })
+      .then(() => {
+        const unfoundNames = compareData.names;
+        // TODO: display unfound names as 0 in table
+      })
+      .then(() => setCompareData("loading", false));
+  }, [compareData.params]);
 
   const filterTypes: Array<OptionType> = [
     { label: "First Name", value: "first" },
@@ -57,20 +79,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     { label: "Surname", value: "compare_last" },
   ];
 
-  const { filter, setFilter, actives } = useFilter({
-    type: query.type,
-    name: query.name,
-    compare_name: query.compare_name,
-  });
-
-  const { theme } = useTheme();
-
   const searchHandler = () => {
     const name: string = searchData.name.trim().replace(/\b(\w)/g, (s: string) => s.toUpperCase());
     if (name.length > 0) {
-      setFilter("type", searchData.type);
-      setFilter("name", name);
-      setFilter("compare_name", "false");
+      setSearchData("params", {
+        explorer: "NAME_POPULARITY",
+        name: name,
+        type: searchData.type.value,
+        compare_name: "false",
+      });
     } else {
       setSearchData("validation", `Please enter your ${searchData.type.value} name`);
     }
@@ -89,17 +106,18 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     }
 
     if (compareData.names.length > 1) {
-      setFilter("type", compareData.type.value === "compare_first" ? "first" : "last");
-      setFilter(
-        "name",
-        compareData.names.map((name: { label: string; value: string }) => name.value).join(",")
-      );
-      setCompareData("name", "");
-      setFilter("compare_name", "true");
+      setCompareData("params", {
+        explorer: "NAME_POPULARITY",
+        type: compareData.type.value === "compare_first" ? "first" : "last",
+        name: compareData.names
+          .map((name: { label: string; value: string }) => name.value)
+          .join(","),
+        compare_name: "true",
+      });
     } else {
-      setCompareData("name", "");
       setCompareData("validation", "Please enter more than one name");
     }
+    setCompareData("name", "");
   };
 
   const compareNameInputHandler = (e: string) => {
@@ -208,65 +226,69 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 "col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2"
               }
             >
-              {query.name && query.type && query.compare_name !== "true" ? (
+              {searchData.data ? (
                 <div className="w-full">
-                  <Bar
-                    precision={0}
-                    suggestedMaxY={10}
-                    className="h-[460px]"
-                    title={
-                      <>
-                        <p className="text-lg font-bold">
-                          <span>
-                            {t("dashboard-name-popularity:bar_title", {
-                              count: data.total || 0,
-                              type: query.type,
-                            })}
-                          </span>
-                          <span className="capitalize">{`"${query.name}".`}</span>
-                        </p>
-                        <p className="text-sm text-dim">
-                          Here’s how many newborns were named{" "}
-                          <span className="capitalize">{query.name}</span> over the years:
-                        </p>
-                      </>
-                    }
-                    data={{
-                      labels: data.decade
-                        ? data.decade.map((x: number) => x.toString().concat("s"))
-                        : [
-                            "1920s",
-                            "1930s",
-                            "1940s",
-                            "1950s",
-                            "1960s",
-                            "1970s",
-                            "1980s",
-                            "1990s",
-                            "2000s",
-                            "2010s",
-                          ],
-                      datasets: [
-                        {
-                          data: data.count,
-                          label: "Similar names",
-                          borderRadius: 12,
-                          barThickness: 12,
-                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                    // precision={0}
-                    // minY={0}
-                    // maxY={Math.max(10, ...(data.count + 5))}
-                  />
+                  {searchData.loading ? (
+                    <div className="flex h-[460px] items-center justify-center">
+                      <SpinnerIcon />
+                    </div>
+                  ) : (
+                    <Bar
+                      precision={0}
+                      suggestedMaxY={10}
+                      className="h-[460px]"
+                      title={
+                        <>
+                          <p className="text-lg font-bold">
+                            <span>
+                              {t("dashboard-name-popularity:bar_title", {
+                                count: searchData.data.total || 0,
+                                type: searchData.params.type,
+                              })}
+                            </span>
+                            <span>{`"${searchData.params.name}".`}</span>
+                          </p>
+                          <p className="text-sm text-dim">
+                            <span>{`Here's how many newborns were named ${searchData.params.name} over the years:`}</span>
+                          </p>
+                        </>
+                      }
+                      data={{
+                        labels: searchData.data.decade
+                          ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
+                          : [
+                              "1920s",
+                              "1930s",
+                              "1940s",
+                              "1950s",
+                              "1960s",
+                              "1970s",
+                              "1980s",
+                              "1990s",
+                              "2000s",
+                              "2010s",
+                            ],
+                        datasets: [
+                          {
+                            data: searchData.data.count,
+                            label: "Similar names",
+                            borderRadius: 12,
+                            barThickness: 12,
+                            backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                          },
+                        ],
+                      }}
+                      enableGridX={false}
+                    />
+                  )}
                 </div>
               ) : (
-                <Card className="hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
-                  <MagnifyingGlassIcon className=" h-4 w-4" />
-                  <p>{t("dashboard-name-popularity:search_prompt")}</p>
-                </Card>
+                <div className="flex h-[460px] items-center justify-center">
+                  <Card className="hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
+                    <MagnifyingGlassIcon className=" h-4 w-4" />
+                    <p>{t("dashboard-name-popularity:search_prompt")}</p>
+                  </Card>
+                </div>
               )}
             </div>
           </div>
@@ -358,23 +380,23 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 <thead>
                   <tr className="md:text-md border-b-2 border-b-outline text-left text-sm dark:border-zinc-800 [&>*]:p-2">
                     <th className="md:w-[50px]">#</th>
-                    <th>{query.type === "last" ? "Surname" : "First Name"}</th>
+                    <th>{compareData.params.type === "last" ? "Surname" : "First Name"}</th>
                     <th>{t("dashboard-name-popularity:table_total")}</th>
                     <th>{t("dashboard-name-popularity:table_most_popular")}</th>
                     <th>{t("dashboard-name-popularity:table_least_popular")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {query.compare_name === "true" &&
-                    data
+                  {compareData.data ? (
+                    compareData.data
                       .sort((a: { total: number }, b: { total: number }) => a.total - b.total)
                       .map(
                         (
-                          item: { name: string; total: number; max: number; min: number },
+                          item: { name: string; total: number; max: string; min: string },
                           i: number
                         ) => (
                           <tr
-                            className={(i < Math.min(3, data.length - 1)
+                            className={(i < Math.min(3, compareData.data.length - 1)
                               ? "bg-slate-50 dark:border-zinc-800 dark:bg-zinc-800/50"
                               : ""
                             ).concat(" md:text-md text-sm")}
@@ -384,7 +406,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                             </td>
                             <td className="border-b border-b-outline p-2 capitalize dark:border-zinc-800">
                               {`${item.name} `.concat(
-                                i < Math.min(3, data.length - 1) ? emojiMap[i] : ""
+                                i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
                               )}
                             </td>
                             <td className="border-b border-b-outline p-2 dark:border-zinc-800">
@@ -398,7 +420,25 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                             </td>
                           </tr>
                         )
-                      )}
+                      )
+                  ) : compareData.isLoading ? (
+                    <tr>
+                      <td colSpan={5}>
+                        <div className="grid place-items-center py-3">
+                          <SpinnerIcon />
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr>
+                      <td colSpan={5}>
+                        <Card className="my-3 hidden w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
+                          <MagnifyingGlassIcon className=" h-4 w-4" />
+                          <p>{t("dashboard-name-popularity:compare_prompt")}</p>
+                        </Card>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
