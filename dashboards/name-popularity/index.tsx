@@ -12,6 +12,7 @@ import { useTheme } from "next-themes";
 import Chips from "@components/Chips";
 import { get } from "@lib/api";
 import { useWatch } from "@hooks/useWatch";
+import Toggle from "@components/Toggle";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
@@ -61,10 +62,6 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     get("/explorer", compareData.params)
       .then(({ data }) => {
         setCompareData("data", data);
-      })
-      .then(() => {
-        const unfoundNames = compareData.names;
-        // TODO: display unfound names as 0 in table
       })
       .then(() => setCompareData("loading", false));
   }, [compareData.params]);
@@ -320,8 +317,8 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                       compareData.validation
                         ? " border-2 border-danger dark:border-danger"
                         : compareData.names.length > 9
-                        ? " border border-outline bg-outline/50 text-dim"
-                        : " border-2 border-slate-200 dark:border-zinc-800 dark:bg-zinc-900"
+                        ? " border border-outline bg-outline text-dim opacity-30 dark:border-black dark:bg-black"
+                        : " border-2 border-outline dark:border-zinc-700 dark:bg-black"
                     )}
                     placeholder={
                       compareData.type.value === "last"
@@ -375,21 +372,37 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               </Card>
             </div>
 
-            <div className="col-span-full h-[460px] lg:col-span-2">
-              <table className="w-full table-auto border-collapse md:table-fixed ">
+            <div className="col-span-full flex h-[460px] flex-col gap-3 lg:col-span-2">
+              <div className="flex flex-row justify-between">
+                <p className="text-lg font-bold">
+                  <span>{t("dashboard-name-popularity:compare_title")}</span>
+                </p>
+                <Toggle
+                  enabled={true}
+                  onStateChanged={checked => setCompareData("order", checked)}
+                  label={t("dashboard-name-popularity:compare_toggle")}
+                />
+              </div>
+
+              <table className="w-full table-auto border-collapse md:table-fixed">
                 <thead>
                   <tr className="md:text-md border-b-2 border-b-outline text-left text-sm dark:border-zinc-800 [&>*]:p-2">
                     <th className="md:w-[50px]">#</th>
                     <th>{compareData.params.type === "last" ? "Surname" : "First Name"}</th>
                     <th>{t("dashboard-name-popularity:table_total")}</th>
                     <th>{t("dashboard-name-popularity:table_most_popular")}</th>
-                    <th>{t("dashboard-name-popularity:table_least_popular")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {compareData.data ? (
                     compareData.data
-                      .sort((a: { total: number }, b: { total: number }) => a.total - b.total)
+                      .sort((a: { total: number }, b: { total: number }) =>
+                        a.total == 0
+                          ? Number.MIN_VALUE
+                          : compareData.order
+                          ? a.total - b.total
+                          : b.total - a.total
+                      )
                       .map(
                         (
                           item: { name: string; total: number; max: string; min: string },
@@ -413,10 +426,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                               {item.total.toLocaleString("en-US")}
                             </td>
                             <td className="border-b border-b-outline p-2 dark:border-zinc-800">
-                              {item.max.toString().concat("s")}
-                            </td>
-                            <td className="border-b border-b-outline p-2 dark:border-zinc-800">
-                              {item.min.toString().concat("s")}
+                              {item.total === 0 ? item.max : item.max.toString().concat("s")}
                             </td>
                           </tr>
                         )

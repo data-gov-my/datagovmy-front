@@ -6,11 +6,13 @@
     "validation_text": "Time series data for this name is not made available, because there are too few Malaysians with the {{ type }} name: {{ name }}. Try again!",
     "search_prompt": "Start search for name to see your name popularity!",
     "search_button": "Search name",
-    "compare_radio": "Compare up to 8 names (separate by comma)",
+    "compare_title": "Comparing Popular Names",
+    "compare_radio": "Compare up to 10 names (separate by comma)",
     "table_name": "Name",
     "table_total": "Total Malaysians",
     "table_most_popular": "Most popular decade",
     "table_least_popular": "Least popular decade",
     "compare_button": "Compare names",
-    "compare_prompt": "Start entering names to compare popularity!"
+    "compare_prompt": "Start entering names to compare popularity!",
+    "compare_toggle": "Sort by Popularity"
 }
