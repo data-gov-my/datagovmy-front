@@ -39,7 +39,7 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
   }, [data]);
 
   const search: Function = useCallback(
-    debounce(() => {
+    debounce(actives => {
       const query = actives.map(([key, value]: [string, unknown]) => [
         key,
         Array.isArray(value)
@@ -49,20 +49,28 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
           : (value as OptionType).value,
       ]);
 
-      router.replace({
-        pathname: router.pathname,
-        query: {
-          ...params,
-          ...Object.fromEntries(query),
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...params,
+            ...Object.fromEntries(query),
+          },
         },
-      });
+        undefined,
+        { scroll: false }
+      );
     }, 500),
-    [data]
+    []
   );
 
-  useWatch(() => {
-    search();
-  }, [data]);
+  useWatch(
+    () => {
+      search(actives);
+    },
+    [data],
+    true
+  );
 
   return {
     filter: data,
