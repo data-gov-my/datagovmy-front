@@ -280,7 +280,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   )}
                 </div>
               ) : (
-                <div className="flex h-[460px] items-center justify-center">
+                <div className="hidden h-[460px] items-center justify-center lg:flex">
                   <Card className="hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
                     <MagnifyingGlassIcon className=" h-4 w-4" />
                     <p>{t("dashboard-name-popularity:search_prompt")}</p>
