@@ -86,14 +86,13 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     return result;
   };
 
-  // const today = new Date().toISOString().split("T")[0];
   const getAge = (dateString: string) => {
     let years = 0;
     let months = 0;
     let days = 0;
     const birthDate = new Date(dateString);
     const currentDate = new Date();
-    // const currentDate = new Date(2020, 1, 29);
+    // const currentDate = new Date(2020, 1, 29); // test
 
     // Calculate years
     years = currentDate.getFullYear() - birthDate.getFullYear();
@@ -187,21 +186,15 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
   // const totalBirths = useMemo(() => groupValuesByDayOfYear(timeseries.data.x, timeseries.data.births), []);
   const mysTimeseries = useMemo(() => timeseries.data, []);
   const totalBirthsNationwide = groupValuesByDayOfYear(mysTimeseries.x, mysTimeseries.births);
-  console.log(totalBirthsNationwide[0]);
-  console.log(totalBirthsNationwide[1]);
   const birthsNationwideOnBirthYear = groupValuesByDayOfYear(
     mysTimeseries.x,
     mysTimeseries.births,
     [birthYear, birthYear]
   );
-  console.log(birthsNationwideOnBirthYear[0]);
-  console.log(birthsNationwideOnBirthYear[1]);
   const birthsOnBirthYear = groupValuesByDayOfYear(timeseries.data.x, timeseries.data.births, [
     birthYear,
     birthYear,
   ]);
-  console.log(birthsOnBirthYear[0]);
-  console.log(birthsOnBirthYear[1]);
   const birthsOnBirthDay = birthsOnBirthYear[getDayOfYear(birthDate) - 1];
   const minBirths = Math.min(...birthsOnBirthYear);
   const maxBirths = Math.max(...birthsOnBirthYear);
@@ -298,8 +291,6 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                   id="date"
                   data-placeholder="Date of birth"
                   value={data.string}
-                  // placeholder="28 September 1993"
-                  // required pattern="dd Month yyyy"
                   min={new Date(1923, 0, 1).toISOString().split("T")[0]}
                   max={new Date(2018, 0, 0).toISOString().split("T")[0]}
                   required
@@ -330,7 +321,6 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                 <Button
                   className="my-6 bg-gradient-to-b from-primary-dark to-primary text-white"
                   onClick={handleClick}
-                  // disabled={!}
                   icon={<SearchIcon className="h-4 w-4 text-white" />}
                 >
                   {t("dashboard-birthday-popularity:search")}
@@ -383,7 +373,7 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                         count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
                       })}
                       <p className="mx-auto font-bold text-black dark:text-white">
-                        {t("dashboard-birthday-popularity:section_1.info6")}
+                        {t("dashboard-birthday-popularity:section_1.info6", { year: birthYear })}
                         <span className="mx-auto text-lg font-bold text-primary">
                           {t("dashboard-birthday-popularity:section_1.info7", {
                             rank: rank.data.rank,

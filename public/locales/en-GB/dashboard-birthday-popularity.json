@@ -22,9 +22,9 @@
     "info4_other": " babies born nationwide",
     "info5_one": ", which is you!",
     "info5_other": ", including you!",
-    "info6": "Your birthday is the ",
+    "info6": "In {{ year }}, your birthday was the ",
     "info7": "{{ rank }}{{ suffix }}",
-    "info8": " most popular out of 366 dates. The most popular is {{ popular }}, while the most rare is {{ rare }}.",
+    "info8": " most popular out of 366 dates. The most popular was {{ popular }}, while the most rare was {{ rare }}.",
     "info9": "Use the time series chart below to explore how the popularity of birthdays has changed over the years."
   },
   "section_2": {
