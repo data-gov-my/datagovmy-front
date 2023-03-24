@@ -187,7 +187,7 @@ const Home: Page = ({
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <At className="btn btn-primary text-sm" href="#" enableIcon>
+            <At className="btn btn-primary text-sm" href="dashboards" enableIcon>
               Dashboards
             </At>
             <At className="btn btn-default text-sm" href="#" enableIcon>

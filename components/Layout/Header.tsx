@@ -126,7 +126,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                 onClick={() => setIsTabletNavOpen(false)}
               />
               {/* DASHBOARD MEGA MENU */}
-              <MegaMenu title={t("nav.dashboards")}>
+              {/* <MegaMenu title={t("nav.dashboards")}>
                 <Container className="relative grid max-h-[70vh] grid-cols-2 gap-8 overflow-auto py-3 lg:grid-cols-3 lg:gap-12 lg:py-6">
                   {megaMenuItems.map(item => (
                     <div key={item.title} className="text-sm">
@@ -151,7 +151,14 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                     </div>
                   ))}
                 </Container>
-              </MegaMenu>
+              </MegaMenu> */}
+
+              <NavItem
+                title={"Dashboards"}
+                link="/dashboards"
+                // icon={<ChartBarSquareIcon className="h-5 w-5 text-black" />}
+                onClick={() => setIsTabletNavOpen(false)}
+              />
 
               <NavItem
                 title={"API Docs"}
