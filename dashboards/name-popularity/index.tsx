@@ -76,8 +76,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     { label: "Surname", value: "compare_last" },
   ];
 
+  const processName = (input: string): string => {
+    return input
+      .toLowerCase()
+      .trim()
+      .replace(/\b(\w)/g, (s: string) => s.toUpperCase());
+  };
+
   const searchHandler = () => {
-    const name: string = searchData.name.trim().replace(/\b(\w)/g, (s: string) => s.toUpperCase());
+    const name: string = processName(searchData.name);
     if (name.length > 0) {
       setSearchData("params", {
         explorer: "NAME_POPULARITY",
@@ -91,10 +98,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   };
 
   const compareHandler = () => {
-    const name: string = compareData.name
-      .toLowerCase()
-      .trim()
-      .replace(/\b(\w)/g, (s: string) => s.toUpperCase());
+    const name: string = processName(compareData.name);
 
     if (name.length > 0) {
       compareData.names.findIndex(
@@ -118,10 +122,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   };
 
   const compareNameInputHandler = (e: string) => {
-    const name = e
-      .toLowerCase()
-      .split(",")[0]
-      .replace(/\b(\w)/g, s => s.toUpperCase());
+    const name = processName(e.split(",")[0].trim());
 
     if (name.length > 0) {
       compareData.names.findIndex(
@@ -160,8 +161,8 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-[#A1BFFF] to-background dark:from-[#203053] dark:to-black"
-        category={[t("nav.megamenu.categories.demography"), "text-primary"]}
+        background="bg-gradient-radial border-b dark:border-washed-dark from-[#A1BFFF] to-background dark:from-[#203053] dark:to-black"
+        category={[t("nav.megamenu.categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("dashboard-name-popularity:header")]}
         description={[t("dashboard-name-popularity:description")]}
         agencyBadge={
@@ -176,7 +177,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         <Section>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="flex flex-col justify-start gap-6 rounded-xl border border-slate-200	bg-slate-50 p-6 shadow dark:border-zinc-800 dark:bg-zinc-800/50">
+              <Card className="flex flex-col justify-start gap-6 rounded-xl border border-outline	bg-background p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50">
                 <div className="flex flex-row gap-4">
                   <span className="text-sm font-medium">Search For: </span>
                   <Radio
@@ -194,7 +195,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   className={"rounded-md border dark:focus:border-primary-dark".concat(
                     searchData.validation
                       ? " border-2 border-danger dark:border-danger"
-                      : " border-2 border-slate-200 dark:border-zinc-800 dark:bg-zinc-900"
+                      : " border-2 border-outline dark:border-zinc-800 dark:bg-zinc-900"
                   )}
                   placeholder={
                     searchData.type.value === "last"
@@ -315,7 +316,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         <Section>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="flex flex-col justify-start gap-6 rounded-xl border border-slate-200	bg-slate-50 p-6 shadow dark:border-zinc-800 dark:bg-zinc-800/50">
+              <Card className="flex flex-col justify-start gap-6 rounded-xl border border-outline	bg-background p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50">
                 <div className="flex flex-col justify-start gap-3">
                   <div className="flex flex-col gap-4">
                     <span className="text-sm font-medium">
@@ -339,7 +340,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         ? " border-2 border-danger dark:border-danger"
                         : compareData.names.length > 9
                         ? " border border-outline bg-outline text-dim opacity-30 dark:border-black dark:bg-black"
-                        : " border-2 border-outline dark:border-zinc-700 dark:bg-black"
+                        : " border-2 border-outline dark:border-zinc-800 dark:bg-zinc-900"
                     )}
                     placeholder={
                       compareData.type.value === "last"
@@ -407,7 +408,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
 
               <table className="w-full table-auto border-collapse md:table-fixed">
                 <thead>
-                  <tr className="md:text-md border-b-2 border-b-outline text-left text-sm dark:border-zinc-800 [&>*]:p-2">
+                  <tr className="md:text-md border-b-2 border-b-outline text-left text-sm dark:border-washed-dark [&>*]:p-2">
                     <th className="md:w-[50px]">#</th>
                     <th>{compareData.params.type === "last" ? "Surname" : "First Name"}</th>
                     <th>{t("dashboard-name-popularity:table_total")}</th>
@@ -431,22 +432,28 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         ) => (
                           <tr
                             className={(i < Math.min(3, compareData.data.length - 1)
-                              ? "bg-slate-50 dark:border-zinc-800 dark:bg-zinc-800/50"
+                              ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
                               : ""
                             ).concat(" md:text-md text-sm")}
                           >
-                            <td className="border-b border-b-outline p-2 dark:border-zinc-800">
+                            <td
+                              className={"border-b border-b-outline p-2 dark:border-washed-dark".concat(
+                                i < Math.min(3, compareData.data.length - 1)
+                                  ? " text-primary dark:text-primary-dark"
+                                  : ""
+                              )}
+                            >
                               {i + 1}
                             </td>
-                            <td className="border-b border-b-outline p-2 capitalize dark:border-zinc-800">
+                            <td className="border-b border-b-outline p-2 capitalize dark:border-washed-dark">
                               {`${item.name} `.concat(
                                 i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
                               )}
                             </td>
-                            <td className="border-b border-b-outline p-2 dark:border-zinc-800">
+                            <td className="border-b border-b-outline p-2 dark:border-washed-dark">
                               {item.total.toLocaleString("en-US")}
                             </td>
-                            <td className="border-b border-b-outline p-2 dark:border-zinc-800">
+                            <td className="border-b border-b-outline p-2 dark:border-washed-dark">
                               {item.total === 0 ? item.max : item.max.toString().concat("s")}
                             </td>
                           </tr>
