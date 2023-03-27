@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="flex flex-row gap-4">
           {/* LOGO */}
           <div className="mt-1 w-12">
-            <Image src="/static/images/logo.png" width={48} height={36} alt="jata negara" />
+            <Image src="/static/images/jata_logo.png" width={48} height={36} alt="jata negara" />
           </div>
           <div>
             <div className="mb-2 uppercase">
@@ -35,6 +35,9 @@ const Footer = () => {
             </a>
             <a className="text-footer-link" href="#" target="_blank">
               {t("nav.backend")}
+            </a>
+            <a className="text-footer-link" href="#" target="_blank">
+              {t("nav.uiux")}
             </a>
           </div>
           {/* OPEN SOURCE DATA */}

@@ -1,46 +1,23 @@
-import {
-  At,
-  Button,
-  Checkbox,
-  Container,
-  Dropdown,
-  Hero,
-  Input,
-  Modal,
-  Radio,
-  Section,
-  Tabs,
-} from "@components/index";
-import {
-  ArrowTrendingUpIcon,
-  ArrowUpRightIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
-import {
-  FunctionComponent,
-  useMemo,
-  useRef,
-  ForwardRefExoticComponent,
-  forwardRef,
-  useImperativeHandle,
-  ReactNode,
-  ForwardedRef,
-} from "react";
-import Label from "@components/Label";
+import Card from "@components/Card";
+import { At, Button, Container, Dropdown, Hero, Input, Section, Tabs } from "@components/index";
+import { OptionType } from "@components/types";
+import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
+import { ArrowUpRightIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useData } from "@hooks/useData";
 import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
-import { OptionType } from "@components/types";
-import Sidebar from "@components/Sidebar";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { BREAKPOINTS, SHORT_LANG } from "@lib/constants";
-import Daterange from "@components/Dropdown/Daterange";
-import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import Card from "@components/Card";
+import { SHORT_LANG } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
-import { rankItem } from "@tanstack/match-sorter-utils";
-import { routes } from "@lib/routes";
+import {
+  ForwardedRef,
+  forwardRef,
+  ForwardRefExoticComponent,
+  FunctionComponent,
+  ReactNode,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 
 /**
  * Dashboard Index
@@ -57,8 +34,6 @@ export type Dashboard = {
 
 interface DashboardIndexProps {
   query: Record<string, string>;
-  //   collection: Record<string, any>;
-  //   total: number;
   analytics: any;
   sources: string[];
   dashboards: Record<string, Record<string, Dashboard[]>>;
@@ -152,7 +127,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
               onChange={index => setData("tabs_section_1", index)}
             >
               {PANELS.map((panel, index) => (
-                <Tabs.Panel name={panel.name as string} key={index}>
+                <Tabs.Panel name={panel.name} key={index}>
                   <Ranking ranks={panel.data} />
                 </Tabs.Panel>
               ))}
@@ -285,13 +260,13 @@ interface RankingProps {
 }
 
 const Ranking = ({ ranks }: RankingProps) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item: RankItem, i) => (
-          <At href={item.id} key={item.id}>
+          <At href={"/dashboard".concat(item.id)} key={item.id}>
             <div className="group w-full space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
               <div className="relative flex items-center gap-3">
                 <span className="text-sm font-bold text-primary">#{i + 1}</span>

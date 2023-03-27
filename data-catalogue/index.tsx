@@ -73,7 +73,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   return (
     <div>
       <Hero
-        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black border-b dark:border-b-washed-dark"
         header={[
           t("catalogue.header").concat(
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""

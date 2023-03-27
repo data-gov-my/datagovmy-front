@@ -3,7 +3,7 @@ import { FunctionComponent, ReactNode } from "react";
 type ContainerProps = {
   background?: string;
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 const Container: FunctionComponent<ContainerProps> = ({ background, className, children }) => {

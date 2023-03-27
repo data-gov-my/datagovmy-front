@@ -169,7 +169,7 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
                     <div className="absolute top-0 left-0 h-2 w-full rounded-xl bg-[#E2E8F0] dark:bg-washed-dark"></div>
                     {/* Active Range */}
                     <div
-                      className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-primary transition-all group-hover:bg-primary md:bg-dim"
+                      className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-primary transition-all duration-100 ease-linear group-hover:bg-primary md:bg-dim"
                       style={{
                         left: position?.active.left,
                         right: position?.active.right,
@@ -178,13 +178,13 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
 
                     {/* Thumb Left */}
                     <span
-                      className="absolute left-0 -top-1.5 h-5 w-5 cursor-pointer rounded-full border-2 border-dim bg-white shadow-xl transition-all group-hover:ring-4 group-hover:ring-primary dark:group-hover:border-primary"
+                      className="absolute left-0 -top-1.5 h-5 w-5 cursor-pointer rounded-full border-2 border-dim bg-white shadow-xl transition-all duration-100 ease-linear group-hover:ring-4 group-hover:ring-primary dark:group-hover:border-primary"
                       style={{ left: position?.thumb.left }}
                     />
 
                     {/* Thumb Right */}
                     <span
-                      className="absolute -top-1.5 -ml-2 h-5 w-5 cursor-pointer rounded-full border-2 border-dim bg-white shadow-xl transition-all group-hover:ring-4 group-hover:ring-primary dark:group-hover:border-primary"
+                      className="absolute -top-1.5 -ml-2 h-5 w-5 cursor-pointer rounded-full border-2 border-dim bg-white shadow-xl transition-all duration-100 ease-linear group-hover:ring-4 group-hover:ring-primary dark:group-hover:border-primary"
                       style={{ right: position?.thumb.right }}
                     />
 
