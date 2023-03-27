@@ -288,7 +288,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               ) : (
                 <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
                   <Bar
-                    className="absolute top-0 z-0 h-[460px] w-full opacity-30"
+                    className="absolute top-0 h-[460px] w-full opacity-30"
                     data={{
                       labels: placeholderData.decade,
                       datasets: [
@@ -303,7 +303,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     enableGridX={false}
                     tooltipEnabled={false}
                   />
-                  <Card className="hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 opacity-100 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
+                  <Card className="z-10 hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
                     <MagnifyingGlassIcon className=" h-4 w-4" />
                     <p>{t("dashboard-name-popularity:search_prompt")}</p>
                   </Card>
