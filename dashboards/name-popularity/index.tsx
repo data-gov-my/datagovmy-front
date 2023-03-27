@@ -13,6 +13,8 @@ import Chips from "@components/Chips";
 import { get } from "@lib/api";
 import { useWatch } from "@hooks/useWatch";
 import Toggle from "@components/Toggle";
+import { useWindowWidth } from "@hooks/useWindowWidth";
+import { BREAKPOINTS } from "@lib/constants";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
@@ -24,6 +26,8 @@ interface NamePopularityDashboardProps {}
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
   const { t, i18n } = useTranslation(["common", "dashboard-name-popularity"]);
+  const windowWidth = useWindowWidth();
+  const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: "First Name", value: "first" },
@@ -235,81 +239,85 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 </p>
               </Card>
             </div>
-            <div
-              className={
-                "col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2"
-              }
-            >
-              {searchData.data ? (
-                <div className="w-full">
-                  {searchData.loading ? (
-                    <div className="flex h-[460px] items-center justify-center">
-                      <SpinnerIcon />
-                    </div>
-                  ) : (
+            {!showPlaceholder && !searchData.data ? (
+              <></>
+            ) : (
+              <div
+                className={
+                  "col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2"
+                }
+              >
+                {searchData.data ? (
+                  <div className="w-full">
+                    {searchData.loading ? (
+                      <div className="flex h-[460px] items-center justify-center">
+                        <SpinnerIcon />
+                      </div>
+                    ) : (
+                      <Bar
+                        precision={0}
+                        suggestedMaxY={10}
+                        className="h-[460px]"
+                        title={
+                          <>
+                            <p className="text-lg font-bold">
+                              <span>
+                                {t("dashboard-name-popularity:bar_title", {
+                                  count: searchData.data.total || 0,
+                                  type: searchData.params.type,
+                                })}
+                              </span>
+                              <span>{`"${searchData.params.name}".`}</span>
+                            </p>
+                            <p className="text-sm text-dim">
+                              <span>{`Here's how many newborns were named ${searchData.params.name} over the years:`}</span>
+                            </p>
+                          </>
+                        }
+                        data={{
+                          labels: searchData.data.decade
+                            ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
+                            : placeholderData.decade,
+                          datasets: [
+                            {
+                              data: searchData.data.count,
+                              label: "Similar names",
+                              borderRadius: 12,
+                              barThickness: 12,
+                              backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                            },
+                          ],
+                        }}
+                        enableGridX={false}
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <div className="relative flex h-[460px] w-full items-center justify-center">
                     <Bar
-                      precision={0}
-                      suggestedMaxY={10}
-                      className="h-[460px]"
-                      title={
-                        <>
-                          <p className="text-lg font-bold">
-                            <span>
-                              {t("dashboard-name-popularity:bar_title", {
-                                count: searchData.data.total || 0,
-                                type: searchData.params.type,
-                              })}
-                            </span>
-                            <span>{`"${searchData.params.name}".`}</span>
-                          </p>
-                          <p className="text-sm text-dim">
-                            <span>{`Here's how many newborns were named ${searchData.params.name} over the years:`}</span>
-                          </p>
-                        </>
-                      }
+                      className="absolute top-0 h-[460px] w-full opacity-30"
                       data={{
-                        labels: searchData.data.decade
-                          ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
-                          : placeholderData.decade,
+                        labels: placeholderData.decade,
                         datasets: [
                           {
-                            data: searchData.data.count,
-                            label: "Similar names",
+                            data: placeholderData.count,
                             borderRadius: 12,
                             barThickness: 12,
-                            backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                            backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
                           },
                         ],
                       }}
                       enableGridX={false}
+                      tooltipEnabled={false}
                     />
-                  )}
-                </div>
-              ) : (
-                <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
-                  <Bar
-                    className="absolute top-0 h-[460px] w-full opacity-30"
-                    data={{
-                      labels: placeholderData.decade,
-                      datasets: [
-                        {
-                          data: placeholderData.count,
-                          borderRadius: 12,
-                          barThickness: 12,
-                          backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                    tooltipEnabled={false}
-                  />
-                  <Card className="z-10 hidden h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
-                    <MagnifyingGlassIcon className=" h-4 w-4" />
-                    <p>{t("dashboard-name-popularity:search_prompt")}</p>
-                  </Card>
-                </div>
-              )}
-            </div>
+                    <Card className="z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto">
+                      <MagnifyingGlassIcon className=" h-4 w-4" />
+                      <p>{t("dashboard-name-popularity:search_prompt")}</p>
+                    </Card>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </Section>
 
@@ -394,96 +402,100 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               </Card>
             </div>
 
-            <div className="col-span-full flex h-[460px] flex-col gap-3 lg:col-span-2">
-              <div className="flex flex-col gap-2 md:flex-row md:justify-between">
-                <p className="text-lg font-bold">
-                  <span>{t("dashboard-name-popularity:compare_title")}</span>
-                </p>
-                <Toggle
-                  enabled={false}
-                  onStateChanged={checked => setCompareData("order", checked)}
-                  label={t("dashboard-name-popularity:compare_toggle")}
-                />
-              </div>
+            {!showPlaceholder && !compareData.data ? (
+              <></>
+            ) : (
+              <div className="col-span-full flex h-[460px] flex-col gap-3 lg:col-span-2">
+                <div className="flex flex-col gap-2 md:flex-row md:justify-between">
+                  <p className="text-lg font-bold">
+                    <span>{t("dashboard-name-popularity:compare_title")}</span>
+                  </p>
+                  <Toggle
+                    enabled={false}
+                    onStateChanged={checked => setCompareData("order", checked)}
+                    label={t("dashboard-name-popularity:compare_toggle")}
+                  />
+                </div>
 
-              <table className="w-full table-auto border-collapse md:table-fixed">
-                <thead>
-                  <tr className="md:text-md max-w-full border-b-2 border-b-outline text-left text-sm dark:border-washed-dark [&>*]:p-2">
-                    <th className="md:w-[50px]">#</th>
-                    <th className="md:w-1/3">
-                      {compareData.params.type === "last" ? "Surname" : "First Name"}
-                    </th>
-                    <th className="md:w-1/3">{t("dashboard-name-popularity:table_total")}</th>
-                    <th className="md:w-1/3">
-                      {t("dashboard-name-popularity:table_most_popular")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {compareData.data ? (
-                    compareData.data
-                      .sort((a: { total: number }, b: { total: number }) =>
-                        a.total == 0
-                          ? Number.MIN_VALUE
-                          : compareData.order
-                          ? b.total - a.total
-                          : a.total - b.total
-                      )
-                      .map(
-                        (
-                          item: { name: string; total: number; max: string; min: string },
-                          i: number
-                        ) => (
-                          <tr
-                            className={(i < Math.min(3, compareData.data.length - 1)
-                              ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
-                              : ""
-                            ).concat(" md:text-md text-sm")}
-                          >
-                            <td
-                              className={"border-b border-b-outline p-2 dark:border-washed-dark".concat(
-                                i < Math.min(3, compareData.data.length - 1)
-                                  ? " text-primary dark:text-primary-dark"
-                                  : ""
-                              )}
-                            >
-                              {i + 1}
-                            </td>
-                            <td className="border-b border-b-outline p-2 capitalize dark:border-washed-dark">
-                              {`${item.name} `.concat(
-                                i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
-                              )}
-                            </td>
-                            <td className="border-b border-b-outline p-2 dark:border-washed-dark">
-                              {item.total.toLocaleString("en-US")}
-                            </td>
-                            <td className="border-b border-b-outline p-2 dark:border-washed-dark">
-                              {item.total === 0 ? item.max : item.max.toString().concat("s")}
-                            </td>
-                          </tr>
+                <table className="w-full table-auto border-collapse md:table-fixed">
+                  <thead>
+                    <tr className="md:text-md max-w-full border-b-2 border-b-outline text-left text-sm dark:border-washed-dark [&>*]:p-2">
+                      <th className="md:w-[50px]">#</th>
+                      <th className="md:w-1/3">
+                        {compareData.params.type === "last" ? "Surname" : "First Name"}
+                      </th>
+                      <th className="md:w-1/3">{t("dashboard-name-popularity:table_total")}</th>
+                      <th className="md:w-1/3">
+                        {t("dashboard-name-popularity:table_most_popular")}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {compareData.data ? (
+                      compareData.data
+                        .sort((a: { total: number }, b: { total: number }) =>
+                          a.total == 0
+                            ? Number.MIN_VALUE
+                            : compareData.order
+                            ? b.total - a.total
+                            : a.total - b.total
                         )
-                      )
-                  ) : compareData.isLoading ? (
-                    <tr>
-                      <td colSpan={5}>
-                        <div className="grid place-items-center py-3">
-                          <SpinnerIcon />
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    <tr>
-                      <td colSpan={5}>
-                        <Card className="my-3 hidden w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
-                          <MagnifyingGlassIcon className=" h-4 w-4" />
-                          <p>{t("dashboard-name-popularity:compare_prompt")}</p>
-                        </Card>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                        .map(
+                          (
+                            item: { name: string; total: number; max: string; min: string },
+                            i: number
+                          ) => (
+                            <tr
+                              className={(i < Math.min(3, compareData.data.length - 1)
+                                ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
+                                : ""
+                              ).concat(" md:text-md text-sm")}
+                            >
+                              <td
+                                className={"border-b border-b-outline p-2 dark:border-washed-dark".concat(
+                                  i < Math.min(3, compareData.data.length - 1)
+                                    ? " text-primary dark:text-primary-dark"
+                                    : ""
+                                )}
+                              >
+                                {i + 1}
+                              </td>
+                              <td className="border-b border-b-outline p-2 capitalize dark:border-washed-dark">
+                                {`${item.name} `.concat(
+                                  i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
+                                )}
+                              </td>
+                              <td className="border-b border-b-outline p-2 dark:border-washed-dark">
+                                {item.total.toLocaleString("en-US")}
+                              </td>
+                              <td className="border-b border-b-outline p-2 dark:border-washed-dark">
+                                {item.total === 0 ? item.max : item.max.toString().concat("s")}
+                              </td>
+                            </tr>
+                          )
+                        )
+                    ) : compareData.isLoading ? (
+                      <tr>
+                        <td colSpan={5}>
+                          <div className="grid place-items-center py-3">
+                            <SpinnerIcon />
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      <tr>
+                        <td colSpan={5}>
+                          <Card className="my-3 hidden w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto lg:flex">
+                            <MagnifyingGlassIcon className=" h-4 w-4" />
+                            <p>{t("dashboard-name-popularity:compare_prompt")}</p>
+                          </Card>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </Section>
       </Container>
