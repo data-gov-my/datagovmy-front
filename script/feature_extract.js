@@ -12,7 +12,7 @@ function main() {
   const ROOT_DIR = path.join(__dirname, "..");
 
   const [type, input] = process.argv.slice(2);
-  const dir = path.join(ROOT_DIR, "./lib/geojson/kawasanku", type);
+  const dir = path.join(ROOT_DIR, "./lib/geojson/", type);
 
   import(input, { assert: { type: "json" } }).then(geojson => {
     const features = geojson.default.features;

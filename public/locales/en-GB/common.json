@@ -108,6 +108,7 @@
     "open_source": "Open Source",
     "frontend": "Frontend Repo: NextJS",
     "backend": "Backend Repo: Django",
+    "uiux": "UI + UX Design: Figma",
     "mampu": "MAMPU",
     "open_data": "Open Data",
     "public_open_data": "Public Sector Open Data",
@@ -115,6 +116,9 @@
     "terms_of_use": "Terms of Use"
   },
   "components": {
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
     "brought_by": "Brought to you by",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore"

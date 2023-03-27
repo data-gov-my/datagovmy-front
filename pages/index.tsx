@@ -1,39 +1,23 @@
-import type { Page } from "@lib/types";
-import { InferGetStaticPropsType, GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import dynamic from "next/dynamic";
-import { get } from "@lib/api";
-import { useTranslation } from "@hooks/useTranslation";
-
-import Metadata from "@components/Metadata";
-import Hero from "@components/Hero";
+import At from "@components/At";
+import Card from "@components/Card";
+import Slider from "@components/Chart/Slider";
 import Container from "@components/Container";
+import Hero from "@components/Hero";
+import Metadata from "@components/Metadata";
 import Section from "@components/Section";
 import Tabs from "@components/Tabs";
-import Slider from "@components/Chart/Slider";
-import { AKSARA_COLOR, BREAKPOINTS, SHORT_LANG } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import Card from "@components/Card";
-import { EyeIcon, DocumentArrowDownIcon } from "@heroicons/react/24/solid";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
-import At from "@components/At";
-import { ReactNode, useEffect, useMemo } from "react";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { routes } from "@lib/routes";
-import {
-  UsersIcon,
-  EconomicGrowthIcon,
-  BankIcon,
-  IndustryIcon,
-  ProductionIcon,
-  RetailTradeIcon,
-  UnemploymentIcon,
-  InflationIcon,
-} from "@components/Icon";
-import { track } from "@lib/mixpanel";
 import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
+import { useData } from "@hooks/useData";
+import { useSlice } from "@hooks/useSlice";
+import { useTranslation } from "@hooks/useTranslation";
+import { get } from "@lib/api";
+import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
+import type { Page } from "@lib/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
@@ -84,83 +68,6 @@ const Home: Page = ({
     },
   ];
 
-  interface StatProps {
-    icon: ReactNode;
-    title: string;
-    url: string;
-    value: string;
-  }
-
-  const STATS = useMemo<StatProps[]>(
-    () => [
-      {
-        icon: <UsersIcon className="h-6 w-6" />,
-        title: t("home.section_1.stats.population"),
-        url: routes.KAWASANKU,
-        value: numFormat(
-          highlights.data.population.callout,
-          "compact",
-          [1, 1],
-          "long",
-          i18n.language,
-          true
-        ),
-      },
-      {
-        icon: <EconomicGrowthIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.economic_growth"),
-        url: routes.GDP,
-        value: numFormat(highlights.data.growth.callout, "compact", [1, 1]) + "%",
-      },
-      {
-        icon: <BankIcon className="h-4 w-4" />,
-        title: t("home.section_1.stats.bnm_opr"),
-        url: routes.INTEREST_RATES,
-        value: numFormat(highlights.data.opr.callout, "compact", [2, 2]) + "%",
-      },
-      {
-        icon: <UnemploymentIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.unemployment"),
-        url: routes.LABOUR_MARKET,
-        value: numFormat(highlights.data.unemployment.callout, "compact", [1, 1]) + "%",
-      },
-      {
-        icon: <InflationIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.inflation"),
-        url: routes.CONSUMER_PRICES,
-        value: numFormat(highlights.data.inflation.callout, "compact", [1, 1]) + "%",
-      },
-      {
-        icon: <ProductionIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.production_cost"),
-        url: routes.PRODUCER_PRICES,
-        value:
-          yieldPrefix(highlights.data.ppi.callout) +
-          numFormat(highlights.data.ppi.callout, "compact", [1, 1]) +
-          "%",
-      },
-      {
-        icon: <IndustryIcon className="h-4 w-4" />,
-        title: t("home.section_1.stats.industrial_production"),
-        url: routes.INDUSTRIAL_PRODUCTION,
-        value:
-          yieldPrefix(highlights.data.ipi.callout) +
-          numFormat(highlights.data.ipi.callout, "compact", [1, 1]) +
-          "%",
-      },
-      {
-        icon: <RetailTradeIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.wholesale_retail"),
-        url: routes.WHOLESALE_RETAIL,
-        value:
-          yieldPrefix(highlights.data.iowrt.callout) +
-          numFormat(highlights.data.iowrt.callout, "compact", [1, 1]) +
-          "%",
-      },
-    ],
-    []
-  );
-
   useEffect(() => {
     // track("page_view", {
     //   type: "dashboard",
@@ -175,30 +82,28 @@ const Home: Page = ({
     <>
       <Metadata keywords={"opendosm data negara inflasi"} />
 
-      <Hero background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black">
-        <div className="space-y-6 xl:w-2/3">
-          <span className="text-base font-medium normal-case tracking-normal text-primary">
-            {t("home.category")}
-          </span>
-
-          <div className="space-y-3">
-            <h2>{t("home.title")}</h2>
+      <Hero
+        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
+        category={[t("home.category"), "text-primary dark:text-primary-dark"]}
+        header={[t("home.title")]}
+        description={
+          <div className="space-y-6">
             <p className="text-dim">{t("home.description")}</p>
+            <div className="flex flex-wrap gap-3">
+              <At className="btn btn-primary text-sm" href="/dashboard" enableIcon>
+                {t("nav.dashboards")}
+              </At>
+              <At className="btn btn-default text-sm" href="/data-catalogue" enableIcon>
+                {t("nav.catalogue")}
+              </At>
+              <At className="btn text-sm" href="#" enableIcon>
+                API Docs
+              </At>
+            </div>
           </div>
+        }
+      />
 
-          <div className="flex flex-wrap gap-3">
-            <At className="btn btn-primary text-sm" href="dashboards" enableIcon>
-              Dashboards
-            </At>
-            <At className="btn btn-default text-sm" href="#" enableIcon>
-              Data Catalogue
-            </At>
-            <At className="btn text-sm" href="#" enableIcon>
-              API Docs
-            </At>
-          </div>
-        </div>
-      </Hero>
       <Container className="min-h-screen">
         <Section
           title={"Explore out hottest dashboards"}
