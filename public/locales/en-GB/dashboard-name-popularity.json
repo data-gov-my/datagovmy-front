@@ -1,8 +1,10 @@
 {
     "header": "Baby Name Popularity",
     "description": "Are you curious about how popular your name or surname is in Malaysia? Or perhaps you're a parent-to-be searching for a unique name for your child? Our name popularity dashboard lets you explore the popularity of any Malaysian name or surname with just a few clicks. Using Malaysia's gold-standard IC database, you can discover how many Malaysians share your name and gain fascinating insights into the country's diverse culture. Check it out now and satisfy your curiosity!",
-    "bar_title_one": "There is {{count, number}} living Malaysian with the {{ type }} name ",
-    "bar_title_other": "There are {{count, number}} living Malaysians with the {{ type }} name ",
+    "bar_title_first_one": "There is {{count, number}} living Malaysian with the first name ",
+    "bar_title_first_other": "There are {{count, number}} living Malaysians with the first name ",
+    "bar_title_last_one": "There is {{count, number}} living Malaysian with the surname ",
+    "bar_title_last_other": "There are {{count, number}} living Malaysians with the surname ",
     "bar_description": "Here's how many newborns were named {{ name }} over the years:",
     "validation_text": "Time series data for this name is not made available, because there are too few Malaysians with the {{ type }} name: {{ name }}. Try again!",
     "first_name": "First Name",

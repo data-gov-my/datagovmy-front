@@ -251,16 +251,18 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     ) : (
                       <Bar
                         precision={0}
-                        suggestedMaxY={10}
+                        suggestedMaxY={5}
                         className="h-[460px]"
                         title={
                           <>
                             <p className="text-lg font-bold">
                               <span>
-                                {t("dashboard-name-popularity:bar_title", {
-                                  count: searchData.data.total || 0,
-                                  type: searchData.params.type,
-                                })}
+                                {t(
+                                  `dashboard-name-popularity:bar_title_${searchData.params.type}`,
+                                  {
+                                    count: searchData.data.total || 0,
+                                  }
+                                )}
                               </span>
                               <span>{`"${searchData.params.name}".`}</span>
                             </p>

@@ -1,8 +1,10 @@
 {
     "header": "Kepopularan Nama Bayi",
     "description": "Adakah anda ingin tahu betapa popularnya nama atau nama keluarga anda di Malaysia? Atau mungkin anda seorang ibu bapa yang mencari nama yang unik untuk anak anda? Papan pemuka populariti nama kami membolehkan anda meneroka populariti mana-mana nama atau nama keluarga Malaysia dengan hanya beberapa klik. Dengan menggunakan pangkalan data IC standard emas Malaysia, anda boleh mengetahui berapa ramai rakyat Malaysia yang berkongsi nama anda dan mendapat wawasan yang menarik tentang budaya yang pelbagai di negara ini. Semak sekarang dan puaskan rasa ingin tahu anda!",
-    "bar_title_one": "Ada {{count, number}} rakyat Malaysia yang hidup dengan nama {{ type }} ",
-    "bar_title_other": "Terdapat {{count, number}} rakyat Malaysia yang hidup dengan nama {{ type }} ",
+    "bar_title_first_one": "Terdapat {{count, number}} rakyat Malaysia yang mempunyai nama pertama ",
+    "bar_title_first_other": "Terdapat {{count, number}} rakyat Malaysia yang mempunyai nama pertama ",
+    "bar_title_last_one": "Terdapat {{count, number}} rakyat Malaysia yang mempunyai nama keluarga ",
+    "bar_title_last_other": "Terdapat {{count, number}} rakyat Malaysia yang mempunyai nama keluarga ",
     "bar_description": "Berikut adalah jumlah bayi yang diberi nama {{ name }} setiap tahun:",
     "validation_text": "Data siri masa untuk nama ini tidak disediakan kerana terlalu sedikit rakyat Malaysia yang mempunyai nama {{ type }}: {{ name }}. Cuba lagi!",
     "first_name": "Nama Pertama",
