@@ -28,6 +28,7 @@ interface BarProps extends ChartHeaderProps {
   prefixY?: string;
   minY?: number;
   maxY?: number;
+  suggestedMaxY?: number;
   precision?: [number, number] | number;
   formatX?: (key: string) => string | string[];
   onClick?: (label: string, index: number) => void;
@@ -38,6 +39,7 @@ interface BarProps extends ChartHeaderProps {
   enableStack?: boolean;
   enableStep?: boolean;
   interactive?: boolean;
+  tooltipEnabled?: boolean;
   _ref?: ForwardedRef<ChartJSOrUndefined<"bar", any[], string | number>>;
 }
 
@@ -64,6 +66,8 @@ const Bar: FunctionComponent<BarProps> = ({
   enableGridY = true,
   minY,
   maxY,
+  suggestedMaxY,
+  tooltipEnabled = true,
   _ref,
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
@@ -112,6 +116,7 @@ const Bar: FunctionComponent<BarProps> = ({
         align: "start",
       },
       tooltip: {
+        enabled: tooltipEnabled,
         bodyFont: {
           family: "Inter",
         },
@@ -177,6 +182,7 @@ const Bar: FunctionComponent<BarProps> = ({
       },
       y: {
         // reverse: !isVertical,
+        suggestedMax: suggestedMaxY,
         grid: {
           display: enableGridY,
           borderWidth: 1,
@@ -197,7 +203,7 @@ const Bar: FunctionComponent<BarProps> = ({
           font: {
             family: "Inter",
           },
-
+          precision: Array.isArray(precision) ? precision[1] : precision,
           callback: function (value: string | number) {
             return displayLabel(
               isVertical

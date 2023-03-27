@@ -32,6 +32,7 @@ export const routes = {
   RESERVE_MONEY: "/dashboard/reserve-money",
   RETIREMENT_READINESS: "/dashboard/retirement-readiness",
   SEKOLAHKU: "/dashboard/sekolahku",
-  SOCIAL_SECURITY: "/dashboard/social-security",
+  SOCIAL_SECURITY: "/dashboard/social-security",s
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
+  NAME_POPULARITY: "/dashboard/name-popularity"
 } as const;

@@ -20,35 +20,30 @@ const Chips: FunctionComponent<ChipsProps> = ({
   onClearAll,
 }) => {
   const { t } = useTranslation();
+
   return (
-    <div className={["flex flex-wrap gap-2", className].join(" ")}>
-      {data.map((item: OptionType, index: number) => {
-        return (
-          <Button
-            key={item.value}
-            className="border bg-washed py-1 px-2 text-start text-sm font-medium dark:border-black dark:bg-washed-dark"
-            icon={<XMarkIcon className="h-4 w-4" onClick={() => onRemove(item.value)} />}
-          >
-            <>
-              <span className="block">{item.label}</span>
-              {colors && (
-                <div
-                  className="min-h-[8px] min-w-[8px] rounded-full"
-                  style={{ backgroundColor: colors[index] }}
-                />
-              )}
-            </>
-          </Button>
-        );
-      })}
-      {onClearAll && data.length ? (
-        <Button icon={<XMarkIcon className="h-4 w-4" />} onClick={onClearAll}>
-          {t("common.clear_all")}
-        </Button>
-      ) : (
-        <></>
+    <ul className="item-center flex flex-wrap gap-1.5">
+      {data.map((option: OptionType, index: number) => (
+        <li
+          key={option.value}
+          className={
+            "flex cursor-pointer flex-row items-center gap-0.5 rounded-full bg-outline px-2.5 py-1 text-sm font-medium text-black outline-none transition-colors dark:bg-washed-dark dark:text-white"
+          }
+          onClick={() => onRemove(option.value)}
+        >
+          <span>{option.label}</span>
+          <XMarkIcon className="h-4 w-4 font-bold text-zinc-500" />
+        </li>
+      ))}
+      {onClearAll && data.length && (
+        <li
+          className="flex cursor-pointer flex-row items-center gap-0.5 rounded-full px-2.5 py-1 text-sm font-medium text-dim outline-none transition-colors"
+          onClick={onClearAll}
+        >
+          <span> {t("common.clear_all")}</span>
+        </li>
       )}
-    </div>
+    </ul>
   );
 };
 

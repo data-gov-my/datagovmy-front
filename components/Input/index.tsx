@@ -8,8 +8,12 @@ interface InputProps extends LabelProps {
   icon?: ReactElement;
   value?: string;
   onChange?: (value: string) => void;
+  onKeyDown?: (value: React.KeyboardEvent<HTMLInputElement>) => void;
   required?: boolean;
   autoFocus?: boolean;
+  isValidation?: boolean;
+  validationText?: string;
+  disabled?: boolean;
 }
 
 const Input: FunctionComponent<InputProps> = ({
@@ -22,7 +26,11 @@ const Input: FunctionComponent<InputProps> = ({
   icon,
   required = false,
   autoFocus = false,
+  isValidation = false,
+  validationText = "",
   onChange,
+  onKeyDown,
+  disabled = false,
 }) => {
   const ref = useRef<HTMLInputElement>(null);
 
@@ -46,6 +54,7 @@ const Input: FunctionComponent<InputProps> = ({
         id={name}
         ref={ref}
         autoFocus={autoFocus}
+        disabled={disabled}
         type={type as HTMLInputTypeAttribute}
         className={[
           "outline-none focus:outline-none focus:ring-0 dark:bg-inherit dark:text-white",
@@ -55,8 +64,14 @@ const Input: FunctionComponent<InputProps> = ({
         placeholder={placeholder}
         value={value}
         required={required}
-        onChange={e => onChange && onChange(e.target.value)}
+        onChange={e => {
+          onChange && onChange(e.target.value);
+        }}
+        onKeyDown={e => {
+          onKeyDown && onKeyDown(e);
+        }}
       />
+      {isValidation ? <p className="text-xs text-danger">{validationText}</p> : <></>}
     </div>
   );
 };
