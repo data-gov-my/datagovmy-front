@@ -174,7 +174,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         }
       />
       <Container className="min-h-screen">
-        <Section>
+        <Section title={t("dashboard-name-popularity:section1_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="flex flex-col justify-start gap-6 rounded-xl border border-outline	bg-background p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50">
@@ -313,7 +313,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
           </div>
         </Section>
 
-        <Section>
+        <Section title={t("dashboard-name-popularity:section2_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="flex flex-col justify-start gap-6 rounded-xl border border-outline	bg-background p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50">
