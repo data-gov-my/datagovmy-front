@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { routes } from "@lib/routes";
 import { STATES } from "@lib/constants";
 
@@ -20,7 +20,6 @@ export default async function handler(
     if (!route) throw new Error("Route missing");
 
     switch (route) {
-      case "DRUG":
       case "CRIME":
         await res.revalidate(routes[route]);
         await revalidateMany(res, route);
@@ -28,7 +27,6 @@ export default async function handler(
 
       default:
         await res.revalidate(routes[route]);
-
         break;
     }
 
