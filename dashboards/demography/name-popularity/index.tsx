@@ -107,12 +107,24 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   };
 
   const compareHandler = () => {
-    const name: string = processName(compareData.name);
+    // process "," for android
+    if (compareData.name.includes(",")) {
+      compareData.name
+        .split(",")
+        .map((name: string) => processName(name))
+        .map((name: string) => {
+          compareData.names.findIndex(
+            (x: OptionType) => x.value.toLowerCase() === name.toLowerCase()
+          ) === -1 && compareData.names.push({ label: name, value: name });
+        });
+    } else {
+      const name: string = processName(compareData.name);
 
-    if (name.length > 0) {
-      compareData.names.findIndex(
-        (x: OptionType) => x.value.toLowerCase() === name.toLowerCase()
-      ) === -1 && compareData.names.push({ label: name, value: name });
+      if (name.length > 0) {
+        compareData.names.findIndex(
+          (x: OptionType) => x.value.toLowerCase() === name.toLowerCase()
+        ) === -1 && compareData.names.push({ label: name, value: name });
+      }
     }
 
     if (compareData.names.length > 1) {
