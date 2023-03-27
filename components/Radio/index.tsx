@@ -21,7 +21,7 @@ const Radio: FunctionComponent<RadioProps> = ({
 }) => {
   return (
     <div>
-      <Label label={label} />
+      {label && <Label label={label} />}
 
       <ul className={className}>
         {options.map((option: OptionType) => (
@@ -33,7 +33,7 @@ const Radio: FunctionComponent<RadioProps> = ({
                 type="radio"
                 name={name}
                 checked={value && option.value === value.value}
-                className="border-2 border-outline text-black focus:ring-black"
+                className="border-2 border-outline text-primary focus:ring-primary dark:bg-inherit dark:checked:bg-primary"
                 onChange={e => onChange && onChange(option)}
               />
               <span className="block text-sm">{option.label}</span>

@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,7 +23,7 @@ import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/Char
 interface EmptyProps extends ChartHeaderProps {
   className?: string;
   type: "bar" | "line" | "timeseries";
-  placeholder?: string;
+  placeholder?: string | ReactNode;
 }
 
 const Empty: FunctionComponent<EmptyProps> = ({
