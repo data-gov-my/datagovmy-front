@@ -74,7 +74,10 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
           onChange={index => setData("period_state", index)}
         >
           {periods.map(period => (
-            <Panel name={t(`dashboard-consumer-prices:section_1.${period}`)}>
+            <Panel
+              key={period.concat("-state")}
+              name={t(`dashboard-consumer-prices:section_1.${period}`)}
+            >
               <Bar
                 className="h-[400px] w-full lg:h-[550px]"
                 layout="horizontal"
@@ -115,7 +118,10 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
           })}
         >
           {periods.map(period => (
-            <Panel name={t(`dashboard-consumer-prices:section_1.${period}`)}>
+            <Panel
+              key={period.concat("-category")}
+              name={t(`dashboard-consumer-prices:section_1.${period}`)}
+            >
               <Bar
                 className="h-[400px] w-full lg:h-[550px]"
                 layout="horizontal"

@@ -84,7 +84,7 @@ const Home: Page = ({
 
       <Hero
         background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
-        category={[t("home.category"), "text-primary"]}
+        category={[t("home.category"), "text-primary dark:text-primary-dark"]}
         header={[t("home.title")]}
         description={
           <div className="space-y-6">
@@ -94,7 +94,7 @@ const Home: Page = ({
                 {t("nav.dashboards")}
               </At>
               <At className="btn btn-default text-sm" href="/data-catalogue" enableIcon>
-                {t("nav.data-catalogue")}
+                {t("nav.catalogue")}
               </At>
               <At className="btn text-sm" href="#" enableIcon>
                 API Docs

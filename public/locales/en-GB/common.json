@@ -115,6 +115,9 @@
     "terms_of_use": "Terms of Use"
   },
   "components": {
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
     "brought_by": "Brought to you by",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore"

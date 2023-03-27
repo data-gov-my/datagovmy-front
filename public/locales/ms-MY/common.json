@@ -26,7 +26,7 @@
     "next": "Seterusnya",
     "in": " di ",
     "yr": "thn",
-    "views": "tontonan",
+    "views": "paparan",
     "page_of": "{{ current }} daripada {{ total }}",
     "data_for": "Data untuk {{ state }}",
     "data_of": "Data setakat {{ date }}",
@@ -115,6 +115,9 @@
     "terms_of_use": "Syarat Penggunaan"
   },
   "components": {
+    "theme": "Tema",
+    "light": "Terang",
+    "dark": "Gelap",
     "brought_by": "Brought to you by",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore"
@@ -130,8 +133,8 @@
     "dosm": "DOSM"
   },
   "home": {
-    "title": "Data: Asas kepada pentadbiran cekap",
-    "description": "data.gov.my adalah platform yang mengkatalog, memberi visualisasi, dan menganalisis pelbagai jenis data daripada pelbagai agensi kerajaan dan negeri Malaysia. Segala data yang dipaparkan di platform ini adalah sumber terbuka dan percuma demi manfaat negara. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya.",
+    "title": "Terkini. Terperinci. Terbukti.",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "section_1": {
       "title": "Malaysia secara Sepintas Lalu",
       "stats": {
