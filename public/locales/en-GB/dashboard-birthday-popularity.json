@@ -1,6 +1,8 @@
 {
   "header": "How popular is your birthday?",
-  "description": "Mark Twain once wrote that “The two most important days in your life are the day you are born and the day you find out why”. This website can’t tell you the meaning of life; we’re just a data site, after all. But what we can do is give you a fun, data-driven way to contextualise your birthday. How many people share your birthday? Which months of the year are most popular for giving birth? Which dates were particularly special? Explore the data below and find out!",
+  "description": "Mark Twain once wrote that ",
+  "quote": "“The two most important days in your life are the day you are born and the day you find out why”. ",
+  "description2": "This website can’t tell you the meaning of life; we’re just a data site, after all. But what we can do is give you a fun, data-driven way to contextualise your birthday. How many people share your birthday? Which months of the year are most popular for giving birth? Which dates were particularly special? Explore the data below and find out!",
   "search": "Search Birthday",
   "enter_birthday": "Enter your birthday",
   "choose_state": "Choose state (optional)",

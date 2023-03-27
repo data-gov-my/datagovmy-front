@@ -1,5 +1,15 @@
-import { FunctionComponent, useCallback, useMemo, useRef, useState } from "react";
-import { Container, Hero, Section, StateDropdown, Button } from "@components/index";
+import { FunctionComponent, useCallback, useRef, useState } from "react";
+import {
+  Container,
+  Hero,
+  Section,
+  StateDropdown,
+  Button,
+  Modal,
+  Dropdown,
+  Radio,
+  Checkbox,
+} from "@components/index";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { useData } from "@hooks/useData";
@@ -11,11 +21,17 @@ import {
   CakeIcon,
   IdentificationIcon,
   MagnifyingGlassIcon as SearchIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import Card from "@components/Card";
-import { useFilter } from "@hooks/useFilter";
 import { DateTimeFormatOptions } from "luxon";
 import { numFormat } from "@lib/helpers";
+import { get } from "@lib/api";
+import useSWRImmutable from "swr";
+import { SpinnerIcon } from "@components/Icon";
+import Label from "@components/Label";
+import { OptionType } from "@components/types";
+import Daterange from "@components/Dropdown/Daterange";
 
 /**
  * Birthday Popularity Dashboard
@@ -25,27 +41,45 @@ import { numFormat } from "@lib/helpers";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface BirthdayPopularityDashboardProps {
-  query: any;
-  rank: any;
   timeseries: any;
 }
 
 const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboardProps> = ({
-  query,
-  rank,
   timeseries,
 }) => {
   const { t, i18n } = useTranslation(["common", "dashboard-birthday-popularity"]);
   const chartRef = useRef(null);
   const windowWidth = useWindowWidth();
+
+  const { data, setData } = useData({
+    timeseries: timeseries,
+    period: "YEARLY",
+    begin: undefined,
+    end: undefined,
+  });
+  const fetcher = (url: string) =>
+    get(url).then(({ data }) => {
+      setData("timeseries", data.timeseries);
+    });
+
+  const [state, setState] = useState("mys");
+  const [datestring, setDatestring] = useState("");
+  const [queryState, setQueryState] = useState("mys");
+  const [queryBday, setQueryBday] = useState("");
+  const [minmax, setMinmax] = useState<[number, number]>([0, 94]);
+  const { error, isLoading } = useSWRImmutable(
+    `dashboard/?dashboard=birthday_popularity&state=${queryState}&bday=01-01`,
+    fetcher
+  );
+  console.log(minmax);
   const daysOfYearInMillis: number[] = Array.from(
     { length: 366 },
     (_, i) => i * 1000 * 60 * 60 * 24 + 63072000000
   );
 
-  const oldest_year = new Date(timeseries.data.x[0]).getFullYear();
+  const oldest_year = new Date(data.timeseries.data.x[0]).getFullYear();
   const diff =
-    (timeseries.data.x[timeseries.data.x.length - 1] - timeseries.data.x[0]) /
+    (data.timeseries.data.x[data.timeseries.data.x.length - 1] - data.timeseries.data.x[0]) /
     (365 * 24 * 60 * 60 * 1000);
   const yearRange: number[] = Array.from({ length: diff }, (_, i) => i + oldest_year);
 
@@ -129,10 +163,10 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     }
     return { years, months, days };
   };
-  const { years, months, days } = getAge(query.bday);
+  const { years, months, days } = getAge(queryBday);
   const options: DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
 
-  const handleMinMax = (string: String) => {
+  const handleMinMax = (string: String): [number, number] => {
     return string &&
       Number(string.substring(0, string.indexOf("-"))) < 2017 &&
       Number(string.substring(0, string.indexOf("-"))) > oldest_year
@@ -142,62 +176,41 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
         ]
       : [0, yearRange.length - 1];
   };
-
-  const { data, setData } = useData({
-    state: query.state ? query.state : "mys",
-    minmax: handleMinMax(query.bday),
-    bday: query.bday ? query.bday : undefined,
-    string: query.bday ? query.bday : undefined,
-  });
-
-  const handleClick = () => {
-    setFilter("state", data.state);
-    setFilter("bday", data.string);
-    setData("minmax", handleMinMax(data.string));
-  };
+  const birthDate = new Date(queryBday);
+  const birthYear = birthDate.getFullYear();
+  const birthsNationwideOnBirthYear = groupValuesByDayOfYear(
+    timeseries.data.x,
+    timeseries.data.births,
+    [birthYear, birthYear]
+  );
+  const birthsOnBirthYear = groupValuesByDayOfYear(
+    data.timeseries.data.x,
+    data.timeseries.data.births,
+    [birthYear, birthYear]
+  ); //.map((births, index) => ({ day: index, value: births })).sort((a, b) => b.value - a.value);
+  const birthsMap = birthsOnBirthYear.map((births, index) => ({ day: index, value: births }));
+  const sortedBirthsOnBirthYear = birthsMap.sort((a, b) => b.value - a.value);
+  const birthsOnBirthDay = birthsOnBirthYear[getDayOfYear(new Date(queryBday)) - 1];
+  const minBirths = Math.min(...birthsOnBirthYear);
+  const maxBirths = Math.max(...birthsOnBirthYear);
 
   const filterTimeline = () => {
     return {
-      births: groupValuesByDayOfYear(timeseries.data.x, timeseries.data.births, [
-        data.minmax[0] + oldest_year,
-        data.minmax[1] + oldest_year,
+      births: groupValuesByDayOfYear(data.timeseries.data.x, data.timeseries.data.births, [
+        minmax[0] + oldest_year,
+        minmax[1] + oldest_year,
       ]),
     };
   };
-  const filtered_timeline = useCallback(filterTimeline, [data.minmax, timeseries]);
+  const filtered_timeline = useCallback(filterTimeline, [minmax, data.timeseries]);
 
-  const tickOptionsX: any = () => {
-    return {
-      callback(val: string, index: number, values: any): string | null {
-        const daysToShow: number[] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 365];
-        const x = daysToShow.includes(index) ? val : null;
-        return x;
-      },
-      minRotation: 0,
-      maxRotation: 0,
-      font: {
-        family: "Inter",
-      },
-    };
-  };
-
-  const birthDate = new Date(query.bday);
-  const birthYear = birthDate.getFullYear();
-  // const totalBirths = useMemo(() => groupValuesByDayOfYear(timeseries.data.x, timeseries.data.births), []);
-  const mysTimeseries = useMemo(() => timeseries.data, []);
-  const totalBirthsNationwide = groupValuesByDayOfYear(mysTimeseries.x, mysTimeseries.births);
-  const birthsNationwideOnBirthYear = groupValuesByDayOfYear(
-    mysTimeseries.x,
-    mysTimeseries.births,
-    [birthYear, birthYear]
+  const description = (
+    <>
+      {t("dashboard-birthday-popularity:description")}
+      <span className="italic">{t("dashboard-birthday-popularity:quote")}</span>
+      {t("dashboard-birthday-popularity:description2")}
+    </>
   );
-  const birthsOnBirthYear = groupValuesByDayOfYear(timeseries.data.x, timeseries.data.births, [
-    birthYear,
-    birthYear,
-  ]);
-  const birthsOnBirthDay = birthsOnBirthYear[getDayOfYear(birthDate) - 1];
-  const minBirths = Math.min(...birthsOnBirthYear);
-  const maxBirths = Math.max(...birthsOnBirthYear);
 
   const section1 = (
     <>
@@ -212,6 +225,13 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
       })}
     </>
   );
+
+  function handleClick(): void {
+    setQueryBday(datestring);
+    setQueryState(state);
+    setMinmax(handleMinMax(datestring));
+  }
+
   function formatDayOfYear(dayOfYear: number): string {
     const date = new Date(2000, 0, dayOfYear + 1);
     const day = date.getDate();
@@ -246,22 +266,52 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
     };
   };
 
+  const tickOptionsX: any = () => {
+    return {
+      callback(val: string, index: number, values: any): string | null {
+        const daysToShow: number[] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 365];
+        const x = daysToShow.includes(index) ? val : null;
+        return x;
+      },
+      minRotation: 0,
+      maxRotation: 0,
+      font: {
+        family: "Inter",
+      },
+    };
+  };
+
+  const filterPeriods: Array<OptionType> = [
+    // { label: t("catalogue.index_filters.daily"), value: "DAILY" },
+    // { label: t("catalogue.index_filters.weekly"), value: "WEEKLY" },
+    // { label: t("catalogue.index_filters.monthly"), value: "MONTHLY" },
+    { label: t("catalogue.index_filters.yearly"), value: "YEARLY" },
+  ];
+
+  const startYear: number = 1923;
+  const endYear: number = 2017;
+
+  const filterYears = (start: number, end: number): Array<OptionType> =>
+    Array(end - start + 1)
+      .fill(start)
+      .map((year, index) => ({ label: `${year + index}`, value: `${year + index}` }));
+
+  const reset = () => {
+    setData("period", "YEARLY");
+    setData("begin", 1923);
+    setData("end", 2017);
+  };
   // const sliderRef = useRef<SliderRef>(null);
   // useWatch(() => {
   //   sliderRef.current && sliderRef.current.reset();
-  // }, [timeseries.data]);
-  const [isLoading, setLoading] = useState(false);
-  const { filter, setFilter } = useFilter({
-    state: query.state,
-    bday: query.bday,
-  });
+  // }, [data.timeseries.data]);
   return (
     <>
       <Hero
         background="bg-gradient-radial border-b dark:border-zinc-800 from-[#A1BFFF] to-background dark:from-outlineHover-dark dark:to-black"
         category={[t("nav.megamenu.categories.demography"), "text-primary"]}
         header={[t("dashboard-birthday-popularity:header")]}
-        description={[t("dashboard-birthday-popularity:description"), "dark:text-outline"]}
+        description={[description, "dark:text-outline"]}
         agencyBadge={
           <AgencyBadge
             agency="Jabatan Pendaftaran Negara"
@@ -290,12 +340,12 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                   name="date"
                   id="date"
                   data-placeholder="Date of birth"
-                  value={data.string}
+                  value={datestring}
                   min={new Date(1923, 0, 1).toISOString().split("T")[0]}
-                  max={new Date(2018, 0, 0).toISOString().split("T")[0]}
+                  max={new Date(2018, 0, 1).toISOString().split("T")[0]}
                   required
                   onChange={selected => {
-                    setData("string", selected.target.value);
+                    setDatestring(selected.target.value);
                   }}
                   onKeyDown={e => {
                     if (e.key === "Enter") handleClick();
@@ -310,9 +360,9 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
                   {t("dashboard-birthday-popularity:choose_state")}
                 </p>
                 <StateDropdown
-                  currentState={data.state}
+                  currentState={state}
                   onChange={selected => {
-                    setData("state", selected.value);
+                    setState(selected.value);
                   }}
                   include={{ label: "Malaysian born Overseas", value: "Overseas" }}
                   exclude={["kvy"]}
@@ -331,68 +381,83 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
               </p>
             </Card>
             <div className="basis-2/3">
-              {query.bday ? (
-                <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
-                  <Card className="my-0 flex h-fit w-full basis-1/3 flex-col self-center rounded-t-xl border border-outline bg-background px-4 py-8 dark:border-washed-dark dark:bg-washed-dark lg:my-8 lg:rounded-xl lg:py-16">
-                    <CakeIcon className="mx-auto h-10 w-10 text-primary" />
-                    <div className="mx-auto mt-4 text-center text-lg font-bold text-black dark:text-white">
-                      {new Date(query.bday).toLocaleDateString("en-GB", options)}
-                    </div>
-                    <div className="mx-auto mt-3 text-center text-sm text-dim">
-                      {t("dashboard-birthday-popularity:section_1.age", {
-                        years: years,
-                        months: months,
-                        days: days,
-                      })}
-                    </div>
-                  </Card>
-                  <div className="flex basis-2/3 flex-col gap-3 self-center px-4 lg:py-8 lg:pl-0 lg:pr-8">
-                    <div className="mx-auto text-lg font-bold text-black dark:text-white">
-                      {t("dashboard-birthday-popularity:section_1.info1", {
-                        count: birthsOnBirthDay,
-                      })}
-                      <span className="mx-auto text-lg font-bold text-primary">
-                        {t("dashboard-birthday-popularity:section_1.count1", {
+              {queryBday ? (
+                !isLoading ? (
+                  <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
+                    <Card className="my-0 flex h-fit w-full basis-1/3 flex-col self-center rounded-t-xl border border-outline bg-background px-4 py-8 dark:border-washed-dark dark:bg-washed-dark lg:my-8 lg:rounded-xl lg:py-16">
+                      <CakeIcon className="mx-auto h-10 w-10 text-primary" />
+                      <div className="mx-auto mt-4 text-center text-lg font-bold text-black dark:text-white">
+                        {new Date(queryBday).toLocaleDateString("en-GB", options)}
+                      </div>
+                      <div className="mx-auto mt-3 text-center text-sm text-dim">
+                        {t("dashboard-birthday-popularity:section_1.age", {
+                          years: years,
+                          months: months,
+                          days: days,
+                        })}
+                      </div>
+                    </Card>
+                    <div className="flex basis-2/3 flex-col gap-3 self-center px-4 pb-8 lg:pt-8 lg:pl-0 lg:pr-8">
+                      <div className="mx-auto text-lg font-bold text-black dark:text-white">
+                        {t("dashboard-birthday-popularity:section_1.info1", {
                           count: birthsOnBirthDay,
                         })}
-                      </span>
-                      {query.state === "Overseas"
-                        ? t("dashboard-birthday-popularity:section_1.info2_overseas", {
-                            count: birthsOnBirthDay,
-                          })
-                        : t("dashboard-birthday-popularity:section_1.info2", {
-                            count: birthsOnBirthDay,
-                          })}
-                      <span className="mx-auto text-lg font-bold text-primary">
-                        {query.state === "Overseas"
-                          ? t("dashboard-birthday-popularity:section_1.overseas")
-                          : CountryAndStates[query.state]}
-                      </span>
-                      {query.state !== "mys" ? section1 : <></>}
-                      {t("dashboard-birthday-popularity:section_1.info5", {
-                        count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
-                      })}
-                      <p className="mx-auto font-bold text-black dark:text-white">
-                        {t("dashboard-birthday-popularity:section_1.info6", { year: birthYear })}
                         <span className="mx-auto text-lg font-bold text-primary">
-                          {t("dashboard-birthday-popularity:section_1.info7", {
-                            rank: rank.data.rank,
-                            suffix: daySuffix(rank.data.rank),
+                          {t("dashboard-birthday-popularity:section_1.count1", {
+                            count: birthsOnBirthDay,
                           })}
                         </span>
-                        {t("dashboard-birthday-popularity:section_1.info8", {
-                          popular: formatDayOfYear(birthsOnBirthYear.indexOf(maxBirths)),
-                          rare: formatDayOfYear(birthsOnBirthYear.indexOf(minBirths)),
+                        {queryState === "Overseas"
+                          ? t("dashboard-birthday-popularity:section_1.info2_overseas", {
+                              count: birthsOnBirthDay,
+                            })
+                          : t("dashboard-birthday-popularity:section_1.info2", {
+                              count: birthsOnBirthDay,
+                            })}
+                        <span className="mx-auto text-lg font-bold text-primary">
+                          {queryState === "Overseas"
+                            ? t("dashboard-birthday-popularity:section_1.overseas")
+                            : CountryAndStates[queryState]}
+                        </span>
+                        {queryState !== "mys" ? section1 : <></>}
+                        {t("dashboard-birthday-popularity:section_1.info5", {
+                          count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
                         })}
+                        <p className="mx-auto font-bold text-black dark:text-white">
+                          {t("dashboard-birthday-popularity:section_1.info6", { year: birthYear })}
+                          <span className="mx-auto text-lg font-bold text-primary">
+                            {t("dashboard-birthday-popularity:section_1.info7", {
+                              rank:
+                                sortedBirthsOnBirthYear
+                                  .map(e => e.day)
+                                  .indexOf(getDayOfYear(birthDate) - 1) + 1,
+                              suffix: daySuffix(
+                                sortedBirthsOnBirthYear
+                                  .map(e => e.day)
+                                  .indexOf(getDayOfYear(birthDate) - 1) + 1
+                              ),
+                            })}
+                          </span>
+                          {t("dashboard-birthday-popularity:section_1.info8", {
+                            popular: formatDayOfYear(birthsOnBirthYear.indexOf(maxBirths)),
+                            rare: formatDayOfYear(birthsOnBirthYear.indexOf(minBirths)),
+                          })}
+                        </p>
+                      </div>
+                      <p className="font-medium text-black dark:text-white">
+                        {t("dashboard-birthday-popularity:section_1.info9")}
                       </p>
                     </div>
-                    <p className="mx-auto font-medium text-black dark:text-white">
-                      {t("dashboard-birthday-popularity:section_1.info9")}
-                    </p>
-                  </div>
-                </Card>
+                  </Card>
+                ) : (
+                  <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline py-8 dark:border-washed-dark lg:flex-row lg:pl-8">
+                    <Card className="mx-auto flex h-min w-fit flex-row gap-2 self-center py-1.5 px-3">
+                      <SpinnerIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />
+                    </Card>
+                  </Card>
+                )
               ) : windowWidth >= BREAKPOINTS.LG ? (
-                <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
+                <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline py-8 dark:border-washed-dark lg:flex-row lg:pl-8">
                   <Card className="mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark">
                     <SearchIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />
                     <p>{t("dashboard-birthday-popularity:start_search")}</p>
@@ -408,37 +473,146 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
         {/* Number of people born on each day of the year */}
         <Section
           title={
-            data.minmax[0] === data.minmax[1]
+            minmax[0] === minmax[1]
               ? t("dashboard-birthday-popularity:section_2.sameyear", {
-                  year: yearRange[data.minmax[0]],
+                  year: yearRange[minmax[0]],
                   state:
-                    query.state === "Overseas"
+                    queryState === "Overseas"
                       ? t("dashboard-birthday-popularity:section_1.overseas")
-                      : CountryAndStates[query.state ? query.state : "mys"],
+                      : CountryAndStates[queryState ? queryState : "mys"],
                 })
               : t("dashboard-birthday-popularity:section_2.title", {
-                  start_year: yearRange[data.minmax[0]],
-                  end_year: yearRange[data.minmax[1]],
+                  start_year: yearRange[minmax[0]],
+                  end_year: yearRange[minmax[1]],
                   state:
-                    query.state === "Overseas"
+                    queryState === "Overseas"
                       ? t("dashboard-birthday-popularity:section_1.overseas")
-                      : CountryAndStates[query.state ? query.state : "mys"],
+                      : CountryAndStates[queryState ? queryState : "mys"],
                 })
           }
           description={
-            hasLeapYear([yearRange[data.minmax[0]], yearRange[data.minmax[1]]])
+            hasLeapYear([yearRange[minmax[0]], yearRange[minmax[1]]])
               ? ""
-              : data.minmax[0] === data.minmax[1]
+              : minmax[0] === minmax[1]
               ? t("dashboard-birthday-popularity:section_2.desc_sameyear", {
-                  year: yearRange[data.minmax[0]],
+                  year: yearRange[minmax[0]],
                 })
               : t("dashboard-birthday-popularity:section_2.description", {
-                  start_year: yearRange[data.minmax[0]],
-                  end_year: yearRange[data.minmax[1]],
+                  start_year: yearRange[minmax[0]],
+                  end_year: yearRange[minmax[1]],
                 })
           }
           date={timeseries.data_as_of}
         >
+          {/* Mobile */}
+          <div className="block xl:hidden">
+            <Modal
+              trigger={open => (
+                <Button
+                  onClick={open}
+                  className="mr-3 block self-center border border-outline px-3 py-1.5 shadow-sm dark:border-washed-dark"
+                >
+                  <span>{t("catalogue.filter")}</span>
+                  <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-white dark:text-black"></span>
+                </Button>
+              )}
+              title={
+                <Label
+                  label={t("catalogue.filter") + ":"}
+                  className="block text-sm font-medium text-black dark:text-white"
+                />
+              }
+              fullScreen
+            >
+              {close => (
+                <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28 dark:divide-outlineHover-dark">
+                  <Radio
+                    label={t("catalogue.period")}
+                    name="period"
+                    className="flex flex-wrap gap-4 px-1 pt-2"
+                    options={filterPeriods}
+                    value={data.period}
+                    onChange={e => setData("period", e)}
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Dropdown
+                      width="w-full"
+                      label={t("catalogue.begin")}
+                      sublabel={t("catalogue.begin") + ":"}
+                      options={filterYears(startYear, endYear)}
+                      selected={data.begin}
+                      placeholder={t("common.select")}
+                      onChange={e => {
+                        setData("begin", e);
+                        setMinmax([Number(e.value) - oldest_year, minmax[1]]);
+                      }}
+                    />
+                    <Dropdown
+                      label={t("catalogue.end")}
+                      sublabel={t("catalogue.end") + ":"}
+                      width="w-full"
+                      disabled={!data.begin}
+                      options={data.begin ? filterYears(+data.begin.value, endYear) : []}
+                      selected={data.end}
+                      placeholder={t("common.select")}
+                      onChange={e => {
+                        setData("end", e);
+                        setMinmax([minmax[0], Number(e.value) - oldest_year]);
+                      }}
+                    />
+                  </div>
+
+                  <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2 dark:bg-black">
+                    <Button
+                      className="btn btn-primary w-full justify-center"
+                      // disabled={
+                      //   actives.length === 0 ||
+                      //   actives.findIndex(active => active[0] === "source") === -1
+                      // }
+                      onClick={reset}
+                    >
+                      {t("common.reset")}
+                    </Button>
+                    <Button
+                      className="btn w-full justify-center"
+                      icon={<XMarkIcon className="h-4 w-4" />}
+                      onClick={close}
+                    >
+                      {t("common.close")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Modal>
+          </div>
+
+          {/* Desktop */}
+          <div className="hidden gap-2 pr-6 xl:flex">
+            <Dropdown
+              options={filterPeriods}
+              placeholder={t("catalogue.period")}
+              selected={data.period}
+              onChange={e => setData("period", e)}
+            />
+            <Daterange
+              options={filterYears(startYear, endYear)}
+              selected={[data.begin, data.end]}
+              onChange={([begin, end]) => {
+                if (begin) {
+                  setData("begin", begin);
+                  setMinmax([Number(begin.value) - oldest_year, minmax[1]]);
+                }
+                if (end) {
+                  setData("end", end);
+                  setMinmax([minmax[0], Number(end.value) - oldest_year]);
+                }
+              }}
+              onReset={() => {
+                setData("begin", undefined);
+                setData("end", undefined);
+              }}
+            />
+          </div>
           <Timeseries
             className="h-[350px] w-full"
             _ref={chartRef}
@@ -474,10 +648,10 @@ const BirthdayPopularityDashboard: FunctionComponent<BirthdayPopularityDashboard
             <Slider
               // ref={sliderRef}
               type="range"
-              value={data.minmax}
+              value={minmax}
               data={yearRange}
               parseAsDate={false}
-              onChange={e => setData("minmax", e)}
+              onChange={e => setMinmax(e)}
             />
           </div>
         </Section>
