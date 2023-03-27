@@ -350,7 +350,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         : " border-2 border-outline dark:border-zinc-800 dark:bg-zinc-900"
                     )}
                     placeholder={
-                      compareData.type.value === "last"
+                      compareData.type.value === "compare_last"
                         ? "E.g. Ibrahim, Loke, Veerapan"
                         : "E.g. Anwar, Siew Fook, Sivakumar"
                     }
