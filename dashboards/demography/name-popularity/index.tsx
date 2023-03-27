@@ -1,20 +1,20 @@
-import { FunctionComponent } from "react";
-import { Button, Container, Hero, Input, Radio, Section } from "@components/index";
-import dynamic from "next/dynamic";
-import { useTranslation } from "@hooks/useTranslation";
 import AgencyBadge from "@components/AgencyBadge";
-import { JabatanPendaftaranNegaraIcon, SpinnerIcon } from "@components/Icon";
 import Card from "@components/Card";
-import { useData } from "@hooks/useData";
+import Chips from "@components/Chips";
+import { JabatanPendaftaranNegaraIcon, SpinnerIcon } from "@components/Icon";
+import { Button, Container, Hero, Input, Radio, Section } from "@components/index";
+import Toggle from "@components/Toggle";
 import { OptionType } from "@components/types";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useTheme } from "next-themes";
-import Chips from "@components/Chips";
-import { get } from "@lib/api";
+import { useData } from "@hooks/useData";
+import { useTranslation } from "@hooks/useTranslation";
 import { useWatch } from "@hooks/useWatch";
-import Toggle from "@components/Toggle";
 import { useWindowWidth } from "@hooks/useWindowWidth";
+import { get } from "@lib/api";
 import { BREAKPOINTS } from "@lib/constants";
+import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
