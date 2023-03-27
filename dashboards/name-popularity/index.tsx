@@ -30,7 +30,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
-    type: { label: "First Name", value: "first" },
+    type: { label: t("dashboard-name-popularity:first_name"), value: "first" },
     name: "",
     validation: false,
     params: {},
@@ -39,7 +39,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   });
 
   const { data: compareData, setData: setCompareData } = useData({
-    type: { label: "First Name", value: "compare_first" },
+    type: { label: t("dashboard-name-popularity:first_name"), value: "compare_first" },
     name: "",
     names: [],
     validation: false,
@@ -71,13 +71,13 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   }, [compareData.params]);
 
   const filterTypes: Array<OptionType> = [
-    { label: "First Name", value: "first" },
-    { label: "Surname", value: "last" },
+    { label: t("dashboard-name-popularity:first_name"), value: "first" },
+    { label: t("dashboard-name-popularity:last_name"), value: "last" },
   ];
 
   const compareFilterTypes: Array<OptionType> = [
-    { label: "First Name", value: "compare_first" },
-    { label: "Surname", value: "compare_last" },
+    { label: t("dashboard-name-popularity:first_name"), value: "compare_first" },
+    { label: t("dashboard-name-popularity:last_name"), value: "compare_last" },
   ];
 
   const processName = (input: string): string => {
@@ -97,7 +97,12 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         compare_name: "false",
       });
     } else {
-      setSearchData("validation", `Please enter your ${searchData.type.value} name`);
+      setSearchData(
+        "validation",
+        searchData.type.value === "first"
+          ? t("dashboard-name-popularity:search_validation_first")
+          : t("dashboard-name-popularity:search_validation_last")
+      );
     }
   };
 
@@ -120,23 +125,17 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         compare_name: "true",
       });
     } else {
-      setCompareData("validation", "Please enter more than one name");
+      setCompareData("validation", t("dashboard-name-popularity:compare_validation"));
     }
     setCompareData("name", "");
   };
 
   const compareNameInputHandler = (e: string) => {
     const name = processName(e.split(",")[0].trim());
-
     if (name.length > 0) {
       compareData.names.findIndex(
         (x: OptionType) => x.value.toLowerCase() === name.toLowerCase()
       ) === -1 && compareData.names.push({ label: name, value: name });
-    } else {
-      setCompareData(
-        "validation",
-        `Please enter your ${compareData.type.value === "compare_last" ? "last" : "first"} name`
-      );
     }
   };
 
@@ -183,7 +182,9 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
             <div className="col-span-full lg:col-span-1">
               <Card className="flex flex-col justify-start gap-6 rounded-xl border border-outline	bg-background p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50">
                 <div className="flex flex-row gap-4">
-                  <span className="text-sm font-medium">Search For: </span>
+                  <span className="text-sm font-medium">
+                    {t("dashboard-name-popularity:search_radio_label")}
+                  </span>
                   <Radio
                     name="type"
                     className="inline-flex gap-4"
@@ -216,7 +217,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     if (e.key === "Enter") searchHandler();
                   }}
                   isValidation={searchData.validation}
-                  validationText={`Please enter your ${searchData.type.value} name`}
+                  validationText={searchData.validation}
                 />
                 <div className="">
                   <Button
@@ -227,15 +228,9 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     {t("dashboard-name-popularity:search_button")}
                   </Button>
                 </div>
+                <p className="text-sm text-dim">{t("dashboard-name-popularity:search_details")}</p>
                 <p className="text-sm text-dim">
-                  {
-                    "The data behind this dashboard does not contain any full names. You can only search for your first name (e.g. Anwar, Azizah) "
-                  }
-                  <span className="font-bold">or</span>
-                  {" your surname (e.g. Loke, Veerapan)."}
-                </p>
-                <p className="text-sm text-dim">
-                  {"We do not store your input - only you can see your search."}
+                  {t("dashboard-name-popularity:search_disclaimer")}
                 </p>
               </Card>
             </div>
@@ -270,7 +265,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                               <span>{`"${searchData.params.name}".`}</span>
                             </p>
                             <p className="text-sm text-dim">
-                              <span>{`Here's how many newborns were named ${searchData.params.name} over the years:`}</span>
+                              <span>
+                                {t("dashboard-name-popularity:bar_description", {
+                                  name: searchData.params.name,
+                                })}
+                              </span>
                             </p>
                           </>
                         }
@@ -397,7 +396,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 </div>
 
                 <p className="text-sm text-dim">
-                  {"We do not store your input - only you can see your search."}
+                  {t("dashboard-name-popularity:search_disclaimer")}
                 </p>
               </Card>
             </div>
@@ -422,7 +421,9 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     <tr className="md:text-md max-w-full border-b-2 border-b-outline text-left text-sm dark:border-washed-dark [&>*]:p-2">
                       <th className="md:w-[50px]">#</th>
                       <th className="md:w-1/3">
-                        {compareData.params.type === "last" ? "Surname" : "First Name"}
+                        {compareData.params.type === "last"
+                          ? t("dashboard-name-popularity:last_name")
+                          : t("dashboard-name-popularity:first_name")}
                       </th>
                       <th className="md:w-1/3">{t("dashboard-name-popularity:table_total")}</th>
                       <th className="md:w-1/3">
