@@ -291,7 +291,7 @@ const Ranking = ({ ranks }: RankingProps) => {
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item: RankItem, i) => (
-          <At href={item.id} key={item.id}>
+          <At href={"/dashboard".concat("/", item.id)} key={item.id}>
             <div className="group w-full space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
               <div className="relative flex items-center gap-3">
                 <span className="text-sm font-bold text-primary">#{i + 1}</span>

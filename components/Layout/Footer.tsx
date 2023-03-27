@@ -36,6 +36,9 @@ const Footer = () => {
             <a className="text-footer-link" href="#" target="_blank">
               {t("nav.backend")}
             </a>
+            <a className="text-footer-link" href="#" target="_blank">
+              {t("nav.uiux")}
+            </a>
           </div>
           {/* OPEN SOURCE DATA */}
           <div className="flex w-full flex-col gap-2 md:w-auto">

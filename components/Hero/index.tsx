@@ -2,6 +2,7 @@ import { FunctionComponent, ReactNode } from "react";
 import Container from "@components/Container";
 import { toDate } from "@lib/helpers";
 import { useTranslation } from "next-i18next";
+import AgencyBadge from "@components/AgencyBadge";
 
 type ConditionalHeroProps =
   | {
@@ -47,13 +48,8 @@ const Hero: FunctionComponent<HeroProps> = ({
         <div className="space-y-6 xl:w-full">
           <div className="relative flex justify-between">
             {category && (
-              <span
-                className={[
-                  "text-base font-medium normal-case tracking-normal",
-                  category[1] ?? "",
-                ].join(" ")}
-              >
-                {category[0]}
+              <span className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}>
+                {t(category[0])}
               </span>
             )}
             <div className="absolute right-0 top-0">{agencyBadge}</div>
@@ -61,9 +57,11 @@ const Hero: FunctionComponent<HeroProps> = ({
 
           {(header || description) && (
             <div className="space-y-3">
-              {header && <h3 className={["text-black", header[1] ?? ""].join(" ")}>{header[0]}</h3>}
+              {header && (
+                <h3 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h3>
+              )}
               {description && Array.isArray(description) ? (
-                <p className={["text-dim", description[1]].join(" ")}>{description[0]}</p>
+                <p className={["text-dim", description[1]].join(" ")}>{t(description[0])}</p>
               ) : (
                 description
               )}
