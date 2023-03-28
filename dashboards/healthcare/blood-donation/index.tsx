@@ -280,7 +280,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           description={t("dashboard-blood-donation:combine_description")}
           date={timeseries_all.date_as_of}
         >
-          {/* <Timeseries
+          <Timeseries
             className="h-[350px] w-full"
             title={t("dashboard-blood-donation:combine_title")}
             state={currentState}
@@ -299,7 +299,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 },
               ],
             }}
-          /> */}
+          />
           <div className="pt-5">
             <Slider
               ref={sliderRef}
