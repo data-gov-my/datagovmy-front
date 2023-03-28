@@ -96,10 +96,10 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
           },
           callbacks: {
             label: function (item: any) {
-              if (!item.raw.feature.id) return "";
-              if (!item.raw.value) return `${item.raw.feature.id}: ${t("common.no_data")}`;
+              if (!item.raw.feature[type]) return "";
+              if (!item.raw.value) return `${item.raw.feature[type]}: ${t("common.no_data")}`;
 
-              return `${item.raw.feature.id}${`: ${prefix ?? ""}${numFormat(
+              return `${item.raw.feature[type]}${`: ${prefix ?? ""}${numFormat(
                 item.raw.value,
                 "standard",
                 precision
@@ -150,7 +150,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = forwardRef(
                     data: choromap
                       ? choromap.features.map((feature: any) => ({
                           feature: feature,
-                          value: data.values[data.labels.indexOf(feature.properties?.state)],
+                          value: data.values[data.labels.indexOf(feature.properties[type])],
                         }))
                       : [],
                   },
