@@ -14,7 +14,7 @@ import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import { useTheme } from "next-themes";
 import AgencyBadge from "@components/AgencyBadge";
-import { BankNegaraIcon } from "@components/Icon";
+import { BNMIcon } from "@components/Icon/agency";
 
 /**
  * Currency in Circulation Dashboard
@@ -166,7 +166,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
           <AgencyBadge
             agency={t("agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BankNegaraIcon />}
+            icon={<BNMIcon />}
           />
         }
       />

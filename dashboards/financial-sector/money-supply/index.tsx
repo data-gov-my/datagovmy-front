@@ -14,7 +14,7 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/AgencyBadge";
-import { BankNegaraIcon } from "@components/Icon";
+import { BNMIcon } from "@components/Icon/agency";
 
 /**
  * Money Supply Dashboard
@@ -236,7 +236,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
           <AgencyBadge
             agency={t("agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BankNegaraIcon />}
+            icon={<BNMIcon />}
           />
         }
       />

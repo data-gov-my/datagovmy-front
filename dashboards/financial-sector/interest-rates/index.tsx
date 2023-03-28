@@ -12,7 +12,7 @@ import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import AgencyBadge from "@components/AgencyBadge";
-import { BankNegaraIcon } from "@components/Icon";
+import { BNMIcon } from "@components/Icon/agency";
 /**
  * Interest Rates Dashboard
  * @overview Status: Live
@@ -164,7 +164,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
           <AgencyBadge
             agency={t("agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BankNegaraIcon />}
+            icon={<BNMIcon />}
           />
         }
       />

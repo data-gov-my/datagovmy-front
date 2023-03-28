@@ -1,7 +1,7 @@
 import AgencyBadge from "@components/AgencyBadge";
 import BarMeter from "@components/Chart/BarMeter";
 import Slider, { SliderRef } from "@components/Chart/Slider";
-import { PusatDarahNegaraIcon } from "@components/Icon";
+import { PDNIcon } from "@components/Icon/agency";
 import {
   Button,
   Container,
@@ -267,7 +267,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           <AgencyBadge
             agency="Pusat Darah Negara"
             link="https://pdn.gov.my/v2/"
-            icon={<PusatDarahNegaraIcon />}
+            icon={<PDNIcon />}
           />
         }
       />

@@ -1,9 +1,10 @@
 import AgencyBadge from "@components/AgencyBadge";
 import Card from "@components/Card";
 import Chips from "@components/Chips";
-import { JabatanPendaftaranNegaraIcon, SpinnerIcon } from "@components/Icon";
+import { JPNIcon } from "@components/Icon/agency";
 import { Button, Container, Hero, Input, Radio, Section } from "@components/index";
 import Toggle from "@components/Toggle";
+import Spinner from "@components/Spinner";
 import { OptionType } from "@components/types";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
@@ -164,7 +165,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-washed-dark from-[#A1BFFF] to-background dark:from-[#203053] dark:to-black"
+        background="blue"
         category={[t("nav.megamenu.categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("dashboard-name-popularity:header")]}
         description={[t("dashboard-name-popularity:description")]}
@@ -172,7 +173,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
           <AgencyBadge
             agency="Jabatan Pendaftaran Negara"
             link="https://www.jpn.gov.my/en/"
-            icon={<JabatanPendaftaranNegaraIcon />}
+            icon={<JPNIcon />}
           />
         }
       />
@@ -246,7 +247,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   <div className="w-full">
                     {searchData.loading ? (
                       <div className="flex h-[460px] items-center justify-center">
-                        <SpinnerIcon />
+                        <Spinner loading={searchData.loading} />
                       </div>
                     ) : (
                       <Bar
@@ -481,7 +482,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                       <tr>
                         <td colSpan={5}>
                           <div className="grid place-items-center py-3">
-                            <SpinnerIcon />
+                            <Spinner loading={compareData.isLoading} />
                           </div>
                         </td>
                       </tr>
