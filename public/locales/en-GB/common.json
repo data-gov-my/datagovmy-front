@@ -39,6 +39,7 @@
     "clear_selection": "Clear selection",
     "clear_all": "Clear all",
     "reset": "Reset",
+    "reset_default": "Reset to default",
     "close": "Close",
     "select": "Select",
     "here": "Here",
@@ -98,7 +99,7 @@
         "exchange_rate": "Exchange Rates",
         "daily_price": "Daily Prices",
         "blood_donation": "Blood Donation",
-        "birthday_popularity": "Birthday Popularity",
+        "birthday_explorer": "Birthday Explorer",
         "name_popularity": "Name Popularity"
       }
     },

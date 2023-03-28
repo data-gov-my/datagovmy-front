@@ -1,6 +1,6 @@
 import type { OptionType } from "@components/types";
 import { default as Label, LabelProps } from "@components/Label";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useRef } from "react";
 import { Transition, Popover } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon, ClockIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { Button } from "..";
@@ -9,25 +9,36 @@ import { useTranslation } from "next-i18next";
 interface DaterangeProps extends LabelProps {
   className?: string;
   disabled?: boolean;
-  options: OptionType[];
+  beginOptions: OptionType[];
+  endOptions: OptionType[];
   label?: string;
   anchor?: "left" | "right" | string;
   selected?: [OptionType?, OptionType?];
   onChange: (selected: any) => void;
   onReset?: () => void;
+  beginScrollBottom?: boolean;
 }
 
 const Range: FunctionComponent<DaterangeProps> = ({
   className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm",
   disabled = false,
-  options,
+  beginOptions,
+  endOptions,
   selected,
   onChange,
   onReset,
+  beginScrollBottom = false,
   anchor = "right",
   label,
 }) => {
   const { t } = useTranslation();
+  const listRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (beginScrollBottom && listRef.current)
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+  }, [selected, onChange]);
+
   return (
     <div className="space-y-2">
       {label && <Label label={label} />}
@@ -41,14 +52,14 @@ const Range: FunctionComponent<DaterangeProps> = ({
               : "hover:border-outlineHover focus:outline-none focus-visible:ring-0",
           ].join(" ")}
         >
-          <ClockIcon className="h-4 w-4 text-dim" />
+          <ClockIcon className="h-4 w-4 text-black dark:text-white" />
           <p className="text-sm">
             {(selected && selected[0] && selected[0].label) ?? t("catalogue.begin")} -{" "}
             {(selected && selected[1] && selected[1].label) ?? t("catalogue.end")}
           </p>
 
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
-            <ChevronDownIcon className="h-5 w-5 text-dim" aria-hidden="true" />
+            <ChevronDownIcon className="h-5 w-5 text-black dark:text-white" aria-hidden="true" />
           </span>
         </Popover.Button>
         <Transition
@@ -79,8 +90,8 @@ const Range: FunctionComponent<DaterangeProps> = ({
                 </p>
               </div>
               <div className="grid h-full grid-cols-2 overflow-auto border-b dark:border-washed-dark">
-                <ul className="max-h-80 overflow-auto">
-                  {options.map(option => (
+                <ul ref={listRef} className="max-h-80 overflow-auto">
+                  {beginOptions.map(option => (
                     <li
                       className={[
                         "flex cursor-pointer select-none items-center justify-between py-2 px-4 hover:bg-washed dark:hover:bg-washed-dark",
@@ -98,7 +109,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                   ))}
                 </ul>
                 <ul className="max-h-80 overflow-auto">
-                  {options.map(option => (
+                  {endOptions.map(option => (
                     <li
                       className={[
                         "flex cursor-pointer select-none items-center justify-between py-2 px-4 hover:bg-washed dark:hover:bg-washed-dark",
@@ -123,7 +134,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
               onClick={onReset}
               disabled={selected?.every(item => item === undefined)}
             >
-              {t("common.clear")}
+              {t("common.reset_default")}
             </Button>
           </Popover.Panel>
         </Transition>

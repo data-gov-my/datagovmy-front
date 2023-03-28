@@ -39,6 +39,7 @@
     "clear_selection": "Kosongkan pilihan",
     "clear_all": "Kosongkan semua",
     "reset": "Set semula",
+    "reset_default": "Set semula",
     "close": "Tutup",
     "select": "Pilih",
     "here": "Sini",
@@ -98,7 +99,7 @@
         "exchange_rate": "Kadar Pertukaran",
         "daily_price": "Harga Harian",
         "blood_donation": "Pendermaan Darah",
-        "birthday_popularity": "Populariti Hari Jadi",
+        "birthday_explorer": "Explorer Hari Jadi",
         "name_popularity": "Popularity Nama"
       }
     },

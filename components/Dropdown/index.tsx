@@ -162,7 +162,10 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
 
               {/* ChevronDown Icon */}
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
-                <ChevronDownIcon className="h-5 w-5 text-dim" aria-hidden="true" />
+                <ChevronDownIcon
+                  className="h-5 w-5 text-black dark:text-white"
+                  aria-hidden="true"
+                />
               </span>
             </>
           </Listbox.Button>

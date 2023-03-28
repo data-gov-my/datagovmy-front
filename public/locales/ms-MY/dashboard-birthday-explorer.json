@@ -2,13 +2,16 @@
   "header": "Populariti Hari Jadi",
   "description": "Papan pemuka ini",
   "quote": "",
-  "description2": "",
   "search": "",
   "enter_birthday": "Pilih Hari Jadi anda",
   "choose_state": "Pilih negeri (tidak wajib)",
-  "privacy": "",
+  "disclaimer": "",
   "start_search": "",
   "section_1": {
+    "title": "",
+    "validation_incomplete": "Tarikh yand diisi tidak lengkap. Sila isikan tarikh yang lengkap.",
+    "validation_min": "Sila isikan tarikh selepas 1 Jan 1923",
+    "validation_max": "Sila isikan tarikh sebelum 31 Dis 2017",
     "age": "Anda berumur {{ years }} tahun, {{ months }} bulan and {{ days }} hari",
     "info1_one": "",
     "info1_other": "",
@@ -26,7 +29,7 @@
     "info6": "",
     "info7": "",
     "info8": "",
-    "info9": ""
+    "explore": ""
   },
   "section_2": {
     "title": "{{ state }}: Jumlah orang yang dilahirkan pada setiap hari, dari {{ start_year }} ke {{ end_year }}",

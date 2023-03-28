@@ -1,26 +1,26 @@
 import Metadata from "@components/Metadata";
-import BirthdayPopularityDashboard from "@dashboards/birthday-popularity";
+import BirthdayExplorerDashboard from "@dashboards/birthday-explorer";
 import { GetServerSideProps, GetStaticProps, InferGetServerSidePropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-const BirthdayPopularity = ({
+const BirthdayExplorer = ({
   // query,
   // rank_overall,
   timeseries,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-birthday-popularity"]);
+  const { t } = useTranslation(["common", "dashboard-birthday-explorer"]);
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.birthday_popularity")}
-        description={t("dashboard-birthday-popularity:description")}
+        title={t("nav.megamenu.dashboards.birthday_explorer")}
+        description={t("dashboard-birthday-explorer:description")}
         keywords={""}
       />
-      {/* <BirthdayPopularityDashboard query={query} rank={rank_overall} timeseries={timeseries} /> */}
-      {/* <BirthdayPopularityDashboard rank={rank_overall} timeseries={timeseries}/> */}
-      <BirthdayPopularityDashboard timeseries={timeseries} />
+      {/* <BirthdayExplorerDashboard query={query} rank={rank_overall} timeseries={timeseries} /> */}
+      {/* <BirthdayExplorerDashboard rank={rank_overall} timeseries={timeseries}/> */}
+      <BirthdayExplorerDashboard timeseries={timeseries} />
     </>
   );
 };
@@ -39,11 +39,10 @@ const formatDate = (inputDate: Date): string => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-popularity"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-explorer"]);
   const { data } = await get("/dashboard", {
     dashboard: "birthday_popularity",
     state: "mys",
-    bday: "01-01",
   });
   return {
     props: {
@@ -54,7 +53,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 // export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
-//   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-popularity"]);
+//   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-explorer"]);
 
 //   const date = new Date(String(query.bday));
 //   const bday: any = isFutureDate(date) && isInvalidDate(date) ? (query = {}) : formatDate(date);
@@ -75,4 +74,4 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 //   };
 // };
 
-export default BirthdayPopularity;
+export default BirthdayExplorer;

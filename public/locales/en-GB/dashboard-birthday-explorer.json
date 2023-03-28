@@ -1,14 +1,17 @@
 {
-  "header": "How popular is your birthday?",
-  "description": "Mark Twain once wrote that ",
-  "quote": "“The two most important days in your life are the day you are born and the day you find out why”. ",
-  "description2": "This website can’t tell you the meaning of life; we’re just a data site, after all. But what we can do is give you a fun, data-driven way to contextualise your birthday. How many people share your birthday? Which months of the year are most popular for giving birth? Which dates were particularly special? Explore the data below and find out!",
+  "header": "Birthday Explorer",
+  "description": "Mark Twain once wrote that <i>{{ quote }}</i>. This website can’t tell you the meaning of life; we’re just a data site, after all. But what we can do is give you a fun, data-driven way to contextualise your birthday. How many people share your birthday? Which months of the year are most popular for giving birth? Which dates were particularly special? Explore the data below and find out!",
+  "quote": "“The two most important days in your life are the day you are born and the day you find out why”",
   "search": "Search Birthday",
   "enter_birthday": "Enter your birthday",
   "choose_state": "Choose state (optional)",
-  "privacy": "We do not store your input - only you can see your search.",
+  "disclaimer": "We do not store your input - only you can see your search.",
   "start_search": "Start searching for your birthday.",
   "section_1": {
+    "title": "How popular is your birthday?",
+    "validation_incomplete": "The date is incomplete. Please enter a valid date.",
+    "validation_min": "Please enter a date later than 1st Jan 1923.",
+    "validation_max": "Please enter a date earlier than 31st Dec 2017",
     "age": "You are {{ years }} years, {{ months }} months and {{ days }} days old",
     "info1_one": "On your birthday, there was ",
     "info1_other": "On your birthday, there were ",
@@ -27,7 +30,7 @@
     "info6": "In {{ year }}, your birthday was the ",
     "info7": "{{ rank }}{{ suffix }}",
     "info8": " most popular out of 366 dates. The most popular was {{ popular }}, while the most rare was {{ rare }}.",
-    "info9": "Use the time series chart below to explore how the popularity of birthdays has changed over the years."
+    "explore": "Use the time series chart below to explore how the popularity of birthdays has changed over the years."
   },
   "section_2": {
     "title": "{{ state }}: Number of babies born on each date, {{ start_year }} to {{ end_year }}",

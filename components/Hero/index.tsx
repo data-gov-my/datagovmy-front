@@ -61,7 +61,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                 <h3 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h3>
               )}
               {description && Array.isArray(description) ? (
-                <p className={["text-dim", description[1]].join(" ")}>{t(description[0])}</p>
+                <p className={["text-dim", description[1]].join(" ")}>{description[0]}</p>
               ) : (
                 description
               )}
