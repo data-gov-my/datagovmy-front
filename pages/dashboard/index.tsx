@@ -8,6 +8,7 @@ import { get } from "@lib/api";
 
 const DashboardIndex: Page = ({
   analytics,
+  sources,
   dashboards,
   query,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -16,26 +17,38 @@ const DashboardIndex: Page = ({
   return (
     <>
       <Metadata title={t("nav.dashboards")} description={""} keywords={""} />
-      <Dashboard
-        query={query}
-        sources={["DOSM", "MAMPU", "PDN", "BNM"]}
-        analytics={analytics}
-        dashboards={dashboards}
-      />
+      <Dashboard query={query} sources={sources} analytics={analytics} dashboards={dashboards} />
     </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
-
   const { data } = await get("/dashboard/", { dashboard: "dashboards" });
+
+  const sources: Record<string, string[]> = {
+    en: [],
+    bm: [],
+  };
+
+  Object.values(data.dashboards_all.data.en).map((category: any) => {
+    category.map((dashboard: any) => {
+      sources["en"].indexOf(dashboard.agency) === -1 && sources["en"].push(dashboard.agency);
+    });
+  });
+
+  Object.values(data.dashboards_all.data.en).map((category: any) => {
+    category.map((dashboard: { agency: string }) => {
+      sources["bm"].indexOf(dashboard.agency) === -1 && sources["bm"].push(dashboard.agency);
+    });
+  });
 
   return {
     props: {
       ...i18n,
       query: query ?? {},
       data: data,
+      sources: sources,
       timeseries: [],
       analytics: {
         data_as_of: data.dashboards_top.data_as_of,
