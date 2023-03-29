@@ -1,28 +1,29 @@
 import { useState, useMemo, useCallback } from "react";
 
 /**
- * Exports the subject to 'png' or 'svg'
+ * Exports the subject svg to inline-data 'png' or 'svg'
  * @param mounted Hook to check if the target element is mounted.
  * @returns { onRefChange, png, svg }
  */
-export const useExport = (mounted: boolean) => {
+export const useExport = (mounted: boolean, selector: string = "svg") => {
   const [element, setElement] = useState<SVGSVGElement | undefined>();
   const [png, setPNG] = useState<string | undefined>(undefined);
   const onRefChange = useCallback(
     (node: any) => {
+      console.log(node);
       if (node !== null) {
-        const svg = node.querySelector("svg");
+        const svg = node.querySelector(selector);
 
         setElement(svg);
         if (svg !== null) {
-          convertSVGtoPNG(svg).then(item => setPNG(item));
+          convertAsPNG(svg).then(item => setPNG(item));
         }
       }
     },
     [mounted]
   );
 
-  const convertSVGtoPNG = async (svgElement: SVGSVGElement): Promise<string | undefined> => {
+  const convertAsPNG = async (svgElement: SVGSVGElement): Promise<string | undefined> => {
     return new Promise(resolve => {
       const base64 =
         "data:image/svg+xml;base64," +
