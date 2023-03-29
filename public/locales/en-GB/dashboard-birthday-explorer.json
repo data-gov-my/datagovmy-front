@@ -37,6 +37,8 @@
     "sameyear": "{{ state }}: Number of babies born on each date in {{ year }}",
     "description": "Note: There are no births on 29 Feb because there are no leap years between {{ start_year }} and {{ end_year }}.",
     "desc_sameyear": "Note: There are no births on 29 Feb because there are no leap years in {{ year }}.",
+    "by_date": "By Date",
+    "by_month": "By Month",
     "births": "Births"
   }
 }

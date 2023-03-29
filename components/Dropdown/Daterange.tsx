@@ -1,6 +1,6 @@
 import type { OptionType } from "@components/types";
 import { default as Label, LabelProps } from "@components/Label";
-import { FunctionComponent, useEffect, useRef } from "react";
+import { FunctionComponent, useRef } from "react";
 import { Transition, Popover } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon, ClockIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { Button } from "..";
@@ -16,7 +16,6 @@ interface DaterangeProps extends LabelProps {
   selected?: [OptionType?, OptionType?];
   onChange: (selected: any) => void;
   onReset?: () => void;
-  beginScrollBottom?: boolean;
 }
 
 const Range: FunctionComponent<DaterangeProps> = ({
@@ -27,17 +26,10 @@ const Range: FunctionComponent<DaterangeProps> = ({
   selected,
   onChange,
   onReset,
-  beginScrollBottom = false,
   anchor = "right",
   label,
 }) => {
   const { t } = useTranslation();
-  const listRef = useRef<HTMLUListElement>(null);
-
-  useEffect(() => {
-    if (beginScrollBottom && listRef.current)
-      listRef.current.scrollTop = listRef.current.scrollHeight;
-  }, [selected, onChange]);
 
   return (
     <div className="space-y-2">
@@ -90,7 +82,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                 </p>
               </div>
               <div className="grid h-full grid-cols-2 overflow-auto border-b dark:border-washed-dark">
-                <ul ref={listRef} className="max-h-80 overflow-auto">
+                <ul className="max-h-80 overflow-auto">
                   {beginOptions.map(option => (
                     <li
                       className={[

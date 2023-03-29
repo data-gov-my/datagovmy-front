@@ -36,6 +36,8 @@
     "same_year": "{{ state }}: Jumlah orang yang dilahirkan pada setiap hari dalam tahun {{ year }}",
     "description": "",
     "desc_sameyear": "",
+    "by_date": "",
+    "by_month": "",
     "births": "Kelahiran"
   }
 }
