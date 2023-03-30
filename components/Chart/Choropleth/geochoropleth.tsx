@@ -130,7 +130,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
         <TileLayer
           key={theme}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url={`http://localhost:8080/styles/${theme}/{z}/{x}/{y}.png`}
+          url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${theme}/{z}/{x}/{y}.png`}
         />
       </MapContainer>
     </div>
