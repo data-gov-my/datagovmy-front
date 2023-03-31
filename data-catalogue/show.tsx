@@ -37,6 +37,9 @@ const CatalogueTimeseries = dynamic(() => import("@data-catalogue/partials/times
 const CatalogueChoropleth = dynamic(() => import("@data-catalogue/partials/choropleth"), {
   ssr: true,
 });
+const CatalogueGeoChoropleth = dynamic(() => import("@data-catalogue/partials/geochoropleth"), {
+  ssr: true,
+});
 const CatalogueGeojson = dynamic(() => import("@data-catalogue/partials/geojson"), {
   ssr: true,
 });
@@ -142,7 +145,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
       case "CHOROPLETH":
         return (
-          <CatalogueChoropleth
+          <CatalogueGeoChoropleth
             dataset={dataset}
             lang={lang}
             urls={urls}
@@ -153,6 +156,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             }}
             onDownload={prop => setDownloads(prop)}
           />
+          //   <CatalogueChoropleth
+          //     dataset={dataset}
+          //     lang={lang}
+          //     urls={urls}
+          //     config={{
+          //       precision: config.precision,
+          //       color: config.color,
+          //       geojson: config.file_json,
+          //     }}
+          //     onDownload={prop => setDownloads(prop)}
+          //   />
         );
       case "GEOJSON":
         return (

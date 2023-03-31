@@ -3,13 +3,11 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import type { Color } from "@hooks/useColor";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
-import { download } from "@lib/helpers";
 import type { DownloadOptions } from "@lib/types";
-import { track } from "mixpanel-browser";
 import { default as dynamic } from "next/dynamic";
-import { FunctionComponent, useCallback, useEffect, useRef, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth/geochoropleth"), {
+const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochoropleth"), {
   ssr: false,
 });
 
@@ -48,98 +46,67 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   config,
   lang,
   urls,
+  onDownload,
 }) => {
   const { t } = useTranslation();
-  const ref = useRef<GeoChoroplethRef>(null);
-  const [mounted, setMounted] = useState<boolean>(false);
-  const { onRefChange, png, svg } = useExport(mounted, "#map");
+  const ctx = useRef<GeoChoroplethRef | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const { png } = useExport(mounted, dataset.meta.unique_id);
 
-  //   useEffect(() => {
-  //     onDownload && onDownload(availableDownloads());
-  //   }, [svg, png, mounted]);
+  useEffect(() => {
+    if (onDownload) onDownload(availableDownloads);
+  }, [mounted, png]);
 
-  //   const availableDownloads = useCallback(
-  //     () => ({
-  //       chart: [
-  //         {
-  //           key: "png",
-  //           image: png,
-  //           title: t("catalogue.image.title"),
-  //           description: t("catalogue.image.desc"),
-  //           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
-  //           href: () => {
-  //             if (png) {
-  //               download(png, dataset.meta.unique_id.concat(".png"), () =>
-  //                 track("file_download", {
-  //                   uid: dataset.meta.unique_id.concat("_png"),
-  //                   id: dataset.meta.unique_id,
-  //                   ext: "svg",
-  //                   name_en: dataset.meta.en.title,
-  //                   name_bm: dataset.meta.bm.title,
-  //                   type: "image",
-  //                 })
-  //               );
-  //             }
-  //           },
-  //         },
-  //         {
-  //           key: "svg",
-  //           image: png,
-  //           title: t("catalogue.vector.title"),
-  //           description: t("catalogue.vector.desc"),
-  //           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
-  //           href: () => {
-  //             if (svg) {
-  //               download(svg, dataset.meta.unique_id.concat(".svg"), () =>
-  //                 track("file_download", {
-  //                   uid: dataset.meta.unique_id.concat("_svg"),
-  //                   id: dataset.meta.unique_id,
-  //                   ext: "svg",
-  //                   name_en: dataset.meta.en.title,
-  //                   name_bm: dataset.meta.bm.title,
-  //                   type: "image",
-  //                 })
-  //               );
-  //             }
-  //           },
-  //         },
-  //       ],
-  //       data: [
-  //         {
-  //           key: "csv",
-  //           image: "/static/images/icons/csv.png",
-  //           title: t("catalogue.csv.title"),
-  //           description: t("catalogue.csv.desc"),
-  //           icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
-  //           href: urls.csv,
-  //         },
-  //         {
-  //           key: "parquet",
-  //           image: "/static/images/icons/parquet.png",
-  //           title: t("catalogue.parquet.title"),
-  //           description: t("catalogue.parquet.desc"),
-  //           icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
-  //           href: urls.parquet,
-  //         },
-  //       ],
-  //     }),
-  //     [ref]
-  //   );
-
+  const availableDownloads = useMemo<DownloadOptions>(
+    () => ({
+      chart: [
+        {
+          key: "png",
+          image: png,
+          title: t("catalogue.image.title"),
+          description: t("catalogue.image.desc"),
+          icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
+          href: () => {
+            if (ctx) ctx.current?.print(dataset.meta.unique_id.concat(".png"));
+            // TODO: Add track by mixpanel
+          },
+        },
+      ],
+      data: [
+        {
+          key: "csv",
+          image: "/static/images/icons/csv.png",
+          title: t("catalogue.csv.title"),
+          description: t("catalogue.csv.desc"),
+          icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
+          href: urls.csv,
+        },
+        {
+          key: "parquet",
+          image: "/static/images/icons/parquet.png",
+          title: t("catalogue.parquet.title"),
+          description: t("catalogue.parquet.desc"),
+          icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
+          href: urls.parquet,
+        },
+      ],
+    }),
+    [png, ctx]
+  );
   return (
     <>
-      <div ref={onRefChange} id="#map">
-        <Choropleth
-          ref={ref}
-          className="h-[350px] w-full lg:h-[600px]"
-          data={{
-            labels: dataset.chart.map(({ id }: ChoroPoint) => id),
-            values: dataset.chart.map(({ value }: ChoroPoint) => value),
-          }}
-          color={config.color}
-          type={config.geojson}
-        />
-      </div>
+      <GeoChoropleth
+        _ref={ctx}
+        id={dataset.meta.unique_id}
+        className="h-[350px] w-full lg:h-[450px]"
+        data={{
+          labels: dataset.chart.map(({ id }: ChoroPoint) => id),
+          values: dataset.chart.map(({ value }: ChoroPoint) => value),
+        }}
+        color={config.color}
+        type={config.geojson}
+        onReady={mounted => setMounted(mounted)}
+      />
     </>
   );
 };

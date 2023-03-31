@@ -16,6 +16,7 @@ import {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
+  FunctionComponent,
   ReactElement,
   useEffect,
   useImperativeHandle,
@@ -31,6 +32,7 @@ export interface GeoChoroplethRef {
   print: (text: string) => void;
 }
 interface GeoChoroplethProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   type?: "state" | "parlimen" | "dun" | "district";
   color?: Color;
@@ -40,7 +42,8 @@ interface GeoChoroplethProps extends ChartHeaderProps {
   position?: LatLngExpression;
   enableZoom?: boolean;
   zoom?: number;
-  ref?: ForwardedRef<GeoChoroplethRef>;
+  _ref?: ForwardedRef<GeoChoroplethRef>;
+  onReady?: (value: true) => void;
 }
 
 type MarkerProp = {
@@ -48,121 +51,121 @@ type MarkerProp = {
   name?: string | ReactElement;
 };
 
-const GeoChoropleth: ForwardRefExoticComponent<GeoChoroplethProps> = forwardRef(
-  (
-    {
-      className = "h-full w-full",
-      title,
-      menu,
-      controls,
-      type = "state",
-      position = [5.1420589, 109.618149], // default - Malaysia
-      data = dummyData,
-      color = "reds",
-      precision = 1,
-      unit,
-      enableZoom = true,
-      zoom = 5,
-    },
-    ref
-  ) => {
-    const { theme } = useTheme();
-    const { t } = useTranslation();
-    const _ref = useRef<GeoControlRef>(null);
-    const [choromap, setChoromap] = useState<FeatureCollection | undefined>(undefined);
+const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
+  id,
+  className = "h-full w-full",
+  title,
+  menu,
+  controls,
+  type = "state",
+  position = [5.1420589, 109.618149], // default - Malaysia
+  data = dummyData,
+  color = "reds",
+  precision = 1,
+  unit,
+  enableZoom = true,
+  zoom = 5,
+  onReady,
+  _ref,
+}) => {
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+  const ref = useRef<GeoControlRef>(null);
+  const [choromap, setChoromap] = useState<FeatureCollection | undefined>(undefined);
 
-    const [min, max] = useMemo<[number, number]>(() => {
-      let min: number = data.values[0];
-      let max: number = data.values[0];
-      for (let num of data.values) {
-        if (num !== null) {
-          if (num < min) {
-            min = num;
-          }
-          if (num > max) {
-            max = num;
-          }
+  const [min, max] = useMemo<[number, number]>(() => {
+    let min: number = data.values[0];
+    let max: number = data.values[0];
+    for (let num of data.values) {
+      if (num !== null) {
+        if (num < min) {
+          min = num;
+        }
+        if (num > max) {
+          max = num;
         }
       }
+    }
 
-      return [min, max];
-    }, [data]);
+    return [min, max];
+  }, [data]);
 
-    const { interpolate } = useColor(color, [min, max]);
+  const { interpolate } = useColor(color, [min, max]);
 
-    useEffect(() => {
-      import(`@lib/geojson/${type}/_map`).then(item => {
-        setChoromap(item.default as unknown as FeatureCollection);
-      });
-    }, [type]);
+  useEffect(() => {
+    import(`@lib/geojson/${type}/_map`).then(item => {
+      setChoromap(item.default as unknown as FeatureCollection);
+      if (onReady) onReady(true);
+    });
+  }, [type]);
 
-    useImperativeHandle(
-      ref,
-      () => {
-        return {
-          print: (text: string) => _ref.current?.printAsImage(text),
-        };
-      },
-      [ref]
-    );
+  useImperativeHandle(
+    _ref,
+    () => {
+      return {
+        print: (text: string) => ref.current?.printAsImage(text),
+      };
+    },
+    [ref]
+  );
 
-    return (
-      <div className={className}>
-        <ChartHeader title={title} menu={menu} controls={controls} />
-        <MapContainer
-          className={className}
-          center={position as LatLngTuple}
-          zoom={zoom}
-          zoomControl={enableZoom}
-          scrollWheelZoom={true}
-          minZoom={6}
-          maxBounds={new LatLngBounds(new LatLng(0.8, 97), new LatLng(10, 122))}
-          maxBoundsViscosity={1}
-        >
-          <GeoControl ref={_ref} />
-          {/* GeoChoropleth */}
-          <>
-            {data &&
-              choromap?.features.map(feature => {
-                const value = data.values[data.labels.indexOf(feature.properties![type])];
+  return (
+    <div className={className}>
+      <ChartHeader title={title} menu={menu} controls={controls} />
+      <MapContainer
+        id={id}
+        className={className}
+        center={position as LatLngTuple}
+        zoom={zoom}
+        zoomControl={enableZoom}
+        scrollWheelZoom={true}
+        minZoom={6}
+        maxBounds={new LatLngBounds(new LatLng(0.8, 97), new LatLng(10, 122))}
+        maxBoundsViscosity={1}
+      >
+        <GeoControl ref={ref} />
+        {/* GeoChoropleth */}
+        <>
+          {data &&
+            choromap?.features.map(feature => {
+              const value = data.values[data.labels.indexOf(feature.properties![type])];
 
-                return (
-                  <GeoJSON
-                    data={feature}
-                    style={{
-                      color: "#0000001A",
-                      fillColor: interpolate(value),
-                      fillOpacity: 0.6,
-                    }}
-                    onEachFeature={(_, layer) => {
-                      layer.on({
-                        mouseover: _ref.current?.highlightFeature,
-                        mouseout: _ref.current?.resetHighlight,
-                        click: _ref.current?.zoomToFeature,
-                      });
-                    }}
-                  >
-                    <Tooltip sticky>
-                      {feature.properties![type]}:{" "}
-                      {value !== null
-                        ? numFormat(value, "standard", precision).concat(unit ?? "")
-                        : t("common.no_data")}
-                    </Tooltip>
-                  </GeoJSON>
-                );
-              })}
-          </>
-          <TileLayer
-            key={theme}
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${theme}/{z}/{x}/{y}.png`}
-          />
-        </MapContainer>
-      </div>
-    );
-  }
-);
-
+              return (
+                <GeoJSON
+                  key={feature.id}
+                  data={feature}
+                  style={{
+                    color: "#0000001A",
+                    fillColor: interpolate(value),
+                    fillOpacity: 0.6,
+                  }}
+                  onEachFeature={(_, layer) => {
+                    layer.on({
+                      mouseover: ref.current?.highlightFeature,
+                      mouseout: ref.current?.resetHighlight,
+                      click: ref.current?.zoomToFeature,
+                    });
+                  }}
+                >
+                  <Tooltip key={value} sticky>
+                    {feature.properties![type]}:{" "}
+                    {value !== null
+                      ? numFormat(value, "standard", precision).concat(unit ?? "")
+                      : t("common.no_data")}
+                  </Tooltip>
+                </GeoJSON>
+              );
+            })}
+        </>
+        <TileLayer
+          key={theme}
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${theme}/{z}/{x}/{y}.png`}
+        />
+      </MapContainer>
+    </div>
+  );
+};
 interface GeoControlProps {
   ref?: ForwardedRef<GeoControlRef>;
 }
