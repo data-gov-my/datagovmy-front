@@ -353,20 +353,22 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     downloads &&
                     [...downloads?.chart, ...downloads?.data].find(({ key }) => e.value === key);
 
-                  return typeof action?.href === "string"
-                    ? download(action.href, dataset.meta.unique_id, () =>
-                        track("file_download", {
-                          uid: dataset.meta.unique_id.concat("_", action.key),
-                          type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
-                          id: dataset.meta.unique_id,
-                          name_en: dataset.meta.en.title,
-                          name_bm: dataset.meta.bm.title,
-                          ext: action.key,
-                        })
-                      )
-                    : action
-                    ? action.href()
-                    : null;
+                  if (!action) return;
+
+                  if (typeof action?.href === "string") {
+                    download(action.href, dataset.meta.unique_id);
+                    track("file_download", {
+                      uid: dataset.meta.unique_id.concat("_", action.key),
+                      type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
+                      id: dataset.meta.unique_id,
+                      name_en: dataset.meta.en.title,
+                      name_bm: dataset.meta.bm.title,
+                      ext: action.key,
+                    });
+                    return;
+                  }
+
+                  return action.href();
                 }}
               />
             </>
