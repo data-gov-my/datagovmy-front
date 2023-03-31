@@ -1,7 +1,7 @@
 import AgencyBadge from "@components/AgencyBadge";
 import BarMeter from "@components/Chart/BarMeter";
 import Slider, { SliderRef } from "@components/Chart/Slider";
-import { PusatDarahNegaraIcon } from "@components/Icon";
+import { PDNIcon } from "@components/Icon/agency";
 import {
   Button,
   Container,
@@ -258,7 +258,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-[#ffe1e1] to-background dark:from-[#492424] dark:to-black"
+        background="red"
         category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
         header={[t("dashboard-blood-donation:title_header")]}
         description={description}
@@ -267,7 +267,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           <AgencyBadge
             agency="Pusat Darah Negara"
             link="https://pdn.gov.my/v2/"
-            icon={<PusatDarahNegaraIcon />}
+            icon={<PDNIcon />}
           />
         }
       />
@@ -280,7 +280,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           description={t("dashboard-blood-donation:combine_description")}
           date={timeseries_all.date_as_of}
         >
-          {/* <Timeseries
+          <Timeseries
             className="h-[350px] w-full"
             title={t("dashboard-blood-donation:combine_title")}
             state={currentState}
@@ -299,7 +299,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 },
               ],
             }}
-          /> */}
+          />
           <div className="pt-5">
             <Slider
               ref={sliderRef}

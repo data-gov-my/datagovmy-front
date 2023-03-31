@@ -1,3 +1,17 @@
+import { Color, useColor } from "@hooks/useColor";
+import { useTranslation } from "@hooks/useTranslation";
+import { numFormat } from "@lib/helpers";
+import type { FeatureCollection } from "geojson";
+import {
+  default as L,
+  LatLng,
+  LatLngBounds,
+  LatLngExpression,
+  LatLngTuple,
+  LeafletMouseEvent,
+} from "leaflet";
+import "leaflet-easyprint";
+import { useTheme } from "next-themes";
 import {
   ForwardedRef,
   forwardRef,
@@ -10,17 +24,15 @@ import {
   useRef,
   useState,
 } from "react";
-import { LatLng, LatLngBounds, LatLngExpression, LeafletMouseEvent } from "leaflet";
-import { MapContainer, TileLayer, useMap, GeoJSON, Tooltip } from "react-leaflet";
-import type { FeatureCollection } from "geojson";
-import { useTheme } from "next-themes";
-import ChartHeader, { ChartHeaderProps } from "../ChartHeader";
+import { GeoJSON, MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
 import type { ChoroplethData } from ".";
-import { useColor, Color } from "@hooks/useColor";
-import { numFormat } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
+import ChartHeader, { ChartHeaderProps } from "../ChartHeader";
 
+export interface GeoChoroplethRef {
+  print: (text: string) => void;
+}
 interface GeoChoroplethProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   type?: "state" | "parlimen" | "dun" | "district";
   color?: Color;
@@ -30,6 +42,8 @@ interface GeoChoroplethProps extends ChartHeaderProps {
   position?: LatLngExpression;
   enableZoom?: boolean;
   zoom?: number;
+  _ref?: ForwardedRef<GeoChoroplethRef>;
+  onReady?: (value: true) => void;
 }
 
 type MarkerProp = {
@@ -38,6 +52,7 @@ type MarkerProp = {
 };
 
 const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
+  id,
   className = "h-full w-full",
   title,
   menu,
@@ -50,6 +65,8 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   unit,
   enableZoom = true,
   zoom = 5,
+  onReady,
+  _ref,
 }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -78,15 +95,27 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   useEffect(() => {
     import(`@lib/geojson/${type}/_map`).then(item => {
       setChoromap(item.default as unknown as FeatureCollection);
+      if (onReady) onReady(true);
     });
   }, [type]);
+
+  useImperativeHandle(
+    _ref,
+    () => {
+      return {
+        print: (text: string) => ref.current?.printAsImage(text),
+      };
+    },
+    [ref]
+  );
 
   return (
     <div className={className}>
       <ChartHeader title={title} menu={menu} controls={controls} />
       <MapContainer
+        id={id}
         className={className}
-        center={position}
+        center={position as LatLngTuple}
         zoom={zoom}
         zoomControl={enableZoom}
         scrollWheelZoom={true}
@@ -103,6 +132,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
 
               return (
                 <GeoJSON
+                  key={feature.id}
                   data={feature}
                   style={{
                     color: "#0000001A",
@@ -117,7 +147,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
                     });
                   }}
                 >
-                  <Tooltip sticky>
+                  <Tooltip key={value} sticky>
                     {feature.properties![type]}:{" "}
                     {value !== null
                       ? numFormat(value, "standard", precision).concat(unit ?? "")
@@ -136,7 +166,6 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
     </div>
   );
 };
-
 interface GeoControlProps {
   ref?: ForwardedRef<GeoControlRef>;
 }
@@ -144,10 +173,29 @@ interface GeoControlRef {
   zoomToFeature: (e: LeafletMouseEvent) => void;
   highlightFeature: (e: LeafletMouseEvent) => void;
   resetHighlight: (e: LeafletMouseEvent) => void;
+  printAsImage: (text: string) => void;
 }
 
 const GeoControl: ForwardRefExoticComponent<GeoControlProps> = forwardRef((_, ref) => {
   const map = useMap();
+  const [print, setPrint] = useState<L.EasyPrint | undefined>(undefined);
+
+  useEffect(() => {
+    if (!print) {
+      setPrint(
+        L.easyPrint({
+          hidden: true,
+          exportOnly: true,
+          sizeModes: ["Current"],
+        })
+      );
+    } else {
+      map.addControl(print);
+    }
+    return () => {
+      print && map.removeControl(print);
+    };
+  }, [map, print]);
 
   const highlightFeature = (e: LeafletMouseEvent) => {
     let layer = e.target;
@@ -168,8 +216,14 @@ const GeoControl: ForwardRefExoticComponent<GeoControlProps> = forwardRef((_, re
       fillOpacity: 0.6,
     });
   };
+
   const zoomToFeature = (e: LeafletMouseEvent) => {
     map.fitBounds(e.target.getBounds());
+  };
+
+  const printAsImage = (text: string) => {
+    if (!print) return;
+    print.printMap("CurrentSize", text);
   };
 
   useImperativeHandle(
@@ -179,29 +233,13 @@ const GeoControl: ForwardRefExoticComponent<GeoControlProps> = forwardRef((_, re
         zoomToFeature,
         highlightFeature,
         resetHighlight,
+        printAsImage,
       };
     },
-    [map]
+    [map, print]
   );
 
-  //   useEffect(() => {
-  //     if (geojson) {
-  //       const bound: [number, number, number, number] = bbox(geojson);
-  //       map.fitBounds([
-  //         [bound[1], bound[0]],
-  //         [bound[3], bound[2]],
-  //       ]);
-  //       setTimeout(() => {
-  //         map.panBy([-100, 0]);
-  //       }, 150);
-  //     }
-  //   }, [geojson]);
-
   return null;
-
-  //   return {
-  //     zoomToFeature,
-  //   };
 });
 
 const dummyData = {

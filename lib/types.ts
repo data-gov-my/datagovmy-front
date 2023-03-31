@@ -36,7 +36,7 @@ export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptio
 
 export type DownloadOption = {
   key: string;
-  image: string | false | undefined;
+  image: string | null | false | undefined;
   title: ReactNode;
   description: ReactNode;
   icon: JSX.Element;

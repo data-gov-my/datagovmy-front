@@ -14,7 +14,7 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/AgencyBadge";
-import { BankNegaraIcon } from "@components/Icon";
+import { BNMIcon } from "@components/Icon/agency";
 
 /**
  * Money Supply Dashboard
@@ -227,7 +227,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
+        background="gray"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-money-supply:header")]}
         description={[t("dashboard-money-supply:description")]}
@@ -236,7 +236,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
           <AgencyBadge
             agency={t("agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BankNegaraIcon />}
+            icon={<BNMIcon />}
           />
         }
       />
