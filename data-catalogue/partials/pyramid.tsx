@@ -1,5 +1,5 @@
 import type { DownloadOptions } from "@lib/types";
-import { FunctionComponent, useCallback, useMemo } from "react";
+import { FunctionComponent, useMemo } from "react";
 import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { useWatch } from "@hooks/useWatch";
@@ -52,7 +52,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   const { data, setData } = useData({
     ctx: undefined,
   });
-  const availableDownloads = useCallback<() => DownloadOptions>(
+  const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
         {
@@ -137,7 +137,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   }, [dataset.chart]);
 
   useWatch(() => {
-    onDownload && onDownload(availableDownloads());
+    if (onDownload) onDownload(availableDownloads);
   }, [dataset.chart.x, data.ctx]);
 
   return (

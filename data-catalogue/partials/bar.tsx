@@ -1,5 +1,5 @@
 import type { DownloadOptions } from "@lib/types";
-import { FunctionComponent, useCallback, useMemo } from "react";
+import { FunctionComponent, useMemo } from "react";
 import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { useWatch } from "@hooks/useWatch";
@@ -58,7 +58,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
     return "vertical";
   }, [dataset.type, windowWidth]);
 
-  const availableDownloads = useCallback<() => DownloadOptions>(
+  const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
         {
@@ -149,7 +149,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   }, [dataset.chart]);
 
   useWatch(() => {
-    onDownload && onDownload(availableDownloads());
+    if (onDownload) onDownload(availableDownloads);
   }, [dataset.chart.x, data.ctx]);
 
   return (

@@ -1,6 +1,5 @@
-import type { Periods } from "@components/Chart/Timeseries";
 import type { DownloadOptions } from "@lib/types";
-import { FunctionComponent, useCallback, useRef } from "react";
+import { FunctionComponent, useMemo, useRef } from "react";
 import { default as Slider, SliderRef } from "@components/Chart/Slider";
 import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
@@ -68,7 +67,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   );
   const sliderRef = useRef<SliderRef>(null);
 
-  const availableDownloads = useCallback<() => DownloadOptions>(
+  const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
         {
@@ -140,7 +139,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   useWatch(() => {
     setData("minmax", [0, dataset.chart.x.length - 1]);
     sliderRef.current && sliderRef.current.reset();
-    onDownload && onDownload(availableDownloads());
+    if (onDownload) onDownload(availableDownloads);
   }, [filter.range, dataset.chart.x, data.ctx]);
 
   return (

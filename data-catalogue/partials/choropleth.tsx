@@ -10,7 +10,6 @@ import canvasToSvg from "canvas2svg";
 import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useData } from "@hooks/useData";
-import type { ChoroplethRef } from "@components/Chart/Choropleth";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
   ssr: false,
@@ -56,7 +55,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   const { t } = useTranslation();
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"choropleth", any[], unknown> | null>(null);
   useEffect(() => {
-    onDownload && onDownload(availableDownloads);
+    if (onDownload) onDownload(availableDownloads);
   }, [ctx]);
 
   const availableDownloads = useMemo<DownloadOptions>(
@@ -138,7 +137,6 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
       }}
       color={config.color}
       type={config.geojson}
-      //   onReady={e => setMounted(e)}
     />
   );
 };
