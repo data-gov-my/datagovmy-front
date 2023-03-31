@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
+import DomToImage from "dom-to-image";
 
 /**
  * Returns the object of max value by a given key in the array.
@@ -174,14 +175,12 @@ export const copyClipboard = async (text: string): Promise<void> => {
  * @param url URL or URLData
  * @param callback Callback function
  */
-export const download = (url: string, title: string, callback?: Function) => {
+export const download = (url: string, title: string): void => {
   let v_anchor = document.createElement("a");
   v_anchor.href = url;
   v_anchor.target = "_blank";
   v_anchor.download = title;
   v_anchor.click();
-
-  if (callback) callback();
 };
 
 /**
@@ -209,6 +208,10 @@ export const chunkSplit = (text: string, len: number): string[] => {
   }
 
   return r;
+};
+
+export const exportAs = async (type: "svg" | "png", element: Node): Promise<string> => {
+  return type === "svg" ? DomToImage.toSvg(element) : DomToImage.toPng(element);
 };
 
 /**

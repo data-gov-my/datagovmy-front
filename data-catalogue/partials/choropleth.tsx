@@ -1,15 +1,12 @@
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import type { Color } from "@hooks/useColor";
-import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
-import { download } from "@lib/helpers";
+import { download, exportAs } from "@lib/helpers";
 import type { DownloadOptions } from "@lib/types";
 import { track } from "mixpanel-browser";
 import { default as dynamic } from "next/dynamic";
-import canvasToSvg from "canvas2svg";
-import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
-import { useData } from "@hooks/useData";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
   ssr: false,
@@ -68,16 +65,15 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           description: t("catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"), () =>
-              track("file_download", {
-                uid: dataset.meta.unique_id.concat("_png"),
-                type: "image",
-                id: dataset.meta.unique_id,
-                name_en: dataset.meta.en.title,
-                name_bm: dataset.meta.bm.title,
-                ext: "png",
-              })
-            );
+            download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name_en: dataset.meta.en.title,
+              name_bm: dataset.meta.bm.title,
+              ext: "png",
+            });
           },
         },
         {
@@ -87,21 +83,21 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           description: t("catalogue.vector.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            let canvas = canvasToSvg(ctx!.canvas.width, ctx!.canvas.height);
-            canvas.drawImage(ctx?.canvas, 0, 0);
-            download(
-              "data:svg+xml;utf8,".concat(canvas.getSerializedSvg()),
-              dataset.meta.unique_id.concat(".svg"),
-              () =>
+            exportAs("svg", ctx!.canvas)
+              .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
+              .then(() =>
                 track("file_download", {
                   uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
                   id: dataset.meta.unique_id,
                   name_en: dataset.meta.en.title,
                   name_bm: dataset.meta.bm.title,
-                  type: "image",
                   ext: "svg",
                 })
-            );
+              )
+              .catch(e => {
+                console.error(e);
+              });
           },
         },
       ],

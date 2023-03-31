@@ -22,7 +22,6 @@
     "@tanstack/match-sorter-utils": "^8.1.1",
     "@tanstack/react-table": "^8.5.2",
     "axios": "^0.27.2",
-    "canvas2svg": "^1.0.16",
     "chart.js": "^3.9.1",
     "chartjs-adapter-luxon": "^1.2.0",
     "chartjs-chart-geo": "3.10.0",

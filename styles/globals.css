@@ -123,7 +123,9 @@ path:focus {
   outline: none;
 }
 
-.leaflet-pane {
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
   @apply z-0;
 }
 

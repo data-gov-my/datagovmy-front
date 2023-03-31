@@ -1,15 +1,14 @@
 import type { DownloadOptions } from "@lib/types";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
-import { useData } from "@hooks/useData";
 import { useWatch } from "@hooks/useWatch";
 import { AKSARA_COLOR } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download } from "@lib/helpers";
+import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import canvasToSvg from "canvas2svg";
 import { track } from "@lib/mixpanel";
 import type { ChartDataset } from "chart.js";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
 interface CataloguePyramidProps {
@@ -49,53 +48,51 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   onDownload,
 }) => {
   const { t } = useTranslation();
-  const { data, setData } = useData({
-    ctx: undefined,
-  });
+  const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
+
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
         {
           key: "png",
-          image: Boolean(data?.ctx) && data.ctx?.toBase64Image("png", 1),
+          image: ctx && ctx.toBase64Image("png", 1),
           title: t("catalogue.image.title"),
           description: t("catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"), () =>
-              track("file_download", {
-                uid: dataset.meta.unique_id.concat("_png"),
-                type: "image",
-                id: dataset.meta.unique_id,
-                name_en: dataset.meta.en.title,
-                name_bm: dataset.meta.bm.title,
-                ext: "png",
-              })
-            );
+            download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name_en: dataset.meta.en.title,
+              name_bm: dataset.meta.bm.title,
+              ext: "png",
+            });
           },
         },
         {
           key: "svg",
-          image: Boolean(data?.ctx) && data.ctx.toBase64Image("image/png", 1),
+          image: ctx && ctx.toBase64Image("image/png", 1),
           title: t("catalogue.vector.title"),
           description: t("catalogue.vector.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            let canvas = canvasToSvg(data.ctx!.canvas.width, data.ctx!.canvas.height);
-            canvas.drawImage(data.ctx!.canvas, 0, 0);
-            download(
-              "data:svg+xml;utf8,".concat(canvas.getSerializedSvg()),
-              dataset.meta.unique_id.concat(".svg"),
-              () =>
+            exportAs("svg", ctx!.canvas)
+              .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
+              .then(() =>
                 track("file_download", {
                   uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
                   id: dataset.meta.unique_id,
                   name_en: dataset.meta.en.title,
                   name_bm: dataset.meta.bm.title,
-                  type: "image",
                   ext: "svg",
                 })
-            );
+              )
+              .catch(e => {
+                console.error(e);
+              });
           },
         },
       ],
@@ -118,7 +115,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
         },
       ],
     }),
-    [data.ctx]
+    [ctx]
   );
 
   const _datasets = useMemo<ChartDataset<"bar", any[]>[]>(() => {
@@ -138,12 +135,12 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
 
   useWatch(() => {
     if (onDownload) onDownload(availableDownloads);
-  }, [dataset.chart.x, data.ctx]);
+  }, [dataset.chart.x, ctx]);
 
   return (
     <>
       <Pyramid
-        _ref={ref => setData("ctx", ref)}
+        _ref={ref => setCtx(ref)}
         className={className}
         precision={config?.precision !== undefined ? [config.precision, 0] : [1, 0]}
         data={{
