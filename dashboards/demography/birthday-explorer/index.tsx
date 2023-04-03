@@ -146,7 +146,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     <>
       {t("dashboard-birthday-explorer:section_1.info3")}
       <span className="mx-auto text-lg font-bold text-primary">
-        {t("dashboard-birthday-explorer:section_1.nation_count", {
+        {t("dashboard-birthday-explorer:section_1.nation_births", {
           count: getBirthsNationwideOnBirthYear,
         })}
       </span>
@@ -171,27 +171,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       setData("begin", year.toString());
       setData("end", year.toString());
     }
-  }
-
-  function daySuffix(day: number): string {
-    if (i18n.language === "ms-MY") return "hb";
-    if (day > 3 && day < 21) return "th";
-    switch (day % 10) {
-      case 1:
-        return "st";
-      case 2:
-        return "nd";
-      case 3:
-        return "rd";
-      default:
-        return "th";
-    }
-  }
-
-  function formatDayOfYear(date: Date): string {
-    const day = date.getDate();
-    const month = new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(date);
-    return `${day}${daySuffix(day)} ${month}`;
   }
 
   const tooltipCallback: any = () => {
@@ -351,17 +330,14 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           count: birthsOnBirthDay,
                         })}
                         <span className="text-primary">
-                          {t("dashboard-birthday-explorer:section_1.state_count", {
+                          {t("dashboard-birthday-explorer:section_1.state_births", {
                             count: birthsOnBirthDay,
                           })}
                         </span>
-                        {data.queryState === "Overseas"
-                          ? t("dashboard-birthday-explorer:section_1.info2_overseas", {
-                              count: birthsOnBirthDay,
-                            })
-                          : t("dashboard-birthday-explorer:section_1.info2", {
-                              count: birthsOnBirthDay,
-                            })}
+                        {t("dashboard-birthday-explorer:section_1.info2", {
+                          count: birthsOnBirthDay,
+                          context: data.queryState === "Overseas" && "overseas",
+                        })}
                         <span className="text-primary">
                           {data.queryState === "Overseas"
                             ? t("dashboard-birthday-explorer:section_1.overseas")
@@ -377,14 +353,34 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           {t("dashboard-birthday-explorer:section_1.info6", { year: birthYear })}
                           <span className="text-primary">
                             {t("dashboard-birthday-explorer:section_1.rank", {
-                              rank: data.rank,
-                              suffix: daySuffix(data.rank),
+                              count: data.rank === data.y_day.length ? 0 : data.rank,
+                              ordinal: true,
+                              context: data.rank === data.y_day.length && "least",
                             })}
                           </span>
                           {t("dashboard-birthday-explorer:section_1.popularity", {
                             count: data.y_day.length === 366 ? 366 : 365,
-                            year_popular: formatDayOfYear(new Date(data.year_popular)),
-                            year_rare: formatDayOfYear(new Date(data.year_rare)),
+                            context:
+                              data.rank === data.y_day.length
+                                ? "least"
+                                : data.rank === 1
+                                ? "first"
+                                : "most",
+                          })}
+                          {t("dashboard-birthday-explorer:section_1.year_popular", {
+                            count: new Date(data.year_popular).getDate(),
+                            ordinal: true,
+                            month: new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(
+                              new Date(data.year_popular)
+                            ),
+                          })}
+                          {t("dashboard-birthday-explorer:section_1.rare")}
+                          {t("dashboard-birthday-explorer:section_1.year_rare", {
+                            count: new Date(data.year_rare).getDate(),
+                            ordinal: true,
+                            month: new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(
+                              new Date(data.year_rare)
+                            ),
                           })}
                         </p>
                       </div>
@@ -420,7 +416,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   year: data.begin,
                   state:
                     data.queryState === "Overseas"
-                      ? t("dashboard-birthday-explorer:section_1.overseas")
+                      ? t("dashboard-birthday-explorer:section_2.overseas")
                       : CountryAndStates[data.queryState ? data.queryState : "mys"],
                 })
               : t("dashboard-birthday-explorer:section_2.title", {
@@ -428,7 +424,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   end_year: data.end,
                   state:
                     data.queryState === "Overseas"
-                      ? t("dashboard-birthday-explorer:section_1.overseas")
+                      ? t("dashboard-birthday-explorer:section_2.overseas")
                       : CountryAndStates[data.queryState ? data.queryState : "mys"],
                 })
           }
@@ -554,6 +550,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               interval={data.groupByDay ? "day" : "month"}
               round={data.groupByDay ? "day" : "month"}
               mode="grouped"
+              minY={0}
               enableGridX={true}
               enableGridY={false}
               gridOffsetX={data.groupByDay ? false : true}
