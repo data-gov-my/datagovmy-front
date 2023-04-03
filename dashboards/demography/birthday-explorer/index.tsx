@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useRef } from "react";
+import { FunctionComponent, useEffect, useMemo, useRef } from "react";
 import {
   Container,
   Hero,
@@ -15,22 +15,18 @@ import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import AgencyBadge from "@components/AgencyBadge";
-import {
-  CakeIcon,
-  IdentificationIcon,
-  MagnifyingGlassIcon as SearchIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
+import { CakeIcon, MagnifyingGlassIcon as SearchIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { JPNIcon } from "@components/Icon/agency";
 import Card from "@components/Card";
-import { DateTimeFormatOptions } from "luxon";
+import { DateTime, DateTimeFormatOptions } from "luxon";
 import { numFormat } from "@lib/helpers";
 import { get } from "@lib/api";
-import useSWRImmutable from "swr";
-import { SpinnerIcon } from "@components/Icon";
 import Label from "@components/Label";
 import { OptionType } from "@components/types";
 import Daterange from "@components/Dropdown/Daterange";
 import { Trans } from "next-i18next";
+import { useWatch } from "@hooks/useWatch";
+import Spinner from "@components/Spinner";
 
 /**
  * Birthday Explorer Dashboard
@@ -52,160 +48,160 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
 
   const { data, setData } = useData({
     timeseries: timeseries,
-    period: "DATE",
+    x: [],
+    y: [],
+    // period: "DATE",
     begin: "1923",
     end: "2017",
+    datestring: "",
     validation: false,
     state: "mys",
     queryState: "mys",
-    datestring: "",
     queryBday: "",
-    groupByDay: true,
+    loading: false,
+    timeseriesLoading: false,
+    // groupByDay: true,
   });
-  const fetcher = (url: string) =>
-    get(url).then(({ data }) => {
-      setData("timeseries", data.timeseries);
-    });
 
-  const { error, isLoading } = useSWRImmutable(
-    `dashboard/?dashboard=birthday_popularity&state=${data.queryState}`,
-    fetcher
-  );
+  // const daysOfYearInMillis: number[] = Array.from(
+  //   { length: 366 },
+  //   (_, i) => i * 1000 * 60 * 60 * 24 + 63072000000
+  // );
 
-  const daysOfYearInMillis: number[] = Array.from(
-    { length: 366 },
-    (_, i) => i * 1000 * 60 * 60 * 24 + 63072000000
-  );
-
-  const monthsOfYearInMillis: number[] = Array.from({ length: 12 }, (_, i) =>
-    new Date(99, i).getTime()
-  );
+  // const monthsOfYearInMillis: number[] = Array.from({ length: 12 }, (_, i) =>
+  //   new Date(99, i).getTime()
+  // );
 
   const isLeapYear = (year: number) => {
     return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
   };
 
-  const hasLeapYear = (yearRange: [number, number]) => {
-    for (let i = yearRange[0]; i <= yearRange[1]; i++) {
-      if (isLeapYear(i)) return true;
-    }
-    return false;
-  };
+  // const hasLeapYear = (yearRange: [number, number]) => {
+  //   for (let i = yearRange[0]; i <= yearRange[1]; i++) {
+  //     if (isLeapYear(i)) return true;
+  //   }
+  //   return false;
+  // };
 
   const getDayOfYear = (date: Date) => {
     const startOfYear = new Date(date.getFullYear(), 0, 0);
     const diff = date.getTime() - startOfYear.getTime();
     const oneDay = 1000 * 60 * 60 * 24;
     const day = Math.floor(diff / oneDay);
-    const toggleLeapYear = data.toggle ? 0 : 1;
-    return isLeapYear(date.getFullYear()) ? day : day > 59 ? day + toggleLeapYear : day;
+    return day; //isLeapYear(date.getFullYear()) ? day : day > 59 ? day + 1 : day;
   };
 
-  const groupValuesByPeriod = (
-    milliseconds: number[],
-    values: number[],
-    groupByDay: boolean,
-    yearRange?: [number, number]
-  ) => {
-    const result: number[] = new Array(366).fill(0);
-    for (let i = 0; i < milliseconds.length; i++) {
-      const date = new Date(milliseconds[i]);
-      const year = date.getFullYear();
-      if (yearRange && (year < yearRange[0] || year > yearRange[1])) {
-        continue; // Skip data point outside range
-      }
-      if (groupByDay) {
-        const dayOfYear = getDayOfYear(date);
-        result[dayOfYear - 1] += values[i];
-      } else {
-        const monthOfYear = date.getMonth();
-        result[monthOfYear] += values[i];
-      }
-    }
-    return result;
+  // const groupValuesByPeriod = (
+  //   milliseconds: number[],
+  //   values: number[],
+  //   groupByDay: boolean,
+  //   yearRange?: [number, number]
+  // ) => {
+  //   const result: number[] = new Array(366).fill(0);
+  //   for (let i = 0; i < milliseconds.length; i++) {
+  //     const date = new Date(milliseconds[i]);
+  //     const year = date.getFullYear();
+  //     if (yearRange && (year < yearRange[0] || year > yearRange[1])) {
+  //       continue; // Skip data point outside range
+  //     }
+  //     if (groupByDay) {
+  //       const dayOfYear = getDayOfYear(date);
+  //       result[dayOfYear - 1] += values[i];
+  //     } else {
+  //       const monthOfYear = date.getMonth();
+  //       result[monthOfYear] += values[i];
+  //     }
+  //   }
+  //   return result;
+  // };
+
+  useWatch(() => {
+    setData("loading", true);
+    get("/dashboard", {
+      dashboard: "birthday_popularity",
+      state: data.queryState,
+      start: Number(data.begin),
+      end: Number(data.end),
+    })
+      .then(({ data }) => {
+        setData("x", data.x);
+        setData("y", data.y);
+        setData("timeseries", data);
+      })
+      .then(() => setData("loading", false));
+  }, [data.queryState, data.queryBday]);
+
+  useEffect(() => {
+    setData("timeseriesLoading", true);
+    get("/dashboard", {
+      dashboard: "birthday_popularity",
+      state: data.queryState,
+      start: Number(data.begin),
+      end: Number(data.end),
+    })
+      .then(({ data }) => {
+        setData("timeseries", data);
+      })
+      .then(() => setData("timeseriesLoading", false));
+  }, [data.begin, data.end]);
+
+  const today = useMemo(() => {
+    return DateTime.now();
+  }, []);
+
+  const getAge = (dateString: string, today: DateTime) => {
+    const start = DateTime.fromISO(dateString);
+    return today.diff(start, ["years", "months", "days", "hours"]).toObject();
   };
-
-  const getAge = (dateString: string) => {
-    let years = 0;
-    let months = 0;
-    let days = 0;
-    const birthDate = new Date(dateString);
-    const currentDate = new Date();
-
-    // Calculate years
-    years = currentDate.getFullYear() - birthDate.getFullYear();
-
-    // Calculate months and days
-    const birthMonth = birthDate.getMonth();
-    const currentMonth = currentDate.getMonth();
-    if (currentMonth >= birthMonth) {
-      months = currentMonth - birthMonth;
-    } else {
-      years--;
-      months = 12 + currentMonth - birthMonth;
-    }
-    const birthDay = birthDate.getDate();
-    const currentDay = currentDate.getDate();
-    if (currentDay >= birthDay) {
-      days = currentDay - birthDay;
-    } else {
-      months--;
-      const daysInLastMonth = new Date(currentDate.getFullYear(), currentMonth, 0).getDate();
-      days = daysInLastMonth + currentDay - birthDay;
-      if (
-        isLeapYear(birthDate.getFullYear()) &&
-        birthMonth === 1 &&
-        birthDay === 29 &&
-        !isLeapYear(currentDate.getFullYear()) &&
-        currentMonth === 2
-      )
-        days++;
-      if (months < 0) {
-        years--;
-        months = 11;
-      }
-    }
-    return { years, months, days };
-  };
-  const { years, months, days } = getAge(data.queryBday);
+  const { years, months, days } = getAge(data.queryBday, today);
   const options: DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
 
+  const getBirthsNationwideOnBirthYear =
+    timeseries.data.births[timeseries.data.x.indexOf(new Date(data.queryBday).getTime())];
   const birthDate = new Date(data.queryBday);
   const birthYear = birthDate.getFullYear();
-  const birthsNationwideOnBirthYear = groupValuesByPeriod(
-    timeseries.data.x,
-    timeseries.data.births,
-    true,
-    [birthYear, birthYear]
-  );
-  const birthsOnBirthYear = groupValuesByPeriod(
-    data.timeseries.data.x,
-    data.timeseries.data.births,
-    true,
-    [birthYear, birthYear]
-  );
-  const birthsMap = birthsOnBirthYear.map((births, index) => ({ day: index, value: births }));
-  const sortedBirthsOnBirthYear = birthsMap.sort((a, b) => b.value - a.value);
-  const birthsOnBirthDay = birthsOnBirthYear[getDayOfYear(new Date(data.queryBday)) - 1];
-  const minBirths = Math.min(...birthsOnBirthYear);
-  const maxBirths = Math.max(...birthsOnBirthYear);
+  // const birthsOnBirthYear = groupValuesByPeriod(
+  //   data.timeseries.data.x,
+  //   data.timeseries.data.births,
+  //   true,s
+  //   [birthYear, birthYear]
+  // );
+  // const birthsMap = data.timeseries.y.map((birth, index) => ({ day: index, value: birth }));
+  // const sortedBirthsOnBirthYear = birthsMap.sort((a, b) => b.value - a.value);
+  // const birthsOnBirthDay = data.timeseries.y[getDayOfYear(new Date(data.queryBday)) - 1];
+  const minBirths = data.y.indexOf(Math.min(...data.y));
+  const maxBirths = data.y.indexOf(Math.max(...data.y));
+  const birthsOnBirthDay = data.y[getDayOfYear(new Date(data.queryBday)) - 1];
 
-  const filterTimeline = () => {
-    return {
-      births: groupValuesByPeriod(
-        data.timeseries.data.x,
-        data.timeseries.data.births,
-        data.groupByDay,
-        [Number(data.begin), Number(data.end)]
-      ),
-    };
-  };
-  const filtered_timeline = useCallback(filterTimeline, [
-    data.begin,
-    data.end,
-    data.groupByDay,
-    data.timeseries,
-  ]);
+  const rank =
+    data.y
+      .map((birth: number, index: number) => ({ day: index, birth: birth }))
+      .sort(
+        (a: { day: number; birth: number }, b: { day: number; birth: number }) => b.birth - a.birth
+      )
+      .findIndex((obj: { day: number; birth: number }) => obj.day === getDayOfYear(birthDate) - 1) +
+    1;
+  // const minBirths = useMemo(() => { return data.y.indexOf(Math.min(...data.y));}, [data.queryBday, data.queryState]);
+  // const maxBirths = useMemo(() => { return data.y.indexOf(Math.max(...data.y));}, [data.queryBday, data.queryState]);
+  // const birthsOnBirthDay = useMemo(() => { return data.y[getDayOfYear(new Date(data.queryBday)) - 1];}, [data.queryBday, data.queryState]);
+  // const sortedBirthsOnBirthYear = useMemo(() => { return data.y.map((birth: number, index: number) => ({ day: index, value: birth })).sort((a: any, b: any) => b.value - a.value);}, [data.queryBday, data.queryState]);
+
+  // const filterTimeline = () => {
+  //   return {
+  //     births: groupValuesByPeriod(
+  //       data.timeseries.x,
+  //       data.timeseries.y,
+  //       data.groupByDay,
+  //       [Number(data.begin), Number(data.end)]
+  //     ),
+  //   };
+  // };
+  // const filtered_timeline = useCallback(filterTimeline, [
+  //   data.begin,
+  //   data.end,
+  //   data.groupByDay,
+  //   data.timeseries,
+  // ]);
 
   const description = (
     <Trans>
@@ -219,12 +215,12 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     <>
       {t("dashboard-birthday-explorer:section_1.info3")}
       <span className="mx-auto text-lg font-bold text-primary">
-        {t("dashboard-birthday-explorer:section_1.count2", {
-          count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
+        {t("dashboard-birthday-explorer:section_1.nation_count", {
+          count: getBirthsNationwideOnBirthYear,
         })}
       </span>
       {t("dashboard-birthday-explorer:section_1.info4", {
-        count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
+        count: getBirthsNationwideOnBirthYear,
       })}
     </>
   );
@@ -247,9 +243,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   }
 
   function formatDayOfYear(dayOfYear: number): string {
-    const date = new Date(2000, 0, dayOfYear + 1);
+    const date = new Date(isLeapYear(birthYear) ? 2000 : 1970, 0, dayOfYear + 1);
     const day = date.getDate();
-    const month = new Intl.DateTimeFormat("en-GB", { month: "long" }).format(date);
+    const month = new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(date);
     return `${day}${daySuffix(day)} ${month}`;
   }
 
@@ -283,9 +279,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   const tickOptionsXDay: any = () => {
     return {
       callback(val: string, index: number, values: any): string | null {
-        const daysToShow: number[] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 365];
-        const x = daysToShow.includes(index) ? val : null;
-        return x;
+        const leapTicks: number[] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 365];
+        const nonLeapTicks: number[] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364];
+        const x = data.y.length === 366 ? leapTicks : nonLeapTicks;
+        return x.includes(index) ? val : null;
       },
       minRotation: 0,
       maxRotation: 0,
@@ -307,10 +304,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       },
     };
   };
-  const filterPeriods: Array<OptionType> = [
-    { label: t("dashboard-birthday-explorer:section_2.by_date"), value: "DATE" },
-    { label: t("dashboard-birthday-explorer:section_2.by_month"), value: "MONTH" },
-  ];
+  // const filterPeriods: Array<OptionType> = [
+  //   { label: t("dashboard-birthday-explorer:section_2.by_date"), value: "DATE" },
+  //   { label: t("dashboard-birthday-explorer:section_2.by_month"), value: "MONTH" },
+  // ];
 
   const startYear: number = 1923;
   const endYear: number = 2017;
@@ -322,14 +319,14 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   };
 
   const reset = () => {
-    setData("period", undefined);
+    // setData("period", undefined);
     setData("begin", "1923");
     setData("end", "2017");
   };
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-washed-dark from-[#A1BFFF] to-background dark:from-outlineHover-dark dark:to-black"
+        background="blue"
         category={[t("nav.megamenu.categories.demography"), "text-primary"]}
         header={[t("dashboard-birthday-explorer:header")]}
         description={[description, "dark:text-outline"]}
@@ -337,11 +334,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
           <AgencyBadge
             agency="Jabatan Pendaftaran Negara"
             link="https://www.jpn.gov.my/en/"
-            icon={
-              <div className="h-8 w-8 rounded-full bg-primary">
-                <IdentificationIcon className="mx-auto mt-1 h-6 w-6 text-white" />
-              </div>
-            }
+            icon={<JPNIcon />}
           />
         }
       />
@@ -363,7 +356,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   data-placeholder="Date of birth"
                   value={data.datestring}
                   min={new Date(1923, 0, 1).toISOString().split("T")[0]}
-                  max={new Date(2018, 0, 1).toISOString().split("T")[0]}
+                  max={new Date(2017, 11, 31).toISOString().split("T")[0]}
                   required
                   onChange={selected => {
                     setData("datestring", selected.target.value);
@@ -410,12 +403,12 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
             </Card>
             <div className="basis-2/3">
               {data.queryBday ? (
-                !isLoading ? (
+                !data.loading ? (
                   <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
                     <Card className="my-0 flex h-fit w-full basis-1/3 flex-col self-center rounded-t-xl border border-outline bg-background px-4 py-8 dark:border-washed-dark dark:bg-washed-dark lg:my-8 lg:rounded-xl lg:py-16">
                       <CakeIcon className="mx-auto h-10 w-10 text-primary" />
                       <div className="mx-auto mt-4 text-center text-lg font-bold text-black dark:text-white">
-                        {new Date(data.queryBday).toLocaleDateString("en-GB", options)}
+                        {new Date(data.queryBday).toLocaleDateString(i18n.language, options)}
                       </div>
                       <div className="mx-auto mt-3 text-center text-sm text-dim">
                         {t("dashboard-birthday-explorer:section_1.age", {
@@ -425,13 +418,13 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                         })}
                       </div>
                     </Card>
-                    <div className="flex basis-2/3 flex-col gap-3 self-center px-4 pb-8 text-lg font-bold lg:pt-8 lg:pl-0 lg:pr-8">
+                    <div className="flex basis-2/3 flex-col gap-3 self-center px-4 pb-4 text-lg font-bold lg:pt-4 lg:pl-0 lg:pr-8">
                       <div className=" text-black dark:text-white">
                         {t("dashboard-birthday-explorer:section_1.info1", {
                           count: birthsOnBirthDay,
                         })}
                         <span className="text-primary">
-                          {t("dashboard-birthday-explorer:section_1.count1", {
+                          {t("dashboard-birthday-explorer:section_1.state_count", {
                             count: birthsOnBirthDay,
                           })}
                         </span>
@@ -448,31 +441,27 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                             : CountryAndStates[data.queryState]}
                         </span>
                         {data.queryState !== "mys" ? section1 : <></>}
-                        {t("dashboard-birthday-explorer:section_1.info5", {
-                          count: birthsNationwideOnBirthYear[getDayOfYear(birthDate) - 1],
-                        })}
-                        <p className="text-black dark:text-white">
+                        {birthsOnBirthDay === 0
+                          ? "."
+                          : t("dashboard-birthday-explorer:section_1.info5", {
+                              count: birthsOnBirthDay,
+                            })}
+                        <p>
                           {t("dashboard-birthday-explorer:section_1.info6", { year: birthYear })}
                           <span className="text-primary">
-                            {t("dashboard-birthday-explorer:section_1.info7", {
-                              rank:
-                                sortedBirthsOnBirthYear
-                                  .map(e => e.day)
-                                  .indexOf(getDayOfYear(birthDate) - 1) + 1,
-                              suffix: daySuffix(
-                                sortedBirthsOnBirthYear
-                                  .map(e => e.day)
-                                  .indexOf(getDayOfYear(birthDate) - 1) + 1
-                              ),
+                            {t("dashboard-birthday-explorer:section_1.rank", {
+                              rank: rank,
+                              suffix: daySuffix(rank),
                             })}
                           </span>
-                          {t("dashboard-birthday-explorer:section_1.info8", {
-                            popular: formatDayOfYear(birthsOnBirthYear.indexOf(maxBirths)),
-                            rare: formatDayOfYear(birthsOnBirthYear.indexOf(minBirths)),
+                          {t("dashboard-birthday-explorer:section_1.popularity", {
+                            count: data.y.length === 366 ? 366 : 365,
+                            year_popular: formatDayOfYear(maxBirths),
+                            year_rare: formatDayOfYear(minBirths),
                           })}
                         </p>
                       </div>
-                      <p className="font-medium text-black dark:text-white">
+                      <p className="font-medium">
                         {t("dashboard-birthday-explorer:section_1.explore")}
                       </p>
                     </div>
@@ -480,7 +469,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 ) : (
                   <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline py-8 dark:border-washed-dark lg:flex-row lg:pl-8">
                     <Card className="mx-auto flex h-min w-fit flex-row gap-2 self-center py-1.5 px-3">
-                      <SpinnerIcon className="mx-auto mt-1 h-4 w-4" />
+                      <Spinner loading={data.loading} />
                     </Card>
                   </Card>
                 )
@@ -516,18 +505,18 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                       : CountryAndStates[data.queryState ? data.queryState : "mys"],
                 })
           }
-          description={
-            hasLeapYear([data.begin, data.end])
-              ? ""
-              : data.begin === data.end
-              ? t("dashboard-birthday-explorer:section_2.desc_sameyear", {
-                  year: data.begin,
-                })
-              : t("dashboard-birthday-explorer:section_2.description", {
-                  start_year: data.begin,
-                  end_year: data.end,
-                })
-          }
+          // description={
+          //   data.y.length === 366
+          //     ? ""
+          //     : data.begin === data.end
+          //     ? t("dashboard-birthday-explorer:section_2.desc_sameyear", {
+          //         year: data.begin,
+          //       })
+          //     : t("dashboard-birthday-explorer:section_2.description", {
+          //         start_year: data.begin,
+          //         end_year: data.end,
+          //       })
+          // }
           date={timeseries.data_as_of}
         >
           {/* Mobile */}
@@ -552,7 +541,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
             >
               {close => (
                 <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28 dark:divide-outlineHover-dark">
-                  <Radio
+                  {/* <Radio
                     label={t("catalogue.period")}
                     name="period"
                     className="flex flex-wrap gap-4 px-1 pt-2"
@@ -564,7 +553,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                         ? setData("groupByDay", false)
                         : setData("groupByDay", true);
                     }}
-                  />
+                  /> */}
                   <div className="grid grid-cols-2 gap-4">
                     <Dropdown
                       width="w-full"
@@ -573,9 +562,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                       options={filterYears(startYear, endYear)}
                       selected={data.begin}
                       placeholder={data.begin}
-                      onChange={begin => {
-                        setData("begin", begin.value);
-                      }}
+                      onChange={b => setData("begin", b.value)}
                     />
                     <Dropdown
                       label={t("catalogue.end")}
@@ -585,9 +572,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                       options={filterYears(startYear, endYear)}
                       selected={data.end}
                       placeholder={data.end}
-                      onChange={e => {
-                        setData("end", e);
-                      }}
+                      onChange={e => setData("end", e.value)}
                     />
                   </div>
                   <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2 dark:bg-black">
@@ -613,8 +598,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
 
           {/* Desktop */}
           <div className="hidden gap-2 pb-2 xl:flex">
-            <Dropdown
+            {/* <Dropdown
               className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
+              anchor={"left"}
               options={filterPeriods}
               placeholder={t("catalogue.period")}
               selected={data.period}
@@ -622,7 +608,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 setData("period", e);
                 e.value === "MONTH" ? setData("groupByDay", false) : setData("groupByDay", true);
               }}
-            />
+            /> */}
             <Daterange
               className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
               beginOptions={filterYears(startYear, endYear)}
@@ -646,38 +632,46 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               }}
             />
           </div>
-          <Timeseries
-            className="h-[350px] w-full"
-            _ref={chartRef}
-            interval={data.groupByDay ? "day" : "month"}
-            round="day"
-            mode="grouped"
-            enableGridX={true}
-            enableGridY={false}
-            gridOffsetX={data.groupByDay ? false : true}
-            tickOptionsX={data.groupByDay ? tickOptionsXDay : tickOptionsXMonth}
-            tooltipCallback={tooltipCallback}
-            tooltipFormat={data.groupByDay ? undefined : "MMMM"}
-            data={{
-              labels: data.groupByDay ? daysOfYearInMillis : monthsOfYearInMillis,
-              datasets: [
-                {
-                  type: data.groupByDay ? "line" : "bar",
-                  data: filtered_timeline().births,
-                  label: t("dashboard-birthday-explorer:section_2.births"),
-                  backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                  borderColor: AKSARA_COLOR.PRIMARY,
-                  borderWidth:
-                    windowWidth <= BREAKPOINTS.MD
-                      ? 0.75
-                      : windowWidth <= BREAKPOINTS.LG
-                      ? 1.0
-                      : 1.5,
-                  fill: true,
-                },
-              ],
-            }}
-          />
+          {!data.timeseriesLoading ? (
+            <Timeseries
+              className="h-[350px] w-full"
+              _ref={chartRef}
+              interval={"day"} //{data.groupByDay ? "day" : "month"}
+              round={"day"} //{data.groupByDay ? "day" : "month"}
+              mode="grouped"
+              enableGridX={true}
+              enableGridY={false}
+              gridOffsetX={false} //{data.groupByDay ? false : true}
+              tickOptionsX={tickOptionsXDay} //{data.groupByDay ? tickOptionsXDay : tickOptionsXMonth}
+              tooltipCallback={tooltipCallback}
+              // tooltipFormat={data.groupByDay ? undefined : "MMMM"}
+              data={{
+                labels: data.timeseries.x,
+                datasets: [
+                  {
+                    type: "line", //data.groupByDay ? "line" : "bar",
+                    data: data.timeseries.y,
+                    label: t("dashboard-birthday-explorer:section_2.births"),
+                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                    borderColor: AKSARA_COLOR.PRIMARY,
+                    borderWidth:
+                      windowWidth <= BREAKPOINTS.MD
+                        ? 0.75
+                        : windowWidth <= BREAKPOINTS.LG
+                        ? 1.0
+                        : 1.5,
+                    fill: true,
+                  },
+                ],
+              }}
+            />
+          ) : (
+            <div className="flex h-[350px] w-full">
+              <div className="mx-auto self-center">
+                <Spinner loading={data.timeseriesLoading} />
+              </div>
+            </div>
+          )}
         </Section>
       </Container>
     </>

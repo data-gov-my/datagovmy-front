@@ -1,5 +1,5 @@
 import Metadata from "@components/Metadata";
-import BirthdayExplorerDashboard from "@dashboards/birthday-explorer";
+import BirthdayExplorerDashboard from "@dashboards/demography/birthday-explorer";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
