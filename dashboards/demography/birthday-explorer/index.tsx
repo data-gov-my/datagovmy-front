@@ -113,11 +113,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     })
       .then(({ data }) => {
         setData("x", data.x);
-        data.groupByDay ? setData("y_day", data.y) : setData("y_month", data.y);
+        data.y.length === 12 ? setData("y_month", data.y) : setData("y_day", data.y);
       })
       .then(() => setData("timeseriesLoading", false));
   }, [data.begin, data.end, data.groupByDay]);
-
   const today = useMemo(() => {
     return DateTime.now();
   }, []);
