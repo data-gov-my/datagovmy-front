@@ -95,9 +95,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                           : "cursor-pointer hover:bg-washed dark:hover:bg-washed-dark",
                       ].join(" ")}
                       onClick={() => {
-                        selected &&
-                          Number(option.value) <= Number(selected[1]?.value) &&
-                          onChange([option, selected ? selected[1] : undefined]);
+                        selected && onChange([option, selected ? selected[1] : undefined]);
                       }}
                     >
                       {option.label}
@@ -120,9 +118,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                           : "cursor-pointer hover:bg-washed dark:hover:bg-washed-dark",
                       ].join(" ")}
                       onClick={() =>
-                        selected &&
-                        Number(option.value) >= Number(selected[0]?.value) &&
-                        onChange([selected ? selected[0] : undefined, option])
+                        selected && onChange([selected ? selected[0] : undefined, option])
                       }
                     >
                       {option.label}
