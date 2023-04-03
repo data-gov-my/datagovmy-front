@@ -381,7 +381,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
     return (
       <div className="space-y-2">
         <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-        {stats && <Stats data={stats}></Stats>}
+        {stats && <Stats data={stats} />}
         {subheader && <div>{subheader}</div>}
         <div className={className}>
           <Chart ref={_ref} data={data} options={options()} type={type} />

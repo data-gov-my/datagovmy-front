@@ -12,7 +12,7 @@ import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import AgencyBadge from "@components/AgencyBadge";
-import { BankNegaraIcon } from "@components/Icon";
+import { BNMIcon } from "@components/Icon/agency";
 
 /**
  * International Reserves Dashboard
@@ -79,7 +79,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
+        background="gray"
         category={[t("nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-international-reserves:header")]}
         description={[t("dashboard-international-reserves:description")]}
@@ -88,7 +88,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
           <AgencyBadge
             agency={t("agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BankNegaraIcon />}
+            icon={<BNMIcon />}
           />
         }
       />

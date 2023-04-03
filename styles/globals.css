@@ -123,6 +123,12 @@ path:focus {
   outline: none;
 }
 
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  @apply z-0;
+}
+
 .leaflet-tooltip-left,
 .leaflet-tooltip-right {
   @apply border-0 bg-black/80 font-sans text-xs text-white;

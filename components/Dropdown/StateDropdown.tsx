@@ -49,6 +49,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   return (
     <div className={!hideOnScroll ? `block ${width}` : show ? "hidden lg:block" : "hidden"}>
       <Dropdown
+        className="flex-row items-center"
         onChange={selected => (onChange ? onChange(selected) : redirect(selected))}
         disabled={disabled}
         selected={

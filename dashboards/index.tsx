@@ -91,7 +91,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   return (
     <>
       <Hero
-        background="bg-gradient-radial from-white to-primary/10 dark:from-outlineHover-dark dark:to-black"
+        background="gray"
         header={[
           t("dashboard.header").concat(
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
