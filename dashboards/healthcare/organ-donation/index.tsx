@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { NTRCIcon } from "@components/Icon/agency";
 
 /**
  * OrganDonation Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface OrganDonationProps {}
 
 const OrganDonation: FunctionComponent<OrganDonationProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-organ-donation"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Healthcare"]}
-        header={["Organ Donation"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        background="green"
+        category={[t("nav.megamenu.categories.healthcare"), "text-[#16A34A]"]}
+        header={[t("dashboard-organ-donation:header")]}
+        description={[t("dashboard-organ-donation:description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Health"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            agency={"National Transplant Resource Centre (NTRC)"}
+            link="https://www.dermaorgan.gov.my/ntrc"
+            icon={<NTRCIcon />}
           />
         }
       />

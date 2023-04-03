@@ -8,18 +8,22 @@ import { useTranslation } from "@hooks/useTranslation";
 import OrganDonationDashboard from "@dashboards/healthcare/organ-donation";
 
 const OrganDonation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-organ-donation"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-organ-donation:header")}
+        description={t("dashboard-organ-donation:description")}
+        keywords={""}
+      />
       <OrganDonationDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-organ-donation"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

@@ -8,18 +8,22 @@ import { useTranslation } from "@hooks/useTranslation";
 import ImmigrationDashboard from "@dashboards/demography/immigration";
 
 const Immigration: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-immigration"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-immigration:header")}
+        description={t("dashboard-immigration:description")}
+        keywords={""}
+      />
       <ImmigrationDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-immigration"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

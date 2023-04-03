@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { LHDNIcon } from "@components/Icon/agency";
 
 /**
  * Income Taxation Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface IncomeTaxationProps {}
 
 const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-income-taxation"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Economy"]}
-        header={["Income Taxation"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        background="orange"
+        category={[t("nav.megamenu.categories.economy"), "text-[#FF820E]"]}
+        header={[t("dashboard-income-taxation:header")]}
+        description={[t("dashboard-income-taxation:description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Internal Revenue Board"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            link="https://www.hasil.gov.my"
+            icon={<LHDNIcon />}
           />
         }
       />

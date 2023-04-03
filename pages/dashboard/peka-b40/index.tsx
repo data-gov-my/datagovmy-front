@@ -8,18 +8,22 @@ import { useTranslation } from "@hooks/useTranslation";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
 
 const PekaB40: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-peka-b40:header")}
+        description={t("dashboard-peka-b40:description")}
+        keywords={""}
+      />
       <PekaB40Dashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

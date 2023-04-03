@@ -8,18 +8,22 @@ import { useTranslation } from "@hooks/useTranslation";
 import FloodWarningDashboard from "@dashboards/environment/flood-warning";
 
 const FloodWarning: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-flood-warning"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-flood-warning:header")}
+        description={t("dashboard-flood-warning:description")}
+        keywords={""}
+      />
       <FloodWarningDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-flood-warning"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {
