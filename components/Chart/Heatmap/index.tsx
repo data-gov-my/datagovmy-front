@@ -1,336 +1,248 @@
-import { FunctionComponent, ReactElement, useMemo } from "react";
-import { ResponsiveHeatMap } from "@nivo/heatmap";
-import { ColorInterpolatorId, ContinuousColorScaleConfig } from "@nivo/colors";
-import { AxisProps } from "@nivo/axes";
+import { FunctionComponent, useMemo } from "react";
+import {
+  CartesianScaleTypeRegistry,
+  CategoryScale,
+  Chart as ChartJS,
+  LinearScale,
+  ScaleOptionsByType,
+  ScriptableContext,
+  TimeScale,
+  Tooltip,
+} from "chart.js";
+import { Chart } from "react-chartjs-2";
+import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
-import { CountryAndStates } from "@lib/constants";
-import DefaultTick from "@components/Chart/Ticks/DefaultTick";
-import StateTick from "@components/Chart/Ticks/StateTick";
+import type { ChartCrosshairOption } from "@lib/types";
+import { Color, useColor } from "@hooks/useColor";
+import { DeepPartial } from "chart.js/types/utils";
+import "chartjs-adapter-luxon";
 
 interface HeatmapProps extends ChartHeaderProps {
   className?: string;
-  data?: any;
-  subdata?: boolean;
-  key?: string;
-  valueFormat?: string;
-  schema?: Array<HeatmapSchema>;
-  color?: ColorInterpolatorId | Array<string>;
-  colorMax?: number;
-  minY?: number;
-  maxY?: number;
-  forceSquare?: boolean;
-  interactive?: boolean;
+  data?: HeatmapData;
+  color?: Color;
   unitX?: string;
   unitY?: string;
-  hoverTarget?: "cell" | "row" | "column" | "rowColumn";
-  axisLeft?: AxisProps<any> | "state" | "default";
-  axisTop?: AxisProps<any> | null;
-  legend?: LegendTitle;
 }
 
-type HeatmapSchema = {
-  label?: string;
-  labelColor?: string;
-  max: number;
+type HeatmapDatum = {
+  x: string | number;
+  y: string | number;
+  v: number | null;
 };
+type HeatmapData = Array<HeatmapDatum>;
 
-type LegendTitle = {
-  left?: string;
-  top?: string;
-};
+// type HeatmapScaleType = "time" | "category";
 
 const Heatmap: FunctionComponent<HeatmapProps> = ({
-  className,
+  className = "h-[400px]",
   title,
-  data = dummy,
-  subdata = false,
-  schema,
-  color,
-  colorMax,
+  data = dummyCategory,
   menu,
   state,
-  key = "y",
-  valueFormat = ">-.1f",
+  color = "blues",
   unitX,
   unitY,
   controls,
-  forceSquare = false,
-  interactive = true,
-  hoverTarget,
-  axisLeft,
-  axisTop,
-  legend,
 }) => {
-  const get = (
-    props: { id: any; serieId: any; data: any; formattedValue: any; color?: any },
-    _key: keyof HeatmapSchema
-  ) => {
-    if (!schema) return;
-    let { data, formattedValue } = props;
-    for (const scheme of schema) {
-      if (data[key] <= scheme.max) {
-        if (!scheme[_key]) return formattedValue;
-        return scheme[_key];
+  ChartJS.register(MatrixController, MatrixElement, LinearScale, CategoryScale, TimeScale, Tooltip);
+  const [min, max, uniqueXs, uniqueYs] = useMemo<
+    [number, number, Array<string | number>, Array<string | number>]
+  >(() => {
+    if (!data) return [0, 1, [], []];
+    let min: number = data[0].v !== null ? data[0].v : 0;
+    let max: number = data[0].v !== null ? data[0].v : 1;
+    for (let { v } of data) {
+      if (v !== null) {
+        if (v < min) {
+          min = v;
+        }
+        if (v > max) {
+          max = v;
+        }
       }
     }
-
-    return formattedValue ?? "";
-  };
-
-  const getAxisLeft = (): AxisProps<any> | null => {
-    switch (axisLeft) {
-      case "state":
-        return {
-          ticksPosition: "before",
-          tickSize: 0,
-          tickPadding: 10,
-          tickRotation: 0,
-          renderTick: StateTick,
-        };
-
-      case "default":
-        return {
-          ticksPosition: "before",
-          tickSize: 0,
-          tickPadding: 10,
-          renderTick: DefaultTick,
-        };
-      default:
-        return axisLeft ?? null;
-    }
-  };
-
-  const getColorScheme = (): ContinuousColorScaleConfig | undefined => {
-    if (Array.isArray(color)) {
-      return {
-        type: "quantize",
-        colors: color,
-        steps: color.length,
-      };
-    } else if (typeof color === "string") {
-      return {
-        type: "sequential",
-        scheme: color,
-        maxValue: colorMax,
-      };
-    }
-
-    return undefined;
-  };
-
-  const computeTextColor = (value: number, subdata: boolean = false) => {
-    let max = colorMax;
-    if (!max) {
-      max = !subdata
-        ? getMax(formatted.data.map((item: any) => item.data.map((_item: any) => _item.y)))
-        : getMax(formatted.subdata.map((item: any) => item.data.map((_item: any) => _item.y)));
-    }
-
-    if (value / max > 0.65) return "#FFF";
-    else return "#000";
-  };
-
-  const getMax = (array: Array<any>): number =>
-    Math.max(...array.map((e: any) => (Array.isArray(e) ? getMax(e) : e)));
-
-  const formatted = useMemo(() => {
-    let _data: Array<any> = data;
-    let _subdata: Array<any> = [];
-
-    if (subdata) {
-      _data = data.map((set: any) => {
-        _subdata.push({ ...set, data: [set.data[set.data.length - 1]] });
-        return { ...set, data: set.data.slice(0, -1) };
-      });
-    }
-
-    return {
-      data: _data,
-      subdata: _subdata,
-    };
+    return [
+      //   typeof data[0].x === "string" ? "category" : "time",
+      min,
+      max,
+      [...new Set(data.map(item => item.x))],
+      [...new Set(data.map(item => item.y))],
+    ];
   }, [data]);
+
+  const { interpolate } = useColor(color, [min, max]);
+
+  const scale = (): {
+    x: DeepPartial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>>;
+    y: DeepPartial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>>;
+  } => {
+    // switch (type) {
+    //   case "category":
+    return {
+      x: {
+        type: "category",
+        labels: uniqueXs as string[],
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        type: "category",
+        labels: uniqueYs as string[],
+        offset: true,
+        grid: {
+          display: false,
+        },
+      },
+    };
+    // TODO: KIV; timeseries in heatmap not important
+    //   case "time":
+    //     return {
+    //       y: {
+    //         type: "time",
+    //         offset: true,
+    //         time: {
+    //           displayFormats: {
+    //             quarter: "qQ yyyy",
+    //             month: "MMM",
+    //             week: "dd MMM",
+    //           },
+    //           tooltipFormat: ["year", "month", "quarter"].includes(interval as string)
+    //             ? { quarter: "qQ yyyy", month: "MMM yyyy", year: "yyyy" }[interval as string]
+    //             : "dd MMM yyyy",
+    //         },
+    //         reverse: true,
+    //         position: "left",
+    //         ticks: {
+    //           maxRotation: 0,
+    //           autoSkip: true,
+    //           padding: 1,
+    //           font: {
+    //             size: 9,
+    //           },
+    //         },
+    //         grid: {
+    //           display: false,
+    //           drawBorder: false,
+    //           tickLength: 0,
+    //         },
+    //       },
+    //       x: {
+    //         type: "time",
+    //         position: "bottom",
+    //         offset: true,
+    //         time: {
+    //           isoWeekday: 1,
+    //           displayFormats: {
+    //             week: "MMM dd",
+    //           },
+    //         },
+    //         ticks: {
+    //           maxRotation: 0,
+    //           autoSkip: true,
+    //           font: {
+    //             size: 9,
+    //           },
+    //         },
+    //         grid: {
+    //           display: false,
+    //           drawBorder: false,
+    //         },
+    //       },
+    //     };
+    // }
+  };
+
+  const options: ChartCrosshairOption<"matrix"> = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        bodyFont: {
+          family: "Inter",
+        },
+        callbacks: {
+          title() {
+            return "";
+          },
+          label(context) {
+            const v = context.dataset.data[context.dataIndex] as HeatmapDatum;
+            return ["x: " + v.x, "y: " + v.y, "v: " + v.v];
+          },
+        },
+      },
+      crosshair: false,
+    },
+    scales: scale(),
+  };
 
   return (
     <div>
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
 
-      <div className="table-responsive">
-        <div className={`${className} lg:w-auto`}>
-          {legend?.left && (
-            <span className="rotate-180 text-center font-medium [writing-mode:vertical-lr]">
-              {legend.left}
-            </span>
-          )}
-          <div className="h-full flex-grow">
-            {legend?.top && <span className="block text-center font-medium">{legend.top}</span>}
-
-            <ResponsiveHeatMap
-              data={formatted.data}
-              margin={{
-                top: axisTop !== null ? 30 : 0,
-                right: 0,
-                bottom: 30,
-                left: axisLeft === "state" ? 180 : axisLeft === "default" ? 120 : 80,
-              }}
-              hoverTarget={hoverTarget}
-              valueFormat={valueFormat}
-              axisTop={
-                axisTop !== undefined
-                  ? axisTop
-                  : {
-                      tickSize: 0,
-                      tickPadding: 10,
-                      tickRotation: 0,
-                      legendOffset: 46,
-                    }
-              }
-              label={schema ? props => get(props, "label") : undefined}
-              //   labelTextColor={schema ? props => get(props, "labelColor") : undefined}
-              labelTextColor={
-                schema
-                  ? props => get(props, "labelColor")
-                  : props => computeTextColor(props.value as number)
-              }
-              tooltip={({ cell }) => {
-                return (
-                  <div className="nivo-tooltip flex gap-2 overflow-visible">
-                    <span>
-                      {axisLeft === "state" ? CountryAndStates[cell.serieId] : cell.serieId}:
-                    </span>
-                    <span>
-                      <strong>
-                        {cell.data.x}
-                        {unitX}
-                      </strong>{" "}
-                      -{" "}
-                      <strong>
-                        {cell.label}
-                        {unitY}
-                      </strong>
-                    </span>
-                  </div>
-                );
-              }}
-              axisLeft={getAxisLeft()}
-              isInteractive={interactive}
-              forceSquare={forceSquare}
-              inactiveOpacity={0.3}
-              theme={{
-                fontSize: 13,
-                axis: {
-                  ticks: {
-                    text: {
-                      fontSize: 13,
-                      fontFamily: "inherit",
-                    },
-                  },
+      <div className={className}>
+        <Chart
+          type="matrix"
+          data={{
+            datasets: [
+              {
+                data: data,
+                borderWidth: 1,
+                borderColor: "rgba(0,0,0,0.5)",
+                backgroundColor(ctx: ScriptableContext<"matrix">) {
+                  return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).v);
                 },
-              }}
-              colors={getColorScheme()}
-              emptyColor="#555555"
-              animate={false}
-            />
-          </div>
-
-          {subdata && (
-            <div className="aspect-auto h-full w-[15%]">
-              <ResponsiveHeatMap
-                data={formatted.subdata}
-                margin={{
-                  top: axisTop !== null ? 30 : 0,
-                  right: 0,
-                  bottom: 30,
-                  left: 30,
-                }}
-                hoverTarget={"row"}
-                valueFormat={valueFormat}
-                axisTop={
-                  axisTop !== undefined
-                    ? axisTop
-                    : {
-                        tickSize: 0,
-                        tickPadding: 10,
-                        tickRotation: 0,
-                        legend: "",
-                        legendOffset: 46,
-                      }
-                }
-                axisLeft={null}
-                forceSquare={forceSquare}
-                inactiveOpacity={0.3}
-                isInteractive={interactive}
-                label={schema ? props => get(props, "label") : undefined}
-                labelTextColor={props => computeTextColor(props.value as number, true)}
-                theme={{
-                  fontSize: 13,
-                  axis: {
-                    ticks: {
-                      text: {
-                        fontSize: 13,
-                        fontFamily: "inherit",
-                      },
-                    },
-                  },
-                }}
-                tooltip={({ cell }) => {
-                  return (
-                    <div className="nivo-tooltip flex gap-2 overflow-visible">
-                      <span>{cell.serieId}:</span>
-                      <span>
-                        <strong>
-                          {cell.data.x}
-                          {unitX}
-                        </strong>{" "}
-                        -{" "}
-                        <strong>
-                          {cell.label}
-                          {unitY}
-                        </strong>
-                      </span>
-                    </div>
-                  );
-                }}
-                colors={getColorScheme()}
-                emptyColor="#555555"
-                animate={false}
-              />
-            </div>
-          )}
-        </div>
+                width: ({ chart }) => (chart.chartArea || {}).width / uniqueXs.length - 1,
+                height: ({ chart }) => (chart.chartArea || {}).height / uniqueYs.length - 1,
+              },
+            ],
+          }}
+          options={options}
+        />
       </div>
     </div>
   );
 };
 
-const dummy = Array(Object.keys(CountryAndStates).length)
-  .fill(0)
-  .map((_, index) => {
-    let date = new Date();
-    date.setDate(date.getDate() - index);
+const dummyLinear = [
+  { x: 1, y: 1, v: 11 },
+  { x: 1, y: 2, v: 12 },
+  { x: 1, y: 3, v: 13 },
+  { x: 2, y: 1, v: 40 },
+  { x: 2, y: 2, v: 22 },
+  { x: 2, y: 3, v: 23 },
+  { x: 3, y: 1, v: 31 },
+  { x: 3, y: 2, v: 36 },
+  { x: 3, y: 3, v: 33 },
+];
 
-    const y1 = () => Math.floor(Math.random() * 98 + 2);
+const dummyCategory = [
+  { x: "A", y: "X", v: 11 },
+  { x: "A", y: "Y", v: 12 },
+  { x: "A", y: "Z", v: 13 },
+  { x: "B", y: "X", v: 21 },
+  { x: "B", y: "Y", v: 22 },
+  { x: "B", y: "Z", v: 23 },
+  { x: "C", y: "X", v: 31 },
+  { x: "C", y: "Y", v: 32 },
+  { x: "C", y: "Z", v: 33 },
+];
 
-    return {
-      id: Object.keys(CountryAndStates)[index],
-      data: [
-        {
-          x: "A",
-          y: y1(),
-        },
-        {
-          x: "B",
-          y: y1(),
-        },
-        {
-          x: "AB",
-          y: y1(),
-        },
-        {
-          x: "O",
-          y: y1(),
-        },
-      ],
-    };
-  });
+const dummyTime = [
+  { x: 1420070400000, y: 1443657600000, v: 11 },
+  { x: 1420070400000, y: 1446336000000, v: 12 },
+  { x: 1420070400000, y: 1448928000000, v: 13 },
+
+  { x: 1422748800000, y: 1443657600000, v: 21 },
+  { x: 1422748800000, y: 1446336000000, v: 22 },
+  { x: 1422748800000, y: 1448928000000, v: 23 },
+
+  { x: 1425168000000, y: 1443657600000, v: 31 },
+  { x: 1425168000000, y: 1446336000000, v: 32 },
+  { x: 1425168000000, y: 1448928000000, v: 33 },
+];
 
 export default Heatmap;

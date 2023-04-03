@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactElement, useEffect } from "react";
-import { LatLng, LatLngBounds, LatLngExpression } from "leaflet";
+import { LatLng, LatLngBounds, LatLngExpression, LatLngTuple } from "leaflet";
 import { MapContainer, TileLayer, useMap, Marker, Popup, GeoJSON } from "react-leaflet";
 import type { GeoJsonObject } from "geojson";
 import bbox from "geojson-bbox";
@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 
 type OSMapWrapperProps = {
   className?: string;
-  position?: LatLngExpression;
+  position?: LatLngTuple; // [lat: number, lng: number]
   enableZoom?: boolean;
   zoom?: number;
   geojson?: GeoJsonObject;
