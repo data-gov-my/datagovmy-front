@@ -5,7 +5,7 @@ import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof getStaticProps>) => {
+const BirthdayExplorer = ({ data }: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-birthday-explorer"]);
   return (
     <>
@@ -14,7 +14,7 @@ const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof get
         description={t("dashboard-birthday-explorer:description")}
         keywords={""}
       />
-      <BirthdayExplorerDashboard timeseries={timeseries} />
+      <BirthdayExplorerDashboard timeseries={data} />
     </>
   );
 };
@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
       ...i18n,
-      ...data,
+      data,
     },
   };
 };

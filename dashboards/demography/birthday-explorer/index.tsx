@@ -46,74 +46,39 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   const chartRef = useRef(null);
   const windowWidth = useWindowWidth();
 
+  const filterPeriods: Array<OptionType> = [
+    { label: t("dashboard-birthday-explorer:section_2.by_date"), value: "DATE" },
+    { label: t("dashboard-birthday-explorer:section_2.by_month"), value: "MONTH" },
+  ];
+
   const { data, setData } = useData({
     timeseries: timeseries,
     x: [],
-    y: [],
-    // period: "DATE",
+    y_day: [],
+    y_month: [],
+    rank: 0,
+    year_popular: 0,
+    year_rare: 0,
+    groupByDay: true,
+    period: filterPeriods[0],
     begin: "1923",
     end: "2017",
+    state: "mys",
     datestring: "",
     validation: false,
-    state: "mys",
     queryState: "mys",
     queryBday: "",
     loading: false,
     timeseriesLoading: false,
-    // groupByDay: true,
   });
-
-  // const daysOfYearInMillis: number[] = Array.from(
-  //   { length: 366 },
-  //   (_, i) => i * 1000 * 60 * 60 * 24 + 63072000000
-  // );
-
-  // const monthsOfYearInMillis: number[] = Array.from({ length: 12 }, (_, i) =>
-  //   new Date(99, i).getTime()
-  // );
-
-  const isLeapYear = (year: number) => {
-    return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
-  };
-
-  // const hasLeapYear = (yearRange: [number, number]) => {
-  //   for (let i = yearRange[0]; i <= yearRange[1]; i++) {
-  //     if (isLeapYear(i)) return true;
-  //   }
-  //   return false;
-  // };
 
   const getDayOfYear = (date: Date) => {
     const startOfYear = new Date(date.getFullYear(), 0, 0);
     const diff = date.getTime() - startOfYear.getTime();
     const oneDay = 1000 * 60 * 60 * 24;
     const day = Math.floor(diff / oneDay);
-    return day; //isLeapYear(date.getFullYear()) ? day : day > 59 ? day + 1 : day;
+    return day;
   };
-
-  // const groupValuesByPeriod = (
-  //   milliseconds: number[],
-  //   values: number[],
-  //   groupByDay: boolean,
-  //   yearRange?: [number, number]
-  // ) => {
-  //   const result: number[] = new Array(366).fill(0);
-  //   for (let i = 0; i < milliseconds.length; i++) {
-  //     const date = new Date(milliseconds[i]);
-  //     const year = date.getFullYear();
-  //     if (yearRange && (year < yearRange[0] || year > yearRange[1])) {
-  //       continue; // Skip data point outside range
-  //     }
-  //     if (groupByDay) {
-  //       const dayOfYear = getDayOfYear(date);
-  //       result[dayOfYear - 1] += values[i];
-  //     } else {
-  //       const monthOfYear = date.getMonth();
-  //       result[monthOfYear] += values[i];
-  //     }
-  //   }
-  //   return result;
-  // };
 
   useWatch(() => {
     setData("loading", true);
@@ -122,11 +87,17 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       state: data.queryState,
       start: Number(data.begin),
       end: Number(data.end),
+      groupByDay: true,
+      birthday: data.queryBday,
     })
       .then(({ data }) => {
+        setData("groupByDay", true);
+        setData("period", filterPeriods[0]);
         setData("x", data.x);
-        setData("y", data.y);
-        setData("timeseries", data);
+        setData("y_day", data.y);
+        setData("rank", data.rank);
+        setData("year_popular", data.popularity.year_popular);
+        setData("year_rare", data.popularity.year_rare);
       })
       .then(() => setData("loading", false));
   }, [data.queryState, data.queryBday]);
@@ -138,12 +109,14 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       state: data.queryState,
       start: Number(data.begin),
       end: Number(data.end),
+      groupByDay: data.groupByDay,
     })
       .then(({ data }) => {
-        setData("timeseries", data);
+        setData("x", data.x);
+        data.groupByDay ? setData("y_day", data.y) : setData("y_month", data.y);
       })
       .then(() => setData("timeseriesLoading", false));
-  }, [data.begin, data.end]);
+  }, [data.begin, data.end, data.groupByDay]);
 
   const today = useMemo(() => {
     return DateTime.now();
@@ -160,48 +133,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     timeseries.data.births[timeseries.data.x.indexOf(new Date(data.queryBday).getTime())];
   const birthDate = new Date(data.queryBday);
   const birthYear = birthDate.getFullYear();
-  // const birthsOnBirthYear = groupValuesByPeriod(
-  //   data.timeseries.data.x,
-  //   data.timeseries.data.births,
-  //   true,s
-  //   [birthYear, birthYear]
-  // );
-  // const birthsMap = data.timeseries.y.map((birth, index) => ({ day: index, value: birth }));
-  // const sortedBirthsOnBirthYear = birthsMap.sort((a, b) => b.value - a.value);
-  // const birthsOnBirthDay = data.timeseries.y[getDayOfYear(new Date(data.queryBday)) - 1];
-  const minBirths = data.y.indexOf(Math.min(...data.y));
-  const maxBirths = data.y.indexOf(Math.max(...data.y));
-  const birthsOnBirthDay = data.y[getDayOfYear(new Date(data.queryBday)) - 1];
-
-  const rank =
-    data.y
-      .map((birth: number, index: number) => ({ day: index, birth: birth }))
-      .sort(
-        (a: { day: number; birth: number }, b: { day: number; birth: number }) => b.birth - a.birth
-      )
-      .findIndex((obj: { day: number; birth: number }) => obj.day === getDayOfYear(birthDate) - 1) +
-    1;
-  // const minBirths = useMemo(() => { return data.y.indexOf(Math.min(...data.y));}, [data.queryBday, data.queryState]);
-  // const maxBirths = useMemo(() => { return data.y.indexOf(Math.max(...data.y));}, [data.queryBday, data.queryState]);
-  // const birthsOnBirthDay = useMemo(() => { return data.y[getDayOfYear(new Date(data.queryBday)) - 1];}, [data.queryBday, data.queryState]);
-  // const sortedBirthsOnBirthYear = useMemo(() => { return data.y.map((birth: number, index: number) => ({ day: index, value: birth })).sort((a: any, b: any) => b.value - a.value);}, [data.queryBday, data.queryState]);
-
-  // const filterTimeline = () => {
-  //   return {
-  //     births: groupValuesByPeriod(
-  //       data.timeseries.x,
-  //       data.timeseries.y,
-  //       data.groupByDay,
-  //       [Number(data.begin), Number(data.end)]
-  //     ),
-  //   };
-  // };
-  // const filtered_timeline = useCallback(filterTimeline, [
-  //   data.begin,
-  //   data.end,
-  //   data.groupByDay,
-  //   data.timeseries,
-  // ]);
+  const birthsOnBirthDay = data.y_day[getDayOfYear(new Date(data.queryBday)) - 1];
 
   const description = (
     <Trans>
@@ -242,14 +174,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     }
   }
 
-  function formatDayOfYear(dayOfYear: number): string {
-    const date = new Date(isLeapYear(birthYear) ? 2000 : 1970, 0, dayOfYear + 1);
-    const day = date.getDate();
-    const month = new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(date);
-    return `${day}${daySuffix(day)} ${month}`;
-  }
-
   function daySuffix(day: number): string {
+    if (i18n.language === "ms-MY") return "hb";
     if (day > 3 && day < 21) return "th";
     switch (day % 10) {
       case 1:
@@ -261,6 +187,12 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       default:
         return "th";
     }
+  }
+
+  function formatDayOfYear(date: Date): string {
+    const day = date.getDate();
+    const month = new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(date);
+    return `${day}${daySuffix(day)} ${month}`;
   }
 
   const tooltipCallback: any = () => {
@@ -281,7 +213,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       callback(val: string, index: number, values: any): string | null {
         const leapTicks: number[] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 365];
         const nonLeapTicks: number[] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364];
-        const x = data.y.length === 366 ? leapTicks : nonLeapTicks;
+        const x = data.y_day.length === 366 ? leapTicks : nonLeapTicks;
         return x.includes(index) ? val : null;
       },
       minRotation: 0,
@@ -304,10 +236,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       },
     };
   };
-  // const filterPeriods: Array<OptionType> = [
-  //   { label: t("dashboard-birthday-explorer:section_2.by_date"), value: "DATE" },
-  //   { label: t("dashboard-birthday-explorer:section_2.by_month"), value: "MONTH" },
-  // ];
 
   const startYear: number = 1923;
   const endYear: number = 2017;
@@ -319,7 +247,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   };
 
   const reset = () => {
-    // setData("period", undefined);
+    setData("period", filterPeriods[0]);
     setData("begin", "1923");
     setData("end", "2017");
   };
@@ -450,14 +378,14 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           {t("dashboard-birthday-explorer:section_1.info6", { year: birthYear })}
                           <span className="text-primary">
                             {t("dashboard-birthday-explorer:section_1.rank", {
-                              rank: rank,
-                              suffix: daySuffix(rank),
+                              rank: data.rank,
+                              suffix: daySuffix(data.rank),
                             })}
                           </span>
                           {t("dashboard-birthday-explorer:section_1.popularity", {
-                            count: data.y.length === 366 ? 366 : 365,
-                            year_popular: formatDayOfYear(maxBirths),
-                            year_rare: formatDayOfYear(minBirths),
+                            count: data.y_day.length === 366 ? 366 : 365,
+                            year_popular: formatDayOfYear(new Date(data.year_popular)),
+                            year_rare: formatDayOfYear(new Date(data.year_rare)),
                           })}
                         </p>
                       </div>
@@ -505,18 +433,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                       : CountryAndStates[data.queryState ? data.queryState : "mys"],
                 })
           }
-          // description={
-          //   data.y.length === 366
-          //     ? ""
-          //     : data.begin === data.end
-          //     ? t("dashboard-birthday-explorer:section_2.desc_sameyear", {
-          //         year: data.begin,
-          //       })
-          //     : t("dashboard-birthday-explorer:section_2.description", {
-          //         start_year: data.begin,
-          //         end_year: data.end,
-          //       })
-          // }
           date={timeseries.data_as_of}
         >
           {/* Mobile */}
@@ -541,7 +457,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
             >
               {close => (
                 <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28 dark:divide-outlineHover-dark">
-                  {/* <Radio
+                  <Radio
                     label={t("catalogue.period")}
                     name="period"
                     className="flex flex-wrap gap-4 px-1 pt-2"
@@ -553,7 +469,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                         ? setData("groupByDay", false)
                         : setData("groupByDay", true);
                     }}
-                  /> */}
+                  />
                   <div className="grid grid-cols-2 gap-4">
                     <Dropdown
                       width="w-full"
@@ -598,7 +514,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
 
           {/* Desktop */}
           <div className="hidden gap-2 pb-2 xl:flex">
-            {/* <Dropdown
+            <Dropdown
               className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
               anchor={"left"}
               options={filterPeriods}
@@ -608,7 +524,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 setData("period", e);
                 e.value === "MONTH" ? setData("groupByDay", false) : setData("groupByDay", true);
               }}
-            /> */}
+            />
             <Daterange
               className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
               beginOptions={filterYears(startYear, endYear)}
@@ -636,21 +552,21 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
             <Timeseries
               className="h-[350px] w-full"
               _ref={chartRef}
-              interval={"day"} //{data.groupByDay ? "day" : "month"}
-              round={"day"} //{data.groupByDay ? "day" : "month"}
+              interval={data.groupByDay ? "day" : "month"}
+              round={data.groupByDay ? "day" : "month"}
               mode="grouped"
               enableGridX={true}
               enableGridY={false}
-              gridOffsetX={false} //{data.groupByDay ? false : true}
-              tickOptionsX={tickOptionsXDay} //{data.groupByDay ? tickOptionsXDay : tickOptionsXMonth}
+              gridOffsetX={data.groupByDay ? false : true}
+              tickOptionsX={data.groupByDay ? tickOptionsXDay : tickOptionsXMonth}
               tooltipCallback={tooltipCallback}
-              // tooltipFormat={data.groupByDay ? undefined : "MMMM"}
+              tooltipFormat={data.groupByDay ? undefined : "MMMM"}
               data={{
-                labels: data.timeseries.x,
+                labels: data.x,
                 datasets: [
                   {
-                    type: "line", //data.groupByDay ? "line" : "bar",
-                    data: data.timeseries.y,
+                    type: data.groupByDay ? "line" : "bar",
+                    data: data.groupByDay ? data.y_day : data.y_month,
                     label: t("dashboard-birthday-explorer:section_2.births"),
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderColor: AKSARA_COLOR.PRIMARY,
