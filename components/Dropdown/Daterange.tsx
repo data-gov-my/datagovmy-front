@@ -1,6 +1,6 @@
 import type { OptionType } from "@components/types";
 import { default as Label, LabelProps } from "@components/Label";
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent } from "react";
 import { Transition, Popover } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon, ClockIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { Button } from "..";
@@ -86,12 +86,19 @@ const Range: FunctionComponent<DaterangeProps> = ({
                   {beginOptions.map(option => (
                     <li
                       className={[
-                        "flex cursor-pointer select-none items-center justify-between py-2 px-4 hover:bg-washed dark:hover:bg-washed-dark",
+                        "flex select-none items-center justify-between py-2 px-4",
                         selected && selected[0]?.value === option.value
                           ? "bg-washed dark:bg-washed-dark"
                           : "bg-inherit",
+                        selected && Number(option.value) > Number(selected[1]?.value)
+                          ? "cursor-not-allowed text-outline hover:bg-white dark:text-outlineHover-dark dark:hover:bg-black"
+                          : "cursor-pointer hover:bg-washed dark:hover:bg-washed-dark",
                       ].join(" ")}
-                      onClick={() => onChange([option, selected ? selected[1] : undefined])}
+                      onClick={() => {
+                        selected &&
+                          Number(option.value) <= Number(selected[1]?.value) &&
+                          onChange([option, selected ? selected[1] : undefined]);
+                      }}
                     >
                       {option.label}
                       {selected && selected[0]?.value === option.value && (
@@ -104,12 +111,19 @@ const Range: FunctionComponent<DaterangeProps> = ({
                   {endOptions.map(option => (
                     <li
                       className={[
-                        "flex cursor-pointer select-none items-center justify-between py-2 px-4 hover:bg-washed dark:hover:bg-washed-dark",
+                        "flex select-none items-center justify-between py-2 px-4",
                         selected && selected[1]?.value === option.value
                           ? "bg-washed dark:bg-washed-dark"
                           : "bg-inherit",
+                        selected && Number(option.value) < Number(selected[0]?.value)
+                          ? "cursor-not-allowed text-outline hover:bg-white dark:text-outlineHover-dark dark:hover:bg-black"
+                          : "cursor-pointer hover:bg-washed dark:hover:bg-washed-dark",
                       ].join(" ")}
-                      onClick={() => onChange([selected ? selected[0] : undefined, option])}
+                      onClick={() =>
+                        selected &&
+                        Number(option.value) >= Number(selected[0]?.value) &&
+                        onChange([selected ? selected[0] : undefined, option])
+                      }
                     >
                       {option.label}
                       {selected && selected[1]?.value === option.value && (
