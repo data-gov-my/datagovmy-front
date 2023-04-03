@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from "react";
+import { ForwardedRef, FunctionComponent, useMemo } from "react";
 import {
   CartesianScaleTypeRegistry,
   CategoryScale,
@@ -16,6 +16,7 @@ import type { ChartCrosshairOption } from "@lib/types";
 import { Color, useColor } from "@hooks/useColor";
 import { DeepPartial } from "chart.js/types/utils";
 import "chartjs-adapter-luxon";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 interface HeatmapProps extends ChartHeaderProps {
   className?: string;
@@ -23,6 +24,7 @@ interface HeatmapProps extends ChartHeaderProps {
   color?: Color;
   unitX?: string;
   unitY?: string;
+  _ref?: ForwardedRef<ChartJSOrUndefined<"matrix", any[], unknown>>;
 }
 
 type HeatmapDatum = {
@@ -30,7 +32,7 @@ type HeatmapDatum = {
   y: string | number;
   v: number | null;
 };
-type HeatmapData = Array<HeatmapDatum>;
+export type HeatmapData = Array<HeatmapDatum>;
 
 // type HeatmapScaleType = "time" | "category";
 
@@ -44,6 +46,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   unitX,
   unitY,
   controls,
+  _ref,
 }) => {
   ChartJS.register(MatrixController, MatrixElement, LinearScale, CategoryScale, TimeScale, Tooltip);
   const [min, max, uniqueXs, uniqueYs] = useMemo<
@@ -185,6 +188,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
 
       <div className={className}>
         <Chart
+          ref={_ref}
           type="matrix"
           data={{
             datasets: [
