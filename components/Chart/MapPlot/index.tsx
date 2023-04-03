@@ -21,17 +21,17 @@ type MapPlotProps = {
   enableZoom?: boolean;
   zoom?: number;
   geojson?: GeoJsonObject;
-  markers?: MarkerProp[];
+  markers?: MarkerData;
 };
 
 export interface MapPlotRef {
   print: (text: string) => void;
 }
 
-type MarkerProp = {
+export type MarkerData = Array<{
   position: LatLngTuple;
   name?: string | ReactElement;
-};
+}>;
 
 const MapPlot: FunctionComponent<MapPlotProps> = ({
   id,
@@ -123,7 +123,7 @@ const GeoJSONControl: FunctionComponent<GeoJSONControl> = ({ geojson }) => {
   return null;
 };
 
-const dummy: MarkerProp[] = [
+const dummy: MarkerData = [
   {
     position: [51.505, -0.09],
     name: "A pretty CSS3 popup. <br> Easily customizable.",

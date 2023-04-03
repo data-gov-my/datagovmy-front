@@ -1,5 +1,5 @@
-import type { DownloadOptions, ChoroplethColors } from "@lib/types";
-import { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
+import type { DownloadOptions } from "@lib/types";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
 import { useTranslation } from "@hooks/useTranslation";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";

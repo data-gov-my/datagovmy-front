@@ -1,4 +1,5 @@
 import type { GeoChoroplethRef } from "@components/Chart/Choropleth/geochoropleth";
+import type { MarkerData } from "@components/Chart/MapPlot";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
@@ -9,18 +10,12 @@ import { FunctionComponent, useEffect, useMemo, useRef } from "react";
 const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), {
   ssr: false,
 });
-
-type ChoroPoint = {
-  id: string;
-  value: number;
-};
-
-interface CatalogueChoroplethProps {
+interface CatalogueMapPlotProps {
   config: {
     precision: number;
   };
   dataset: {
-    chart: Array<ChoroPoint>; // ChoroplethData
+    chart: MarkerData;
     meta: {
       en: {
         title: string;
@@ -38,7 +33,7 @@ interface CatalogueChoroplethProps {
   onDownload?: (prop: DownloadOptions) => void;
 }
 
-const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
+const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
   dataset,
   config,
   lang,
@@ -91,9 +86,14 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   );
   return (
     <>
-      <MapPlot _ref={ctx} id={dataset.meta.unique_id} className="h-[350px] w-full lg:h-[450px]" />
+      <MapPlot
+        _ref={ctx}
+        id={dataset.meta.unique_id}
+        className="h-[350px] w-full lg:h-[450px]"
+        markers={dataset.chart}
+      />
     </>
   );
 };
 
-export default CatalogueChoropleth;
+export default CatalogueMapPlot;

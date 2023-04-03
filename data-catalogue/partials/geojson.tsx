@@ -1,10 +1,11 @@
-import type { ChoroplethColors, DownloadOptions } from "@lib/types";
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
-import { default as dynamic } from "next/dynamic";
-import { useTranslation } from "@hooks/useTranslation";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import type { Color } from "@hooks/useColor";
+import { useTranslation } from "@hooks/useTranslation";
 import { download, exportAs } from "@lib/helpers";
+import type { DownloadOptions } from "@lib/types";
 import { track } from "mixpanel-browser";
+import { default as dynamic } from "next/dynamic";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
@@ -18,7 +19,7 @@ type ChoroPoint = {
 
 interface CatalogueGeojsonProps {
   config: {
-    color: ChoroplethColors;
+    color: Color;
     geojson: "state" | "dun" | "parlimen" | "district";
   };
   dataset: {
