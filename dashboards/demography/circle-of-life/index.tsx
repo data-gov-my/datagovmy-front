@@ -24,7 +24,7 @@ const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
         description={[t("dashboard-circle-of-life:description")]}
         agencyBadge={
           <AgencyBadge
-            agency="Immigration Department of Malaysia"
+            agency="Jabatan Pendaftaran Negara"
             link="https://www.jpn.gov.my/en/"
             icon={<JPNIcon />}
           />

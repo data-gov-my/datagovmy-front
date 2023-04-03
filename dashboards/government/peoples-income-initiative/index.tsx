@@ -3,7 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { MOFIcon } from "@components/Icon/agency";
+import { IPREPUIcon } from "@components/Icon/agency";
 
 /**
  * PeoplesIncomeInitiative Dashboard
@@ -24,9 +24,9 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
         description={[t("dashboard-peoples-income-initiative:description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Finance"}
-            link="https://www.mof.gov.my/portal/en"
-            icon={<MOFIcon />}
+            agency={"Ministry of Economy"}
+            link="https://www.epu.gov.my/en"
+            icon={<IPREPUIcon />}
           />
         }
       />
