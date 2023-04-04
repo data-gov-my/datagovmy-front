@@ -242,3 +242,12 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
     );
   }) as ReactElement[];
 };
+
+// MATH helpers
+export const average = (values: number[]): number => values.reduce((a, b) => a + b) / values.length;
+
+export const standardDeviation = (values: number[]): number => {
+  const mean = average(values);
+  const variance = average(values.map(x => Math.pow(x - mean, 2)));
+  return Math.sqrt(variance);
+};

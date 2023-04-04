@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { METIcon } from "@components/Icon/agency";
 
 /**
  * WeatherandClimate Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface WeatherandClimateProps {}
 
 const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-weather-and-climate"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Environment"]}
-        header={["Weather & Climate"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        background="green"
+        category={[t("nav.megamenu.categories.environment"), "text-[#16A34A]"]}
+        header={[t("dashboard-weather-and-climate:header")]}
+        description={[t("dashboard-weather-and-climate:description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Metereology Department"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            link="https://www.met.gov.my/?lang=en"
+            icon={<METIcon />}
           />
         }
       />

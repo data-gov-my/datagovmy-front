@@ -5,21 +5,25 @@ import type { Page } from "@lib/types";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
-import PublicContractingDashboard from "@dashboards/government/public-contracting";
+import PublicContractingDashboard from "@dashboards/public-finances/public-contracting";
 
 const PublicContracting: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-public-contracting"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-public-contracting:header")}
+        description={t("dashboard-public-contracting:description")}
+        keywords={""}
+      />
       <PublicContractingDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-public-contracting"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

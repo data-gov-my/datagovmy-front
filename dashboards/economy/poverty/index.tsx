@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { ICUJPMIcon } from "@components/Icon/agency";
 
 /**
  * Poverty Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface PovertyProps {}
 
 const Poverty: FunctionComponent<PovertyProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-poverty"]);
 
   return (
     <>
       <Hero
         background="gray"
-        category={["Economy"]}
-        header={["Poverty"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        category={[t("nav.megamenu.categories.economy"), "text-black"]}
+        header={[t("dashboard-poverty:header")]}
+        description={[t("dashboard-poverty:description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Internal Coordination Unit (ICU JPM)"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            link="https://www.icu.gov.my/"
+            icon={<ICUJPMIcon />}
           />
         }
       />

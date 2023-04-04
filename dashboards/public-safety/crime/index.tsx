@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { PDRMIcon } from "@components/Icon/agency";
 
 /**
  * Crime Dashboard
@@ -12,18 +13,22 @@ import Container from "@components/Container";
 interface CrimeProps {}
 
 const Crime: FunctionComponent<CrimeProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-crime"]);
 
   return (
     <>
       <Hero
         background="gray"
-        category={["Public Safety"]}
-        header={["Crime"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
-        agencyBadge={<AgencyBadge agency={"PDRM"} link="https://www.bnm.gov.my/publications/mhs" />}
+        category={[t("nav.megamenu.categories.public_safety"), "text-black"]}
+        header={[t("dashboard-crime:header")]}
+        description={[t("dashboard-crime:description")]}
+        agencyBadge={
+          <AgencyBadge
+            agency={"Royal Malaysian Police (PDRM)"}
+            link="https://www.rmp.gov.my/"
+            icon={<PDRMIcon />}
+          />
+        }
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

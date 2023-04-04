@@ -71,13 +71,21 @@
     "catalogue": "Data Catalogue",
     "megamenu": {
       "categories": {
+        "democracy": "Democracy",
         "demography": "Demography",
+        "digitalisation": "Digitalisation",
         "economy": "Economy",
+        "education": "Education",
+        "environment": "Environment",
         "financial_sector": "Financial Sector",
-        "social": "Social",
-        "national_accounts": "National Accounts",
+        "government_programs": "Government Programs",
         "high_frequency": "High-Frequency Data",
-        "healthcare": "Healthcare Programs"
+        "healthcare": "Healthcare",
+        "national_accounts": "National Accounts",
+        "public_finances": "Public Finances",
+        "public_safety": "Public Safety",
+        "social": "Social",
+        "transportation": "Transportation"
       },
       "dashboards": {
         "kawasanku": "Kawasanku",

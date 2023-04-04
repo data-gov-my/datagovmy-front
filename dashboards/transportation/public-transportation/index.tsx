@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { MOTIcon } from "@components/Icon/agency";
 
 /**
  * PublicTransportation Dashboard
@@ -12,21 +13,23 @@ import Container from "@components/Container";
 interface PublicTransportationProps {}
 
 const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-public-transportation"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Transportation"]}
-        header={["Public Transportation"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        background="blue"
+        category={[
+          t("nav.megamenu.categories.transportation"),
+          "text-primary dark:text-primary-dark",
         ]}
+        header={[t("dashboard-public-transportation:header")]}
+        description={[t("dashboard-public-transportation:description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Transport"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            agency={"Ministry of Transport (MoT)"}
+            link="https://www.mot.gov.my/en/"
+            icon={<MOTIcon />}
           />
         }
       />

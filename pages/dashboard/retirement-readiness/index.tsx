@@ -8,18 +8,22 @@ import { useTranslation } from "@hooks/useTranslation";
 import RetirementReadinessDashboard from "@dashboards/economy/retirement-readiness";
 
 const RetirementReadiness: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-retirement-readiness"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-retirement-readiness:header")}
+        description={t("dashboard-retirement-readiness:description")}
+        keywords={""}
+      />
       <RetirementReadinessDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-retirement-readiness"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {
