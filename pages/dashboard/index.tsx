@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
   };
 
   Object.values(data.dashboards_all.data.en).map((category: any) => {
-    category.map((dashboard: any) => {
+    category.map((dashboard: { agency: string }) => {
       sources["en"].indexOf(dashboard.agency) === -1 && sources["en"].push(dashboard.agency);
     });
   });
