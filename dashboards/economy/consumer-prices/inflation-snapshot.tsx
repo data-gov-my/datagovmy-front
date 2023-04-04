@@ -10,7 +10,7 @@ import { SHORT_LANG } from "@lib/constants";
 import type { ChartDataset } from "chart.js";
 import { useTranslation } from "@hooks/useTranslation";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useMemo } from "react";
 
 /**
  * Consumer Prices (CPI) - Inflation Snapshot Section
@@ -82,7 +82,7 @@ const InflationSnapshot: FunctionComponent = ({}) => {
     true
   );
 
-  const activeSnapshot = useCallback<() => ChartDataset<"scatter", any[]>[]>(() => {
+  const activeSnapshot = useMemo<ChartDataset<"scatter", any[]>[]>(() => {
     if (!data.granular_type) return [];
 
     return (data[`snapshot_options_${data.granular_type.value}`] ?? []).map(
@@ -182,7 +182,7 @@ const InflationSnapshot: FunctionComponent = ({}) => {
       </div>
       <Scatter
         className="mx-auto aspect-square w-full lg:w-3/4 xl:w-1/2"
-        data={{ datasets: activeSnapshot() }}
+        data={activeSnapshot}
         unitY="%"
         titleX={data.x_axis.label}
         titleY={data.y_axis.label}

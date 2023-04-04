@@ -29,7 +29,7 @@ const Empty = dynamic(() => import("@components/Chart/Empty"), { ssr: false });
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const OSMapWrapper = dynamic(() => import("@components/OSMapWrapper"), { ssr: false });
+const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
 
 interface BloodDonationDashboardProps {
   last_updated: number;
@@ -227,7 +227,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
   const section5right = (
     <>
-      <OSMapWrapper
+      <MapPlot
         className="h-full w-full rounded-r"
         zoom={data.zoom_facility ? 9 : 6}
         position={
