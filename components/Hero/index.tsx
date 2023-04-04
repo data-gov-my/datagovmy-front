@@ -72,7 +72,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                 {t(category[0])}
               </span>
             )}
-            <div className="absolute right-0 top-0">{agencyBadge}</div>
+            <div className="absolute right-0 top-0 hidden lg:block">{agencyBadge}</div>
           </div>
 
           {(header || description) && (
@@ -87,7 +87,7 @@ const Hero: FunctionComponent<HeroProps> = ({
               )}
             </div>
           )}
-
+          <div className="relative py-6 lg:hidden">{agencyBadge}</div>
           {last_updated && (
             <p className="text-sm text-dim dark:text-white">
               {t("common.last_updated", {
