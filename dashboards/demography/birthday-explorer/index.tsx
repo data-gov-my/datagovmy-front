@@ -232,6 +232,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   return (
     <>
       <Hero
+        className="px-3 xl:px-20"
         background="blue"
         category={[t("nav.megamenu.categories.demography"), "text-primary"]}
         header={[t("dashboard-birthday-explorer:header")]}
@@ -244,7 +245,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
           />
         }
       />
-      <Container className="min-h-screen">
+      <Container className="min-h-screen px-3 xl:px-20">
         <Section title={t("dashboard-birthday-explorer:section_1.title")}>
           <div className="flex flex-col gap-8 rounded-xl lg:flex-row">
             <Card
