@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef } from "react";
+import { ForwardedRef, FunctionComponent, useRef } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import {
   Chart as ChartJS,
@@ -14,8 +14,9 @@ import { numFormat, standardDeviation } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import { useTheme } from "next-themes";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
-type ScatterData = ChartDataset<"scatter", any[]>;
+export type ScatterData = ChartDataset<"scatter", any[]>;
 
 interface ScatterProps extends ChartHeaderProps {
   className?: string;
@@ -32,6 +33,7 @@ interface ScatterProps extends ChartHeaderProps {
   enableLegend?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  _ref?: ForwardedRef<ChartJSOrUndefined<"scatter", any[], unknown>>;
 }
 
 const Scatter: FunctionComponent<ScatterProps> = ({
@@ -53,10 +55,10 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   minX,
   minY,
   maxY,
+  _ref,
 }) => {
   ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, ChartTooltip);
   const { theme } = useTheme();
-  const ref = useRef(null);
 
   const display = (
     value: number,
@@ -229,8 +231,8 @@ const Scatter: FunctionComponent<ScatterProps> = ({
         ...config,
         type: "line" as "scatter", // hack to avoid TS type mismatch error
         data: [
-          getTrendLinePoint(data[0].x, slope, y_intercept),
-          getTrendLinePoint(data[data.length - 1].x, slope, y_intercept),
+          calculatePoint(data[0].x, slope, y_intercept),
+          calculatePoint(data[data.length - 1].x, slope, y_intercept),
         ],
       };
     }
@@ -239,16 +241,16 @@ const Scatter: FunctionComponent<ScatterProps> = ({
     };
   };
 
-  function getTrendLinePoint(x: number, slope: number, intercept: number) {
+  const calculatePoint = (x: number, slope: number, intercept: number) => {
     return { x: x, y: slope * x + intercept };
-  }
+  };
 
   return (
     <div className="space-y-4">
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
       <div className={className}>
         <ScatterCanvas
-          ref={ref}
+          ref={_ref}
           data={{
             datasets: [
               ...data.map(({ label, data, ...rest }: ChartDataset<"scatter", any[]>) => ({
