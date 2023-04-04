@@ -24,7 +24,7 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
         description={[t("dashboard-peoples-income-initiative:description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Economy"}
+            agency={"Ministry of the Economy"}
             link="https://www.epu.gov.my/en"
             icon={<IPREPUIcon />}
           />
