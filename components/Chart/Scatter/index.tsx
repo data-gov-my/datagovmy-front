@@ -1,22 +1,25 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useRef } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import {
   Chart as ChartJS,
   CategoryScale,
+  LineElement,
   LinearScale,
   PointElement,
   Tooltip as ChartTooltip,
-  ChartData,
+  ChartDataset,
 } from "chart.js";
 import { Scatter as ScatterCanvas } from "react-chartjs-2";
-import { numFormat } from "@lib/helpers";
+import { numFormat, standardDeviation } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import { useTheme } from "next-themes";
 
+type ScatterData = ChartDataset<"scatter", any[]>;
+
 interface ScatterProps extends ChartHeaderProps {
   className?: string;
-  data?: ChartData<"scatter", any[], string | number>;
+  data?: ScatterData[];
   unitX?: string;
   unitY?: string;
   prefixY?: string;
@@ -25,13 +28,14 @@ interface ScatterProps extends ChartHeaderProps {
   maxY?: number;
   titleX?: string;
   titleY?: string;
+  enableRegression?: boolean;
   enableLegend?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
 }
 
 const Scatter: FunctionComponent<ScatterProps> = ({
-  className = "w-full h-full", // manage CSS here
+  className = "w-full h-full lg:h-[400px]", // manage CSS here
   menu,
   title,
   controls,
@@ -40,6 +44,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   unitY,
   prefixY,
   data = dummy,
+  enableRegression = false,
   enableLegend = false,
   enableGridX = true,
   enableGridY = true,
@@ -49,8 +54,9 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   minY,
   maxY,
 }) => {
-  ChartJS.register(CategoryScale, LinearScale, PointElement, ChartTooltip);
+  ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, ChartTooltip);
   const { theme } = useTheme();
+  const ref = useRef(null);
 
   const display = (
     value: number,
@@ -81,23 +87,23 @@ const Scatter: FunctionComponent<ScatterProps> = ({
         align: "start",
       },
       tooltip: {
-        external: externalTooltipHandler,
-        enabled: false,
+        // external: externalTooltipHandler,
+        enabled: true,
         mode: "nearest",
         bodyFont: {
           family: "Inter",
         },
-        callbacks: {
-          label: function (item) {
-            return JSON.stringify({
-              label: item.dataset.label,
-              titleX,
-              titleY,
-              x: display(item.parsed.x, "compact", [1, 1]),
-              y: display(item.parsed.y, "compact", [1, 1]),
-            });
-          },
-        },
+        // callbacks: {
+        //   label: function (item) {
+        //     return JSON.stringify({
+        //       label: item.dataset.label,
+        //       titleX,
+        //       titleY,
+        //       x: display(item.parsed.x, "compact", [1, 1]),
+        //       y: display(item.parsed.y, "compact", [1, 1]),
+        //     });
+        //   },
+        // },
       },
       crosshair: false,
       annotation: false,
@@ -162,11 +168,101 @@ const Scatter: FunctionComponent<ScatterProps> = ({
       },
     },
   };
+
+  /**
+   * Generate linear regression lines for the scatter plot.
+   * @param data ChartDataset<"scatter", any[]>
+   * @returns ChartDataset<"line", any[]>
+   *
+   * @tutorial yieldRegressionLine
+   * Formula: y = mx + b
+   * m = slope
+   * b = y-intercept
+   *
+   * Slope formula: m = r * sy/sx
+   * r = correlation coefficient
+   * sy = standard deviation for ys
+   * sx = standard deviation for xs
+   *
+   * Correlation coefficient formula:r = (n*xySum - xSum*ySum) / sqrt([n*xSquareSum - xSum^2] * [n*ySquareSum - ySum^2])
+   * n = data length
+   * xySum =
+   *
+   * Y-intercept formula: b = y_bar - m*x_bar
+   * y_bar = average y
+   * x_bar = average x
+   */
+  const yieldRegressionLine = (_data: ChartDataset<"scatter", any[]>) => {
+    const { fill: _, data, ...config } = _data;
+    let xSum = 0,
+      ySum = 0,
+      xySum = 0,
+      xSquare = 0,
+      ySquare = 0;
+
+    if (data?.length) {
+      data.forEach(datum => {
+        if (datum.y === null) return;
+        xySum += datum.x * datum.y;
+        xSum += datum.x;
+        ySum += datum.y;
+        xSquare += Math.pow(datum.x, 2);
+        ySquare += Math.pow(datum.y, 2);
+      });
+
+      // Finding coefficient correlation (r)
+      const r_num = xySum * data.length - xSum * ySum;
+      const r_den_left = data.length * xSquare - Math.pow(xSum, 2);
+      const r_den_right = data.length * ySquare - Math.pow(ySum, 2);
+      const r_den = Math.sqrt(r_den_left * r_den_right);
+      const r = r_num / r_den;
+
+      // Finding slope
+      const slope =
+        (r * standardDeviation(data.map(({ y }) => (y !== null ? y : 0)))) /
+        standardDeviation(data.map(({ x }) => x));
+
+      // Finding y-intercept
+      const y_intercept = ySum / data.length - (slope * xSum) / data.length;
+
+      return {
+        ...config,
+        type: "line" as "scatter", // hack to avoid TS type mismatch error
+        data: [
+          getTrendLinePoint(data[0].x, slope, y_intercept),
+          getTrendLinePoint(data[data.length - 1].x, slope, y_intercept),
+        ],
+      };
+    }
+    return {
+      data: [],
+    };
+  };
+
+  function getTrendLinePoint(x: number, slope: number, intercept: number) {
+    return { x: x, y: slope * x + intercept };
+  }
+
   return (
     <div className="space-y-4">
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
       <div className={className}>
-        <ScatterCanvas data={data} options={options} />
+        <ScatterCanvas
+          ref={ref}
+          data={{
+            datasets: [
+              ...data.map(({ label, data, ...rest }: ChartDataset<"scatter", any[]>) => ({
+                label,
+                data,
+                ...rest,
+              })),
+              ...(enableRegression
+                ? data.map((set: ChartDataset<"scatter", any>) => yieldRegressionLine(set))
+                : [{ data: [] }]),
+            ],
+          }}
+          options={options}
+        />
       </div>
     </div>
   );
@@ -316,24 +412,57 @@ const externalTooltipHandler = (context: { chart: any; tooltip: any }) => {
   tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
 };
 
-const dummy = {
-  labels: ["0-4", "5-10", "11-14"], // x-values
-  datasets: [
-    // grouped y-values
-    {
-      label: "Moving Average (MA)",
-      data: [1, 2, 3], // y-values
-      fill: true,
-      backgroundColor: "#000",
-    },
-    {
-      label: "Primary",
-      data: [4, 1, 7], // y-values
-      fill: true,
-      backgroundColor: "#a4a4a4",
-      stack: "primary",
-    },
-  ],
-};
+const dummy: ScatterData[] = [
+  {
+    label: "category 1", // label
+    data: [
+      {
+        x: 0,
+        y: 0,
+      },
+      {
+        x: 1,
+        y: 1,
+      },
+      {
+        x: 2,
+        y: 2,
+      },
+      {
+        x: 3,
+        y: 3,
+      },
+      {
+        x: 4,
+        y: 4,
+      },
+    ],
+  },
+  {
+    label: "category 2",
+    data: [
+      {
+        x: 0,
+        y: 4,
+      },
+      {
+        x: 1,
+        y: 3,
+      },
+      {
+        x: 2,
+        y: 2,
+      },
+      {
+        x: 3,
+        y: 1,
+      },
+      {
+        x: 4,
+        y: 0,
+      },
+    ],
+  },
+];
 
 export default Scatter;

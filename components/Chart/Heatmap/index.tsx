@@ -178,6 +178,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         },
       },
       crosshair: false,
+      annotation: false,
     },
     scales: scale(),
   };

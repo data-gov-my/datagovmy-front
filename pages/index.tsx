@@ -20,7 +20,6 @@ import dynamic from "next/dynamic";
 import { useEffect } from "react";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), { ssr: false });
 
 const Home: Page = ({
   highlights,
@@ -128,11 +127,6 @@ const Home: Page = ({
               </Tabs.Panel>
             ))}
           </Tabs>
-        </Section>
-
-        {/* Testing Ground */}
-        <Section title={"Testing Ground"}>
-          <Heatmap />
         </Section>
 
         <Section
