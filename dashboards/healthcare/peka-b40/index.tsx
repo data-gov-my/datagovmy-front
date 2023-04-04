@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { PHCorpIcon } from "@components/Icon/agency";
 
 /**
  * PekaB40 Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface PekaB40Props {}
 
 const PekaB40: FunctionComponent<PekaB40Props> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-peka-b40"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Healthcare"]}
-        header={["Peka B40"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        background="purple"
+        category={[t("nav.megamenu.categories.healthcare"), "text-[#7C3AED]"]}
+        header={[t("dashboard-peka-b40:header")]}
+        description={[t("dashboard-peka-b40:description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Health"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            agency={"ProtectHealth Corporation"}
+            link="https://protecthealth.com.my"
+            icon={<PHCorpIcon />}
           />
         }
       />

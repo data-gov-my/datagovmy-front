@@ -8,18 +8,25 @@ import { useTranslation } from "@hooks/useTranslation";
 import PeoplesIncomeInitiativeDashboard from "@dashboards/government/peoples-income-initiative";
 
 const PeoplesIncomeInitiative: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-peoples-income-initiative"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-peoples-income-initiative:header")}
+        description={t("dashboard-peoples-income-initiative:description")}
+        keywords={""}
+      />
       <PeoplesIncomeInitiativeDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, [
+    "common",
+    "dashboard-peoples-income-initiative",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

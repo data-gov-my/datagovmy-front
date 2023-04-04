@@ -8,18 +8,25 @@ import { useTranslation } from "@hooks/useTranslation";
 import HospitalBedUtilisationDashboard from "@dashboards/healthcare/hospital-bed-utilisation";
 
 const HospitalBedUtilisation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-hospital-bed-utilisation"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-hospital-bed-utilisation:header")}
+        description={t("dashboard-hospital-bed-utilisation:description")}
+        keywords={""}
+      />
       <HospitalBedUtilisationDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, [
+    "common",
+    "dashboard-hospital-bed-utilisation",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

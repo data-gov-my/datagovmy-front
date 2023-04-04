@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { BOMBAIcon } from "@components/Icon/agency";
 
 /**
  * FireandRescue Dashboard
@@ -12,19 +13,21 @@ import Container from "@components/Container";
 interface FireandRescueProps {}
 
 const FireandRescue: FunctionComponent<FireandRescueProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-fire-and-rescue"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Public Safety"]}
-        header={["Fire and Rescure"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        background="red"
+        category={[t("nav.megamenu.categories.public_safety"), "text-danger"]}
+        header={[t("dashboard-fire-and-rescue:header")]}
+        description={[t("dashboard-fire-and-rescue:description")]}
         agencyBadge={
-          <AgencyBadge agency={"BOMBA"} link="https://www.bnm.gov.my/publications/mhs" />
+          <AgencyBadge
+            agency={"Fire and Rescue Department (BOMBA)"}
+            link="https://www.bomba.gov.my/"
+            icon={<BOMBAIcon />}
+          />
         }
       />
       {/* Rest of page goes here */}

@@ -8,18 +8,25 @@ import { useTranslation } from "@hooks/useTranslation";
 import GovernmentSiteTrackerDashboard from "@dashboards/digitalisation/government-site-tracker";
 
 const GovernmentSiteTracker: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-government-site-tracker"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-government-site-tracker:header")}
+        description={t("dashboard-government-site-tracker:description")}
+        keywords={""}
+      />
       <GovernmentSiteTrackerDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, [
+    "common",
+    "dashboard-government-site-tracker",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

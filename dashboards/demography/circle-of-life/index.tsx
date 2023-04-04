@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { JPNIcon } from "@components/Icon/agency";
 
 /**
  * Election Explorer Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface CircleofLifeProps {}
 
 const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-circle-of-life"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Demography"]}
-        header={["Circle of Life"]}
-        description={[
-          "There are 4 major demographic milestones in a person's life - the day they are born, the day they get married (and possibly divorced), the day they have children, and the day they die. This dashboard tracks these 4 milestones for the Malaysian population, giving you a sweeping overview of the nation’s demographics. At what age do Malaysians get married? How many children do they have? How has life expectancy changed over the years? Jump in and find out more below!",
-        ]}
+        background="blue"
+        category={[t("nav.megamenu.categories.demography"), "text-primary dark:text-primary-dark"]}
+        header={[t("dashboard-circle-of-life:header")]}
+        description={[t("dashboard-circle-of-life:description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"National Registration Department"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            agency="Jabatan Pendaftaran Negara"
+            link="https://www.jpn.gov.my/en/"
+            icon={<JPNIcon />}
           />
         }
       />

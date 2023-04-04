@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { MAMPUIcon } from "@components/Icon/agency";
 
 /**
  * Government Site Tracker Dashboard
@@ -12,19 +13,20 @@ import Container from "@components/Container";
 interface GovernmentSiteTrackerProps {}
 
 const GovernmentSiteTracker: FunctionComponent<GovernmentSiteTrackerProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-government-site-tracker"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Digitalisation"]}
-        header={["Government Site Tracker"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        background="blue"
+        category={[
+          t("nav.megamenu.categories.digitalisation"),
+          "text-primary dark:text-primary-dark",
         ]}
+        header={[t("dashboard-government-site-tracker:header")]}
+        description={[t("dashboard-government-site-tracker:description")]}
         agencyBadge={
-          <AgencyBadge agency={"MAMPU"} link="https://www.bnm.gov.my/publications/mhs" />
+          <AgencyBadge agency={"MAMPU"} link="https://www.mampu.gov.my/" icon={<MAMPUIcon />} />
         }
       />
       {/* Rest of page goes here */}

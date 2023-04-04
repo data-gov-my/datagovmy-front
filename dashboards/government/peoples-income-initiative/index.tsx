@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { IPREPUIcon } from "@components/Icon/agency";
 
 /**
  * PeoplesIncomeInitiative Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface PeoplesIncomeInitiativeProps {}
 
 const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-peoples-income-initiative"]);
 
   return (
     <>
       <Hero
         background="gray"
-        category={["Government"]}
-        header={["People's Income Initiative"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        category={[t("nav.megamenu.categories.government_programs"), "text-black"]}
+        header={[t("dashboard-peoples-income-initiative:header")]}
+        description={[t("dashboard-peoples-income-initiative:description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Finance"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            agency={"Ministry of the Economy"}
+            link="https://www.epu.gov.my/en"
+            icon={<IPREPUIcon />}
           />
         }
       />
