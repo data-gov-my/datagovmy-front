@@ -17,7 +17,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
   return (
     <>
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
+        background="gray"
         category={["Education"]}
         header={["Sekolahku"]}
         description={[

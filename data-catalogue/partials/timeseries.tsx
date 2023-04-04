@@ -1,6 +1,5 @@
-import type { Periods } from "@components/Chart/Timeseries";
 import type { DownloadOptions } from "@lib/types";
-import { FunctionComponent, useCallback, useRef } from "react";
+import { FunctionComponent, useMemo, useRef } from "react";
 import { default as Slider, SliderRef } from "@components/Chart/Slider";
 import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
@@ -8,9 +7,8 @@ import { useSlice } from "@hooks/useSlice";
 import { useWatch } from "@hooks/useWatch";
 import { AKSARA_COLOR, SHORT_PERIOD } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download } from "@lib/helpers";
+import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import canvasToSvg from "canvas2svg";
 import { track } from "@lib/mixpanel";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
@@ -68,7 +66,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   );
   const sliderRef = useRef<SliderRef>(null);
 
-  const availableDownloads = useCallback<() => DownloadOptions>(
+  const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
         {
@@ -78,16 +76,15 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           description: t("catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"), () =>
-              track("file_download", {
-                uid: dataset.meta.unique_id.concat("_png"),
-                type: "image",
-                id: dataset.meta.unique_id,
-                name_en: dataset.meta.en.title,
-                name_bm: dataset.meta.bm.title,
-                ext: "png",
-              })
-            );
+            download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name_en: dataset.meta.en.title,
+              name_bm: dataset.meta.bm.title,
+              ext: "png",
+            });
           },
         },
         {
@@ -97,21 +94,21 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           description: t("catalogue.vector.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            let canvas = canvasToSvg(data.ctx!.canvas.width, data.ctx!.canvas.height);
-            canvas.drawImage(data.ctx!.canvas, 0, 0);
-            download(
-              "data:svg+xml;utf8,".concat(canvas.getSerializedSvg()),
-              dataset.meta.unique_id.concat(".svg"),
-              () =>
+            exportAs("svg", data.ctx!.canvas)
+              .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
+              .then(() =>
                 track("file_download", {
                   uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
                   id: dataset.meta.unique_id,
                   name_en: dataset.meta.en.title,
                   name_bm: dataset.meta.bm.title,
-                  type: "image",
                   ext: "svg",
                 })
-            );
+              )
+              .catch(e => {
+                console.error(e);
+              });
           },
         },
       ],
@@ -140,7 +137,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   useWatch(() => {
     setData("minmax", [0, dataset.chart.x.length - 1]);
     sliderRef.current && sliderRef.current.reset();
-    onDownload && onDownload(availableDownloads());
+    if (onDownload) onDownload(availableDownloads);
   }, [filter.range, dataset.chart.x, data.ctx]);
 
   return (

@@ -1,13 +1,11 @@
 import type { ChoroplethColors, DownloadOptions } from "@lib/types";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
-import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download } from "@lib/helpers";
+import { download, exportAs } from "@lib/helpers";
 import { track } from "mixpanel-browser";
-import { DISTRICTS, PARLIMENS, STATES, DUNS } from "@lib/schema/kawasanku";
-import { OptionType } from "@components/types";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
   ssr: false,
@@ -50,69 +48,68 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   onDownload,
 }) => {
   const { t } = useTranslation();
-  const [mounted, setMounted] = useState<boolean>(false);
-  const { onRefChange, svg, png } = useExport(mounted);
+  const [ctx, setCtx] = useState<ChartJSOrUndefined<"choropleth", any[], unknown> | null>(null);
 
   useEffect(() => {
-    onDownload && onDownload(availableDownloads());
-  }, [svg, png, mounted]);
+    if (onDownload) onDownload(availableDownloads);
+  }, [ctx]);
 
-  const yieldDummy = () => {
-    const geojson_dict: Record<typeof config.geojson, any> = {
-      state: STATES,
-      dun: DUNS,
-      parlimen: PARLIMENS,
-      district: DISTRICTS,
-    };
+  //   const yieldDummy = () => {
+  //     const geojson_dict: Record<typeof config.geojson, any> = {
+  //       state: STATES,
+  //       dun: DUNS,
+  //       parlimen: PARLIMENS,
+  //       district: DISTRICTS,
+  //     };
 
-    return Object.values(geojson_dict[config.geojson])
-      .flat()
-      .map(item => ({ id: (item as unknown as OptionType).label, value: -1.1 }));
-  };
+  //     return Object.values(geojson_dict[config.geojson])
+  //       .flat()
+  //       .map(item => ({ id: (item as unknown as OptionType).label, value: -1.1 }));
+  //   };
 
-  const availableDownloads = useCallback(
+  const availableDownloads = useMemo(
     () => ({
       chart: [
         {
           key: "png",
-          image: png,
+          image: ctx && ctx.toBase64Image("png", 1),
           title: t("catalogue.image.title"),
           description: t("catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (png) {
-              download(png, dataset.meta.unique_id.concat(".png"), () =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_png"),
-                  id: dataset.meta.unique_id,
-                  ext: "svg",
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  type: "image",
-                })
-              );
-            }
+            download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name_en: dataset.meta.en.title,
+              name_bm: dataset.meta.bm.title,
+              ext: "png",
+            });
           },
         },
         {
           key: "svg",
-          image: png,
+          image: ctx && ctx.toBase64Image("png", 1),
           title: t("catalogue.vector.title"),
           description: t("catalogue.vector.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (svg) {
-              download(svg, dataset.meta.unique_id.concat(".svg"), () =>
+            exportAs("svg", ctx!.canvas)
+              .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
+              .then(() =>
                 track("file_download", {
                   uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
                   id: dataset.meta.unique_id,
-                  ext: "svg",
                   name_en: dataset.meta.en.title,
                   name_bm: dataset.meta.bm.title,
-                  type: "image",
+                  ext: "svg",
                 })
-              );
-            }
+              )
+              .catch(e => {
+                console.error(e);
+              });
           },
         },
       ],
@@ -127,19 +124,15 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
         },
       ],
     }),
-    [mounted, svg, png]
+    [ctx]
   );
 
   return (
-    <>
-      <div ref={onRefChange}>
-        <Choropleth
-          className="h-[350px] w-full lg:h-[600px]"
-          type={config.geojson}
-          onReady={e => setMounted(e)}
-        />
-      </div>
-    </>
+    <Choropleth
+      _ref={_ref => setCtx(_ref)}
+      className="h-[350px] w-full lg:h-[600px]"
+      type={config.geojson}
+    />
   );
 };
 

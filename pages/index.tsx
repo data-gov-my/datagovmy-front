@@ -83,7 +83,7 @@ const Home: Page = ({
       <Metadata keywords={"opendosm data negara inflasi"} />
 
       <Hero
-        background="bg-gradient-radial border-b dark:border-zinc-800 from-white to-background dark:from-outlineHover-dark dark:to-black"
+        background="gray"
         category={[t("home.category"), "text-primary dark:text-primary-dark"]}
         header={[t("home.title")]}
         description={
