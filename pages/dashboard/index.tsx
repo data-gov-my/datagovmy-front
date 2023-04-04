@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
     });
   });
 
-  Object.values(data.dashboards_all.data.en).map((category: any) => {
+  Object.values(data.dashboards_all.data.bm).map((category: any) => {
     category.map((dashboard: { agency: string }) => {
       sources["bm"].indexOf(dashboard.agency) === -1 && sources["bm"].push(dashboard.agency);
     });
