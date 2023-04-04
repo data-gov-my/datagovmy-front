@@ -37,7 +37,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
       <Popover className="relative">
         <Popover.Button
           className={[
-            "relative flex w-full flex-col items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:border-washed-dark dark:bg-black lg:w-fit lg:flex-row lg:items-center",
+            "relative flex w-full flex-row items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:border-washed-dark dark:bg-black lg:w-fit lg:items-center",
             className,
             disabled
               ? "pointer-events-none bg-outline text-dim"

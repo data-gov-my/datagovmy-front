@@ -311,8 +311,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
             <div className="basis-2/3">
               {data.queryBday ? (
                 !data.loading ? (
-                  <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline dark:border-washed-dark lg:flex-row lg:pl-8">
-                    <Card className="my-0 flex h-fit w-full basis-1/3 flex-col self-center rounded-t-xl border border-outline bg-background px-4 py-8 dark:border-washed-dark dark:bg-washed-dark lg:my-8 lg:rounded-xl lg:py-16">
+                  <Card className="flex h-full flex-col gap-6 rounded-xl border border-outline py-8 dark:border-washed-dark lg:flex-row lg:pl-8">
+                    <Card className="my-0 flex h-auto w-full basis-1/3 flex-col self-center rounded-t-xl border border-outline bg-background px-4 py-8 dark:border-washed-dark dark:bg-washed-dark lg:rounded-xl lg:py-16">
                       <CakeIcon className="mx-auto h-10 w-10 text-primary" />
                       <div className="mx-auto mt-4 text-center text-lg font-bold text-black dark:text-white">
                         {new Date(data.queryBday).toLocaleDateString(i18n.language, options)}
@@ -325,7 +325,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                         })}
                       </div>
                     </Card>
-                    <div className="flex basis-2/3 flex-col gap-3 self-center px-4 pb-4 text-lg font-bold lg:pt-4 lg:pl-0 lg:pr-8">
+                    <div className="flex h-auto basis-2/3 flex-col gap-3 self-center px-4 pb-4 text-lg font-bold lg:pt-4 lg:pl-0 lg:pr-8">
                       <div className=" text-black dark:text-white">
                         {t("dashboard-birthday-explorer:section_1.info1", {
                           count: birthsOnBirthDay,
@@ -362,27 +362,36 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           {t("dashboard-birthday-explorer:section_1.popularity", {
                             count: data.y_day.length === 366 ? 366 : 365,
                             context:
-                              data.rank === data.y_day.length
-                                ? "least"
-                                : data.rank === 1
-                                ? "first"
+                              data.rank === data.y_day.length || data.rank === 1
+                                ? "without"
                                 : "most",
                           })}
-                          {t("dashboard-birthday-explorer:section_1.year_popular", {
-                            count: new Date(data.year_popular).getDate(),
-                            ordinal: true,
-                            month: new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(
-                              new Date(data.year_popular)
-                            ),
+                          {data.rank === 1
+                            ? ""
+                            : t("dashboard-birthday-explorer:section_1.popular", {
+                                context: data.rank === data.y_day.length && "while",
+                              })}
+                          {data.rank === 1
+                            ? ""
+                            : t("dashboard-birthday-explorer:section_1.most_popular", {
+                                count: new Date(data.year_popular).getDate(),
+                                ordinal: true,
+                                month: new Intl.DateTimeFormat(i18n.language, {
+                                  month: "long",
+                                }).format(new Date(data.year_popular)),
+                              })}
+                          {t("dashboard-birthday-explorer:section_1.rare", {
+                            context: data.rank === data.y_day.length && "none",
                           })}
-                          {t("dashboard-birthday-explorer:section_1.rare")}
-                          {t("dashboard-birthday-explorer:section_1.year_rare", {
-                            count: new Date(data.year_rare).getDate(),
-                            ordinal: true,
-                            month: new Intl.DateTimeFormat(i18n.language, { month: "long" }).format(
-                              new Date(data.year_rare)
-                            ),
-                          })}
+                          {data.rank === data.y_day.length
+                            ? ""
+                            : t("dashboard-birthday-explorer:section_1.most_rare", {
+                                count: new Date(data.year_rare).getDate(),
+                                ordinal: true,
+                                month: new Intl.DateTimeFormat(i18n.language, {
+                                  month: "long",
+                                }).format(new Date(data.year_rare)),
+                              })}
                         </p>
                       </div>
                       <p className="font-medium">
@@ -431,88 +440,12 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
           }
           date={timeseries.data_as_of}
         >
-          {/* Mobile */}
-          <div className="block xl:hidden">
-            <Modal
-              trigger={open => (
-                <Button
-                  onClick={open}
-                  className="mr-3 block self-center border border-outline px-3 py-1.5 shadow-sm dark:border-washed-dark"
-                >
-                  <span>{t("catalogue.filter")}</span>
-                  <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-white dark:text-black"></span>
-                </Button>
-              )}
-              title={
-                <Label
-                  label={t("catalogue.filter") + ":"}
-                  className="block text-sm font-medium text-black dark:text-white"
-                />
-              }
-              fullScreen
-            >
-              {close => (
-                <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28 dark:divide-outlineHover-dark">
-                  <Radio
-                    label={t("catalogue.period")}
-                    name="period"
-                    className="flex flex-wrap gap-4 px-1 pt-2"
-                    options={filterPeriods}
-                    value={data.period}
-                    onChange={e => {
-                      setData("period", e);
-                      e.value === "MONTH"
-                        ? setData("groupByDay", false)
-                        : setData("groupByDay", true);
-                    }}
-                  />
-                  <div className="grid grid-cols-2 gap-4">
-                    <Dropdown
-                      width="w-full"
-                      label={t("catalogue.begin")}
-                      sublabel={t("catalogue.begin") + ":"}
-                      options={filterYears(startYear, endYear)}
-                      selected={data.begin}
-                      placeholder={data.begin}
-                      onChange={b => setData("begin", b.value)}
-                    />
-                    <Dropdown
-                      label={t("catalogue.end")}
-                      sublabel={t("catalogue.end") + ":"}
-                      width="w-full"
-                      disabled={!data.begin}
-                      options={filterYears(startYear, endYear)}
-                      selected={data.end}
-                      placeholder={data.end}
-                      onChange={e => setData("end", e.value)}
-                    />
-                  </div>
-                  <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2 dark:bg-black">
-                    <Button
-                      className="btn btn-primary w-full justify-center"
-                      disabled={data.begin === "1923" && data.end === "2017"}
-                      onClick={reset}
-                    >
-                      {t("common.reset")}
-                    </Button>
-                    <Button
-                      className="btn w-full justify-center"
-                      icon={<XMarkIcon className="h-4 w-4" />}
-                      onClick={close}
-                    >
-                      {t("common.close")}
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </Modal>
-          </div>
-
           {/* Desktop */}
-          <div className="hidden gap-2 pb-2 xl:flex">
+          <div className="flex justify-start gap-2 pb-2">
             <Dropdown
               className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
               anchor={"left"}
+              width={"w-fit"}
               options={filterPeriods}
               placeholder={t("catalogue.period")}
               selected={data.period}
