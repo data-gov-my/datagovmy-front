@@ -1,7 +1,7 @@
 import { Color, useColor } from "@hooks/useColor";
 import { MapControl, MapControlRef } from "@hooks/useMap";
 import { useTranslation } from "@hooks/useTranslation";
-import { numFormat } from "@lib/helpers";
+import { minMax, numFormat } from "@lib/helpers";
 import type { FeatureCollection } from "geojson";
 import { LatLng, LatLngBounds, LatLngExpression, LatLngTuple } from "leaflet";
 import { useTheme } from "next-themes";
@@ -63,23 +63,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   const { t } = useTranslation();
   const ref = useRef<MapControlRef>(null);
   const [choromap, setChoromap] = useState<FeatureCollection | undefined>(undefined);
-
-  const [min, max] = useMemo<[number, number]>(() => {
-    let min: number = data.values[0];
-    let max: number = data.values[0];
-    for (let num of data.values) {
-      if (num !== null) {
-        if (num < min) {
-          min = num;
-        }
-        if (num > max) {
-          max = num;
-        }
-      }
-    }
-
-    return [min, max];
-  }, [data]);
+  const [min, max] = minMax(data.values);
 
   const { interpolate } = useColor(color, [min, max]);
 
@@ -181,16 +165,5 @@ const dummyData = {
   ],
   values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
 };
-
-const dummyMarker: MarkerProp[] = [
-  {
-    position: [51.505, -0.09],
-    name: "A pretty CSS3 popup. <br> Easily customizable.",
-  },
-  {
-    position: [51.51, -0.1],
-    name: "Another pretty CSS3 popup. <br> Easily customizable.",
-  },
-];
 
 export default GeoChoropleth;
