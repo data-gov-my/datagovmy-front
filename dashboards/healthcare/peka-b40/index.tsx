@@ -34,7 +34,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
   const isMobile = windowWidth < BREAKPOINTS.MD;
   const currentState = (router.query.state as string) ?? "mys";
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
@@ -84,7 +84,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
               datasets: [
                 {
                   type: "line",
-                  data: coordinate.daily,
+                  data: coordinate.line,
                   label: t("dashboard-peka-b40:screening"),
                   borderColor: "#7C3AED",
                   borderWidth: 1.5,
