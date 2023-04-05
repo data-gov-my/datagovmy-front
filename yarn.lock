@@ -1317,23 +1317,23 @@
   integrity sha512-HQZo6gfx1D0+DU3nWlNLD5iA6Ef4JAXh0LeD8lOGrJwEDBwwJNKQza6WoXhhY1uQrxOuU8ROxV7CqiQV4CoiLw==
 
 "@tanstack/match-sorter-utils@^8.1.1":
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.1.1.tgz#895f407813254a46082a6bbafad9b39b943dc834"
-  integrity sha512-IdmEekEYxQsoLOR0XQyw3jD1GujBpRRYaGJYQUw1eOT1eUugWxdc7jomh1VQ1EKHcdwDLpLaCz/8y4KraU4T9A==
+  version "8.8.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.8.4.tgz#0b2864d8b7bac06a9f84cb903d405852cc40a457"
+  integrity sha512-rKH8LjZiszWEvmi01NR72QWZ8m4xmXre0OOwlRGnjU01Eqz/QnN+cqpty2PJ0efHblq09+KilvyR7lsbzmXVEw==
   dependencies:
     remove-accents "0.4.2"
 
-"@tanstack/react-table@^8.5.2":
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.5.2.tgz#1e547649b8f057eddbe769b04612914a2efa5d09"
-  integrity sha512-CbNOay5FZHjU5EKiqik+Q8/gkUJfzH07KzYnnpGyqbfeocGZZckDblw7YwGMQ5/8Y0jgmobTYrMSqd27wtPdrA==
+"@tanstack/react-table@^8.8.5":
+  version "8.8.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.8.5.tgz#d345fd855bb8067cd32b7a9b5231bdefd9cbde55"
+  integrity sha512-g/t21E/ICHvaCOJOhsDNr5QaB/6aDQEHFbx/YliwwU/CJThMqG+dS28vnToIBV/5MBgpeXoGRi2waDJVJlZrtg==
   dependencies:
-    "@tanstack/table-core" "8.5.2"
+    "@tanstack/table-core" "8.8.5"
 
-"@tanstack/table-core@8.5.2":
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.5.2.tgz#097d88131bdf72eca0d4554270922e250e944a92"
-  integrity sha512-uhmhqeSNL2un0ssO5fZFtuwgvloBZdc2NFu8Rodzp4uPc1LfEWPhvrfoG9/L7FLRHC2ImlkmQgpVOakNZk9zgQ==
+"@tanstack/table-core@8.8.5":
+  version "8.8.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.8.5.tgz#4d75b452a9989a273174df1b9249157292a15bd5"
+  integrity sha512-Xnwa1qxpgvSW7ozLiexmKp2PIYcLBiY/IizbdGriYCL6OOHuZ9baRhrrH51zjyz+61ly6K59rmt6AI/3RR+97Q==
 
 "@types/d3-geo@^3.0.2":
   version "3.0.3"
