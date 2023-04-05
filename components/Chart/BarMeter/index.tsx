@@ -1,7 +1,7 @@
 import { FunctionComponent, useMemo } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import { CountryAndStates } from "@lib/constants";
-import { minMax, maxBy, numFormat } from "@lib/helpers";
+import { limitMax, maxBy, numFormat } from "@lib/helpers";
 import Image from "next/image";
 
 interface BarMeterProps extends ChartHeaderProps {
@@ -43,7 +43,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
     return max;
   };
   const percentFill = (value: number): string => {
-    return `${minMax((value / maximum()) * 100)}%`;
+    return `${limitMax((value / maximum()) * 100)}%`;
   };
 
   const _data = useMemo(() => {

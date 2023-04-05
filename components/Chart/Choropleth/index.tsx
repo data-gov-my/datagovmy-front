@@ -86,9 +86,8 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
         },
         callbacks: {
           label: function (item: any) {
-            //   if (!item.raw.feature.properties[type]) return "";
-            //   if (!item.raw.value)
-            //     return `${item.raw.feature.properties[type]}: ${t("common.no_data")}`;
+            if (!item.raw.feature.properties[type]) return "";
+            if (!item.raw.value) return `${item.raw.feature.properties[type]}: No data`;
             return `${item.raw.feature.properties[type]}${`: ${prefix ?? ""}${numFormat(
               item.raw.value,
               "standard",
@@ -98,6 +97,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
         },
       },
       crosshair: false,
+      annotation: false,
     },
     scales: {
       xy: {
