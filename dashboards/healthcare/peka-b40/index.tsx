@@ -11,6 +11,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
 
 /**
  * PekaB40 Dashboard
@@ -39,7 +40,10 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
   const sliderRef = useRef<SliderRef>(null);
-
+  const sortedChoro = choropleth.data.sort(
+    (a: typeof choropleth.data, b: typeof choropleth.data) => b.data.perc - a.data.perc
+  );
+  const displayPercent = (percent: number) => `${percent.toFixed(2)}%`;
   return (
     <>
       <Hero
@@ -109,13 +113,44 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
         <Section>
           <LeftRightCard
             left={
-              <Section
-                title={t("dashboard-peka-b40:choro_header")}
-                date={choropleth.data_as_of}
-                className="gap-6 p-8"
-              >
-                <p className="text-dim">{t("dashboard-peka-b40:choro_description")}</p>
-              </Section>
+              <div className="flex h-full w-full flex-col space-y-6 p-8">
+                <div className="flex flex-col gap-2">
+                  <h4>{t("dashboard-peka-b40:choro_header")}</h4>
+                  <span className="text-sm text-dim">
+                    {t("common.data_of", { date: choropleth.data_as_of })}
+                  </span>
+                </div>
+                <div className="flex grow flex-col justify-between space-y-6">
+                  <p className="text-dim">{t("dashboard-peka-b40:choro_description")}</p>
+                  <div className="space-y-3 border-t pt-6">
+                    <p className="font-bold">{t("dashboard-peka-b40:choro_ranking")}</p>
+                    <div className="flex space-x-3">
+                      <div className="font-medium text-dim">#1</div>
+                      <div className="grow">{CountryAndStates[sortedChoro[0].state]}</div>
+                      <div className="font-bold text-[#7C3AED]">
+                        {displayPercent(sortedChoro[0].data.perc)}
+                      </div>
+                      <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
+                    </div>
+                    <div className="flex space-x-3">
+                      <div className="font-medium text-dim">#2</div>
+                      <div className="grow">{CountryAndStates[sortedChoro[1].state]}</div>
+                      <div className="font-bold text-[#7C3AED]">
+                        {displayPercent(sortedChoro[1].data.perc)}
+                      </div>
+                      <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
+                    </div>
+                    <div className="flex space-x-3">
+                      <div className="font-medium text-dim">#3</div>
+                      <div className="grow">{CountryAndStates[sortedChoro[2].state]}</div>
+                      <div className="font-bold text-[#7C3AED]">
+                        {displayPercent(sortedChoro[2].data.perc)}
+                      </div>
+                      <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             }
             right={
               <Choropleth
