@@ -21,6 +21,14 @@ const nextConfig = {
   i18n,
   reactStrictMode: true,
   swcMinify: true,
+  async rewrites() {
+    return [
+      {
+        source: "/lib.min.js",
+        destination: "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js",
+      },
+    ];
+  },
 };
 
 module.exports = () => {

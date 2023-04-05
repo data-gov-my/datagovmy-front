@@ -7,7 +7,6 @@ import config from "@config/mixpanel";
  * @param prop Object
  */
 export const track = (event: EventType, prop?: Record<string, any>): void => {
-  if (!config.id) return;
   window.mixpanel.track(event, prop);
 };
 
@@ -15,7 +14,6 @@ export const track = (event: EventType, prop?: Record<string, any>): void => {
  * Mixpanel track session period.
  */
 export const init_session = (): void => {
-  if (!config.id) return;
   window.mixpanel.time_event("page_view");
 };
 

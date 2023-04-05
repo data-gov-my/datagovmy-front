@@ -20,23 +20,22 @@ function App({ Component, pageProps }: AppPropsLayout) {
 
   // Mixpanel initialisation
   useEffect(() => {
-    window.mixpanel.init(
-      mixpanelConfig.token,
-      { debug: process.env.NODE_ENV === "development" },
-      mixpanelConfig.name
-    );
+    window.mixpanel.init(mixpanelConfig.token, {
+      debug: true,
+      api_host: "https://api.mixpanel.com",
+    });
   }, []);
 
   useEffect(() => {
     // trigger page view event for client-side navigation
-    // const handleRouteChange = (url: string) => {
-    //   ga_track(url);
-    //   init_session();
-    // };
-    // router.events.on("routeChangeComplete", handleRouteChange);
-    // return () => {
-    //   router.events.off("routeChangeComplete", handleRouteChange);
-    // };
+    const handleRouteChange = (url: string) => {
+      //   ga_track(url);
+      //   init_session();
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
   }, [router.events]);
 
   return (
