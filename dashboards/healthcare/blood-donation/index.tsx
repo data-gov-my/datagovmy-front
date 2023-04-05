@@ -282,8 +282,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         >
           <Timeseries
             className="h-[350px] w-full"
-            title={t("dashboard-blood-donation:combine_title")}
-            state={currentState}
+            title={t("dashboard-blood-donation:combine_title", {
+              state: CountryAndStates[currentState],
+            })}
+            // state={currentState}
             interval="auto"
             data={{
               labels: coordinate.x,
@@ -318,8 +320,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
         {/* A breakdown of donations by key variables */}
         <Section
-          title={t("dashboard-blood-donation:barmeter_header")}
-          description={t("dashboard-blood-donation:barmeter_description", {
+          title={t("dashboard-blood-donation:barmeter_header", {
             state: CountryAndStates[currentState],
           })}
           menu={
@@ -344,7 +345,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       <BarMeter
                         title={t("dashboard-blood-donation:barmeter1_title")}
                         className="col-span-2"
-                        state={currentState}
                         data={data.blood_group}
                         layout="horizontal"
                         unit="%"
@@ -355,7 +355,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       <BarMeter
                         title={t("dashboard-blood-donation:barmeter2_title")}
                         className="flex-col"
-                        state={currentState}
                         data={data.donation_type}
                         layout="horizontal"
                         unit="%"
@@ -364,7 +363,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       <BarMeter
                         title={t("dashboard-blood-donation:barmeter3_title")}
                         className="flex-col"
-                        state={currentState}
                         data={data.location}
                         layout="horizontal"
                         unit="%"
@@ -373,7 +371,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       <BarMeter
                         title={t("dashboard-blood-donation:barmeter4_title")}
                         className="flex-col"
-                        state={currentState}
                         data={data.donation_regularity}
                         layout="horizontal"
                         unit="%"
@@ -382,7 +379,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       <BarMeter
                         title={t("dashboard-blood-donation:barmeter5_title")}
                         className="flex-col"
-                        state={currentState}
                         data={data.social_group}
                         layout="horizontal"
                         unit="%"
@@ -406,7 +402,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         >
           <div className="grid w-full grid-cols-1 gap-12 xl:grid-cols-2">
             <div>
-              <Tabs title={t("dashboard-blood-donation:bar1_title")} state={currentState}>
+              <Tabs title={t("dashboard-blood-donation:bar1_title")}>
                 <Panel name={t("dashboard-blood-donation:annual")}>
                   <Bar
                     className="h-[250px]"
@@ -446,7 +442,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               </Tabs>
             </div>
             <div>
-              <Tabs title={t("dashboard-blood-donation:bar2_title")} state={currentState}>
+              <Tabs title={t("dashboard-blood-donation:bar2_title")}>
                 {/* //menu={<MenuDropdown />} */}
                 <Panel name={t("dashboard-blood-donation:year")}>
                   <Bar
