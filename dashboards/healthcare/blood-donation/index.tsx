@@ -141,120 +141,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     </div>
   );
 
-  const section5left = (
-    <div className="grid gap-12 p-8">
-      <div className="w-full space-y-3">
-        <div className="flex flex-wrap justify-between">
-          <div className="flex flex-row items-center gap-4">
-            <MapPinIcon className="h-5 w-auto text-dim" />
-            <h4>{t("common.zoom")}</h4>
-          </div>
-          <Button
-            onClick={handleClearSelection}
-            disabled={!data.zoom_state}
-            icon={<ArrowPathIcon className="h-4 w-4" />}
-          >
-            {t("common.clear_selection")}
-          </Button>
-        </div>
-        <StateDropdown
-          currentState={data.zoom_state}
-          onChange={selected => {
-            setData("zoom_facility", undefined);
-            setData("zoom_state", selected.value);
-          }}
-          exclude={["lbn", "pls", "pjy", "mys"]}
-          width="w-full"
-        />
-        <Dropdown
-          placeholder={t("placeholder.facility")}
-          onChange={item => setData("zoom_facility", item)}
-          selected={data.zoom_facility}
-          disabled={!data.zoom_state}
-          options={
-            data.zoom_state !== undefined
-              ? Object.keys(map_facility.data[data.zoom_state]).map((facility, index) => {
-                  return {
-                    label: facility,
-                    value: index,
-                  };
-                })
-              : []
-          }
-          width="w-full"
-        />
-        {timeseries_facility.data?.[data.zoom_state]?.[data.zoom_facility?.label] ? (
-          <div className="w-full pt-4">
-            <Timeseries
-              className="h-[250px] w-full pt-4"
-              title={t("dashboard-blood-donation:bar3_title")}
-              state={
-                <p className="pt-4 text-sm text-dim">
-                  {t("common.data_for", {
-                    state: `${data.zoom_facility?.label}, ${CountryAndStates[data.zoom_state]}`,
-                  })}
-                </p>
-              }
-              //menu={<MenuDropdown />}
-              data={{
-                labels: timeseries_facility.data[data.zoom_state!][data.zoom_facility.label].x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: `${t("dashboard-blood-donation:bar3_tooltips1")}`,
-                    data: timeseries_facility.data[data.zoom_state!][data.zoom_facility.label].line,
-                    borderWidth: 1.5,
-                    fill: true,
-                    backgroundColor: AKSARA_COLOR.DANGER_H,
-                    borderColor: AKSARA_COLOR.DANGER,
-                  },
-                ],
-              }}
-              enableGridX={false}
-            />
-          </div>
-        ) : (
-          <Empty
-            title={t("dashboard-blood-donation:bar3_title")}
-            type="timeseries"
-            className="h-[250px] w-full pt-10"
-            placeholder={t("placeholder.facility")}
-          />
-        )}
-      </div>
-    </div>
-  );
-
-  const section5right = (
-    <>
-      <MapPlot
-        className="h-full w-full rounded-r"
-        zoom={data.zoom_facility ? 9 : 6}
-        position={
-          data.zoom_facility && data.zoom_state
-            ? [
-                map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
-                map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
-              ]
-            : undefined
-        }
-        markers={
-          data.zoom_facility && data.zoom_state
-            ? [
-                {
-                  name: `${data.zoom_facility.label}, ${CountryAndStates[data.zoom_state]}`,
-                  position: [
-                    map_facility.data[data.zoom_state][data.zoom_facility.label].lat,
-                    map_facility.data[data.zoom_state][data.zoom_facility.label].lon,
-                  ],
-                },
-              ]
-            : []
-        }
-      />
-    </>
-  );
-
   return (
     <>
       <Hero
@@ -483,15 +369,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               </Tabs>
             </div>
           </div>
-        </Section>
-
-        {/* How is this data collected? */}
-        <Section
-          title={t("dashboard-blood-donation:map_header")}
-          description={t("dashboard-blood-donation:map_description")}
-          className="py-12"
-        >
-          <LeftRightCard left={section5left} right={section5right} />
         </Section>
       </Container>
     </>
