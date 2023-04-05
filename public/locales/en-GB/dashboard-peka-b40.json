@@ -6,5 +6,5 @@
     "timeseries_title": "{{ state }}: Daily Screenings",
     "choro_header": "How do screening rates differ across the country?",
     "choro_description": "This data shows the % of the population eligible for PeKa B40 screening in each state which has been screened at least once.",
-    "screening": "Screening"
+    "screening": "Screenings"
 }
