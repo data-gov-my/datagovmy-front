@@ -172,7 +172,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               state: CountryAndStates[currentState],
             })}
             // state={currentState}
-            interval="auto"
+            interval="day"
             data={{
               labels: coordinate.x,
               datasets: [
@@ -194,7 +194,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               type="range"
               value={data.minmax}
               data={timeseries_all.data.x}
-              period="year"
               onChange={e => setData("minmax", e)}
             />
           </div>
