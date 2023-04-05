@@ -1,4 +1,20 @@
 {
     "header": "Organ Donation",
-    "description": "The National Transplant Resource Centre has conducted Organ Donor Pledge registrations since 1997. However, some of the data was collected and recorded manually. The data shown here reflects records from 2009 which could be digitalised and consolidated with the new pledges collected via MySejahtera. MoH is committed to ensuring the delivery of comprehensive healthcare information to the rakyat."
+    "description": "The National Transplant Resource Centre has conducted Organ Donor Pledge registrations since 1997. However, some of the data was collected and recorded manually. The data shown here reflects records from 2009 which could be digitalised and consolidated with the new pledges collected via MySejahtera. MoH is committed to ensuring the delivery of comprehensive healthcare information to the rakyat.",
+    "timeseries_header": "What are the latest organ pledger trends in {{ state }}?",
+    "timeseries_description": "On 6 September 2022, a digital Organ Donor Pledge was launched on MySejahtera. The recent spike in pledges is attributable to this digitalisation effort.",
+    "timeseries_title": "{{ state }}: Daily Pledges",
+    "choro_header": "How do organ pledger rates differ across the country?",
+    "choro_description": "This data shows the % of the total population in each state which has pledged to donate their organs.",
+    "choro_ranking": "Ranking",
+    "bar_header": "How strong is new pledger recruitment in {{ state }}?",
+    "bar_description": "To meet Malaysia's healthcare needs, it is vital to recruit as many new pledgers as possible.",
+    "bar1_title": "New pledges",
+    "annual": "Annual",
+    "monthly": "Monthly",
+    "bar2_title": "New Pledges by Age Group",
+    "year": "Past 1 year",
+    "month": "Past 1 month",
+    "bar_tooltip": "New Pledges",
+    "donor": "Pledgers"
 }
