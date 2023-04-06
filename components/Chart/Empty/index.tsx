@@ -84,6 +84,7 @@ const Empty: FunctionComponent<EmptyProps> = ({
         intersect: false,
       },
       crosshair: false,
+      annotation: false,
     },
     scales: {
       x: {
