@@ -52,6 +52,9 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
     return numFormat(value, type, precision) + (unitY ?? "");
   };
 
+  /**
+   * @todo Potential performance issue. Refactor later
+   */
   const equimax = useMemo<number>(() => {
     let raw: number[] = [];
     data.datasets.forEach(item => {
