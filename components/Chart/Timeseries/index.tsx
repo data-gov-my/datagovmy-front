@@ -25,15 +25,15 @@ import {
   ChartTypeRegistry,
   Filler,
   BarController,
-  ChartDataset,
-  TickOptions,
-  TooltipOptions,
+  Scale,
+  Tick,
+  TooltipItem,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
 
 import { Chart } from "react-chartjs-2";
-import { chunkSplit, numFormat } from "@lib/helpers";
+import { numFormat } from "@lib/helpers";
 import "chartjs-adapter-luxon";
 import { ChartCrosshairOption } from "@lib/types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -78,9 +78,14 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableLegend?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
-  tickOptionsX?: TickOptions;
+  tickXCallback?: (
+    this: Scale,
+    tickValue: number | string,
+    index: number,
+    ticks: Tick[]
+  ) => string | string[] | number | number[] | null | undefined;
   gridOffsetX?: boolean;
-  tooltipCallback?: TooltipOptions;
+  tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
   displayNumFormat?: (
     value: number,
@@ -117,9 +122,9 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
       enableLegend = false,
       enableGridX = false,
       enableGridY = true,
-      tickOptionsX,
       gridOffsetX = true,
       tooltipCallback,
+      tickXCallback,
       beginZero = false,
       minY,
       maxY,
@@ -178,17 +183,18 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
             },
             mode: "index",
             intersect: false,
-            callbacks: tooltipCallback
-              ? tooltipCallback
-              : {
-                  label: function (item) {
+            callbacks: {
+              label: tooltipCallback
+                ? tooltipCallback
+                : function (item) {
                     return `${item.dataset.label as string}: ${
                       item.parsed.y !== undefined || item.parsed.y !== null
                         ? display(item.parsed.y, "standard", precision)
                         : "-"
                     }`;
                   },
-                },
+            },
+
             filter: function (tooltipItem) {
               return !!tooltipItem.dataset.label;
             },
@@ -298,18 +304,17 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
               borderWidth: 1,
               borderDash: [5, 10],
             },
-            ticks: tickOptionsX
-              ? tickOptionsX
-              : {
-                  major: {
-                    enabled: true,
-                  },
-                  minRotation: 0,
-                  maxRotation: 0,
-                  font: {
-                    family: "Inter",
-                  },
-                },
+            ticks: {
+              callback: tickXCallback,
+              major: {
+                enabled: false,
+              },
+              minRotation: 0,
+              maxRotation: 0,
+              font: {
+                family: "Inter",
+              },
+            },
             stacked: mode === "stacked",
           },
           y: {

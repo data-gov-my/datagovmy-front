@@ -229,8 +229,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   onKeyDown={e => {
                     if (e.key === "Enter") searchHandler();
                   }}
-                  isValidation={searchData.validation}
-                  validationText={searchData.validation}
+                  validation={searchData.validation}
                 />
                 <div className="">
                   <Button
@@ -384,8 +383,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         setCompareData("validation", false);
                       }
                     }}
-                    isValidation={compareData.validation}
-                    validationText={compareData.validation}
+                    validation={compareData.validation}
                   />
                   {compareData.names.length > 0 && (
                     <Chips

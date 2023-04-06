@@ -91,6 +91,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                 <ul className="max-h-80 overflow-auto">
                   {beginOptions.map(option => (
                     <li
+                      key={option.label}
                       className={[
                         "flex select-none items-center justify-between py-2 px-4",
                         selected && selected[0]?.value === option.value
@@ -115,6 +116,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                 <ul className="max-h-80 overflow-auto">
                   {endOptions.map(option => (
                     <li
+                      key={option.label}
                       className={[
                         "flex select-none items-center justify-between py-2 px-4",
                         selected && selected[1]?.value === option.value

@@ -5,7 +5,7 @@ import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-const BirthdayExplorer = ({ data }: InferGetServerSidePropsType<typeof getStaticProps>) => {
+const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-birthday-explorer"]);
   return (
     <>
@@ -14,24 +14,23 @@ const BirthdayExplorer = ({ data }: InferGetServerSidePropsType<typeof getStatic
         description={t("dashboard-birthday-explorer:description")}
         keywords={""}
       />
-      <BirthdayExplorerDashboard timeseries={data} />
+      <BirthdayExplorerDashboard timeseries={timeseries} />
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-explorer"]);
-  const { data } = await get("/dashboard", {
-    dashboard: "birthday_popularity",
-    state: "mys",
-    // start: "1923",
-    // end: "2017",
-    // groupByDay: true,
-  });
+  const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
   return {
     props: {
       ...i18n,
-      data,
+      timeseries: {
+        data: {
+          x: data.x,
+          y: data.y,
+        },
+      },
     },
   };
 };
