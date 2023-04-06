@@ -6,7 +6,7 @@ import {
   ForwardRefExoticComponent,
   useEffect,
 } from "react";
-import { minMax, toDate } from "@lib/helpers";
+import { limitMax, toDate } from "@lib/helpers";
 import { useRouter } from "next/router";
 import { useWatch } from "@hooks/useWatch";
 
@@ -14,8 +14,8 @@ import { useWatch } from "@hooks/useWatch";
 //   className?: string;
 //   type?: "single" | "range";
 //   onChange?: ([min, max]: [number, number]) => void;
-//   value?: [number, number]; // default minmax. on-init only
-//   range?: [number, number]; // linear minmax. for sliders that don't have `data[]`
+//   value?: [number, number]; // default limitmax. on-init only
+//   range?: [number, number]; // linear limitmax. for sliders that don't have `data[]`
 //   step?: number;
 //   data?: Array<number>;
 //   parseAsDate?: boolean;
@@ -27,17 +27,17 @@ import { useWatch } from "@hooks/useWatch";
 type RangeProps = {
   type: "range";
   onChange: ([min, max]: [number, number]) => void;
-  value: [number, number]; // default minmax. on-init only
+  value: [number, number]; // default limitmax. on-init only
 };
 type SingleProps = {
   type: "single";
   onChange: (value: number) => void;
-  value: number; // default minmax. on-init only
+  value: number; // default limitmax. on-init only
 };
 
 type SliderProps = (RangeProps | SingleProps) & {
   className?: string;
-  //   range?: [number, number]; // linear minmax. for sliders that don't have `data[]`
+  //   range?: [number, number]; // linear limitmax. for sliders that don't have `data[]`
   step?: number;
   data?: Array<number>;
   parseAsDate?: boolean;
@@ -112,12 +112,12 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
         if (type === "range")
           return {
             active: {
-              left: `${(minMax(min, maxIndex) / maxIndex) * 100}%`,
-              right: `${((maxIndex - minMax(max, maxIndex)) / maxIndex) * 100}%`,
+              left: `${(limitMax(min, maxIndex) / maxIndex) * 100}%`,
+              right: `${((maxIndex - limitMax(max, maxIndex)) / maxIndex) * 100}%`,
             },
             thumb: {
-              left: `${(minMax(min, maxIndex) / maxIndex) * 99}%`,
-              right: `${((maxIndex - minMax(max, maxIndex)) / maxIndex) * 99}%`,
+              left: `${(limitMax(min, maxIndex) / maxIndex) * 99}%`,
+              right: `${((maxIndex - limitMax(max, maxIndex)) / maxIndex) * 99}%`,
             },
           };
         if (type === "single")

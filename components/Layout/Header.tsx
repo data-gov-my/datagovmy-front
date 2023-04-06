@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FunctionComponent, ReactElement, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "@hooks/useTranslation";
 import { Bars3BottomRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { SunIcon, MoonIcon } from "@heroicons/react/20/solid";
@@ -12,11 +12,10 @@ import Nav from "@components/Nav";
 import NavItem from "@components/Nav/Item";
 import Dropdown from "@components/Dropdown";
 import Container from "@components/Container";
-import MegaMenu from "@components/Nav/MegaMenu";
 import Button from "@components/Button";
 
 interface HeaderProps {
-  stateSelector?: ReactElement;
+  stateSelector?: ReactNode;
 }
 
 const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
@@ -24,49 +23,6 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   const { language, onLanguageChange } = useLanguage();
 
   const [isTabletNavOpen, setIsTabletNavOpen] = useState(false);
-
-  //   const megaMenuItems = [
-  //     {
-  //       title: t("nav.megamenu.categories.economy"),
-  //       list: [
-  //         {
-  //           title: t("nav.megamenu.dashboards.consumer_prices"),
-  //           link: routes.CONSUMER_PRICES,
-  //         },
-  //         { title: t("nav.megamenu.dashboards.exchange_rate"), link: routes.EXCHANGE_RATE },
-  //         { title: t("nav.megamenu.dashboards.gdp"), link: routes.GDP },
-  //       ],
-  //     },
-  //     {
-  //       title: t("nav.megamenu.categories.financial_sector"),
-  //       list: [
-  //         {
-  //           title: t("nav.megamenu.dashboards.currency_in_circulation"),
-  //           link: routes.CURRENCY_IN_CIRCULATION,
-  //         },
-  //         {
-  //           title: t("nav.megamenu.dashboards.money_supply"),
-  //           link: routes.MONEY_SUPPLY,
-  //         },
-  //         {
-  //           title: t("nav.megamenu.dashboards.reserve_money"),
-  //           link: routes.RESERVE_MONEY,
-  //         },
-  //         {
-  //           title: t("nav.megamenu.dashboards.international_reserves"),
-  //           link: routes.INTERNATIONAL_RESERVES,
-  //         },
-  //         {
-  //           title: t("nav.megamenu.dashboards.interest_rates"),
-  //           link: routes.INTEREST_RATES,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       title: t("nav.megamenu.categories.healthcare"),
-  //       list: [{ title: t("nav.megamenu.dashboards.blood_donation"), link: routes.BLOOD_DONATION }],
-  //     },
-  //   ];
 
   return (
     <div className="fixed top-0 left-0 z-30 w-full border-b dark:border-washed-dark">
@@ -115,7 +71,11 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
             </div>
 
             {/* LANGUAGE DROPDOWN */}
-            <Dropdown selected={language} onChange={onLanguageChange} options={languages} />
+            <Dropdown
+              selected={languages.find(lang => lang.value === language)}
+              onChange={onLanguageChange}
+              options={languages}
+            />
             {/* MOBILE NAV ICONS */}
             {isTabletNavOpen ? (
               <XMarkIcon

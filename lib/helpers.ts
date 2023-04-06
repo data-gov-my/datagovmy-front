@@ -20,9 +20,31 @@ export const maxBy = (array: Array<any>, key: string) => {
  * @param e number
  * @returns max || 100
  */
-export const minMax = (e: number, max: number = 100) => {
+export const limitMax = (e: number, max: number = 100) => {
   if (!e) return 0;
   return Math.min(Math.max(e, 0), max);
+};
+
+/**
+ * Finds the min and max in an array.
+ * @param value number[]
+ * @returns [min, max]
+ */
+export const minMax = (values: Array<number | null>): [min: number, max: number] => {
+  let min: number = 0;
+  let max: number = 0;
+  for (let num of values) {
+    if (num !== null) {
+      if (num < min) {
+        min = num;
+      }
+      if (num > max) {
+        max = num;
+      }
+    }
+  }
+
+  return [min, max];
 };
 
 /**
