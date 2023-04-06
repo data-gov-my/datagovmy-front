@@ -255,7 +255,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
 
                           <span className="text-primary dark:text-primary-dark">
                             {t("dashboard-birthday-explorer:section_1.count", {
-                              count: numFormat(data.state_total, "standard"),
+                              count: data.state_total,
                             })}
                           </span>
                           {t("dashboard-birthday-explorer:section_1.info2", {
@@ -268,13 +268,23 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                               ? t("dashboard-birthday-explorer:section_1.overseas")
                               : CountryAndStates[data.state]}
                           </span>
-                          <span>
-                            {data.state !== "mys"
-                              ? t("dashboard-birthday-explorer:section_1.info3", {
+                          {data.state !== "mys" ? (
+                            <>
+                              <span>{t("dashboard-birthday-explorer:section_1.and")}</span>
+                              <span className="text-primary dark:text-primary-dark">
+                                {t("dashboard-birthday-explorer:section_1.count", {
                                   count: data.nationwide_total,
-                                })
-                              : "."}
-                          </span>
+                                })}
+                              </span>
+                              <span>
+                                {t("dashboard-birthday-explorer:section_1.info3", {
+                                  count: data.nationwide_total,
+                                })}
+                              </span>
+                            </>
+                          ) : (
+                            "."
+                          )}
                         </p>
                         <p>
                           {t("dashboard-birthday-explorer:section_1.info6", {
