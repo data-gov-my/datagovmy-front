@@ -24,6 +24,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const { data } = await get("/dashboard", {
     dashboard: "birthday_popularity",
     state: "mys",
+    // start: "1923",
+    // end: "2017",
+    // groupByDay: true,
   });
   return {
     props: {

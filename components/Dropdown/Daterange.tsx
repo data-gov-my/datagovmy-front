@@ -31,6 +31,12 @@ const Range: FunctionComponent<DaterangeProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  const isDisabled = (type: "begin" | "end", value: string, selected?: string) => {
+    if (!selected) return false;
+    if (type === "begin") return +value > +selected;
+    return +value < +selected;
+  };
+
   return (
     <div className="space-y-2">
       {label && <Label label={label} />}
@@ -90,12 +96,13 @@ const Range: FunctionComponent<DaterangeProps> = ({
                         selected && selected[0]?.value === option.value
                           ? "bg-washed dark:bg-washed-dark"
                           : "bg-inherit",
-                        selected && Number(option.value) > Number(selected[1]?.value)
+                        selected && isDisabled("begin", option.value, selected[1]?.value)
                           ? "cursor-not-allowed text-outline hover:bg-white dark:text-outlineHover-dark dark:hover:bg-black"
                           : "cursor-pointer hover:bg-washed dark:hover:bg-washed-dark",
                       ].join(" ")}
                       onClick={() => {
-                        selected && onChange([option, selected ? selected[1] : undefined]);
+                        if (selected && !isDisabled("begin", option.value, selected[1]?.value))
+                          onChange([option, selected ? selected[1] : undefined]);
                       }}
                     >
                       {option.label}
@@ -113,13 +120,14 @@ const Range: FunctionComponent<DaterangeProps> = ({
                         selected && selected[1]?.value === option.value
                           ? "bg-washed dark:bg-washed-dark"
                           : "bg-inherit",
-                        selected && Number(option.value) < Number(selected[0]?.value)
+                        selected && isDisabled("end", option.value, selected[0]?.value)
                           ? "cursor-not-allowed text-outline hover:bg-white dark:text-outlineHover-dark dark:hover:bg-black"
                           : "cursor-pointer hover:bg-washed dark:hover:bg-washed-dark",
                       ].join(" ")}
-                      onClick={() =>
-                        selected && onChange([selected ? selected[0] : undefined, option])
-                      }
+                      onClick={() => {
+                        if (selected && !isDisabled("end", option.value, selected[0]?.value))
+                          onChange([selected ? selected[0] : undefined, option]);
+                      }}
                     >
                       {option.label}
                       {selected && selected[1]?.value === option.value && (

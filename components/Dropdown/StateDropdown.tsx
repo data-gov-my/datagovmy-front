@@ -12,7 +12,7 @@ interface StateDropdownProps {
   currentState?: string;
   onChange?: (selected: OptionType) => void;
   disabled?: boolean;
-  include?: { label: string; value: string };
+  include?: OptionType[];
   exclude?: string[];
   hideOnScroll?: boolean;
   width?: string;
@@ -45,6 +45,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   };
 
   const show = useMemo(() => scroll.scrollY > 300, [scroll.scrollY]);
+  const options = include ? statesOptions.concat(include) : statesOptions;
 
   return (
     <div className={!hideOnScroll ? `block ${width}` : show ? "hidden lg:block" : "hidden"}>
@@ -52,16 +53,8 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
         className="flex-row items-center"
         onChange={selected => (onChange ? onChange(selected) : redirect(selected))}
         disabled={disabled}
-        selected={
-          include
-            ? statesOptions.concat(include!).find(state => state.value === currentState)
-            : statesOptions.find(state => state.value === currentState)
-        }
-        options={
-          include
-            ? statesOptions.concat(include!).filter(option => !exclude?.includes(option.value))
-            : statesOptions.filter(option => !exclude?.includes(option.value))
-        }
+        selected={options.find(state => state.value === currentState)}
+        options={options.filter(option => !exclude?.includes(option.value))}
         placeholder={t("placeholder.state")}
         enableFlag
         darkMode={darkMode}
