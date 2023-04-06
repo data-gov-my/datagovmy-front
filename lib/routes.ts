@@ -7,6 +7,7 @@ export const routes = {
   CIVIL_SERVICE: "/dashboard/civil-service",
   CONSUMER_PRICES: "/dashboard/consumer-prices",
   COVID_19: "/dashboard/covid-19",
+  COVID_VACCINATION: "/dashboard/covid-vaccination",
   CRIME: "/dashboard/crime",
   CURRENCY_IN_CIRCULATION: "/dashboard/currency-in-circulation",
   ELECTION_EXPLORER: "/dashboard/election-explorer",
