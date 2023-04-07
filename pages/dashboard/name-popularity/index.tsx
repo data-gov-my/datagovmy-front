@@ -21,7 +21,12 @@ const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticPr
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-name-popularity"]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-name-popularity"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   return {
     props: {
       ...i18n,

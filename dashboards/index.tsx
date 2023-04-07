@@ -139,7 +139,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         {_collection.sort().map(([category, dashboards]) => {
           return (
             dashboards.length > 0 && (
-              <Section title={category}>
+              <Section title={category} key={category}>
                 <div className="grid  grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-5">
                   {dashboards.map((item: Dashboard) => (
                     <At href={item.id} key={item.id}>
