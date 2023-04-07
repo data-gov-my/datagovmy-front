@@ -40,7 +40,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
 
   return (
     <>
-      <ThemeProvider attribute="class">
+      <ThemeProvider attribute="class" enableSystem={false}>
         {layout(
           <div
             className={[Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black"].join(
