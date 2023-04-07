@@ -112,7 +112,7 @@ const ThemeToggle = () => {
   return (
     <>
       <Button
-        className="group relative overflow-hidden hover:bg-washed dark:hover:bg-washed-dark"
+        className="group relative hover:bg-washed dark:hover:bg-washed-dark"
         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       >
         <Transition
@@ -124,7 +124,7 @@ const ThemeToggle = () => {
           leaveFrom="absolute opacity-100 translate-y-0"
           leaveTo="absolute opacity-0 translate-y-1"
         >
-          <MoonIcon className=" h-4 w-4 text-dim  group-hover:text-black " />
+          <MoonIcon className=" h-4 w-4 text-dim group-hover:text-black" />
         </Transition>
         <Transition
           show={theme !== "light"}

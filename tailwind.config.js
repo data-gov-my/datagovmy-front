@@ -50,5 +50,8 @@ module.exports = {
       },
     },
   },
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/line-clamp")],
 };
