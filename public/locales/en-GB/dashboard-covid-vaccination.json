@@ -13,7 +13,7 @@
     "daily": "Daily",
     "dose2": "2nd Dose",
     "tooltips_dose2": "Number of individuals who received the second dose of a two-dose vaccine, or a single-dose vaccine (e.g. Cansino)",
-    "booster1": "Booster 1",
+    "booster1": "1st Booster",
     "tooltips_booster1": "",
     "booster2": "2nd Booster",
     "tooltips_booster2": "",
