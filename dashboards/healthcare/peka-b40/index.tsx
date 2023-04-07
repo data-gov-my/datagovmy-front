@@ -10,10 +10,8 @@ import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import { ChartData, ChartTypeRegistry } from "chart.js";
 
 /**
  * PekaB40 Dashboard
@@ -41,28 +39,6 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const datasets: ChartData<keyof ChartTypeRegistry, any[], string | number> = {
-    labels: coordinate.x,
-    datasets: [
-      {
-        type: "line",
-        data: coordinate.line,
-        label: t("dashboard-peka-b40:tooltip1"),
-        borderColor: AKSARA_COLOR.PURPLE,
-        borderWidth: 1.5,
-        backgroundColor: AKSARA_COLOR.PURPLE_H,
-        fill: true,
-      },
-      {
-        type: "bar",
-        label: t("dashboard-peka-b40:tooltip2"),
-        data: coordinate.daily,
-        borderColor: AKSARA_COLOR.PURPLE,
-        backgroundColor: AKSARA_COLOR.PURPLE_H,
-        hidden: true,
-      },
-    ],
-  };
   const sliderRef = useRef<SliderRef>(null);
   const sortedChoro = choropleth.data.sort(
     (a: typeof choropleth.data, b: typeof choropleth.data) => b.data.perc - a.data.perc
@@ -107,12 +83,26 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
               state: CountryAndStates[currentState],
             })}
             interval="auto"
-            tooltipCallback={tooltipItem =>
-              datasets.datasets.map(
-                ds => ds.label + ": " + numFormat(ds.data[tooltipItem.dataIndex], "standard", 0)
-              )
-            }
-            data={datasets}
+            data={{
+              labels: coordinate.x,
+              datasets: [
+                {
+                  type: "line",
+                  data: coordinate.line,
+                  label: t("dashboard-peka-b40:tooltip1"),
+                  borderColor: AKSARA_COLOR.PURPLE,
+                  borderWidth: 1.5,
+                  backgroundColor: AKSARA_COLOR.PURPLE_H,
+                  fill: true,
+                },
+                {
+                  label: t("dashboard-peka-b40:tooltip2"),
+                  data: coordinate.daily,
+                  borderColor: "#00000000",
+                  backgroundColor: "#00000000",
+                },
+              ],
+            }}
           />
           <div className="pt-5">
             <Slider
