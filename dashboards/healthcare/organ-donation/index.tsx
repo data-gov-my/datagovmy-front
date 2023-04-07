@@ -18,7 +18,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useTheme } from "next-themes";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
-import { BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
@@ -59,28 +59,6 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const datasets: ChartData<keyof ChartTypeRegistry, any[], string | number> = {
-    labels: coordinate.x,
-    datasets: [
-      {
-        type: "line",
-        data: coordinate.line,
-        label: t("dashboard-organ-donation:tooltip1"),
-        borderColor: "#16A34A",
-        borderWidth: 1.5,
-        backgroundColor: "#16A34A1A",
-        fill: true,
-      },
-      {
-        label: t("dashboard-organ-donation:tooltip2"),
-        data: coordinate.daily,
-        borderColor: "#16A34A",
-        backgroundColor: "#16A34A1A",
-        fill: true,
-        hidden: true,
-      },
-    ],
-  };
   const sliderRef = useRef<SliderRef>(null);
   const { theme } = useTheme();
   const sortedChoro = choropleth.data.sort(
@@ -126,12 +104,28 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
               state: CountryAndStates[currentState],
             })}
             interval="auto"
-            tooltipCallback={tooltipItem =>
-              datasets.datasets.map(
-                ds => ds.label + ": " + numFormat(ds.data[tooltipItem.dataIndex], "standard", 0)
-              )
-            }
-            data={datasets}
+            data={{
+              labels: coordinate.x,
+              datasets: [
+                {
+                  type: "line",
+                  data: coordinate.line,
+                  label: t("dashboard-organ-donation:tooltip1"),
+                  borderColor: "#16A34A",
+                  borderWidth: 1.5,
+                  backgroundColor: "#16A34A1A",
+                  fill: true,
+                },
+                {
+                  type: "line",
+                  label: t("dashboard-organ-donation:tooltip2"),
+                  data: coordinate.daily,
+                  borderColor: "#00000000",
+                  backgroundColor: "#00000000",
+                  fill: true,
+                },
+              ],
+            }}
           />
           <div className="pt-5">
             <Slider
@@ -230,7 +224,8 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_time.data.annual.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                          backgroundColor:
+                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
                         },
                       ],
                     }}
@@ -248,7 +243,8 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_time.data.monthly.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                          backgroundColor:
+                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
                         },
                       ],
                     }}
@@ -270,7 +266,8 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_age.data.past_year.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                          backgroundColor:
+                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
                         },
                       ],
                     }}
@@ -288,7 +285,8 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_age.data.past_month.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                          backgroundColor:
+                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
                         },
                       ],
                     }}
