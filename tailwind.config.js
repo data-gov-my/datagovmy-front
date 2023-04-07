@@ -39,6 +39,7 @@ module.exports = {
         "outlineHover-dark": "#3F3F46", // Zinc 700
         "background": "#F8FAFC", // Slate 500
         "background-dark": "#121212", // Slate 500
+        "purple": "#7C3AED", // Violet 600
       },
       gridTemplateColumns: {
         13: "repeat(13, minmax(0, 1fr))",
