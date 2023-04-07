@@ -60,9 +60,10 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
 
-  const WAFFLE_LIST: { doseType: string; dosePerc: ReactNode }[] = [
+  const WAFFLE_LIST: { doseType: string; color: string; dosePerc: ReactNode }[] = [
     {
       doseType: "dose1",
+      color: "#9FE8B1",
       dosePerc: (
         <Tooltip tip={<span>{t("dashboard-covid-vaccination:tooltips_dose1")}</span>}>
           {open => (
@@ -80,6 +81,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
     },
     {
       doseType: "dose2",
+      color: "#31C752",
       dosePerc: (
         <Tooltip tip={<span>{t("dashboard-covid-vaccination:tooltips_dose2")}</span>}>
           {open => (
@@ -97,6 +99,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
     },
     {
       doseType: "booster1",
+      color: "#228F3A",
       dosePerc: (
         <span className="pl-1">{`${(
           waffle.data[data.filter_age.value].booster1.perc as number
@@ -105,6 +108,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
     },
     {
       doseType: "booster2",
+      color: "#135523",
       dosePerc: (
         <span className="pl-1">{`${(
           waffle.data[data.filter_age.value].booster2.perc as number
@@ -188,7 +192,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
               key={t("dashboard-covid-vaccination:filter_age")}
             >
               <div className="grid grid-cols-2 gap-x-2 gap-y-10 py-5 lg:grid-cols-4 lg:gap-6">
-                {WAFFLE_LIST.map(({ doseType, dosePerc }) => (
+                {WAFFLE_LIST.map(({ doseType, dosePerc, color }) => (
                   <Waffle
                     className="aspect-square w-full lg:h-[250px] lg:w-auto"
                     title={
@@ -197,7 +201,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                         {dosePerc}
                       </div>
                     }
-                    color="#9FE8B1"
+                    color={color}
                     data={waffle.data[data.filter_age.value][doseType].data}
                   >
                     <div className="text-dim">
