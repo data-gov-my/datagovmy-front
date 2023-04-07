@@ -35,19 +35,16 @@ interface CatalogueBarProps {
   urls: {
     [key: string]: string;
   };
-  lang: "en" | "bm";
   onDownload?: (prop: DownloadOptions) => void;
 }
 
 const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   config,
-  lang,
   dataset,
   urls,
   onDownload,
 }) => {
   const { t } = useTranslation();
-
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
   const windowWidth = useWindowWidth();
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
@@ -55,6 +52,8 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 
     return "vertical";
   }, [dataset.type, windowWidth]);
+
+  // console.log(dataset.chart.x , 'x')
 
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
@@ -71,8 +70,8 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
               uid: dataset.meta.unique_id.concat("_png"),
               type: "image",
               id: dataset.meta.unique_id,
-              name_en: dataset.meta.en.title,
-              name_bm: dataset.meta.bm.title,
+              name_en: dataset.meta.title,
+              name_bm: dataset.meta.title,
               ext: "png",
             });
           },
@@ -91,8 +90,8 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
                   uid: dataset.meta.unique_id.concat("_svg"),
                   type: "image",
                   id: dataset.meta.unique_id,
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
+                  name_en: dataset.meta.title,
+                  name_bm: dataset.meta.title,
                   ext: "svg",
                 })
               )
@@ -133,11 +132,13 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
       AKSARA_COLOR.WARNING,
     ]; // [blue, red]
 
+    // console.log(sets)
+
     return sets.map(([key, y], index) => ({
       data: y as number[],
-      label: sets.length === 1 ? dataset.meta[lang].title : dataset.table.columns[`${key}_${lang}`],
+      label: sets.length === 1 ? dataset.meta.title : dataset.table.columns[key],
       borderColor: colors[index],
-      backgroundColor: colors[index].concat("33"), //AKSARA_COLOR.PRIMARY_H,
+      // backgroundColor: colors[index].concat("33"), //AKSARA_COLOR.PRIMARY_H,
       borderWidth: 1,
     }));
   }, [dataset.chart]);

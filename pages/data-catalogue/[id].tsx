@@ -24,8 +24,8 @@ const CatalogueShow: Page = ({
   metadata,
   urls,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t, i18n } = useTranslation();
-  const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
+  const { t } = useTranslation();
+  console.log(dataset);
 
   const availableOptions = useMemo<OptionType[]>(() => {
     switch (dataset.type) {
@@ -77,8 +77,8 @@ const CatalogueShow: Page = ({
   return (
     <>
       <Metadata
-        title={dataset.meta[lang].title}
-        description={dataset.meta[lang].desc.replace(/^(.*?)]/, "")}
+        title={dataset.meta.title}
+        description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
       <DataCatalogueShow
@@ -95,10 +95,13 @@ const CatalogueShow: Page = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common"], null, ["en-GB", "ms-MY"]);
 
-  const { data } = await get("/data-variable/", { id: params!.id, ...query });
-
+  const { data } = await get("/data-variable/", {
+    id: params!.id,
+    ...query,
+    lang: SHORT_LANG[locale as "en-GB" | "ms-MY"],
+  });
   let filter_state;
 
   if (["TIMESERIES", "BAR", "HBAR", "PYRAMID"].includes(data.API.chart_type)) {
@@ -110,8 +113,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
       ])
     );
   }
-
-  const { in_dataset: _, out_dataset: __, ...metadata } = data.metadata;
 
   return {
     props: {
@@ -130,7 +131,10 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
       },
       explanation: data.explanation,
       metadata: {
-        ...metadata,
+        url: {
+          csv: data.metadata.url.csv,
+          parquet: data.metadata.url.parquet,
+        },
         definitions: [...(data.metadata?.in_dataset ?? []), ...data.metadata.out_dataset],
       },
       urls: data.downloads ?? {},

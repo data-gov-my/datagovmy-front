@@ -244,6 +244,7 @@ export const exportAs = async (type: "svg" | "png", element: Node): Promise<stri
  * @returns {string | ReactElement[]} string | React elements
  */
 export const interpolate = (raw_text: string): string | ReactElement[] => {
+  if (!raw_text) return "Not found";
   const delimiter = /\[(.*?)\)/;
   let matches = raw_text.split(delimiter);
 
