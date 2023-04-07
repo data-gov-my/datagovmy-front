@@ -88,7 +88,7 @@ const Home: Page = ({
         header={[t("home.title")]}
         description={
           <div className="space-y-6">
-            <p className="text-dim">{t("home.description")}</p>
+            <p className="text-dim xl:w-2/3">{t("home.description")}</p>
             <div className="flex flex-wrap gap-3">
               <At className="btn btn-primary text-sm" href="/dashboard" enableIcon>
                 {t("nav.dashboards")}
