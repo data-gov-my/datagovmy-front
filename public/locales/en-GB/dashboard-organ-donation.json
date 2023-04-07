@@ -16,5 +16,7 @@
     "year": "Past 1 year",
     "month": "Past 1 month",
     "bar_tooltip": "New Pledges",
-    "donor": "Pledgers"
+    "donor": "Pledgers",
+    "tooltip1": "7d avg",
+    "tooltip2": "Daily"
 }

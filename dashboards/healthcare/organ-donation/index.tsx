@@ -19,8 +19,10 @@ import { useTheme } from "next-themes";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { ChartData, ChartTypeRegistry } from "chart.js";
 
 /**
  * OrganDonation Dashboard
@@ -57,6 +59,28 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
+  const datasets: ChartData<keyof ChartTypeRegistry, any[], string | number> = {
+    labels: coordinate.x,
+    datasets: [
+      {
+        type: "line",
+        data: coordinate.line,
+        label: t("dashboard-organ-donation:tooltip1"),
+        borderColor: "#16A34A",
+        borderWidth: 1.5,
+        backgroundColor: "#16A34A1A",
+        fill: true,
+      },
+      {
+        label: t("dashboard-organ-donation:tooltip2"),
+        data: coordinate.daily,
+        borderColor: "#16A34A",
+        backgroundColor: "#16A34A1A",
+        fill: true,
+        hidden: true,
+      },
+    ],
+  };
   const sliderRef = useRef<SliderRef>(null);
   const { theme } = useTheme();
   const sortedChoro = choropleth.data.sort(
@@ -101,21 +125,13 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
             title={t("dashboard-organ-donation:timeseries_title", {
               state: CountryAndStates[currentState],
             })}
-            interval="day"
-            data={{
-              labels: coordinate.x,
-              datasets: [
-                {
-                  type: "line",
-                  data: coordinate.daily,
-                  label: t("dashboard-organ-donation:donor"),
-                  borderColor: "#16A34A",
-                  borderWidth: 1.5,
-                  backgroundColor: "#16A34A1A",
-                  fill: true,
-                },
-              ],
-            }}
+            interval="auto"
+            tooltipCallback={tooltipItem =>
+              datasets.datasets.map(
+                ds => ds.label + ": " + numFormat(ds.data[tooltipItem.dataIndex], "standard", 0)
+              )
+            }
+            data={datasets}
           />
           <div className="pt-5">
             <Slider

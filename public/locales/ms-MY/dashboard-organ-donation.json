@@ -16,5 +16,7 @@
     "year": "1 tahun lepas",
     "month": "1 bulan lepas",
     "bar_tooltip": "Pengikrar Baru",
-    "donor": "Pengikrar"
+    "donor": "Pengikrar",
+    "tooltip1": "Purata 7 hari",
+    "tooltip2": "Harian"
 }
