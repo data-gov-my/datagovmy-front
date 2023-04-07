@@ -19,10 +19,8 @@ import { useTheme } from "next-themes";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import { ChartData, ChartTypeRegistry } from "chart.js";
 
 /**
  * OrganDonation Dashboard
@@ -117,12 +115,10 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                   fill: true,
                 },
                 {
-                  type: "line",
                   label: t("dashboard-organ-donation:tooltip2"),
                   data: coordinate.daily,
                   borderColor: "#00000000",
                   backgroundColor: "#00000000",
-                  fill: true,
                 },
               ],
             }}
