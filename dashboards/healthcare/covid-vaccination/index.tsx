@@ -12,6 +12,7 @@ import Slider, { SliderRef } from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
 import { filterAgeOptions, filterDoseOptions } from "@lib/options";
 import { useWindowWidth } from "@hooks/useWindowWidth";
+import { useSlice } from "@hooks/useSlice";
 
 /**
  * COVID Vaccination Dashboard
@@ -54,7 +55,10 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       label: t(`dashboard-covid-vaccination:${filterAgeOptions[0].value}`),
       value: filterAgeOptions[0].value,
     },
+    minmax: [0, timeseries.data.x.length - 1],
   });
+
+  const { coordinate } = useSlice(timeseries.data, data.minmax);
 
   const WAFFLE_LIST: { doseType: string; dosePerc: ReactNode }[] = [
     {
@@ -241,11 +245,11 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
             })}
             interval="auto"
             data={{
-              labels: timeseries.data.x,
+              labels: coordinate.x,
               datasets: [
                 {
                   type: "line",
-                  data: timeseries.data.line_stacked,
+                  data: coordinate.line_stacked,
                   label: t("dashboard-covid-vaccination:combine_tooltip1"),
                   borderColor: AKSARA_COLOR.GREEN,
                   borderWidth: 1.5,
@@ -259,10 +263,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
             className="pt-5"
             ref={sliderRef}
             type="range"
-            value={timeseries.data.x}
+            value={data.minmax}
             data={timeseries.data.x}
-            period="year"
-            onChange={e => {}}
+            onChange={e => setData("minmax", e)}
           />
         </Section>
 
@@ -285,11 +288,11 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                   enableGridX={false}
                   precision={0}
                   data={{
-                    labels: timeseries.data.x,
+                    labels: coordinate.x,
                     datasets: [
                       {
                         type: "line",
-                        data: timeseries.data[y_key],
+                        data: coordinate[y_key],
                         label: t("dashboard-covid-vaccination:combine_tooltip1"),
                         borderColor: AKSARA_COLOR.GREEN,
                         borderWidth: 1.5,
