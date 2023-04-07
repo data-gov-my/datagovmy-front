@@ -123,7 +123,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         header={[t("dashboard-covid-vaccination:header")]}
         description={
           <>
-            <p className={"text-dim"}>{t("dashboard-covid-vaccination:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("dashboard-covid-vaccination:description")}</p>
             <div className="pt-6">
               <StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />
             </div>
