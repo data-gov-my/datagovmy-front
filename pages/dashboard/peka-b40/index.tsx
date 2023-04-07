@@ -31,7 +31,10 @@ const PekaB40: Page = ({
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
   const { data } = await get("/dashboard", { dashboard: "peka_b40", state: "mys" });
 
   return {

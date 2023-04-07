@@ -23,10 +23,12 @@ const HospitalBedUtilisation: Page = ({}: InferGetStaticPropsType<typeof getStat
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, [
-    "common",
-    "dashboard-hospital-bed-utilisation",
-  ]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-hospital-bed-utilisation"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

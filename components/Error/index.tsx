@@ -6,7 +6,7 @@ import { FunctionComponent } from "react";
 
 interface ErrorProps {
   title: string;
-  description?: string;
+  description?: string | null;
   code: number;
   reason: string;
 }

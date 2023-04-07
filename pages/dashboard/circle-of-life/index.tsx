@@ -23,7 +23,10 @@ const CircleofLife: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) 
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-circle-of-life"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-circle-of-life"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

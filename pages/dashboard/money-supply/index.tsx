@@ -31,7 +31,10 @@ const MoneySupply = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-money-supply"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-money-supply"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
 
   const { data } = await get("/dashboard", { dashboard: "money_measures" });
 

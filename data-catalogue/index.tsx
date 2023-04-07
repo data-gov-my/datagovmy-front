@@ -350,7 +350,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
           />
 
           <Daterange
-            options={filterYears(startYear, endYear)}
+            beginOptions={filterYears(startYear, endYear)}
+            endOptions={filterYears(startYear, endYear)}
             selected={[
               filterYears(startYear, endYear).find(item => item.value === query.begin),
               filterYears(startYear, endYear).find(item => item.value === query.end),

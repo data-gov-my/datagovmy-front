@@ -39,6 +39,7 @@
     "clear_selection": "Kosongkan pilihan",
     "clear_all": "Kosongkan semua",
     "reset": "Set semula",
+    "reset_default": "Set semula",
     "close": "Tutup",
     "select": "Pilih",
     "here": "Sini",
@@ -98,6 +99,7 @@
         "exchange_rate": "Kadar Pertukaran",
         "daily_price": "Harga Harian",
         "blood_donation": "Pendermaan Darah",
+        "birthday_explorer": "Explorer Hari Lahir",
         "name_popularity": "Popularity Nama"
       }
     },
@@ -121,7 +123,8 @@
     "dark": "Gelap",
     "brought_by": "Brought to you by",
     "visit_portal": "Visit our portal",
-    "click_to_explore": "Click to explore"
+    "click_to_explore": "Click to explore",
+    "ovs": "Lahir di Luar Negara"
   },
   "agency": {
     "bnm": "Bank Negara Malaysia",
@@ -345,7 +348,7 @@
     "header_3": "Penerbitan berdasarkan data ini",
     "meta_desc": "Penerangan dataset",
     "meta_def": "Definisi pembolehubah",
-    "meta_chart_above": "(Carta d iatas)",
+    "meta_chart_above": "(Carta di atas)",
     "meta_all_dataset": "Dalam keseluruhan dataset:",
     "meta_variable": "Pembolehubah",
     "meta_variable_name": "Nama pembolehubah",
