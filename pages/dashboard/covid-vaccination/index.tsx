@@ -18,7 +18,7 @@ const CovidVaccination: Page = ({
   return (
     <>
       <Metadata
-        title={t("dashboard-covid-vaccination:header")}
+        title={t("dashboard-covid-vaccination:page_title")}
         description={t("dashboard-covid-vaccination:description")}
         keywords={""}
       />
