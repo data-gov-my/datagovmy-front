@@ -7,5 +7,7 @@
     "choro_header": "Bagaimanakan kadar saringan berbeza di seluruh negara?",
     "choro_description": "Data ini menunjukkan % daripada populasi yang layak untuk saringan kesihatan PeKa B40 yang telah disaring sekurang-kurangnya sekali.",
     "choro_ranking": "Kedudukan",
-    "screening": "Saringan"
+    "screening": "Saringan",
+    "tooltip1": "Purata 7 hari",
+    "tooltip2": "Harian"
 }

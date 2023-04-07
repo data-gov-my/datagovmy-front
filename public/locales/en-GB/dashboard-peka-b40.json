@@ -7,5 +7,7 @@
     "choro_header": "How do screening rates differ across the country?",
     "choro_description": "This data shows the % of the population eligible for PeKa B40 screening in each state which has been screened at least once.",
     "choro_ranking": "Ranking",
-    "screening": "Screenings"
+    "screening": "Screenings",
+    "tooltip1": "7d avg",
+    "tooltip2": "Daily"
 }

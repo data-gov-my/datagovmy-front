@@ -9,9 +9,11 @@ import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
-import { BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { ChartData, ChartTypeRegistry } from "chart.js";
 
 /**
  * PekaB40 Dashboard
@@ -39,6 +41,28 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
+  const datasets: ChartData<keyof ChartTypeRegistry, any[], string | number> = {
+    labels: coordinate.x,
+    datasets: [
+      {
+        type: "line",
+        data: coordinate.line,
+        label: t("dashboard-peka-b40:tooltip1"),
+        borderColor: AKSARA_COLOR.PURPLE,
+        borderWidth: 1.5,
+        backgroundColor: AKSARA_COLOR.PURPLE_H,
+        fill: true,
+      },
+      {
+        type: "bar",
+        label: t("dashboard-peka-b40:tooltip2"),
+        data: coordinate.daily,
+        borderColor: AKSARA_COLOR.PURPLE,
+        backgroundColor: AKSARA_COLOR.PURPLE_H,
+        hidden: true,
+      },
+    ],
+  };
   const sliderRef = useRef<SliderRef>(null);
   const sortedChoro = choropleth.data.sort(
     (a: typeof choropleth.data, b: typeof choropleth.data) => b.data.perc - a.data.perc
@@ -48,7 +72,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
     <>
       <Hero
         background="purple"
-        category={[t("nav.megamenu.categories.healthcare"), "text-[#7C3AED]"]}
+        category={[t("nav.megamenu.categories.healthcare"), "text-purple"]}
         header={[t("dashboard-peka-b40:header")]}
         description={
           <>
@@ -82,21 +106,13 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
             title={t("dashboard-peka-b40:timeseries_title", {
               state: CountryAndStates[currentState],
             })}
-            interval="day"
-            data={{
-              labels: coordinate.x,
-              datasets: [
-                {
-                  type: "line",
-                  data: coordinate.line,
-                  label: t("dashboard-peka-b40:screening"),
-                  borderColor: "#7C3AED",
-                  borderWidth: 1.5,
-                  backgroundColor: "#7C3AED1A",
-                  fill: true,
-                },
-              ],
-            }}
+            interval="auto"
+            tooltipCallback={tooltipItem =>
+              datasets.datasets.map(
+                ds => ds.label + ": " + numFormat(ds.data[tooltipItem.dataIndex], "standard", 0)
+              )
+            }
+            data={datasets}
           />
           <div className="pt-5">
             <Slider
