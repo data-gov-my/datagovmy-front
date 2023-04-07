@@ -10,7 +10,6 @@ import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import Slider, { SliderRef } from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
-import { filterAgeOptions, filterDoseOptions } from "@lib/options";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { useSlice } from "@hooks/useSlice";
 
@@ -45,15 +44,18 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
   const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
 
+  const filterDoseOptions: string[] = ["dose1", "dose2", "booster1", "booster2"];
+  const filterAgeOptions: string[] = ["total", "child", "adolescent", "adult", "elderly"];
+
   const { data, setData } = useData({
     vax_tab: 0,
     filter_dose: {
-      label: t(`dashboard-covid-vaccination:${filterDoseOptions[0].value}`),
-      value: filterDoseOptions[0].value,
+      label: t(`dashboard-covid-vaccination:${filterDoseOptions[0]}`),
+      value: filterDoseOptions[0],
     },
     filter_age: {
-      label: t(`dashboard-covid-vaccination:${filterAgeOptions[0].value}`),
-      value: filterAgeOptions[0].value,
+      label: t(`dashboard-covid-vaccination:${filterAgeOptions[0]}`),
+      value: filterAgeOptions[0],
     },
     minmax: [0, timeseries.data.x.length - 1],
   });
@@ -157,12 +159,10 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 placeholder="Select"
                 onChange={item => setData("filter_age", item)}
                 selected={data.filter_age}
-                options={filterAgeOptions.map(option => {
-                  return {
-                    label: t(`dashboard-covid-vaccination:${option.value}`),
-                    value: option.value,
-                  };
-                })}
+                options={filterAgeOptions.map(value => ({
+                  label: t(`dashboard-covid-vaccination:${value}`),
+                  value: value,
+                }))}
               />
             ) : (
               <Dropdown
@@ -170,12 +170,10 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 placeholder="Select"
                 onChange={item => setData("filter_dose", item)}
                 selected={data.filter_dose}
-                options={filterDoseOptions.map(option => {
-                  return {
-                    label: t(`dashboard-covid-vaccination:${option.value}`),
-                    value: option.value,
-                  };
-                })}
+                options={filterDoseOptions.map(value => ({
+                  label: t(`dashboard-covid-vaccination:${value}`),
+                  value: value,
+                }))}
               />
             )}
             <Tabs.List
