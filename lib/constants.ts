@@ -124,8 +124,9 @@ export const MYR_COLOR = {
  * @example AKSARA_COLOR.PRIMARY -> "#2563EB"
  */
 export const AKSARA_COLOR = {
-  BLACK: "#0F172A",
-  BLACK_H: "#0F172A1A",
+  BLACK: "#18181B",
+  BLACK_H: "#18181B1A",
+  WHITE: "FFFFFF",
   DANGER: "#DC2626",
   DANGER_H: "#DC26261A",
   PRIMARY: "#2563EB",
