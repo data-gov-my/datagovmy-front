@@ -47,7 +47,7 @@ type ConditionalProps<L, V> =
 type DropdownProps<L, V> = CommonProps<L, V> & ConditionalProps<L, V> & LabelProps;
 
 const Dropdown = <L extends string | number | ReactElement | ReactElement[] = string, V = string>({
-  className = "flex-col lg:flex-row ",
+  className = "lg:flex-row ",
   disabled = false,
   multiple = false,
   icon,
@@ -137,12 +137,14 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
 
               {/* Flag (selected) */}
               {enableFlag && selected && (
-                <Image
-                  src={`/static/images/states/${(selected as OptionType<L, V>).value}.jpeg`}
-                  width={20}
-                  height={12}
-                  alt={(selected as OptionType<L, V>).label as string}
-                />
+                <div className="self-center">
+                  <Image
+                    src={`/static/images/states/${(selected as OptionType<L, V>).value}.jpeg`}
+                    width={20}
+                    height={12}
+                    alt={(selected as OptionType<L, V>).label as string}
+                  />
+                </div>
               )}
 
               {/* Label */}
@@ -160,7 +162,10 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
 
               {/* ChevronDown Icon */}
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
-                <ChevronDownIcon className="h-5 w-5 text-dim" aria-hidden="true" />
+                <ChevronDownIcon
+                  className="h-5 w-5 text-black dark:text-white"
+                  aria-hidden="true"
+                />
               </span>
             </>
           </Listbox.Button>

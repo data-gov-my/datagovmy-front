@@ -38,7 +38,7 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common"], null, ["en-GB", "ms-MY"]);
 
   const { data } = await get("/data-catalog/", {
     lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],

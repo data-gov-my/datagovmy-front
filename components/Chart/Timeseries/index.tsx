@@ -25,13 +25,15 @@ import {
   ChartTypeRegistry,
   Filler,
   BarController,
-  ChartDataset,
+  Scale,
+  Tick,
+  TooltipItem,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
 
 import { Chart } from "react-chartjs-2";
-import { chunkSplit, numFormat } from "@lib/helpers";
+import { numFormat } from "@lib/helpers";
 import "chartjs-adapter-luxon";
 import { ChartCrosshairOption } from "@lib/types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -76,6 +78,14 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableLegend?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  tickXCallback?: (
+    this: Scale,
+    tickValue: number | string,
+    index: number,
+    ticks: Tick[]
+  ) => string | string[] | number | number[] | null | undefined;
+  gridOffsetX?: boolean;
+  tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
   displayNumFormat?: (
     value: number,
@@ -112,7 +122,11 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
       enableLegend = false,
       enableGridX = false,
       enableGridY = true,
+      gridOffsetX = true,
+      tooltipCallback,
+      tickXCallback,
       beginZero = false,
+      minY,
       maxY,
       displayNumFormat = numFormat,
     },
@@ -170,14 +184,17 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
             mode: "index",
             intersect: false,
             callbacks: {
-              label: function (item) {
-                return `${item.dataset.label as string}: ${
-                  item.parsed.y !== undefined || item.parsed.y !== null
-                    ? display(item.parsed.y, "standard", precision)
-                    : "-"
-                }`;
-              },
+              label: tooltipCallback
+                ? tooltipCallback
+                : function (item) {
+                    return `${item.dataset.label as string}: ${
+                      item.parsed.y !== undefined || item.parsed.y !== null
+                        ? display(item.parsed.y, "standard", precision)
+                        : "-"
+                    }`;
+                  },
             },
+
             filter: function (tooltipItem) {
               return !!tooltipItem.dataset.label;
             },
@@ -275,18 +292,22 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
               },
               tooltipFormat: tooltipFormat
                 ? tooltipFormat
-                : ["year", "month", "quarter"].includes(interval as string)
-                ? { quarter: "qQ yyyy", month: "MMM yyyy", year: "yyyy" }[interval as string]
+                : ["year", "month", "quarter", "day"].includes(interval as string)
+                ? { quarter: "qQ yyyy", month: "MMM yyyy", year: "yyyy", day: "dd MMM" }[
+                    interval as string
+                  ]
                 : "dd MMM yyyy",
             },
             grid: {
+              offset: gridOffsetX,
               display: enableGridX,
               borderWidth: 1,
               borderDash: [5, 10],
             },
             ticks: {
+              callback: tickXCallback,
               major: {
-                enabled: true,
+                enabled: false,
               },
               minRotation: 0,
               maxRotation: 0,
@@ -322,6 +343,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
                 family: "Inter",
               },
             },
+            min: minY,
             max: maxY,
             stacked: mode === "stacked",
             beginAtZero: beginZero,
