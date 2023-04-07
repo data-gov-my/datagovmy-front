@@ -75,7 +75,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
 
   const { data } = await get("/dashboard", { dashboard: "peka_b40", state: params?.state });
 
