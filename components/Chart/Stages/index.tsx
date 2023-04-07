@@ -181,11 +181,11 @@ const Stats: FunctionComponent<StatsProps> = ({
             className={`inline-block rounded px-1.5 ${
               !unit
                 ? badgeColor(delta, inverse).concat(" bg-opacity-20")
-                : "bg-washed text-gray-500"
+                : "bg-washed text-gray-500 dark:bg-washed-dark"
             }`}
           >
             {!unit && appendPlusMinus(delta)}
-            {delta && (+delta).toLocaleString()}
+            {delta && delta.toLocaleString()}
             {unit}
           </small>
         </div>

@@ -288,7 +288,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     {
                       name: `${t("dashboard-covid-19:col2_title1")}`,
                       value: snapshot_graphic.data.home,
-                      delta: Number((+snapshot_graphic.data.home_annot).toFixed(1)),
+                      delta: snapshot_graphic.data.home_annot.toFixed(1),
                       unit: "%",
                       icon: (
                         <Image
@@ -302,7 +302,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     {
                       name: `${t("dashboard-covid-19:col2_title2")}`,
                       value: snapshot_graphic.data.pkrc,
-                      delta: Number((+snapshot_graphic.data.pkrc_annot).toFixed(1)),
+                      delta: snapshot_graphic.data.pkrc_annot.toFixed(1),
                       unit: "%",
                       icon: (
                         <Image
@@ -316,7 +316,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     {
                       name: `${t("dashboard-covid-19:col2_title3")}`,
                       value: snapshot_graphic.data.hosp,
-                      delta: Number((+snapshot_graphic.data.hosp_annot).toFixed(1)),
+                      delta: snapshot_graphic.data.hosp_annot.toFixed(1),
                       unit: "%",
                       icon: (
                         <Image
@@ -330,7 +330,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     {
                       name: `${t("dashboard-covid-19:col2_title4")}`,
                       value: snapshot_graphic.data.icu,
-                      delta: Number((+snapshot_graphic.data.icu_annot).toFixed(1)),
+                      delta: snapshot_graphic.data.icu_annot.toFixed(1),
                       unit: "%",
                       icon: (
                         <Image
@@ -344,7 +344,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     {
                       name: `${t("dashboard-covid-19:col2_title5")}`,
                       value: snapshot_graphic.data.vent,
-                      delta: Number((+snapshot_graphic.data.vent_annot).toFixed(1)),
+                      delta: snapshot_graphic.data.vent_annot.toFixed(1),
                       unit: "%",
                       icon: (
                         <Image
@@ -360,7 +360,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     {
                       name: `${t("dashboard-covid-19:col3_title1")}`,
                       value: snapshot_graphic.data.cases_recovered,
-                      delta: snapshot_graphic.data.cases_recovered_annot,
+                      delta: snapshot_graphic.data.cases_recovered_annot.toFixed(0),
                       icon: (
                         <Image
                           src="/static/images/stages/recovered.svg"
