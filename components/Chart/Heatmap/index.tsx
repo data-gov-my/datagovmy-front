@@ -17,6 +17,7 @@ import { Color, useColor } from "@hooks/useColor";
 import { DeepPartial } from "chart.js/types/utils";
 import "chartjs-adapter-luxon";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { minMax } from "@lib/helpers";
 
 interface HeatmapProps extends ChartHeaderProps {
   className?: string;
@@ -53,20 +54,8 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
     [number, number, Array<string | number>, Array<string | number>]
   >(() => {
     if (!data) return [0, 1, [], []];
-    let min: number = data[0].v !== null ? data[0].v : 0;
-    let max: number = data[0].v !== null ? data[0].v : 1;
-    for (let { v } of data) {
-      if (v !== null) {
-        if (v < min) {
-          min = v;
-        }
-        if (v > max) {
-          max = v;
-        }
-      }
-    }
+    const [min, max] = minMax(data.map(({ v }) => v));
     return [
-      //   typeof data[0].x === "string" ? "category" : "time",
       min,
       max,
       [...new Set(data.map(item => item.x))],

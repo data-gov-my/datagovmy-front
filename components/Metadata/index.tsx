@@ -3,8 +3,8 @@ import { FunctionComponent } from "react";
 import { useTranslation } from "next-i18next";
 
 interface MetadataProps {
-  title?: string;
-  description?: string;
+  title?: string | null;
+  description?: string | null;
   keywords?: string;
 }
 

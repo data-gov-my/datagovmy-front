@@ -11,7 +11,7 @@ import {
   UNIVERSAL_TABLE_SCHEMA,
 } from "@lib/schema/data-catalogue";
 import { OptionType } from "@components/types";
-import { track } from "@lib/mixpanel";
+// import { track } from "@lib/mixpanel";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Card from "@components/Card";
@@ -219,12 +219,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   };
 
   useEffect(() => {
-    track("page_view", {
-      type: "catalogue",
-      id: dataset.meta.unique_id,
-      name_en: dataset.meta.en.title,
-      name_bm: dataset.meta.bm.title,
-    });
+    // track("page_view", {
+    //   type: "catalogue",
+    //   id: dataset.meta.unique_id,
+    //   name_en: dataset.meta.en.title,
+    //   name_bm: dataset.meta.bm.title,
+    // });
     if (dataset.type === "TABLE") {
       setDownloads({
         chart: [],
@@ -357,14 +357,14 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
                   if (typeof action?.href === "string") {
                     download(action.href, dataset.meta.unique_id);
-                    track("file_download", {
-                      uid: dataset.meta.unique_id.concat("_", action.key),
-                      type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
-                      id: dataset.meta.unique_id,
-                      name_en: dataset.meta.en.title,
-                      name_bm: dataset.meta.bm.title,
-                      ext: action.key,
-                    });
+                    // track("file_download", {
+                    //   uid: dataset.meta.unique_id.concat("_", action.key),
+                    //   type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
+                    //   id: dataset.meta.unique_id,
+                    //   name_en: dataset.meta.en.title,
+                    //   name_bm: dataset.meta.bm.title,
+                    //   ext: action.key,
+                    // });
                     return;
                   }
 
@@ -567,15 +567,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       <a
                         href={url as string}
                         className="break-all text-primary hover:underline dark:text-primary-dark"
-                        onClick={() =>
-                          track("file_download", {
-                            uid: dataset.meta.unique_id.concat("_", key),
-                            id: dataset.meta.unique_id,
-                            name_en: dataset.meta.en.title,
-                            name_bm: dataset.meta.bm.title,
-                            type: "file",
-                            ext: key,
-                          })
+                        onClick={
+                          () => {}
+                          //   track("file_download", {
+                          //     uid: dataset.meta.unique_id.concat("_", key),
+                          //     id: dataset.meta.unique_id,
+                          //     name_en: dataset.meta.en.title,
+                          //     name_bm: dataset.meta.bm.title,
+                          //     type: "file",
+                          //     ext: key,
+                          //   })
                         }
                       >
                         {url as string}
@@ -685,7 +686,8 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
 }) => {
   return typeof href === "string" ? (
     // .csv & .parquet
-    <a href={href} download onClick={() => track("file_download", meta)}>
+    // //track("file_download", meta)}>
+    <a href={href} download onClick={() => {}}>
       <Card type="gray">
         <div className="flex items-center gap-4.5">
           {image && (

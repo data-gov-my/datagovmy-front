@@ -1,25 +1,25 @@
-import { useState } from "react";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { languages } from "@lib/options";
-
 /**
  * Language switcher hook.
- * @returns Page with corrent language
+ * @returns Page with current language
  */
 export const useLanguage = () => {
+  const { i18n } = useTranslation();
   const { pathname, asPath, query, locale, push } = useRouter();
-  const [language, setLanguage] = useState(languages.find(language => language.value === locale));
 
   const onLanguageChange = (lang: any) => {
-    push({ pathname, query }, asPath, {
-      locale: lang.value,
-      scroll: false,
-    });
-    setLanguage(lang);
+    i18n.changeLanguage(lang.value).then(() =>
+      push({ pathname, query }, asPath, {
+        locale: lang.value,
+        scroll: false,
+        shallow: true,
+      })
+    );
   };
 
   return {
-    language,
+    language: locale,
     onLanguageChange,
   };
 };

@@ -23,7 +23,12 @@ const RetirementReadiness: Page = ({}: InferGetStaticPropsType<typeof getStaticP
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-retirement-readiness"]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-retirement-readiness"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

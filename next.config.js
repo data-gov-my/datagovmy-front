@@ -4,9 +4,9 @@ const { i18n } = require("./next-i18next.config");
 /**
  * Plugins
  */
-// const analyzer = require("@next/bundle-analyzer")({
-//   enabled: process.env.ANALYZE ?? false,
-// });
+const analyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE ?? false,
+});
 const pwa = require("next-pwa")({
   dest: "public",
   register: true,
@@ -21,9 +21,17 @@ const nextConfig = {
   i18n,
   reactStrictMode: true,
   swcMinify: true,
+  async rewrites() {
+    return [
+      {
+        source: "/lib.min.js",
+        destination: "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js",
+      },
+    ];
+  },
 };
 
 module.exports = () => {
-  const plugins = [pwa];
+  const plugins = [pwa]; // add analyzer here later
   return plugins.reduce((acc, next) => next(acc), nextConfig);
 };

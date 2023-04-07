@@ -27,7 +27,7 @@ const DashboardIndex: Page = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common"], null, ["en-GB", "ms-MY"]);
 
   const { data } = await get("/dashboard/", { dashboard: "dashboards" });
 

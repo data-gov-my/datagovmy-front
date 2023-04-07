@@ -23,7 +23,10 @@ const COVID19: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {
