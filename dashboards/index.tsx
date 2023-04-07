@@ -35,7 +35,7 @@ export type Dashboard = {
 interface DashboardIndexProps {
   query: Record<string, string>;
   analytics: any;
-  sources: Record<string, string[]>;
+  sources: Record<string, { agency: string }[]>;
   dashboards: Record<string, Record<string, Dashboard[]>>;
 }
 
@@ -109,7 +109,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         <DashboardFilter
           ref={filterRef}
           query={query}
-          sources={sources[lang].map((item: any) => item.agency)}
+          sources={sources[lang].map(({ agency }) => agency)}
         />
 
         {!query["search"] && !query["source"] && (
