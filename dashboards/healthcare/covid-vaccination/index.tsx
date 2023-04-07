@@ -1,7 +1,7 @@
 import AgencyBadge from "@components/AgencyBadge";
-import { Dropdown, Hero, Section, StateDropdown, Tabs } from "@components/index";
+import { Dropdown, Hero, Panel, Section, StateDropdown, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent, ReactNode, useRef } from "react";
 import Container from "@components/Container";
 import { MOHIcon } from "@components/Icon/agency";
 import { routes } from "@lib/routes";
@@ -23,6 +23,7 @@ interface COVIDVaccinationProps {
   timeseries: Record<string, any>;
   statistics: Record<string, any>;
   barmeter: Record<string, any>;
+  waffle: Record<string, any>;
 }
 
 const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
@@ -30,6 +31,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   timeseries,
   statistics,
   barmeter,
+  waffle,
 }) => {
   const { t, i18n } = useTranslation(["common", "dashboard-covid-vaccination"]);
   const router = useRouter();
@@ -40,6 +42,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
 
   const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
   const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+  const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
 
   const { data, setData } = useData({
     vax_tab: 0,
@@ -53,16 +56,61 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
     },
   });
 
-  const section3_timeseries: string[] = [
-    "primary",
-    "booster",
-    "booster2",
-    "adult",
-    "adol",
-    "child",
+  const WAFFLE_LIST: { doseType: string; dosePerc: ReactNode }[] = [
+    {
+      doseType: "dose1",
+      dosePerc: (
+        <Tooltip tip={<span>{t("dashboard-covid-vaccination:tooltips_dose1")}</span>}>
+          {open => (
+            <>
+              <p
+                className="pl-1 underline decoration-dashed underline-offset-4"
+                onClick={() => open()}
+              >
+                {`${(waffle.data[data.filter_age.value].dose1.perc as number).toFixed(1)}%`}
+              </p>
+            </>
+          )}
+        </Tooltip>
+      ),
+    },
+    {
+      doseType: "dose2",
+      dosePerc: (
+        <Tooltip tip={<span>{t("dashboard-covid-vaccination:tooltips_dose2")}</span>}>
+          {open => (
+            <>
+              <p
+                className="pl-1 underline decoration-dashed underline-offset-4"
+                onClick={() => open()}
+              >
+                {`${(waffle.data[data.filter_age.value].dose2.perc as number).toFixed(1)}%`}
+              </p>
+            </>
+          )}
+        </Tooltip>
+      ),
+    },
+    {
+      doseType: "booster1",
+      dosePerc: (
+        <span className="pl-1">{`${(
+          waffle.data[data.filter_age.value].booster1.perc as number
+        ).toFixed(1)}%`}</span>
+      ),
+    },
+    {
+      doseType: "booster2",
+      dosePerc: (
+        <span className="pl-1">{`${(
+          waffle.data[data.filter_age.value].booster2.perc as number
+        ).toFixed(1)}%`}</span>
+      ),
+    },
   ];
 
-  console.log(data);
+  const TIMESERIES_LIST: string[] = ["primary", "booster", "booster2", "adult", "adol", "child"];
+
   return (
     <>
       <Hero
@@ -86,7 +134,6 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           />
         }
       />
-      {/* Rest of page goes here */}
       <Container className="min-h-screen">
         {/* How vaccinated against COVID-19 are we? */}
         <Section title={t("dashboard-covid-vaccination:waffle_header")} date={lastUpdated}>
@@ -117,21 +164,64 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
               />
             )}
             <Tabs.List
-              options={["Age group", "Dose"]}
+              options={[
+                t("dashboard-covid-vaccination:filter_age"),
+                t("dashboard-covid-vaccination:filter_dose"),
+              ]}
               current={data.vax_tab}
               onChange={i => setData("vax_tab", i)}
             />
           </div>
 
           <Tabs hidden current={data.vax_tab} onChange={i => setData("vax_tab", i)}>
-            <Tabs.Panel name={"panel1"} key={0}>
+            <Panel
+              name={t("dashboard-covid-vaccination:filter_age")}
+              key={t("dashboard-covid-vaccination:filter_age")}
+            >
+              <div className="grid grid-cols-2 gap-x-2 gap-y-10 py-5 lg:grid-cols-4 lg:gap-6">
+                {WAFFLE_LIST.map(({ doseType, dosePerc }) => (
+                  <Waffle
+                    className="aspect-square w-full lg:h-[250px] lg:w-auto"
+                    title={
+                      <div className="flex self-center text-base font-bold">
+                        {t(`dashboard-covid-vaccination:${doseType}`).concat(` - `)}
+                        {dosePerc}
+                      </div>
+                    }
+                    color="#9FE8B1"
+                    data={waffle.data[data.filter_age.value][doseType].data}
+                  >
+                    <div className="text-dim">
+                      <p>
+                        {`${t("dashboard-covid-vaccination:total")} - `}
+                        <span className="font-medium text-black">
+                          {(
+                            waffle.data[data.filter_age.value][doseType].total as number
+                          ).toLocaleString()}
+                        </span>
+                      </p>
+                      <p>
+                        {`${t("dashboard-covid-vaccination:daily")} - `}
+                        <span className="font-medium text-black">
+                          {waffle.data[data.filter_age.value][doseType].daily}
+                        </span>
+                      </p>
+                    </div>
+                  </Waffle>
+                ))}
+              </div>
+            </Panel>
+            <Panel
+              name={t("dashboard-covid-vaccination:filter_dose")}
+              key={t("dashboard-covid-vaccination:filter_dose")}
+            >
               <BarMeter
                 className="col-span-2"
                 data={barmeter.data[data.filter_dose.value]}
                 unit="%"
                 layout={isMobile ? "horizontal" : "vertical"}
               />
-            </Tabs.Panel>
+            </Panel>
           </Tabs>
         </Section>
 
@@ -177,7 +267,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           date={timeseries.data_as_of}
         >
           <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
-            {section3_timeseries.map((item: string, i: number) => {
+            {TIMESERIES_LIST.map((item: string, i: number) => {
               const title: string = `area_chart_title${i + 1}`;
               const y_key: string = `line_${item}`;
               const statistic_key: string = `daily_${item}`;

@@ -11,6 +11,7 @@ const CovidVaccination: Page = ({
   timeseries,
   statistics,
   barmeter,
+  waffle,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
 
@@ -26,6 +27,7 @@ const CovidVaccination: Page = ({
         timeseries={timeseries}
         statistics={statistics}
         barmeter={barmeter}
+        waffle={waffle}
       />
     </>
   );
@@ -43,6 +45,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       timeseries: data.timeseries,
       statistics: data.statistics,
       barmeter: data.bar_chart,
+      waffle: data.waffle,
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };

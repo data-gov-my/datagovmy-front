@@ -1,3 +1,4 @@
+import { OptionType } from "@components/types";
 import { MALAYSIA, STATES } from "./constants";
 import { sortMsiaFirst } from "./helpers";
 
@@ -15,14 +16,14 @@ export const statesOptions = [MALAYSIA].concat(sortMsiaFirst(STATES, "key")).map
 }));
 
 // For Covid Vaccinatino page
-export const filterDoseOptions = [
+export const filterDoseOptions: Array<OptionType> = [
   { label: "1st Dose", value: "dose1" },
   { label: "2nd Dose", value: "dose2" },
   { label: "1st Booster", value: "booster1" },
   { label: "2nd Booster", value: "booster2" },
 ];
 
-export const filterAgeOptions = [
+export const filterAgeOptions: Array<OptionType> = [
   { label: "Total Population", value: "total" },
   { label: "Children (5-11)", value: "child" },
   { label: "Adolescents (12-17)", value: "adolescent" },
