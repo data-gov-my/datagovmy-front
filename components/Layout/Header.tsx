@@ -43,14 +43,21 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
               </div>
             </Link>
             <Nav isTabletNavOpen={isTabletNavOpen}>
-              <NavItem title={t("nav.home")} link="/" onClick={() => setIsTabletNavOpen(false)} />
+              <NavItem
+                key={"/"}
+                title={t("nav.home")}
+                link="/"
+                onClick={() => setIsTabletNavOpen(false)}
+              />
               <NavItem
                 title={t("nav.dashboards")}
                 link="/dashboard"
+                key="/dashboard"
                 onClick={() => setIsTabletNavOpen(false)}
               />
               <NavItem
                 title={t("nav.catalogue")}
+                key="/data-catalogue"
                 link="/data-catalogue"
                 onClick={() => setIsTabletNavOpen(false)}
               />

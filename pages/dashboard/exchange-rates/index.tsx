@@ -33,7 +33,10 @@ const ExchangeRates: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-exchange-rates"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-exchange-rates"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
 
   const { data } = await get("/dashboard", { dashboard: "exchange_rates" });
 

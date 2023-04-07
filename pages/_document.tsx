@@ -52,7 +52,7 @@ class HTMLDocument extends Document {
           />
 
           {/* Mixpanel */}
-          <Script
+          {/* <Script
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `const MIXPANEL_CUSTOM_LIB_URL = "${process.env.APP_URL}/lib.min.js";
@@ -60,7 +60,7 @@ class HTMLDocument extends Document {
               for(h=0;h<i.length;h++)g(a,i[h]);var j="set set_once union unset remove delete".split(" ");a.get_group=function(){function b(c){d[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));a.push([e,call2])}}for(var d={},e=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<j.length;c++)b(j[c]);return d};b._i.push([e,f,c])};b.__SV=1.2;e=f.createElement("script");e.type="text/javascript";e.async=!0;e.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
               MIXPANEL_CUSTOM_LIB_URL:"file:"===f.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\\/\\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";g=f.getElementsByTagName("script")[0];g.parentNode.insertBefore(e,g)}})(document,window.mixpanel||[]);`,
             }}
-          />
+          /> */}
 
           {/* PWA setting */}
           <meta name="application-name" content="data.gov.my" />
