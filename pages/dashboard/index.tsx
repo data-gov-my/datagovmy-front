@@ -27,29 +27,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
 
   const { data } = await get("/dashboard/", { dashboard: "dashboards" });
 
-  const sources: Record<string, string[]> = {
-    en: [],
-    bm: [],
-  };
-
-  Object.values(data.dashboards_all.data.en).map((category: any) => {
-    category.map((dashboard: { agency: string }) => {
-      sources["en"].indexOf(dashboard.agency) === -1 && sources["en"].push(dashboard.agency);
-    });
-  });
-
-  Object.values(data.dashboards_all.data.bm).map((category: any) => {
-    category.map((dashboard: { agency: string }) => {
-      sources["bm"].indexOf(dashboard.agency) === -1 && sources["bm"].push(dashboard.agency);
-    });
-  });
-
   return {
     props: {
       ...i18n,
       query: query ?? {},
       data: data,
-      sources: sources,
+      sources: data.agencies_all.data,
       timeseries: [],
       analytics: {
         data_as_of: data.dashboards_top.data_as_of,

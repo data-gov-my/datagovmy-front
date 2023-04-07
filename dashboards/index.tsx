@@ -106,7 +106,11 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
       />
 
       <Container className="min-h-screen">
-        <DashboardFilter ref={filterRef} query={query} sources={sources[lang]} />
+        <DashboardFilter
+          ref={filterRef}
+          query={query}
+          sources={sources[lang].map((item: any) => item.agency)}
+        />
 
         {!query["search"] && !query["source"] && (
           <Section
