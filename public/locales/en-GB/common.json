@@ -39,6 +39,7 @@
     "clear_selection": "Clear selection",
     "clear_all": "Clear all",
     "reset": "Reset",
+    "reset_default": "Reset to default",
     "close": "Close",
     "select": "Select",
     "here": "Here",
@@ -106,6 +107,7 @@
         "exchange_rate": "Exchange Rates",
         "daily_price": "Daily Prices",
         "blood_donation": "Blood Donation",
+        "birthday_explorer": "Birthday Explorer",
         "name_popularity": "Name Popularity"
       }
     },
@@ -129,7 +131,8 @@
     "dark": "Dark",
     "brought_by": "Brought to you by",
     "visit_portal": "Visit our portal",
-    "click_to_explore": "Click to explore"
+    "click_to_explore": "Click to explore",
+    "ovs": "Malaysian-born Overseas"
   },
   "agency": {
     "bnm": "Bank Negara Malaysia",

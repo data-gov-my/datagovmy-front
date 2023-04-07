@@ -878,12 +878,12 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.13.17", "@babel/runtime@^7.14.5", "@babel/runtime@^7.17.2":
-  version "7.18.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.3.tgz#c7b654b57f6f63cf7f8b418ac9ca04408c4579f4"
-  integrity sha512-38Y8f7YUhce/K7RMwTp7m0uCumpv9hZkitCbBClqQIow1qSbCvGkcegKOXpEWCQLfWmevgRiWokZ1GkpfhbZug==
+"@babel/runtime@^7.20.13", "@babel/runtime@^7.20.6":
+  version "7.21.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.21.0.tgz#5b55c9d394e5fcf304909a8b00c07dc217b56673"
+  integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
   dependencies:
-    regenerator-runtime "^0.13.4"
+    regenerator-runtime "^0.13.11"
 
 "@babel/template@^7.18.10":
   version "7.18.10"
@@ -2914,17 +2914,12 @@ highlight.js@^11.6.0:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.6.0.tgz#a50e9da05763f1bb0c1322c8f4f755242cff3f5a"
   integrity sha512-ig1eqDzJaB0pqEvlPVIpSSyMaO92bH1N2rJpLMN/nX396wTpDA4Eq0uK+7I/2XG17pFaaKE0kjV/XPeGt7Evjw==
 
-hoist-non-react-statics@^3.2.0, hoist-non-react-statics@^3.3.0:
+hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   dependencies:
     react-is "^16.7.0"
-
-html-escaper@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-2.0.2.tgz#dfd60027da36a36dfcbe236262c00a5822681453"
-  integrity sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==
 
 html-parse-stringify@^3.0.1:
   version "3.0.1"
@@ -2943,17 +2938,17 @@ husky@>=6:
   resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.1.tgz#511cb3e57de3e3190514ae49ed50f6bc3f50b3e9"
   integrity sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==
 
-i18next-fs-backend@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/i18next-fs-backend/-/i18next-fs-backend-1.1.4.tgz#d0e9b9ed2fa7a0f11002d82b9fa69c3c3d6482da"
-  integrity sha512-/MfAGMP0jHonV966uFf9PkWWuDjPYLIcsipnSO3NxpNtAgRUKLTwvm85fEmsF6hGeu0zbZiCQ3W74jwO6K9uXA==
+i18next-fs-backend@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/i18next-fs-backend/-/i18next-fs-backend-2.1.1.tgz#07c6393be856c5a398e3dfc1257bf8439841cd89"
+  integrity sha512-FTnj+UmNgT3YRml5ruRv0jMZDG7odOL/OP5PF5mOqvXud2vHrPOOs68Zdk6iqzL47cnnM0ZVkK2BAvpFeDJToA==
 
-i18next@^21.6.14:
-  version "21.8.10"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.8.10.tgz#12f164cc0f5f7904f0d4e0cfdf5950b93793d171"
-  integrity sha512-7xRb6y4QlSqZRZ3uA5BIEsLuZpmxpzHLizQyKjDDThOcvdfgICOX7aFoBnh4BSWcLtJamTqSweaOuK22A2xqkA==
+i18next@^22.4.14:
+  version "22.4.14"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.4.14.tgz#18dd94e9adc2618497c7de101a206e1ca3a18727"
+  integrity sha512-VtLPtbdwGn0+DAeE00YkiKKXadkwg+rBUV+0v8v0ikEjwdiJ0gmYChVE4GIa9HXymY6wKapkL93vGT7xpq6aTw==
   dependencies:
-    "@babel/runtime" "^7.17.2"
+    "@babel/runtime" "^7.20.6"
 
 idb@^7.0.1:
   version "7.1.0"
@@ -3508,18 +3503,16 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-next-i18next@^11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/next-i18next/-/next-i18next-11.0.0.tgz#2857d13c58a5ed976fe57c44286f1520b07f7c96"
-  integrity sha512-phxbQiZGSJTTBE2FI4+BnqFZl88AI2V+6MrEQnT9aPFAXq/fATQ/F0pOUM3J7kU4nEeCfn3hjISq+ygGHlEz0g==
+next-i18next@^13.2.2:
+  version "13.2.2"
+  resolved "https://registry.yarnpkg.com/next-i18next/-/next-i18next-13.2.2.tgz#9609546fab1d1d5f9b227e86c5ca23d0cbbbddb4"
+  integrity sha512-t0WU6K+HJoq2nVQ0n6OiiEZja9GyMqtDSU74FmOafgk4ljns+iZ18bsNJiI8rOUXfFfkW96ea1N7D5kbMyT+PA==
   dependencies:
-    "@babel/runtime" "^7.13.17"
+    "@babel/runtime" "^7.20.13"
     "@types/hoist-non-react-statics" "^3.3.1"
     core-js "^3"
-    hoist-non-react-statics "^3.2.0"
-    i18next "^21.6.14"
-    i18next-fs-backend "^1.1.4"
-    react-i18next "^11.16.2"
+    hoist-non-react-statics "^3.3.2"
+    i18next-fs-backend "^2.1.1"
 
 next-pwa@^5.6.0:
   version "5.6.0"
@@ -3958,13 +3951,12 @@ react-dom@18.1.0:
     loose-envify "^1.1.0"
     scheduler "^0.22.0"
 
-react-i18next@^11.16.2:
-  version "11.17.2"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-11.17.2.tgz#4ca77a20bedfa607e4e863dcc85963d1a180e2e9"
-  integrity sha512-/HG4XSResWDY450cFmoUqLgCYDu8VYMFISGcMnZlxRSV05naj3+F7DoebwnPu6z/akA3Wd0Xe7KGTYdywL9z9g==
+react-i18next@^12.2.0:
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-12.2.0.tgz#010e3f6070b8d700442947233352ebe4b252d7a1"
+  integrity sha512-5XeVgSygaGfyFmDd2WcXvINRw2WEC1XviW1LXY/xLOEMzsCFRwKqfnHN+hUjla8ZipbVJR27GCMSuTr0BhBBBQ==
   dependencies:
-    "@babel/runtime" "^7.14.5"
-    html-escaper "^2.0.2"
+    "@babel/runtime" "^7.20.6"
     html-parse-stringify "^3.0.1"
 
 react-is@^16.13.1, react-is@^16.7.0:
@@ -4034,6 +4026,11 @@ regenerate@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
+
+regenerator-runtime@^0.13.11:
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
+  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 regenerator-runtime@^0.13.4:
   version "0.13.9"

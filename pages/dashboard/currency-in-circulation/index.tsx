@@ -33,10 +33,12 @@ const CurrencyInCirculation: Page = ({
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, [
-    "common",
-    "dashboard-currency-in-circulation",
-  ]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-currency-in-circulation"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
 
   const { data } = await get("/dashboard", { dashboard: "currency" });
 

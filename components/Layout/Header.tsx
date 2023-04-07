@@ -26,7 +26,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
 
   return (
     <div className="fixed top-0 left-0 z-30 w-full border-b dark:border-washed-dark">
-      <Container background="bg-white dark:bg-black" className="flex items-center gap-4  py-[11px]">
+      <Container background="bg-white dark:bg-black" className="flex items-center gap-4 py-[11px]">
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/">
@@ -43,15 +43,22 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
               </div>
             </Link>
             <Nav isTabletNavOpen={isTabletNavOpen}>
-              <NavItem title={t("nav.home")} link="/" onClick={() => setIsTabletNavOpen(false)} />
               <NavItem
-                title={t("nav.catalogue")}
-                link="/data-catalogue"
+                key={"/"}
+                title={t("nav.home")}
+                link="/"
                 onClick={() => setIsTabletNavOpen(false)}
               />
               <NavItem
                 title={t("nav.dashboards")}
                 link="/dashboard"
+                key="/dashboard"
+                onClick={() => setIsTabletNavOpen(false)}
+              />
+              <NavItem
+                title={t("nav.catalogue")}
+                key="/data-catalogue"
+                link="/data-catalogue"
                 onClick={() => setIsTabletNavOpen(false)}
               />
 

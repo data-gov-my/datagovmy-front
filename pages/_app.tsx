@@ -20,10 +20,10 @@ function App({ Component, pageProps }: AppPropsLayout) {
 
   // Mixpanel initialisation
   useEffect(() => {
-    window.mixpanel.init(mixpanelConfig.token, {
-      debug: true,
-      api_host: "https://api.mixpanel.com",
-    });
+    // window.mixpanel.init(mixpanelConfig.token, {
+    //   debug: true,
+    //   api_host: "https://api.mixpanel.com",
+    // });
   }, []);
 
   useEffect(() => {

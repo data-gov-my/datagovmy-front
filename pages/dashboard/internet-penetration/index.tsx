@@ -23,7 +23,12 @@ const InternetPenetration: Page = ({}: InferGetStaticPropsType<typeof getStaticP
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-internet-penetration"]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-internet-penetration"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

@@ -1,6 +1,7 @@
 export const routes = {
   HOME: "/",
   TRACKER_999: "/dashboard/999-tracker",
+  BIRTHDAY_EXPLORER: "/dashboard/birthday-explorer",
   BLOOD_DONATION: "/dashboard/blood-donation",
   CAR_POPULARITY: "/dashboard/car-popularity",
   CIRCLE_OF_LIFE: "/dashboard/circle-of-life",

@@ -65,37 +65,45 @@ const Hero: FunctionComponent<HeroProps> = ({
       {children ? (
         children
       ) : (
-        <div className="space-y-6 xl:w-full">
-          <div className="relative flex justify-between">
-            {category && (
-              <span className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}>
-                {t(category[0])}
-              </span>
-            )}
-            <div className="absolute right-0 top-0">{agencyBadge}</div>
+        <>
+          <div className="flex flex-row-reverse pb-4 sm:pb-0 lg:absolute lg:right-3 lg:top-20 xl:right-20">
+            {agencyBadge}
           </div>
-
-          {(header || description) && (
-            <div className="space-y-3">
-              {header && (
-                <h3 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h3>
-              )}
-              {description && Array.isArray(description) ? (
-                <p className={["text-dim", description[1]].join(" ")}>{t(description[0])}</p>
-              ) : (
-                description
+          <div className="space-y-6 xl:w-full">
+            <div className="relative flex justify-between">
+              {category && (
+                <span
+                  className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}
+                >
+                  {t(category[0])}
+                </span>
               )}
             </div>
-          )}
 
-          {last_updated && (
-            <p className="text-sm text-dim dark:text-white">
-              {t("common.last_updated", {
-                date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-              })}
-            </p>
-          )}
-        </div>
+            {(header || description) && (
+              <div className="space-y-3">
+                {header && (
+                  <h3 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h3>
+                )}
+                {description && Array.isArray(description) ? (
+                  <p className={["text-dim xl:w-2/3", description[1]].join(" ")}>
+                    {description[0]}
+                  </p>
+                ) : (
+                  description
+                )}
+              </div>
+            )}
+
+            {last_updated && (
+              <p className="text-sm text-dim dark:text-white">
+                {t("common.last_updated", {
+                  date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
+                })}
+              </p>
+            )}
+          </div>
+        </>
       )}
     </Container>
   );

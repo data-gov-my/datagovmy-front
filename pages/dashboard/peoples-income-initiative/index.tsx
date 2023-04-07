@@ -23,10 +23,12 @@ const PeoplesIncomeInitiative: Page = ({}: InferGetStaticPropsType<typeof getSta
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, [
-    "common",
-    "dashboard-peoples-income-initiative",
-  ]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-peoples-income-initiative"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {
