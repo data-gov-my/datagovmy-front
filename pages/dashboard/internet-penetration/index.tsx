@@ -8,18 +8,27 @@ import { useTranslation } from "@hooks/useTranslation";
 import InternetPenetrationDashboard from "@dashboards/digitalisation/internet-penetration";
 
 const InternetPenetration: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-internet-penetration"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-internet-penetration:header")}
+        description={t("dashboard-internet-penetration:description")}
+        keywords={""}
+      />
       <InternetPenetrationDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-internet-penetration"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

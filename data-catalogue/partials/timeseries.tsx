@@ -10,6 +10,7 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
@@ -56,16 +57,8 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     ctx: undefined,
     minmax: [0, dataset.chart.x.length - 1],
   });
-  const { coordinate } = useSlice(
-    {
-      x: dataset.chart.x,
-      y: dataset.chart.y,
-      line: dataset.chart.line,
-    },
-    data.minmax
-  );
+  const { coordinate } = useSlice(dataset.chart, data.minmax);
   const sliderRef = useRef<SliderRef>(null);
-
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
@@ -134,6 +127,26 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     [data.ctx]
   );
 
+  const _datasets = useMemo<ChartDataset<keyof ChartTypeRegistry, any[]>[]>(() => {
+    const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
+    const colors = [
+      AKSARA_COLOR.PRIMARY,
+      AKSARA_COLOR.DIM,
+      AKSARA_COLOR.DANGER,
+      AKSARA_COLOR.WARNING,
+    ]; // [blue, red]
+
+    return sets.map(([key, y], index) => ({
+      type: "line",
+      data: y as number[],
+      label: key, //sets.length === 1 ? dataset.meta[lang].title : dataset.table.columns[`${key}_${lang}`],
+      borderColor: colors[index],
+      backgroundColor: colors[index].concat("33"), //AKSARA_COLOR.PRIMARY_H,
+      borderWidth: 1.5,
+      fill: true,
+    }));
+  }, [coordinate]);
+
   useWatch(() => {
     setData("minmax", [0, dataset.chart.x.length - 1]);
     sliderRef.current && sliderRef.current.reset();
@@ -153,17 +166,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
         data={{
           labels: coordinate.x,
-          datasets: [
-            {
-              type: "line",
-              data: coordinate.y,
-              label: dataset.meta[lang].title,
-              borderColor: AKSARA_COLOR.PRIMARY,
-              backgroundColor: AKSARA_COLOR.PRIMARY_H,
-              borderWidth: 1.5,
-              fill: true,
-            },
-          ],
+          datasets: _datasets,
         }}
       />
       <Slider

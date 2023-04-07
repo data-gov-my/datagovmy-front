@@ -1,4 +1,4 @@
-import Dropdown from "@components/Dropdown";
+// import Dropdown from "@components/Dropdown";
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import "highlight.js/styles/shades-of-purple.css";
 import { useTranslation } from "@hooks/useTranslation";
@@ -6,7 +6,7 @@ import { FunctionComponent } from "react";
 
 interface ErrorProps {
   title: string;
-  description?: string;
+  description?: string | null;
   code: number;
   reason: string;
 }
@@ -27,7 +27,7 @@ const Error: FunctionComponent<ErrorProps> = ({ title, description, code, reason
           <p className=" pb-2 text-sm font-bold uppercase text-dim">{t("error.output")}</p>
 
           <div className="rounded-xl bg-black ">
-            <div className="flex justify-between border-b border-outline border-opacity-20 p-2.5 text-white">
+            {/* <div className="flex justify-between border-b border-outline border-opacity-20 p-2.5 text-white">
               <Dropdown
                 darkMode
                 sublabel={<GlobeAltIcon className="mr-2 h-4 w-4" />}
@@ -35,7 +35,7 @@ const Error: FunctionComponent<ErrorProps> = ({ title, description, code, reason
                 selected={{ label: "Bash", value: "bash" }}
                 onChange={() => {}}
               />
-            </div>
+            </div> */}
             <div className="p-4.5 font-mono text-sm text-white">
               <span className="font-bold text-green-600">data.gov.my:~/ $</span> cat {code}
               -error.log

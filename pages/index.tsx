@@ -128,6 +128,7 @@ const Home: Page = ({
             ))}
           </Tabs>
         </Section>
+
         <Section
           title={"Study our most popular datasets"}
           description={
@@ -276,7 +277,7 @@ const Ranking = ({ ranks }: RankingProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common"], null, ["en-GB", "ms-MY"]);
   const { data } = await get("/dashboard", { dashboard: "homepage" });
 
   return {

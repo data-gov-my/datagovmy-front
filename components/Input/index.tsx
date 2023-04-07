@@ -9,25 +9,27 @@ interface InputProps extends LabelProps {
   value?: string;
   onChange?: (value: string) => void;
   onKeyDown?: (value: React.KeyboardEvent<HTMLInputElement>) => void;
+  min?: string;
+  max?: string;
   required?: boolean;
   autoFocus?: boolean;
-  isValidation?: boolean;
-  validationText?: string;
+  validation?: string;
   disabled?: boolean;
 }
 
 const Input: FunctionComponent<InputProps> = ({
   name,
   label,
-  className = "px-4 w-full rounded-md border-outline text-sm placeholder:text-dim dark:bg-inherit dark:text-white md:text-base",
+  className = "px-4 w-full text-sm md:text-base",
   type = "text",
   value,
   placeholder,
+  min,
+  max,
   icon,
   required = false,
   autoFocus = false,
-  isValidation = false,
-  validationText = "",
+  validation = "",
   onChange,
   onKeyDown,
   disabled = false,
@@ -56,8 +58,10 @@ const Input: FunctionComponent<InputProps> = ({
         autoFocus={autoFocus}
         disabled={disabled}
         type={type as HTMLInputTypeAttribute}
+        min={min}
+        max={max}
         className={[
-          "outline-none focus:outline-none focus:ring-0 dark:bg-inherit dark:text-white",
+          "rounded-md border-outline outline-none placeholder:text-dim focus:border-outlineHover focus:outline-none focus:ring-0 focus:ring-dim dark:border-washed-dark dark:bg-black dark:focus:border-outlineHover-dark",
           icon ? "pl-10" : "",
           className,
         ].join(" ")}
@@ -65,13 +69,11 @@ const Input: FunctionComponent<InputProps> = ({
         value={value}
         required={required}
         onChange={e => {
-          onChange && onChange(e.target.value);
+          if (onChange) onChange(e.target.value);
         }}
-        onKeyDown={e => {
-          onKeyDown && onKeyDown(e);
-        }}
+        onKeyDown={onKeyDown}
       />
-      {isValidation ? <p className="text-xs text-danger">{validationText}</p> : <></>}
+      {validation && <p className="text-xs text-danger">{validation}</p>}
     </div>
   );
 };

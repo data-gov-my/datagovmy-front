@@ -8,18 +8,25 @@ import { useTranslation } from "@hooks/useTranslation";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
 
 const CarPopularity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-car-popularity"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-car-popularity:header")}
+        description={t("dashboard-car-popularity:description")}
+        keywords={""}
+      />
       <CarPopularityDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-car-popularity"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

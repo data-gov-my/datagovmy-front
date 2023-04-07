@@ -8,18 +8,25 @@ import { useTranslation } from "@hooks/useTranslation";
 import PublicPensionDashboard from "@dashboards/economy/public-pension";
 
 const PublicPension: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-public-pension"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-public-pension:header")}
+        description={t("dashboard-public-pension:description")}
+        keywords={""}
+      />
       <PublicPensionDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-public-pension"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

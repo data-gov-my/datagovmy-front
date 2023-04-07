@@ -8,18 +8,27 @@ import { useTranslation } from "@hooks/useTranslation";
 import IncomeTaxationDashboard from "@dashboards/economy/income-taxation";
 
 const IncomeTaxation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-income-taxation"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-income-taxation:header")}
+        description={t("dashboard-income-taxation:description")}
+        keywords={""}
+      />
       <IncomeTaxationDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-income-taxation"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

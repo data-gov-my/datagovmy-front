@@ -3,6 +3,7 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { KWAPIcon } from "@components/Icon/agency";
 
 /**
  * PublicPension Dashboard
@@ -12,21 +13,20 @@ import Container from "@components/Container";
 interface PublicPensionProps {}
 
 const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common", "dashboard-public-pension"]);
 
   return (
     <>
       <Hero
-        background="gray"
-        category={["Economy"]}
-        header={["Public Pension"]}
-        description={[
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ]}
+        background="blue"
+        category={[t("nav.megamenu.categories.economy"), "text-primary dark:text-primary-dark"]}
+        header={[t("dashboard-public-pension:header")]}
+        description={[t("dashboard-public-pension:description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Retirement Fund Inc (KWAP)"}
-            link="https://www.bnm.gov.my/publications/mhs"
+            link="https://www.kwap.gov.my"
+            icon={<KWAPIcon />}
           />
         }
       />

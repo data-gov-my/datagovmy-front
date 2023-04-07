@@ -4,14 +4,10 @@ import { AppPropsLayout } from "@lib/types";
 import Layout from "@components/Layout";
 import { useEffect, ReactNode, useState, createContext } from "react";
 import { useRouter } from "next/router";
-import mixpanel from "mixpanel-browser";
 import mixpanelConfig from "@config/mixpanel";
 import { ga_track, init_session } from "@lib/mixpanel";
 import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
-
-// Global settings
-mixpanel.init(mixpanelConfig.token, { debug: process.env.NODE_ENV === "development" });
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
@@ -22,16 +18,24 @@ function App({ Component, pageProps }: AppPropsLayout) {
     ));
   const router = useRouter();
 
+  // Mixpanel initialisation
+  useEffect(() => {
+    // window.mixpanel.init(mixpanelConfig.token, {
+    //   debug: true,
+    //   api_host: "https://api.mixpanel.com",
+    // });
+  }, []);
+
   useEffect(() => {
     // trigger page view event for client-side navigation
-    // const handleRouteChange = (url: string) => {
-    //   ga_track(url);
-    //   init_session();
-    // };
-    // router.events.on("routeChangeComplete", handleRouteChange);
-    // return () => {
-    //   router.events.off("routeChangeComplete", handleRouteChange);
-    // };
+    const handleRouteChange = (url: string) => {
+      //   ga_track(url);
+      //   init_session();
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
   }, [router.events]);
 
   return (

@@ -8,18 +8,25 @@ import { useTranslation } from "@hooks/useTranslation";
 import PovertyDashboard from "@dashboards/economy/poverty";
 
 const Poverty: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["common", "dashboard-poverty"]);
 
   return (
     <>
-      <Metadata title={"title"} description={"description"} keywords={""} />
+      <Metadata
+        title={t("dashboard-poverty:header")}
+        description={t("dashboard-poverty:description")}
+        keywords={""}
+      />
       <PovertyDashboard />
     </>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-poverty"], null, [
+    "en-GB",
+    "ms-MY",
+  ]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

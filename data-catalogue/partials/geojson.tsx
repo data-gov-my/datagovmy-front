@@ -1,10 +1,11 @@
-import type { ChoroplethColors, DownloadOptions } from "@lib/types";
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
-import { default as dynamic } from "next/dynamic";
-import { useTranslation } from "@hooks/useTranslation";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import type { Color } from "@hooks/useColor";
+import { useTranslation } from "@hooks/useTranslation";
 import { download, exportAs } from "@lib/helpers";
-import { track } from "mixpanel-browser";
+import type { DownloadOptions } from "@lib/types";
+// import { track } from "mixpanel-browser";
+import { default as dynamic } from "next/dynamic";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
@@ -18,7 +19,7 @@ type ChoroPoint = {
 
 interface CatalogueGeojsonProps {
   config: {
-    color: ChoroplethColors;
+    color: Color;
     geojson: "state" | "dun" | "parlimen" | "district";
   };
   dataset: {
@@ -78,14 +79,14 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name_en: dataset.meta.en.title,
-              name_bm: dataset.meta.bm.title,
-              ext: "png",
-            });
+            // track("file_download", {
+            //   uid: dataset.meta.unique_id.concat("_png"),
+            //   type: "image",
+            //   id: dataset.meta.unique_id,
+            //   name_en: dataset.meta.en.title,
+            //   name_bm: dataset.meta.bm.title,
+            //   ext: "png",
+            // });
           },
         },
         {
@@ -97,15 +98,16 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  ext: "svg",
-                })
+              .then(
+                () => {}
+                // track("file_download", {
+                //   uid: dataset.meta.unique_id.concat("_svg"),
+                //   type: "image",
+                //   id: dataset.meta.unique_id,
+                //   name_en: dataset.meta.en.title,
+                //   name_bm: dataset.meta.bm.title,
+                //   ext: "svg",
+                // })
               )
               .catch(e => {
                 console.error(e);
