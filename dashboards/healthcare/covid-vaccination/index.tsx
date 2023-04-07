@@ -39,7 +39,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const currentState = (router.query.state as string) ?? "mys";
   const sliderRef = useRef<SliderRef>(null);
   const windowWidth = useWindowWidth();
-  const isMobile = windowWidth < BREAKPOINTS.MD;
+  const isTablet = windowWidth < BREAKPOINTS.LG;
 
   const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
   const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
@@ -148,9 +148,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           title={t("dashboard-covid-vaccination:waffle_header", {
             state: CountryAndStates[currentState],
           })}
-          date={lastUpdated}
+          date={waffle.data_as_of}
         >
-          <div className="flex flex-col justify-between gap-4 md:flex-row">
+          <div className="flex flex-col justify-between gap-4 lg:flex-row">
             {data.vax_tab === 0 ? (
               <Dropdown
                 placeholder="Select"
@@ -232,7 +232,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 className="col-span-2"
                 data={barmeter.data[data.filter_dose.value]}
                 unit="%"
-                layout={isMobile ? "horizontal" : "vertical"}
+                layout={isTablet ? "horizontal" : "vertical"}
               />
             </Panel>
           </Tabs>
