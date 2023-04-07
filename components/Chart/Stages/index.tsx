@@ -34,7 +34,7 @@ const Stages: FunctionComponent<StagesProps> = ({
           <div className="m-auto w-fit min-w-[200px] rounded bg-washed py-1.5 px-3 text-center">
             <span className="text-xs text-dim">{data.header.name}</span>
             <div className="flex items-center justify-center gap-2">
-              <span className="text-xl">{data.header.value.toLocaleString()}</span>
+              <span className="text-xl dark:text-black">{data.header.value.toLocaleString()}</span>
 
               <small
                 className={`inline-block rounded bg-opacity-20 px-1.5 ${badgeColor(
@@ -176,7 +176,7 @@ const Stats: FunctionComponent<StatsProps> = ({
       >
         <span className="text-xs text-dim">{name}</span>
         <div className="flex items-center gap-2">
-          <span className="text-xl">{value && value.toLocaleString()}</span>
+          <span className="text-xl">{value && (+value).toLocaleString()}</span>
           <small
             className={`inline-block rounded px-1.5 ${
               !unit
@@ -185,7 +185,7 @@ const Stats: FunctionComponent<StatsProps> = ({
             }`}
           >
             {!unit && appendPlusMinus(delta)}
-            {delta && (+delta.toFixed(1)).toLocaleString()}
+            {delta && (+delta).toLocaleString()}
             {unit}
           </small>
         </div>

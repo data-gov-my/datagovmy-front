@@ -85,5 +85,5 @@
 .donut-meter::before {
   content: "";
   transform: translate(-50%, -50%);
-  @apply absolute top-1/2 left-1/2 h-[75%] w-[75%] rounded-[50%] bg-white transition-all;
+  @apply absolute top-1/2 left-1/2 h-[75%] w-[75%] rounded-[50%] bg-white transition-all dark:bg-black;
 }
