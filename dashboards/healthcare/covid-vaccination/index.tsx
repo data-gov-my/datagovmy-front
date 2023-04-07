@@ -114,7 +114,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   return (
     <>
       <Hero
-        background="red"
+        background="green"
         category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
         header={[t("dashboard-covid-vaccination:header")]}
         description={
@@ -136,7 +136,12 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       />
       <Container className="min-h-screen">
         {/* How vaccinated against COVID-19 are we? */}
-        <Section title={t("dashboard-covid-vaccination:waffle_header")} date={lastUpdated}>
+        <Section
+          title={t("dashboard-covid-vaccination:waffle_header", {
+            state: CountryAndStates[currentState],
+          })}
+          date={lastUpdated}
+        >
           <div className="flex flex-col justify-between gap-4 md:flex-row">
             {data.vax_tab === 0 ? (
               <Dropdown
@@ -194,7 +199,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                     <div className="text-dim">
                       <p>
                         {`${t("dashboard-covid-vaccination:total")} - `}
-                        <span className="font-medium text-black">
+                        <span className="font-medium">
                           {(
                             waffle.data[data.filter_age.value][doseType].total as number
                           ).toLocaleString()}
@@ -202,7 +207,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                       </p>
                       <p>
                         {`${t("dashboard-covid-vaccination:daily")} - `}
-                        <span className="font-medium text-black">
+                        <span className="font-medium">
                           {waffle.data[data.filter_age.value][doseType].daily}
                         </span>
                       </p>
@@ -263,7 +268,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
 
         {/*  How are COVID-19 key indicators trending */}
         <Section
-          title={t("dashboard-covid-vaccination:area_chart_header")}
+          title={t("dashboard-covid-vaccination:area_chart_header", {
+            state: CountryAndStates[currentState],
+          })}
           date={timeseries.data_as_of}
         >
           <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">

@@ -34,8 +34,12 @@ const CovidVaccination: Page = ({
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-vaccination"]);
-
+  const i18n = await serverSideTranslations(
+    locale!,
+    ["common", "dashboard-covid-vaccination"],
+    null,
+    ["en-GB", "ms-MY"]
+  );
   const { data } = await get("/dashboard", { dashboard: "covid_vax", state: "mys" });
 
   return {
