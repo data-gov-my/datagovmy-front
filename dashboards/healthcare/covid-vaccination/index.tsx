@@ -153,6 +153,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           <div className="flex flex-col justify-between gap-4 lg:flex-row">
             {data.vax_tab === 0 ? (
               <Dropdown
+                anchor="left"
                 placeholder="Select"
                 onChange={item => setData("filter_age", item)}
                 selected={data.filter_age}
@@ -165,6 +166,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
               />
             ) : (
               <Dropdown
+                anchor="left"
                 placeholder="Select"
                 onChange={item => setData("filter_dose", item)}
                 selected={data.filter_dose}
