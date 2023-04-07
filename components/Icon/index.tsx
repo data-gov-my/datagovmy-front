@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 
 export interface IconProps {
   className?: string;
+  fillColor?: string;
 }
 
 export const UsersIcon: FunctionComponent<IconProps> = ({ className }) => {

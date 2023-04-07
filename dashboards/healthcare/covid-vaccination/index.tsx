@@ -119,7 +119,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
     <>
       <Hero
         background="green"
-        category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
+        category={[t("nav.megamenu.categories.healthcare"), "text-green-600"]}
         header={[t("dashboard-covid-vaccination:header")]}
         description={
           <>
@@ -134,7 +134,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           <AgencyBadge
             agency={"Ministry of Health (MoH)"}
             link="https://www.moh.gov.my"
-            icon={<MOHIcon />}
+            icon={<MOHIcon fillColor="#16A34A" />} // green-600
           />
         }
       />
