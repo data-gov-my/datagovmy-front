@@ -47,19 +47,18 @@ CovidVaccinationState.layout = (page: ReactElement<any, string | JSXElementConst
       <StateDropdown
         url={routes.COVID_VACCINATION}
         currentState={(useRouter().query.state as string) ?? "mys"}
-        exclude={["kvy"]}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.COVID_VACCINATION} exclude={["kvy"]} />
+    <StateModal url={routes.COVID_VACCINATION} />
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
   let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
+  STATES.filter(state => {
     paths = paths.concat([
       {
         params: {
