@@ -222,7 +222,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 </Tooltip>
               </div>
             </div>
-            {util_chart.data.util_pkrc && util_chart.data.util_pkrc !== "None" ? (
+            {util_chart.data.util_pkrc ? (
               <div className="flex items-center gap-3">
                 <DonutMeter value={util_chart.data.util_pkrc} />
                 <div>
@@ -302,7 +302,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     {
                       name: `${t("dashboard-covid-19:col2_title2")}`,
                       value: snapshot_graphic.data.pkrc,
-                      delta: snapshot_graphic.data.pkrc_annot.toFixed(1),
+                      delta: snapshot_graphic.data.pkrc_annot,
                       unit: "%",
                       icon: (
                         <Image
