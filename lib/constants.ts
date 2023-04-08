@@ -154,6 +154,8 @@ export const AKSARA_COLOR = {
   GREY_H: "#94A3B81A",
   DARK_BLUE: "#0C3284",
   DARK_BLUE_H: "#0C32841A",
+  PURPLE: "#7C3AED",
+  PURPLE_H: "#7C3AED1A",
 } as const;
 
 /**
