@@ -129,7 +129,7 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
                     <div className="absolute top-0 left-0 h-2 w-full rounded-xl bg-[#E2E8F0] dark:bg-washed-dark"></div>
                     {/* Active Range */}
                     <div
-                      className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-primary transition-all duration-100 ease-linear group-hover:bg-primary md:bg-dim"
+                      className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-primary transition-all duration-100 ease-linear group-hover:bg-primary md:bg-[#A1A1AA]"
                       style={{
                         left: position?.active.left,
                         right: position?.active.right,

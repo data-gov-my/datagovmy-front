@@ -858,7 +858,7 @@ export const MOFIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns MOHIcon
  */
-export const MOHIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const MOHIcon: FunctionComponent<IconProps> = ({ className, fillColor = "#DC2626" }) => {
   return (
     <svg
       width="32"
@@ -869,7 +869,7 @@ export const MOHIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1291_15356)">
-        <circle cx="16" cy="16" r="16" fill="#DC2626" />
+        <circle cx="16" cy="16" r="16" fill={fillColor} />
         <path
           fillRule="evenodd"
           clipRule="evenodd"

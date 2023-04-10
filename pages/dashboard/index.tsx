@@ -8,6 +8,7 @@ import { get } from "@lib/api";
 
 const DashboardIndex: Page = ({
   analytics,
+  sources,
   dashboards,
   query,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -16,12 +17,7 @@ const DashboardIndex: Page = ({
   return (
     <>
       <Metadata title={t("nav.dashboards")} description={""} keywords={""} />
-      <Dashboard
-        query={query}
-        sources={["DOSM", "MAMPU", "PDN", "BNM"]}
-        analytics={analytics}
-        dashboards={dashboards}
-      />
+      <Dashboard query={query} sources={sources} analytics={analytics} dashboards={dashboards} />
     </>
   );
 };
@@ -36,6 +32,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
       ...i18n,
       query: query ?? {},
       data: data,
+      sources: data.agencies_all.data,
       timeseries: [],
       analytics: {
         data_as_of: data.dashboards_top.data_as_of,

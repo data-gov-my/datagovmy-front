@@ -66,11 +66,10 @@ const Hero: FunctionComponent<HeroProps> = ({
         children
       ) : (
         <>
-          <div className="flex flex-row-reverse pb-4 sm:pb-0 lg:absolute lg:right-3 lg:top-20 xl:right-20">
-            {agencyBadge}
-          </div>
+          <div className="flex flex-row-reverse pb-4 sm:pb-0 lg:hidden">{agencyBadge}</div>
           <div className="space-y-6 xl:w-full">
             <div className="relative flex justify-between">
+              <div className="hidden lg:absolute lg:right-0 lg:top-0 lg:block">{agencyBadge}</div>
               {category && (
                 <span
                   className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}
@@ -83,7 +82,7 @@ const Hero: FunctionComponent<HeroProps> = ({
             {(header || description) && (
               <div className="space-y-3">
                 {header && (
-                  <h3 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h3>
+                  <h2 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h2>
                 )}
                 {description && Array.isArray(description) ? (
                   <p className={["text-dim xl:w-2/3", description[1]].join(" ")}>
@@ -96,7 +95,7 @@ const Hero: FunctionComponent<HeroProps> = ({
             )}
 
             {last_updated && (
-              <p className="text-sm text-dim dark:text-white">
+              <p className="text-sm text-dim">
                 {t("common.last_updated", {
                   date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
                 })}
