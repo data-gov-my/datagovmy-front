@@ -2,6 +2,7 @@ import { FunctionComponent, ReactElement } from "react";
 import { ResponsiveWaffle } from "@nivo/waffle";
 import { Colors } from "@nivo/core";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
+import { useTheme } from "next-themes";
 interface WaffleProps extends ChartHeaderProps {
   className?: string;
   data?: any;
@@ -29,6 +30,7 @@ const Waffle: FunctionComponent<WaffleProps> = ({
   children,
   interactive = false,
 }) => {
+  const { theme } = useTheme();
   return (
     <div>
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
@@ -39,7 +41,7 @@ const Waffle: FunctionComponent<WaffleProps> = ({
           rows={rows}
           columns={cols}
           padding={padding}
-          emptyColor="#F3F4F6"
+          emptyColor={theme === "light" ? "#f1f5f9" : "#27272a"}
           margin={{ top: 10, right: 0, bottom: 10, left: -20 }}
           colors={color}
           animate={false}

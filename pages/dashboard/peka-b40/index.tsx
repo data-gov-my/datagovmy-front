@@ -7,7 +7,11 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
 
-const PekaB40: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PekaB40: Page = ({
+  last_updated,
+  timeseries,
+  choropleth,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-peka-b40"]);
 
   return (
@@ -17,7 +21,11 @@ const PekaB40: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
         description={t("dashboard-peka-b40:description")}
         keywords={""}
       />
-      <PekaB40Dashboard />
+      <PekaB40Dashboard
+        last_updated={last_updated}
+        timeseries={timeseries}
+        choropleth={choropleth}
+      />
     </>
   );
 };
@@ -27,12 +35,15 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     "en-GB",
     "ms-MY",
   ]);
-  //   const { data } = await get("/dashboard", { dashboard: "currency" });
+  const { data } = await get("/dashboard", { dashboard: "peka_b40", state: "mys" });
 
   return {
     notFound: false,
     props: {
       ...i18n,
+      last_updated: new Date().valueOf(),
+      timeseries: data.timeseries,
+      choropleth: data.choropleth_malaysia,
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
