@@ -16,22 +16,7 @@ interface CatalogueBarProps {
   config: {
     precision: number;
   };
-  dataset:
-    | {
-        chart: {
-          x: number[];
-          y: number[];
-        };
-        meta: {
-          en: {
-            title: string;
-          };
-          bm: {
-            title: string;
-          };
-        };
-      }
-    | any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
@@ -52,8 +37,6 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 
     return "vertical";
   }, [dataset.type, windowWidth]);
-
-  // console.log(dataset.chart.x , 'x')
 
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
@@ -132,13 +115,11 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
       AKSARA_COLOR.WARNING,
     ]; // [blue, red]
 
-    // console.log(sets)
-
     return sets.map(([key, y], index) => ({
       data: y as number[],
       label: sets.length === 1 ? dataset.meta.title : dataset.table.columns[key],
       borderColor: colors[index],
-      // backgroundColor: colors[index].concat("33"), //AKSARA_COLOR.PRIMARY_H,
+      // backgroundColor: colors[index].concat("33"),
       borderWidth: 1,
     }));
   }, [dataset.chart]);

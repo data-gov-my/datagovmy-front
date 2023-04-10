@@ -1,5 +1,6 @@
+import type { OptionType } from "@components/types";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
-import { AnnotationPluginOptions } from "chartjs-plugin-annotation";
+import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
@@ -54,6 +55,47 @@ export interface AnalyticsEvent {
   label: string;
   value: string;
 }
+
+/************************ DATA CATALOGUE ************************** */
+export type DCChartKeys =
+  | "TABLE"
+  | "TIMESERIES"
+  | "CHOROPLETH"
+  | "GEOJSON"
+  | "BAR"
+  | "HBAR"
+  | "PYRAMID"
+  | "HEATMAP"
+  | "SCATTER";
+export type DCPeriod = "YEARLY" | "QUARTERLY" | "MONTHLY" | "WEEKLY" | "DAILY";
+
+type BaseFilter = {
+  key: string;
+  default: OptionType<string, string>;
+  options: OptionType<string, string>[];
+};
+export type FilterDefault = BaseFilter & {
+  interval: never;
+};
+
+export type FilterDate = {
+  key: string;
+  default: string;
+  options: string[];
+  interval: DCPeriod;
+};
+
+export type DCFilter = FilterDefault | FilterDate;
+
+// Usage
+export type DCConfig = {
+  context: {
+    [key: string]: string;
+  };
+  dates: FilterDate | null;
+  options: FilterDefault[] | null;
+  precision: number;
+};
 
 /*************************** MIXPANEL ***************************** */
 

@@ -30,7 +30,7 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
   const queries: string = useMemo(() => {
     const query = actives
       .map(([key, value]) =>
-        Array.isArray(value)
+        !value && Array.isArray(value)
           ? `${key}=${value.map((item: OptionType) => item.value).join(",")}`
           : `${key}=${(value as OptionType).value ?? value}`
       )
@@ -64,13 +64,9 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
     []
   );
 
-  useWatch(
-    () => {
-      search(actives);
-    },
-    [data],
-    true
-  );
+  useWatch(() => {
+    search(actives);
+  }, [data]);
 
   return {
     filter: data,

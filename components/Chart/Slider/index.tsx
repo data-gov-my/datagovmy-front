@@ -4,7 +4,6 @@ import {
   forwardRef,
   ForwardedRef,
   ForwardRefExoticComponent,
-  useEffect,
 } from "react";
 import { limitMax, toDate } from "@lib/helpers";
 import { useRouter } from "next/router";
@@ -39,10 +38,10 @@ type SliderProps = (RangeProps | SingleProps) & {
   className?: string;
   //   range?: [number, number]; // linear limitmax. for sliders that don't have `data[]`
   step?: number;
-  data?: Array<number>;
+  data?: Array<number | string>;
   parseAsDate?: boolean;
   ref?: ForwardedRef<SliderRef>;
-  period?: "year" | "month" | "auto" | "quarter";
+  period?: "year" | "month" | "day" | "auto" | "quarter";
 };
 
 export interface SliderRef {
@@ -73,7 +72,6 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
         reset: () => {
           setMin(0);
           setMax(data.length - 1);
-          // onChange && onChange([min,max]);
         },
       };
     });
@@ -89,6 +87,7 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
 
     const dateFormat = {
       auto: "dd MMM yyyy",
+      day: "dd MMM yyyy",
       month: "MMM yyyy",
       quarter: "qQ yyyy",
       year: "yyyy",
@@ -131,31 +130,6 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
             },
           };
       }
-      //   else if (range) {
-      //     const delta = range[1] - range[0];
-
-      //     if (type === "range")
-      //       return {
-      //         active: {
-      //           left: `${((Number(min) - range[0]) / delta) * 100}%`,
-      //           right: `${((range[1] - Number(max)) / delta) * 100}%`,
-      //         },
-      //         thumb: {
-      //           left: `${((Number(min) - range[0]) / delta) * 99}%`,
-      //           right: `${((range[1] - Number(max)) / delta) * 99}%`,
-      //         },
-      //       };
-      //     if (type === "single")
-      //       return {
-      //         active: {
-      //           left: "0%",
-      //           right: `${100 - ((Number(min) - range[0]) / delta) * 100}%`,
-      //         },
-      //         thumb: {
-      //           left: `${((Number(min) - range[0]) / delta) * 99}%`,
-      //         },
-      //       };
-      //   }
     })();
 
     return (

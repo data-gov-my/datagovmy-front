@@ -1,4 +1,4 @@
-import type { Page } from "@lib/types";
+import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { SHORT_LANG } from "@lib/constants";
@@ -9,12 +9,6 @@ import { get } from "@lib/api";
 import Metadata from "@components/Metadata";
 import DataCatalogueShow from "@data-catalogue/show";
 import { useMemo } from "react";
-
-type CatalogueFilter = {
-  key: string;
-  default: OptionType<string, string>;
-  options: OptionType<string, string>[];
-};
 
 const CatalogueShow: Page = ({
   params,
@@ -42,37 +36,37 @@ const CatalogueShow: Page = ({
     }
   }, [dataset.type]);
 
-  const availableFilters = useMemo<{
-    filter_state: Record<string, OptionType> | undefined;
-    filter_mapping: Array<CatalogueFilter>;
-  }>(() => {
-    return {
-      filter_mapping: config.filter_mapping?.map(
-        (filter: CatalogueFilter): CatalogueFilter => ({
-          ...filter,
-          options: filter.options.map((option: OptionType) => ({
-            label: (t(`catalogue.show_filters.${option.value}`) as string).includes("catalogue")
-              ? option.value
-              : t(`catalogue.show_filters.${option.value}`),
-            value: option.value,
-          })),
-        })
-      ),
-      filter_state: Object.fromEntries(
-        Object.entries(config.filter_state).map(([key, option]: [string, unknown]) => [
-          key,
-          {
-            label: (t(`catalogue.show_filters.${(option as OptionType).value}`) as string).includes(
-              "catalogue"
-            )
-              ? (option as OptionType).value
-              : t(`catalogue.show_filters.${(option as OptionType).value}`),
-            value: (option as OptionType).value,
-          },
-        ])
-      ),
-    };
-  }, [config]);
+  // const availableFilters = useMemo<{
+  //   filter_state: Record<string, OptionType> | undefined;
+  //   filter_mapping: Array<CatalogueFilter>;
+  // }>(() => {
+  //   return {
+  //     filter_mapping: config.filter_mapping?.map(
+  //       (filter: CatalogueFilter): CatalogueFilter => ({
+  //         ...filter,
+  //         options: filter.options.map((option: OptionType) => ({
+  //           label: (t(`catalogue.show_filters.${option.value}`) as string).includes("catalogue")
+  //             ? option.value
+  //             : t(`catalogue.show_filters.${option.value}`),
+  //           value: option.value,
+  //         })),
+  //       })
+  //     ),
+  //     filter_state: Object.fromEntries(
+  //       Object.entries(config.filter_state).map(([key, option]: [string, unknown]) => [
+  //         key,
+  //         {
+  //           label: (t(`catalogue.show_filters.${(option as OptionType).value}`) as string).includes(
+  //             "catalogue"
+  //           )
+  //             ? (option as OptionType).value
+  //             : t(`catalogue.show_filters.${(option as OptionType).value}`),
+  //           value: (option as OptionType).value,
+  //         },
+  //       ])
+  //     ),
+  //   };
+  // }, [config]);
 
   return (
     <>
@@ -84,7 +78,7 @@ const CatalogueShow: Page = ({
       <DataCatalogueShow
         options={availableOptions}
         params={params}
-        config={{ ...config, ...availableFilters }}
+        config={config}
         dataset={dataset}
         explanation={explanation}
         metadata={metadata}
@@ -99,30 +93,33 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
 
   const { data } = await get("/data-variable/", {
     id: params!.id,
-    ...query,
     lang: SHORT_LANG[locale as "en-GB" | "ms-MY"],
+    ...query,
   });
-  let filter_state;
-
-  if (["TIMESERIES", "BAR", "HBAR", "PYRAMID"].includes(data.API.chart_type)) {
-    filter_state = Object.fromEntries(
-      data.API.filters.map((filter: any) => [
-        filter.key,
-        filter.options.find((item: OptionType) => item.value === query[filter.key]) ??
-          filter.default,
-      ])
-    );
-  }
+  let config: DCConfig = {
+    context: {},
+    dates: null,
+    options: null,
+    precision: data.API.precision,
+  };
+  data.API.filters.forEach((item: DCFilter) => {
+    if (item.key === "date_slider") config.dates = item as FilterDate;
+    Object.assign(config.context, {
+      [item.key]:
+        typeof item.options[0] === "string"
+          ? { label: item.key, value: query[item.key] ?? item.default }
+          : (item.options as OptionType[]).find(option => option.value === query[item.key]) ??
+            item.default,
+    });
+  });
+  config.options = data.API.filters.filter((item: DCFilter) => item.key !== "date_slider");
 
   return {
+    // notFound: true,
     props: {
       ...i18n,
-      config: {
-        filter_state: filter_state ?? {},
-        filter_mapping: data.API.filters ?? null,
-        ...data.API,
-      },
-      params: params,
+      config,
+      params,
       dataset: {
         type: data.API.chart_type,
         chart: data.chart_details.chart_data ?? {},
@@ -135,7 +132,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
           csv: data.metadata.url.csv,
           parquet: data.metadata.url.parquet,
         },
-        definitions: [...(data.metadata?.in_dataset ?? []), ...data.metadata.out_dataset],
+        data_as_of: data.metadata.data_as_of,
+        last_updated: data.metadata.last_updated,
+        next_update: data.metadata.next_update,
+        description: data.metadata.dataset_desc,
+        source: data.metadata.data_source,
+        definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
       },
       urls: data.downloads ?? {},
     },

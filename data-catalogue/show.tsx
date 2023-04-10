@@ -1,9 +1,9 @@
-import type { DownloadOptions, DownloadOption } from "@lib/types";
+import type { DownloadOptions, DownloadOption, DCConfig, DCChartKeys } from "@lib/types";
 import type { TableConfig } from "@components/Chart/Table";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, ReactNode, useEffect, useMemo, useState } from "react";
-import { SHORT_LANG } from "@lib/constants";
+import { SHORT_LANG, SHORT_PERIOD } from "@lib/constants";
 import { download, interpolate, toDate } from "@lib/helpers";
 import {
   CATALOGUE_TABLE_SCHEMA,
@@ -24,6 +24,8 @@ import Tooltip from "@components/Tooltip";
 import { useRouter } from "next/router";
 import { useFilter } from "@hooks/useFilter";
 import CatalogueCode from "./partials/code";
+import Slider from "@components/Chart/Slider";
+import { DateTime } from "luxon";
 
 /**
  * Catalogue Show
@@ -53,44 +55,29 @@ const CatalogueHeatmap = dynamic(() => import("@data-catalogue/partials/heatmap"
   ssr: true,
 });
 
-export type Langs = "bm" | "en";
-export type CatalogueType =
-  | "TIMESERIES"
-  | "CHOROPLETH"
-  | "TABLE"
-  | "GEOJSON"
-  | "BAR"
-  | "HBAR"
-  | "PYRAMID"
-  | "HEATMAP";
 interface CatalogueShowProps {
   options: OptionType[];
   params: {
     id: string;
   };
-  config: any;
+  config: DCConfig;
   dataset: {
-    type: CatalogueType;
+    type: DCChartKeys;
     chart: any;
     table: {
       data: Array<Record<string, any>>;
-      columns: {
-        x_bm: string;
-        x_en: string;
-        y_bm: string;
-        y_en: string;
-      };
+      columns: Record<string, string>;
     };
     meta: { title: string; desc: string; unique_id: string };
   };
   explanation: { caveat: string; methodology: string; publication?: string };
   metadata: {
-    url: {
-      [key: string]: string;
-    };
     data_as_of: string;
-    data_source: Array<string>;
-    next_update: string;
+    url: {
+      csv?: string;
+      parquet?: string;
+    };
+    source: string[];
     definitions: Array<{
       id: number;
       unique_id?: string;
@@ -98,7 +85,8 @@ interface CatalogueShowProps {
       desc: string;
       title: string;
     }>;
-    dataset_desc: string;
+    next_update: string;
+    description: string;
     last_updated: string;
   };
   urls: {
@@ -124,8 +112,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   });
 
   const query = useRouter().query;
-  const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
-  const { filter, setFilter } = useFilter(config.filter_state, { id: params.id });
+  const { filter, setFilter } = useFilter(config.context, { id: params.id });
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -337,16 +324,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 placeholder={t("catalogue.download")}
                 options={
                   downloads
-                    ? [...downloads.chart, ...downloads.data].map(item => ({
+                    ? downloads.chart.concat(downloads.data).map(item => ({
                         label: item.title as string,
                         value: item.key,
                       }))
                     : []
                 }
                 onChange={async e => {
-                  const action =
-                    downloads &&
-                    [...downloads?.chart, ...downloads?.data].find(({ key }) => e.value === key);
+                  const action = downloads.chart
+                    .concat(downloads.data)
+                    .find(({ key }) => e.value === key);
 
                   if (!action) return;
 
@@ -370,9 +357,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           }
         >
           {/* Dataset Filters & Chart / Table */}
-          {Boolean(config?.filter_mapping) && (
+          {config.options && (
             <div className="flex gap-3 pb-2">
-              {config.filter_mapping?.map((item: any, index: number) => (
+              {config.options.map((item: any, index: number) => (
                 <Dropdown
                   key={index}
                   anchor={index > 0 ? "right" : "left"}
@@ -431,6 +418,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               />
             </div>
           )} */}
+
+          {config.dates !== null && (
+            <Slider
+              className="pt-8"
+              type="single"
+              value={config.dates?.options.indexOf(
+                filter[config.dates.key].value ?? config.dates.default
+              )}
+              data={config.dates.options}
+              period={SHORT_PERIOD[config.dates.interval]}
+              onChange={e =>
+                config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
+              }
+            ></Slider>
+          )}
         </Section>
 
         <div className="space-y-8 border-b py-12 dark:border-b-outlineHover-dark">
@@ -480,7 +482,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               {/* Dataset description */}
               <div className="space-y-3">
                 <h5>{t("catalogue.meta_desc")}</h5>
-                <p className="leading-relaxed text-dim">{interpolate(metadata.dataset_desc)}</p>
+                <p className="leading-relaxed text-dim">{interpolate(metadata.description)}</p>
               </div>
               <div className="space-y-3">
                 {/* Variable definitions */}
@@ -515,7 +517,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                             id: item.id,
                             uid: item.unique_id,
                             variable: item.name,
-                            variable_name: item[`title_${lang}`],
+                            variable_name: item.title,
                             data_type: type,
                             definition: interpolate(definition),
                           };
@@ -544,7 +546,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <div className="space-y-3">
                 <h5>{t("catalogue.meta_source")}</h5>
                 <ul className="ml-6 list-outside list-disc text-dim">
-                  {metadata.data_source?.map(source => (
+                  {metadata.source?.map(source => (
                     <li key={source}>{source}</li>
                   ))}
                 </ul>
