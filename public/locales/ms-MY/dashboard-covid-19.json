@@ -1,5 +1,5 @@
 {
-    "header": "",
+    "header": "COVID-19",
     "description": "Berdasarkan dashboard COVIDNOW yang sebelumnya, halaman ini memberi ringkasan tentang pandemik di Malaysia dan membolehkan anda mengikuti perkembangan terkini setiap hari.",
     "donut_header": "Kadar penggunaan fasiliti kesihatan",
     "donut1": "Alat bantuan pernafasan (ABP)",
@@ -10,7 +10,7 @@
     "donut3_tooltips": "Termasuk penggunaan untuk kes bukan COVID-19 supaya memberi gambaran yang menyeluruh tentang sistem kesihatan awam",
     "donut4": "PKRC",
     "donut4_tooltips": "Pusat Kuarantin dan Rawatan COVID-19",
-    "diagram_header": "Apakah data terkini tentang COVID-19 di {{ state }}",
+    "diagram_header": "Apakah data terkini tentang COVID-19 di {{ state }}?",
     "diagram_subheader": "{{ state }}: Kes Aktif COVID-19",
     "diagram_title": "Kes Aktif",
     "col1_title1": "Kes Tempatan",
