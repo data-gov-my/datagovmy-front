@@ -122,7 +122,9 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
       data: y as number[],
       label: dataset.table.columns[key],
       borderColor: colors[index],
-      borderWidth: 1.5,
+      backgroundColor: colors[index].concat("33"),
+      borderWidth: 1,
+      fill: sets.length <= 1,
     }));
   }, [coordinate]);
 
