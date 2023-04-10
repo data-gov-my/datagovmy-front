@@ -1,19 +1,9 @@
 import AgencyBadge from "@components/AgencyBadge";
 import BarMeter from "@components/Chart/BarMeter";
-import Slider, { SliderRef } from "@components/Chart/Slider";
+import Slider from "@components/Chart/Slider";
 import { PDNIcon } from "@components/Icon/agency";
-import {
-  Button,
-  Container,
-  Dropdown,
-  Panel,
-  Section,
-  StateDropdown,
-  Tabs,
-  Hero,
-} from "@components/index";
+import { Container, Panel, Section, StateDropdown, Tabs, Hero } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
-import { ArrowPathIcon, MapPinIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
@@ -23,7 +13,7 @@ import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent } from "react";
 
 const Empty = dynamic(() => import("@components/Chart/Empty"), { ssr: false });
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
@@ -67,7 +57,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   const isMobile = windowWidth < BREAKPOINTS.MD;
   const currentState = (router.query.state as string) ?? "mys";
 
-  const sliderRef = useRef<SliderRef>(null);
   const { data, setData } = useData({
     absolute_donation_type: false,
     absolute_blood_group: false,
@@ -190,7 +179,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           />
           <div className="pt-5">
             <Slider
-              ref={sliderRef}
               type="range"
               value={data.minmax}
               data={timeseries_all.data.x}

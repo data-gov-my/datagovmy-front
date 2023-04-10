@@ -398,16 +398,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       )
                     : undefined
                 }
-                config={
-                  UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze)
-                  // : CATALOGUE_TABLE_SCHEMA(
-                  //     dataset.table.columns,
-                  //     lang,
-                  //     query.range ?? config.filter_state.range?.value,
-                  //     Object.keys(dataset.chart),
-                  //     [config.precision, config.precision]
-                  //   )
-                }
+                config={UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze)}
                 enablePagination={dataset.type === "TABLE" ? 10 : false}
               />
             </div>
@@ -500,22 +491,24 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     <div className="hidden md:block">
                       <Table
                         className="table-slate table-default-slate table"
-                        data={metadata.definitions.map((item: any) => {
-                          const raw = item.desc;
-                          const [type, definition] = [
-                            raw.substring(1, raw.indexOf("]")),
-                            raw.substring(raw.indexOf("]") + 1),
-                          ];
+                        data={metadata.definitions
+                          .filter(item => item.id === 0)
+                          .map((item: any) => {
+                            const raw = item.desc;
+                            const [type, definition] = [
+                              raw.substring(1, raw.indexOf("]")),
+                              raw.substring(raw.indexOf("]") + 1),
+                            ];
 
-                          return {
-                            id: item.id,
-                            uid: item.unique_id,
-                            variable: item.name,
-                            variable_name: item.title,
-                            data_type: type,
-                            definition: interpolate(definition),
-                          };
-                        })}
+                            return {
+                              id: item.id,
+                              uid: item.unique_id,
+                              variable: item.name,
+                              variable_name: item.title,
+                              data_type: type,
+                              definition: interpolate(definition),
+                            };
+                          })}
                         config={tableConfig}
                       />
                     </div>

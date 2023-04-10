@@ -1,6 +1,6 @@
 import type { DownloadOptions } from "@lib/types";
-import { FunctionComponent, useMemo, useRef } from "react";
-import { default as Slider, SliderRef } from "@components/Chart/Slider";
+import { FunctionComponent, useMemo } from "react";
+import { default as Slider } from "@components/Chart/Slider";
 import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
@@ -40,7 +40,6 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     minmax: [0, dataset.chart.x.length - 1],
   });
   const { coordinate } = useSlice(dataset.chart, data.minmax);
-  const sliderRef = useRef<SliderRef>(null);
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
@@ -131,7 +130,6 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
 
   useWatch(() => {
     setData("minmax", [0, dataset.chart.x.length - 1]);
-    sliderRef.current && sliderRef.current.reset();
     if (onDownload) onDownload(availableDownloads);
   }, [filter.range, dataset.chart.x, data.ctx]);
 
@@ -153,7 +151,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         }}
       />
       <Slider
-        ref={sliderRef}
+        // ref={sliderRef}
         className="pt-7"
         type="range"
         data={dataset.chart.x}

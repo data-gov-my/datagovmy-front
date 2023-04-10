@@ -68,14 +68,6 @@
   /* HERO MESH GRADIENTS */
 }
 
-.graphiql-container {
-  @apply min-h-screen;
-}
-
-input[type="range"] {
-  opacity: 0%;
-}
-
 input[type="range"]::-webkit-slider-thumb {
   pointer-events: all;
 }
@@ -138,4 +130,8 @@ path:focus {
 }
 .leaflet-tooltip-left::before {
   @apply border-l-0 border-l-black/80;
+}
+
+:focus-visible {
+  outline: unset;
 }

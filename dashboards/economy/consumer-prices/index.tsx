@@ -1,5 +1,5 @@
 import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect, useRef } from "react";
+import { FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, toDate } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -7,8 +7,8 @@ import { useSlice } from "@hooks/useSlice";
 import { useData } from "@hooks/useData";
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import Slider, { SliderRef } from "@components/Chart/Slider";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import Slider from "@components/Chart/Slider";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
@@ -16,7 +16,6 @@ import { routes } from "@lib/routes";
 import InflationTrends from "./inflation-trends";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
-import { useWatch } from "@hooks/useWatch";
 import { useTheme } from "next-themes";
 import AgencyBadge from "@components/AgencyBadge";
 
@@ -75,7 +74,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     { label: t("dashboard-consumer-prices:keys.recession"), value: "recession" },
   ];
 
-  const sliderRef = useRef<SliderRef>(null);
   const { data, setData } = useData({
     cpi_type: CPI_OPTIONS[0],
     index_type: INDEX_OPTIONS[0],
@@ -171,10 +169,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     });
   }, []);
 
-  useWatch(() => {
-    sliderRef.current && sliderRef.current.reset();
-  }, [data.cpi_type, data.index_type]);
-
   return (
     <>
       <Hero
@@ -229,7 +223,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
             </div>
 
             <Slider
-              ref={sliderRef}
               type="range"
               value={data.minmax}
               data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
