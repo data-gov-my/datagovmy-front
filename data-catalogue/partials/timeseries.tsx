@@ -147,8 +147,6 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         }}
       />
       <Slider
-        // ref={sliderRef}
-        className="pt-7"
         type="range"
         data={dataset.chart.x}
         value={data.minmax}
