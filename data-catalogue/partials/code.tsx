@@ -1,10 +1,10 @@
 import CodeBlock from "@components/CodeBlock";
-import type { CatalogueType } from "@data-catalogue/show";
+import type { DCChartKeys } from "@lib/types";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, useMemo } from "react";
 
 interface CatalogueCodeProps {
-  type: CatalogueType;
+  type: DCChartKeys;
   url: string;
 }
 
