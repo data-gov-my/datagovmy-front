@@ -65,7 +65,7 @@ const Slider: FunctionComponent<SliderProps> = ({
           <p className="w-fit text-sm text-dim">
             {parseAsDate ? toDate(data[0], "yyyy", i18n.language) : data[0]}
           </p>
-          <div className="group relative flex h-5 grow touch-none select-none items-center px-3">
+          <div className="group relative flex h-5 grow touch-none select-none items-center">
             <Track className="relative z-0 mx-3 h-2 grow rounded-full bg-[#E2E8F0] dark:bg-washed-dark">
               <Range className="absolute z-0 h-full rounded-xl group-hover:bg-primary md:bg-[#A1A1AA]" />
             </Track>
@@ -101,10 +101,10 @@ const Slider: FunctionComponent<SliderProps> = ({
         onValueChange={e => setMinmax(e)}
         onValueCommit={(e: number[] & number) => onChange(e)}
       >
-        <p className="w-fit text-sm text-dim">
+        <p className="w-fit pr-2 text-sm text-dim">
           {parseAsDate ? toDate(data[0], "yyyy", i18n.language) : data[0]}
         </p>
-        <div className="group relative flex h-5 grow touch-none select-none items-center px-3">
+        <div className="group relative flex h-5 grow touch-none select-none items-center">
           <Track className="relative z-0 h-2 grow rounded-full bg-[#E2E8F0] px-3 dark:bg-washed-dark">
             <Range className="absolute z-0 h-full rounded-xl group-hover:bg-primary md:bg-[#A1A1AA]" />
           </Track>
@@ -116,7 +116,7 @@ const Slider: FunctionComponent<SliderProps> = ({
             </SliderTooltip>
           </Thumb>
         </div>
-        <p className="w-fit text-sm text-dim">
+        <p className="w-fit pl-2 text-sm text-dim">
           {parseAsDate
             ? toDate(data[data.length - 1], "yyyy", i18n.language)
             : data[data.length - 1]}
