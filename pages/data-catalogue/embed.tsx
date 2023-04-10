@@ -5,7 +5,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import dynamic from "next/dynamic";
-const CatalogueWidget = dynamic(() => import("@data-catalogue/widget"), { ssr: false });
+// const CatalogueWidget = dynamic(() => import("@data-catalogue/widget"), { ssr: false });
 
 const DataCatalogueEmbed: Page = ({
   params,
@@ -15,14 +15,15 @@ const DataCatalogueEmbed: Page = ({
   urls,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
-    <CatalogueWidget
-      params={params}
-      config={config}
-      dataset={dataset}
-      explanation={undefined}
-      metadata={metadata}
-      urls={urls}
-    />
+    <></>
+    // <CatalogueWidget
+    //   params={params}
+    //   config={config}
+    //   dataset={dataset}
+    //   explanation={undefined}
+    //   metadata={metadata}
+    //   urls={urls}
+    // />
   );
 };
 
