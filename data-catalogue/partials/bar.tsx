@@ -119,7 +119,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
       data: y as number[],
       label: sets.length === 1 ? dataset.meta.title : dataset.table.columns[key],
       borderColor: colors[index],
-      // backgroundColor: colors[index].concat("33"),
+      backgroundColor: colors[index].concat("33"),
       borderWidth: 1,
     }));
   }, [dataset.chart]);

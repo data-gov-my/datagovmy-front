@@ -101,6 +101,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
     dates: null,
     options: null,
     precision: data.API.precision,
+    freeze: data.API.freeze ?? null,
   };
   data.API.filters.forEach((item: DCFilter) => {
     if (item.key === "date_slider") config.dates = item as FilterDate;

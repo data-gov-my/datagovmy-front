@@ -35,14 +35,12 @@ interface CataloguePyramidProps {
   urls: {
     [key: string]: string;
   };
-  lang: "en" | "bm";
   onDownload?: (prop: DownloadOptions) => void;
 }
 
 const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   className = "h-[450px] lg:h-[400px] max-w-lg mx-auto",
   config,
-  lang,
   dataset,
   urls,
   onDownload,
@@ -126,7 +124,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
       .filter(([key, _]) => key !== "x")
       .map(([key, y], index) => ({
         data: y as number[],
-        label: dataset.table.columns[`${key}_${lang}`],
+        label: dataset.table.columns[key],
         backgroundColor: colors[index].concat("33") ?? AKSARA_COLOR.PRIMARY_H,
         borderColor: colors[index] ?? AKSARA_COLOR.PRIMARY,
         borderWidth: 1,

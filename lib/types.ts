@@ -95,6 +95,7 @@ export type DCConfig = {
   dates: FilterDate | null;
   options: FilterDefault[] | null;
   precision: number;
+  freeze?: string[];
 };
 
 /*************************** MIXPANEL ***************************** */

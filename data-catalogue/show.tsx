@@ -1,15 +1,17 @@
-import type { DownloadOptions, DownloadOption, DCConfig, DCChartKeys } from "@lib/types";
+import type {
+  DownloadOptions,
+  DownloadOption,
+  DCConfig,
+  DCChartKeys,
+  FilterDefault,
+} from "@lib/types";
 import type { TableConfig } from "@components/Chart/Table";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, ReactNode, useEffect, useMemo, useState } from "react";
-import { SHORT_LANG, SHORT_PERIOD } from "@lib/constants";
-import { download, interpolate, toDate } from "@lib/helpers";
-import {
-  CATALOGUE_TABLE_SCHEMA,
-  UniversalColumn,
-  UNIVERSAL_TABLE_SCHEMA,
-} from "@lib/schema/data-catalogue";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { SHORT_PERIOD } from "@lib/constants";
+import { clx, download, interpolate, toDate } from "@lib/helpers";
+import { UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
 import { OptionType } from "@components/types";
 // import { track } from "@lib/mixpanel";
 import dynamic from "next/dynamic";
@@ -25,7 +27,6 @@ import { useRouter } from "next/router";
 import { useFilter } from "@hooks/useFilter";
 import CatalogueCode from "./partials/code";
 import Slider from "@components/Chart/Slider";
-import { DateTime } from "luxon";
 
 /**
  * Catalogue Show
@@ -116,17 +117,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
-      // case "TIMESERIES":
-      //   return (
-      //     <CatalogueTimeseries
-      //       config={config}
-      //       dataset={dataset}
-      //       filter={filter}
-      //       lang={lang}
-      //       urls={urls}
-      //       onDownload={prop => setDownloads(prop)}
-      //     />
-      //   );
+      case "TIMESERIES":
+        return (
+          <CatalogueTimeseries
+            config={config}
+            dataset={dataset}
+            filter={filter}
+            urls={urls}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
 
       // case "CHOROPLETH":
       //   return (
@@ -176,16 +176,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             onDownload={prop => setDownloads(prop)}
           />
         );
-      // case "PYRAMID":
-      //   return (
-      //     <CataloguePyramid
-      //       config={config}
-      //       dataset={dataset}
-      //       lang={lang}
-      //       urls={urls}
-      //       onDownload={prop => setDownloads(prop)}
-      //     />
-      //   );
+      case "PYRAMID":
+        return (
+          <CataloguePyramid
+            config={config}
+            dataset={dataset}
+            urls={urls}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
       // case "HEATMAP":
       //   return (
       //     <CatalogueHeatmap
@@ -357,11 +356,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           }
         >
           {/* Dataset Filters & Chart / Table */}
-          {config.options && (
+          {config.options !== null && config.options.length > 0 && (
             <div className="flex gap-3 pb-2">
-              {config.options.map((item: any, index: number) => (
+              {config.options.map((item: FilterDefault, index: number) => (
                 <Dropdown
-                  key={index}
+                  key={item.key}
                   anchor={index > 0 ? "right" : "left"}
                   options={item.options}
                   selected={filter[item.key]}
@@ -370,22 +369,22 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               ))}
             </div>
           )}
-          <div className={[show.value === "chart" ? "block" : "hidden", "space-y-2"].join(" ")}>
+          <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
           </div>
-          {/* {Boolean(dataset?.table) && (
+          {Boolean(dataset?.table) && (
             <div
-              className={[
+              className={clx(
                 "mx-auto",
                 show.value === "table" ? "block" : "hidden",
-                dataset.type !== "TABLE" ? "max-h-[500px] overflow-auto" : "",
-              ].join(" ")}
+                dataset.type !== "TABLE" ? "max-h-[500px] overflow-auto" : ""
+              )}
             >
               <Table
-                className={[
+                className={clx(
                   "table-stripe table-default",
-                  dataset.type !== "TABLE" ? "table-sticky-header" : "",
-                ].join(" ")}
+                  dataset.type !== "TABLE" ? "table-sticky-header" : ""
+                )}
                 responsive={dataset.type === "TABLE"}
                 data={dataset.table.data}
                 enableSticky={dataset.type === "TABLE"}
@@ -400,24 +399,19 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     : undefined
                 }
                 config={
-                  dataset.type === "TABLE"
-                    ? UNIVERSAL_TABLE_SCHEMA(
-                        dataset.table.columns as unknown as UniversalColumn,
-                        lang as "en" | "bm",
-                        config.freeze
-                      )
-                    : CATALOGUE_TABLE_SCHEMA(
-                        dataset.table.columns,
-                        lang,
-                        query.range ?? config.filter_state.range?.value,
-                        Object.keys(dataset.chart),
-                        [config.precision, config.precision]
-                      )
+                  UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze)
+                  // : CATALOGUE_TABLE_SCHEMA(
+                  //     dataset.table.columns,
+                  //     lang,
+                  //     query.range ?? config.filter_state.range?.value,
+                  //     Object.keys(dataset.chart),
+                  //     [config.precision, config.precision]
+                  //   )
                 }
                 enablePagination={dataset.type === "TABLE" ? 10 : false}
               />
             </div>
-          )} */}
+          )}
 
           {config.dates !== null && (
             <Slider

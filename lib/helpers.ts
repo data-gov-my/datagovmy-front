@@ -4,6 +4,15 @@ import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
 
 /**
+ * Conditional class joiner.
+ * @param args classNames
+ * @returns string
+ */
+export const clx = (...args: any[]): string => {
+  return args.filter(Boolean).join(" ");
+};
+
+/**
  * Returns the object of max value by a given key in the array.
  * @param array Object array
  * @param key Comparing key

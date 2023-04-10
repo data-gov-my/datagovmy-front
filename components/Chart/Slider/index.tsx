@@ -9,20 +9,6 @@ import { limitMax, toDate } from "@lib/helpers";
 import { useRouter } from "next/router";
 import { useWatch } from "@hooks/useWatch";
 
-// interface SliderProps {
-//   className?: string;
-//   type?: "single" | "range";
-//   onChange?: ([min, max]: [number, number]) => void;
-//   value?: [number, number]; // default limitmax. on-init only
-//   range?: [number, number]; // linear limitmax. for sliders that don't have `data[]`
-//   step?: number;
-//   data?: Array<number>;
-//   parseAsDate?: boolean;
-//   ref?: ForwardedRef<SliderRef>;
-//   period?: "year" | "month" | "auto" | "quarter";
-//   //   displayFormatter?: (dateString: string) => string;
-// }
-
 type RangeProps = {
   type: "range";
   onChange: ([min, max]: [number, number]) => void;
@@ -208,12 +194,12 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
               </>
             ),
             single: (
-              <div className="relative mx-auto w-[90%] lg:w-[95%]">
+              <div className="group relative mx-auto w-[90%] lg:w-[95%]">
                 <div className="mx-auto h-2 w-full">
                   <div className="absolute top-0 left-0 h-2 w-full rounded-xl bg-[#E2E8F0]"></div>
                   {/* Active Range */}
                   <div
-                    className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-outlineHover"
+                    className="absolute top-0 left-0 right-0 h-2 rounded-xl bg-primary transition-all duration-100 ease-linear group-hover:bg-primary md:bg-dim"
                     style={{
                       left: position?.active.left,
                       right: position?.active.right,
@@ -222,22 +208,22 @@ const Slider: ForwardRefExoticComponent<SliderProps> = forwardRef(
 
                   {/* Thumb Left */}
                   <span
-                    className=" absolute left-0 -top-1 h-4 w-4 cursor-pointer rounded-full border bg-white shadow-xl"
+                    className="absolute left-0 -top-1.5 h-5 w-5 cursor-pointer rounded-full border-2 border-dim bg-white shadow-xl transition-all duration-100 ease-linear group-hover:ring-4 group-hover:ring-primary dark:group-hover:border-primary"
                     style={{ left: position?.thumb.left }}
                   ></span>
 
                   {/* Tip Left */}
                   <div
-                    className="pointer-events-none absolute -top-8 w-fit whitespace-nowrap"
+                    className="pointer-events-none absolute -top-8 w-fit whitespace-nowrap transition-all duration-100 ease-linear"
                     style={{ left: position?.thumb.left }}
                   >
-                    <span className="-ml-8 text-sm">
+                    <span className="-ml-3 text-sm">
                       {parseAsDate ? toDate(data[min], dateFormat[period], lang) : data[min]}
                     </span>
                   </div>
                 </div>
                 <input
-                  className="pointer-events-none absolute -top-1 z-20 m-0 w-full"
+                  className="pointer-events-none absolute -top-1 left-0 z-20 m-0 w-full cursor-grab active:cursor-grabbing"
                   type="range"
                   value={min}
                   min={0}

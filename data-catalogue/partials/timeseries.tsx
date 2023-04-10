@@ -18,35 +18,17 @@ interface CatalogueTimeseriesProps {
     precision: number;
   };
   className?: string;
-  dataset:
-    | {
-        chart: {
-          x: number[];
-          y: number[];
-          line: number[];
-        };
-        meta: {
-          en: {
-            title: string;
-          };
-          bm: {
-            title: string;
-          };
-        };
-      }
-    | any;
+  dataset: any;
   filter: any;
   urls: {
     [key: string]: string;
   };
-  lang: "en" | "bm";
   onDownload?: (prop: DownloadOptions) => void;
 }
 
 const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   config,
   className = "h-[350px] w-full",
-  lang,
   dataset,
   urls,
   filter,
@@ -139,7 +121,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
-      label: key, //sets.length === 1 ? dataset.meta[lang].title : dataset.table.columns[`${key}_${lang}`],
+      label: dataset.table.columns[key],
       borderColor: colors[index],
       backgroundColor: colors[index].concat("33"), //AKSARA_COLOR.PRIMARY_H,
       borderWidth: 1.5,
@@ -164,6 +146,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             : "auto"
         }
         precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+        mode="grouped"
         data={{
           labels: coordinate.x,
           datasets: _datasets,
@@ -175,11 +158,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         type="range"
         data={dataset.chart.x}
         value={data.minmax}
-        period={
-          ["YEARLY", "MONTHLY", "QUARTERLY"].includes(filter.range?.value)
-            ? filter.range.value.toLowerCase().replace("ly", "")
-            : "auto"
-        }
+        period={SHORT_PERIOD[filter.range?.value as keyof typeof SHORT_PERIOD] ?? "auto"}
         onChange={e => setData("minmax", e)}
       />
     </>
