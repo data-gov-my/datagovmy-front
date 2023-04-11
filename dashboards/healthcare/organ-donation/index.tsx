@@ -12,7 +12,7 @@ import {
 } from "@components/index";
 import { NTRCIcon } from "@components/Icon/agency";
 import LeftRightCard from "@components/LeftRightCard";
-import Slider, { SliderRef } from "@components/Chart/Slider";
+import Slider from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTheme } from "next-themes";
@@ -57,7 +57,6 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const sliderRef = useRef<SliderRef>(null);
   const { theme } = useTheme();
   const sortedChoro = choropleth.data.sort(
     (a: typeof choropleth.data, b: typeof choropleth.data) => b.data.perc - a.data.perc
@@ -125,7 +124,6 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
           />
           <div className="pt-5">
             <Slider
-              ref={sliderRef}
               type="range"
               value={data.minmax}
               data={timeseries.data.x}
