@@ -2184,6 +2184,11 @@ chartjs-plugin-crosshair@^1.2.0:
   resolved "https://registry.yarnpkg.com/chartjs-plugin-crosshair/-/chartjs-plugin-crosshair-1.2.0.tgz#54c8223ed40db4a5c380f17967fcf1a11cb2a284"
   integrity sha512-yohsbME+wT1ODBdErBzWnC6xUDcn2tLeWmGjGDTykjpiT7+FMgibffajxqaCVmdzselxNPirpt76vx33EewSSQ==
 
+chartjs-plugin-datalabels@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.2.0.tgz#369578e131d743c2e34b5fbe2d3f9335f6639b8f"
+  integrity sha512-14ZU30lH7n89oq+A4bWaJPnAG8a7ZTk7dKf48YAzMvJjQtjrgg5Dpk9f+LbjCF6bpx3RAGTeL13IXpKQYyRvlw==
+
 chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"

@@ -11,13 +11,14 @@ import {
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import type { ChartCrosshairOption } from "@lib/types";
 import { Color, useColor } from "@hooks/useColor";
 import { DeepPartial } from "chart.js/types/utils";
 import "chartjs-adapter-luxon";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
-import { minMax, numFormat } from "@lib/helpers";
+import { minMax, normalize, numFormat } from "@lib/helpers";
 
 interface HeatmapProps extends ChartHeaderProps {
   className?: string;
@@ -50,7 +51,15 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   controls,
   _ref,
 }) => {
-  ChartJS.register(MatrixController, MatrixElement, LinearScale, CategoryScale, TimeScale, Tooltip);
+  ChartJS.register(
+    MatrixController,
+    MatrixElement,
+    LinearScale,
+    CategoryScale,
+    TimeScale,
+    Tooltip,
+    ChartDataLabels
+  );
   const [min, max, uniqueXs, uniqueYs] = useMemo<
     [number, number, Array<string | number>, Array<string | number>]
   >(() => {
@@ -78,8 +87,6 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
     x: DeepPartial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>>;
     y: DeepPartial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>>;
   } => {
-    // switch (type) {
-    //   case "category":
     return {
       x: {
         type: "category",
@@ -161,6 +168,17 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
       legend: {
         display: false,
       },
+      datalabels: {
+        display: true,
+        color(context) {
+          if (data[context.dataIndex].z === null) return "#000";
+          const n_value = normalize(data[context.dataIndex].z!, min, max);
+          return n_value > 0.7 ? "#fff" : "#000";
+        },
+        formatter(value) {
+          return value.z;
+        },
+      },
       tooltip: {
         bodyFont: {
           family: "Inter",
@@ -170,12 +188,10 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
             return "";
           },
           label(context) {
-            const v = context.dataset.data[context.dataIndex] as HeatmapDatum;
-            return [
-              "x: " + v.x,
-              "y: " + v.y,
-              "z: " + (v.z === null ? "No data" : display(v.z!, "standard", [1, 1])),
-            ];
+            const v = data[context.dataIndex];
+            return `${v.y}, ${v.x}: ${
+              v.z === null ? "No data" : display(v.z!, "standard", [1, 1])
+            }`;
           },
         },
       },

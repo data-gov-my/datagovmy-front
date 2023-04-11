@@ -29,6 +29,7 @@
     "chartjs-chart-matrix": "^2.0.1",
     "chartjs-plugin-annotation": "^2.0.1",
     "chartjs-plugin-crosshair": "^1.2.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "d3-scale-chromatic": "^3.0.0",
     "dom-to-image": "^2.6.0",
     "highlight.js": "^11.6.0",

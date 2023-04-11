@@ -283,3 +283,6 @@ export const standardDeviation = (values: number[]): number => {
   const variance = average(values.map(x => Math.pow(x - mean, 2)));
   return Math.sqrt(variance);
 };
+
+export const normalize = (value: number, min: number, max: number): number =>
+  (value - min) / (max - min);
