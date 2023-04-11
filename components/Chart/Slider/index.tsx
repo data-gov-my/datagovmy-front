@@ -67,16 +67,16 @@ const Slider: FunctionComponent<SliderProps> = ({
           </p>
           <div className="group relative flex h-5 grow touch-none select-none items-center">
             <Track className="relative z-0 mx-3 h-2 grow rounded-full bg-[#E2E8F0] dark:bg-washed-dark">
-              <Range className="absolute z-0 h-full rounded-xl group-hover:bg-primary md:bg-[#A1A1AA]" />
+              <Range className="absolute z-0 h-full rounded-xl bg-[#A1A1AA] group-focus-within:bg-primary group-hover:bg-primary dark:group-focus-within:bg-primary dark:group-hover:bg-primary" />
             </Track>
-            <Thumb className="ml-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-hover:border-primary group-hover:ring-4 group-hover:ring-primary ">
+            <Thumb className="ml-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:border-primary group-focus-within:ring-4 group-focus-within:ring-primary group-hover:border-primary group-hover:ring-4 group-hover:ring-primary">
               <SliderTooltip>
                 {parseAsDate
                   ? toDate(data[minmax[0]], dateFormat[period], i18n.language)
                   : data[minmax[0]]}
               </SliderTooltip>
             </Thumb>
-            <Thumb className="mr-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-hover:border-primary group-hover:ring-4 group-hover:ring-primary ">
+            <Thumb className="mr-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:border-primary group-focus-within:ring-4 group-focus-within:ring-primary group-hover:border-primary group-hover:ring-4 group-hover:ring-primary">
               <SliderTooltip>
                 {parseAsDate
                   ? toDate(data[minmax[1]], dateFormat[period], i18n.language)
@@ -106,9 +106,9 @@ const Slider: FunctionComponent<SliderProps> = ({
         </p>
         <div className="group relative flex h-5 grow touch-none select-none items-center">
           <Track className="relative z-0 h-2 grow rounded-full bg-[#E2E8F0] px-3 dark:bg-washed-dark">
-            <Range className="absolute z-0 h-full rounded-xl group-hover:bg-primary md:bg-[#A1A1AA]" />
+            <Range className="absolute z-0 h-full rounded-xl bg-[#A1A1AA] group-focus-within:bg-primary group-hover:bg-primary dark:group-focus-within:bg-primary dark:group-hover:bg-primary" />
           </Track>
-          <Thumb className="mx-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-hover:border-primary group-hover:ring-4 group-hover:ring-primary ">
+          <Thumb className="mx-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:border-primary group-focus-within:ring-4 group-focus-within:ring-primary group-hover:border-primary group-hover:ring-4 group-hover:ring-primary">
             <SliderTooltip>
               {parseAsDate
                 ? toDate(data[minmax[0]], dateFormat[period], i18n.language)
@@ -132,8 +132,8 @@ interface SliderTooltipProps {
 
 const SliderTooltip: FunctionComponent<SliderTooltipProps> = ({ children }) => {
   return (
-    <div className="group relative inline-block w-fit overflow-visible">
-      <div className="tooltip-content-up invisible absolute -top-14 left-2 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black py-1 px-1.5 text-sm font-normal text-white transition-all group-hover:visible md:max-w-sm">
+    <div className="relative inline-block w-fit overflow-visible">
+      <div className="invisible absolute -top-14 left-2 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black py-1 px-1.5 text-sm font-normal text-white transition-all before:absolute before:left-[38%] before:top-[26px] before:h-0 before:w-0 before:border-8 before:border-transparent before:border-t-black group-focus-within:visible group-hover:visible dark:bg-white dark:text-black dark:before:border-t-white">
         {children}
       </div>
     </div>

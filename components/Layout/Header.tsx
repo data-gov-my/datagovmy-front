@@ -73,6 +73,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
 
             {/* LANGUAGE DROPDOWN */}
             <Dropdown
+              width="w-fit"
               selected={languages.find(lang => lang.value === language)}
               onChange={onLanguageChange}
               options={languages}
@@ -80,12 +81,12 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
             {/* MOBILE NAV ICONS */}
             {isTabletNavOpen ? (
               <XMarkIcon
-                className="-m-2 box-content block h-5 w-5 p-2 text-black dark:text-white md:hidden"
+                className=" box-content block h-5 w-5 text-black dark:text-white md:hidden"
                 onClick={() => setIsTabletNavOpen(false)}
               />
             ) : (
               <Bars3BottomRightIcon
-                className="-m-2 box-content block h-5 w-5 p-2 text-black dark:text-white md:hidden"
+                className="box-content block h-5 w-5 text-black dark:text-white md:hidden"
                 onClick={() => setIsTabletNavOpen(true)}
               />
             )}
@@ -97,18 +98,8 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
 };
 
 const ThemeToggle = () => {
-  const options = [
-    { label: "Light", value: "light" },
-    { label: "Dark", value: "dark" },
-  ];
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState<boolean>(false);
-  const { t } = useTranslation("common");
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) return null;
   return (
     <>
       <Button

@@ -361,6 +361,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               {config.options.map((item: FilterDefault, index: number) => (
                 <Dropdown
                   key={item.key}
+                  width="w-fit"
                   anchor={index > 0 ? "right" : "left"}
                   options={item.options}
                   selected={filter[item.key]}
