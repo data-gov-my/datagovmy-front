@@ -1,9 +1,16 @@
+import { FunctionComponent } from "react";
 import AgencyBadge from "@components/AgencyBadge";
 import Hero from "@components/Hero";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { SPRIcon } from "@components/Icon/agency";
+import { useData } from "@hooks/useData";
+import { useTranslation } from "@hooks/useTranslation";
+import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
+import Election from "./elections";
+import ElectionCandidates from "./candidates";
+import ElectionParties from "./political-parties";
+import ElectionSeats from "./seats";
 
 /**
  * Election Explorer Dashboard
@@ -14,7 +21,31 @@ interface ElectionExplorerProps {}
 
 const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
   const { t, i18n } = useTranslation(["common", "dashboard-election-explorer"]);
-
+  const PANELS = [
+    {
+      name: t("dashboard-election-explorer:elections"),
+      icon: <SPRIcon fillColor="#00000000" />,
+      data: <Election />,
+    },
+    {
+      name: t("dashboard-election-explorer:candidates"),
+      icon: <UserIcon className="mx-1 h-5 w-5" />,
+      data: <ElectionCandidates />,
+    },
+    {
+      name: t("dashboard-election-explorer:parties"),
+      icon: <FlagIcon className="mx-1 h-5 w-5" />,
+      data: <ElectionParties />,
+    },
+    {
+      name: t("dashboard-election-explorer:seats"),
+      icon: <MapIcon className="mx-1 h-5 w-5" />,
+      data: <ElectionSeats />,
+    },
+  ];
+  const { data, setData } = useData({
+    tabs: 0,
+  });
   return (
     <>
       <Hero
@@ -26,12 +57,20 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
           <AgencyBadge
             agency={"Election Comission (EC)"}
             link="https://www.spr.gov.my/"
-            icon={<SPRIcon />}
+            icon={<SPRIcon className="text-white" />}
           />
         }
       />
-      {/* Rest of page goes here */}
-      <Container className="min-h-screen"></Container>
+
+      <Container className="min-h-fit">
+        <ContainerTabs current={data.tabs}>
+          {PANELS.map((panel, index) => (
+            <ContainerTabs.Panel name={panel.name} icon={panel.icon} key={index}>
+              {panel.data}
+            </ContainerTabs.Panel>
+          ))}
+        </ContainerTabs>
+      </Container>
     </>
   );
 };
