@@ -1,4 +1,5 @@
 import Card from "@components/Card";
+import AgencyIcon from "@components/Icon/agency";
 import { At, Button, Container, Dropdown, Hero, Input, Section, Tabs } from "@components/index";
 import { OptionType } from "@components/types";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
@@ -13,7 +14,6 @@ import {
   forwardRef,
   ForwardRefExoticComponent,
   FunctionComponent,
-  ReactNode,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -97,21 +97,13 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
           ),
         ]}
-        description={
-          <div className="space-y-6">
-            <p className="text-dim">{t("dashboard.description")}</p>
-            {filterRef.current?.sourceFilter()}
-          </div>
-        }
       />
-
+      <DashboardFilter
+        ref={filterRef}
+        query={query}
+        sources={sources[lang].map(({ agency }) => agency)}
+      />
       <Container className="min-h-screen">
-        <DashboardFilter
-          ref={filterRef}
-          query={query}
-          sources={sources[lang].map(({ agency }) => agency)}
-        />
-
         {!query["search"] && !query["source"] && (
           <Section
             title={
@@ -149,7 +141,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                     <At href={item.id} key={item.id}>
                       <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
                         <div className="relative flex items-center gap-4">
-                          <div className="h-4 w-4 rounded-full bg-outline" />
+                          <AgencyIcon agency={item.agency} />
                           <p className="text-sm text-dim">{item.agency}</p>
                           <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
                         </div>
@@ -180,7 +172,6 @@ interface DashboardFilterProps {
 
 interface DashboardFilterRef {
   source?: string;
-  sourceFilter: () => ReactNode;
 }
 
 const DashboardFilter: ForwardRefExoticComponent<DashboardFilterProps> = forwardRef(
@@ -205,48 +196,54 @@ const DashboardFilter: ForwardRefExoticComponent<DashboardFilterProps> = forward
     useImperativeHandle(ref, () => {
       return {
         source: filter.source?.value ?? "",
-        sourceFilter: () => (
-          <Dropdown
-            icon={<BuildingLibraryIcon className="h-4 w-4 text-dim" />}
-            className="min-w-[250px]"
-            placeholder={t("dashboard.source_placeholder")}
-            anchor="left"
-            options={filterSources}
-            selected={filter.source}
-            onChange={e => setFilter("source", e)}
-            enableSearch
-            enableClear
-          />
-        ),
       };
     });
 
+    const renderClear = (className: string) => {
+      return (
+        actives.length > 0 && (
+          <div className={className}>
+            <Button
+              className="w-max text-sm text-dim hover:bg-washed dark:hover:bg-washed-dark"
+              icon={<XMarkIcon className="h-4 w-4" />}
+              disabled={!actives.length}
+              onClick={reset}
+            >
+              {t("common.clear_all")}
+            </Button>
+          </div>
+        )
+      );
+    };
+
     return (
       <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:border-washed-dark dark:bg-black lg:pl-2">
-        <div className="flex flex-grow items-center">
-          <Input
-            className="border-0"
-            type="search"
-            placeholder={t("dashboard.search_placeholder")}
-            autoFocus
-            value={filter.search}
-            onChange={e => setFilter("search", e)}
-            icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
-          />
-        </div>
-        <div className="hidden gap-2 pr-6 xl:flex">
-          {actives.length > 0 && (
-            <div>
-              <Button
-                icon={<XMarkIcon className="h-4 w-4" />}
-                disabled={!actives.length}
-                onClick={reset}
-              >
-                {t("common.clear_all")}
-              </Button>
-            </div>
-          )}
-        </div>
+        <Container>
+          <div className="flex flex-row flex-wrap-reverse items-center gap-3 lg:flex-nowrap">
+            {renderClear("block lg:hidden")}
+            <Dropdown
+              icon={<BuildingLibraryIcon className="h-4 w-4 text-dim" />}
+              className="w-fit min-w-fit"
+              placeholder={t("dashboard.source_placeholder")}
+              anchor="left"
+              options={filterSources}
+              selected={filter.source}
+              onChange={e => setFilter("source", e)}
+              enableSearch
+              enableClear
+            />
+            <Input
+              className="border-0 "
+              type="search"
+              placeholder={t("dashboard.search_placeholder")}
+              autoFocus
+              value={filter.search}
+              onChange={e => setFilter("search", e)}
+              icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
+            />
+            {renderClear("hidden lg:block")}
+          </div>
+        </Container>
       </div>
     );
   }
