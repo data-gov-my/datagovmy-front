@@ -23,7 +23,6 @@ import Dropdown from "@components/Dropdown";
 import Search from "@components/Search";
 import Section from "@components/Section";
 import Tooltip from "@components/Tooltip";
-import { useRouter } from "next/router";
 import { useFilter } from "@hooks/useFilter";
 import CatalogueCode from "./partials/code";
 import Slider from "@components/Chart/Slider";
@@ -111,8 +110,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     chart: [],
     data: [],
   });
-
-  const query = useRouter().query;
   const { filter, setFilter } = useFilter(config.context, { id: params.id });
 
   const renderChart = (): ReactNode | undefined => {
@@ -185,16 +182,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             onDownload={prop => setDownloads(prop)}
           />
         );
-      // case "HEATMAP":
-      //   return (
-      //     <CatalogueHeatmap
-      //       config={config}
-      //       dataset={dataset}
-      //       lang={lang}
-      //       urls={urls}
-      //       onDownload={prop => setDownloads(prop)}
-      //     />
-      //   );
+      case "HEATTABLE":
+        return (
+          <CatalogueHeatmap
+            config={config}
+            dataset={dataset}
+            urls={urls}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
       default:
         break;
     }

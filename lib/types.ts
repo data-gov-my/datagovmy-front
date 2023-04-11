@@ -65,7 +65,7 @@ export type DCChartKeys =
   | "BAR"
   | "HBAR"
   | "PYRAMID"
-  | "HEATMAP"
+  | "HEATTABLE"
   | "SCATTER";
 export type DCPeriod = "YEARLY" | "QUARTERLY" | "MONTHLY" | "WEEKLY" | "DAILY";
 

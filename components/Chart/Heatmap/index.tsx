@@ -17,21 +17,22 @@ import { Color, useColor } from "@hooks/useColor";
 import { DeepPartial } from "chart.js/types/utils";
 import "chartjs-adapter-luxon";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
-import { minMax } from "@lib/helpers";
+import { minMax, numFormat } from "@lib/helpers";
 
 interface HeatmapProps extends ChartHeaderProps {
   className?: string;
   data?: HeatmapData;
   color?: Color;
-  unitX?: string;
-  unitY?: string;
+  prefix?: string;
+  unit?: string;
+
   _ref?: ForwardedRef<ChartJSOrUndefined<"matrix", any[], unknown>>;
 }
 
 type HeatmapDatum = {
   x: string | number;
   y: string | number;
-  v: number | null;
+  z: number | null;
 };
 export type HeatmapData = Array<HeatmapDatum>;
 
@@ -44,8 +45,8 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   menu,
   state,
   color = "blues",
-  unitX,
-  unitY,
+  prefix,
+  unit,
   controls,
   _ref,
 }) => {
@@ -54,7 +55,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
     [number, number, Array<string | number>, Array<string | number>]
   >(() => {
     if (!data) return [0, 1, [], []];
-    const [min, max] = minMax(data.map(({ v }) => v));
+    const [min, max] = minMax(data.map(item => item!.z));
     return [
       min,
       max,
@@ -64,6 +65,14 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   }, [data]);
 
   const { interpolate } = useColor(color, [min, max]);
+
+  const display = (
+    value: number,
+    type: "compact" | "standard",
+    precision: number | [min: number, max: number]
+  ): string => {
+    return (prefix ?? "") + numFormat(value, type, precision) + (unit ?? "");
+  };
 
   const scale = (): {
     x: DeepPartial<ScaleOptionsByType<keyof CartesianScaleTypeRegistry>>;
@@ -162,7 +171,11 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
           },
           label(context) {
             const v = context.dataset.data[context.dataIndex] as HeatmapDatum;
-            return ["x: " + v.x, "y: " + v.y, "v: " + v.v];
+            return [
+              "x: " + v.x,
+              "y: " + v.y,
+              "z: " + (v.z === null ? "No data" : display(v.z!, "standard", [1, 1])),
+            ];
           },
         },
       },
@@ -187,7 +200,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
                 borderWidth: 1,
                 borderColor: "rgba(0,0,0,0.5)",
                 backgroundColor(ctx: ScriptableContext<"matrix">) {
-                  return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).v);
+                  return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).z);
                 },
                 width: ({ chart }) => (chart.chartArea || {}).width / uniqueXs.length - 1,
                 height: ({ chart }) => (chart.chartArea || {}).height / uniqueYs.length - 1,
@@ -202,41 +215,41 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
 };
 
 const dummyLinear = [
-  { x: 1, y: 1, v: 11 },
-  { x: 1, y: 2, v: 12 },
-  { x: 1, y: 3, v: 13 },
-  { x: 2, y: 1, v: 40 },
-  { x: 2, y: 2, v: 22 },
-  { x: 2, y: 3, v: 23 },
-  { x: 3, y: 1, v: 31 },
-  { x: 3, y: 2, v: 36 },
-  { x: 3, y: 3, v: 33 },
+  { x: 1, y: 1, z: 11 },
+  { x: 1, y: 2, z: 12 },
+  { x: 1, y: 3, z: 13 },
+  { x: 2, y: 1, z: 40 },
+  { x: 2, y: 2, z: 22 },
+  { x: 2, y: 3, z: 23 },
+  { x: 3, y: 1, z: 31 },
+  { x: 3, y: 2, z: 36 },
+  { x: 3, y: 3, z: 33 },
 ];
 
 const dummyCategory = [
-  { x: "A", y: "X", v: 11 },
-  { x: "A", y: "Y", v: 12 },
-  { x: "A", y: "Z", v: 13 },
-  { x: "B", y: "X", v: 21 },
-  { x: "B", y: "Y", v: 22 },
-  { x: "B", y: "Z", v: 23 },
-  { x: "C", y: "X", v: 31 },
-  { x: "C", y: "Y", v: 32 },
-  { x: "C", y: "Z", v: 33 },
+  { x: "A", y: "X", z: 11 },
+  { x: "A", y: "Y", z: 12 },
+  { x: "A", y: "Z", z: 13 },
+  { x: "B", y: "X", z: 21 },
+  { x: "B", y: "Y", z: 22 },
+  { x: "B", y: "Z", z: 23 },
+  { x: "C", y: "X", z: 31 },
+  { x: "C", y: "Y", z: 32 },
+  { x: "C", y: "Z", z: 33 },
 ];
 
 const dummyTime = [
-  { x: 1420070400000, y: 1443657600000, v: 11 },
-  { x: 1420070400000, y: 1446336000000, v: 12 },
-  { x: 1420070400000, y: 1448928000000, v: 13 },
+  { x: 1420070400000, y: 1443657600000, z: 11 },
+  { x: 1420070400000, y: 1446336000000, z: 12 },
+  { x: 1420070400000, y: 1448928000000, z: 13 },
 
-  { x: 1422748800000, y: 1443657600000, v: 21 },
-  { x: 1422748800000, y: 1446336000000, v: 22 },
-  { x: 1422748800000, y: 1448928000000, v: 23 },
+  { x: 1422748800000, y: 1443657600000, z: 21 },
+  { x: 1422748800000, y: 1446336000000, z: 22 },
+  { x: 1422748800000, y: 1448928000000, z: 23 },
 
-  { x: 1425168000000, y: 1443657600000, v: 31 },
-  { x: 1425168000000, y: 1446336000000, v: 32 },
-  { x: 1425168000000, y: 1448928000000, v: 33 },
+  { x: 1425168000000, y: 1443657600000, z: 31 },
+  { x: 1425168000000, y: 1446336000000, z: 32 },
+  { x: 1425168000000, y: 1448928000000, z: 33 },
 ];
 
 export default Heatmap;

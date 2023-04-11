@@ -19,7 +19,6 @@ const CatalogueShow: Page = ({
   urls,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation();
-  console.log(dataset);
 
   const availableOptions = useMemo<OptionType[]>(() => {
     switch (dataset.type) {
@@ -27,7 +26,9 @@ const CatalogueShow: Page = ({
         return [{ label: t("catalogue.table"), value: "table" }];
 
       case "GEOJSON":
+      case "HEATTABLE":
         return [{ label: t("catalogue.chart"), value: "chart" }];
+
       default:
         return [
           { label: t("catalogue.chart"), value: "chart" },
@@ -93,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
 
   const { data } = await get("/data-variable/", {
     id: params!.id,
-    lang: SHORT_LANG[locale as "en-GB" | "ms-MY"],
+    lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
     ...query,
   });
   let config: DCConfig = {
