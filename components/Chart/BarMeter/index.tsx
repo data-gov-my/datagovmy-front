@@ -121,11 +121,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
                 {(item.y as number).toFixed(1)}
                 {unit}
               </p>
-              <div className="relative flex h-[80%] w-8 overflow-x-hidden bg-washed dark:bg-black">
+              <div className="relative flex h-[80%] w-6 overflow-x-hidden rounded-full bg-washed dark:bg-washed-dark">
                 <div
-                  className="absolute bottom-0 w-full items-center overflow-hidden"
+                  className="absolute bottom-0 w-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
                   style={{
-                    backgroundColor: color,
                     height: percentFill(item.y),
                   }}
                 />
