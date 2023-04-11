@@ -57,19 +57,18 @@ COVID19State.layout = page => (
       <StateDropdown
         url={routes.COVID_19}
         currentState={(useRouter().query.state as string) ?? "mys"}
-        exclude={["kvy"]}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.COVID_19} exclude={["kvy"]} />
+    <StateModal url={routes.COVID_19} />
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
   let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
+  STATES.forEach(state => {
     paths = paths.concat([
       {
         params: {
