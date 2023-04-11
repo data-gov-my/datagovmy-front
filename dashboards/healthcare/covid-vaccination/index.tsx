@@ -1,17 +1,18 @@
 import AgencyBadge from "@components/AgencyBadge";
 import { Dropdown, Hero, Panel, Section, StateDropdown, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, ReactNode, useRef } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import Container from "@components/Container";
 import { MOHIcon } from "@components/Icon/agency";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
-import Slider, { SliderRef } from "@components/Chart/Slider";
+import Slider from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { useSlice } from "@hooks/useSlice";
+import { OptionType } from "@components/types";
 
 /**
  * COVID Vaccination Dashboard
@@ -33,10 +34,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   barmeter,
   waffle,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-covid-vaccination"]);
+  const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
   const router = useRouter();
   const currentState = (router.query.state as string) ?? "mys";
-  const sliderRef = useRef<SliderRef>(null);
   const windowWidth = useWindowWidth();
   const isTablet = windowWidth < BREAKPOINTS.LG;
 
@@ -44,19 +44,23 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
   const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
 
-  const filterDoseOptions: string[] = ["dose1", "dose2", "booster1", "booster2"];
-  const filterAgeOptions: string[] = ["total", "child", "adolescent", "adult", "elderly"];
+  const AGE_OPTIONS: Array<OptionType> = ["total", "child", "adolescent", "adult", "elderly"].map(
+    (key: string) => ({
+      label: t(`dashboard-covid-vaccination:${key}`),
+      value: key,
+    })
+  );
+  const DOSE_OPTIONS: Array<OptionType> = ["dose1", "dose2", "booster1", "booster2"].map(
+    (key: string) => ({
+      label: t(`dashboard-covid-vaccination:${key}`),
+      value: key,
+    })
+  );
 
   const { data, setData } = useData({
     vax_tab: 0,
-    filter_dose: {
-      label: t(`dashboard-covid-vaccination:${filterDoseOptions[0]}`),
-      value: filterDoseOptions[0],
-    },
-    filter_age: {
-      label: t(`dashboard-covid-vaccination:${filterAgeOptions[0]}`),
-      value: filterAgeOptions[0],
-    },
+    filter_age: AGE_OPTIONS[0],
+    filter_dose: DOSE_OPTIONS[0],
     minmax: [0, timeseries.data.x.length - 1],
   });
 
@@ -157,25 +161,17 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
               <Dropdown
                 anchor="left"
                 width="w-fit"
-                placeholder="Select"
-                onChange={item => setData("filter_age", item)}
-                selected={data.filter_age}
-                options={filterAgeOptions.map(value => ({
-                  label: t(`dashboard-covid-vaccination:${value}`),
-                  value: value,
-                }))}
+                options={AGE_OPTIONS}
+                selected={AGE_OPTIONS.find(age => age.value === data.filter_age.value)}
+                onChange={e => setData("filter_age", e)}
               />
             ) : (
               <Dropdown
                 anchor="left"
                 width="w-fit"
-                placeholder="Select"
-                onChange={item => setData("filter_dose", item)}
-                selected={data.filter_dose}
-                options={filterDoseOptions.map(value => ({
-                  label: t(`dashboard-covid-vaccination:${value}`),
-                  value: value,
-                }))}
+                options={DOSE_OPTIONS}
+                selected={DOSE_OPTIONS.find(dose => dose.value === data.filter_dose.value)}
+                onChange={e => setData("filter_dose", e)}
               />
             )}
             <Tabs.List
@@ -266,8 +262,6 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
             }}
           />
           <Slider
-            className="pt-5"
-            ref={sliderRef}
             type="range"
             value={data.minmax}
             data={timeseries.data.x}

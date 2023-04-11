@@ -8,51 +8,57 @@ import { useTranslation } from "@hooks/useTranslation";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import Fonts from "@config/font";
-import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
+import OrganDonationDashboard from "@dashboards/healthcare/organ-donation";
+import { DateTime } from "luxon";
 
-const PekaB40State: Page = ({
+const OrganDonationState: Page = ({
   last_updated,
   timeseries,
   state,
   choropleth,
+  barchart_age,
+  barchart_time,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
+  const { t } = useTranslation(["common", "dashboard-organ-donation"]);
 
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-peka-b40:header"))}
-        description={t("dashboard-peka-b40:description")}
+        title={CountryAndStates[state].concat(" - ", t("dashboard-organ-donation:header"))}
+        description={t("dashboard-organ-donation:description")}
         keywords={""}
       />
-      <PekaB40Dashboard
+      <OrganDonationDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         choropleth={choropleth}
+        barchart_age={barchart_age}
+        barchart_time={barchart_time}
       />
     </>
   );
 };
 
-PekaB40State.layout = page => (
+OrganDonationState.layout = page => (
   <Layout
     className={[Fonts.body.variable, "font-sans"].join(" ")}
     stateSelector={
       <StateDropdown
-        url={routes.PEKA_B40}
+        url={routes.ORGAN_DONATION}
         currentState={(useRouter().query.state as string) ?? "mys"}
+        exclude={["kvy"]}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.PEKA_B40} />
+    <StateModal url={routes.ORGAN_DONATION} exclude={["kvy"]} />
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
   let paths: Array<any> = [];
-  STATES.forEach(state => {
+  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
     paths = paths.concat([
       {
         params: {
@@ -74,12 +80,17 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"], null, [
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-organ-donation"], null, [
     "en-GB",
     "ms-MY",
   ]);
+  const { data } = await get("/dashboard", { dashboard: "organ_donation", state: params?.state });
 
-  const { data } = await get("/dashboard", { dashboard: "peka_b40", state: params?.state });
+  // transform:
+  data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
+    const period = DateTime.fromFormat(item, "yyyy-MM-dd");
+    return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
+  });
 
   return {
     props: {
@@ -88,9 +99,11 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
       timeseries: data.timeseries,
       state: params?.state,
       choropleth: data.choropleth_malaysia,
+      barchart_age: data.barchart_age,
+      barchart_time: data.barchart_time,
     },
-    revalidate: 300,
+    revalidate: 60 * 60 * 24,
   };
 };
 
-export default PekaB40State;
+export default OrganDonationState;

@@ -2,6 +2,7 @@ import { FunctionComponent, ReactElement, ReactNode, useMemo, useState } from "r
 import { Tab } from "@headlessui/react";
 import { CountryAndStates } from "@lib/constants";
 import { useTranslation } from "@hooks/useTranslation";
+import { clx } from "@lib/helpers";
 
 interface TabsProps {
   children: ReactNode;
@@ -37,12 +38,12 @@ const List: FunctionComponent<ListProps> = ({ options, current, onChange }) => {
       {options.map((option, index) => (
         <li
           key={option}
-          className={[
-            "cursor-pointer self-center rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
+          className={clx(
+            "cursor-pointer self-center rounded-full px-[10px] text-sm outline-none transition-colors",
             current === index
               ? "bg-outline font-medium text-black dark:bg-washed-dark dark:text-white"
-              : "bg-transparent text-dim hover:text-black dark:hover:text-white",
-          ].join(" ")}
+              : "bg-transparent text-dim hover:text-black dark:hover:text-white"
+          )}
           onClick={() => onChange(index)}
         >
           {option}
@@ -71,7 +72,7 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
   return (
     <>
       <Tab.Group selectedIndex={current} onChange={onChange}>
-        <div className={`flex flex-wrap items-baseline justify-between gap-4 ${className}`}>
+        <div className={clx("flex flex-wrap items-baseline justify-between gap-4", className)}>
           <div>
             {title && typeof title === "string" ? (
               <span className="text-base font-bold">{title}</span>
@@ -88,23 +89,23 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
           </div>
 
           <Tab.List
-            className={[
+            className={clx(
               "item-center flex flex-wrap justify-between gap-[10px] lg:items-start lg:justify-end",
-              hidden ? "hidden" : "",
-            ].join(" ")}
+              hidden && "hidden"
+            )}
           >
             {controls}
-            <div className="flex flex-grow flex-wrap gap-1">
+            <div className="flex flex-grow flex-wrap">
               {_children.map(({ props: { name } }, index) => (
                 <Tab
                   key={index}
                   className={({ selected }) =>
-                    [
+                    clx(
                       "rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
                       selected
                         ? "bg-outline font-medium text-black dark:bg-washed-dark dark:text-white"
-                        : "bg-transparent text-dim hover:text-black dark:hover:text-white",
-                    ].join(" ")
+                        : "bg-transparent text-dim hover:text-black dark:hover:text-white"
+                    )
                   }
                 >
                   {name}

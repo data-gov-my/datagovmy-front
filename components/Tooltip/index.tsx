@@ -4,6 +4,8 @@ import { Fragment, FunctionComponent, ReactNode, useState } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 import { BREAKPOINTS } from "@lib/constants";
+import { clx } from "@lib/helpers";
+import Fonts from "@config/font";
 
 type TooltipProps = {
   children?: (open: () => void) => ReactNode;
@@ -37,7 +39,11 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip }) => {
         <div className="tooltip-content">{tip}</div>
       ) : (
         <Transition.Root show={isOpen} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={setIsOpen}>
+          <Dialog
+            as="div"
+            className={clx(Fonts.body.variable, "relative z-10 font-sans")}
+            onClose={setIsOpen}
+          >
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

@@ -109,6 +109,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
       },
       crosshair: false,
       annotation: false,
+      datalabels: false,
     },
     scales: {
       x: {
