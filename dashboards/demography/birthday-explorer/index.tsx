@@ -238,11 +238,21 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           .toLocaleString(DateTime.DATE_FULL)}
                       </div>
                       <div className="mx-auto mt-3 text-center text-sm text-dim">
-                        {t("dashboard-birthday-explorer:section_1.age", {
-                          years,
-                          months,
-                          days: numFormat(days!, "standard", 0),
-                        })}
+                        <span>
+                          {t("dashboard-birthday-explorer:section_1.year", {
+                            count: years,
+                          })}
+                        </span>
+                        <span>
+                          {t("dashboard-birthday-explorer:section_1.month", {
+                            count: months,
+                          })}
+                        </span>
+                        <span>
+                          {t("dashboard-birthday-explorer:section_1.day", {
+                            count: Math.floor(days!),
+                          })}
+                        </span>
                       </div>
                     </Card>
                     <div className="flex h-auto basis-2/3 flex-col gap-3 self-center px-4 pb-4 text-lg font-bold lg:pt-4 lg:pl-0 lg:pr-8">
