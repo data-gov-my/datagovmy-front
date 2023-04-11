@@ -39,11 +39,21 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
     loading: false,
 
     // timeseries data
-    x: [
-      0, 2678400000, 5097600000, 7776000000, 10368000000, 13046400000, 15638400000, 18316800000,
-      20995200000, 23587200000, 26265600000, 28857600000,
+    x: [],
+    y: [],
+    placeholderX: [
+      631152000000, 662688000000, 694224000000, 725846400000, 757382400000, 788918400000,
+      820454400000, 852076800000, 883612800000, 915148800000, 946684800000, 978307200000,
+      1009843200000, 1041379200000, 1072915200000, 1104537600000, 1136073600000, 1167609600000,
+      1199145600000, 1230768000000, 1262304000000, 1293840000000, 1325376000000, 1356998400000,
+      1388534400000, 1420070400000, 1451606400000, 1483228800000, 1514764800000, 1546300800000,
+      1577836800000, 1609459200000, 1640995200000,
     ],
-    y: [5547, 5234, 5834, 5621, 5705, 5398, 5998, 6057, 6423, 6159, 5325, 5404],
+    placeholderY: [
+      70150, 29766, 48832, 87217, 22895, 16223, 76955, 73224, 94678, 47467, 6086, 16614, 75976,
+      78252, 60954, 88490, 15135, 17795, 43085, 54941, 20484, 35517, 91158, 68620, 59882, 94217,
+      3477, 45860, 82643, 6464, 554, 16730, 20919,
+    ],
   });
 
   const filterManufacturers = useMemo<Array<OptionType>>(() => {
@@ -79,15 +89,14 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
   useWatch(() => {
     setData("loading", true);
 
-    // console.log("REQUEST: ", { dashboard: "car_popularity", ...data.params });
-
-    // get("dashboard/", { dashboard: "car_popularity", ...data.params })
-    //   .then(({ data }) => {
-    //     setData("x", data.timeseries?.data.x);
-    //     setData("y", data.timeseries?.data.cars);
-    //   })
-    //   .then(() => setData("loading", false));
-  }, []);
+    get("chart/", { dashboard: "car_popularity", chart_name: "timeseries", ...data.params })
+      .then(({ data }) => {
+        setData("x", data.data?.x);
+        setData("y", data.data?.cars);
+        setData("data_as_of", data.data_as_of);
+      })
+      .then(() => setData("loading", false));
+  }, [data.params]);
 
   return (
     <>
@@ -108,7 +117,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         }
       />
       <Container className="min-h-screen">
-        <Section title={t("dashboard-car-popularity:section_title")} date={Date.now()}>
+        <Section title={t("dashboard-car-popularity:section_title")} date={data.data_as_of}>
           <div className="flex flex-col gap-8 lg:flex-row">
             <div className="w-full lg:w-fit">
               <Card className="flex w-full flex-col justify-items-start gap-6 rounded-xl border border-outline bg-background	p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50 lg:w-[400px]">
@@ -153,15 +162,31 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
               </Card>
             </div>
             <div className="w-full">
-              <div className="relative hidden h-[460px] w-full items-center justify-center">
+              {data.x?.length > 0 ? (
                 <Timeseries
-                  className="absolute top-0 left-0 h-full w-full opacity-30"
+                  className="h-[460px] w-full"
+                  title={
+                    <>
+                      <p className="text-lg font-bold">
+                        <span>
+                          {t("dashboard-car-popularity:timeseries_title", {
+                            car: data.params.model,
+                          })}
+                        </span>
+                      </p>
+                      <p className="text-sm text-dim">
+                        <span>{t("dashboard-car-popularity:timeseries_description")}</span>
+                      </p>
+                    </>
+                  }
+                  interval={"year"}
                   data={{
                     labels: data.x,
                     datasets: [
                       {
                         type: "line",
                         data: data.y,
+                        label: t("dashboard-car-popularity:label"),
                         backgroundColor: AKSARA_COLOR.PRIMARY_H,
                         borderColor: AKSARA_COLOR.PRIMARY,
                         borderWidth:
@@ -174,48 +199,38 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                       },
                     ],
                   }}
-                  enableGridX={false}
                 />
-                <Card className="z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto">
-                  <MagnifyingGlassIcon className=" h-4 w-4" />
-                  <p>{t("dashboard-car-popularity:search_prompt")}</p>
-                </Card>
-              </div>
-
-              <Timeseries
-                className="h-[460px] w-full"
-                title={
-                  <>
-                    <p className="text-lg font-bold">
-                      <span>
-                        {t("dashboard-car-popularity:timeseries_title", { car: "Toyota" })}
-                      </span>
-                    </p>
-                    <p className="text-sm text-dim">
-                      <span>{t("dashboard-car-popularity:timeseries_description")}</span>
-                    </p>
-                  </>
-                }
-                data={{
-                  labels: data.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      data: data.y,
-                      label: t("dashboard-car-popularity:label"),
-                      backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                      borderColor: AKSARA_COLOR.PRIMARY,
-                      borderWidth:
-                        windowWidth <= BREAKPOINTS.MD
-                          ? 0.75
-                          : windowWidth <= BREAKPOINTS.LG
-                          ? 1.0
-                          : 1.5,
-                      fill: true,
-                    },
-                  ],
-                }}
-              />
+              ) : (
+                <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
+                  <Timeseries
+                    className="absolute top-0 left-0 h-full w-full opacity-30"
+                    data={{
+                      labels: data.placeholderX,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: data.placeholderY,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth:
+                            windowWidth <= BREAKPOINTS.MD
+                              ? 0.75
+                              : windowWidth <= BREAKPOINTS.LG
+                              ? 1.0
+                              : 1.5,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                    interval={"year"}
+                  />
+                  <Card className="z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto">
+                    <MagnifyingGlassIcon className=" h-4 w-4" />
+                    <p>{t("dashboard-car-popularity:search_prompt")}</p>
+                  </Card>
+                </div>
+              )}
             </div>
           </div>
         </Section>

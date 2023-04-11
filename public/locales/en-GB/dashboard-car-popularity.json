@@ -11,5 +11,6 @@
     "search_button": "Search for car",
     "search_prompt": "Start search for car brand to see your car popularity",
     "timeseries_title": "{{car}}: Popularity over the Years",
-    "timeseries_description": "Note: This data is based on the year the car was first registered with JPJ, not the year it was manufactured"
+    "timeseries_description": "Note: This data is based on the year the car was first registered with JPJ, not the year it was manufactured",
+    "label": "Cars"
 }

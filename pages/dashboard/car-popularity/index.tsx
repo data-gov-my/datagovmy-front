@@ -31,13 +31,48 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   const data = {
     manufacturer_1: {
-      manufacturer_1_model_1: ["1-1-colours", "1-1-red", "1-1-blue"],
-      manufacturer_1_model_2: ["1-2-red", "1-2-green"],
+      model_1: [
+        "all_colours",
+        "colour_4",
+        "colour_10",
+        "colour_1",
+        "colour_7",
+        "colour_5",
+        "colour_8",
+        "colour_9",
+        "colour_3",
+        "colour_6",
+        "colour_2",
+      ],
+      model_2: [
+        "all_colours",
+        "colour_4",
+        "colour_10",
+        "colour_1",
+        "colour_7",
+        "colour_5",
+        "colour_8",
+        "colour_9",
+        "colour_3",
+        "colour_6",
+        "colour_2",
+      ],
     },
     manufacturer_2: {
-      m2_model_1: ["2-2-1-purple", "2-2-1-red", "2-2-1-pink"],
-      m2_model_2: ["2-2-last-color", "2-2-last-pink"],
-      m2_model_3: ["2-3-last-color", "2-3-last-pink"],
+      model_1: [
+        "all_colours",
+        "colour_4",
+        "colour_10",
+        "colour_1",
+        "colour_7",
+        "colour_5",
+        "colour_8",
+        "colour_9",
+        "colour_3",
+        "colour_6",
+        "colour_2",
+      ],
+      model_2: ["colour_2"],
     },
   };
 
