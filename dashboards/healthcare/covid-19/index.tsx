@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useRef } from "react";
+import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -17,6 +17,7 @@ import DonutMeter from "@components/Chart/DonutMeter";
 import Slider from "@components/Chart/Slider";
 import Stages from "@components/Chart/Stages";
 import { useData } from "@hooks/useData";
+import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { routes } from "@lib/routes";
 import { CountryAndStates } from "@lib/constants";
@@ -76,44 +77,12 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     minmax: [timeseries_deaths.data.x.length - 365, timeseries_deaths.data.x.length - 1],
   });
 
-  const filterTimeline = () => {
-    return {
-      x: timeseries_deaths.data.x.slice(data.minmax[0], data.minmax[1] + 1),
-      deaths_line: timeseries_deaths.data.line.slice(data.minmax[0], data.minmax[1] + 1),
-      deaths_inpatient: timeseries_deaths.data.deaths_inpatient.slice(
-        data.minmax[0],
-        data.minmax[1] + 1
-      ),
-      deaths_broughtin: timeseries_deaths.data.deaths_brought_in.slice(
-        data.minmax[0],
-        data.minmax[1] + 1
-      ),
-      vents_line: timeseries_vents.data.line.slice(data.minmax[0], data.minmax[1] + 1),
-      vents_vent: timeseries_vents.data.vent.slice(data.minmax[0], data.minmax[1] + 1),
-      icu_line: timeseries_icu.data.line.slice(data.minmax[0], data.minmax[1] + 1),
-      icu_icu: timeseries_icu.data.icu.slice(data.minmax[0], data.minmax[1] + 1),
-      admitted_line: timeseries_admitted.data.line.slice(data.minmax[0], data.minmax[1] + 1),
-      admitted_admitted: timeseries_admitted.data.admitted.slice(
-        data.minmax[0],
-        data.minmax[1] + 1
-      ),
-      cases_line: timeseries_cases.data.line.slice(data.minmax[0], data.minmax[1] + 1),
-      cases_cases: timeseries_cases.data.cases.slice(data.minmax[0], data.minmax[1] + 1),
-      tests_posrate: timeseries_tests.data.tooltip.slice(data.minmax[0], data.minmax[1] + 1),
-      tests_rtk: timeseries_tests.data.tests_rtk.slice(data.minmax[0], data.minmax[1] + 1),
-      tests_pcr: timeseries_tests.data.tests_pcr.slice(data.minmax[0], data.minmax[1] + 1),
-    };
-  };
-
-  const filtered_timeline = useCallback(filterTimeline, [
-    data.minmax,
-    timeseries_admitted,
-    timeseries_cases,
-    timeseries_deaths,
-    timeseries_icu,
-    timeseries_tests,
-    timeseries_vents,
-  ]);
+  const { coordinate: admitted_coordinate } = useSlice(timeseries_admitted.data, data.minmax);
+  const { coordinate: cases_coordinate } = useSlice(timeseries_cases.data, data.minmax);
+  const { coordinate: deaths_coordinate } = useSlice(timeseries_deaths.data, data.minmax);
+  const { coordinate: icu_coordinate } = useSlice(timeseries_icu.data, data.minmax);
+  const { coordinate: tests_coordinate } = useSlice(timeseries_tests.data, data.minmax);
+  const { coordinate: vents_coordinate } = useSlice(timeseries_vents.data, data.minmax);
 
   const BarTabsMenu = [
     {
@@ -249,7 +218,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           date={snapshot_graphic.data_as_of}
         >
           <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
-            <div className="col-span-1 xl:col-span-2">
+            <div className="col-span-2">
               <Stages
                 title={t("dashboard-covid-19:diagram_subheader", {
                   state: CountryAndStates[currentState],
@@ -394,7 +363,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 }}
               />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-2 xl:col-span-1">
               <Tabs
                 title={BarTabsMenu[data.filter_state].title}
                 className="w-full"
@@ -441,27 +410,27 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 },
               ]}
               data={{
-                labels: filtered_timeline().x,
+                labels: deaths_coordinate.x,
                 datasets: [
                   {
                     type: "line",
                     label: `${t("dashboard-covid-19:area_chart_tooltip1")}`,
                     pointRadius: 0,
-                    data: filtered_timeline().deaths_line,
-                    borderColor: "#0F172A",
+                    data: deaths_coordinate.line,
+                    borderColor: "#2563EB",
                     borderWidth: 1.5,
                   },
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart_tooltip2")}`,
-                    data: filtered_timeline().deaths_inpatient,
+                    data: deaths_coordinate.deaths_inpatient,
                     backgroundColor: "#6BABFA",
                     stack: "same",
                   },
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart_tooltip3")}`,
-                    data: filtered_timeline().deaths_broughtin,
+                    data: deaths_coordinate.deaths_brought_in,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
                   },
@@ -486,20 +455,20 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 },
               ]}
               data={{
-                labels: filtered_timeline().x,
+                labels: vents_coordinate.x,
                 datasets: [
                   {
                     type: "line",
                     label: `${t("dashboard-covid-19:area_chart2_tooltip1")}`,
                     pointRadius: 0,
-                    data: filtered_timeline().vents_line,
+                    data: vents_coordinate.line,
                     borderColor: "#2563EB",
                     borderWidth: 1.5,
                   },
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart2_tooltip2")}`,
-                    data: filtered_timeline().vents_vent,
+                    data: vents_coordinate.vent,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
                   },
@@ -521,20 +490,20 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 },
               ]}
               data={{
-                labels: filtered_timeline().x,
+                labels: icu_coordinate.x,
                 datasets: [
                   {
                     type: "line",
                     label: `${t("dashboard-covid-19:area_chart3_tooltip1")}`,
                     pointRadius: 0,
-                    data: filtered_timeline().icu_line,
+                    data: icu_coordinate.line,
                     borderColor: "#2563EB",
                     borderWidth: 1.5,
                   },
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart3_tooltip2")}`,
-                    data: filtered_timeline().icu_icu,
+                    data: icu_coordinate.icu,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
                   },
@@ -559,20 +528,20 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 },
               ]}
               data={{
-                labels: filtered_timeline().x,
+                labels: admitted_coordinate.x,
                 datasets: [
                   {
                     type: "line",
                     label: `${t("dashboard-covid-19:area_chart4_tooltip1")}`,
                     pointRadius: 0,
-                    data: filtered_timeline().admitted_line,
+                    data: admitted_coordinate.line,
                     borderColor: "#2563EB",
                     borderWidth: 1.5,
                   },
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart4_tooltip2")}`,
-                    data: filtered_timeline().admitted_admitted,
+                    data: admitted_coordinate.admitted,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
                   },
@@ -594,20 +563,20 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 },
               ]}
               data={{
-                labels: filtered_timeline().x,
+                labels: cases_coordinate.x,
                 datasets: [
                   {
                     type: "line",
                     label: `${t("dashboard-covid-19:area_chart5_tooltip1")}`,
                     pointRadius: 0,
-                    data: filtered_timeline().cases_line,
+                    data: cases_coordinate.line,
                     borderColor: "#2563EB",
                     borderWidth: 1.5,
                   },
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart5_tooltip2")}`,
-                    data: filtered_timeline().cases_cases,
+                    data: cases_coordinate.cases,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
                   },
@@ -633,14 +602,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               ]}
               enableRightScale
               data={{
-                labels: filtered_timeline().x,
+                labels: tests_coordinate.x,
                 datasets: [
                   {
                     type: "line",
                     label: `${t("dashboard-covid-19:area_chart6_tooltip1")}`,
                     pointRadius: 0,
-                    borderColor: "#0F172A",
-                    data: filtered_timeline().tests_posrate,
+                    borderColor: "#2563EB",
+                    data: tests_coordinate.tooltip,
                     borderWidth: 1.5,
                     yAxisID: "y1",
                     spanGaps: true,
@@ -648,14 +617,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart6_tooltip2")}`,
-                    data: filtered_timeline().tests_rtk,
+                    data: tests_coordinate.tests_rtk,
                     backgroundColor: "#6BABFA",
                     stack: "same",
                   },
                   {
                     type: "bar",
                     label: `${t("dashboard-covid-19:area_chart6_tooltip3")}`,
-                    data: filtered_timeline().tests_pcr,
+                    data: tests_coordinate.tests_pcr,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
                   },

@@ -6,7 +6,6 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import COVID19Dashboard from "@dashboards/healthcare/covid-19";
-import { sortMsiaFirst } from "@lib/helpers";
 
 const COVID19: Page = ({
   last_updated,
