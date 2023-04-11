@@ -92,7 +92,9 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
                 height={12}
                 alt={CountryAndStates[item.x]}
               />
-              <p className="text-sm text-dim dark:text-white">{CountryAndStates[item.x]}</p>
+              <p className="truncate text-sm text-dim dark:text-white">
+                {CountryAndStates[item.x]}
+              </p>
             </div>
 
             <div className="flex flex-grow items-center gap-2">

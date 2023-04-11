@@ -1,10 +1,10 @@
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { AgencyBadge, Container, Hero, Section, StateDropdown } from "@components/index";
 import { PHCorpIcon } from "@components/Icon/agency";
 import LeftRightCard from "@components/LeftRightCard";
-import Slider, { SliderRef } from "@components/Chart/Slider";
+import Slider from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
@@ -28,7 +28,7 @@ interface PekaB40Props {
 }
 
 const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, choropleth }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-peka-b40"]);
+  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
 
   const router = useRouter();
   const windowWidth = useWindowWidth();
@@ -39,7 +39,6 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const sliderRef = useRef<SliderRef>(null);
   const sortedChoro = choropleth.data.sort(
     (a: typeof choropleth.data, b: typeof choropleth.data) => b.data.perc - a.data.perc
   );
@@ -104,15 +103,13 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
               ],
             }}
           />
-          <div className="pt-5">
-            <Slider
-              ref={sliderRef}
-              type="range"
-              value={data.minmax}
-              data={timeseries.data.x}
-              onChange={e => setData("minmax", e)}
-            />
-          </div>
+
+          <Slider
+            type="range"
+            value={data.minmax}
+            data={timeseries.data.x}
+            onChange={e => setData("minmax", e)}
+          />
         </Section>
 
         {/* How do screening rates differ across the country? */}

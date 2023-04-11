@@ -3,7 +3,7 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import type { Color } from "@hooks/useColor";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
-import type { DownloadOptions } from "@lib/types";
+import type { DownloadOptions, Geotype } from "@lib/types";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 
@@ -19,7 +19,7 @@ type ChoroPoint = {
 interface CatalogueChoroplethProps {
   config: {
     color: Color;
-    geojson: "state" | "dun" | "parlimen" | "district";
+    geojson: Geotype;
     precision: number;
   };
   dataset: {
