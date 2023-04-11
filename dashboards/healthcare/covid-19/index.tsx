@@ -21,6 +21,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { routes } from "@lib/routes";
 import { CountryAndStates } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
 
 /**
  * COVID19 Dashboard
@@ -153,7 +154,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       className="text-2xl font-medium underline decoration-dashed underline-offset-4"
                       onClick={() => open()}
                     >
-                      {+util_chart.data.util_vent.toFixed(1)}%
+                      {numFormat(util_chart.data.util_vent, "standard", 1)}%
                     </span>
                   )}
                 </Tooltip>
@@ -169,7 +170,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       className="text-2xl font-medium underline decoration-dashed underline-offset-4"
                       onClick={() => open()}
                     >
-                      {+util_chart.data.util_icu.toFixed(1)}%
+                      {numFormat(util_chart.data.util_icu, "standard", 1)}%
                     </span>
                   )}
                 </Tooltip>
@@ -185,7 +186,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       className="text-2xl font-medium underline decoration-dashed underline-offset-4"
                       onClick={() => open()}
                     >
-                      {+util_chart.data.util_hosp.toFixed(1)}%
+                      {numFormat(util_chart.data.util_hosp, "standard", 1)}%
                     </span>
                   )}
                 </Tooltip>
@@ -202,7 +203,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                         className="text-2xl font-medium underline decoration-dashed underline-offset-4"
                         onClick={() => open()}
                       >
-                        {util_chart.data.util_pkrc && +util_chart.data.util_pkrc}%
+                        {numFormat(util_chart.data.util_vent, "standard", 1)}%
                       </span>
                     )}
                   </Tooltip>
@@ -217,8 +218,8 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           title={t("dashboard-covid-19:diagram_header", { state: CountryAndStates[currentState] })}
           date={snapshot_graphic.data_as_of}
         >
-          <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-5">
+            <div className="col-span-1 xl:col-span-3">
               <Stages
                 title={t("dashboard-covid-19:diagram_subheader", {
                   state: CountryAndStates[currentState],
@@ -363,7 +364,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 }}
               />
             </div>
-            <div className="col-span-2 xl:col-span-1">
+            <div className="col-span-1 xl:col-span-2">
               <Tabs
                 title={BarTabsMenu[data.filter_state].title}
                 className="w-full"

@@ -1,6 +1,7 @@
 import { FunctionComponent, ReactNode } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
+import { clx, numFormat } from "@lib/helpers";
 
 /**
  * Stages
@@ -37,13 +38,13 @@ const Stages: FunctionComponent<StagesProps> = ({
               <span className="text-xl dark:text-white">{data.header.value.toLocaleString()}</span>
 
               <small
-                className={`inline-block rounded bg-opacity-20 px-1.5 ${badgeColor(
-                  data.header.delta,
-                  data.header.inverse
-                )}`}
+                className={clx(
+                  "inline-block rounded bg-opacity-20 px-1.5",
+                  badgeColor(data.header.delta, data.header.inverse)
+                )}
               >
                 {appendPlusMinus(data.header.delta)}
-                {data.header.delta}
+                {numFormat(data.header.delta, "standard")}
               </small>
             </div>
           </div>
@@ -162,30 +163,34 @@ const Stats: FunctionComponent<StatsProps> = ({
 }) => {
   return (
     <div
-      className={`flex ${className} ${
+      className={clx(
+        "flex",
+        className,
         iconPlacement === "top"
           ? "flex-col items-center space-y-4"
           : "flex-col items-center lg:flex-row lg:items-start lg:space-x-4"
-      }`}
+      )}
     >
       {icon && icon}
       <div
-        className={`flex flex-col ${
+        className={clx(
+          "flex flex-col",
           iconPlacement === "top" ? "items-center" : "items-center lg:items-start"
-        }`}
+        )}
       >
         <span className="text-xs text-dim">{name}</span>
         <div className="flex items-center gap-2">
-          <span className="text-xl">{value && (+value).toLocaleString()}</span>
+          <span className="text-xl">{value && numFormat(value, "standard")}</span>
           <small
-            className={`inline-block rounded px-1.5 ${
+            className={clx(
+              "inline-block rounded px-1.5",
               !unit
                 ? badgeColor(delta, inverse).concat(" bg-opacity-20")
                 : "bg-washed text-gray-500 dark:bg-washed-dark"
-            }`}
+            )}
           >
             {!unit && appendPlusMinus(delta)}
-            {delta && delta.toLocaleString()}
+            {delta && numFormat(delta, "standard")}
             {unit}
           </small>
         </div>
