@@ -1,15 +1,17 @@
-import type { DownloadOptions, DownloadOption } from "@lib/types";
+import type {
+  DownloadOptions,
+  DownloadOption,
+  DCConfig,
+  DCChartKeys,
+  FilterDefault,
+} from "@lib/types";
 import type { TableConfig } from "@components/Chart/Table";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, ReactNode, useEffect, useMemo, useState } from "react";
-import { SHORT_LANG } from "@lib/constants";
-import { download, interpolate, toDate } from "@lib/helpers";
-import {
-  CATALOGUE_TABLE_SCHEMA,
-  UniversalColumn,
-  UNIVERSAL_TABLE_SCHEMA,
-} from "@lib/schema/data-catalogue";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { SHORT_PERIOD } from "@lib/constants";
+import { clx, download, interpolate, toDate } from "@lib/helpers";
+import { UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
 import { OptionType } from "@components/types";
 // import { track } from "@lib/mixpanel";
 import dynamic from "next/dynamic";
@@ -21,9 +23,9 @@ import Dropdown from "@components/Dropdown";
 import Search from "@components/Search";
 import Section from "@components/Section";
 import Tooltip from "@components/Tooltip";
-import { useRouter } from "next/router";
 import { useFilter } from "@hooks/useFilter";
 import CatalogueCode from "./partials/code";
+import Slider from "@components/Chart/Slider";
 
 /**
  * Catalogue Show
@@ -53,54 +55,38 @@ const CatalogueHeatmap = dynamic(() => import("@data-catalogue/partials/heatmap"
   ssr: true,
 });
 
-export type Langs = "bm" | "en";
-export type CatalogueType =
-  | "TIMESERIES"
-  | "CHOROPLETH"
-  | "TABLE"
-  | "GEOJSON"
-  | "BAR"
-  | "HBAR"
-  | "PYRAMID"
-  | "HEATMAP";
 interface CatalogueShowProps {
   options: OptionType[];
   params: {
     id: string;
   };
-  config: any;
+  config: DCConfig;
   dataset: {
-    type: CatalogueType;
+    type: DCChartKeys;
     chart: any;
     table: {
       data: Array<Record<string, any>>;
-      columns: {
-        x_bm: string;
-        x_en: string;
-        y_bm: string;
-        y_en: string;
-      };
+      columns: Record<string, string>;
     };
-    meta: Record<Langs, { title: string; desc: string }> & { unique_id: string };
+    meta: { title: string; desc: string; unique_id: string };
   };
-  explanation: Record<Langs, { caveat: string; methodology: string; publication?: string }>;
+  explanation: { caveat: string; methodology: string; publication?: string };
   metadata: {
-    url: {
-      [key: string]: string;
-    };
     data_as_of: string;
-    data_source: Array<string>;
-    next_update: string;
+    url: {
+      csv?: string;
+      parquet?: string;
+    };
+    source: string[];
     definitions: Array<{
       id: number;
       unique_id?: string;
       name: string;
-      desc_bm: string;
-      desc_en: string;
-      title_bm: string;
-      title_en: string;
+      desc: string;
+      title: string;
     }>;
-    dataset_desc: Record<Langs, string>;
+    next_update: string;
+    description: string;
     last_updated: string;
   };
   urls: {
@@ -124,10 +110,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     chart: [],
     data: [],
   });
-
-  const query = useRouter().query;
-  const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
-  const { filter, setFilter } = useFilter(config.filter_state, { id: params.id });
+  const { filter, setFilter } = useFilter(config.context, { id: params.id });
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -137,7 +120,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             config={config}
             dataset={dataset}
             filter={filter}
-            lang={lang}
             urls={urls}
             onDownload={prop => setDownloads(prop)}
           />
@@ -145,49 +127,39 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
       case "CHOROPLETH":
         return (
-          <CatalogueGeoChoropleth
-            dataset={dataset}
-            lang={lang}
-            urls={urls}
-            config={{
-              precision: config.precision,
-              color: config.color,
-              geojson: config.file_json,
-            }}
-            onDownload={prop => setDownloads(prop)}
-          />
-          //   <CatalogueChoropleth
+          //   <CatalogueGeoChoropleth
           //     dataset={dataset}
-          //     lang={lang}
           //     urls={urls}
-          //     config={{
-          //       precision: config.precision,
-          //       color: config.color,
-          //       geojson: config.file_json,
-          //     }}
+          //     config={config}
           //     onDownload={prop => setDownloads(prop)}
           //   />
-        );
-      case "GEOJSON":
-        return (
-          <CatalogueGeojson
-            config={{
-              color: config.color,
-              geojson: config.file_json,
-            }}
+          // );
+          <CatalogueChoropleth
             dataset={dataset}
-            lang={lang}
             urls={urls}
+            config={config}
             onDownload={prop => setDownloads(prop)}
           />
         );
+      // case "GEOJSON":
+      //   return (
+      //     <CatalogueGeojson
+      //       config={{
+      //         color: config.color,
+      //         geojson: config.file_json,
+      //       }}
+      //       dataset={dataset}
+      //       lang={lang}
+      //       urls={urls}
+      //       onDownload={prop => setDownloads(prop)}
+      //     />
+      //   );
       case "BAR":
       case "HBAR":
         return (
           <CatalogueBar
             config={config}
             dataset={dataset}
-            lang={lang}
             urls={urls}
             onDownload={prop => setDownloads(prop)}
           />
@@ -197,17 +169,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           <CataloguePyramid
             config={config}
             dataset={dataset}
-            lang={lang}
             urls={urls}
             onDownload={prop => setDownloads(prop)}
           />
         );
-      case "HEATMAP":
+      case "HEATTABLE":
         return (
           <CatalogueHeatmap
             config={config}
             dataset={dataset}
-            lang={lang}
             urls={urls}
             onDownload={prop => setDownloads(prop)}
           />
@@ -316,13 +286,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
         {/* Chart & Table */}
         <Section
-          title={dataset.meta[lang].title}
+          title={dataset.meta.title}
           className=""
           description={
             <p className="whitespace-pre-line text-base text-dim">
-              {interpolate(
-                dataset.meta[lang].desc.substring(dataset.meta[lang].desc.indexOf("]") + 1)
-              )}
+              {interpolate(dataset.meta.desc.substring(dataset.meta.desc.indexOf("]") + 1))}
             </p>
           }
           date={metadata.data_as_of}
@@ -342,16 +310,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 placeholder={t("catalogue.download")}
                 options={
                   downloads
-                    ? [...downloads.chart, ...downloads.data].map(item => ({
+                    ? downloads.chart.concat(downloads.data).map(item => ({
                         label: item.title as string,
                         value: item.key,
                       }))
                     : []
                 }
                 onChange={async e => {
-                  const action =
-                    downloads &&
-                    [...downloads?.chart, ...downloads?.data].find(({ key }) => e.value === key);
+                  const action = downloads.chart
+                    .concat(downloads.data)
+                    .find(({ key }) => e.value === key);
 
                   if (!action) return;
 
@@ -375,11 +343,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           }
         >
           {/* Dataset Filters & Chart / Table */}
-          {Boolean(config?.filter_mapping) && (
+          {config.options !== null && config.options.length > 0 && (
             <div className="flex gap-3 pb-2">
-              {config.filter_mapping?.map((item: any, index: number) => (
+              {config.options.map((item: FilterDefault, index: number) => (
                 <Dropdown
-                  key={index}
+                  key={item.key}
+                  width="w-fit"
                   anchor={index > 0 ? "right" : "left"}
                   options={item.options}
                   selected={filter[item.key]}
@@ -388,22 +357,22 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               ))}
             </div>
           )}
-          <div className={[show.value === "chart" ? "block" : "hidden", "space-y-2"].join(" ")}>
+          <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
           </div>
           {Boolean(dataset?.table) && (
             <div
-              className={[
+              className={clx(
                 "mx-auto",
                 show.value === "table" ? "block" : "hidden",
-                dataset.type !== "TABLE" ? "max-h-[500px] overflow-auto" : "",
-              ].join(" ")}
+                dataset.type !== "TABLE" ? "max-h-[500px] overflow-auto" : ""
+              )}
             >
               <Table
-                className={[
+                className={clx(
                   "table-stripe table-default",
-                  dataset.type !== "TABLE" ? "table-sticky-header" : "",
-                ].join(" ")}
+                  dataset.type !== "TABLE" ? "table-sticky-header" : ""
+                )}
                 responsive={dataset.type === "TABLE"}
                 data={dataset.table.data}
                 enableSticky={dataset.type === "TABLE"}
@@ -417,24 +386,25 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       )
                     : undefined
                 }
-                config={
-                  dataset.type === "TABLE"
-                    ? UNIVERSAL_TABLE_SCHEMA(
-                        dataset.table.columns as unknown as UniversalColumn,
-                        lang as "en" | "bm",
-                        config.freeze
-                      )
-                    : CATALOGUE_TABLE_SCHEMA(
-                        dataset.table.columns,
-                        lang,
-                        query.range ?? config.filter_state.range?.value,
-                        Object.keys(dataset.chart),
-                        [config.precision, config.precision]
-                      )
-                }
+                config={UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze)}
                 enablePagination={dataset.type === "TABLE" ? 10 : false}
               />
             </div>
+          )}
+
+          {config.dates !== null && (
+            <Slider
+              className="pt-8"
+              type="single"
+              value={config.dates?.options.indexOf(
+                filter[config.dates.key].value ?? config.dates.default
+              )}
+              data={config.dates.options}
+              period={SHORT_PERIOD[config.dates.interval]}
+              onChange={e =>
+                config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
+              }
+            ></Slider>
           )}
         </Section>
 
@@ -445,7 +415,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             className=""
             description={
               <p className="whitespace-pre-line leading-relaxed text-dim ">
-                {interpolate(explanation[lang].methodology)}
+                {interpolate(explanation.methodology)}
               </p>
             }
           />
@@ -456,19 +426,19 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             className=""
             description={
               <p className="whitespace-pre-line leading-relaxed text-dim">
-                {interpolate(explanation[lang].caveat)}
+                {interpolate(explanation.caveat)}
               </p>
             }
           />
 
           {/* Publication using this Data */}
-          {Boolean(explanation[lang].publication) && (
+          {Boolean(explanation.publication) && (
             <Section
               title={t("catalogue.header_3")}
               className=""
               description={
                 <p className="whitespace-pre-line leading-relaxed text-dim">
-                  {interpolate(explanation[lang].publication ?? "")}
+                  {interpolate(explanation.publication ?? "")}
                 </p>
               }
             />
@@ -485,9 +455,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               {/* Dataset description */}
               <div className="space-y-3">
                 <h5>{t("catalogue.meta_desc")}</h5>
-                <p className="leading-relaxed text-dim">
-                  {interpolate(metadata.dataset_desc[lang])}
-                </p>
+                <p className="leading-relaxed text-dim">{interpolate(metadata.description)}</p>
               </div>
               <div className="space-y-3">
                 {/* Variable definitions */}
@@ -496,16 +464,14 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   <>
                     <ul className="ml-6 list-outside list-disc text-dim md:hidden">
                       {metadata.definitions?.map(item => (
-                        <li key={item[`title_${lang}`]}>
+                        <li key={item.title}>
                           <span>
                             {Boolean(item.unique_id) ? (
-                              <At href={`/data-catalogue/${item.unique_id}`}>
-                                {item[`title_${lang}`]}
-                              </At>
+                              <At href={`/data-catalogue/${item.unique_id}`}>{item.title}</At>
                             ) : (
-                              item[`title_${lang}`]
+                              item.title
                             )}{" "}
-                            <Tooltip tip={interpolate(item[`desc_${lang}`])} />
+                            <Tooltip tip={interpolate(item.desc)} />
                           </span>
                         </li>
                       ))}
@@ -513,22 +479,24 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     <div className="hidden md:block">
                       <Table
                         className="table-slate table-default-slate table"
-                        data={metadata.definitions.map((item: any) => {
-                          const raw = item[`desc_${lang}`];
-                          const [type, definition] = [
-                            raw.substring(1, raw.indexOf("]")),
-                            raw.substring(raw.indexOf("]") + 1),
-                          ];
+                        data={metadata.definitions
+                          .filter(item => item.id === 0)
+                          .map((item: any) => {
+                            const raw = item.desc;
+                            const [type, definition] = [
+                              raw.substring(1, raw.indexOf("]")),
+                              raw.substring(raw.indexOf("]") + 1),
+                            ];
 
-                          return {
-                            id: item.id,
-                            uid: item.unique_id,
-                            variable: item.name,
-                            variable_name: item[`title_${lang}`],
-                            data_type: type,
-                            definition: interpolate(definition),
-                          };
-                        })}
+                            return {
+                              id: item.id,
+                              uid: item.unique_id,
+                              variable: item.name,
+                              variable_name: item.title,
+                              data_type: type,
+                              definition: interpolate(definition),
+                            };
+                          })}
                         config={tableConfig}
                       />
                     </div>
@@ -553,7 +521,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <div className="space-y-3">
                 <h5>{t("catalogue.meta_source")}</h5>
                 <ul className="ml-6 list-outside list-disc text-dim">
-                  {metadata.data_source?.map(source => (
+                  {metadata.source?.map(source => (
                     <li key={source}>{source}</li>
                   ))}
                 </ul>
@@ -619,8 +587,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       meta={{
                         uid: dataset.meta.unique_id.concat("_", props.key),
                         id: dataset.meta.unique_id,
-                        name_en: dataset.meta.en.title,
-                        name_bm: dataset.meta.bm.title,
+                        name: dataset.meta.title,
                         ext: props.key,
                         type: ["csv", "parquet"].includes(props.key) ? "file" : "image",
                       }}
@@ -639,8 +606,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       meta={{
                         uid: dataset.meta.unique_id.concat("_", props.key),
                         id: dataset.meta.unique_id,
-                        name_en: dataset.meta.en.title,
-                        name_bm: dataset.meta.bm.title,
+                        name: dataset.meta.title,
                         ext: props.key,
                         type: ["csv", "parquet"].includes(props.key) ? "file" : "image",
                       }}
@@ -669,8 +635,7 @@ interface DownloadCard extends DownloadOption {
   meta: {
     uid: string;
     id: string;
-    name_en: string;
-    name_bm: string;
+    name: string;
     ext: string;
     type: string;
   };

@@ -86,6 +86,8 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
         },
       },
       crosshair: false,
+      annotation: false,
+      datalabels: false,
     },
     scales: {
       x: {

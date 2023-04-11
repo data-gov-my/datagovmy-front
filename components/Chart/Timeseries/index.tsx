@@ -272,6 +272,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
                 },
               }
             : false,
+          datalabels: false,
         },
         layout: {
           padding: {
@@ -307,7 +308,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
             ticks: {
               callback: tickXCallback,
               major: {
-                enabled: false,
+                enabled: true,
               },
               minRotation: 0,
               maxRotation: 0,

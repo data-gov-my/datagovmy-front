@@ -1,5 +1,7 @@
+import type { OptionType } from "@components/types";
+import type { Color } from "@hooks/useColor";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
-import { AnnotationPluginOptions } from "chartjs-plugin-annotation";
+import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
@@ -31,6 +33,7 @@ export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptio
         }
       | false;
     annotation?: AnnotationPluginOptions | false;
+    datalabels?: any | false;
   };
 };
 
@@ -54,6 +57,52 @@ export interface AnalyticsEvent {
   label: string;
   value: string;
 }
+
+export type Geotype = "state" | "parlimen" | "dun" | "district";
+
+/************************ DATA CATALOGUE ************************** */
+export type DCChartKeys =
+  | "TABLE"
+  | "TIMESERIES"
+  | "CHOROPLETH"
+  | "GEOJSON"
+  | "BAR"
+  | "HBAR"
+  | "PYRAMID"
+  | "HEATTABLE"
+  | "SCATTER";
+export type DCPeriod = "YEARLY" | "QUARTERLY" | "MONTHLY" | "WEEKLY" | "DAILY";
+
+type BaseFilter = {
+  key: string;
+  default: OptionType<string, string>;
+  options: OptionType<string, string>[];
+};
+export type FilterDefault = BaseFilter & {
+  interval: never;
+};
+
+export type FilterDate = {
+  key: string;
+  default: string;
+  options: string[];
+  interval: DCPeriod;
+};
+
+export type DCFilter = FilterDefault | FilterDate;
+
+// Usage
+export type DCConfig = {
+  context: {
+    [key: string]: string;
+  };
+  dates: FilterDate | null;
+  options: FilterDefault[] | null;
+  precision: number;
+  freeze?: string[];
+  color?: Color;
+  geojson?: Geotype | null;
+};
 
 /*************************** MIXPANEL ***************************** */
 

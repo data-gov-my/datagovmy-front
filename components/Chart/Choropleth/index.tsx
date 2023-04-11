@@ -8,7 +8,7 @@ import { Chart } from "react-chartjs-2";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { BREAKPOINTS } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
-import type { ChartCrosshairOption } from "@lib/types";
+import type { ChartCrosshairOption, Geotype } from "@lib/types";
 import type { FeatureCollection } from "geojson";
 import type { Color } from "@hooks/useColor";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -30,7 +30,7 @@ interface ChoroplethProps extends ChartHeaderProps {
   unit?: string;
   precision?: number | [number, number];
   enableZoom?: boolean;
-  type?: "state" | "parlimen" | "dun" | "district";
+  type?: Geotype;
   color?: Color;
   onReady?: (status: boolean) => void;
   _ref?: ForwardedRef<ChartJSOrUndefined<"choropleth", any[], unknown>>;
@@ -98,6 +98,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
       },
       crosshair: false,
       annotation: false,
+      datalabels: false,
     },
     scales: {
       xy: {

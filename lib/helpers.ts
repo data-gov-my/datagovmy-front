@@ -4,6 +4,15 @@ import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
 
 /**
+ * Conditional class joiner.
+ * @param args classNames
+ * @returns string
+ */
+export const clx = (...args: any[]): string => {
+  return args.filter(Boolean).join(" ");
+};
+
+/**
  * Returns the object of max value by a given key in the array.
  * @param array Object array
  * @param key Comparing key
@@ -244,6 +253,7 @@ export const exportAs = async (type: "svg" | "png", element: Node): Promise<stri
  * @returns {string | ReactElement[]} string | React elements
  */
 export const interpolate = (raw_text: string): string | ReactElement[] => {
+  if (!raw_text) return "Not found";
   const delimiter = /\[(.*?)\)/;
   let matches = raw_text.split(delimiter);
 
@@ -273,3 +283,6 @@ export const standardDeviation = (values: number[]): number => {
   const variance = average(values.map(x => Math.pow(x - mean, 2)));
   return Math.sqrt(variance);
 };
+
+export const normalize = (value: number, min: number, max: number): number =>
+  (value - min) / (max - min);

@@ -1,14 +1,14 @@
 import AgencyBadge from "@components/AgencyBadge";
 import { Dropdown, Hero, Panel, Section, StateDropdown, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, ReactNode, useRef } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import Container from "@components/Container";
 import { MOHIcon } from "@components/Icon/agency";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
-import Slider, { SliderRef } from "@components/Chart/Slider";
+import Slider from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { useSlice } from "@hooks/useSlice";
@@ -33,10 +33,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   barmeter,
   waffle,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-covid-vaccination"]);
+  const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
   const router = useRouter();
   const currentState = (router.query.state as string) ?? "mys";
-  const sliderRef = useRef<SliderRef>(null);
   const windowWidth = useWindowWidth();
   const isTablet = windowWidth < BREAKPOINTS.LG;
 
@@ -266,8 +265,6 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
             }}
           />
           <Slider
-            className="pt-5"
-            ref={sliderRef}
             type="range"
             value={data.minmax}
             data={timeseries.data.x}

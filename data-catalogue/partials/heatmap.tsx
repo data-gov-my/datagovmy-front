@@ -15,22 +15,10 @@ const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), {
 
 interface CatalogueHeatmapProps {
   config: {
-    color: Color;
+    color?: Color;
     precision: number;
   };
-  dataset: {
-    chart: HeatmapData;
-    meta: {
-      en: {
-        title: string;
-      };
-      bm: {
-        title: string;
-      };
-      unique_id: string;
-    };
-  };
-  lang: "en" | "bm";
+  dataset: any;
   urls: {
     [key: string]: string;
   };
@@ -40,7 +28,6 @@ interface CatalogueHeatmapProps {
 const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
   dataset,
   config,
-  lang,
   urls,
   onDownload,
 }) => {

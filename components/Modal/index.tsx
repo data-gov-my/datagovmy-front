@@ -1,6 +1,8 @@
-import { Dispatch, FunctionComponent, ReactElement, SetStateAction, useState } from "react";
+import { FunctionComponent, ReactElement, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import { clx } from "@lib/helpers";
+import Font from "@config/font";
 
 interface ModalProps {
   trigger?: (open: () => void) => ReactElement;
@@ -19,12 +21,13 @@ const Modal: FunctionComponent<ModalProps> = ({ trigger, title, children, fullSc
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 pt-[15%] ">
-          <div className={`block h-full ${!fullScreen ? "lg:p-4" : ""}`}>
+          <div className={clx("block h-full", !fullScreen && "lg:p-4")}>
             <Dialog.Panel
-              className={[
-                "mx-auto flex w-full flex-col rounded bg-white px-4 pt-4 dark:bg-black",
-                !fullScreen ? "max-w-sm" : "h-full",
-              ].join(" ")}
+              className={clx(
+                Font.body.variable,
+                "mx-auto flex w-full flex-col rounded bg-white px-4 pt-4 font-sans dark:bg-black",
+                !fullScreen ? "max-w-sm" : "h-full"
+              )}
             >
               <div className="flex justify-between border-b bg-white pb-2 dark:border-outlineHover-dark dark:bg-black">
                 <Dialog.Title as="h4" className="text-black dark:text-white ">

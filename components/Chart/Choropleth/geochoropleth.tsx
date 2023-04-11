@@ -11,13 +11,13 @@ import {
   ReactElement,
   useEffect,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import { GeoJSON, MapContainer, TileLayer, Tooltip } from "react-leaflet";
 import type { ChoroplethData } from ".";
 import ChartHeader, { ChartHeaderProps } from "../ChartHeader";
+import type { Geotype } from "@lib/types";
 
 export interface GeoChoroplethRef {
   print: (text: string) => void;
@@ -25,7 +25,7 @@ export interface GeoChoroplethRef {
 interface GeoChoroplethProps extends ChartHeaderProps {
   id?: string;
   className?: string;
-  type?: "state" | "parlimen" | "dun" | "district";
+  type?: Geotype;
   color?: Color;
   unit?: string;
   precision?: number | [number, number];

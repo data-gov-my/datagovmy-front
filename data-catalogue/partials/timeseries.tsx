@@ -1,6 +1,6 @@
 import type { DownloadOptions } from "@lib/types";
-import { FunctionComponent, useMemo, useRef } from "react";
-import { default as Slider, SliderRef } from "@components/Chart/Slider";
+import { FunctionComponent, useMemo } from "react";
+import { default as Slider } from "@components/Chart/Slider";
 import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
@@ -18,35 +18,17 @@ interface CatalogueTimeseriesProps {
     precision: number;
   };
   className?: string;
-  dataset:
-    | {
-        chart: {
-          x: number[];
-          y: number[];
-          line: number[];
-        };
-        meta: {
-          en: {
-            title: string;
-          };
-          bm: {
-            title: string;
-          };
-        };
-      }
-    | any;
+  dataset: any;
   filter: any;
   urls: {
     [key: string]: string;
   };
-  lang: "en" | "bm";
   onDownload?: (prop: DownloadOptions) => void;
 }
 
 const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   config,
   className = "h-[350px] w-full",
-  lang,
   dataset,
   urls,
   filter,
@@ -58,7 +40,6 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     minmax: [0, dataset.chart.x.length - 1],
   });
   const { coordinate } = useSlice(dataset.chart, data.minmax);
-  const sliderRef = useRef<SliderRef>(null);
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
@@ -139,17 +120,16 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
-      label: key, //sets.length === 1 ? dataset.meta[lang].title : dataset.table.columns[`${key}_${lang}`],
+      label: dataset.table.columns[key],
       borderColor: colors[index],
-      backgroundColor: colors[index].concat("33"), //AKSARA_COLOR.PRIMARY_H,
-      borderWidth: 1.5,
-      fill: true,
+      backgroundColor: colors[index].concat("33"),
+      borderWidth: 1,
+      fill: sets.length <= 1,
     }));
   }, [coordinate]);
 
   useWatch(() => {
     setData("minmax", [0, dataset.chart.x.length - 1]);
-    sliderRef.current && sliderRef.current.reset();
     if (onDownload) onDownload(availableDownloads);
   }, [filter.range, dataset.chart.x, data.ctx]);
 
@@ -158,28 +138,19 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
       <Timeseries
         className={className}
         _ref={ref => setData("ctx", ref)}
-        interval={
-          filter.range?.value
-            ? SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]
-            : "auto"
-        }
+        interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
         precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+        mode="grouped"
         data={{
           labels: coordinate.x,
           datasets: _datasets,
         }}
       />
       <Slider
-        ref={sliderRef}
-        className="pt-7"
         type="range"
         data={dataset.chart.x}
         value={data.minmax}
-        period={
-          ["YEARLY", "MONTHLY", "QUARTERLY"].includes(filter.range?.value)
-            ? filter.range.value.toLowerCase().replace("ly", "")
-            : "auto"
-        }
+        period={SHORT_PERIOD[filter.range?.value as keyof typeof SHORT_PERIOD] ?? "auto"}
         onChange={e => setData("minmax", e)}
       />
     </>
