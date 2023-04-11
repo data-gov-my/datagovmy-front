@@ -31,10 +31,10 @@ const Stages: FunctionComponent<StagesProps> = ({
       <div className={className}>
         {/* Header */}
         {data?.header && (
-          <div className="m-auto w-fit min-w-[200px] rounded bg-washed py-1.5 px-3 text-center">
+          <div className="m-auto w-fit min-w-[200px] rounded bg-washed py-1.5 px-3 text-center dark:bg-washed-dark">
             <span className="text-xs text-dim">{data.header.name}</span>
             <div className="flex items-center justify-center gap-2">
-              <span className="text-xl dark:text-black">{data.header.value.toLocaleString()}</span>
+              <span className="text-xl dark:text-white">{data.header.value.toLocaleString()}</span>
 
               <small
                 className={`inline-block rounded bg-opacity-20 px-1.5 ${badgeColor(
@@ -220,9 +220,9 @@ const Bracket: FunctionComponent<BracketProps> = ({ className = "", arrowLeft, a
     <>
       {arrowLeft && arrowLeft}
       <div className={`relative ${className}`}>
-        <div className="h-1 bg-outline lg:h-full lg:w-1" />
-        <div className="absolute top-0 left-0 h-2 w-1 rounded-xl bg-outline lg:h-1 lg:w-2" />
-        <div className="absolute bottom-0 top-0 right-0 h-2 w-1 bg-outline lg:top-full lg:left-0 lg:h-1 lg:w-2" />
+        <div className="h-1 bg-outline dark:bg-outlineHover-dark lg:h-full lg:w-1" />
+        <div className="absolute top-0 left-0 h-2 w-1 rounded-xl bg-outline dark:bg-outlineHover-dark lg:h-1 lg:w-2" />
+        <div className="absolute bottom-0 top-0 right-0 h-2 w-1 bg-outline dark:bg-outlineHover-dark lg:top-full lg:left-0 lg:h-1 lg:w-2" />
       </div>
       {arrowRight && arrowRight}
     </>
