@@ -6,6 +6,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import OrganDonationDashboard from "@dashboards/healthcare/organ-donation";
+import { DateTime } from "luxon";
 
 const OrganDonation: Page = ({
   last_updated,
@@ -40,6 +41,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     "ms-MY",
   ]);
   const { data } = await get("/dashboard", { dashboard: "organ_donation", state: "mys" });
+
+  // transform:
+  data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
+    const period = DateTime.fromFormat(item, "yyyy-MM-dd");
+    return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
+  });
 
   return {
     notFound: false,
