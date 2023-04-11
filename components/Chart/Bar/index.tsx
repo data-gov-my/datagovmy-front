@@ -141,6 +141,7 @@ const Bar: FunctionComponent<BarProps> = ({
       },
       crosshair: false,
       annotation: false,
+      datalabels: false,
     },
     scales: {
       x: {

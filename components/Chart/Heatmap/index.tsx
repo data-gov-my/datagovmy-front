@@ -97,7 +97,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
       },
       y: {
         type: "category",
-        labels: uniqueYs as string[],
+        labels: uniqueYs.slice().reverse() as string[],
         offset: true,
         grid: {
           display: false,
@@ -170,12 +170,12 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
       },
       datalabels: {
         display: true,
-        color(context) {
+        color(context: { dataIndex: number }) {
           if (data[context.dataIndex].z === null) return "#000";
           const n_value = normalize(data[context.dataIndex].z!, min, max);
           return n_value > 0.7 ? "#fff" : "#000";
         },
-        formatter(value) {
+        formatter(value: HeatmapDatum) {
           return value.z;
         },
       },

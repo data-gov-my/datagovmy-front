@@ -37,38 +37,6 @@ const CatalogueShow: Page = ({
     }
   }, [dataset.type]);
 
-  // const availableFilters = useMemo<{
-  //   filter_state: Record<string, OptionType> | undefined;
-  //   filter_mapping: Array<CatalogueFilter>;
-  // }>(() => {
-  //   return {
-  //     filter_mapping: config.filter_mapping?.map(
-  //       (filter: CatalogueFilter): CatalogueFilter => ({
-  //         ...filter,
-  //         options: filter.options.map((option: OptionType) => ({
-  //           label: (t(`catalogue.show_filters.${option.value}`) as string).includes("catalogue")
-  //             ? option.value
-  //             : t(`catalogue.show_filters.${option.value}`),
-  //           value: option.value,
-  //         })),
-  //       })
-  //     ),
-  //     filter_state: Object.fromEntries(
-  //       Object.entries(config.filter_state).map(([key, option]: [string, unknown]) => [
-  //         key,
-  //         {
-  //           label: (t(`catalogue.show_filters.${(option as OptionType).value}`) as string).includes(
-  //             "catalogue"
-  //           )
-  //             ? (option as OptionType).value
-  //             : t(`catalogue.show_filters.${(option as OptionType).value}`),
-  //           value: (option as OptionType).value,
-  //         },
-  //       ])
-  //     ),
-  //   };
-  // }, [config]);
-
   return (
     <>
       <Metadata
@@ -103,6 +71,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
     options: null,
     precision: data.API.precision,
     freeze: data.API.freeze ?? null,
+    color: data.API.colour ?? "blues",
+    geojson: data.API.file_json ?? null,
   };
   data.API.filters.forEach((item: DCFilter) => {
     if (item.key === "date_slider") config.dates = item as FilterDate;

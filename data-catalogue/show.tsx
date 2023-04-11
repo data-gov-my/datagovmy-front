@@ -125,31 +125,22 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           />
         );
 
-      // case "CHOROPLETH":
-      //   return (
-      //     <CatalogueGeoChoropleth
-      //       dataset={dataset}
-      //       lang={lang}
-      //       urls={urls}
-      //       config={{
-      //         precision: config.precision,
-      //         color: config.color,
-      //         geojson: config.file_json,
-      //       }}
-      //       onDownload={prop => setDownloads(prop)}
-      //     />
-      //     //   <CatalogueChoropleth
-      //     //     dataset={dataset}
-      //     //     lang={lang}
-      //     //     urls={urls}
-      //     //     config={{
-      //     //       precision: config.precision,
-      //     //       color: config.color,
-      //     //       geojson: config.file_json,
-      //     //     }}
-      //     //     onDownload={prop => setDownloads(prop)}
-      //     //   />
-      //   );
+      case "CHOROPLETH":
+        return (
+          //   <CatalogueGeoChoropleth
+          //     dataset={dataset}
+          //     urls={urls}
+          //     config={config}
+          //     onDownload={prop => setDownloads(prop)}
+          //   />
+          // );
+          <CatalogueChoropleth
+            dataset={dataset}
+            urls={urls}
+            config={config}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
       // case "GEOJSON":
       //   return (
       //     <CatalogueGeojson

@@ -1,4 +1,5 @@
 import type { OptionType } from "@components/types";
+import type { Color } from "@hooks/useColor";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
 import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
@@ -32,6 +33,7 @@ export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptio
         }
       | false;
     annotation?: AnnotationPluginOptions | false;
+    datalabels?: any | false;
   };
 };
 
@@ -55,6 +57,8 @@ export interface AnalyticsEvent {
   label: string;
   value: string;
 }
+
+export type Geotype = "state" | "parlimen" | "dun" | "district";
 
 /************************ DATA CATALOGUE ************************** */
 export type DCChartKeys =
@@ -96,6 +100,8 @@ export type DCConfig = {
   options: FilterDefault[] | null;
   precision: number;
   freeze?: string[];
+  color?: Color;
+  geojson?: Geotype | null;
 };
 
 /*************************** MIXPANEL ***************************** */

@@ -107,6 +107,7 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
         },
       },
       crosshair: false,
+      datalabels: false,
     },
     maintainAspectRatio: false,
     responsive: true,

@@ -272,6 +272,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = forwardRef(
                 },
               }
             : false,
+          datalabels: false,
         },
         layout: {
           padding: {

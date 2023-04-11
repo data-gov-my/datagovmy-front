@@ -15,7 +15,7 @@ const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), {
 
 interface CatalogueHeatmapProps {
   config: {
-    // color: Color;
+    color?: Color;
     precision: number;
   };
   dataset: any;
@@ -106,7 +106,7 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
     [ctx]
   );
 
-  return <Heatmap _ref={ref => setCtx(ref)} data={dataset.chart} color={"blues"} />;
+  return <Heatmap _ref={ref => setCtx(ref)} data={dataset.chart} color={config.color} />;
 };
 
 export default CatalogueHeatmap;

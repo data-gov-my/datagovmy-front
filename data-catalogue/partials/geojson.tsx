@@ -2,7 +2,7 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import type { Color } from "@hooks/useColor";
 import { useTranslation } from "@hooks/useTranslation";
 import { download, exportAs } from "@lib/helpers";
-import type { DownloadOptions } from "@lib/types";
+import type { DownloadOptions, Geotype } from "@lib/types";
 // import { track } from "mixpanel-browser";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
@@ -20,7 +20,7 @@ type ChoroPoint = {
 interface CatalogueGeojsonProps {
   config: {
     color: Color;
-    geojson: "state" | "dun" | "parlimen" | "district";
+    geojson: Geotype;
   };
   dataset: {
     chart: Array<ChoroPoint>;
