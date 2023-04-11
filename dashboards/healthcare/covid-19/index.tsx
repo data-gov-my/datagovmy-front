@@ -445,14 +445,11 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               stats={[
                 {
                   title: t("dashboard-covid-19:vent.annot1"),
-                  value: statistics.data.vent.annot1.toLocaleString(),
+                  value: numFormat(statistics.data.vent.annot1, "standard"),
                 },
                 {
                   title: t("dashboard-covid-19:vent.annot2"),
-                  value: Number(statistics.data.vent.annot2)
-                    .toFixed(1)
-                    .toLocaleString()
-                    .concat("%"),
+                  value: numFormat(statistics.data.vent.annot2, "standard").concat("%"),
                 },
               ]}
               data={{
@@ -483,11 +480,11 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               stats={[
                 {
                   title: t("dashboard-covid-19:icu.annot1"),
-                  value: statistics.data.icu.annot1.toLocaleString(),
+                  value: numFormat(statistics.data.icu.annot1, "standard"),
                 },
                 {
                   title: t("dashboard-covid-19:icu.annot2"),
-                  value: Number(statistics.data.icu.annot2).toFixed(1).toLocaleString().concat("%"),
+                  value: numFormat(statistics.data.icu.annot2, "standard").concat("%"),
                 },
               ]}
               data={{
@@ -518,14 +515,11 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               stats={[
                 {
                   title: t("dashboard-covid-19:admitted.annot1"),
-                  value: statistics.data.admitted.annot1.toLocaleString(),
+                  value: numFormat(statistics.data.admitted.annot1, "standard"),
                 },
                 {
                   title: t("dashboard-covid-19:admitted.annot2"),
-                  value: Number(statistics.data.admitted.annot2)
-                    .toFixed(1)
-                    .toLocaleString()
-                    .concat("%"),
+                  value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
                 },
               ]}
               data={{
@@ -556,11 +550,11 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               stats={[
                 {
                   title: t("dashboard-covid-19:cases.annot1"),
-                  value: statistics.data.cases.annot1.toLocaleString(),
+                  value: numFormat(statistics.data.cases.annot1, "standard"),
                 },
                 {
                   title: t("dashboard-covid-19:cases.annot2"),
-                  value: statistics.data.cases.annot2.toLocaleString(),
+                  value: numFormat(statistics.data.cases.annot2, "standard"),
                 },
               ]}
               data={{
@@ -591,14 +585,11 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               stats={[
                 {
                   title: t("dashboard-covid-19:tests.annot1"),
-                  value: statistics.data.tests.annot1.toLocaleString(),
+                  value: numFormat(statistics.data.tests.annot1, "standard"),
                 },
                 {
                   title: t("dashboard-covid-19:tests.annot2"),
-                  value: Number(statistics.data.tests.annot2)
-                    .toFixed(1)
-                    .toLocaleString()
-                    .concat("%"),
+                  value: numFormat(statistics.data.tests.annot2, "standard").concat("%"),
                 },
               ]}
               enableRightScale
@@ -636,7 +627,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           </div>
           <div>
             <Slider
-              className="pt-7"
               type="range"
               data={timeseries_deaths.data.x}
               value={data.minmax}
