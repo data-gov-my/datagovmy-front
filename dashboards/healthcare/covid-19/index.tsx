@@ -124,7 +124,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         header={[t("dashboard-covid-19:header")]}
         description={
           <>
-            <p className={"text-dim"}>{t("dashboard-covid-19:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("dashboard-covid-19:description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.COVID_19} currentState={currentState} />
             </div>

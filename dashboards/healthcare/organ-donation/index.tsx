@@ -70,7 +70,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         header={[t("dashboard-organ-donation:header")]}
         description={
           <>
-            <p className={"text-dim"}>{t("dashboard-organ-donation:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("dashboard-organ-donation:description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />
             </div>
