@@ -14,6 +14,7 @@ import { OptionType } from "@components/types";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
+import Spinner from "@components/Spinner";
 
 /**
  * CarPopularity Dashboard
@@ -163,43 +164,49 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
             </div>
             <div className="w-full">
               {data.x?.length > 0 ? (
-                <Timeseries
-                  className="h-[460px] w-full"
-                  title={
-                    <>
-                      <p className="text-lg font-bold">
-                        <span>
-                          {t("dashboard-car-popularity:timeseries_title", {
-                            car: data.params.model,
-                          })}
-                        </span>
-                      </p>
-                      <p className="text-sm text-dim">
-                        <span>{t("dashboard-car-popularity:timeseries_description")}</span>
-                      </p>
-                    </>
-                  }
-                  interval={"year"}
-                  data={{
-                    labels: data.x,
-                    datasets: [
-                      {
-                        type: "line",
-                        data: data.y,
-                        label: t("dashboard-car-popularity:label"),
-                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                        borderColor: AKSARA_COLOR.PRIMARY,
-                        borderWidth:
-                          windowWidth <= BREAKPOINTS.MD
-                            ? 0.75
-                            : windowWidth <= BREAKPOINTS.LG
-                            ? 1.0
-                            : 1.5,
-                        fill: true,
-                      },
-                    ],
-                  }}
-                />
+                data.loading ? (
+                  <div className="flex h-[460px] items-center justify-center">
+                    <Spinner loading={data.loading} />
+                  </div>
+                ) : (
+                  <Timeseries
+                    className="h-[460px] w-full"
+                    title={
+                      <>
+                        <p className="text-lg font-bold">
+                          <span>
+                            {t("dashboard-car-popularity:timeseries_title", {
+                              car: data.params.model,
+                            })}
+                          </span>
+                        </p>
+                        <p className="text-sm text-dim">
+                          <span>{t("dashboard-car-popularity:timeseries_description")}</span>
+                        </p>
+                      </>
+                    }
+                    interval={"year"}
+                    data={{
+                      labels: data.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: data.y,
+                          label: t("dashboard-car-popularity:label"),
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth:
+                            windowWidth <= BREAKPOINTS.MD
+                              ? 0.75
+                              : windowWidth <= BREAKPOINTS.LG
+                              ? 1.0
+                              : 1.5,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                  />
+                )
               ) : (
                 <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
                   <Timeseries
