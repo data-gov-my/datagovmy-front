@@ -337,7 +337,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
           <Dropdown
             options={filterPeriods}
             placeholder={t("catalogue.period")}
-            selected={filterPeriods.find(item => item.value === filter.period.value)}
+            selected={filterPeriods.find(item => item.value === filter.period?.value) ?? undefined}
             onChange={e => setFilter("period", e)}
           />
           <Dropdown

@@ -35,7 +35,9 @@ const Stages: FunctionComponent<StagesProps> = ({
           <div className="m-auto w-fit min-w-[200px] rounded bg-washed py-1.5 px-3 text-center dark:bg-washed-dark">
             <span className="text-xs text-dim">{data.header.name}</span>
             <div className="flex items-center justify-center gap-2">
-              <span className="text-xl dark:text-white">{data.header.value.toLocaleString()}</span>
+              <span className="text-xl dark:text-white">
+                {numFormat(data.header.value, "standard")}
+              </span>
 
               <small
                 className={clx(
@@ -190,7 +192,7 @@ const Stats: FunctionComponent<StatsProps> = ({
             )}
           >
             {!unit && appendPlusMinus(delta)}
-            {delta && numFormat(delta, "standard")}
+            {delta && numFormat(delta, "standard", 1)}
             {unit}
           </small>
         </div>

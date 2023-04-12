@@ -68,16 +68,18 @@ const Hero: FunctionComponent<HeroProps> = ({
         <>
           <div className="flex flex-row-reverse pb-4 sm:pb-0 lg:hidden">{agencyBadge}</div>
           <div className="space-y-6 xl:w-full">
-            <div className="relative flex justify-between">
-              <div className="hidden lg:absolute lg:right-0 lg:top-0 lg:block">{agencyBadge}</div>
-              {category && (
-                <span
-                  className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}
-                >
-                  {t(category[0])}
-                </span>
-              )}
-            </div>
+            {[category, agencyBadge].some(Boolean) && (
+              <div className="relative flex justify-between">
+                <div className="hidden lg:absolute lg:right-0 lg:top-0 lg:block">{agencyBadge}</div>
+                {category && (
+                  <span
+                    className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}
+                  >
+                    {t(category[0])}
+                  </span>
+                )}
+              </div>
+            )}
 
             {(header || description) && (
               <div className="space-y-3">
