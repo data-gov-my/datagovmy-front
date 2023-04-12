@@ -10,7 +10,7 @@ import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { SHORT_PERIOD } from "@lib/constants";
-import { clx, download, interpolate, toDate } from "@lib/helpers";
+import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
 import { UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
 import { OptionType } from "@components/types";
 // import { track } from "@lib/mixpanel";
@@ -41,6 +41,9 @@ const CatalogueChoropleth = dynamic(() => import("@data-catalogue/partials/choro
 });
 const CatalogueGeoChoropleth = dynamic(() => import("@data-catalogue/partials/geochoropleth"), {
   ssr: true,
+});
+const CatalogueMapPlot = dynamic(() => import("@data-catalogue/partials/mapplot"), {
+  ssr: false,
 });
 const CatalogueGeojson = dynamic(() => import("@data-catalogue/partials/geojson"), {
   ssr: true,
@@ -127,13 +130,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
       case "CHOROPLETH":
         return (
-          //   <CatalogueGeoChoropleth
-          //     dataset={dataset}
-          //     urls={urls}
-          //     config={config}
-          //     onDownload={prop => setDownloads(prop)}
-          //   />
-          // );
           <CatalogueChoropleth
             dataset={dataset}
             urls={urls}
@@ -141,19 +137,19 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             onDownload={prop => setDownloads(prop)}
           />
         );
-      // case "GEOJSON":
-      //   return (
-      //     <CatalogueGeojson
-      //       config={{
-      //         color: config.color,
-      //         geojson: config.file_json,
-      //       }}
-      //       dataset={dataset}
-      //       lang={lang}
-      //       urls={urls}
-      //       onDownload={prop => setDownloads(prop)}
-      //     />
-      //   );
+      case "GEOPOINT":
+        return (
+          <CatalogueMapPlot dataset={dataset} urls={urls} onDownload={prop => setDownloads(prop)} />
+        );
+      case "GEOJSON":
+        return (
+          <CatalogueGeojson
+            config={config}
+            dataset={dataset}
+            urls={urls}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
       case "BAR":
       case "HBAR":
         return (
@@ -281,6 +277,20 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     },
   ];
 
+  const generateTableSchema = () => {
+    switch (dataset.type) {
+      case "TIMESERIES":
+        return UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze, (item, key) => {
+          if (key === "x") return toDate(item[key], config.context.range, i18n.language);
+          else if (typeof item[key] === "string") return item[key];
+          else if (typeof item[key] === "number") return numFormat(item[key], "standard");
+        });
+
+      default:
+        return UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze);
+    }
+  };
+
   return (
     <div>
       <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
@@ -386,8 +396,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       )
                     : undefined
                 }
-                config={UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze)}
-                enablePagination={dataset.type === "TABLE" ? 10 : false}
+                config={generateTableSchema()}
+                enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 20 : false}
               />
             </div>
           )}
@@ -530,27 +540,29 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <div className="space-y-3">
                 <h5>{t("catalogue.meta_url")}</h5>
                 <ul className="ml-6 list-outside list-disc text-dim">
-                  {Object.entries(metadata.url).map(([key, url]: [string, unknown]) => (
-                    <li key={url as string}>
-                      <a
-                        href={url as string}
-                        className="break-all text-primary hover:underline dark:text-primary-dark"
-                        onClick={
-                          () => {}
-                          //   track("file_download", {
-                          //     uid: dataset.meta.unique_id.concat("_", key),
-                          //     id: dataset.meta.unique_id,
-                          //     name_en: dataset.meta.en.title,
-                          //     name_bm: dataset.meta.bm.title,
-                          //     type: "file",
-                          //     ext: key,
-                          //   })
-                        }
-                      >
-                        {url as string}
-                      </a>
-                    </li>
-                  ))}
+                  {Object.entries(metadata.url).map(([_, url]: [string, unknown]) =>
+                    url ? (
+                      <li key={url as string}>
+                        <a
+                          href={url as string}
+                          className="break-all text-primary hover:underline dark:text-primary-dark"
+                          onClick={
+                            () => {}
+                            //   track("file_download", {
+                            //     uid: dataset.meta.unique_id.concat("_", key),
+                            //     id: dataset.meta.unique_id,
+                            //     name_en: dataset.meta.en.title,
+                            //     name_bm: dataset.meta.bm.title,
+                            //     type: "file",
+                            //     ext: key,
+                            //   })
+                          }
+                        >
+                          {url as string}
+                        </a>
+                      </li>
+                    ) : undefined
+                  )}
                 </ul>
               </div>
               {/* License */}

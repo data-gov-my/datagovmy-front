@@ -1,7 +1,8 @@
 // import { useTranslation } from "@hooks/useTranslation";
 // import { numFormat, toDate } from "@lib/helpers";
-
-import { numFormat } from "@lib/helpers";
+import type { TableConfig } from "@components/Chart/Table";
+import { numFormat, toDate } from "@lib/helpers";
+import type { DCPeriod } from "@lib/types";
 
 // /**
 //  * For timeseries & choropleth.
@@ -10,11 +11,9 @@ import { numFormat } from "@lib/helpers";
 //  * @param {Period} period Period
 //  * @returns table schema
 //  */
-// export const CATALOGUE_TABLE_SCHEMA = (
-//   column: XYColumn,
-//   locale: "en" | "bm" = "en",
-//   period: Period,
-//   headers: string[],
+// export const TIMESERIES_TABLE_SCHEMA = (
+//   column: Record<string, string>,
+//   period: DCPeriod,
 //   precision: number | [number, number]
 // ) => {
 //   const formatBy = {
@@ -24,38 +23,26 @@ import { numFormat } from "@lib/helpers";
 //     QUARTERLY: "qQ yyyy",
 //     YEARLY: "yyyy",
 //   };
-//   const { t } = useTranslation();
-//   const y_headers = headers
-//     .filter((y: string) => !["line", "x"].includes(y))
-//     .map((y: string) => ({
-//       id: y,
-//       header: locale === "en" ? column[`${y}_en`] : column[`${y}_bm`],
-//       accessorFn: (item: any) =>
-//         typeof item[y] === "number" ? numFormat(item[y], "standard", precision) : item[y],
-//       sortingFn: "localeNumber",
-//     }));
+
+// //   const y_headers = headers
+// //     .filter((y: string) => !["line", "x"].includes(y))
+// //     .map((y: string) => ({
+// //       id: y,
+// //       header: locale === "en" ? column[`${y}_en`] : column[`${y}_bm`],
+// //       accessorFn: (item: any) =>
+// //         typeof item[y] === "number" ? numFormat(item[y], "standard", precision) : item[y],
+// //       sortingFn: "localeNumber",
+// //     }));
 
 //   return [
 //     {
 //       id: "x",
-//       header: locale === "en" ? column.x_en : column.x_bm,
-//       accessorKey: "x",
-//       cell: (item: any) => {
-//         const x: number | string = item.getValue();
-//         return (
-//           <div>
-//             <span className="text-sm">
-//               {
-//                 {
-//                   number: toDate(x, formatBy[period], locale),
-//                   string: !t(`catalogue.show_filters.${x}`).includes(".show_filters")
-//                     ? t(`catalogue.show_filters.${x}`)
-//                     : x,
-//                 }[typeof x as number | string]
-//               }
-//             </span>
-//           </div>
-//         );
+//       header: column.x,
+
+//       accessorFn: (item: any) => {
+//         if (typeof item[key] === "string") return item[key];
+//         if (typeof item[key] === "number") return numFormat(item[key], "standard");
+//         return "";
 //       },
 //     },
 //     ...y_headers,
@@ -68,28 +55,38 @@ import { numFormat } from "@lib/helpers";
  * @param freezeKeys Freeze cols
  * @returns Table schema
  */
-export const UNIVERSAL_TABLE_SCHEMA = (column: Record<string, string>, freezeKeys?: string[]) => {
+export const UNIVERSAL_TABLE_SCHEMA = (
+  column: Record<string, string>,
+  freezeKeys?: string[],
+  accessorFn?: (item: any, key: string) => string
+): TableConfig[] => {
   const columns = Object.entries(column);
-  if (!freezeKeys) return columns.map(([key, value]) => generateSchema(key, value));
+  if (!freezeKeys) return columns.map(([key, value]) => generateSchema(key, value, accessorFn));
 
   const [index_cols, rest]: [[string, string][], [string, string][]] = [[], []];
   columns.forEach(([key, value]: [string, string]) => {
     if (freezeKeys.includes(key)) index_cols.push([key, value]);
     else rest.push([key, value]);
   });
-  return index_cols.concat(rest).map(([key, value]) => generateSchema(key, value));
+  return index_cols.concat(rest).map(([key, value]) => generateSchema(key, value, accessorFn));
 };
 
-const generateSchema = (key: string, value: any) => {
+const generateSchema = (
+  key: string,
+  value: any,
+  accessorFn?: (item: any, key: string) => string
+): TableConfig => {
   return {
     id: key,
     header: value,
     // Filter bug, cannot have number type in table: https://github.com/TanStack/table/issues/4280
-    accessorFn: (item: any) => {
-      if (typeof item[key] === "string") return item[key];
-      if (typeof item[key] === "number") return numFormat(item[key], "standard");
-      return "";
-    },
+    accessorFn: accessorFn
+      ? (item: any) => accessorFn(item, key)
+      : (item: any) => {
+          if (typeof item[key] === "string") return item[key];
+          if (typeof item[key] === "number") return numFormat(item[key], "standard");
+          return "";
+        },
     className: "text-left",
     sortingFn: "localeNumber",
   };

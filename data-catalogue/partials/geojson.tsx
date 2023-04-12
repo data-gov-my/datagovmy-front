@@ -8,33 +8,13 @@ import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
+const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochoropleth"), {
   ssr: false,
 });
 
-type ChoroPoint = {
-  id: string;
-  value: number;
-};
-
 interface CatalogueGeojsonProps {
-  config: {
-    color: Color;
-    geojson: Geotype;
-  };
-  dataset: {
-    chart: Array<ChoroPoint>;
-    meta: {
-      en: {
-        title: string;
-      };
-      bm: {
-        title: string;
-      };
-      unique_id: string;
-    };
-  };
-  lang: "en" | "bm";
+  config: any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
@@ -44,7 +24,6 @@ interface CatalogueGeojsonProps {
 const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   dataset,
   config,
-  lang,
   urls,
   onDownload,
 }) => {
@@ -68,6 +47,8 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   //       .map(item => ({ id: (item as unknown as OptionType).label, value: -1.1 }));
   //   };
 
+  console.log(config);
+
   const availableDownloads = useMemo(
     () => ({
       chart: [
@@ -89,31 +70,6 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
             // });
           },
         },
-        {
-          key: "svg",
-          image: ctx && ctx.toBase64Image("png", 1),
-          title: t("catalogue.vector.title"),
-          description: t("catalogue.vector.desc"),
-          icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
-          href: () => {
-            exportAs("svg", ctx!.canvas)
-              .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(
-                () => {}
-                // track("file_download", {
-                //   uid: dataset.meta.unique_id.concat("_svg"),
-                //   type: "image",
-                //   id: dataset.meta.unique_id,
-                //   name_en: dataset.meta.en.title,
-                //   name_bm: dataset.meta.bm.title,
-                //   ext: "svg",
-                // })
-              )
-              .catch(e => {
-                console.error(e);
-              });
-          },
-        },
       ],
       data: [
         {
@@ -130,10 +86,11 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   );
 
   return (
-    <Choropleth
-      _ref={_ref => setCtx(_ref)}
-      className="h-[350px] w-full lg:h-[600px]"
+    <GeoChoropleth
+      className="h-[450px] w-full"
       type={config.geojson}
+      color={config.color}
+      enableFill={false}
     />
   );
 };

@@ -7,6 +7,9 @@
 @import "./dashboards/general.css";
 @import "./dashboards/table.css";
 @import "./dashboards/banner.css";
+@import "leaflet.markercluster";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 @layer base {
   h1 {
@@ -130,6 +133,21 @@ path:focus {
 }
 .leaflet-tooltip-left::before {
   @apply border-l-0 border-l-black/80;
+}
+
+/* MapPlot Popup Marker */
+.leaflet-popup-content {
+  width: fit-content !important;
+}
+
+.leaflet-popup-content-wrapper {
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  @apply w-fit whitespace-pre font-mono text-xs;
+}
+
+.leaflet-popup-tip-container {
 }
 
 :focus-visible {

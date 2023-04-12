@@ -69,12 +69,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
     context: {},
     dates: null,
     options: null,
-    precision: data.API.precision,
+    precision: data.API.precision ?? null,
     freeze: data.API.freeze ?? null,
     color: data.API.colour ?? "blues",
     geojson: data.API.file_json ?? null,
   };
-  data.API.filters.forEach((item: DCFilter) => {
+  data.API.filters?.forEach((item: DCFilter) => {
     if (item.key === "date_slider") config.dates = item as FilterDate;
     Object.assign(config.context, {
       [item.key]:
@@ -84,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
             item.default,
     });
   });
-  config.options = data.API.filters.filter((item: DCFilter) => item.key !== "date_slider");
+  config.options = data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
 
   return {
     // notFound: true,
@@ -101,8 +101,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
       explanation: data.explanation,
       metadata: {
         url: {
-          csv: data.metadata.url.csv,
-          parquet: data.metadata.url.parquet,
+          csv: data.metadata.url.csv ?? null,
+          parquet: data.metadata.url.parquet ?? null,
+          link_geojson: data.metadata.url.link_geojson ?? null,
         },
         data_as_of: data.metadata.data_as_of,
         last_updated: data.metadata.last_updated,

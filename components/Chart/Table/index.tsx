@@ -42,9 +42,6 @@ export interface TableConfig {
   header?: ReactNode;
   accessorKey?: string;
   className?: string;
-  /**
-   * @default true
-   */
   enableSorting?: boolean;
   cell?: (item: any) => JSX.Element;
   columns?: TableConfigColumn[];
@@ -191,19 +188,19 @@ const Table: FunctionComponent<TableProps> = ({
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <div
-                          {...{
-                            className: [
-                              header.subHeaders.length < 1
-                                ? "select-none flex gap-1 text-sm justify-between text-left px-2"
-                                : !header.column.columnDef.header
-                                ? "hidden"
-                                : "text-end pr-2",
-                              header.column.getCanSort() ? "cursor-pointer" : "",
-                            ].join(" "),
-                            onClick: header.column.getCanSort()
+                          className={[
+                            header.subHeaders.length < 1
+                              ? "flex select-none justify-between gap-1 px-2 text-left text-sm"
+                              : !header.column.columnDef.header
+                              ? "hidden"
+                              : "pr-2 text-end",
+                            header.column.getCanSort() ? "cursor-pointer" : "",
+                          ].join(" ")}
+                          onClick={
+                            header.column.getCanSort()
                               ? header.column.getToggleSortingHandler()
-                              : undefined,
-                          }}
+                              : undefined
+                          }
                         >
                           <div>
                             <p className="font-medium text-black dark:text-white">
@@ -220,18 +217,18 @@ const Table: FunctionComponent<TableProps> = ({
                               className="inline-block"
                               title={sortTooltip(header.column.getIsSorted())}
                             >
-                              {{
-                                asc: (
-                                  <ArrowUpIcon className="inline-block h-4 w-auto text-black dark:text-white" />
-                                ),
-                                desc: (
-                                  <ArrowDownIcon className="inline-block h-4 w-auto text-black dark:text-white" />
-                                ),
-                              }[header.column.getIsSorted() as string] ?? null}
-                              {header.column.getCanSort() && !header.column.getIsSorted() ? (
+                              {
+                                {
+                                  asc: (
+                                    <ArrowUpIcon className="inline-block h-4 w-auto text-black dark:text-white" />
+                                  ),
+                                  desc: (
+                                    <ArrowDownIcon className="inline-block h-4 w-auto text-black dark:text-white" />
+                                  ),
+                                }[header.column.getIsSorted() as "asc" | "desc"]
+                              }
+                              {header.column.getCanSort() && !header.column.getIsSorted() && (
                                 <ArrowsUpDownIcon className="inline-block h-4 w-auto text-dim" />
-                              ) : (
-                                ""
                               )}
                             </span>
                           )}
