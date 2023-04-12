@@ -190,7 +190,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                 <Input
                   type="search"
                   icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                  className="w-full min-w-[200px] border-0 border-b border-outline text-sm dark:border-washed-dark"
+                  className="w-full min-w-[200px] rounded-b-none border-0 border-b border-outline text-sm dark:border-washed-dark"
                   placeholder={t("common:placeholder.search") + " ..."}
                   onChange={value => setSearch(value)}
                 />

@@ -39,7 +39,7 @@ const List: FunctionComponent<ListProps> = ({ options, current, onChange }) => {
         <li
           key={option}
           className={clx(
-            "cursor-pointer self-center rounded-full px-[10px] text-sm outline-none transition-colors",
+            "cursor-pointer self-center rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
             current === index
               ? "bg-outline font-medium text-black dark:bg-washed-dark dark:text-white"
               : "bg-transparent text-dim hover:text-black dark:hover:text-white"

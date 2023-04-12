@@ -227,14 +227,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 className="h-full pt-4"
                 data={{
                   header: {
-                    name: `${t("dashboard-covid-19:diagram_title")}`,
+                    name: t("dashboard-covid-19:diagram_title"),
                     value: snapshot_graphic.data.cases_active,
                     delta: snapshot_graphic.data.cases_active_annot,
                     inverse: true,
                   },
                   col_1: [
                     {
-                      name: `${t("dashboard-covid-19:col1_title1")}`,
+                      name: t("dashboard-covid-19:col1_title1"),
                       value: snapshot_graphic.data.cases_local,
                       delta: snapshot_graphic.data.cases_local_annot,
                       inverse: true,
@@ -248,7 +248,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col1_title2")}`,
+                      name: t("dashboard-covid-19:col1_title2"),
                       value: snapshot_graphic.data.cases_import,
                       delta: snapshot_graphic.data.cases_import_annot,
                       inverse: true,
@@ -256,9 +256,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   ],
                   col_2: [
                     {
-                      name: `${t("dashboard-covid-19:col2_title1")}`,
+                      name: t("dashboard-covid-19:col2_title1"),
                       value: snapshot_graphic.data.home,
-                      delta: snapshot_graphic.data.home_annot.toFixed(1),
+                      delta: snapshot_graphic.data.home_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -270,7 +270,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title2")}`,
+                      name: t("dashboard-covid-19:col2_title2"),
                       value: snapshot_graphic.data.pkrc,
                       delta: snapshot_graphic.data.pkrc_annot,
                       unit: "%",
@@ -284,9 +284,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title3")}`,
+                      name: t("dashboard-covid-19:col2_title3"),
                       value: snapshot_graphic.data.hosp,
-                      delta: snapshot_graphic.data.hosp_annot.toFixed(1),
+                      delta: snapshot_graphic.data.hosp_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -298,9 +298,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title4")}`,
+                      name: t("dashboard-covid-19:col2_title4"),
                       value: snapshot_graphic.data.icu,
-                      delta: snapshot_graphic.data.icu_annot.toFixed(1),
+                      delta: snapshot_graphic.data.icu_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -312,9 +312,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title5")}`,
+                      name: t("dashboard-covid-19:col2_title5"),
                       value: snapshot_graphic.data.vent,
-                      delta: snapshot_graphic.data.vent_annot.toFixed(1),
+                      delta: snapshot_graphic.data.vent_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -328,9 +328,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   ],
                   col_3: [
                     {
-                      name: `${t("dashboard-covid-19:col3_title1")}`,
+                      name: t("dashboard-covid-19:col3_title1"),
                       value: snapshot_graphic.data.cases_recovered,
-                      delta: snapshot_graphic.data.cases_recovered_annot.toFixed(0),
+                      delta: snapshot_graphic.data.cases_recovered_annot,
                       icon: (
                         <Image
                           src="/static/images/stages/recovered.svg"
@@ -341,7 +341,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col3_title2")}`,
+                      name: t("dashboard-covid-19:col3_title2"),
                       value: snapshot_graphic.data.deaths,
                       delta: snapshot_graphic.data.deaths_annot,
                       inverse: true,
@@ -355,7 +355,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col3_title3")}`,
+                      name: t("dashboard-covid-19:col3_title3"),
                       value: snapshot_graphic.data.deaths_bid,
                       delta: snapshot_graphic.data.deaths_bid_annot,
                       inverse: true,
@@ -374,7 +374,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   return (
                     <Panel key={index} name={name}>
                       <BarMeter
-                        className="block w-full space-y-2 pt-4"
+                        className="block pt-4"
                         data={data}
                         layout="state-horizontal"
                         relative
@@ -403,11 +403,11 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               stats={[
                 {
                   title: t("dashboard-covid-19:deaths.annot1"),
-                  value: statistics.data.deaths.annot1.toLocaleString(),
+                  value: numFormat(statistics.data.deaths.annot1, "standard"),
                 },
                 {
                   title: t("dashboard-covid-19:deaths.annot2"),
-                  value: statistics.data.deaths.annot2.toLocaleString(),
+                  value: numFormat(statistics.data.deaths.annot2, "standard"),
                 },
               ]}
               data={{

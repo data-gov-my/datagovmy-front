@@ -7,12 +7,12 @@ import { MOHIcon } from "@components/Icon/agency";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import Slider from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
-import { useWindowWidth } from "@hooks/useWindowWidth";
 import { useSlice } from "@hooks/useSlice";
 import { OptionType } from "@components/types";
+import { numFormat } from "@lib/helpers";
 
 /**
  * COVID Vaccination Dashboard
@@ -37,8 +37,6 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
   const router = useRouter();
   const currentState = (router.query.state as string) ?? "mys";
-  const windowWidth = useWindowWidth();
-  const isTablet = windowWidth < BREAKPOINTS.LG;
 
   const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
   const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
@@ -78,7 +76,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 className="pl-1 underline decoration-dashed underline-offset-4"
                 onClick={() => open()}
               >
-                {`${(waffle.data[data.filter_age.value].dose1.perc as number).toFixed(1)}%`}
+                {numFormat(waffle.data[data.filter_age.value].dose1.perc, "standard", 1)}%
               </p>
             </>
           )}
@@ -96,7 +94,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 className="pl-1 underline decoration-dashed underline-offset-4"
                 onClick={() => open()}
               >
-                {`${(waffle.data[data.filter_age.value].dose2.perc as number).toFixed(1)}%`}
+                {numFormat(waffle.data[data.filter_age.value].dose2.perc, "standard", 1)}%
               </p>
             </>
           )}
@@ -107,18 +105,18 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "booster1",
       color: "#228F3A",
       dosePerc: (
-        <span className="pl-1">{`${(
-          waffle.data[data.filter_age.value].booster1.perc as number
-        ).toFixed(1)}%`}</span>
+        <span className="pl-1">
+          {numFormat(waffle.data[data.filter_age.value].booster1.perc, "standard", 1)}%
+        </span>
       ),
     },
     {
       doseType: "booster2",
       color: "#135523",
       dosePerc: (
-        <span className="pl-1">{`${(
-          waffle.data[data.filter_age.value].booster2.perc as number
-        ).toFixed(1)}%`}</span>
+        <span className="pl-1">
+          {numFormat(waffle.data[data.filter_age.value].booster2.perc, "standard", 1)}%
+        </span>
       ),
     },
   ];
@@ -230,7 +228,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 className="col-span-2"
                 data={barmeter.data[data.filter_dose.value]}
                 unit="%"
-                layout={isTablet ? "horizontal" : "vertical"}
+                layout="vertical"
               />
             </Panel>
           </Tabs>
@@ -304,11 +302,11 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                   stats={[
                     {
                       title: t("dashboard-covid-vaccination:daily"),
-                      value: `+${statistics.data[statistic_key].latest.toLocaleString()}`,
+                      value: `+${numFormat(statistics.data[statistic_key].latest, "standard")}`,
                     },
                     {
                       title: t("dashboard-covid-vaccination:total"),
-                      value: `${statistics.data[statistic_key].total.toLocaleString()}`,
+                      value: `${numFormat(statistics.data[statistic_key].total, "standard")}`,
                     },
                   ]}
                 />
