@@ -27,60 +27,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     "en-GB",
     "ms-MY",
   ]);
-  // const { data } = await get("/dashboard", { dashboard: "" });
-
-  const data = {
-    manufacturer_1: {
-      model_1: [
-        "all_colours",
-        "colour_4",
-        "colour_10",
-        "colour_1",
-        "colour_7",
-        "colour_5",
-        "colour_8",
-        "colour_9",
-        "colour_3",
-        "colour_6",
-        "colour_2",
-      ],
-      model_2: [
-        "all_colours",
-        "colour_4",
-        "colour_10",
-        "colour_1",
-        "colour_7",
-        "colour_5",
-        "colour_8",
-        "colour_9",
-        "colour_3",
-        "colour_6",
-        "colour_2",
-      ],
-    },
-    manufacturer_2: {
-      model_1: [
-        "all_colours",
-        "colour_4",
-        "colour_10",
-        "colour_1",
-        "colour_7",
-        "colour_5",
-        "colour_8",
-        "colour_9",
-        "colour_3",
-        "colour_6",
-        "colour_2",
-      ],
-      model_2: ["colour_2"],
-    },
-  };
-
+  const { data } = await get("/dropdown", { dashboard: "car_popularity" });
   return {
     notFound: false,
     props: {
       ...i18n,
-      queryOptions: data,
+      queryOptions: data.query_values.data.data,
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
