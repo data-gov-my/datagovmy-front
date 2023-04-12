@@ -67,7 +67,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
               <NavItem title={"Request Data"} link="#" onClick={() => setIsTabletNavOpen(false)} />
             </Nav>
           </div>
-          <div className="flex items-center gap-3 md:gap-4">
+          <div className="flex items-center gap-3 lg:gap-4">
             {stateSelector}
             <ThemeToggle />
 
@@ -81,12 +81,12 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
             {/* MOBILE NAV ICONS */}
             {isTabletNavOpen ? (
               <XMarkIcon
-                className=" box-content block h-5 w-5 text-black dark:text-white md:hidden"
+                className="box-content block h-5 w-5 text-black dark:text-white lg:hidden"
                 onClick={() => setIsTabletNavOpen(false)}
               />
             ) : (
               <Bars3BottomRightIcon
-                className="box-content block h-5 w-5 text-black dark:text-white md:hidden"
+                className="box-content block h-5 w-5 text-black dark:text-white lg:hidden"
                 onClick={() => setIsTabletNavOpen(true)}
               />
             )}
