@@ -120,7 +120,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         <Section title={t("dashboard-car-popularity:section_title")} date={data.data_as_of}>
           <div className="flex flex-col gap-8 lg:flex-row">
             <div className="w-full lg:w-fit">
-              <Card className="flex w-full flex-col justify-items-start gap-6 rounded-xl border border-outline bg-background	p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50 lg:w-[400px]">
+              <Card className="flex w-full flex-col justify-items-start gap-x-6 rounded-xl border border-outline bg-background	p-6 shadow dark:border-washed-dark dark:bg-washed-dark/50 lg:w-[400px]">
                 <Dropdown
                   label={t("dashboard-car-popularity:label_manufacturer")}
                   width="w-full"
@@ -144,7 +144,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   selected={data.colour}
                   onChange={selected => setData("colour", selected)}
                 />
-                <div>
+                <div className="mt-6">
                   <Button
                     icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
                     className="btn btn-primary"
