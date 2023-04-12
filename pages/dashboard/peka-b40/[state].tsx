@@ -41,19 +41,18 @@ PekaB40State.layout = page => (
       <StateDropdown
         url={routes.PEKA_B40}
         currentState={(useRouter().query.state as string) ?? "mys"}
-        exclude={["kvy"]}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.PEKA_B40} exclude={["kvy"]} />
+    <StateModal url={routes.PEKA_B40} />
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
   let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
+  STATES.forEach(state => {
     paths = paths.concat([
       {
         params: {
