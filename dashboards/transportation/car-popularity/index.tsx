@@ -165,12 +165,12 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
             <div className="w-full">
               {data.x?.length > 0 ? (
                 data.loading ? (
-                  <div className="flex h-[460px] items-center justify-center">
+                  <div className="flex h-96 items-center justify-center">
                     <Spinner loading={data.loading} />
                   </div>
                 ) : (
                   <Timeseries
-                    className="h-[460px] w-full"
+                    className="h-96 w-full"
                     title={
                       <>
                         <p className="text-lg font-bold">
@@ -211,7 +211,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   />
                 )
               ) : (
-                <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
+                <div className="relative hidden h-96 w-full items-center justify-center lg:flex">
                   <Timeseries
                     className="absolute top-0 left-0 h-full w-full opacity-30"
                     data={{
@@ -233,6 +233,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                       ],
                     }}
                     enableGridX={false}
+                    enableCrosshair={false}
                     interval={"year"}
                   />
                   <Card className="z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border border-outline bg-outline py-1.5 px-3 dark:border-washed-dark dark:bg-washed-dark md:mx-auto">
