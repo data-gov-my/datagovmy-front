@@ -1,0 +1,37 @@
+import AgencyBadge from "@components/AgencyBadge";
+import { Hero } from "@components/index";
+import { useTranslation } from "@hooks/useTranslation";
+import { FunctionComponent } from "react";
+import Container from "@components/Container";
+
+/**
+ * {{titleCase dashboard_name}} Dashboard
+ * @overview Status: In-development
+ */
+
+interface {{pascalCase dashboard_name}}Props {}
+
+const {{pascalCase dashboard_name}}: FunctionComponent<{{pascalCase dashboard_name}}Props> = ({}) => {
+  const { t, i18n } = useTranslation(["common", "dashboard-{{dashCase dashboard_name}}"]);
+
+  return (
+    <>
+      <Hero
+        background="gray"
+        category={[t("dashboard-{{dashCase dashboard_name}}:category"), "text-black"]}
+        header={[t("dashboard-{{dashCase dashboard_name}}:header")]}
+        description={[t("dashboard-{{dashCase dashboard_name}}:description")]}
+        agencyBadge={
+          <AgencyBadge
+            agency="Placeholder Agency"
+            link="Placeholder Link"
+          />
+        }
+      />
+      {/* Rest of page goes here */}
+      <Container className="min-h-screen"></Container>
+    </>
+  );
+};
+
+export default {{pascalCase dashboard_name}};
