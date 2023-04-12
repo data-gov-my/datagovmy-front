@@ -174,11 +174,14 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                     title={
                       <>
                         <p className="text-lg font-bold">
-                          <span>
-                            {t("dashboard-car-popularity:timeseries_title", {
+                          <span className="capitalize">
+                            {t("dashboard-car-popularity:timeseries_car_description", {
                               car: data.params.model,
+                              manufacturer: data.params.manufacturer,
+                              colour: data.params.colour,
                             })}
                           </span>
+                          <span>{t("dashboard-car-popularity:timeseries_title")}</span>
                         </p>
                         <p className="text-sm text-dim">
                           <span>{t("dashboard-car-popularity:timeseries_description")}</span>
