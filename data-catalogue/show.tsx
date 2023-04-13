@@ -386,26 +386,28 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             {renderChart()}
           </div>
 
-          <div className={clx("mx-auto", show.value === "table" ? "block" : "hidden")}>
-            <Table
-              className={clx("table-stripe", dataset.type !== "TABLE" && "table-sticky-header")}
-              responsive={true}
-              data={dataset.table.data}
-              freeze={config.freeze}
-              search={
-                dataset.type === "TABLE"
-                  ? onSearch => (
-                      <Search
-                        className="w-full lg:w-auto"
-                        onChange={query => onSearch(query ?? "")}
-                      />
-                    )
-                  : undefined
-              }
-              config={generateTableSchema()}
-              enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 20 : false}
-            />
-          </div>
+          {dataset.table && (
+            <div className={clx("mx-auto", show.value === "table" ? "block" : "hidden")}>
+              <Table
+                className={clx("table-stripe", dataset.type !== "TABLE" && "table-sticky-header")}
+                responsive={true}
+                data={dataset.table.data}
+                freeze={config.freeze}
+                search={
+                  dataset.type === "TABLE"
+                    ? onSearch => (
+                        <Search
+                          className="w-full lg:w-auto"
+                          onChange={query => onSearch(query ?? "")}
+                        />
+                      )
+                    : undefined
+                }
+                config={generateTableSchema()}
+                enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 20 : false}
+              />
+            </div>
+          )}
 
           {config.dates !== null && (
             <Slider
