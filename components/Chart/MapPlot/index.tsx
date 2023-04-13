@@ -1,10 +1,9 @@
 import { MapControl, MapControlRef } from "@hooks/useMap";
 import type { GeoJsonObject } from "geojson";
-import bbox from "geojson-bbox";
-import { LatLng, LatLngBounds, LatLngTuple, Map } from "leaflet";
+import { LatLng, LatLngBounds, LatLngTuple } from "leaflet";
 import { useTheme } from "next-themes";
-import { ForwardedRef, FunctionComponent, useEffect, useImperativeHandle, useRef } from "react";
-import { GeoJSON, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { ForwardedRef, FunctionComponent, useImperativeHandle, useRef } from "react";
+import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import Markercluster from "./markercluster";
 
 type MapPlotProps = {
@@ -54,14 +53,15 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
 
   const printMarker = (item: Record<string, any>) => {
     let text = "";
-    Object.entries(item).forEach(([key, value]) => (text += `${key}: ${value}\n`));
+    Object.entries(item).forEach(([key, value]) =>
+      key === "position" ? null : (text += `${key}: ${value}\n`)
+    );
     return text;
   };
 
   return (
     <MapContainer
       id={id}
-      key={markers?.length} // random uid required to refresh change in geojson
       className={className}
       center={position}
       zoom={zoom}
@@ -73,31 +73,16 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
     >
       <MapControl ref={controlRef} />
 
-      {geojson && (
-        <>
-          {/* <GeoJSONControl position={position} zoom={zoom} geojson={geojson} /> */}
-          <GeoJSON
-            key={Math.random() * 10} // random uid required to refresh change in geojson
-            data={geojson}
-            style={{
-              color: "#000",
-              fill: false,
-              weight: 1,
-            }}
-          />
-        </>
-      )}
       <TileLayer
         key={theme}
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${theme}/{z}/{x}/{y}.png`}
       />
-      <Markercluster chunkedLoading>
+      <Markercluster chunkedLoading removeOutsideVisibleBounds chunkDelay={0} chunkInterval={50}>
         {markers?.map((item: MarkerDatum, index) => {
-          const { position: _, ...props } = item;
           return (
             <Marker key={index} position={item.position}>
-              <Popup>{printMarker(props)}</Popup>
+              <Popup>{printMarker(item)}</Popup>
             </Marker>
           );
         })}

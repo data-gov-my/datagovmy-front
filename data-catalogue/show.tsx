@@ -107,12 +107,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   urls,
 }) => {
   const { t, i18n } = useTranslation();
-
   const [show, setShow] = useState<OptionType>(options[0]);
-  const [downloads, setDownloads] = useState<DownloadOptions>({
-    chart: [],
-    data: [],
-  });
+  const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
   const { filter, setFilter } = useFilter(config.context, { id: params.id });
 
   const renderChart = (): ReactNode | undefined => {
@@ -285,7 +281,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           else if (typeof item[key] === "string") return item[key];
           else if (typeof item[key] === "number") return numFormat(item[key], "standard");
         });
-
+      case "GEOJSON":
+        return UNIVERSAL_TABLE_SCHEMA(
+          dataset.table.columns,
+          config.freeze,
+          (item, key) => item[key]
+        );
       default:
         return UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze);
     }
