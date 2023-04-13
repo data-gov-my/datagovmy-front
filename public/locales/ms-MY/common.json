@@ -71,13 +71,21 @@
     "catalogue": "Katalog Data",
     "megamenu": {
       "categories": {
+        "democracy": "Demokrasi",
         "demography": "Demografi",
+        "digitalisation": "Digitalisasi",
         "economy": "Ekonomi",
+        "education": "Pendidikan",
+        "environment": "Alam Sekitar",
         "financial_sector": "Sektor Kewangan",
-        "social": "Sosial",
-        "national_accounts": "Akaun Kebangsaan",
+        "government_programs": "Program Kerajaan",
+        "healthcare": "Program Kesihatan",
         "high_frequency": "Data Kekerapan Tinggi",
-        "healthcare": "Program Kesihatan"
+        "national_accounts": "Akaun Kebangsaan",
+        "public_finances": "Kewangan Awam",
+        "public_safety": "Keselamatan Awam",
+        "social": "Sosial",
+        "transportation": "Pengangkutan"
       },
       "dashboards": {
         "kawasanku": "Kawasanku",

@@ -10,10 +10,8 @@ import {
   Section,
   StateDropdown,
   Tabs,
-  Tooltip,
 } from "@components/index";
 import { MOHIcon } from "@components/Icon/agency";
-import DonutMeter from "@components/Chart/DonutMeter";
 import Slider from "@components/Chart/Slider";
 import Stages from "@components/Chart/Stages";
 import { useData } from "@hooks/useData";
@@ -25,7 +23,7 @@ import { numFormat } from "@lib/helpers";
 
 /**
  * COVID19 Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
@@ -124,7 +122,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         header={[t("dashboard-covid-19:header")]}
         description={
           <>
-            <p className={"text-dim"}>{t("dashboard-covid-19:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("dashboard-covid-19:description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.COVID_19} currentState={currentState} />
             </div>
@@ -141,78 +139,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
       />
 
       <Container className="min-h-screen">
-        {/* Utilisations */}
-        <Section title={t("dashboard-covid-19:donut_header")} date={util_chart.data_as_of}>
-          <div className="grid grid-cols-2 gap-12 pt-6 lg:grid-cols-4">
-            <div className="flex items-center gap-3">
-              <DonutMeter value={util_chart.data.util_vent} />
-              <div>
-                <p className="text-dim">{t("dashboard-covid-19:donut1")}</p>
-                <Tooltip tip={t("dashboard-covid-19:donut1_tooltips")}>
-                  {open => (
-                    <span
-                      className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                      onClick={() => open()}
-                    >
-                      {numFormat(util_chart.data.util_vent, "standard", 1)}%
-                    </span>
-                  )}
-                </Tooltip>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <DonutMeter value={util_chart.data.util_icu} />
-              <div>
-                <p className="text-dim">{t("dashboard-covid-19:donut2")}</p>
-                <Tooltip tip={t("dashboard-covid-19:donut2_tooltips")}>
-                  {open => (
-                    <span
-                      className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                      onClick={() => open()}
-                    >
-                      {numFormat(util_chart.data.util_icu, "standard", 1)}%
-                    </span>
-                  )}
-                </Tooltip>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <DonutMeter value={util_chart.data.util_hosp} />
-              <div>
-                <p className="text-dim">{t("dashboard-covid-19:donut3")}</p>
-                <Tooltip tip={t("dashboard-covid-19:donut3_tooltips")}>
-                  {open => (
-                    <span
-                      className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                      onClick={() => open()}
-                    >
-                      {numFormat(util_chart.data.util_hosp, "standard", 1)}%
-                    </span>
-                  )}
-                </Tooltip>
-              </div>
-            </div>
-            {util_chart.data.util_pkrc ? (
-              <div className="flex items-center gap-3">
-                <DonutMeter value={util_chart.data.util_pkrc} />
-                <div>
-                  <p className="text-dim">{t("dashboard-covid-19:donut4")}</p>
-                  <Tooltip tip={t("dashboard-covid-19:donut4_tooltips")}>
-                    {open => (
-                      <span
-                        className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                        onClick={() => open()}
-                      >
-                        {numFormat(util_chart.data.util_vent, "standard", 1)}%
-                      </span>
-                    )}
-                  </Tooltip>
-                </div>
-              </div>
-            ) : undefined}
-          </div>
-        </Section>
-
         {/* What does the latest data show? */}
         <Section
           title={t("dashboard-covid-19:diagram_header", { state: CountryAndStates[currentState] })}
