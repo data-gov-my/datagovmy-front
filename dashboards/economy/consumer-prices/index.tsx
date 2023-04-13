@@ -65,7 +65,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
       value: key,
     })
   );
-  const COICOP_OPTIONS: Array<OptionType> = Object.keys(choropleth.data).map((key: string) => ({
+  const COICOP_OPTIONS: Array<OptionType> = Object.keys(choropleth.data.y).map((key: string) => ({
     label: t(`dashboard-consumer-prices:keys.${key}`),
     value: key,
   }));
@@ -369,10 +369,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
             />
             <Choropleth
               data={{
-                labels: choropleth.data[data.coicop_type.value].map(({ id }: { id: string }) => id),
-                values: choropleth.data[data.coicop_type.value].map(
-                  ({ value }: { value: number | null }) => value
-                ),
+                labels: choropleth.data.x,
+                values: choropleth.data.y[data.coicop_type.value],
               }}
               precision={[2, 2]}
               prefix="RM"
