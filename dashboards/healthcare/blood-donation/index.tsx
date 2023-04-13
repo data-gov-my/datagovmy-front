@@ -226,11 +226,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           }
           date={t(barchart_variables.date_as_of)}
         >
-          <Tabs
-            hidden
-            current={data.tabs_section_3}
-            onChange={index => setData("tabs_section_2", index)}
-          >
+          <Tabs hidden current={data.tabs_section_3}>
             {KEY_VARIABLES_SCHEMA.map(({ name, data }) => {
               return (
                 <Panel key={name} name={name}>
