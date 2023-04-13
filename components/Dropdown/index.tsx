@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { Input } from "..";
 import { useTranslation } from "next-i18next";
+import { clx } from "@lib/helpers";
 
 type CommonProps<L, V> = {
   className?: string;
@@ -119,11 +120,11 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               width,
               darkMode
                 ? "border-outline/10 text-white active:bg-washed/10"
-                : "border-outline bg-white active:bg-washed",
+                : "border-outline active:bg-washed",
               ,
               disabled
                 ? "pointer-events-none bg-outline text-dim"
-                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0",
+                : "bg-white hover:border-outlineHover focus:outline-none focus-visible:ring-0",
             ].join(" ")}
           >
             <>
@@ -148,7 +149,12 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               )}
 
               {/* Label */}
-              <span className="block w-full truncate dark:text-white lg:w-auto">
+              <span
+                className={clx(
+                  disabled ? "dark:text-dim" : "",
+                  "block w-full truncate dark:text-white lg:w-auto"
+                )}
+              >
                 {multiple
                   ? title
                   : (selected as OptionType<L, V>)?.label || placeholder || "Select"}
@@ -163,7 +169,10 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               {/* ChevronDown Icon */}
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
                 <ChevronDownIcon
-                  className="h-5 w-5 text-black dark:text-white"
+                  className={clx(
+                    disabled ? "dark:text-dim" : "",
+                    "h-5 w-5 text-black dark:text-white"
+                  )}
                   aria-hidden="true"
                 />
               </span>

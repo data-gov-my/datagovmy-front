@@ -50,6 +50,10 @@
     "copied": "Disalin!",
     "maximum": "Maksima",
     "minimum": "Minima",
+    "won": "Menang",
+    "lost": "Kalah",
+    "form_gov": "Menjadi Kerajaan",
+    "form_opp": "Menjadi Pembangkang",
     "indicator": "Penunjuk",
     "charts": {
       "heatmap": "Peta",

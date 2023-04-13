@@ -7,16 +7,28 @@
     "seats": "Kerusi",
     "election": {
         "section_1": "Terokailah data pilihan raya dari Merdeka sehingga kini!",
+        "parliament": "Parlimen",
+        "state": "Negeri",
+        "parliament_of": "Parlimen ",
+        "summary": "Rumusan",
+        "map": "Peta",
+        "table": "Jadual",        
+        "majority": "112 kerusi (50%) Majoriti mudah",
+        "explore": "Bahagian ini digunakan untuk menerokai keputusan pilihan raya seperti Pilihan Raya Umum ke-15 pada tahun 2022. \nSekiranya anda ingin menerokai sejarah penuh seseorang calon ataupun sebuah parti, sila pergi ke bahagian Calon atau Parti Politik",
         "section_2": "Lihat keputusan penuh bagi kerusi tertentu",
-        "section_3": "Analisa pilihan raya"
+        "search_area": "Carilah kawasan anda",
+        "full_result": "{{ election }}: Keputusan penuh bagi ",
+        "section_3": "Analisa pilihan raya",
+        "voter_turnout": "Keluar Mengundi"
     },
-    "parliament": "Parlimen",
-    "state": "Negeri",
-    "parliament_of": "Parlimen ",
-    "summary": "Rumusan",
-    "map": "Peta",
-    "table": "Jadual",
-    "search_area": "Carilah kawasan anda",
-    "voter-turnout": "",
+    "candidate": {
+        "header": "Terokailah sejarah pilihan raya penuh bagi calon yang pernah bertanding dalam pilihan raya"
+    },
+    "party": {
+        "header": "Terokailah sejarah pilihan raya penuh parti politik"
+    },
+    "seat": {
+        "header": "Terokailah sejarah pilihan raya penuh bagi kawasan anda"
+    },
     "": ""
 }

@@ -7,16 +7,28 @@
     "seats": "Seats",
     "election": {
         "section_1": "Explore any election from Merdeka to the present!",
+        "parliament": "Parliament",
+        "state": "State",
+        "parliament_of": "Parliament of ",
+        "summary": "Summary",
+        "map": "Map",
+        "table": "Table",
+        "majority": "112 seats (50%) Simple majority",
+        "explore": "This page is designed to help you explore the results for a particular election, such as the 15th General Election in 2022. \nIf you wish to explore the full history for a particular candidate or party, visit our Party and Candidate Explorer instead!",
         "section_2": "View the full ballot for a specific seat",
-        "section_3": "Election analysis"
+        "full_result": "{{ election }}: Full result for ",
+        "search_area": "Search for your area",
+        "section_3": "Election analysis",
+        "voter_turnout": "Voter Turnout"
     },
-    "parliament": "Parliament",
-    "state": "State",
-    "parliament_of": "Parliament of ",
-    "summary": "Summary",
-    "map": "Map",
-    "table": "Table",
-    "search_area": "Search for your area",
-    "voter-turnout": "Voter Turnout",
+    "candidate": {
+        "header": "Explore the electoral history of anyone who’s ever competed in an election"
+    },
+    "party": {
+        "header": "Explore any party’s entire electoral history"
+    },
+    "seat": {
+        "header": "Explore the entire electoral history for your area"
+    },
     "": ""
 }

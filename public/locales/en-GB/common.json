@@ -50,6 +50,10 @@
     "copied": "Copied!",
     "maximum": "Maximum",
     "minimum": "Minimum",
+    "won": "Won",
+    "lost": "Lost",
+    "form_gov": "Formed the Government",
+    "form_opp": "Formed the Opposition",
     "indicator": "Indicator",
     "charts": {
       "heatmap": "Heatmap",
