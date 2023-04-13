@@ -1,15 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { useTranslation } from "@hooks/useTranslation";
-import { Bars3BottomRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { Transition } from "@headlessui/react";
-import { useTheme } from "next-themes";
-import { useLanguage } from "@hooks/useLanguage";
 import Nav from "@components/Nav";
-import Dropdown from "@components/Dropdown";
 import Container from "@components/Container";
-import Button from "@components/Button";
 
 interface HeaderProps {
   stateSelector?: ReactNode;
@@ -17,8 +11,6 @@ interface HeaderProps {
 
 const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   const { t } = useTranslation("common");
-
-  const [isTabletNavOpen, setIsTabletNavOpen] = useState(false);
 
   return (
     <div className="fixed top-0 left-0 z-30 w-full border-b dark:border-washed-dark">
