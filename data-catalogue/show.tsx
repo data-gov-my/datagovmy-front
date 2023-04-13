@@ -117,6 +117,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
       case "TIMESERIES":
+      case "STACKED_AREA":
         return (
           <CatalogueTimeseries
             config={config}
@@ -151,6 +152,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         );
       case "BAR":
       case "HBAR":
+      case "STACKED_BAR":
         return (
           <CatalogueBar
             config={config}

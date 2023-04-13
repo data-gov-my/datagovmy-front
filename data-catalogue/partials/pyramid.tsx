@@ -125,7 +125,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
       .map(([key, y], index) => ({
         data: y as number[],
         label: dataset.table.columns[key],
-        backgroundColor: colors[index].concat("33") ?? AKSARA_COLOR.PRIMARY_H,
+        backgroundColor: colors[index].concat("1A") ?? AKSARA_COLOR.PRIMARY_H,
         borderColor: colors[index] ?? AKSARA_COLOR.PRIMARY,
         borderWidth: 1,
       }));

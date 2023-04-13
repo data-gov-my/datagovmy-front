@@ -71,7 +71,9 @@ export type DCChartKeys =
   | "HBAR"
   | "PYRAMID"
   | "HEATTABLE"
-  | "SCATTER";
+  | "SCATTER"
+  | "STACKED_AREA"
+  | "STACKED_BAR";
 export type DCPeriod = "YEARLY" | "QUARTERLY" | "MONTHLY" | "WEEKLY" | "DAILY";
 
 type BaseFilter = {

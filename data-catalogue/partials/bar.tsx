@@ -110,16 +110,16 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
     const sets = Object.entries(dataset.chart).filter(([key, _]) => key !== "x");
     const colors = [
       AKSARA_COLOR.PRIMARY,
-      AKSARA_COLOR.GREY,
-      AKSARA_COLOR.DANGER,
       AKSARA_COLOR.WARNING,
+      AKSARA_COLOR.DANGER,
+      AKSARA_COLOR.GREY,
     ]; // [blue, red]
 
     return sets.map(([key, y], index) => ({
       data: y as number[],
       label: sets.length === 1 ? dataset.meta.title : dataset.table.columns[key],
       borderColor: colors[index],
-      backgroundColor: colors[index].concat("33"),
+      backgroundColor: colors[index].concat("1A"),
       borderWidth: 1,
     }));
   }, [dataset.chart]);
@@ -138,6 +138,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
             : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
         }
         type="category"
+        enableStack={dataset.type === "STACKED_BAR"}
         layout={bar_layout}
         enableGridX={bar_layout !== "vertical"}
         enableGridY={bar_layout === "vertical"}

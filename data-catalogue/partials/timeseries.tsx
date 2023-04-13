@@ -112,9 +112,10 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
     const colors = [
       AKSARA_COLOR.PRIMARY,
-      AKSARA_COLOR.GREY,
-      AKSARA_COLOR.DANGER,
       AKSARA_COLOR.WARNING,
+
+      AKSARA_COLOR.DANGER,
+      AKSARA_COLOR.GREY,
     ]; // [blue, red]
 
     return sets.map(([key, y], index) => ({
@@ -122,9 +123,9 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
       data: y as number[],
       label: dataset.table.columns[key],
       borderColor: colors[index],
-      backgroundColor: colors[index].concat("33"),
+      backgroundColor: colors[index].concat("1A"),
       borderWidth: 1,
-      fill: sets.length <= 1,
+      fill: dataset.type === "STACKED_AREA" || sets.length <= 1,
     }));
   }, [coordinate]);
 
@@ -140,7 +141,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         _ref={ref => setData("ctx", ref)}
         interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
         precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-        mode="grouped"
+        mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
         data={{
           labels: coordinate.x,
           datasets: _datasets,
