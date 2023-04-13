@@ -59,20 +59,19 @@ const Hero: FunctionComponent<HeroProps> = ({
 
   return (
     <>
-      <div className="sticky top-14 left-0 z-10 flex flex-row-reverse md:hidden md:pb-0">
-        {agencyBadge}
-      </div>
-
       <Container
         background={background_style.concat(" border-b dark:border-washed-dark")}
-        className={clx("relative py-12", className)}
+        className={clx("relative", className)}
       >
+        <div className="sticky top-14 left-0 z-10 flex flex-row-reverse md:hidden md:pb-0">
+          {agencyBadge}
+        </div>
         {children ? (
           children
         ) : (
           <>
-            <div className="space-y-6 xl:w-full">
-              {[category, agencyBadge].some(Boolean) && (
+            <div className="space-y-6 py-12 xl:w-full">
+              {(category || agencyBadge) && (
                 <div className="relative flex justify-between">
                   <div className="hidden md:absolute md:right-0 md:top-0 md:block">
                     {agencyBadge}
