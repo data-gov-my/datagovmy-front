@@ -7,6 +7,7 @@ import { FunctionComponent, useMemo } from "react";
 import { default as Dropdown } from ".";
 
 interface StateDropdownProps {
+  anchor?: string;
   className?: string;
   url?: string;
   currentState?: string;
@@ -21,6 +22,7 @@ interface StateDropdownProps {
 }
 
 const StateDropdown: FunctionComponent<StateDropdownProps> = ({
+  anchor,
   className,
   url,
   currentState,
@@ -57,6 +59,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
         options={options.filter(option => !exclude?.includes(option.value))}
         placeholder={t("placeholder.state")}
         enableFlag
+        anchor={anchor}
         darkMode={darkMode}
         width={width}
         sublabel={sublabel}

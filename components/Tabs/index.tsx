@@ -18,12 +18,15 @@ interface TabsProps {
 
 interface PanelProps {
   name: string | ReactElement;
+  icon?: ReactNode;
   className?: string;
   children?: ReactNode;
 }
 
 interface ListProps {
   options: string[];
+  icons?: Array<ReactNode>;
+  className?: string;
   current: number;
   onChange: (index: number) => void;
 }
@@ -32,7 +35,7 @@ const Panel: FunctionComponent<PanelProps> = ({ children, name }) => {
   return <>{children}</>;
 };
 
-const List: FunctionComponent<ListProps> = ({ options, current, onChange }) => {
+const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons, className }) => {
   return (
     <ul className="flex">
       {options.map((option, index) => (
@@ -40,12 +43,14 @@ const List: FunctionComponent<ListProps> = ({ options, current, onChange }) => {
           key={option}
           className={clx(
             "cursor-pointer self-center rounded-full px-[10px] text-sm outline-none transition-colors",
+            className,
             current === index
               ? "bg-outline font-medium text-black dark:bg-washed-dark dark:text-white"
               : "bg-transparent text-dim hover:text-black dark:hover:text-white"
           )}
           onClick={() => onChange(index)}
         >
+          {icons && icons[index]}
           {option}
         </li>
       ))}
@@ -90,24 +95,25 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
 
           <Tab.List
             className={clx(
-              "item-center flex flex-wrap justify-between gap-[10px] lg:items-start lg:justify-end",
+              "flex flex-wrap items-center justify-between gap-[10px] lg:items-start lg:justify-end",
               hidden && "hidden"
             )}
           >
             {controls}
             <div className="flex flex-grow flex-wrap">
-              {_children.map(({ props: { name } }, index) => (
+              {_children.map(({ props: { name, icon } }, index) => (
                 <Tab
                   key={index}
                   className={({ selected }) =>
                     clx(
-                      "rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
+                      "group flex flex-row rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
                       selected
                         ? "bg-outline font-medium text-black dark:bg-washed-dark dark:text-white"
                         : "bg-transparent text-dim hover:text-black dark:hover:text-white"
                     )
                   }
                 >
+                  {icon}
                   {name}
                 </Tab>
               ))}
@@ -132,5 +138,6 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
 Tabs.Panel = Panel;
 Tabs.List = List;
 
+export { List };
 export { Panel };
 export default Tabs;

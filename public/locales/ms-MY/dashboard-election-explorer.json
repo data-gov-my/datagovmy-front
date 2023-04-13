@@ -5,5 +5,18 @@
     "candidates": "Calon",
     "parties": "Parti Politik",
     "seats": "Kerusi",
+    "election": {
+        "section_1": "Terokailah data pilihan raya dari Merdeka sehingga kini!",
+        "section_2": "Lihat keputusan penuh bagi kerusi tertentu",
+        "section_3": "Analisa pilihan raya"
+    },
+    "parliament": "Parlimen",
+    "state": "Negeri",
+    "parliament_of": "Parlimen ",
+    "summary": "Rumusan",
+    "map": "Peta",
+    "table": "Jadual",
+    "search_area": "Carilah kawasan anda",
+    "voter-turnout": "",
     "": ""
 }

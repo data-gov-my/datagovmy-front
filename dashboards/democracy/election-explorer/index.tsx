@@ -24,22 +24,22 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
   const PANELS = [
     {
       name: t("dashboard-election-explorer:elections"),
-      icon: <SPRIcon fillColor="#00000000" />,
+      icon: <SPRIcon className="-mb-1" fillColor="#00000000" />,
       data: <Election />,
     },
     {
       name: t("dashboard-election-explorer:candidates"),
-      icon: <UserIcon className="mx-1 h-5 w-5" />,
+      icon: <UserIcon className="m-1 h-5 w-5" />,
       data: <ElectionCandidates />,
     },
     {
       name: t("dashboard-election-explorer:parties"),
-      icon: <FlagIcon className="mx-1 h-5 w-5" />,
+      icon: <FlagIcon className="m-1 h-5 w-5" />,
       data: <ElectionParties />,
     },
     {
       name: t("dashboard-election-explorer:seats"),
-      icon: <MapIcon className="mx-1 h-5 w-5" />,
+      icon: <MapIcon className="m-1 h-5 w-5" />,
       data: <ElectionSeats />,
     },
   ];

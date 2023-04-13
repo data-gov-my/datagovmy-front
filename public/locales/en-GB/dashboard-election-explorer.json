@@ -5,5 +5,18 @@
     "candidates": "Candidates",
     "parties": "Political Parties",
     "seats": "Seats",
+    "election": {
+        "section_1": "Explore any election from Merdeka to the present!",
+        "section_2": "View the full ballot for a specific seat",
+        "section_3": "Election analysis"
+    },
+    "parliament": "Parliament",
+    "state": "State",
+    "parliament_of": "Parliament of ",
+    "summary": "Summary",
+    "map": "Map",
+    "table": "Table",
+    "search_area": "Search for your area",
+    "voter-turnout": "Voter Turnout",
     "": ""
 }

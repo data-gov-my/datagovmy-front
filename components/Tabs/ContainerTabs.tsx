@@ -41,17 +41,17 @@ const ContainerTabs: FunctionComponent<ContainerTabsProps> & { Panel: typeof Pan
         >
           <Tab.List
             className={clx(
-              "item-center mx-auto flex flex-wrap justify-between",
+              "mx-auto flex flex-wrap items-center justify-between",
               hidden && "hidden"
             )}
           >
-            <div className="flex h-[56px] flex-grow flex-wrap">
+            <div className="flex h-fit flex-grow flex-nowrap sm:h-[56px]">
               {_children.map(({ props: { name, icon } }, index) => (
                 <Tab
                   key={index}
                   className={({ selected }) =>
                     clx(
-                      "group flex flex-row items-center px-4 text-sm outline-none transition-colors",
+                      "group flex flex-col items-center justify-center px-2 text-xs outline-none transition-colors sm:flex-row lg:px-4 lg:text-sm",
                       selected
                         ? "border-b-2 border-primary font-medium text-black dark:bg-washed-dark dark:text-white"
                         : "bg-transparent text-dim hover:text-black dark:hover:text-white"
@@ -68,7 +68,7 @@ const ContainerTabs: FunctionComponent<ContainerTabsProps> & { Panel: typeof Pan
 
         <Tab.Panels className="w-full">
           {_children.map(({ props: { children } }, index) => (
-            <Tab.Panel className="overflow-auto" key={index}>
+            <Tab.Panel className="overflow-clip" key={index}>
               {children}
             </Tab.Panel>
           ))}
