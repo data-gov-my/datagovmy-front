@@ -42,6 +42,9 @@ const CatalogueChoropleth = dynamic(() => import("@data-catalogue/partials/choro
 const CatalogueGeoChoropleth = dynamic(() => import("@data-catalogue/partials/geochoropleth"), {
   ssr: true,
 });
+const CatalogueScatter = dynamic(() => import("@data-catalogue/partials/scatter"), {
+  ssr: true,
+});
 const CatalogueMapPlot = dynamic(() => import("@data-catalogue/partials/mapplot"), {
   ssr: false,
 });
@@ -168,6 +171,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "HEATTABLE":
         return (
           <CatalogueHeatmap
+            config={config}
+            dataset={dataset}
+            urls={urls}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
+      case "SCATTER":
+        return (
+          <CatalogueScatter
             config={config}
             dataset={dataset}
             urls={urls}

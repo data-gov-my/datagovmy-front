@@ -110,7 +110,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
     const sets = Object.entries(dataset.chart).filter(([key, _]) => key !== "x");
     const colors = [
       AKSARA_COLOR.PRIMARY,
-      AKSARA_COLOR.DIM,
+      AKSARA_COLOR.GREY,
       AKSARA_COLOR.DANGER,
       AKSARA_COLOR.WARNING,
     ]; // [blue, red]
