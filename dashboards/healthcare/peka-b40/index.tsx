@@ -150,7 +150,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
                 )}
                 color="purples"
                 data={{
-                  labels: choropleth.data.x,
+                  labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),
                   values: choropleth.data.y.perc,
                 }}
                 unit="%"

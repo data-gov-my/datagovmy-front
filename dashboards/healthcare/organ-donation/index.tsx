@@ -170,7 +170,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                 )}
                 color="greens"
                 data={{
-                  labels: choropleth.data.x,
+                  labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),
                   values: choropleth.data.y.perc,
                 }}
                 unit="%"
