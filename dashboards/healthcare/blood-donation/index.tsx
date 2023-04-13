@@ -4,11 +4,13 @@ import Slider from "@components/Chart/Slider";
 import { PDNIcon } from "@components/Icon/agency";
 import { Container, Panel, Section, StateDropdown, Tabs, Hero } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { getTopIndices } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
@@ -69,8 +71,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   });
 
   const { coordinate } = useSlice(timeseries_all.data, data.minmax);
-
   const { theme } = useTheme();
+  const topStateIndices = getTopIndices(choropleth_malaysia_blood_donation.data.y.perc, 3, true);
 
   const handleClearSelection = () => {
     setData("zoom_state", undefined);
@@ -102,13 +104,34 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   );
 
   const section2left = (
-    <Section
-      title={t("dashboard-blood-donation:choro_header")}
-      date={last_updated}
-      className="gap-6 p-8"
-    >
-      <p className="text-dim">{t("dashboard-blood-donation:choro_description")}</p>
-    </Section>
+    <div className="flex h-full w-full flex-col space-y-6 p-8">
+      <div className="flex flex-col gap-2">
+        <h4>{t("dashboard-blood-donation:choro_header")}</h4>
+        <span className="text-sm text-dim">
+          {t("common.data_of", { date: choropleth_malaysia_blood_donation.data_as_of })}
+        </span>
+      </div>
+      <div className="flex grow flex-col justify-between space-y-6">
+        <p className="text-dim">{t("dashboard-blood-donation:choro_description")}</p>
+        <div className="space-y-3 border-t pt-6">
+          <p className="font-bold">{t("dashboard-blood-donation:choro_ranking")}</p>
+          {topStateIndices.map((pos, i) => {
+            return (
+              <div className="flex space-x-3">
+                <div className="font-medium text-dim">#{i + 1}</div>
+                <div className="grow">
+                  {CountryAndStates[choropleth_malaysia_blood_donation.data.x[pos]]}
+                </div>
+                <div className="font-bold text-[#DC2626]">
+                  {`${choropleth_malaysia_blood_donation.data.y.perc[pos].toFixed(2)}%`}
+                </div>
+                <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 
   const section2right = (
@@ -117,12 +140,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         className={(isMobile ? "h-[400px] w-auto" : "h-[500px] w-full").concat(" rounded-b")}
         color="reds"
         data={{
-          labels: choropleth_malaysia_blood_donation.data.map(
-            ({ state }: { state: string }) => CountryAndStates[state]
+          labels: choropleth_malaysia_blood_donation.data.x.map(
+            (state: string) => CountryAndStates[state]
           ),
-          values: choropleth_malaysia_blood_donation.data.map(
-            ({ data: { perc } }: { data: { perc: number | null } }) => perc
-          ),
+          values: choropleth_malaysia_blood_donation.data.y.perc,
         }}
         unit="%"
         type="state"
@@ -205,11 +226,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           }
           date={t(barchart_variables.date_as_of)}
         >
-          <Tabs
-            hidden
-            current={data.tabs_section_3}
-            onChange={index => setData("tabs_section_2", index)}
-          >
+          <Tabs hidden current={data.tabs_section_3}>
             {KEY_VARIABLES_SCHEMA.map(({ name, data }) => {
               return (
                 <Panel key={name} name={name}>

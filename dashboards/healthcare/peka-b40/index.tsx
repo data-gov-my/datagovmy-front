@@ -12,6 +12,7 @@ import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { getTopIndices } from "@lib/helpers";
 
 /**
  * PekaB40 Dashboard
@@ -39,9 +40,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
   });
 
   const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const sortedChoro = choropleth.data.sort(
-    (a: typeof choropleth.data, b: typeof choropleth.data) => b.data.perc - a.data.perc
-  );
+  const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
   const displayPercent = (percent: number) => `${percent.toFixed(2)}%`;
   return (
     <>
@@ -127,30 +126,19 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
                   <p className="text-dim">{t("dashboard-peka-b40:choro_description")}</p>
                   <div className="space-y-3 border-t pt-6">
                     <p className="font-bold">{t("dashboard-peka-b40:choro_ranking")}</p>
-                    <div className="flex space-x-3">
-                      <div className="font-medium text-dim">#1</div>
-                      <div className="grow">{CountryAndStates[sortedChoro[0].state]}</div>
-                      <div className="font-bold text-[#7C3AED]">
-                        {displayPercent(sortedChoro[0].data.perc)}
-                      </div>
-                      <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
-                    </div>
-                    <div className="flex space-x-3">
-                      <div className="font-medium text-dim">#2</div>
-                      <div className="grow">{CountryAndStates[sortedChoro[1].state]}</div>
-                      <div className="font-bold text-[#7C3AED]">
-                        {displayPercent(sortedChoro[1].data.perc)}
-                      </div>
-                      <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
-                    </div>
-                    <div className="flex space-x-3">
-                      <div className="font-medium text-dim">#3</div>
-                      <div className="grow">{CountryAndStates[sortedChoro[2].state]}</div>
-                      <div className="font-bold text-[#7C3AED]">
-                        {displayPercent(sortedChoro[2].data.perc)}
-                      </div>
-                      <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
-                    </div>
+
+                    {topStateIndices.map((pos, i) => {
+                      return (
+                        <div className="flex space-x-3">
+                          <div className="font-medium text-dim">#{i + 1}</div>
+                          <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
+                          <div className="font-bold text-[#7C3AED]">
+                            {displayPercent(choropleth.data.y.perc[pos])}
+                          </div>
+                          <ArrowRightIcon className="h-4 w-4 self-center stroke-[1.5px] text-dim" />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -162,12 +150,8 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
                 )}
                 color="purples"
                 data={{
-                  labels: choropleth.data.map(
-                    ({ state }: { state: string }) => CountryAndStates[state]
-                  ),
-                  values: choropleth.data.map(
-                    ({ data: { perc } }: { data: { perc: number | null } }) => perc
-                  ),
+                  labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),
+                  values: choropleth.data.y.perc,
                 }}
                 unit="%"
                 type="state"

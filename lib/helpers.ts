@@ -213,6 +213,23 @@ export const copyClipboard = async (text: string): Promise<void> => {
 };
 
 /**
+ * Returns indices of top n largest/smallest item from an array
+ */
+export const getTopIndices = (arr: number[], n: number, reverse = false): number[] => {
+  // create an array of [value, index] pairs
+  const pairs = arr.map((value, index) => [value, index]);
+
+  // sort the pairs by value (in descending or ascending order depending on the "reverse" flag)
+  pairs.sort((a, b) => (reverse ? b[0] - a[0] : a[0] - b[0]));
+
+  // extract the first n indices from the sorted pairs
+  const topPairs = pairs.slice(0, n);
+
+  // extract the indices from the top pairs and return them
+  return topPairs.map(pair => pair[1]);
+};
+
+/**
  * Generic download helper function
  * @param url URL or URLData
  * @param callback Callback function
