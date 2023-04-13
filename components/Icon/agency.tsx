@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, createElement } from "react";
 import type { IconProps } from ".";
 
 /**
@@ -1127,3 +1127,46 @@ export const SPRIcon: FunctionComponent<IconProps> = ({ className, fillColor = "
     </svg>
   );
 };
+
+interface AgencyIconProps {
+  agency: string;
+}
+
+export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
+  const Components: Record<string, any> = {
+    "BNM": BNMIcon,
+    "BOMBA": BOMBAIcon,
+    "DOSM": DOSMIcon,
+    "EPF": EPFIcon,
+    "ICU JPM": ICUJPMIcon,
+    "KE": IPREPUIcon,
+    "Imigresen": JIMIcon,
+    "JPA": JPAIcon,
+    "JPJ": JPJIcon,
+    "JPN": JPNIcon,
+    "KWAP": KWAPIcon,
+    "LHDN": LHDNIcon,
+    "MAMPU": MAMPUIcon,
+    "MCMC": MCMCIcon,
+    "MERS 999": MERSIcon,
+    "Met": METIcon,
+    "JPS": MET_FloodIcon,
+    "MoE": MOEIcon,
+    "MoF": MOFIcon,
+    "MoH": MOHIcon,
+    "MoT": MOTIcon,
+    "NTRC": NTRCIcon,
+    "PDN": PDNIcon,
+    "PDRM": PDRMIcon,
+    "PHCorp": PHCorpIcon,
+    "PERKESO": SOCSOIcon,
+    "SPR": SPRIcon,
+  };
+
+  if (typeof Components[agency] !== "undefined") {
+    return createElement(Components[agency], { className: "h-6 w-6" });
+  }
+  return createElement("p", { children: "not found" });
+};
+
+export default AgencyIcon;

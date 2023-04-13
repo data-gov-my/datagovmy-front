@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactNode, useMemo } from "react";
 import Container from "@components/Container";
-import { toDate } from "@lib/helpers";
+import { clx, toDate } from "@lib/helpers";
 import { useTranslation } from "next-i18next";
 
 type ConditionalHeroProps =
@@ -58,53 +58,61 @@ const Hero: FunctionComponent<HeroProps> = ({
   }, [background]);
 
   return (
-    <Container
-      background={background_style.concat(" border-b dark:border-washed-dark")}
-      className={`py-12 ${className}`}
-    >
-      {children ? (
-        children
-      ) : (
-        <>
-          <div className="flex flex-row-reverse pb-4 sm:pb-0 lg:hidden">{agencyBadge}</div>
-          <div className="space-y-6 xl:w-full">
-            <div className="relative flex justify-between">
-              <div className="hidden lg:absolute lg:right-0 lg:top-0 lg:block">{agencyBadge}</div>
-              {category && (
-                <span
-                  className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}
-                >
-                  {t(category[0])}
-                </span>
+    <>
+      <Container
+        background={background_style.concat(" border-b dark:border-washed-dark")}
+        className={clx("relative", className)}
+      >
+        <div className="sticky top-14 left-0 z-10 flex flex-row-reverse md:hidden md:pb-0">
+          {agencyBadge}
+        </div>
+        {children ? (
+          children
+        ) : (
+          <>
+            <div className="space-y-6 py-12 xl:w-full">
+              {(category || agencyBadge) && (
+                <div className="relative flex justify-between">
+                  <div className="hidden md:absolute md:right-0 md:top-0 md:block">
+                    {agencyBadge}
+                  </div>
+                  {category && (
+                    <span
+                      className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}
+                    >
+                      {t(category[0])}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {(header || description) && (
+                <div className="space-y-3">
+                  {header && (
+                    <h2 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h2>
+                  )}
+                  {description && Array.isArray(description) ? (
+                    <p className={["text-dim xl:w-2/3", description[1]].join(" ")}>
+                      {description[0]}
+                    </p>
+                  ) : (
+                    description
+                  )}
+                </div>
+              )}
+
+              {last_updated && (
+                <p className="text-sm text-dim">
+                  {t("common.last_updated", {
+                    date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
+                  })}
+                </p>
               )}
             </div>
-
-            {(header || description) && (
-              <div className="space-y-3">
-                {header && (
-                  <h2 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h2>
-                )}
-                {description && Array.isArray(description) ? (
-                  <p className={["text-dim xl:w-2/3", description[1]].join(" ")}>
-                    {description[0]}
-                  </p>
-                ) : (
-                  description
-                )}
-              </div>
-            )}
-
-            {last_updated && (
-              <p className="text-sm text-dim">
-                {t("common.last_updated", {
-                  date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-                })}
-              </p>
-            )}
-          </div>
-        </>
-      )}
-    </Container>
+          </>
+        )}
+      </Container>
+    </>
   );
 };
 

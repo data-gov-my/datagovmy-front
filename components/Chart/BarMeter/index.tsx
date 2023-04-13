@@ -1,14 +1,13 @@
 import { FunctionComponent, useMemo } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import { CountryAndStates } from "@lib/constants";
-import { limitMax, maxBy, numFormat } from "@lib/helpers";
+import { clx, limitMax, maxBy, numFormat } from "@lib/helpers";
 import Image from "next/image";
 
 interface BarMeterProps extends ChartHeaderProps {
   className?: string;
   max?: number;
-  data?: Array<BarMeterData>;
-  color?: string;
+  data?: BarMeterData[];
   unit?: string;
   relative?: boolean;
   sort?: "asc" | "desc" | ((a: BarMeterData, b: BarMeterData) => number);
@@ -29,7 +28,6 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   controls,
   state,
   max = 100,
-  color = "#0F172A",
   data = dummy,
   layout = "vertical",
   unit = "",
@@ -54,7 +52,13 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
     } else {
       return data.sort(sort);
     }
-  }, [data]);
+  }, [data, sort]);
+
+  const layout_style: Record<typeof layout, string> = {
+    "horizontal": "flex flex-col w-full space-y-2",
+    "state-horizontal": "flex flex-col w-full space-y-2",
+    "vertical": "flex flex-col lg:flex-row justify-around lg:h-[400px] ",
+  };
 
   const renderBars = (item: BarMeterData, index: number) => {
     switch (layout) {
@@ -79,7 +83,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
         );
 
       /**
-       * xKey must indicate a 'state' code (eg. 'mlk', 'jhr', 'png' etc).
+       * x-key must indicate a 'state' code (eg. 'mlk', 'jhr', 'png' etc).
        * Used in /dashboard/covid
        */
       case "state-horizontal":
@@ -99,7 +103,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
 
             <div className="flex flex-grow items-center gap-2">
               <p className="w-[40px] text-sm text-dim">
-                {(item.y as number).toFixed(1)}
+                {numFormat(item.y, "standard", [1, 1])}
                 {unit}
               </p>
               <div className="flex h-2.5 w-full overflow-x-hidden rounded-full bg-washed dark:bg-washed-dark">
@@ -116,11 +120,11 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
         return (
           <>
             <div
-              className="hidden h-full flex-col items-center space-y-2 lg:flex"
+              className="hidden h-full flex-col items-center space-y-2 pt-4 lg:flex"
               key={item.x.concat(`_${index}`)}
             >
               <p>
-                {(item.y as number).toFixed(1)}
+                {numFormat(item.y, "standard", [1, 1])}
                 {unit}
               </p>
               <div className="relative flex h-[80%] w-6 overflow-x-hidden rounded-full bg-washed dark:bg-washed-dark">
@@ -133,22 +137,20 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
               </div>
               <p>{item.x}</p>
             </div>
-            <div className="block space-y-2 lg:hidden" key={item.x.concat(`__${index}`)}>
+
+            <div className="block space-y-1 pb-2 lg:hidden" key={item.x.concat(`_${index}`)}>
               <div className="flex justify-between">
-                <p>{item.x}</p>
-                <p className="text-dim">
-                  {(item.y as number).toFixed(1)}
+                <p>{formatX ? formatX(item.x) : item.x}</p>
+                <p className="text-dim dark:text-white">
+                  {formatY ? formatY(item.y) : numFormat(item.y, "standard", 1)}
                   {unit}
                 </p>
               </div>
 
-              <div className="flex h-2.5 w-full overflow-x-hidden bg-washed">
+              <div className="flex h-2.5 w-full overflow-x-hidden rounded-full bg-washed dark:bg-washed-dark">
                 <div
-                  className="h-full items-center overflow-hidden"
-                  style={{
-                    backgroundColor: color,
-                    width: percentFill(item.y),
-                  }}
+                  className="h-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
+                  style={{ width: percentFill(item.y) }}
                 />
               </div>
             </div>
@@ -160,21 +162,14 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   return (
     <div className="space-y-2">
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-      <div
-        className={[
-          "flex",
-          layout !== "vertical" ? "flex-col" : "flex-row justify-between lg:h-[400px]",
-          className,
-        ].join(" ")}
-      >
-        {_data &&
-          _data.map((item, index) => {
-            return (
-              <div className="h-full" key={index}>
-                {renderBars(item, index)}
-              </div>
-            );
-          })}
+      <div className={clx(layout_style[layout], className)}>
+        {_data?.map((item, index) => {
+          return (
+            <div className="h-full" key={index}>
+              {renderBars(item, index)}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

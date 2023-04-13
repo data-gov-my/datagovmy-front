@@ -10,10 +10,8 @@ import {
   Section,
   StateDropdown,
   Tabs,
-  Tooltip,
 } from "@components/index";
 import { MOHIcon } from "@components/Icon/agency";
-import DonutMeter from "@components/Chart/DonutMeter";
 import Slider from "@components/Chart/Slider";
 import Stages from "@components/Chart/Stages";
 import { useData } from "@hooks/useData";
@@ -25,7 +23,7 @@ import { numFormat } from "@lib/helpers";
 
 /**
  * COVID19 Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
@@ -124,7 +122,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         header={[t("dashboard-covid-19:header")]}
         description={
           <>
-            <p className={"text-dim"}>{t("dashboard-covid-19:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("dashboard-covid-19:description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.COVID_19} currentState={currentState} />
             </div>
@@ -141,78 +139,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
       />
 
       <Container className="min-h-screen">
-        {/* Utilisations */}
-        <Section title={t("dashboard-covid-19:donut_header")} date={util_chart.data_as_of}>
-          <div className="grid grid-cols-2 gap-12 pt-6 lg:grid-cols-4">
-            <div className="flex items-center gap-3">
-              <DonutMeter value={util_chart.data.util_vent} />
-              <div>
-                <p className="text-dim">{t("dashboard-covid-19:donut1")}</p>
-                <Tooltip tip={t("dashboard-covid-19:donut1_tooltips")}>
-                  {open => (
-                    <span
-                      className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                      onClick={() => open()}
-                    >
-                      {numFormat(util_chart.data.util_vent, "standard", 1)}%
-                    </span>
-                  )}
-                </Tooltip>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <DonutMeter value={util_chart.data.util_icu} />
-              <div>
-                <p className="text-dim">{t("dashboard-covid-19:donut2")}</p>
-                <Tooltip tip={t("dashboard-covid-19:donut2_tooltips")}>
-                  {open => (
-                    <span
-                      className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                      onClick={() => open()}
-                    >
-                      {numFormat(util_chart.data.util_icu, "standard", 1)}%
-                    </span>
-                  )}
-                </Tooltip>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <DonutMeter value={util_chart.data.util_hosp} />
-              <div>
-                <p className="text-dim">{t("dashboard-covid-19:donut3")}</p>
-                <Tooltip tip={t("dashboard-covid-19:donut3_tooltips")}>
-                  {open => (
-                    <span
-                      className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                      onClick={() => open()}
-                    >
-                      {numFormat(util_chart.data.util_hosp, "standard", 1)}%
-                    </span>
-                  )}
-                </Tooltip>
-              </div>
-            </div>
-            {util_chart.data.util_pkrc ? (
-              <div className="flex items-center gap-3">
-                <DonutMeter value={util_chart.data.util_pkrc} />
-                <div>
-                  <p className="text-dim">{t("dashboard-covid-19:donut4")}</p>
-                  <Tooltip tip={t("dashboard-covid-19:donut4_tooltips")}>
-                    {open => (
-                      <span
-                        className="text-2xl font-medium underline decoration-dashed underline-offset-4"
-                        onClick={() => open()}
-                      >
-                        {numFormat(util_chart.data.util_vent, "standard", 1)}%
-                      </span>
-                    )}
-                  </Tooltip>
-                </div>
-              </div>
-            ) : undefined}
-          </div>
-        </Section>
-
         {/* What does the latest data show? */}
         <Section
           title={t("dashboard-covid-19:diagram_header", { state: CountryAndStates[currentState] })}
@@ -227,14 +153,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 className="h-full pt-4"
                 data={{
                   header: {
-                    name: `${t("dashboard-covid-19:diagram_title")}`,
+                    name: t("dashboard-covid-19:diagram_title"),
                     value: snapshot_graphic.data.cases_active,
                     delta: snapshot_graphic.data.cases_active_annot,
                     inverse: true,
                   },
                   col_1: [
                     {
-                      name: `${t("dashboard-covid-19:col1_title1")}`,
+                      name: t("dashboard-covid-19:col1_title1"),
                       value: snapshot_graphic.data.cases_local,
                       delta: snapshot_graphic.data.cases_local_annot,
                       inverse: true,
@@ -248,7 +174,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col1_title2")}`,
+                      name: t("dashboard-covid-19:col1_title2"),
                       value: snapshot_graphic.data.cases_import,
                       delta: snapshot_graphic.data.cases_import_annot,
                       inverse: true,
@@ -256,9 +182,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   ],
                   col_2: [
                     {
-                      name: `${t("dashboard-covid-19:col2_title1")}`,
+                      name: t("dashboard-covid-19:col2_title1"),
                       value: snapshot_graphic.data.home,
-                      delta: snapshot_graphic.data.home_annot.toFixed(1),
+                      delta: snapshot_graphic.data.home_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -270,7 +196,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title2")}`,
+                      name: t("dashboard-covid-19:col2_title2"),
                       value: snapshot_graphic.data.pkrc,
                       delta: snapshot_graphic.data.pkrc_annot,
                       unit: "%",
@@ -284,9 +210,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title3")}`,
+                      name: t("dashboard-covid-19:col2_title3"),
                       value: snapshot_graphic.data.hosp,
-                      delta: snapshot_graphic.data.hosp_annot.toFixed(1),
+                      delta: snapshot_graphic.data.hosp_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -298,9 +224,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title4")}`,
+                      name: t("dashboard-covid-19:col2_title4"),
                       value: snapshot_graphic.data.icu,
-                      delta: snapshot_graphic.data.icu_annot.toFixed(1),
+                      delta: snapshot_graphic.data.icu_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -312,9 +238,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col2_title5")}`,
+                      name: t("dashboard-covid-19:col2_title5"),
                       value: snapshot_graphic.data.vent,
-                      delta: snapshot_graphic.data.vent_annot.toFixed(1),
+                      delta: snapshot_graphic.data.vent_annot,
                       unit: "%",
                       icon: (
                         <Image
@@ -328,9 +254,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   ],
                   col_3: [
                     {
-                      name: `${t("dashboard-covid-19:col3_title1")}`,
+                      name: t("dashboard-covid-19:col3_title1"),
                       value: snapshot_graphic.data.cases_recovered,
-                      delta: snapshot_graphic.data.cases_recovered_annot.toFixed(0),
+                      delta: snapshot_graphic.data.cases_recovered_annot,
                       icon: (
                         <Image
                           src="/static/images/stages/recovered.svg"
@@ -341,7 +267,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col3_title2")}`,
+                      name: t("dashboard-covid-19:col3_title2"),
                       value: snapshot_graphic.data.deaths,
                       delta: snapshot_graphic.data.deaths_annot,
                       inverse: true,
@@ -355,7 +281,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: `${t("dashboard-covid-19:col3_title3")}`,
+                      name: t("dashboard-covid-19:col3_title3"),
                       value: snapshot_graphic.data.deaths_bid,
                       delta: snapshot_graphic.data.deaths_bid_annot,
                       inverse: true,
@@ -374,7 +300,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   return (
                     <Panel key={index} name={name}>
                       <BarMeter
-                        className="block w-full space-y-2 pt-4"
+                        className="block pt-4"
                         data={data}
                         layout="state-horizontal"
                         relative
@@ -403,11 +329,11 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               stats={[
                 {
                   title: t("dashboard-covid-19:deaths.annot1"),
-                  value: statistics.data.deaths.annot1.toLocaleString(),
+                  value: numFormat(statistics.data.deaths.annot1, "standard"),
                 },
                 {
                   title: t("dashboard-covid-19:deaths.annot2"),
-                  value: statistics.data.deaths.annot2.toLocaleString(),
+                  value: numFormat(statistics.data.deaths.annot2, "standard"),
                 },
               ]}
               data={{

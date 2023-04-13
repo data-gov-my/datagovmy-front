@@ -107,8 +107,8 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
       _ref={_ref => setCtx(_ref)}
       className="h-[350px] w-full lg:h-[400px]"
       data={{
-        labels: dataset.chart.labels,
-        values: dataset.chart.values,
+        labels: dataset.chart.x,
+        values: dataset.chart.y,
       }}
       color={config.color}
       type={config.geojson}

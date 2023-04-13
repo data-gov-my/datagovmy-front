@@ -51,7 +51,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
         header={[t("dashboard-peka-b40:header")]}
         description={
           <>
-            <p className={"text-dim"}>{t("dashboard-peka-b40:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("dashboard-peka-b40:description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.PEKA_B40} currentState={currentState} />
             </div>
