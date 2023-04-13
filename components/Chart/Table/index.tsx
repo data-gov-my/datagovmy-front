@@ -30,6 +30,7 @@ import Image from "next/image";
 import { useTranslation } from "@hooks/useTranslation";
 import { default as debounce } from "lodash/debounce";
 import type { DebouncedFunc } from "lodash";
+import { clx } from "@lib/helpers";
 
 export interface TableConfigColumn {
   id: string;
@@ -54,6 +55,7 @@ export interface TableProps {
   className?: string;
   title?: string;
   menu?: ReactElement;
+  freeze?: string[];
   controls?: (
     setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>
   ) => ReactElement | ReactElement[];
@@ -102,6 +104,7 @@ const Table: FunctionComponent<TableProps> = ({
   data = dummy,
   config = dummyConfig,
   sorts = [],
+  freeze,
   controls,
   search,
   responsive = true,
@@ -163,10 +166,15 @@ const Table: FunctionComponent<TableProps> = ({
     []
   );
 
+  const calcStickyLeft = (cellId: string) => {
+    const ele = document.getElementById(cellId)?.previousElementSibling;
+    return ele !== undefined && ele !== null ? ele.clientWidth : 0;
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-        <span className="text-base font-bold">{title ?? ""}</span>
+        <span className="text-base font-bold">{title}</span>
         {menu && <div className="flex items-center justify-end gap-2">{menu}</div>}
       </div>
 
@@ -178,24 +186,32 @@ const Table: FunctionComponent<TableProps> = ({
           {search && search(onSearch)}
         </div>
       )}
-      <div className={responsive ? "table-responsive" : undefined}>
-        <table className={`table ${className} ${enableSticky ? "table-sticky-first" : ""}`}>
+      <div className={clx(responsive && "table-responsive")}>
+        <table className={clx("table", className)}>
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header: any) => {
                   return (
-                    <th key={header.id} colSpan={header.colSpan}>
+                    <th
+                      key={header.id}
+                      id={header.id}
+                      colSpan={header.colSpan}
+                      className={clx(freeze?.includes(header.id)) && "sticky-col"}
+                      style={{
+                        left: freeze?.includes(header.id) ? calcStickyLeft(header.id) : 0,
+                      }}
+                    >
                       {header.isPlaceholder ? null : (
                         <div
-                          className={[
+                          className={clx(
                             header.subHeaders.length < 1
                               ? "flex select-none justify-between gap-1 px-2 text-left text-sm"
                               : !header.column.columnDef.header
                               ? "hidden"
                               : "pr-2 text-end",
-                            header.column.getCanSort() ? "cursor-pointer" : "",
-                          ].join(" ")}
+                            header.column.getCanSort() ? "cursor-pointer" : ""
+                          )}
                           onClick={
                             header.column.getCanSort()
                               ? header.column.getToggleSortingHandler()
@@ -214,7 +230,7 @@ const Table: FunctionComponent<TableProps> = ({
                           </div>
                           {header.subHeaders.length < 1 && (
                             <span
-                              className="inline-block"
+                              className="ml-2 inline-block"
                               title={sortTooltip(header.column.getIsSorted())}
                             >
                               {
@@ -255,23 +271,24 @@ const Table: FunctionComponent<TableProps> = ({
                       const relative = cell.column.columnDef.relative ?? undefined;
                       const scale = cell.column.columnDef.scale ?? undefined;
 
-                      const classNames = [
-                        cell.row.original.state === "mys" && "bg-outline",
+                      const classNames = clx(
                         lastCellInGroup.id === cell.column.id && "text-sm border-r-black",
                         relative ? relativeColor(value as number, inverse) : "bg-opacity-20",
                         scale && scaleColor(value as number),
-                        // value === null && "bg-outlineHover",
-                        index !== 0
+                        freeze?.includes(cell.column.id) && "sticky-col",
+                        cell.column.columnDef.className
                           ? cell.column.columnDef.className
-                            ? cell.column.columnDef.className
-                            : cellClass
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ");
-
+                          : cellClass
+                      );
                       return (
-                        <td key={cell.id} className={classNames}>
+                        <td
+                          id={cell.id}
+                          key={cell.id}
+                          className={classNames}
+                          style={{
+                            left: freeze?.includes(cell.column.id) ? calcStickyLeft(cell.id) : 0,
+                          }}
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           {value !== null && unit}
                           {value === null && relative && "-"}

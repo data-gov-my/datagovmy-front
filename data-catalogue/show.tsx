@@ -383,37 +383,28 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
           </div>
-          {Boolean(dataset?.table) && (
-            <div
-              className={clx(
-                "mx-auto",
-                show.value === "table" ? "block" : "hidden",
-                dataset.type !== "TABLE" ? "max-h-[500px] overflow-auto" : ""
-              )}
-            >
-              <Table
-                className={clx(
-                  "table-stripe table-default",
-                  dataset.type !== "TABLE" ? "table-sticky-header" : ""
-                )}
-                responsive={dataset.type === "TABLE"}
-                data={dataset.table.data}
-                enableSticky={dataset.type === "TABLE"}
-                search={
-                  dataset.type === "TABLE"
-                    ? onSearch => (
-                        <Search
-                          className="w-full lg:w-auto"
-                          onChange={query => onSearch(query ?? "")}
-                        />
-                      )
-                    : undefined
-                }
-                config={generateTableSchema()}
-                enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 20 : false}
-              />
-            </div>
-          )}
+
+          <div className={clx("mx-auto", show.value === "table" ? "block" : "hidden")}>
+            <Table
+              className={clx("table-stripe", dataset.type !== "TABLE" && "table-sticky-header")}
+              responsive={true}
+              data={dataset.table.data}
+              freeze={config.freeze}
+              enableSticky={config.freeze && config.freeze.length > 0}
+              search={
+                dataset.type === "TABLE"
+                  ? onSearch => (
+                      <Search
+                        className="w-full lg:w-auto"
+                        onChange={query => onSearch(query ?? "")}
+                      />
+                    )
+                  : undefined
+              }
+              config={generateTableSchema()}
+              enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 20 : false}
+            />
+          </div>
 
           {config.dates !== null && (
             <Slider
