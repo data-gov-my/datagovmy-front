@@ -99,7 +99,6 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
         <div className="sticky top-16 z-10 mt-6 flex items-center justify-center gap-2 drop-shadow-xl lg:pl-2">
           <div className="max-w-fit rounded-full border border-outline bg-white p-1 dark:border-washed-dark dark:bg-black">
             <List
-              className="flex flex-row py-1"
               options={PANELS.map(item => item.name)}
               icons={PANELS.map(item => item.icon)}
               current={data.tabs}
@@ -242,7 +241,6 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 />
               </div>
               <List
-                className="flex flex-row py-1"
                 options={[
                   t("dashboard-election-explorer:election.map"),
                   t("dashboard-election-explorer:election.table"),
