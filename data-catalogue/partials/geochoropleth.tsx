@@ -67,7 +67,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           description: t("catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (ctx) ctx.current?.print(dataset.meta.unique_id.concat(".png"));
+            if (ctx) ctx.current?.print(dataset.meta.unique_id);
             // TODO: Add track by mixpanel
           },
         },

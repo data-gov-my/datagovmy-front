@@ -1,12 +1,11 @@
+import type { GeoChoroplethRef } from "@components/Chart/Choropleth/geochoropleth";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import type { Color } from "@hooks/useColor";
+import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
-import { download, exportAs } from "@lib/helpers";
-import type { DownloadOptions, Geotype } from "@lib/types";
+import type { DownloadOptions } from "@lib/types";
 // import { track } from "mixpanel-browser";
 import { default as dynamic } from "next/dynamic";
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
-import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 
 const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochoropleth"), {
   ssr: false,
@@ -28,38 +27,27 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   onDownload,
 }) => {
   const { t } = useTranslation();
-  const [ctx, setCtx] = useState<ChartJSOrUndefined<"choropleth", any[], unknown> | null>(null);
+  const ctx = useRef<GeoChoroplethRef | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const { png } = useExport(mounted, dataset.meta.unique_id);
 
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);
-  }, [ctx]);
-
-  //   const yieldDummy = () => {
-  //     const geojson_dict: Record<typeof config.geojson, any> = {
-  //       state: STATES,
-  //       dun: DUNS,
-  //       parlimen: PARLIMENS,
-  //       district: DISTRICTS,
-  //     };
-
-  //     return Object.values(geojson_dict[config.geojson])
-  //       .flat()
-  //       .map(item => ({ id: (item as unknown as OptionType).label, value: -1.1 }));
-  //   };
-
-  console.log(config);
+  }, [png, ctx]);
 
   const availableDownloads = useMemo(
     () => ({
       chart: [
         {
           key: "png",
-          image: ctx && ctx.toBase64Image("png", 1),
+          image: png,
           title: t("catalogue.image.title"),
           description: t("catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
+            if (ctx) ctx.current?.print(dataset.meta.unique_id);
+            // TODO: Add track by mixpanel
+
             // track("file_download", {
             //   uid: dataset.meta.unique_id.concat("_png"),
             //   type: "image",
@@ -82,15 +70,18 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
         },
       ],
     }),
-    [ctx]
+    [png, ctx]
   );
 
   return (
     <GeoChoropleth
+      _ref={ctx}
+      id={dataset.meta.unique_id}
       className="h-[450px] w-full"
       type={config.geojson}
       color={config.color}
       enableFill={false}
+      onReady={mounted => setMounted(mounted)}
     />
   );
 };
