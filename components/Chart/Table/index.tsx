@@ -68,7 +68,6 @@ export interface TableProps {
   config?: Array<TableConfig>;
   responsive?: Boolean;
   enablePagination?: false | number;
-  enableSticky?: boolean;
 }
 
 const relativeColor = (delta: number, inverse: boolean = false) => {
@@ -109,7 +108,6 @@ const Table: FunctionComponent<TableProps> = ({
   search,
   responsive = true,
   enablePagination = false,
-  enableSticky,
   cellClass = "text-right",
 }) => {
   const columns = useMemo<ColumnDef<Record<string, any>>[]>(() => config as any, [config]);

@@ -390,7 +390,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               responsive={true}
               data={dataset.table.data}
               freeze={config.freeze}
-              enableSticky={config.freeze && config.freeze.length > 0}
               search={
                 dataset.type === "TABLE"
                   ? onSearch => (
