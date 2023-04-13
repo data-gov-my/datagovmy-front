@@ -117,12 +117,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         className={(isMobile ? "h-[400px] w-auto" : "h-[500px] w-full").concat(" rounded-b")}
         color="reds"
         data={{
-          labels: choropleth_malaysia_blood_donation.data.map(
-            ({ state }: { state: string }) => CountryAndStates[state]
-          ),
-          values: choropleth_malaysia_blood_donation.data.map(
-            ({ data: { perc } }: { data: { perc: number | null } }) => perc
-          ),
+          labels: choropleth_malaysia_blood_donation.data.x,
+          values: choropleth_malaysia_blood_donation.data.y.perc,
         }}
         unit="%"
         type="state"
