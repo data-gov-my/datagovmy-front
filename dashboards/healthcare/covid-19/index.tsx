@@ -10,10 +10,8 @@ import {
   Section,
   StateDropdown,
   Tabs,
-  Tooltip,
 } from "@components/index";
 import { MOHIcon } from "@components/Icon/agency";
-import DonutMeter from "@components/Chart/DonutMeter";
 import Slider from "@components/Chart/Slider";
 import Stages from "@components/Chart/Stages";
 import { useData } from "@hooks/useData";
@@ -25,7 +23,7 @@ import { numFormat } from "@lib/helpers";
 
 /**
  * COVID19 Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
