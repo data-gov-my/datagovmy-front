@@ -191,3 +191,59 @@ export const SHORT_PERIOD_FORMAT = {
   QUARTERLY: "qQ yyyy",
   YEARLY: "yyyy",
 } as const;
+
+/**
+ * PARTIES defs.
+ */
+export const PARTIES: Array<Record<string, any>> = [
+  {
+    key: "bebas",
+    name: "Bebas",
+  },
+  {
+    key: "bn",
+    name: "Barisan Nasional",
+  },
+  {
+    key: "gps",
+    name: "Gabungan Parti Sarawak",
+  },
+  {
+    key: "grs",
+    name: "Gabungan Rakyat Sabah",
+  },
+  {
+    key: "kdm",
+    name: "Parti KDM",
+  },
+  {
+    key: "muda",
+    name: "Malaysian United Democratic Alliance",
+  },
+  {
+    key: "ph",
+    name: "Pakatan Harapan",
+  },
+  {
+    key: "pn",
+    name: "Perikatan Nasional",
+  },
+  {
+    key: "pbm",
+    name: "Parti Bangsa Malaysia",
+  },
+  {
+    key: "warisan",
+    name: "Parti Warisan Sabah",
+  },
+];
+
+/**
+ * Dictionary of code to party name.
+ * @example PoliticalParty["bebas"] -> "Bebas"
+ */
+export const PoliticalParty: Record<string, string> = (() => {
+  return [...PARTIES].reduce((prev, current) => {
+    return { ...prev, ...{ [current.key]: current.name } };
+  }, {});
+})();

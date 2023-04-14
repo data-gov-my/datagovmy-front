@@ -52,8 +52,6 @@
     "minimum": "Minimum",
     "won": "Won",
     "lost": "Lost",
-    "form_gov": "Formed the Government",
-    "form_opp": "Formed the Opposition",
     "indicator": "Indicator",
     "charts": {
       "heatmap": "Heatmap",
@@ -67,7 +65,8 @@
     "state_first": "Select a state first",
     "district": "Select district",
     "facility": "Select facility",
-    "facility_type": "Select facility type"
+    "facility_type": "Select facility type",
+    "no_results": "No results"
   },
   "nav": {
     "home": "Home",

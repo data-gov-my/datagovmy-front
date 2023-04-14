@@ -1,17 +1,25 @@
 import { FunctionComponent, ReactElement } from "react";
-import { ResponsiveWaffle, WaffleDatum, WaffleFillDirection } from "@nivo/waffle";
-import { Box, Colors } from "@nivo/core";
+import { ResponsiveWaffle, WaffleFillDirection } from "@nivo/waffle";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import { useTheme } from "next-themes";
 interface WaffleProps extends ChartHeaderProps {
   className?: string;
-  data?: WaffleDatum[];
+  data?: {
+    id: string | number;
+    value: number;
+    label: string | number;
+  }[];
   total?: number;
   padding?: number;
-  color?: Colors;
+  color?: string | string[];
   rows?: number;
   cols?: number;
-  margin?: Box;
+  margin?: {
+    bottom?: number | undefined;
+    left?: number | undefined;
+    right?: number | undefined;
+    top?: number | undefined;
+  };
   children?: ReactElement | ReactElement[];
   fillDirection?: WaffleFillDirection;
   interactive?: boolean;
@@ -58,7 +66,7 @@ const Waffle: FunctionComponent<WaffleProps> = ({
   );
 };
 
-const dummy: WaffleDatum[] = [
+const dummy = [
   {
     id: "men",
     label: "men",

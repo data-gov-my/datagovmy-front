@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Dropdown, Input, Section, StateDropdown, Tabs } from "@components/index";
 import { List, Panel } from "@components/Tabs";
@@ -10,7 +10,8 @@ import { OptionType } from "@components/types";
 import { CountryAndStates } from "@lib/constants";
 import { TableCellsIcon } from "@heroicons/react/20/solid";
 import Card from "@components/Card";
-import { WaffleDatum } from "@nivo/waffle";
+import { clx } from "@lib/helpers";
+import ComboBox from "@components/Combobox";
 
 /**
  * Election Explorer Dashboard - Elections Tab
@@ -27,6 +28,22 @@ interface ElectionProps {}
 
 const Election: FunctionComponent<ElectionProps> = ({}) => {
   const { t, i18n } = useTranslation();
+  const [hasShadow, setHasShadow] = useState(false);
+  const divRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const div = divRef.current;
+    if (!div) return;
+
+    const handleScroll = () => {
+      setHasShadow(div.getBoundingClientRect().top === 64);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [divRef]);
 
   const PANELS = [
     {
@@ -60,12 +77,29 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     value: key,
   }));
 
-  const FILTER_OPTIONS: Array<OptionType> = ["voter_turnout"].map((key: string) => ({
+  const SEAT_OPTIONS: Array<OptionType> = [
+    "P001 Padang Besar, Perlis",
+    "P002 Kangar, Perlis",
+    "P003 Arau, Perlis",
+    "P004 Langkawi, Kedah",
+    "P005 Jerlun, Kedah",
+  ].map((key: string) => ({
+    label: key,
+    value: key,
+  }));
+
+  const FILTER_OPTIONS: Array<OptionType> = [
+    "voter_turnout",
+    "majority_%",
+    "rejected_votes",
+    "%_PH",
+    "num_voters",
+  ].map((key: string) => ({
     label: t(`dashboard-election-explorer:election.${key}`),
     value: key,
   }));
 
-  const dummy: WaffleDatum[] = [
+  const dummy = [
     {
       id: "PH",
       label: "PH",
@@ -90,13 +124,22 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     filter: FILTER_OPTIONS[0],
     election: ELECTION_OPTIONS[0],
     state: "",
-    seat: "P.001 Padang Besar, Perlis",
+    seat: "",
+
+    // query
+    q_seat: "",
   });
   return (
     <>
       <Section>
         <h4 className="text-center">{t("dashboard-election-explorer:election.section_1")}</h4>
-        <div className="sticky top-16 z-10 mt-6 flex items-center justify-center gap-2 drop-shadow-xl lg:pl-2">
+        <div
+          ref={divRef}
+          className={clx(
+            "sticky top-16 z-10 mt-6 flex items-center justify-center gap-2 lg:pl-2",
+            hasShadow ? "drop-shadow-xl" : "drop-shadow-none"
+          )}
+        >
           <div className="max-w-fit rounded-full border border-outline bg-white p-1 dark:border-washed-dark dark:bg-black">
             <List
               options={PANELS.map(item => item.name)}
@@ -155,13 +198,13 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                             }
                             fillDirection={"left"}
                             data={dummy}
-                            margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                            margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
                             total={222}
                             rows={3}
                             cols={74}
                             color={["#e2462f", "#000080", "#003152"]}
                           />
-                          <hr className="absolute top-0 left-1/2 z-10 h-[72px] w-0 border border-dashed border-background-dark dark:border-white"></hr>
+                          <hr className="absolute inset-x-1/2 top-0 h-[72px] w-0 border border-dashed border-background-dark dark:border-white"></hr>
                         </div>
                       </div>
                       <p className="whitespace-pre-line text-center text-sm text-dim ">
@@ -200,6 +243,30 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             <h4 className="py-4 text-center">
               {t("dashboard-election-explorer:election.section_2")}
             </h4>
+            <div className="flex items-center justify-center py-6">
+              <ComboBox
+                placeholder={t("dashboard-election-explorer:election.search_area")}
+                options={SEAT_OPTIONS}
+                selected={
+                  data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : data.q_seat
+                }
+                onChange={e => {
+                  if (e) setData("seat", e);
+                  else {
+                    setData("q_seat", e);
+                    setData("seat", "");
+                  }
+                }}
+              />
+              {/* <input className="rounded-full border pl-2"></input> */}
+              {/* <SearchDropdown
+              anchor="left"
+              placeholder={t("dashboard-election-explorer:election.search_area")}
+              options={ELECTION_OPTIONS}
+              selected={ELECTION_OPTIONS.find(e => e.value === data.filter.value)}
+              onChange={e => setData("filter_age", e)}
+            /> */}
+            </div>
             {/* <Input
                   className="w-96 rounded-full border"
                   type="search"
@@ -215,7 +282,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                     {t("dashboard-election-explorer:election.full_result", {
                       election: data.election.value,
                     })}
-                    <span className="text-primary">{data.seat}</span>
+                    <span className="text-primary">{data.seat.value}</span>
                   </div>
                 }
                 // highlightedRow={1}
@@ -229,9 +296,9 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             <h4 className="py-4 text-center">
               {t("dashboard-election-explorer:election.section_3")}
             </h4>
-            <div className="flex flex-col justify-between gap-4 sm:flex-row">
-              <div className="flex flex-row py-1">
-                <div className="w-fit px-4 py-2 text-sm">Filter</div>
+            <div className="flex flex-row justify-between gap-4 sm:flex-row">
+              <div className="flex flex-row">
+                <div className="w-fit px-2 py-1 text-sm lg:px-4">{t("catalogue.filter")}</div>
                 <Dropdown
                   anchor="left"
                   width="w-fit"
