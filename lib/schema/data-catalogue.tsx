@@ -15,7 +15,7 @@ export const UNIVERSAL_TABLE_SCHEMA = (
   freezeKeys?: string[],
   accessorFn?: (item: any, key: string) => string
 ): TableConfig[] => {
-  const yieldValue = (key: string) => (isEmpty(translations) ? key : translations[key] ?? key);
+  const yieldValue = (key: string) => (!isEmpty(translations) ? translations[key] ?? key : key);
 
   if (!freezeKeys)
     return column.map((key: string) => generateSchema(key, yieldValue(key), accessorFn));
@@ -115,4 +115,4 @@ const generateSchema = (
   };
 };
 
-const isEmpty = (obj: Object) => Object.keys(obj).length;
+const isEmpty = (obj: Object) => Object.keys(obj).length === 0;

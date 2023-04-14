@@ -1,30 +1,30 @@
-import type {
-  DownloadOptions,
-  DownloadOption,
-  DCConfig,
-  DCChartKeys,
-  FilterDefault,
-} from "@lib/types";
+import { OptionType } from "@components/types";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "@lib/constants";
 import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
 import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
-import { OptionType } from "@components/types";
+import type {
+  DCChartKeys,
+  DCConfig,
+  DownloadOption,
+  DownloadOptions,
+  FilterDefault,
+} from "@lib/types";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 // import { track } from "@lib/mixpanel";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import Card from "@components/Card";
 import At from "@components/At";
+import Card from "@components/Card";
+import Slider from "@components/Chart/Slider";
 import Container from "@components/Container";
 import Dropdown from "@components/Dropdown";
 import Search from "@components/Search";
 import Section from "@components/Section";
 import Tooltip from "@components/Tooltip";
 import { useFilter } from "@hooks/useFilter";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import CatalogueCode from "./partials/code";
-import Slider from "@components/Chart/Slider";
 
 /**
  * Catalogue Show
@@ -188,6 +188,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             config={config}
             dataset={dataset}
             urls={urls}
+            translations={translations}
             onDownload={prop => setDownloads(prop)}
           />
         );
@@ -198,6 +199,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             config={config}
             dataset={dataset}
             urls={urls}
+            translations={translations}
             onDownload={prop => setDownloads(prop)}
           />
         );
@@ -254,9 +256,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           else if (typeof item[key] === "string") return item[key];
           else if (typeof item[key] === "number") return numFormat(item[key], "standard");
         });
-      case "GEOJSON":
       case "GEOPOINT":
-      case "SCATTER":
       case "TABLE":
         return UNIVERSAL_TABLE_SCHEMA(
           columns,
@@ -264,7 +264,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           config.freeze,
           (item, key) => item[key]
         );
-
       default:
         return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze);
     }
@@ -356,10 +355,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
           {/* Table */}
           {dataset.table && (
-            <div className={clx("mx-auto", show.value === "table" ? "block" : "hidden")}>
+            <div
+              className={clx(
+                dataset.type !== "TABLE" && "mx-auto max-h-[500px] overflow-auto",
+                show.value === "table" ? "block" : "hidden"
+              )}
+            >
               <Table
-                className={clx("table-stripe", dataset.type !== "TABLE" && "table-sticky-header")}
-                responsive={true}
+                className={clx("table-stripe table-default table-sticky-header")}
+                responsive={dataset.type === "TABLE"}
                 data={dataset.table}
                 freeze={config.freeze}
                 search={
@@ -373,7 +377,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     : undefined
                 }
                 config={generateTableSchema()}
-                enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 20 : false}
+                enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 15 : false}
               />
             </div>
           )}

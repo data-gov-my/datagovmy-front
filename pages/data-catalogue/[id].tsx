@@ -77,40 +77,35 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
     geojson: data.API.file_json ?? null,
   };
 
-  const hasTranslations = <O> </O>;
+  const hasTranslations = data.translations && Object.keys(data.translations).length;
+  const hasQuery = query && Object.keys(query).length > 1;
 
-  const assignLabel = () => {
-    // if no translations
-    // if no query param
-    //
+  const assignContext = (item: DCFilter) => {
+    let [label, value] = ["", ""];
+    if (item.key === "date_slider") {
+      label = (query[item.key] as string) ?? item.default;
+      value = (query[item.key] as string) ?? item.default;
+    } else if (!hasTranslations && !hasQuery) {
+      label = item.default;
+      value = item.default;
+    } else if (!hasTranslations && hasQuery) {
+      label = query[item.key] as string;
+      value = query[item.key] as string;
+    } else if (hasTranslations && !hasQuery) {
+      label = (data.translations[item.default] as string) ?? item.default;
+      value = item.default;
+    } else {
+      label = data.translations[query[item.key] as string] ?? query[item.key];
+      value = query[item.key] as string;
+    }
+
+    Object.assign(config.context, { [item.key]: { label, value } });
   };
 
   data.API.filters?.forEach((item: DCFilter) => {
-    // Date slider
     if (item.key === "date_slider") config.dates = item as FilterDate;
-
-    // Context
-    if (Object.keys(data.translations).length) {
-      Object.assign(config.context, {
-        [item.key]: {
-          label:
-            Object.keys(query).length > 0
-              ? data.translations[query[item.key] as string]
-              : data.translations[item.default],
-          value: query[item.key] ?? item.default,
-        },
-      });
-    } else {
-      Object.assign(config.context, {
-        [item.key]: {
-          label: query[item.key] ?? item.default,
-          value: query[item.key] ?? item.default,
-        },
-      });
-    }
+    assignContext(item);
   });
-
-  // Filter options
   config.options = data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
 
   return {

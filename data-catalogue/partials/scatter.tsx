@@ -6,7 +6,6 @@ import { AKSARA_COLOR } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import { track } from "@lib/mixpanel";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { ChartDataset } from "chart.js";
 
@@ -16,6 +15,7 @@ interface CatalogueScatterProps {
   className?: string;
   config: any;
   dataset: any;
+  translations: any;
   urls: {
     [key: string]: string;
   };
@@ -25,6 +25,7 @@ interface CatalogueScatterProps {
 const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
   className = "h-[450px] lg:h-[400px] max-w-lg mx-auto",
   config,
+  translations,
   dataset,
   urls,
   onDownload,
@@ -112,7 +113,7 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
     return dataset.chart.map((item: any, index: number) => ({
       type: "line",
       data: item.data,
-      label: item.label,
+      label: translations[item.label] ?? item.label,
       borderColor: colors[index],
       backgroundColor: colors[index],
       borderWidth: 0,
