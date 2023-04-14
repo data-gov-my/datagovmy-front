@@ -7,7 +7,7 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
 
-const CarPopularity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-car-popularity"]);
 
   return (
@@ -17,7 +17,7 @@ const CarPopularity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>)
         description={t("dashboard-car-popularity:description")}
         keywords={""}
       />
-      <CarPopularityDashboard />
+      <CarPopularityDashboard queryOptions={queryOptions} />
     </>
   );
 };
@@ -27,12 +27,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     "en-GB",
     "ms-MY",
   ]);
-  //   const { data } = await get("/dashboard", { dashboard: "currency" });
-
+  const { data } = await get("/dropdown", { dashboard: "car_popularity" });
   return {
     notFound: false,
     props: {
       ...i18n,
+      queryOptions: data.query_values.data.data,
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };

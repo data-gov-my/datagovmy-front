@@ -9,7 +9,7 @@ export interface LabelProps {
 const Label: FunctionComponent<LabelProps> = ({
   name,
   label,
-  className = "text-sm font-medium text-black dark:text-white block pt-4",
+  className = "text-sm font-medium text-black dark:text-white block",
 }) => {
   return (
     <label htmlFor={name} className={className}>
