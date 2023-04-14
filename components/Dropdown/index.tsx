@@ -102,7 +102,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
   }, [options, search]);
 
   return (
-    <div className={["space-y-2", width].join(" ")}>
+    <div className={["space-y-3", width].join(" ")}>
       {label && <Label label={label}></Label>}
       <Listbox
         value={selected}

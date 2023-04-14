@@ -179,3 +179,15 @@ export const SHORT_PERIOD = {
   QUARTERLY: "quarter",
   YEARLY: "year",
 } as const;
+
+/**
+ * Convert AKSARA API's periods to the designated timeseries interval.
+ * @example SHORT_PERIOD["WEEKLY"] -> "weekly"
+ */
+export const SHORT_PERIOD_FORMAT = {
+  DAILY: "dd MMM yyyy",
+  WEEKLY: "dd MMM yyyy",
+  MONTHLY: "MMM yyyy",
+  QUARTERLY: "qQ yyyy",
+  YEARLY: "yyyy",
+} as const;

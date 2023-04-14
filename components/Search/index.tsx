@@ -37,7 +37,7 @@ const Search: FunctionComponent<SearchProps> = ({ query, onChange, className }) 
         placeholder={t("placeholder.search")}
         value={query}
         onChange={e => onChange(e.target.value)}
-        className="block w-full border-0 border-b border-outline pl-8 text-dim focus:ring-0"
+        className="block w-full border-0 border-b border-outline bg-inherit pl-8 text-sm text-dim focus:ring-0 dark:border-outlineHover-dark"
       />
       <div className="absolute inset-y-0 left-0 flex items-center py-1.5 pr-1.5">
         <SearchIcon className="h-4 w-4 text-dim" />

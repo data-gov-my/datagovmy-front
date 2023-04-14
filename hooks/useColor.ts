@@ -123,9 +123,9 @@ export const useColor = (key: Color, domain: [min: number, max: number]) => {
 
   const normalize = (value: number): number => (value - domain[0]) / (domain[1] - domain[0]);
 
-  const interpolate = (value: number | null): string => {
+  const interpolate = (value: number | null, normalized: boolean = false): string => {
     if (value === null || !value) return "#ffffff00"; // transparent
-    return lookup[key](normalize(value));
+    return !normalized ? lookup[key](normalize(value)) : lookup[key](value);
   };
 
   return {

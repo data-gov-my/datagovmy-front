@@ -23,6 +23,7 @@ interface CatalogueTimeseriesProps {
   urls: {
     [key: string]: string;
   };
+  translations: Record<string, string>;
   onDownload?: (prop: DownloadOptions) => void;
 }
 
@@ -32,6 +33,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   dataset,
   urls,
   filter,
+  translations,
   onDownload,
 }) => {
   const { t } = useTranslation();
@@ -51,14 +53,13 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
             download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name_en: dataset.meta.en.title,
-              name_bm: dataset.meta.bm.title,
-              ext: "png",
-            });
+            // track("file_download", {
+            //   uid: dataset.meta.unique_id.concat("_png"),
+            //   type: "image",
+            //   id: dataset.meta.unique_id,
+            //   name: dataset.meta.title,
+            //   ext: "png",
+            // });
           },
         },
         {
@@ -70,15 +71,15 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           href: () => {
             exportAs("svg", data.ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  ext: "svg",
-                })
+              .then(
+                () => {}
+                // track("file_download", {
+                //   uid: dataset.meta.unique_id.concat("_svg"),
+                //   type: "image",
+                //   id: dataset.meta.unique_id,
+                //   name: dataset.meta.title,
+                //   ext: "svg",
+                // })
               )
               .catch(e => {
                 console.error(e);
@@ -112,19 +113,19 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
     const colors = [
       AKSARA_COLOR.PRIMARY,
-      AKSARA_COLOR.DIM,
-      AKSARA_COLOR.DANGER,
       AKSARA_COLOR.WARNING,
+      AKSARA_COLOR.DANGER,
+      AKSARA_COLOR.GREY,
     ]; // [blue, red]
 
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
-      label: dataset.table.columns[key],
+      label: translations[key] ?? key,
       borderColor: colors[index],
-      backgroundColor: colors[index].concat("33"),
+      backgroundColor: colors[index].concat("1A"),
       borderWidth: 1,
-      fill: sets.length <= 1,
+      fill: dataset.type === "STACKED_AREA" || sets.length <= 1,
     }));
   }, [coordinate]);
 
@@ -140,7 +141,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         _ref={ref => setData("ctx", ref)}
         interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
         precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-        mode="grouped"
+        mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
         data={{
           labels: coordinate.x,
           datasets: _datasets,

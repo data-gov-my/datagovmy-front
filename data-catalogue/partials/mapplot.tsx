@@ -11,22 +11,7 @@ const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), {
   ssr: false,
 });
 interface CatalogueMapPlotProps {
-  config: {
-    precision: number;
-  };
-  dataset: {
-    chart: MarkerData;
-    meta: {
-      en: {
-        title: string;
-      };
-      bm: {
-        title: string;
-      };
-      unique_id: string;
-    };
-  };
-  lang: "en" | "bm";
+  dataset: any;
   urls: {
     [key: string]: string;
   };
@@ -35,8 +20,6 @@ interface CatalogueMapPlotProps {
 
 const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
   dataset,
-  config,
-  lang,
   urls,
   onDownload,
 }) => {
@@ -85,14 +68,12 @@ const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
     [png, ctx]
   );
   return (
-    <>
-      <MapPlot
-        _ref={ctx}
-        id={dataset.meta.unique_id}
-        className="h-[350px] w-full lg:h-[450px]"
-        markers={dataset.chart}
-      />
-    </>
+    <MapPlot
+      _ref={ctx}
+      id={dataset.meta.unique_id}
+      className="h-[350px] w-full lg:h-[450px]"
+      markers={dataset.chart}
+    />
   );
 };
 
