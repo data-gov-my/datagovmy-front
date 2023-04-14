@@ -11,30 +11,9 @@ const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochor
   ssr: false,
 });
 
-type ChoroPoint = {
-  id: string;
-  value: number;
-};
-
 interface CatalogueChoroplethProps {
-  config: {
-    color: Color;
-    geojson: Geotype;
-    precision: number;
-  };
-  dataset: {
-    chart: Array<ChoroPoint>; // ChoroplethData
-    meta: {
-      en: {
-        title: string;
-      };
-      bm: {
-        title: string;
-      };
-      unique_id: string;
-    };
-  };
-  lang: "en" | "bm";
+  config: any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
@@ -44,7 +23,6 @@ interface CatalogueChoroplethProps {
 const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   dataset,
   config,
-  lang,
   urls,
   onDownload,
 }) => {
@@ -100,8 +78,8 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
         id={dataset.meta.unique_id}
         className="h-[350px] w-full lg:h-[450px]"
         data={{
-          labels: dataset.chart.map(({ id }: ChoroPoint) => id),
-          values: dataset.chart.map(({ value }: ChoroPoint) => value),
+          labels: dataset.chart.x,
+          values: dataset.chart.y,
         }}
         color={config.color}
         type={config.geojson}

@@ -82,6 +82,7 @@ interface CatalogueShowProps {
     url: {
       csv?: string;
       parquet?: string;
+      [key: string]: string | undefined;
     };
     source: string[];
     definitions: Array<{
@@ -127,10 +128,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             onDownload={prop => setDownloads(prop)}
           />
         );
-
       case "CHOROPLETH":
         return (
           <CatalogueChoropleth
+            dataset={dataset}
+            urls={urls}
+            config={config}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
+      case "GEOCHOROPLETH":
+        return (
+          <CatalogueGeoChoropleth
             dataset={dataset}
             urls={urls}
             config={config}
@@ -182,6 +191,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "SCATTER":
         return (
           <CatalogueScatter
+            className="mx-auto aspect-square w-full lg:h-[512px] lg:w-1/2"
             config={config}
             dataset={dataset}
             urls={urls}
@@ -382,10 +392,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               ))}
             </div>
           )}
+          {/* Chart */}
           <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
           </div>
 
+          {/* Table */}
           {dataset.table && (
             <div className={clx("mx-auto", show.value === "table" ? "block" : "hidden")}>
               <Table
@@ -409,6 +421,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             </div>
           )}
 
+          {/* Date Slider (optional) */}
           {config.dates !== null && (
             <Slider
               className="pt-8"
@@ -421,7 +434,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               onChange={e =>
                 config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
               }
-            ></Slider>
+            />
           )}
         </Section>
 
@@ -495,25 +508,23 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     </ul>
                     <div className="hidden md:block">
                       <Table
-                        className="table-slate table-default-slate table"
-                        data={metadata.definitions
-                          .filter(item => item.id === 0)
-                          .map((item: any) => {
-                            const raw = item.desc;
-                            const [type, definition] = [
-                              raw.substring(1, raw.indexOf("]")),
-                              raw.substring(raw.indexOf("]") + 1),
-                            ];
+                        className="table-slate table-default-slate"
+                        data={metadata.definitions.map((item: any) => {
+                          const raw = item.desc;
+                          const [type, definition] = [
+                            raw.substring(1, raw.indexOf("]")),
+                            raw.substring(raw.indexOf("]") + 1),
+                          ];
 
-                            return {
-                              id: item.id,
-                              uid: item.unique_id,
-                              variable: item.name,
-                              variable_name: item.title,
-                              data_type: type,
-                              definition: interpolate(definition),
-                            };
-                          })}
+                          return {
+                            id: item.id,
+                            uid: item.unique_id,
+                            variable: item.name,
+                            variable_name: item.title,
+                            data_type: type,
+                            definition: interpolate(definition),
+                          };
+                        })}
                         config={tableConfig}
                       />
                     </div>
@@ -666,7 +677,6 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
   title,
   description,
   icon,
-  meta,
 }) => {
   return typeof href === "string" ? (
     // .csv & .parquet

@@ -65,6 +65,7 @@ export type DCChartKeys =
   | "TABLE"
   | "TIMESERIES"
   | "CHOROPLETH"
+  | "GEOCHOROPLETH"
   | "GEOPOINT"
   | "GEOJSON"
   | "BAR"

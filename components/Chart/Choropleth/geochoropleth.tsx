@@ -109,7 +109,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
                 style={{
                   color: "#0000001A",
                   fillColor: enableFill ? interpolate(value) : interpolate(0.33, true), // assuming with enableFill
-                  fillOpacity: 0.5,
+                  fillOpacity: 0.6,
                 }}
                 onEachFeature={(_, layer) => {
                   layer.on({
