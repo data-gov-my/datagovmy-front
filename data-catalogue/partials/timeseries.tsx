@@ -23,6 +23,7 @@ interface CatalogueTimeseriesProps {
   urls: {
     [key: string]: string;
   };
+  translations: Record<string, string>;
   onDownload?: (prop: DownloadOptions) => void;
 }
 
@@ -32,6 +33,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   dataset,
   urls,
   filter,
+  translations,
   onDownload,
 }) => {
   const { t } = useTranslation();
@@ -119,7 +121,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
-      label: dataset.table.columns[key],
+      label: translations[key] ?? key,
       borderColor: colors[index],
       backgroundColor: colors[index].concat("1A"),
       borderWidth: 1,

@@ -17,6 +17,7 @@ const CatalogueShow: Page = ({
   explanation,
   metadata,
   urls,
+  translations,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation();
 
@@ -52,6 +53,7 @@ const CatalogueShow: Page = ({
         explanation={explanation}
         metadata={metadata}
         urls={urls}
+        translations={translations}
       />
     </>
   );
@@ -74,20 +76,44 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
     color: data.API.colour ?? "blues",
     geojson: data.API.file_json ?? null,
   };
+
+  const hasTranslations = <O> </O>;
+
+  const assignLabel = () => {
+    // if no translations
+    // if no query param
+    //
+  };
+
   data.API.filters?.forEach((item: DCFilter) => {
+    // Date slider
     if (item.key === "date_slider") config.dates = item as FilterDate;
-    Object.assign(config.context, {
-      [item.key]:
-        typeof item.options[0] === "string"
-          ? { label: item.key, value: query[item.key] ?? item.default }
-          : (item.options as OptionType[]).find(option => option.value === query[item.key]) ??
-            item.default,
-    });
+
+    // Context
+    if (Object.keys(data.translations).length) {
+      Object.assign(config.context, {
+        [item.key]: {
+          label:
+            Object.keys(query).length > 0
+              ? data.translations[query[item.key] as string]
+              : data.translations[item.default],
+          value: query[item.key] ?? item.default,
+        },
+      });
+    } else {
+      Object.assign(config.context, {
+        [item.key]: {
+          label: query[item.key] ?? item.default,
+          value: query[item.key] ?? item.default,
+        },
+      });
+    }
   });
+
+  // Filter options
   config.options = data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
 
   return {
-    // notFound: true,
     props: {
       ...i18n,
       config,
@@ -113,6 +139,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
         definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
       },
       urls: data.downloads ?? {},
+      translations: data.translations ?? {},
     },
   };
 };

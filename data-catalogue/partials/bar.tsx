@@ -13,20 +13,20 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 interface CatalogueBarProps {
-  config: {
-    precision: number;
-  };
+  config: any;
   dataset: any;
   urls: {
     [key: string]: string;
   };
   onDownload?: (prop: DownloadOptions) => void;
+  translations: Record<string, string>;
 }
 
 const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   config,
   dataset,
   urls,
+  translations,
   onDownload,
 }) => {
   const { t } = useTranslation();
@@ -117,7 +117,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 
     return sets.map(([key, y], index) => ({
       data: y as number[],
-      label: sets.length === 1 ? dataset.meta.title : dataset.table.columns[key],
+      label: sets.length === 1 ? dataset.meta.title : translations[key] ?? key,
       borderColor: colors[index],
       backgroundColor: colors[index].concat("1A"),
       borderWidth: 1,

@@ -13,28 +13,12 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
 interface CataloguePyramidProps {
   className?: string;
-  config: {
-    precision: number;
-  };
-  dataset:
-    | {
-        chart: {
-          x: number[];
-          y: number[];
-        };
-        meta: {
-          en: {
-            title: string;
-          };
-          bm: {
-            title: string;
-          };
-        };
-      }
-    | any;
+  config: any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
+  translations: Record<string, string>;
   onDownload?: (prop: DownloadOptions) => void;
 }
 
@@ -43,6 +27,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   config,
   dataset,
   urls,
+  translations,
   onDownload,
 }) => {
   const { t } = useTranslation();
@@ -124,7 +109,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
       .filter(([key, _]) => key !== "x")
       .map(([key, y], index) => ({
         data: y as number[],
-        label: dataset.table.columns[key],
+        label: translations[key] ?? key,
         backgroundColor: colors[index].concat("1A") ?? AKSARA_COLOR.PRIMARY_H,
         borderColor: colors[index] ?? AKSARA_COLOR.PRIMARY,
         borderWidth: 1,

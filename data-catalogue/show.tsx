@@ -8,7 +8,7 @@ import type {
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, ReactNode, useEffect, useState } from "react";
-import { SHORT_PERIOD } from "@lib/constants";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "@lib/constants";
 import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
 import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
 import { OptionType } from "@components/types";
@@ -69,10 +69,7 @@ interface CatalogueShowProps {
   dataset: {
     type: DCChartKeys;
     chart: any;
-    table: {
-      data: Array<Record<string, any>>;
-      columns: Record<string, string>;
-    };
+    table: Record<string, any>[];
     meta: { title: string; desc: string; unique_id: string };
   };
   explanation: { caveat: string; methodology: string; publication?: string };
@@ -98,6 +95,9 @@ interface CatalogueShowProps {
   urls: {
     [key: string]: string;
   };
+  translations: {
+    [key: string]: string;
+  };
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -108,6 +108,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   explanation,
   metadata,
   urls,
+  translations,
 }) => {
   const { t, i18n } = useTranslation();
   const [show, setShow] = useState<OptionType>(options[0]);
@@ -124,6 +125,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             dataset={dataset}
             filter={filter}
             urls={urls}
+            translations={translations}
             onDownload={prop => setDownloads(prop)}
           />
         );
@@ -166,6 +168,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             config={config}
             dataset={dataset}
             urls={urls}
+            translations={translations}
             onDownload={prop => setDownloads(prop)}
           />
         );
@@ -175,6 +178,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             config={config}
             dataset={dataset}
             urls={urls}
+            translations={translations}
             onDownload={prop => setDownloads(prop)}
           />
         );
@@ -236,21 +240,33 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   }, []);
 
   const generateTableSchema = () => {
+    const columns = Object.keys(dataset.table[0]);
     switch (dataset.type) {
       case "TIMESERIES":
-        return UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze, (item, key) => {
-          if (key === "x") return toDate(item[key], config.context.range, i18n.language);
+      case "STACKED_AREA":
+        return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze, (item, key) => {
+          if (key === "x")
+            return toDate(
+              item[key],
+              SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              i18n.language
+            );
           else if (typeof item[key] === "string") return item[key];
           else if (typeof item[key] === "number") return numFormat(item[key], "standard");
         });
       case "GEOJSON":
+      case "GEOPOINT":
+      case "SCATTER":
+      case "TABLE":
         return UNIVERSAL_TABLE_SCHEMA(
-          dataset.table.columns,
+          columns,
+          translations,
           config.freeze,
           (item, key) => item[key]
         );
+
       default:
-        return UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, config.freeze);
+        return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze);
     }
   };
 
@@ -323,7 +339,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   key={item.key}
                   width="w-fit"
                   anchor={index > 0 ? "right" : "left"}
-                  options={item.options}
+                  options={item.options.map(option => ({
+                    label: translations[option] ?? option,
+                    value: option,
+                  }))}
                   selected={filter[item.key]}
                   onChange={e => setFilter(item.key, e)}
                 />
@@ -341,7 +360,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <Table
                 className={clx("table-stripe", dataset.type !== "TABLE" && "table-sticky-header")}
                 responsive={true}
-                data={dataset.table.data}
+                data={dataset.table}
                 freeze={config.freeze}
                 search={
                   dataset.type === "TABLE"

@@ -4,30 +4,35 @@ import At from "@components/At";
 
 /**
  * Table schema for data catalogue
- * @param {UniversalColumn} column
- * @param freezeKeys Freeze cols
- * @returns Table schema
+ * @param {string[]} column
+ * @param {Record<string, any>} translations i18n key-value
+ * @param {string[]} freezeKeys Freeze cols
+ * @returns {TableConfig[]} Table schema
  */
 export const UNIVERSAL_TABLE_SCHEMA = (
-  column: Record<string, string>,
+  column: string[],
+  translations: Record<string, string>,
   freezeKeys?: string[],
   accessorFn?: (item: any, key: string) => string
 ): TableConfig[] => {
-  const columns = Object.entries(column);
-  if (!freezeKeys) return columns.map(([key, value]) => generateSchema(key, value, accessorFn));
+  const yieldValue = (key: string) => (isEmpty(translations) ? key : translations[key] ?? key);
+
+  if (!freezeKeys)
+    return column.map((key: string) => generateSchema(key, yieldValue(key), accessorFn));
 
   const [index_cols, rest]: [[string, string][], [string, string][]] = [[], []];
-  columns.forEach(([key, value]: [string, string]) => {
-    if (freezeKeys.includes(key)) index_cols.push([key, value]);
-    else rest.push([key, value]);
+  column.forEach((key: string) => {
+    if (freezeKeys.includes(key)) index_cols.push([key, yieldValue(key)]);
+    else rest.push([key, yieldValue(key)]);
   });
+
   return index_cols.concat(rest).map(([key, value]) => generateSchema(key, value, accessorFn));
 };
 
 /**
  * Metadata table schema.
  * @param {Function} t
- * @param freezeKeys Freeze cols
+ * @param {boolean} isTable is-type TABLE
  * @returns {TableConfig[]} Metadata schema
  */
 export const METADATA_TABLE_SCHEMA = (
@@ -109,3 +114,5 @@ const generateSchema = (
     sortingFn: "localeNumber",
   };
 };
+
+const isEmpty = (obj: Object) => Object.keys(obj).length;
