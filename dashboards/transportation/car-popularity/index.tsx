@@ -87,8 +87,13 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
     return _colours;
   }, [data.model]);
 
-  useWatch(() => {
+  const searchHandler = () => {
     setData("loading", true);
+    setData("params", {
+      manufacturer: data.manufacturer.value,
+      model: data.model.value,
+      colour: data.colour.value,
+    });
 
     get("chart/", { dashboard: "car_popularity", chart_name: "timeseries", ...data.params })
       .then(({ data }) => {
@@ -97,7 +102,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         setData("data_as_of", data.data_as_of);
       })
       .then(() => setData("loading", false));
-  }, [data.params]);
+  };
 
   return (
     <>
@@ -149,13 +154,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   <Button
                     icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
                     className="btn btn-primary"
-                    onClick={() => {
-                      setData("params", {
-                        manufacturer: data.manufacturer.value,
-                        model: data.model.value,
-                        colour: data.colour.value,
-                      });
-                    }}
+                    onClick={searchHandler}
                   >
                     {t("dashboard-car-popularity:search_button")}
                   </Button>
