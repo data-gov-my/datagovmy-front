@@ -65,27 +65,28 @@ export type DCChartKeys =
   | "TABLE"
   | "TIMESERIES"
   | "CHOROPLETH"
+  | "GEOCHOROPLETH"
+  | "GEOPOINT"
   | "GEOJSON"
   | "BAR"
   | "HBAR"
   | "PYRAMID"
   | "HEATTABLE"
-  | "SCATTER";
+  | "SCATTER"
+  | "STACKED_AREA"
+  | "STACKED_BAR";
 export type DCPeriod = "YEARLY" | "QUARTERLY" | "MONTHLY" | "WEEKLY" | "DAILY";
 
 type BaseFilter = {
   key: string;
-  default: OptionType<string, string>;
-  options: OptionType<string, string>[];
+  default: string;
+  options: string[];
 };
 export type FilterDefault = BaseFilter & {
   interval: never;
 };
 
-export type FilterDate = {
-  key: string;
-  default: string;
-  options: string[];
+export type FilterDate = BaseFilter & {
   interval: DCPeriod;
 };
 
@@ -94,7 +95,7 @@ export type DCFilter = FilterDefault | FilterDate;
 // Usage
 export type DCConfig = {
   context: {
-    [key: string]: string;
+    [key: string]: OptionType;
   };
   dates: FilterDate | null;
   options: FilterDefault[] | null;

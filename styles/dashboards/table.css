@@ -1,13 +1,13 @@
 .table {
-  @apply relative mx-auto w-full table-auto border-collapse border-spacing-0 md:w-fit md:max-w-full;
+  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit md:max-w-full;
 }
 
 .table-responsive {
-  @apply overflow-auto;
+  @apply relative overflow-x-auto;
 }
 
 .table th {
-  @apply w-auto pb-2 font-normal text-dim dark:text-white md:whitespace-nowrap;
+  @apply w-auto py-3 font-normal text-dim dark:text-white md:whitespace-nowrap;
 }
 .table tbody tr {
   @apply border-b-[0.5px] border-l-[0.5px] border-l-black dark:border-b-washed-dark dark:border-l-outlineHover-dark;
@@ -36,23 +36,12 @@
   @apply text-left;
 }
 
-.table-sticky-first thead tr > th:first-child {
-  @apply sticky left-0 z-10 whitespace-normal bg-white  md:whitespace-nowrap;
-}
-
-.table-sticky-first thead tr > th:not(:first-child) {
-  @apply whitespace-nowrap;
-}
-
-.table-sticky-first tbody tr > td:first-child {
-  @apply sticky left-0 z-10 bg-inherit;
-}
-.table-sticky-first tbody tr > td {
-  @apply whitespace-normal md:whitespace-nowrap;
-}
-
 .table-sticky-header tr > th {
-  @apply sticky top-0 bg-white dark:bg-black;
+  @apply sticky top-0 border-b bg-white dark:border-b-outlineHover-dark dark:bg-black;
+}
+
+.sticky-col {
+  @apply sticky z-10 max-w-fit whitespace-normal bg-white dark:bg-black md:whitespace-nowrap;
 }
 
 /* .table tr > td:first-child {

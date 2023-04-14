@@ -6,22 +6,19 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import { download, exportAs } from "@lib/helpers";
 // import { track } from "mixpanel-browser";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
-import type { HeatmapData } from "@components/Chart/Heatmap";
-import type { Color } from "@hooks/useColor";
+import type { HeatmapData, HeatmapDatum } from "@components/Chart/Heatmap";
 
 const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), {
   ssr: false,
 });
 
 interface CatalogueHeatmapProps {
-  config: {
-    color?: Color;
-    precision: number;
-  };
+  config: any;
   dataset: any;
   urls: {
     [key: string]: string;
   };
+  translations: any;
   onDownload?: (prop: DownloadOptions) => void;
 }
 
@@ -29,6 +26,7 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
   dataset,
   config,
   urls,
+  translations,
   onDownload,
 }) => {
   const { t } = useTranslation();
@@ -106,7 +104,15 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
     [ctx]
   );
 
-  return <Heatmap _ref={ref => setCtx(ref)} data={dataset.chart} color={config.color} />;
+  const _datasets = useMemo<HeatmapData>(() => {
+    return dataset.chart.map((item: HeatmapDatum) => ({
+      x: translations[item.x] ?? item.x,
+      y: translations[item.y] ?? item.y,
+      z: item.z,
+    }));
+  }, [dataset.chart]);
+
+  return <Heatmap _ref={ref => setCtx(ref)} data={_datasets} color={config.color} />;
 };
 
 export default CatalogueHeatmap;

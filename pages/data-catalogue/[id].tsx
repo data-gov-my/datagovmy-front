@@ -17,6 +17,7 @@ const CatalogueShow: Page = ({
   explanation,
   metadata,
   urls,
+  translations,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation();
 
@@ -52,6 +53,7 @@ const CatalogueShow: Page = ({
         explanation={explanation}
         metadata={metadata}
         urls={urls}
+        translations={translations}
       />
     </>
   );
@@ -69,25 +71,44 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
     context: {},
     dates: null,
     options: null,
-    precision: data.API.precision,
+    precision: data.API.precision ?? null,
     freeze: data.API.freeze ?? null,
     color: data.API.colour ?? "blues",
     geojson: data.API.file_json ?? null,
   };
-  data.API.filters.forEach((item: DCFilter) => {
+
+  const hasTranslations = data.translations && Object.keys(data.translations).length;
+  const hasQuery = query && Object.keys(query).length > 1;
+
+  const assignContext = (item: DCFilter) => {
+    let [label, value] = ["", ""];
+    if (item.key === "date_slider") {
+      label = (query[item.key] as string) ?? item.default;
+      value = (query[item.key] as string) ?? item.default;
+    } else if (!hasTranslations && !hasQuery) {
+      label = item.default;
+      value = item.default;
+    } else if (!hasTranslations && hasQuery) {
+      label = query[item.key] as string;
+      value = query[item.key] as string;
+    } else if (hasTranslations && !hasQuery) {
+      label = (data.translations[item.default] as string) ?? item.default;
+      value = item.default;
+    } else {
+      label = data.translations[query[item.key] as string] ?? query[item.key];
+      value = query[item.key] as string;
+    }
+
+    Object.assign(config.context, { [item.key]: { label, value } });
+  };
+
+  data.API.filters?.forEach((item: DCFilter) => {
     if (item.key === "date_slider") config.dates = item as FilterDate;
-    Object.assign(config.context, {
-      [item.key]:
-        typeof item.options[0] === "string"
-          ? { label: item.key, value: query[item.key] ?? item.default }
-          : (item.options as OptionType[]).find(option => option.value === query[item.key]) ??
-            item.default,
-    });
+    assignContext(item);
   });
-  config.options = data.API.filters.filter((item: DCFilter) => item.key !== "date_slider");
+  config.options = data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
 
   return {
-    // notFound: true,
     props: {
       ...i18n,
       config,
@@ -101,8 +122,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
       explanation: data.explanation,
       metadata: {
         url: {
-          csv: data.metadata.url.csv,
-          parquet: data.metadata.url.parquet,
+          csv: data.metadata.url.csv ?? null,
+          parquet: data.metadata.url.parquet ?? null,
+          link_geojson: data.metadata.url.link_geojson ?? null,
         },
         data_as_of: data.metadata.data_as_of,
         last_updated: data.metadata.last_updated,
@@ -112,6 +134,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, pa
         definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
       },
       urls: data.downloads ?? {},
+      translations: data.translations ?? {},
     },
   };
 };

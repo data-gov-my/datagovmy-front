@@ -1,17 +1,10 @@
-import {
-  ForwardedRef,
-  FunctionComponent,
-  ReactElement,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
-import { LatLng, LatLngBounds, LatLngTuple } from "leaflet";
-import { MapContainer, TileLayer, useMap, Marker, Popup, GeoJSON } from "react-leaflet";
-import type { GeoJsonObject } from "geojson";
-import bbox from "geojson-bbox";
-import { useTheme } from "next-themes";
 import { MapControl, MapControlRef } from "@hooks/useMap";
+import type { GeoJsonObject } from "geojson";
+import { LatLng, LatLngBounds, LatLngTuple } from "leaflet";
+import { useTheme } from "next-themes";
+import { ForwardedRef, FunctionComponent, useImperativeHandle, useRef } from "react";
+import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import Markercluster from "./markercluster";
 
 type MapPlotProps = {
   id?: string;
@@ -28,10 +21,12 @@ export interface MapPlotRef {
   print: (text: string) => void;
 }
 
-export type MarkerData = Array<{
+type MarkerDatum = {
   position: LatLngTuple;
-  name?: string | ReactElement;
-}>;
+  [key: string]: string | number | LatLngTuple;
+};
+
+export type MarkerData = MarkerDatum[];
 
 const MapPlot: FunctionComponent<MapPlotProps> = ({
   id,
@@ -44,22 +39,29 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
   _ref,
 }) => {
   const { theme } = useTheme();
-  const ref = useRef<MapControlRef>(null);
+  const controlRef = useRef<MapControlRef>(null);
 
   useImperativeHandle(
     _ref,
     () => {
       return {
-        print: (text: string) => ref.current?.printAsImage(text),
+        print: (text: string) => controlRef.current?.printAsImage(text),
       };
     },
-    [ref]
+    [controlRef]
   );
+
+  const printMarker = (item: Record<string, any>) => {
+    let text = "";
+    Object.entries(item).forEach(([key, value]) =>
+      key === "position" ? null : (text += `${key}: ${value}\n`)
+    );
+    return text;
+  };
 
   return (
     <MapContainer
       id={id}
-      key={markers?.length} // random uid required to refresh change in geojson
       className={className}
       center={position}
       zoom={zoom}
@@ -69,32 +71,22 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
       maxBounds={new LatLngBounds(new LatLng(1, 97), new LatLng(10, 122))}
       maxBoundsViscosity={1}
     >
-      <MapControl ref={ref} />
+      <MapControl ref={controlRef} />
 
-      {geojson && (
-        <>
-          <GeoJSONControl position={position} zoom={zoom} geojson={geojson} />
-          <GeoJSON
-            key={Math.random() * 10} // random uid required to refresh change in geojson
-            data={geojson}
-            style={{
-              color: "#000",
-              fill: false,
-              weight: 1,
-            }}
-          />
-        </>
-      )}
       <TileLayer
         key={theme}
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${theme}/{z}/{x}/{y}.png`}
       />
-      {markers?.map((item: any) => (
-        <Marker key={item.name} position={item.position} autoPan draggable>
-          <Popup>{item.name}</Popup>
-        </Marker>
-      ))}
+      <Markercluster chunkedLoading removeOutsideVisibleBounds chunkDelay={0} chunkInterval={50}>
+        {markers?.map((item: MarkerDatum, index) => {
+          return (
+            <Marker key={index} position={item.position}>
+              <Popup>{printMarker(item)}</Popup>
+            </Marker>
+          );
+        })}
+      </Markercluster>
     </MapContainer>
   );
 };
@@ -106,19 +98,19 @@ interface GeoJSONControl {
 }
 
 const GeoJSONControl: FunctionComponent<GeoJSONControl> = ({ geojson }) => {
-  const map = useMap();
-  useEffect(() => {
-    if (geojson) {
-      const bound: [number, number, number, number] = bbox(geojson);
-      map.fitBounds([
-        [bound[1], bound[0]],
-        [bound[3], bound[2]],
-      ]);
-      setTimeout(() => {
-        map.panBy([-100, 0]);
-      }, 150);
-    }
-  }, [geojson]);
+  //   const map = useMap();
+  //   useEffect(() => {
+  //     if (geojson) {
+  //       const bound: [number, number, number, number] = bbox(geojson);
+  //       map.fitBounds([
+  //         [bound[1], bound[0]],
+  //         [bound[3], bound[2]],
+  //       ]);
+  //       setTimeout(() => {
+  //         map.panBy([-100, 0]);
+  //       }, 150);
+  //     }
+  //   }, [geojson]);
 
   return null;
 };

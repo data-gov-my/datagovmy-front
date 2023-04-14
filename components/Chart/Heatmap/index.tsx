@@ -30,7 +30,7 @@ interface HeatmapProps extends ChartHeaderProps {
   _ref?: ForwardedRef<ChartJSOrUndefined<"matrix", any[], unknown>>;
 }
 
-type HeatmapDatum = {
+export type HeatmapDatum = {
   x: string | number;
   y: string | number;
   z: number | null;

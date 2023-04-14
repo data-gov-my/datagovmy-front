@@ -8,13 +8,17 @@ import {
   PointElement,
   Tooltip as ChartTooltip,
   ChartDataset,
+  Legend,
 } from "chart.js";
 import { Scatter as ScatterCanvas } from "react-chartjs-2";
-import { numFormat, standardDeviation } from "@lib/helpers";
+import { maxBy, minBy, numFormat, standardDeviation } from "@lib/helpers";
+// import RegressionPlugin from "./regression-line";
 import { ChartCrosshairOption } from "@lib/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import { useTheme } from "next-themes";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import AnnotationPlugin from "chartjs-plugin-annotation";
+import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 
 export type ScatterData = ChartDataset<"scatter", any[]>;
 
@@ -29,6 +33,7 @@ interface ScatterProps extends ChartHeaderProps {
   maxY?: number;
   titleX?: string;
   titleY?: string;
+  enableCrosshair?: boolean;
   enableRegression?: boolean;
   enableLegend?: boolean;
   enableGridX?: boolean;
@@ -46,6 +51,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   unitY,
   prefixY,
   data = dummy,
+  enableCrosshair = false,
   enableRegression = false,
   enableLegend = false,
   enableGridX = true,
@@ -57,7 +63,16 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   maxY,
   _ref,
 }) => {
-  ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, ChartTooltip);
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    LineElement,
+    PointElement,
+    ChartTooltip,
+    AnnotationPlugin,
+    CrosshairPlugin,
+    Legend
+  );
   const { theme } = useTheme();
 
   const display = (
@@ -79,36 +94,113 @@ const Scatter: FunctionComponent<ScatterProps> = ({
     },
   });
 
+  const yieldRegressionYs = (_data: ChartDataset<"scatter", any[]>): [min: number, max: number] => {
+    const { data } = _data;
+    let xSum = 0,
+      ySum = 0,
+      xySum = 0,
+      xSquare = 0,
+      ySquare = 0;
+
+    if (data?.length) {
+      data.forEach(datum => {
+        if (datum.y === null) return;
+        xySum += datum.x * datum.y;
+        xSum += datum.x;
+        ySum += datum.y;
+        xSquare += Math.pow(datum.x, 2);
+        ySquare += Math.pow(datum.y, 2);
+      });
+
+      // Finding coefficient correlation (r)
+      const r_num = xySum * data.length - xSum * ySum;
+      const r_den_left = data.length * xSquare - Math.pow(xSum, 2);
+      const r_den_right = data.length * ySquare - Math.pow(ySum, 2);
+      const r_den = Math.sqrt(r_den_left * r_den_right);
+      const r = r_num / r_den;
+
+      // Finding slope
+      const slope =
+        (r * standardDeviation(data.map(({ y }) => (y !== null ? y : 0)))) /
+        standardDeviation(data.map(({ x }) => x));
+
+      // Finding y-intercept
+      const y_intercept = ySum / data.length - (slope * xSum) / data.length;
+      const max_x = maxBy(data, "x").x;
+      const min_x = minBy(data, "x").x;
+
+      return [min_x * slope + y_intercept, max_x * slope + y_intercept];
+    }
+    return [0, 0];
+  };
+
   const options: ChartCrosshairOption<"scatter"> = {
     maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: {
         display: enableLegend,
-        position: "chartArea" as const,
+        position: "top",
         align: "start",
+        labels: {
+          usePointStyle: true,
+          pointStyle: "rect",
+        },
       },
       tooltip: {
-        // external: externalTooltipHandler,
         enabled: true,
         mode: "nearest",
         bodyFont: {
           family: "Inter",
         },
-        // callbacks: {
-        //   label: function (item) {
-        //     return JSON.stringify({
-        //       label: item.dataset.label,
-        //       titleX,
-        //       titleY,
-        //       x: display(item.parsed.x, "compact", [1, 1]),
-        //       y: display(item.parsed.y, "compact", [1, 1]),
-        //     });
-        //   },
-        // },
+        callbacks: {
+          label: function (item) {
+            return `${item.dataset.label!}: (${display(
+              item.parsed.x,
+              "compact",
+              [1, 1]
+            )}, ${display(item.parsed.y, "compact", [1, 1])})`;
+          },
+        },
       },
-      crosshair: false,
-      annotation: false,
+      crosshair: enableCrosshair
+        ? {
+            line: {
+              width: 0,
+              color: theme === "light" ? "#000" : "#FFF",
+              dashPattern: [6, 4],
+            },
+            zoom: {
+              enabled: false,
+            },
+            sync: {
+              enabled: false,
+            },
+          }
+        : false,
+      annotation: enableRegression
+        ? {
+            clip: false,
+            common: {
+              drawTime: "afterDatasetsDraw",
+            },
+            annotations: data.map(set => {
+              return {
+                id: set.label,
+                type: "line",
+                scaleID: set.label,
+                yMin: yieldRegressionYs(set)[0],
+                yMax: yieldRegressionYs(set)[1],
+                borderColor: set.backgroundColor ? set.backgroundColor + "cc" : "black",
+                display(ctx) {
+                  return !ctx.chart.legend?.legendItems?.find(item => item.text === set.label)
+                    ?.hidden;
+                },
+                borderWidth: 2,
+              };
+            }),
+          }
+        : false,
       datalabels: false,
     },
     scales: {
@@ -173,6 +265,8 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   };
 
   /**
+   * @deprecated To be replaced with line annotations
+   *
    * Generate linear regression lines for the scatter plot.
    * @param data ChartDataset<"scatter", any[]>
    * @returns ChartDataset<"line", any[]>
@@ -195,52 +289,57 @@ const Scatter: FunctionComponent<ScatterProps> = ({
    * y_bar = average y
    * x_bar = average x
    */
-  const yieldRegressionLine = (_data: ChartDataset<"scatter", any[]>) => {
-    const { fill: _, data, ...config } = _data;
-    let xSum = 0,
-      ySum = 0,
-      xySum = 0,
-      xSquare = 0,
-      ySquare = 0;
+  //   const yieldRegressionLine = (_data: ChartDataset<"scatter", any[]>) => {
+  //     const { fill: _, data, borderColor: __, backgroundColor: ___, ...config } = _data;
+  //     let xSum = 0,
+  //       ySum = 0,
+  //       xySum = 0,
+  //       xSquare = 0,
+  //       ySquare = 0;
 
-    if (data?.length) {
-      data.forEach(datum => {
-        if (datum.y === null) return;
-        xySum += datum.x * datum.y;
-        xSum += datum.x;
-        ySum += datum.y;
-        xSquare += Math.pow(datum.x, 2);
-        ySquare += Math.pow(datum.y, 2);
-      });
+  //     if (data?.length) {
+  //       data.forEach(datum => {
+  //         if (datum.y === null) return;
+  //         xySum += datum.x * datum.y;
+  //         xSum += datum.x;
+  //         ySum += datum.y;
+  //         xSquare += Math.pow(datum.x, 2);
+  //         ySquare += Math.pow(datum.y, 2);
+  //       });
 
-      // Finding coefficient correlation (r)
-      const r_num = xySum * data.length - xSum * ySum;
-      const r_den_left = data.length * xSquare - Math.pow(xSum, 2);
-      const r_den_right = data.length * ySquare - Math.pow(ySum, 2);
-      const r_den = Math.sqrt(r_den_left * r_den_right);
-      const r = r_num / r_den;
+  //       // Finding coefficient correlation (r)
+  //       const r_num = xySum * data.length - xSum * ySum;
+  //       const r_den_left = data.length * xSquare - Math.pow(xSum, 2);
+  //       const r_den_right = data.length * ySquare - Math.pow(ySum, 2);
+  //       const r_den = Math.sqrt(r_den_left * r_den_right);
+  //       const r = r_num / r_den;
 
-      // Finding slope
-      const slope =
-        (r * standardDeviation(data.map(({ y }) => (y !== null ? y : 0)))) /
-        standardDeviation(data.map(({ x }) => x));
+  //       // Finding slope
+  //       const slope =
+  //         (r * standardDeviation(data.map(({ y }) => (y !== null ? y : 0)))) /
+  //         standardDeviation(data.map(({ x }) => x));
 
-      // Finding y-intercept
-      const y_intercept = ySum / data.length - (slope * xSum) / data.length;
+  //       // Finding y-intercept
+  //       const y_intercept = ySum / data.length - (slope * xSum) / data.length;
+  //       const max_x = maxBy(data, "x").x;
+  //       const min_x = minBy(data, "x").x;
 
-      return {
-        ...config,
-        type: "line" as "scatter", // hack to avoid TS type mismatch error
-        data: [
-          calculatePoint(data[0].x, slope, y_intercept),
-          calculatePoint(data[data.length - 1].x, slope, y_intercept),
-        ],
-      };
-    }
-    return {
-      data: [],
-    };
-  };
+  //       return {
+  //         ...config,
+  //         type: "line" as "scatter", // hack to avoid TS type mismatch error
+  //         data: [
+  //           calculatePoint(min_x, slope, y_intercept),
+  //           calculatePoint(max_x, slope, y_intercept),
+  //         ],
+  //         borderWidth: 1,
+  //         backgroundColor: _data.backgroundColor,
+  //         borderColor: _data.borderColor,
+  //       };
+  //     }
+  //     return {
+  //       data: [],
+  //     };
+  //   };
 
   const calculatePoint = (x: number, slope: number, intercept: number) => {
     return { x: x, y: slope * x + intercept };
@@ -253,16 +352,15 @@ const Scatter: FunctionComponent<ScatterProps> = ({
         <ScatterCanvas
           ref={_ref}
           data={{
-            datasets: [
-              ...data.map(({ label, data, ...rest }: ChartDataset<"scatter", any[]>) => ({
-                label,
-                data,
-                ...rest,
-              })),
-              ...(enableRegression
-                ? data.map((set: ChartDataset<"scatter", any>) => yieldRegressionLine(set))
-                : [{ data: [] }]),
-            ],
+            datasets: data.map(({ label, data, ...rest }: ChartDataset<"scatter", any[]>) => ({
+              label,
+              data,
+              ...rest,
+            })),
+            //   ...(enableRegression
+            //     ? data.map((set: ChartDataset<"scatter", any>) => yieldRegressionLine(set))
+            //     : [{ data: [] }]),
+            // ],
           }}
           options={options}
         />

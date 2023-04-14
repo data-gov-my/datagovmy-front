@@ -23,6 +23,17 @@ export const maxBy = (array: Array<any>, key: string) => {
     return prev[key] > current[key] ? prev : current;
   });
 };
+/**
+ * Returns the object of max value by a given key in the array.
+ * @param array Object array
+ * @param key Comparing key
+ * @returns Object
+ */
+export const minBy = (array: Array<any>, key: string) => {
+  return array.reduce((prev, current) => {
+    return prev[key] < current[key] ? prev : current;
+  });
+};
 
 /**
  * Find max or limit to 100 if above.
