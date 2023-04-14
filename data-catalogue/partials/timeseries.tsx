@@ -51,14 +51,13 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
             download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name_en: dataset.meta.en.title,
-              name_bm: dataset.meta.bm.title,
-              ext: "png",
-            });
+            // track("file_download", {
+            //   uid: dataset.meta.unique_id.concat("_png"),
+            //   type: "image",
+            //   id: dataset.meta.unique_id,
+            //   name: dataset.meta.title,
+            //   ext: "png",
+            // });
           },
         },
         {
@@ -70,15 +69,15 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           href: () => {
             exportAs("svg", data.ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  ext: "svg",
-                })
+              .then(
+                () => {}
+                // track("file_download", {
+                //   uid: dataset.meta.unique_id.concat("_svg"),
+                //   type: "image",
+                //   id: dataset.meta.unique_id,
+                //   name: dataset.meta.title,
+                //   ext: "svg",
+                // })
               )
               .catch(e => {
                 console.error(e);
@@ -113,7 +112,6 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     const colors = [
       AKSARA_COLOR.PRIMARY,
       AKSARA_COLOR.WARNING,
-
       AKSARA_COLOR.DANGER,
       AKSARA_COLOR.GREY,
     ]; // [blue, red]

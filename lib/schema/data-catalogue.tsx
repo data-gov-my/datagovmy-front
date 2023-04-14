@@ -1,53 +1,6 @@
-// import { useTranslation } from "@hooks/useTranslation";
-// import { numFormat, toDate } from "@lib/helpers";
 import type { TableConfig } from "@components/Chart/Table";
-import { numFormat, toDate } from "@lib/helpers";
-import type { DCPeriod } from "@lib/types";
-
-// /**
-//  * For timeseries & choropleth.
-//  * @param {XYColumn} column Column
-//  * @param {en|bm}locale en | bm
-//  * @param {Period} period Period
-//  * @returns table schema
-//  */
-// export const TIMESERIES_TABLE_SCHEMA = (
-//   column: Record<string, string>,
-//   period: DCPeriod,
-//   precision: number | [number, number]
-// ) => {
-//   const formatBy = {
-//     DAILY: "dd MMM yyyy",
-//     WEEKLY: "dd MMM yyyy",
-//     MONTHLY: "MMM yyyy",
-//     QUARTERLY: "qQ yyyy",
-//     YEARLY: "yyyy",
-//   };
-
-// //   const y_headers = headers
-// //     .filter((y: string) => !["line", "x"].includes(y))
-// //     .map((y: string) => ({
-// //       id: y,
-// //       header: locale === "en" ? column[`${y}_en`] : column[`${y}_bm`],
-// //       accessorFn: (item: any) =>
-// //         typeof item[y] === "number" ? numFormat(item[y], "standard", precision) : item[y],
-// //       sortingFn: "localeNumber",
-// //     }));
-
-//   return [
-//     {
-//       id: "x",
-//       header: column.x,
-
-//       accessorFn: (item: any) => {
-//         if (typeof item[key] === "string") return item[key];
-//         if (typeof item[key] === "number") return numFormat(item[key], "standard");
-//         return "";
-//       },
-//     },
-//     ...y_headers,
-//   ];
-// };
+import { numFormat } from "@lib/helpers";
+import At from "@components/At";
 
 /**
  * Table schema for data catalogue
@@ -69,6 +22,71 @@ export const UNIVERSAL_TABLE_SCHEMA = (
     else rest.push([key, value]);
   });
   return index_cols.concat(rest).map(([key, value]) => generateSchema(key, value, accessorFn));
+};
+
+/**
+ * Metadata table schema.
+ * @param {Function} t
+ * @param freezeKeys Freeze cols
+ * @returns {TableConfig[]} Metadata schema
+ */
+export const METADATA_TABLE_SCHEMA = (
+  t: (key: string, params?: any) => string,
+  isTable: boolean = false
+): TableConfig[] => {
+  return [
+    {
+      id: "variable",
+      header: t("catalogue.meta_variable_name"),
+      accessorFn({ variable, data_type }) {
+        return `${variable}$$${data_type ? `(${data_type})` : ""}`;
+      },
+      cell: value => {
+        const [variable, data_type] = value.getValue().split("$$");
+        return (
+          <p className="font-mono text-sm">
+            {variable} {data_type}
+          </p>
+        );
+      },
+      className: "text-left",
+      enableSorting: false,
+    },
+    {
+      id: "variable_name",
+      header: t("catalogue.meta_variable"),
+      accessorFn: (item: any) => JSON.stringify({ uid: item.uid, name: item.variable_name }),
+      className: "text-left min-w-[140px]",
+      enableSorting: false,
+      cell: value => {
+        const [item, index] = [JSON.parse(value.getValue()), value.row.index];
+        return (
+          <>
+            {Boolean(item.uid) ? (
+              <At href={`/data-catalogue/${item.uid}`} className="hover:underline dark:text-white">
+                {item.name}
+              </At>
+            ) : (
+              <p>{item.name}</p>
+            )}
+            {index === 0 && !isTable && (
+              <p className="font-normal text-dim">
+                <i>{t("catalogue.meta_chart_above")}</i>
+              </p>
+            )}
+          </>
+        );
+      },
+    },
+    {
+      id: "definition",
+      header: t("catalogue.meta_definition"),
+      accessorKey: "definition",
+      className: "text-left leading-relaxed",
+      cell: value => <p>{value.getValue()}</p>,
+      enableSorting: false,
+    },
+  ];
 };
 
 const generateSchema = (

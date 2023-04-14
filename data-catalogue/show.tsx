@@ -5,13 +5,12 @@ import type {
   DCChartKeys,
   FilterDefault,
 } from "@lib/types";
-import type { TableConfig } from "@components/Chart/Table";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { SHORT_PERIOD } from "@lib/constants";
 import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
-import { UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
+import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
 import { OptionType } from "@components/types";
 // import { track } from "@lib/mixpanel";
 import dynamic from "next/dynamic";
@@ -236,67 +235,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     }
   }, []);
 
-  const tableConfig: TableConfig[] = [
-    {
-      id: "variable",
-      header: t("catalogue.meta_variable_name"),
-      accessorFn({ variable, data_type }) {
-        return `${variable}//${data_type ? `(${data_type})` : ""}`;
-      },
-      cell: (value: any) => {
-        const [variable, data_type] = value.getValue().split("//");
-        return (
-          <p className="font-mono text-sm">
-            {variable} {data_type}
-          </p>
-        );
-      },
-      className: "text-left",
-      enableSorting: false,
-    },
-    {
-      id: "variable_name",
-      header: t("catalogue.meta_variable"),
-      accessorFn: (item: any) => JSON.stringify({ uid: item.uid, name: item.variable_name }),
-      className: "text-left min-w-[140px]",
-      enableSorting: false,
-      cell: (value: any) => {
-        const [item, index] = [JSON.parse(value.getValue()), value.row.index];
-        return (
-          <>
-            {Boolean(item.uid) ? (
-              <At href={`/data-catalogue/${item.uid}`} className="hover:underline dark:text-white">
-                {item.name}
-              </At>
-            ) : (
-              <p>{item.name}</p>
-            )}
-            {index === 0 && dataset.type !== "TABLE" && (
-              <p className="font-normal text-dim">
-                <i>{t("catalogue.meta_chart_above")}</i>
-              </p>
-            )}
-          </>
-        );
-      },
-    },
-    {
-      id: "definition",
-      header: t("catalogue.meta_definition"),
-      accessorKey: "definition",
-      className: "text-left leading-relaxed",
-      cell: (value: any) => {
-        const definition = value.getValue();
-        return (
-          <>
-            <p>{definition}</p>
-          </>
-        );
-      },
-      enableSorting: false,
-    },
-  ];
-
   const generateTableSchema = () => {
     switch (dataset.type) {
       case "TIMESERIES":
@@ -512,7 +450,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         data={metadata.definitions.map((item: any) => {
                           const raw = item.desc;
                           const [type, definition] = [
-                            raw.substring(1, raw.indexOf("]")),
+                            raw.substring(raw.indexOf("[") + 1, raw.indexOf("]")),
                             raw.substring(raw.indexOf("]") + 1),
                           ];
 
@@ -525,7 +463,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                             definition: interpolate(definition),
                           };
                         })}
-                        config={tableConfig}
+                        config={METADATA_TABLE_SCHEMA(t, dataset.type === "TABLE")}
                       />
                     </div>
                   </>

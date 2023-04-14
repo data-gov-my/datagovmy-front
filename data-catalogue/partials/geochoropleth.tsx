@@ -1,6 +1,5 @@
 import type { GeoChoroplethRef } from "@components/Chart/Choropleth/geochoropleth";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import type { Color } from "@hooks/useColor";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
 import type { DownloadOptions, Geotype } from "@lib/types";
