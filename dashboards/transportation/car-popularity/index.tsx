@@ -89,17 +89,23 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
 
   const searchHandler = () => {
     setData("loading", true);
-    setData("params", {
+
+    const params = {
       manufacturer: data.manufacturer.value,
       model: data.model.value,
       colour: data.colour.value,
-    });
+    };
 
-    get("chart/", { dashboard: "car_popularity", chart_name: "timeseries", ...data.params })
+    get("chart/", {
+      dashboard: "car_popularity",
+      chart_name: "timeseries",
+      ...params,
+    })
       .then(({ data }) => {
         setData("x", data.data?.x);
         setData("y", data.data?.cars);
         setData("data_as_of", data.data_as_of);
+        setData("params", params); // for timeseries title
       })
       .then(() => setData("loading", false));
   };
