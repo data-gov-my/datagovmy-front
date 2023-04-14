@@ -20,7 +20,7 @@ const ChartHeader: FunctionComponent<ChartHeaderProps> = ({
   const { t } = useTranslation();
   return (
     <>
-      {[title, state, controls, menu].every(Boolean) && (
+      {[title, state, controls, menu].some(Boolean) && (
         <div className={clx("flex flex-wrap items-start justify-between gap-2", className)}>
           <div>
             {title && typeof title === "string" ? (
