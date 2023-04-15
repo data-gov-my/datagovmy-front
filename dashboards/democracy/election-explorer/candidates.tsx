@@ -60,35 +60,35 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
     {
       date: "23 Jan 2022",
       area: "P148 - Ayer Hitam, Johor",
-      party: "MCA",
+      party: "mca",
       votes: "18,911 (40.5%)",
       result: "won",
     },
     {
       date: "23 Jan 2018",
       area: "P148 - Ayer Hitam, Johor",
-      party: "MCA",
+      party: "mca",
       votes: "17,076 (44.0%)",
       result: "won",
     },
     {
       date: "23 Jan 2013",
       area: "P148 - Ayer Hitam, Johor",
-      party: "MCA",
+      party: "mca",
       votes: "22,045 (59.8%)",
       result: "won",
     },
     {
       date: "23 Jan 2008",
       area: "P148 - Ayer Hitam, Johor",
-      party: "MCA",
+      party: "mca",
       votes: "20,230 (76.1%)",
       result: "won",
     },
     {
       date: "23 Jan 2004",
       area: "P148 - Ayer Hitam, Johor",
-      party: "MCA",
+      party: "mca",
       votes: "20,065 (82.3%)",
       result: "won",
     },
@@ -97,7 +97,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
   const columnHelper = createColumnHelper<Candidate>();
 
   const columns: ColumnDef<Candidate, any>[] = [
-    columnHelper.accessor("date", {
+    columnHelper.accessor((row: any) => row.date, {
       header: "Date",
       cell: (info: any) => info.getValue(),
     }),
@@ -105,12 +105,12 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
       header: "Constituency",
       cell: (info: any) => info.getValue(),
     }),
-    columnHelper.accessor((row: any) => row.party, {
+    columnHelper.accessor("party", {
       header: "Party",
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+          <div className="flex flex-col items-center gap-1 md:gap-2 lg:flex-row">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -138,7 +138,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
     columnHelper.accessor("result", {
       header: "",
       cell: () => (
-        <button className="flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+        <button className="flex flex-col items-center gap-1 md:gap-2 lg:flex-row">
           <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
           <p>{t("dashboard-election-explorer:full_result")}</p>
         </button>
@@ -169,8 +169,10 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
               }}
             />
             <div className="flex flex-col text-center lg:flex-row">
-              <span>{t("dashboard-election-explorer:popular_searches")}</span>
-              <span>
+              <span className="whitespace-pre">
+                {t("dashboard-election-explorer:popular_searches")}
+              </span>
+              <div>
                 <span className="font-semibold text-primary dark:text-primary-dark">
                   {data.popular_searches[0]}
                 </span>
@@ -182,12 +184,12 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
                 <span className="font-semibold text-primary dark:text-primary-dark">
                   {data.popular_searches[2]}
                 </span>
-              </span>
+              </div>
             </div>
           </div>
           <BorderlessTable data={dummyData} columns={columns} />
           <div>
-            {emptyData && (
+            {!dummyData.length && (
               <Card className="flex h-[200px] items-center justify-center">
                 <Card className="mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md bg-outline py-1.5 px-3 dark:bg-washed-dark">
                   <FaceFrownIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />

@@ -25,9 +25,14 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
   const { t, i18n } = useTranslation();
 
   const PARTY_OPTIONS: Array<OptionType> = [
-    "Pakatan Harapan",
-    "Perikatan Nasional",
-    "Barisan Nasional",
+    "ph",
+    "pn",
+    "bn",
+    "warisan",
+    "kdm",
+    "gps",
+    "grs",
+    "mca",
   ].map((key: string) => ({
     label: key,
     value: key,
@@ -153,6 +158,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
                   setData("party", "");
                 }
               }}
+              enableFlag
             />
           </div>
           <BorderlessTable data={dummyData} columns={columns} />

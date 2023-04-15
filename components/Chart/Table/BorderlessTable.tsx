@@ -166,7 +166,7 @@ interface WonProps {
 export const Won: FunctionComponent<WonProps> = ({ desc }) => {
   const { t } = useTranslation();
   return (
-    <span className="ml-2 flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+    <span className="ml-2 flex flex-col items-center gap-1 md:flex-row md:gap-2">
       <CheckCircleIcon className="h-4 w-4 self-center text-[#10B981]" />
       <span className="uppercase text-[#10B981]">{desc}</span>
     </span>
@@ -180,14 +180,14 @@ interface LostProps {
 export const Lost: FunctionComponent<LostProps> = ({ desc }) => {
   const { t } = useTranslation();
   return (
-    <span className="ml-2 flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+    <span className="ml-2 flex flex-col items-center gap-1 md:flex-row md:gap-2">
       <XCircleIcon className="h-4 w-4 self-center text-danger" />
       <span className="uppercase text-danger">{desc}</span>
     </span>
   );
 };
 
-type Candidate = {
+export type Candidate = {
   name: string;
   party: string;
   votes: number;
@@ -240,7 +240,7 @@ const dummyColumns: Array<ColumnDef<Candidate, any>> = [
     cell: (info: any) => {
       const party = info.getValue() as string;
       return (
-        <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+        <div className="flex flex-col items-center gap-1 md:flex-row md:gap-2">
           <Image
             src={`/static/images/parties/${party}.png`}
             width={28}
@@ -261,7 +261,7 @@ const dummyColumns: Array<ColumnDef<Candidate, any>> = [
   columnHelper.accessor("perc", {
     id: "perc",
     cell: (info: any) => (
-      <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+      <div className="flex flex-col items-center gap-1 md:flex-row md:gap-2">
         <BarMeter perc={info.getValue()} />
         <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
       </div>

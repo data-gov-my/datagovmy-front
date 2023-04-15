@@ -1,14 +1,12 @@
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { Dropdown, Input, Section, StateDropdown, Tabs } from "@components/index";
+import { Dropdown, Section, StateDropdown, Tabs } from "@components/index";
 import { List, Panel } from "@components/Tabs";
-import BuildingLibraryIcon from "@heroicons/react/20/solid/BuildingLibraryIcon";
-import { FlagIcon, MagnifyingGlassIcon, MapIcon } from "@heroicons/react/24/solid";
+import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { OptionType } from "@components/types";
 import { CountryAndStates } from "@lib/constants";
-import { TableCellsIcon } from "@heroicons/react/20/solid";
 import Card from "@components/Card";
 import { clx } from "@lib/helpers";
 import ComboBox from "@components/Combobox";
@@ -124,7 +122,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     filter: FILTER_OPTIONS[0],
     election: ELECTION_OPTIONS[0],
     state: "",
-    seat: "",
+    seat: SEAT_OPTIONS[0].value,
 
     // query
     q_seat: "",
@@ -193,9 +191,6 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                         <div className="relative py-3">
                           <Waffle
                             className="h-[50px] min-h-max w-full"
-                            title={
-                              <div className="flex self-center text-base font-bold">{"test"}</div>
-                            }
                             fillDirection={"left"}
                             data={dummy}
                             margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
@@ -220,7 +215,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                           className="static h-[500px] rounded-xl border border-outline dark:border-washed-dark"
                           type="gray"
                         >
-                          <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />
+                          {/* <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} /> */}
                         </Card>
                       </div>
                     </Panel>
@@ -248,33 +243,14 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 placeholder={t("dashboard-election-explorer:election.search_area")}
                 options={SEAT_OPTIONS}
                 selected={
-                  data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : data.q_seat
+                  data.q_seat ? SEAT_OPTIONS.find(e => e.value === data.q_seat.value) : null
                 }
                 onChange={e => {
-                  if (e) setData("seat", e);
-                  else {
-                    setData("q_seat", e);
-                    setData("seat", "");
-                  }
+                  if (e) setData("seat", e.value);
+                  setData("q_seat", e);
                 }}
               />
-              {/* <input className="rounded-full border pl-2"></input> */}
-              {/* <SearchDropdown
-              anchor="left"
-              placeholder={t("dashboard-election-explorer:election.search_area")}
-              options={ELECTION_OPTIONS}
-              selected={ELECTION_OPTIONS.find(e => e.value === data.filter.value)}
-              onChange={e => setData("filter_age", e)}
-            /> */}
             </div>
-            {/* <Input
-                  className="w-96 rounded-full border"
-                  type="search"
-                  placeholder={t("dashboard-election-explorer:election.search_area")}
-                  value={data.search}
-                  onChange={e => setData("search", e)}
-                  icon={<MagnifyingGlassIcon className="h-4 w-4 self-center lg:h-5 lg:w-5" />}
-                /> */}
             <div className="py-6">
               <BorderlessTable
                 title={
@@ -282,7 +258,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                     {t("dashboard-election-explorer:election.full_result", {
                       election: data.election.value,
                     })}
-                    <span className="text-primary">{data.seat.value}</span>
+                    <span className="text-primary">{data.seat}</span>
                   </div>
                 }
                 // highlightedRow={1}
@@ -334,7 +310,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                     className="static h-[500px] rounded-xl border border-outline dark:border-washed-dark"
                     type="gray"
                   >
-                    <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />
+                    {/* <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} /> */}
                   </Card>
                 </div>
               </Panel>

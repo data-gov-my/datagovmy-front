@@ -38,8 +38,8 @@
     "party": {
         "header": "Terokailah sejarah pilihan raya penuh parti politik",
         "search_party": "Carilah nama parti politik",
-        "form_gov": "Menjadi Kerajaan",
-        "form_opp": "Menjadi Pembangkang"
+        "formed_gov": "Menjadi Kerajaan",
+        "formed_opp": "Menjadi Pembangkang"
     },
     "seat": {
         "header": "Terokailah sejarah pilihan raya penuh bagi kawasan anda",
