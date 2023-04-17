@@ -1,0 +1,17 @@
+{
+    "header": "Car Popularity",
+    "description": "In Malaysia, a vehicle has to be registered with the Road Transport Department (JPJ) before it can be legally driven. JPJ therefore maintains a database of every vehicle ever used in Malaysia. This dashboard draws on that data to provide insights into the popularity of different car makes and models. Whether you're a car enthusiast looking to check out the latest trends or a prospective buyer trying to choose your first car, we hope this dashboard is an invaluable resource for you!",
+    "section_title": "How popular is your car?",
+    "label_manufacturer": "Manufacturer",
+    "label_model": "Model",
+    "label_colour": "Colour",
+    "option_manufacturer": "Select car manufacturer",
+    "option_model": "Select car model",
+    "option_colour": "Select car colour",
+    "search_button": "Search for car",
+    "search_prompt": "Start search for car brand to see your car popularity",
+    "timeseries_car_description": "{{colour}} {{manufacturer}} {{car}}: ",
+    "timeseries_title": "Popularity over the Years",
+    "timeseries_description": "Note: This data is based on the year the car was first registered with JPJ, not the year it was manufactured",
+    "label": "Cars"
+}

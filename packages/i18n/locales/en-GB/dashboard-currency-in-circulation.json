@@ -1,0 +1,47 @@
+{
+    "header": "Currency in Circulation",
+    "description": "There are over RM150 billion in coins and notes circulating in the Malaysian economy. This dashboard, which builds on Bank Negara Malaysia's Monthly Highlight and Statistics, provides an overview allowing users to track the composition and growth of currency in circulation. It should be noted that currency in circulation only captures currency which is still valid legal tender, which is a subset of all notes and coins that have ever existed. For instance, the RM1 coin has been discontinued.",
+    "section_1": {
+        "title": "A snapshot of currency currently in circulation",
+        "bar1_header": "Notes by Denomination",
+        "bar2_header": "Volume of Notes in Circulation",
+        "bar3_header": "Coins by Denomination",
+        "bar4_header": "Volume of Coins in Circulation"
+    },
+    "section_2": {
+        "title": "How is currency in circulation trending?"
+    },
+    "mom_growth": "MoM Growth",
+    "yoy_growth": "YoY Growth",
+    "keys": {
+        "value": "Value (RM)",
+        "growth_mom": "MoM Growth",
+        "growth_yoy": "YoY Growth",
+        "no_shade": "No shading",
+        "recession": "Recession",
+        "cny": "Chinese New Year",
+        "eid": "Aidilfitri Holiday",
+        "note_1": "RM1",
+        "note_5": "RM5",
+        "note_10": "RM10",
+        "note_20": "RM20",
+        "note_50": "RM50",
+        "note_100": "RM100",
+        "coin_1": "1 sen",
+        "coin_5": "5 sen",
+        "coin_10": "10 sen",
+        "coin_20": "20 sen",
+        "coin_50": "50 sen",
+        "others": "Others",
+        "overall": "Overall",
+        "rm1_notes": "RM1 notes",
+        "rm5_notes": "RM5 notes",
+        "rm10_notes": "RM10 notes",
+        "rm20_notes": "RM20 notes",
+        "rm50_notes": "RM50 notes",
+        "rm100_notes": "RM100 notes",
+        "10_sen_coins": "10 sen coins",
+        "20_sen_coins": "20 sen coins",
+        "50_sen_coins": "50 sen coins"
+    }
+}
