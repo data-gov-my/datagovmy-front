@@ -1,4 +1,5 @@
 import {
+  AgencyBadge,
   At,
   Button,
   Checkbox,
@@ -21,6 +22,7 @@ import {
   ReactNode,
   ForwardedRef,
 } from "react";
+import Image from "next/image";
 import Label from "@components/Label";
 import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
@@ -84,6 +86,15 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             <p className="text-dim">{t("catalogue.description")}</p>
             {filterRef.current?.sourceFilter()}
           </div>
+        }
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agency.govt")}
+            link="https://www.malaysia.gov.my/portal/index"
+            icon={
+              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
+            }
+          />
         }
       />
 
@@ -220,8 +231,6 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         ),
       };
     });
-
-    console.log(actives);
 
     return (
       <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:border-washed-dark dark:bg-black lg:pl-2">

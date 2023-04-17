@@ -8,10 +8,9 @@ interface ModalProps {
   trigger?: (open: () => void) => ReactElement;
   children: (value: () => void) => ReactElement | ReactElement[];
   title?: string | ReactElement;
-  fullScreen?: boolean;
 }
 
-const Modal: FunctionComponent<ModalProps> = ({ trigger, title, children, fullScreen }) => {
+const Modal: FunctionComponent<ModalProps> = ({ trigger, title, children }) => {
   const [open, setOpen] = useState(false);
 
   return (

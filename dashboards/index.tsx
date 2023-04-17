@@ -1,6 +1,16 @@
 import Card from "@components/Card";
 import AgencyIcon from "@components/Icon/agency";
-import { At, Button, Container, Dropdown, Hero, Input, Section, Tabs } from "@components/index";
+import {
+  AgencyBadge,
+  At,
+  Button,
+  Container,
+  Dropdown,
+  Hero,
+  Input,
+  Section,
+  Tabs,
+} from "@components/index";
 import { OptionType } from "@components/types";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 import { ArrowUpRightIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -9,6 +19,7 @@ import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { SHORT_LANG } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
+import Image from "next/image";
 import {
   ForwardedRef,
   forwardRef,
@@ -97,6 +108,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
           ),
         ]}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agency.govt")}
+            link="https://www.malaysia.gov.my/portal/index"
+            icon={
+              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
+            }
+          />
+        }
       />
       <DashboardFilter
         ref={filterRef}

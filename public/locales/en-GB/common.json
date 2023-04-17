@@ -129,12 +129,13 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "brought_by": "Brought to you by",
+    "brought_by": "Brought to you by the",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore",
     "ovs": "Malaysian-born Overseas"
   },
   "agency": {
+    "govt": "Government of Malaysia",
     "bnm": "Bank Negara Malaysia",
     "mampu": "Malaysian Administrative Modernisation and Management Planning Unit",
     "dosm": "Department of Statistics Malaysia"
