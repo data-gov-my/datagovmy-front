@@ -72,11 +72,13 @@ const Card: FunctionComponent<CardProps> = ({ data = dummyData, title, desc, win
                 >
                   <Dialog.Title as="h4" className="flex flex-row justify-between">
                     <div>
-                      <span className="text-lg font-bold uppercase text-black dark:text-white">
-                        P148 - Ayer Hitam
-                      </span>
-                      <span className="pl-2 text-lg font-normal uppercase text-dim">Johor</span>
+                      {title && typeof title === "string" ? (
+                        <span className="text-base font-bold dark:text-white">{title}</span>
+                      ) : (
+                        title
+                      )}
                     </div>
+
                     <div className="flex flex-row gap-2 text-base font-medium">
                       <span>
                         {win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />}

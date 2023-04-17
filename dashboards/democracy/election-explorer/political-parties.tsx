@@ -1,14 +1,17 @@
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { FunctionComponent } from "react";
 import { BarMeter, Lost, Won } from "@components/Chart/Table/BorderlessTable";
 import ComboBox from "@components/Combobox";
-import { Section } from "@components/index";
+import { Panel, Section, StateDropdown, Tabs } from "@components/index";
 import { OptionType } from "@components/types";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
+import { PoliticalParty } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import dynamic from "next/dynamic";
-import { FunctionComponent } from "react";
+import ElectionCard from "@components/Card/ElectionCard";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -39,7 +42,9 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
   }));
 
   const { data, setData } = useData({
-    party: "",
+    state: "",
+    tabs: 0,
+    party: PARTY_OPTIONS[0],
 
     // query
     q_party: "",
@@ -95,11 +100,11 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
 
   const columns: ColumnDef<Party, any>[] = [
     columnHelper.accessor((row: any) => row.date, {
-      header: "Date",
+      header: t("dashboard-election-explorer:date"),
       cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor("seats", {
-      header: "Seats Won",
+      header: t("dashboard-election-explorer:seats_won"),
       cell: (info: any) => (
         <div className="flex flex-col items-center gap-2 md:flex-row">
           <BarMeter perc={Number(info.getValue())} />
@@ -109,7 +114,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
       ),
     }),
     columnHelper.accessor("perc", {
-      header: "% of Votes Won",
+      header: t("dashboard-election-explorer:perc_votes_won"),
       cell: (info: any) => (
         <div className="flex flex-col items-center gap-2 md:flex-row">
           <BarMeter perc={info.getValue()} />
@@ -118,11 +123,11 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
       ),
     }),
     columnHelper.accessor("votes", {
-      header: "Votes won",
+      header: t("dashboard-election-explorer:votes_won"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("result", {
-      header: "Result",
+      header: t("dashboard-election-explorer:result"),
       cell: (info: any) =>
         info.getValue() === "formed_gov" ? (
           <Won desc={t("dashboard-election-explorer:party.formed_gov")} />
@@ -130,36 +135,92 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
           <Lost desc={t("dashboard-election-explorer:party.formed_opp")} />
         ),
     }),
-    columnHelper.accessor("result", {
-      header: "",
+    columnHelper.display({
+      id: "fullResult",
       cell: () => (
-        <button className="flex flex-row items-center gap-2">
-          <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-          <p className="whitespace-nowrap">{t("dashboard-election-explorer:full_result")}</p>
-        </button>
+        <ElectionCard desc={t("dashboard-election-explorer:full_result")} title={"GE-15 Result"} />
       ),
     }),
   ];
   return (
     <Section>
-      <div className="grid grid-cols-12">
-        <div className="col-span-10 col-start-2">
-          <h4 className="py-4 text-center">{t("dashboard-election-explorer:party.header")}</h4>
-          <div className="flex items-center justify-center py-6">
-            <ComboBox
-              placeholder={t("dashboard-election-explorer:party.search_party")}
-              options={PARTY_OPTIONS}
-              selected={
-                data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : data.q_party
-              }
-              onChange={e => {
-                if (e) setData("party", e);
-                setData("q_party", e);
-              }}
-              enableFlag
-            />
+      <div className="lg:grid lg:grid-cols-12">
+        <div className="lg:col-span-10 lg:col-start-2">
+          <h4 className="text-center">{t("dashboard-election-explorer:party.header")}</h4>
+          <div className="pt-6 pb-12">
+            <div className="flex items-center justify-center">
+              <ComboBox
+                placeholder={t("dashboard-election-explorer:party.search_party")}
+                options={PARTY_OPTIONS}
+                selected={
+                  data.q_party
+                    ? PARTY_OPTIONS.find(e => e.value === data.q_party.value)
+                    : data.q_party
+                }
+                onChange={e => {
+                  if (e) setData("party", e);
+                  setData("q_party", e);
+                }}
+                enableFlag
+              />
+            </div>
           </div>
-          <BorderlessTable data={dummyData} columns={columns} />
+          <Tabs
+            title={
+              <div className="flex flex-row items-center gap-2">
+                <Image
+                  src={`/static/images/parties/${data.party.value}.png`}
+                  width={28}
+                  height={16}
+                  alt={PoliticalParty[data.party.value]}
+                />
+                <div className="text-base font-bold">
+                  {t("dashboard-election-explorer:party.title", {
+                    party: PoliticalParty[data.party.value],
+                  })}
+                </div>
+                <StateDropdown
+                  currentState={data.state}
+                  onChange={selected => setData("state", selected.value)}
+                  exclude={["mys"]}
+                  width="min-w-max"
+                  anchor="left"
+                  disabled={data.tabs === 0}
+                />
+              </div>
+            }
+            current={data.tabs}
+            onChange={index => setData("tabs", index)}
+          >
+            <Panel name={t("dashboard-election-explorer:parliament_elections")}>
+              <BorderlessTable
+                data={dummyData}
+                columns={columns}
+                empty={
+                  <p>
+                    {t("dashboard-election-explorer:candidate.never_compete", {
+                      name: data.q_party ? data.q_party.value : null,
+                      context: data.tabs === 0 ? "parliament" : "state",
+                    })}
+                  </p>
+                }
+              />
+            </Panel>
+            <Panel name={t("dashboard-election-explorer:state_elections")}>
+              <BorderlessTable
+                data={dummyData}
+                columns={columns}
+                empty={
+                  <p>
+                    {t("dashboard-election-explorer:candidate.never_compete", {
+                      name: data.party ? data.party.value : "",
+                      context: data.tabs === 0 ? "parliament" : "state",
+                    })}
+                  </p>
+                }
+              />
+            </Panel>
+          </Tabs>
         </div>
       </div>
     </Section>

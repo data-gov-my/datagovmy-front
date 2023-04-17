@@ -7,6 +7,20 @@
     "seats": "Seats",
     "full_result": "Full result",
     "popular_searches": "Popular searches today ",
+    "parliament_elections": "Parliamentary Elections",
+    "state_elections": "State Elections",
+    "candidate_name": "Candidate name",
+    "party_name": "Party",
+    "total_votes": "Total votes",
+    "perc_votes": "% of votes",
+    "date": "Date",
+    "constituency": "Constituency",
+    "seats_won": "Seats won",
+    "votes_won": "Votes won",
+    "perc_votes_won": "% of votes won",
+    "result": "Result",
+    "winning_party": "Winning Party",
+    "majority": "Majority",
     "election": {
         "section_1": "Explore any election from Merdeka to the present!",
         "parliament": "Parliament",
@@ -30,6 +44,7 @@
     "candidate": {
         "header": "Explore the electoral history of anyone who’s ever competed in an election",
         "search_candidate": "Search for candidate's name",
+        "title": "Complete electoral history for ",
         "never_compete_state": "{{ name }} has never competed in State elections",
         "never_compete_parliament": "{{ name }} has never competed in Parliament elections",
         "won": "Won",
@@ -38,6 +53,7 @@
     "party": {
         "header": "Explore any party’s entire electoral history",
         "search_party": "Search for political party name",
+        "title": "{{ party }}’s electoral history in ",
         "formed_gov": "Formed the Government",
         "formed_opp": "Formed the Opposition"
     },

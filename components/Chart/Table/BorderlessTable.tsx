@@ -12,15 +12,18 @@ import {
   CheckCircleIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  FaceFrownIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 import { Button } from "@components/index";
 import { PoliticalParty } from "@lib/constants";
 import Image from "next/image";
+import Card from "@components/Card";
 
 export interface BorderlessTableProps {
   className?: string;
   title?: string | ReactNode;
+  empty?: string | ReactNode;
   data?: any;
   columns?: Array<ColumnDef<any, any>>;
   responsive?: Boolean;
@@ -32,6 +35,7 @@ export interface BorderlessTableProps {
 const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   className = "",
   title,
+  empty,
   data = dummyData,
   columns = dummyColumns,
   responsive = true,
@@ -105,6 +109,14 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
             ))}
           </tbody>
         </table>
+        {!data.length && (
+          <Card className="flex h-[200px] items-center justify-center">
+            <Card className="mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md bg-outline py-1.5 px-3 dark:bg-washed-dark">
+              <FaceFrownIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />
+              {empty}
+            </Card>
+          </Card>
+        )}
       </div>
       {enablePagination && (
         <div className="space-y-3">

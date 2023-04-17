@@ -9,8 +9,10 @@ import { useTranslation } from "@hooks/useTranslation";
 import { OptionType } from "@components/types";
 import { CountryAndStates, PoliticalParty, PoliticalPartyColours } from "@lib/constants";
 import Card from "@components/Card";
-import { clx } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import ComboBox from "@components/Combobox";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 
 /**
  * Election Explorer Dashboard - Elections Tab
@@ -138,16 +140,97 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     // query
     q_seat: "",
   });
+
+  type Candidate = {
+    name: string;
+    party: string;
+    votes: number;
+    perc: number;
+  };
+
+  const dummyData: Candidate[] = [
+    {
+      name: "Rushdan Bin Rusmi",
+      party: "pn",
+      votes: 24267,
+      perc: 60.45,
+    },
+    {
+      name: "Ko Chu Liang",
+      party: "ph",
+      votes: 11753,
+      perc: 30.05,
+    },
+    {
+      name: "Zahida Binti Zarik Khan",
+      party: "bn",
+      votes: 9267,
+      perc: 4.5,
+    },
+    {
+      name: "Kapt (B) Hj Mohamad Yahya",
+      party: "warisan",
+      votes: 7085,
+      perc: 3.5,
+    },
+    {
+      name: "Zahidi Zainul Abidin",
+      party: "bebas",
+      votes: 244,
+      perc: 1.5,
+    },
+  ];
+
+  const columnHelper = createColumnHelper<Candidate>();
+
+  const dummyColumns: Array<ColumnDef<Candidate, any>> = [
+    columnHelper.accessor("name", {
+      id: "name",
+      cell: (info: any) => info.getValue(),
+      header: t("dashboard-election-explorer:candidate_name"),
+    }),
+    columnHelper.accessor((row: any) => row.party, {
+      id: "party",
+      cell: (info: any) => {
+        const party = info.getValue() as string;
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <Image
+              src={`/static/images/parties/${party}.png`}
+              width={28}
+              height={16}
+              alt={PoliticalParty[party]}
+            />
+            <span className="text-center">{PoliticalParty[party]}</span>
+          </div>
+        );
+      },
+      header: t("dashboard-election-explorer:party_name"),
+    }),
+    columnHelper.accessor("votes", {
+      id: "votes",
+      cell: (info: any) => numFormat(info.getValue(), "standard"),
+      header: t("dashboard-election-explorer:total_votes"),
+    }),
+    columnHelper.accessor("perc", {
+      id: "perc",
+      cell: (info: any) => (
+        <div className="flex flex-row items-center gap-2">
+          <BarMeter perc={info.getValue()} />
+          <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
+        </div>
+      ),
+      header: t("dashboard-election-explorer:perc_votes"),
+    }),
+  ];
+
   return (
     <>
       <Section>
         <h4 className="text-center">{t("dashboard-election-explorer:election.section_1")}</h4>
         <div
           ref={divRef}
-          className={clx(
-            "sticky top-16 z-10 mt-6 flex items-center justify-center gap-2 lg:pl-2"
-            // hasShadow ? "drop-shadow-2xl" : "drop-shadow-none"
-          )}
+          className={clx("sticky top-16 z-10 mt-6 flex items-center justify-center gap-2 lg:pl-2")}
         >
           <div className="max-w-fit rounded-full border border-outline bg-white p-1 dark:border-washed-dark dark:bg-black">
             <List
@@ -266,7 +349,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                       name={t("dashboard-election-explorer:election.table")}
                       icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                     >
-                      <BorderlessTable />
+                      <BorderlessTable data={dummyData} columns={dummyColumns} />
                     </Panel>
                   </Tabs>
                 </div>
@@ -301,6 +384,8 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                   <span className="text-primary">{data.seat}</span>
                 </div>
               }
+              data={dummyData}
+              columns={dummyColumns}
               // highlightedRow={1}
               // win={true}
             />
@@ -311,7 +396,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             <h4 className="py-4 text-center">
               {t("dashboard-election-explorer:election.section_3")}
             </h4>
-            <div className="flex flex-row justify-between gap-4 sm:flex-row">
+            <div className="flex flex-row justify-between gap-4 pb-6 sm:flex-row">
               <div className="flex flex-row">
                 <div className="w-fit px-2 py-1 text-sm lg:px-4">{t("catalogue.filter")}</div>
                 <Dropdown
@@ -355,7 +440,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 name={t("dashboard-election-explorer:election.table")}
                 icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
               >
-                <BorderlessTable />
+                <BorderlessTable data={dummyData} columns={dummyColumns} />
               </Panel>
             </Tabs>
           </div>

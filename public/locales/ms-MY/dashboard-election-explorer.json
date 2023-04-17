@@ -7,6 +7,20 @@
     "seats": "Kerusi",
     "full_result": "Keputusan penuh",
     "popular_searches": "Carian popular hari ini ",
+    "parliament_elections": "Pilihan Raya Umum",
+    "state_elections": "Pilihan Raya Negeri",
+    "candidate_name": "Nama calon",
+    "party_name": "Parti",
+    "total_votes": "Jumlah undi",
+    "perc_votes": "% undi",
+    "date": "Tarikh",
+    "constituency": "Kawasan",
+    "seats_won": "Kerusi dimenang",
+    "votes_won": "Undi didapati",
+    "perc_votes_won": "% undi dimenang",
+    "result": "Keputusan",
+    "winning_party": "Parti Menang",
+    "majority": "Majoriti",
     "election": {
         "section_1": "Terokailah data pilihan raya dari Merdeka sehingga kini!",
         "parliament": "Parlimen",
@@ -30,6 +44,7 @@
     "candidate": {
         "header": "Terokailah sejarah pilihan raya penuh bagi calon yang pernah bertanding dalam pilihan raya",
         "search_candidate": "Carilah nama calon",
+        "title": "Keputusan penuh bagi calon ",
         "never_compete_state": "{{ name }} tidak pernah bertanding di Pilihan Raya Negeri",
         "never_compete_parliament": "{{ name }} tidak pernah bertanding di Pilihan Raya Umum",
         "won": "Menang",
@@ -38,17 +53,13 @@
     "party": {
         "header": "Terokailah sejarah pilihan raya penuh parti politik",
         "search_party": "Carilah nama parti politik",
+        "title": "{{ party }}: Sejarah penuh pilihan raya di",
         "formed_gov": "Menjadi Kerajaan",
         "formed_opp": "Menjadi Pembangkang"
     },
     "seat": {
         "header": "Terokailah sejarah pilihan raya penuh bagi kawasan anda",
         "search_seat": "Carilah kerusi (eg. P.051 Bayan Baru)",
-        "date": "Tarikh",
-        "party": "Parti Menang",
-        "name": "Calon",
-        "majority": "Majoriti",
-        "result": "Keputusan",
         "uncontested": "Tidak ditandingi",
         "close": "Persaingan sengit",
         "comfortable": "Menang selesa"

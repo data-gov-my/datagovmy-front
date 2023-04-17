@@ -11,6 +11,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
 import { PoliticalParty } from "@lib/constants";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import ElectionCard from "@components/Card/ElectionCard";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -39,7 +40,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
 
   const { data, setData } = useData({
     popular_searches: ["P.001", "P.011", "P.111"],
-    seat: "",
+    seat: SEAT_OPTIONS[0],
 
     // query
     q_seat: "",
@@ -95,11 +96,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
 
   const columns: ColumnDef<Seat, any>[] = [
     columnHelper.accessor("date", {
-      header: "Date",
+      header: t("dashboard-election-explorer:date"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor((row: any) => row.party, {
-      header: "Winning Party",
+      header: t("dashboard-election-explorer:winning_party"),
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
@@ -116,11 +117,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       },
     }),
     columnHelper.accessor("name", {
-      header: "Candidate",
+      header: t("dashboard-election-explorer:candidate_name"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("majority", {
-      header: "Majority",
+      header: t("dashboard-election-explorer:majority"),
       cell: (info: any) => (
         <div className="flex flex-row items-center gap-2">
           <BarMeter perc={info.getValue()} />
@@ -129,7 +130,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       ),
     }),
     columnHelper.accessor("result", {
-      header: "Result",
+      header: t("dashboard-election-explorer:result"),
       cell: (info: any) =>
         info.getValue() === "comfortable" ? (
           <span className="flex flex-row items-center gap-2 uppercase">
@@ -155,53 +156,68 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
     columnHelper.display({
       id: "fullResult",
       cell: () => (
-        <button className="flex flex-row items-center gap-2">
-          <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-          <p className="whitespace-nowrap">{t("dashboard-election-explorer:full_result")}</p>
-        </button>
+        <ElectionCard
+          desc={t("dashboard-election-explorer:full_result")}
+          title={
+            <div>
+              <span className="text-lg font-bold uppercase text-black dark:text-white">
+                P148 - Ayer Hitam
+              </span>
+              <span className="pl-2 text-lg font-normal uppercase text-dim">Johor</span>
+            </div>
+          }
+        />
       ),
     }),
   ];
   return (
     <Section>
-      <div className="grid grid-cols-12">
-        <div className="col-span-10 col-start-2">
-          <h4 className="py-4 text-center">{t("dashboard-election-explorer:seat.header")}</h4>
-          <div className="flex flex-col items-center justify-center space-y-3 py-6">
-            <ComboBox
-              placeholder={t("dashboard-election-explorer:seat.search_seat")}
-              options={SEAT_OPTIONS}
-              selected={
-                data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : data.q_seat
-              }
-              onChange={e => {
-                if (e) setData("seat", e);
-                else {
-                  setData("q_seat", e);
-                  setData("seat", "");
+      <div className="lg:grid lg:grid-cols-12">
+        <div className="lg:col-span-10 lg:col-start-2">
+          <h4 className="text-center">{t("dashboard-election-explorer:seat.header")}</h4>
+          <div className="pt-6 pb-12">
+            <div className="flex flex-col items-center justify-center space-y-3">
+              <ComboBox
+                placeholder={t("dashboard-election-explorer:seat.search_seat")}
+                options={SEAT_OPTIONS}
+                selected={
+                  data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : data.q_seat
                 }
-              }}
-            />
-            <div className="flex flex-col text-center lg:flex-row">
-              <span className="whitespace-pre">
-                {t("dashboard-election-explorer:popular_searches")}
-              </span>
-              <span>
-                <span className="font-semibold text-primary dark:text-primary-dark">
-                  {data.popular_searches[0]}
+                onChange={e => {
+                  if (e) setData("seat", e);
+                  setData("q_seat", e);
+                }}
+              />
+              <div className="flex flex-col text-center lg:flex-row">
+                <span className="whitespace-pre">
+                  {t("dashboard-election-explorer:popular_searches")}
                 </span>
-                <span>, </span>
-                <span className="font-semibold text-primary dark:text-primary-dark">
-                  {data.popular_searches[1]}
+                <span>
+                  <span className="font-semibold text-primary dark:text-primary-dark">
+                    {data.popular_searches[0]}
+                  </span>
+                  <span>, </span>
+                  <span className="font-semibold text-primary dark:text-primary-dark">
+                    {data.popular_searches[1]}
+                  </span>
+                  <span>, </span>
+                  <span className="font-semibold text-primary dark:text-primary-dark">
+                    {data.popular_searches[2]}
+                  </span>
                 </span>
-                <span>, </span>
-                <span className="font-semibold text-primary dark:text-primary-dark">
-                  {data.popular_searches[2]}
-                </span>
-              </span>
+              </div>
             </div>
           </div>
-          <BorderlessTable data={dummyData} columns={columns} />
+          <BorderlessTable
+            title={
+              <div className="text-base font-bold">
+                {t("dashboard-election-explorer:candidate.title")}
+                <span className="text-primary">{data.seat.value}</span>
+              </div>
+            }
+            data={dummyData}
+            columns={columns}
+          />
         </div>
       </div>
     </Section>
