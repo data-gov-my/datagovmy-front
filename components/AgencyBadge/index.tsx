@@ -8,9 +8,15 @@ export interface AgencyBadgeProps {
   agency: string;
   link: string;
   icon?: ReactNode;
+  prefixThe?: boolean;
 }
 
-const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }) => {
+const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
+  agency,
+  link,
+  icon,
+  prefixThe = false,
+}) => {
   const { t } = useTranslation();
   return (
     <a href={link} target="_blank">
@@ -24,7 +30,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }
           <div className="relative overflow-hidden">
             {/* Brought to you by / Visit our portal */}
             <p className="text-xs text-dim transition-transform duration-200 group-hover:-translate-y-6">
-              {t("components.brought_by")}
+              {!prefixThe ? t("components.brought_by") : t("components.brought_by_the")}
             </p>
             <p className="absolute -top-6 text-xs text-primary transition-transform group-hover:translate-y-6 dark:text-primary-dark">
               {t("components.visit_portal")}

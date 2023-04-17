@@ -129,7 +129,8 @@
     "theme": "Tema",
     "light": "Terang",
     "dark": "Gelap",
-    "brought_by": "Dibawakan kepada anda oleh",
+    "brought_by": "Produk data digital oleh",
+    "brought_by_the": "Produk data digital oleh",
     "visit_portal": "Layari portal kami",
     "click_to_explore": "Click to explore",
     "ovs": "Lahir di Luar Negara"
@@ -149,7 +150,7 @@
     "title": "Terkini. Terperinci. Terbukti.",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "section_1": {
-      "title": "Malaysia secara Sepintas Lalu",
+      "title": "Terokailah papan pemuka paling popular!",
       "stats": {
         "population": "Penduduk Semasa",
         "economic_growth": "Pertumbuhan Ekonomi",
@@ -162,11 +163,11 @@
       }
     },
     "section_2": {
-      "title": "Lihat dataset paling hangat di data.gov.my",
-      "description": "Data ini bertujuan untuk membantu anda melihat bagaimana pengguna lain menggunakan data.gov.my. Jika anda sudah tahu apa yang anda ingin cari, anda boleh terus ke Katalog Data untuk mencari data yang paling relevan!",
+      "title": "Lihat dataset paling hangat!",
+      "description": "",
       "today": "Hari ini",
-      "past_24h": "24 jam lepas",
-      "past_month": "1 bulan lepas",
+      "past_24h": "24 jam",
+      "past_month": "1 bulan",
       "all_time": "Keseluruhan",
       "dashboards": "Papan Pemuka",
       "datasets_available": "Dataset Sedia Ada",

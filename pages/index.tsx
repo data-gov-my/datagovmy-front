@@ -106,6 +106,7 @@ const Home: Page = ({
         }
         agencyBadge={
           <AgencyBadge
+            prefixThe
             agency={t("agency.govt")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
@@ -134,7 +135,7 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                <Ranking ranks={panel.data.dashboard_views} />
+                <Ranking ranks={panel.data.dashboard} />
               </Tabs.Panel>
             ))}
           </Tabs>
@@ -161,7 +162,7 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                <Ranking ranks={panel.data.dataset_views} />
+                <Ranking ranks={panel.data.dataset} />
               </Tabs.Panel>
             ))}
           </Tabs>
@@ -296,23 +297,19 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       ...i18n,
       timeseries_callouts: data.statistics,
       timeseries: data.timeseries,
-      highlights: data.highlight,
       analytics: {
         data_as_of: data.table_summary.data_as_of,
         today: {
-          resource_views: data.metrics_stats.data.today.resource_views.count,
-          resource_downloads: data.metrics_stats.data.today.resource_downloads.count,
-          ...data.table_summary.data.today,
+          dataset: data.table_summary.data.today.dataset_views,
+          dashboard: data.table_summary.data.today.dashboard_views,
         },
         last_month: {
-          resource_views: data.metrics_stats.data.last_month.resource_views.count,
-          resource_downloads: data.metrics_stats.data.last_month.resource_downloads.count,
-          ...data.table_summary.data.last_month,
+          dataset: data.table_summary.data.last_month.dataset_views,
+          dashboard: data.table_summary.data.last_month.dashboard_views,
         },
         all_time: {
-          resource_views: data.metrics_stats.data.all_time.resource_views.count,
-          resource_downloads: data.metrics_stats.data.all_time.resource_downloads.count,
-          ...data.table_summary.data.all_time,
+          dataset: data.table_summary.data.all_time.dataset_views,
+          dashboard: data.table_summary.data.all_time.dataset_views,
         },
         total: {
           catalogue: data.total_catalog,
