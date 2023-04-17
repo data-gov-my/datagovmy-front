@@ -129,7 +129,8 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "brought_by": "Brought to you by the",
+    "brought_by": "Brought to you by",
+    "brought_by_the": "Brought to you by the",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore",
     "ovs": "Malaysian-born Overseas"

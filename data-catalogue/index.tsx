@@ -91,6 +91,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
             }
+            prefixThe
           />
         }
       />
