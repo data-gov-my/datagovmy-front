@@ -152,7 +152,7 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "section_1": {
       "title": "Explore our hottest dashboards",
-      "description": "These dashboards are the ones that have been getting attention, but we have way more to offer - don't forget to check out our [/dashboards](full collection of dashboards)!",
+      "description": "These dashboards are the ones that have been getting attention, but we have way more to offer - don't forget to check out our [full collection of dashboards](/dashboards)!",
       "stats": {
         "population": "Current Population",
         "economic_growth": "Economic Growth",
@@ -166,7 +166,7 @@
     },
     "section_2": {
       "title": "Study our most popular datasets",
-      "description": "If you want to search for something specific, head on over to our [/data-catalogue](data catalogue), where we serve data from every government agency in Malaysia!",
+      "description": "If you want to search for something specific, head on over to our [data catalogue](/data-catalogue), where we serve data from every government agency in Malaysia!",
       "past_24h": "24 hours",
       "past_month": "1 month",
       "all_time": "All-time",
