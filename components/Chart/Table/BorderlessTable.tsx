@@ -59,7 +59,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
       </div>
       <div className={responsive ? "table-responsive" : undefined}>
         <table className="w-full text-left text-sm">
-          <thead className="">
+          <thead>
             {table.getHeaderGroups().map((headerGroup: any) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header: any) => (
@@ -95,12 +95,10 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                       "py-[10px] pl-2"
                     )}
                   >
-                    <div className="flex flex-col lg:flex-row">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      {rowIndex === highlightedRow &&
-                        colIndex === 0 &&
-                        (win ? <Won desc={t("common.win")} /> : <Lost desc={t("common.lost")} />)}
-                    </div>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {rowIndex === highlightedRow &&
+                      colIndex === 0 &&
+                      (win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />)}
                   </td>
                 ))}
               </tr>
@@ -110,7 +108,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
       </div>
       {enablePagination && (
         <div className="space-y-3">
-          <span className="flex items-center justify-center gap-1 text-center text-sm">
+          <span className="flex items-center justify-center gap-2 text-center text-sm">
             {t("common.page_of", {
               current: table.getState().pagination.pageIndex + 1,
               total: table.getPageCount(),
@@ -166,9 +164,9 @@ interface WonProps {
 export const Won: FunctionComponent<WonProps> = ({ desc }) => {
   const { t } = useTranslation();
   return (
-    <span className="ml-2 flex flex-col items-center gap-1 md:flex-row md:gap-2">
+    <span className="ml-2 flex flex-row items-center gap-2">
       <CheckCircleIcon className="h-4 w-4 self-center text-[#10B981]" />
-      <span className="uppercase text-[#10B981]">{desc}</span>
+      <span className="whitespace-nowrap uppercase text-[#10B981]">{desc}</span>
     </span>
   );
 };
@@ -180,9 +178,9 @@ interface LostProps {
 export const Lost: FunctionComponent<LostProps> = ({ desc }) => {
   const { t } = useTranslation();
   return (
-    <span className="ml-2 flex flex-col items-center gap-1 md:flex-row md:gap-2">
+    <span className="ml-2 flex flex-row items-center gap-2">
       <XCircleIcon className="h-4 w-4 self-center text-danger" />
-      <span className="uppercase text-danger">{desc}</span>
+      <span className="whitespace-nowrap uppercase text-danger">{desc}</span>
     </span>
   );
 };
@@ -240,7 +238,7 @@ const dummyColumns: Array<ColumnDef<Candidate, any>> = [
     cell: (info: any) => {
       const party = info.getValue() as string;
       return (
-        <div className="flex flex-col items-center gap-1 md:flex-row md:gap-2">
+        <div className="flex flex-row items-center gap-2">
           <Image
             src={`/static/images/parties/${party}.png`}
             width={28}
@@ -261,7 +259,7 @@ const dummyColumns: Array<ColumnDef<Candidate, any>> = [
   columnHelper.accessor("perc", {
     id: "perc",
     cell: (info: any) => (
-      <div className="flex flex-col items-center gap-1 md:flex-row md:gap-2">
+      <div className="flex flex-row items-center gap-2">
         <BarMeter perc={info.getValue()} />
         <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
       </div>

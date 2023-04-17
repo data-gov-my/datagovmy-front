@@ -5,7 +5,7 @@ import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import ComboBox from "@components/Combobox";
 import { Section } from "@components/index";
 import { OptionType } from "@components/types";
-import { ArrowsPointingOutIcon, MinusIcon } from "@heroicons/react/20/solid";
+import { ArrowsPointingOutIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
@@ -103,14 +103,14 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex flex-col items-center gap-1 md:flex-row md:gap-2">
+          <div className="flex items-center gap-2 pr-7 lg:pr-0">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
               height={16}
-              alt={PoliticalParty[party]}
+              alt={PoliticalParty[party] as string}
             />
-            <span className="text-center">{PoliticalParty[party]}</span>
+            <span className="whitespace-nowrap">{PoliticalParty[party]}</span>
           </div>
         );
       },
@@ -122,7 +122,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
     columnHelper.accessor("majority", {
       header: "Majority",
       cell: (info: any) => (
-        <div className="flex flex-col items-center gap-1 md:flex-row md:gap-2">
+        <div className="flex flex-row items-center gap-2">
           <BarMeter perc={info.getValue()} />
           <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
         </div>
@@ -132,30 +132,32 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       header: "Result",
       cell: (info: any) =>
         info.getValue() === "comfortable" ? (
-          <span className="flex flex-col items-center gap-1 uppercase md:flex-row md:gap-2">
+          <span className="flex flex-row items-center gap-2 uppercase">
             <span className="w-4">💪</span>
-            <span className="text-[#10B981]">
+            <p className="whitespace-nowrap text-[#10B981]">
               {t("dashboard-election-explorer:seat.comfortable")}
-            </span>
+            </p>
           </span>
         ) : info.getValue() === "close" ? (
-          <span className="flex flex-col items-center gap-1 uppercase md:flex-row md:gap-2">
+          <span className="flex flex-row items-center gap-2 uppercase">
             <span className="w-4">🔥</span>
-            <span className="text-danger">{t("dashboard-election-explorer:seat.close")}</span>
+            <p className="whitespace-nowrap text-danger">
+              {t("dashboard-election-explorer:seat.close")}
+            </p>
           </span>
         ) : (
-          <span className="flex flex-col items-center gap-1 uppercase md:flex-row md:gap-2">
+          <span className="flex flex-row items-center gap-2 uppercase">
             <MinusIcon className="h-4 w-4 text-black dark:text-white" />
-            <span>{t("dashboard-election-explorer:seat.uncontested")}</span>
+            <p className="whitespace-nowrap">{t("dashboard-election-explorer:seat.uncontested")}</p>
           </span>
         ),
     }),
-    columnHelper.accessor("result", {
-      header: "",
+    columnHelper.display({
+      id: "fullResult",
       cell: () => (
-        <button className="flex flex-col items-center gap-1 md:flex-row md:gap-2">
+        <button className="flex flex-row items-center gap-2">
           <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-          <p>{t("dashboard-election-explorer:full_result")}</p>
+          <p className="whitespace-nowrap">{t("dashboard-election-explorer:full_result")}</p>
         </button>
       ),
     }),
@@ -180,7 +182,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                 }
               }}
             />
-            <div className="flex flex-col text-center md:flex-row">
+            <div className="flex flex-col text-center lg:flex-row">
               <span className="whitespace-pre">
                 {t("dashboard-election-explorer:popular_searches")}
               </span>

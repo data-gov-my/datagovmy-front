@@ -12,6 +12,7 @@ import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { PoliticalParty } from "@lib/constants";
+import ElectionCard from "@components/Card/ElectionCard";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -110,7 +111,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex flex-col items-center gap-1 md:gap-2 lg:flex-row">
+          <div className="flex flex-row items-center gap-2">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -138,10 +139,11 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
     columnHelper.accessor("result", {
       header: "",
       cell: () => (
-        <button className="flex flex-col items-center gap-1 md:gap-2 lg:flex-row">
-          <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-          <p>{t("dashboard-election-explorer:full_result")}</p>
-        </button>
+        <ElectionCard desc={t("dashboard-election-explorer:full_result")} />
+        // <button className="flex items-center gap-2 flex-row">
+        //   <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
+        //   <p>{t("dashboard-election-explorer:full_result")}</p>
+        // </button>
       ),
     }),
   ];

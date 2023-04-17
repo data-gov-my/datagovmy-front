@@ -51,7 +51,7 @@ const ContainerTabs: FunctionComponent<ContainerTabsProps> & { Panel: typeof Pan
                   key={index}
                   className={({ selected }) =>
                     clx(
-                      "group flex w-min flex-col items-center justify-center px-4 py-1 text-xs outline-none transition-colors sm:w-auto sm:flex-row lg:text-sm",
+                      "group flex w-min flex-col items-center justify-center px-4 py-1 text-sm outline-none transition-colors sm:w-auto sm:flex-row",
                       selected
                         ? "border-b-2 border-primary font-medium text-black dark:bg-washed-dark dark:text-white"
                         : "bg-transparent text-dim hover:text-black dark:hover:text-white"

@@ -27,6 +27,7 @@ interface ListProps {
   options: string[];
   icons?: Array<ReactNode>;
   className?: string;
+  shadow?: string;
   current: number;
   onChange: (index: number) => void;
 }
@@ -35,9 +36,9 @@ const Panel: FunctionComponent<PanelProps> = ({ children, name }) => {
   return <>{children}</>;
 };
 
-const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons, className }) => {
+const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons, shadow }) => {
   return (
-    <ul className="flex">
+    <ul className={clx("flex", shadow)}>
       {options.map((option, index) => (
         <li
           key={option}

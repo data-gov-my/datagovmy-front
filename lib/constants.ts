@@ -247,3 +247,59 @@ export const PoliticalParty: Record<string, string> = (() => {
     return { ...prev, ...{ [current.key]: current.name } };
   }, {});
 })();
+
+/**
+ * PARTIES defs.
+ */
+export const PARTY_COLOURS: Array<Record<string, any>> = [
+  {
+    key: "bebas",
+    colour: "#FFFFFF",
+  },
+  {
+    key: "bn",
+    colour: "#000080",
+  },
+  {
+    key: "gps",
+    colour: "#FF9B0E",
+  },
+  {
+    key: "grs",
+    colour: "#E2E8F0",
+  },
+  {
+    key: "kdm",
+    colour: "#E2E8F0",
+  },
+  {
+    key: "muda",
+    colour: "#000000",
+  },
+  {
+    key: "ph",
+    colour: "#E2462F",
+  },
+  {
+    key: "pn",
+    colour: "#003152",
+  },
+  {
+    key: "pbm",
+    colour: "#E2E8F0",
+  },
+  {
+    key: "warisan",
+    colour: "#E2E8F0",
+  },
+];
+
+/**
+ * Dictionary of code to party colour.
+ * @example PoliticalPartyColours["bebas"] -> "#FFFFFF"
+ */
+export const PoliticalPartyColours: Record<string, string> = (() => {
+  return [...PARTY_COLOURS].reduce((prev, current) => {
+    return { ...prev, ...{ [current.key]: current.colour } };
+  }, {});
+})();

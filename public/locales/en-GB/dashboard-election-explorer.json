@@ -44,6 +44,11 @@
     "seat": {
         "header": "Explore the entire electoral history for your area",
         "search_seat": "Search for a seat (eg. P.051 Bayan Baru)",
+        "date": "Date",
+        "party": "Winning Party",
+        "name": "Candidate",
+        "majority": "Majority",
+        "result": "Result",
         "uncontested": "Uncontested",
         "close": "Close contest",
         "comfortable": "Comfortable win"

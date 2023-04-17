@@ -44,7 +44,8 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
     // query
     q_party: "",
   });
-  type Candidate = {
+
+  type Party = {
     date: string;
     seats: string;
     perc: number;
@@ -52,7 +53,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
     result: string;
   };
 
-  const dummyData: Candidate[] = [
+  const dummyData: Party[] = [
     {
       date: "23 Jan 2022",
       seats: "111 / 222",
@@ -90,29 +91,29 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
     },
   ];
 
-  const columnHelper = createColumnHelper<Candidate>();
+  const columnHelper = createColumnHelper<Party>();
 
-  const columns: ColumnDef<Candidate, any>[] = [
+  const columns: ColumnDef<Party, any>[] = [
     columnHelper.accessor((row: any) => row.date, {
       header: "Date",
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor("seats", {
       header: "Seats Won",
       cell: (info: any) => (
-        <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+        <div className="flex flex-col items-center gap-2 md:flex-row">
           <BarMeter perc={Number(info.getValue())} />
           {/* <BarMeter perc={Number(String(info.getValue()).substring(info.getValue().length - 6, info.getValue().length - 2))} /> */}
-          <p>{info.getValue()}</p>
+          <p className="whitespace-nowrap">{info.getValue()}</p>
         </div>
       ),
     }),
     columnHelper.accessor("perc", {
       header: "% of Votes Won",
       cell: (info: any) => (
-        <div className="flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+        <div className="flex flex-col items-center gap-2 md:flex-row">
           <BarMeter perc={info.getValue()} />
-          <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
+          <p className="whitespace-nowrap">{`${numFormat(info.getValue(), "standard")}%`}</p>
         </div>
       ),
     }),
@@ -132,9 +133,9 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
     columnHelper.accessor("result", {
       header: "",
       cell: () => (
-        <button className="flex flex-col items-center gap-1 lg:flex-row lg:gap-3">
+        <button className="flex flex-row items-center gap-2">
           <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-          <p>{t("dashboard-election-explorer:full_result")}</p>
+          <p className="whitespace-nowrap">{t("dashboard-election-explorer:full_result")}</p>
         </button>
       ),
     }),
@@ -153,10 +154,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
               }
               onChange={e => {
                 if (e) setData("party", e);
-                else {
-                  setData("q_party", e);
-                  setData("party", "");
-                }
+                setData("q_party", e);
               }}
               enableFlag
             />

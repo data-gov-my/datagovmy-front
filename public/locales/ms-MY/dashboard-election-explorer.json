@@ -44,6 +44,11 @@
     "seat": {
         "header": "Terokailah sejarah pilihan raya penuh bagi kawasan anda",
         "search_seat": "Carilah kerusi (eg. P.051 Bayan Baru)",
+        "date": "Tarikh",
+        "party": "Parti Menang",
+        "name": "Calon",
+        "majority": "Majoriti",
+        "result": "Keputusan",
         "uncontested": "Tidak ditandingi",
         "close": "Persaingan sengit",
         "comfortable": "Menang selesa"
