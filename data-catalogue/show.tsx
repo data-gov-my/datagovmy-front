@@ -370,7 +370,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   dataset.type === "TABLE"
                     ? onSearch => (
                         <Search
-                          className="w-full lg:w-auto"
+                          className="w-full border-b lg:w-auto"
                           onChange={query => onSearch(query ?? "")}
                         />
                       )

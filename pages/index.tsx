@@ -1,4 +1,6 @@
+import AgencyBadge from "@components/AgencyBadge";
 import At from "@components/At";
+import Image from "next/image";
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
 import Container from "@components/Container";
@@ -101,6 +103,15 @@ const Home: Page = ({
               </At>
             </div>
           </div>
+        }
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agency.govt")}
+            link="https://www.malaysia.gov.my/portal/index"
+            icon={
+              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
+            }
+          />
         }
       />
 

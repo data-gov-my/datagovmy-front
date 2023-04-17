@@ -114,18 +114,17 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
       >
         <div className={`relative text-sm ${disabled ? "cursor-not-allowed" : ""}`}>
           <Listbox.Button
-            className={[
+            className={clx(
               "relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:border-washed-dark dark:bg-black lg:items-center",
               className,
               width,
               darkMode
-                ? "border-outline/10 text-white active:bg-washed/10"
+                ? "border-outline/10  active:bg-washed/10"
                 : "border-outline active:bg-washed",
-              ,
               disabled
                 ? "pointer-events-none bg-outline text-dim"
-                : "bg-white hover:border-outlineHover focus:outline-none focus-visible:ring-0",
-            ].join(" ")}
+                : "bg-white hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+            )}
           >
             <>
               {/* Icon */}
@@ -151,8 +150,8 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               {/* Label */}
               <span
                 className={clx(
-                  disabled ? "dark:text-dim" : "",
-                  "block w-full truncate dark:text-white lg:w-auto"
+                  disabled ? "dark:text-dim" : "dark:text-white",
+                  "block w-full truncate lg:w-auto"
                 )}
               >
                 {multiple
@@ -170,8 +169,8 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
                 <ChevronDownIcon
                   className={clx(
-                    disabled ? "dark:text-dim" : "",
-                    "h-5 w-5 text-black dark:text-white"
+                    disabled ? "dark:text-dim" : "dark:text-white",
+                    "h-5 w-5 text-black"
                   )}
                   aria-hidden="true"
                 />
@@ -208,19 +207,19 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               {availableOptions.map((option, index) => (
                 <Listbox.Option
                   key={index}
-                  className={[
+                  className={clx(
                     "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
                     multiple ? "pl-10" : "pl-4",
                     darkMode
                       ? "text-white hover:bg-washed/10"
                       : "hover:bg-washed dark:text-white dark:hover:bg-washed-dark",
                     multiple &&
-                    selected &&
-                    Array.isArray(selected) &&
-                    selected.some((item: OptionType<L, V>) => item.value == option.value)
+                      selected &&
+                      Array.isArray(selected) &&
+                      selected.some((item: OptionType<L, V>) => item.value == option.value)
                       ? "bg-washed dark:bg-washed-dark"
-                      : "bg-inherit",
-                  ].join(" ")}
+                      : "bg-inherit"
+                  )}
                   onClick={() => (multiple ? handleChange(option) : null)}
                   value={option}
                 >
