@@ -21,12 +21,11 @@ const Modal: FunctionComponent<ModalProps> = ({ trigger, title, children, fullSc
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 pt-[15%] ">
-          <div className={clx("block h-full", !fullScreen && "lg:p-4")}>
+          <div className={clx("block h-full lg:p-4")}>
             <Dialog.Panel
               className={clx(
                 Font.body.variable,
-                "mx-auto flex w-full flex-col rounded bg-white px-4 pt-4 font-sans dark:bg-black",
-                !fullScreen ? "max-w-sm" : "h-full"
+                "absolute bottom-0 mx-auto flex w-full flex-col rounded bg-white px-4 pt-4 font-sans dark:bg-black"
               )}
             >
               <div className="flex justify-between border-b bg-white pb-2 dark:border-outlineHover-dark dark:bg-black">

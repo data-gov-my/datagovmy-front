@@ -5,12 +5,12 @@ import {
   Container,
   Dropdown,
   Hero,
-  Input,
   Modal,
   Radio,
+  Search,
   Section,
 } from "@components/index";
-import { ArrowTrendingUpIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import {
   FunctionComponent,
   useMemo,
@@ -221,17 +221,16 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       };
     });
 
+    console.log(actives);
+
     return (
       <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:border-washed-dark dark:bg-black lg:pl-2">
         <div className="flex-grow">
-          <Input
+          <Search
             className="border-0"
-            type="search"
             placeholder={t("catalogue.search_placeholder")}
-            autoFocus
-            value={filter.search}
+            query={filter.search}
             onChange={e => setFilter("search", e)}
-            icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
           />
         </div>
         {/* Mobile */}
@@ -254,10 +253,9 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 className="block text-sm font-medium text-black dark:text-white"
               />
             }
-            fullScreen
           >
             {close => (
-              <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28 dark:divide-outlineHover-dark">
+              <div className="flex-grow space-y-4 overflow-y-auto pt-4 pb-28">
                 <Radio
                   label={t("catalogue.period")}
                   name="period"
@@ -297,22 +295,15 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   />
                 </div>
 
-                <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2 dark:bg-black">
+                <div className="fixed bottom-0 left-0 flex w-full gap-2 bg-white py-3 px-2 dark:bg-black">
                   <Button
                     className="btn btn-primary w-full justify-center"
-                    disabled={
-                      actives.length === 0 ||
-                      actives.findIndex(active => active[0] === "source") === -1
-                    }
+                    disabled={!actives.length}
                     onClick={reset}
                   >
                     {t("common.reset")}
                   </Button>
-                  <Button
-                    className="btn w-full justify-center"
-                    icon={<XMarkIcon className="h-4 w-4" />}
-                    onClick={close}
-                  >
+                  <Button className="btn btn-default w-full justify-center" onClick={close}>
                     {t("common.close")}
                   </Button>
                 </div>

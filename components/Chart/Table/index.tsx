@@ -177,7 +177,7 @@ const Table: FunctionComponent<TableProps> = ({
       </div>
 
       {(search || controls) && (
-        <div className="flex w-full flex-wrap items-center justify-between gap-4 pb-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4">
           <div className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:items-center">
             {controls && controls(setColumnFilters)}
           </div>
@@ -270,10 +270,10 @@ const Table: FunctionComponent<TableProps> = ({
                       const scale = cell.column.columnDef.scale ?? undefined;
 
                       const classNames = clx(
-                        lastCellInGroup.id === cell.column.id && "text-sm border-r-black",
+                        lastCellInGroup.id === cell.column.id && "text-sm",
                         relative ? relativeColor(value as number, inverse) : "bg-opacity-20",
                         scale && scaleColor(value as number),
-                        freeze?.includes(cell.column.id) && "sticky-col",
+                        freeze?.includes(cell.column.id) && "sticky-col border-l",
                         cell.column.columnDef.className
                           ? cell.column.columnDef.className
                           : cellClass
