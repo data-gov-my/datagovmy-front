@@ -77,9 +77,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                     {agencyBadge}
                   </div>
                   {category && (
-                    <span
-                      className={["text-base font-semibold uppercase", category[1] ?? ""].join(" ")}
-                    >
+                    <span className={clx("text-base font-semibold uppercase", category[1])}>
                       {t(category[0])}
                     </span>
                   )}
@@ -88,13 +86,9 @@ const Hero: FunctionComponent<HeroProps> = ({
 
               {(header || description) && (
                 <div className="space-y-3">
-                  {header && (
-                    <h2 className={["text-black", header[1] ?? ""].join(" ")}>{t(header[0])}</h2>
-                  )}
+                  {header && <h2 className={clx("text-black", header[1])}>{t(header[0])}</h2>}
                   {description && Array.isArray(description) ? (
-                    <p className={["text-dim xl:w-2/3", description[1]].join(" ")}>
-                      {description[0]}
-                    </p>
+                    <p className={clx("text-dim xl:w-2/3", description[1])}>{description[0]}</p>
                   ) : (
                     description
                   )}

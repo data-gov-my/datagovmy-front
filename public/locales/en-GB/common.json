@@ -345,7 +345,7 @@
     "begin": "Begin",
     "end": "End",
     "source": "Data Source",
-    "source_placeholder": "Select ministry or agency",
+    "source_placeholder": "Select agency",
     "search_placeholder": "Search for dataset",
     "image": {
       "title": "Image (PNG)",

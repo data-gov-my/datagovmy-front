@@ -80,7 +80,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           ),
         ]}
         description={
-          <div className="space-y-6">
+          <div className="space-y-6 xl:w-2/3">
             <p className="text-dim">{t("catalogue.description")}</p>
             {filterRef.current?.sourceFilter()}
           </div>

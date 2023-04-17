@@ -329,7 +329,7 @@
     "begin": "Dari",
     "end": "Hingga",
     "source": "Sumber Data",
-    "source_placeholder": "Pilih kementerian atau agensi",
+    "source_placeholder": "Pilih agensi",
     "search_placeholder": "Cari dataset",
     "image": {
       "title": "Gambar (PNG)",
