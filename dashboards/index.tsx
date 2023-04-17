@@ -132,30 +132,38 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         )}
 
         {/* Remaining sections for dashboard */}
-        {_collection.sort().map(([category, dashboards]) => {
-          return (
-            dashboards.length > 0 && (
-              <Section title={category} key={category}>
-                <div className="grid  grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-5">
-                  {dashboards.map((item: Dashboard) => (
-                    <At href={item.id} key={item.id}>
-                      <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
-                        <div className="relative flex items-center gap-4">
-                          <AgencyIcon agency={item.agency} />
-                          <p className="text-sm text-dim">{item.agency}</p>
-                          <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
-                        </div>
-                        <div className="relative overflow-hidden">
-                          <p className="truncate font-medium dark:text-white">{item.name}</p>
-                        </div>
-                      </Card>
-                    </At>
-                  ))}
-                </div>
-              </Section>
-            )
-          );
-        })}
+        <Section title={t("dashboard.section2_title")}>
+          <div className="columns-1 gap-6 sm:columns-2 md:columns-3 lg:columns-4">
+            {_collection.sort().map(([category, dashboards]) => {
+              return (
+                dashboards.length > 0 && (
+                  <Card
+                    className="my-3 inline-block h-min w-full rounded-xl border border-outline bg-background p-[18px] dark:border-washed-dark dark:bg-background-dark"
+                    key={category}
+                  >
+                    <h4 className="pb-1">{category}</h4>
+                    {dashboards.map((item: Dashboard, index: number) => (
+                      <div className="pt-2">
+                        <At href={item.id} key={item.id}>
+                          <Card className="group w-full space-y-3 rounded-xl border border-outline bg-white p-3 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:bg-black dark:hover:border-outlineHover-dark">
+                            <div className="relative flex items-center gap-4">
+                              <AgencyIcon agency={item.agency} />
+                              <p className="text-sm text-dim">{item.agency}</p>
+                              <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+                            </div>
+                            <div className="relative overflow-hidden">
+                              <p className="truncate font-medium dark:text-white">{item.name}</p>
+                            </div>
+                          </Card>
+                        </At>
+                      </div>
+                    ))}
+                  </Card>
+                )
+              );
+            })}
+          </div>
+        </Section>
       </Container>
     </>
   );

@@ -164,6 +164,7 @@
       "title": "Lihat dataset paling hangat di data.gov.my",
       "description": "Data ini bertujuan untuk membantu anda melihat bagaimana pengguna lain menggunakan data.gov.my. Jika anda sudah tahu apa yang anda ingin cari, anda boleh terus ke Katalog Data untuk mencari data yang paling relevan!",
       "today": "Hari ini",
+      "past_24h": "24 jam lepas",
       "past_month": "1 bulan lepas",
       "all_time": "Keseluruhan",
       "dashboards": "Papan Pemuka",
@@ -185,6 +186,13 @@
       "views": "Paparan Harian",
       "downloads": "Muat turun Data Harian"
     }
+  },
+  "dashboard": {
+    "header": "Koleksi Papan Pemuka",
+    "source_placeholder": "Pilih Agensi",
+    "search_placeholder": "Cari papan pemuka",
+    "section1_title": "Papan Pemuka Paling Popular",
+    "section2_title": "Semua papan pemuka"
   },
   "catalogue": {
     "header": "Katalog Data",
