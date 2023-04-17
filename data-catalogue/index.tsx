@@ -76,11 +76,8 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
     <div>
       <Hero
         background="blue"
-        header={[
-          t("catalogue.header").concat(
-            filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
-          ),
-        ]}
+        category={[t("home.category"), "text-primary dark:text-primary-dark"]}
+        header={[`${t("catalogue.header")} ${filterRef.current?.source ?? ""}`]}
         description={
           <div className="space-y-6 xl:w-2/3">
             <p className="text-dim">{t("catalogue.description")}</p>
@@ -94,6 +91,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
             }
+            prefixThe
           />
         }
       />

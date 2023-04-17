@@ -1,11 +1,12 @@
-import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
+import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import Fonts from "@config/font";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
+import { useTranslation } from "@hooks/useTranslation";
+import { get } from "@lib/api";
+import { routes } from "@lib/routes";
+import type { Page } from "@lib/types";
 
 const PekaB40: Page = ({
   last_updated,
@@ -29,7 +30,17 @@ const PekaB40: Page = ({
     </>
   );
 };
-// Disabled
+
+PekaB40.layout = page => (
+  <Layout
+    className={[Fonts.body.variable, "font-sans"].join(" ")}
+    stateSelector={<StateDropdown url={routes.PEKA_B40} currentState={"mys"} hideOnScroll />}
+  >
+    <StateModal url={routes.PEKA_B40} />
+    {page}
+  </Layout>
+);
+
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"], null, [
     "en-GB",
