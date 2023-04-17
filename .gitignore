@@ -44,9 +44,12 @@ public/workbox-*.js.map
 public/fallback-*.js
 public/index.html
 
+
 # sitemaps
 public/*.xml
 public/robots.txt
+public/sw.js.map
+public/fallback-development.js
 
 # bundle-analyzer
 analyze
