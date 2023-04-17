@@ -10,7 +10,7 @@
   @apply w-auto py-3 font-normal text-dim dark:text-white md:whitespace-nowrap;
 }
 .table tbody tr {
-  @apply border-b-[0.5px] border-l-[0.5px] border-l-black dark:border-b-washed-dark dark:border-l-outlineHover-dark;
+  @apply border-b-[0.5px] border-l-[0.5px] border-l-outline dark:border-b-washed-dark dark:border-l-outlineHover-dark;
 }
 
 .table tbody tr:first-child {

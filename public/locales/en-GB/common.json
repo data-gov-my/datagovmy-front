@@ -129,12 +129,13 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "brought_by": "Brought to you by",
+    "brought_by": "Brought to you by the",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore",
     "ovs": "Malaysian-born Overseas"
   },
   "agency": {
+    "govt": "Government of Malaysia",
     "bnm": "Bank Negara Malaysia",
     "mampu": "Malaysian Administrative Modernisation and Management Planning Unit",
     "dosm": "Department of Statistics Malaysia"
@@ -345,7 +346,7 @@
     "begin": "Begin",
     "end": "End",
     "source": "Data Source",
-    "source_placeholder": "Select ministry or agency",
+    "source_placeholder": "Select agency",
     "search_placeholder": "Search for dataset",
     "image": {
       "title": "Image (PNG)",

@@ -129,12 +129,13 @@
     "theme": "Tema",
     "light": "Terang",
     "dark": "Gelap",
-    "brought_by": "Brought to you by",
-    "visit_portal": "Visit our portal",
+    "brought_by": "Dibawakan kepada anda oleh",
+    "visit_portal": "Layari portal kami",
     "click_to_explore": "Click to explore",
     "ovs": "Lahir di Luar Negara"
   },
   "agency": {
+    "govt": "Kerajaan Malaysia",
     "bnm": "Bank Negara Malaysia",
     "mampu": "Unit Pemodenan Tadbiran dan Perancangan Pengurusan Malaysia",
     "dosm": "Jabatan Perangkaan Malaysia"
@@ -329,7 +330,7 @@
     "begin": "Dari",
     "end": "Hingga",
     "source": "Sumber Data",
-    "source_placeholder": "Pilih kementerian atau agensi",
+    "source_placeholder": "Pilih agensi",
     "search_placeholder": "Cari dataset",
     "image": {
       "title": "Gambar (PNG)",
