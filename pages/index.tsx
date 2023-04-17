@@ -120,6 +120,7 @@ const Home: Page = ({
         <Section
           title={t("home.section_1.title")}
           description={t("home.section_1.description")}
+          date={analytics.data_as_of}
           menu={
             <Tabs.List
               options={PANELS.map(item => item.name)}
