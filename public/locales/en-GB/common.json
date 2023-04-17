@@ -129,7 +129,7 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "brought_by": "Brought to you by the",
+    "brought_by": "Brought to you by",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore",
     "ovs": "Malaysian-born Overseas"
@@ -150,8 +150,8 @@
     "title": "High frequency. High granularity. High impact.",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "section_1": {
-      "title": "Explore our hottest dashboards",
-      "description": "Explore how you compare to the national data",
+      "title": "Explore our hottest dashboards!",
+      "description": "",
       "stats": {
         "population": "Current Population",
         "economic_growth": "Economic Growth",
@@ -164,10 +164,10 @@
       }
     },
     "section_2": {
-      "title": "Study our most popular datasets",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "past_24h": "Past 24h",
-      "past_month": "Past 1 month",
+      "title": "Study our most popular datasets!",
+      "description": "",
+      "past_24h": "24 hours",
+      "past_month": "1 month",
       "all_time": "All-time",
       "dashboards": "Dashboards",
       "datasets_available": "Datasets available",
