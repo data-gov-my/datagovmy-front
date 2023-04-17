@@ -1,5 +1,5 @@
 import AgencyBadge from "@components/AgencyBadge";
-import { Hero } from "@components/index";
+import { Hero, Section } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
@@ -23,13 +23,15 @@ const {{pascalCase dashboard_name}}: FunctionComponent<{{pascalCase dashboard_na
         description={[t("dashboard-{{dashCase dashboard_name}}:description")]}
         agencyBadge={
           <AgencyBadge
-            agency="Placeholder Agency"
-            link="Placeholder Link"
+            agency="{{titleCase agency_name}}"
+            link="{{agency_link}}"
           />
         }
       />
       {/* Rest of page goes here */}
-      <Container className="min-h-screen"></Container>
+      <Container className="min-h-screen">
+        {{> sectionPartial}}
+      </Container>
     </>
   );
 };
