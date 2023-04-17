@@ -163,7 +163,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                     className="my-3 inline-block h-min w-full rounded-xl border border-outline bg-background p-[18px] dark:border-washed-dark dark:bg-background-dark"
                     key={category}
                   >
-                    <h4 className="pb-1">{category}</h4>
+                    <h5 className="pb-1">{category}</h5>
                     {dashboards.map((item: Dashboard, index: number) => (
                       <div className="pt-2">
                         <At href={item.id} key={item.id}>
