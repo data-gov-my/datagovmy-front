@@ -184,9 +184,9 @@
       "total": "Jumlah"
     },
     "keys": {
-      "users": "Pengguna Harian",
+      "users": "Penggunaan OpenAPI Harian",
       "views": "Paparan Harian",
-      "downloads": "Muat turun Data Harian"
+      "downloads": "Muat Turun Harian"
     }
   },
   "dashboard": {

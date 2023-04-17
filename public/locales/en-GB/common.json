@@ -185,9 +185,9 @@
       "total": "Total"
     },
     "keys": {
-      "users": "Daily Users",
+      "users": "Daily OpenAPI Usage",
       "views": "Daily Views",
-      "downloads": "Daily Data Downloads"
+      "downloads": "Daily Downloads"
     }
   },
   "dashboard": {
