@@ -37,19 +37,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 .env.local
-public/sw.js
-public/sw.js.map
-public/workbox-*.js
-public/workbox-*.js.map
-public/fallback-*.js
-public/index.html
+sw.js
+sw.js.map
+workbox-*.js
+workbox-*.js.map
+fallback-*.js
+index.html
 
 
 # sitemaps
 public/*.xml
 public/robots.txt
-public/sw.js.map
-public/fallback-development.js
 
 # bundle-analyzer
 analyze
