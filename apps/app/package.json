@@ -1,5 +1,6 @@
 {
-  "name": "datagovmy",
+  "name": "app",
+  "version": "0.0.0",
   "private": true,
   "description": "Malaysia's official open data portal.",
   "license": "MIT",
@@ -35,14 +36,14 @@
     "leaflet.markercluster": "^1.5.3",
     "lodash": "^4.17.21",
     "luxon": "^3.0.3",
-    "next": "^13.2.3",
+    "next": "^13.3.0",
     "next-i18next": "^13.2.2",
     "next-pwa": "^5.6.0",
     "next-sitemap": "^3.1.23",
     "next-themes": "^0.2.1",
-    "react": "18.1.0",
+    "react": "^18.2.0",
     "react-chartjs-2": "^4.3.1",
-    "react-dom": "18.1.0",
+    "react-dom": "^18.2.0",
     "react-i18next": "^12.2.0",
     "react-leaflet": "^4.1.0",
     "sharp": "^0.31.0"
@@ -68,10 +69,9 @@
     "postcss-nesting": "^10.1.10",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.11",
-    "typescript": "^4.9.3",
-    "webpack": "^5.75.0",
-    "tailwindconfig": "*",
     "tailwindcss": "*",
-    "tsconfig": "*"
+    "tsconfig": "*",
+    "typescript": "^4.9.3",
+    "webpack": "^5.75.0"
   }
 }

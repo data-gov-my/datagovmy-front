@@ -1,0 +1,21 @@
+{
+  "name": "docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Malaysia's official open data portal.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "postbuild": "next-sitemap",
+    "start": "next start"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "next": "*",
+    "nextra": "^2.4.0",
+    "nextra-theme-docs": "^2.4.0",
+    "react": "*",
+    "react-dom": "*"
+  }
+}

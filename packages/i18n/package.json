@@ -1,0 +1,7 @@
+{
+  "name": "i18n",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Translations for datagovmy.",
+  "license": "MIT"
+}
