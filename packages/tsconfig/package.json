@@ -5,6 +5,13 @@
   "files": [
     "base.json",
     "nextjs.json",
-    "react-library.json"
-  ]
+    "react-library.json",
+    "tailwindcss.js",
+    "postcss.js"
+  ],
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "tailwindcss": "^3.3.1"
+  }
 }
