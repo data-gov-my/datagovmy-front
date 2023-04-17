@@ -14,7 +14,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }
   const { t } = useTranslation();
   return (
     <a href={link} target="_blank">
-      <Card className="group flex w-screen items-center border-y border-outline bg-white py-1.5 px-3 transition-[padding] duration-200 hover:border-outlineHover hover:pr-10 dark:border-washed-dark dark:bg-black dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark md:w-fit md:rounded-full md:border md:py-1 md:pl-2 md:pr-6">
+      <Card className="group -mx-3 flex w-screen items-center border-y border-outline bg-white py-1.5 px-3 transition-[padding] duration-200 hover:border-outlineHover hover:pr-10 dark:border-washed-dark dark:bg-black dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark md:m-0 md:w-fit md:rounded-full md:border md:py-1 md:pl-2 md:pr-6">
         <div className="relative flex w-full items-center gap-2">
           {/* Agency icon */}
           {icon || <div className="h-8 w-8 rounded-full bg-outline" />}

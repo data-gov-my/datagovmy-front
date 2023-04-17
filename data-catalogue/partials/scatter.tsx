@@ -6,43 +6,26 @@ import { AKSARA_COLOR } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import { track } from "@lib/mixpanel";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { ChartDataset } from "chart.js";
 
 const Scatter = dynamic(() => import("@components/Chart/Scatter"), { ssr: false });
 
 interface CatalogueScatterProps {
   className?: string;
-  config: {
-    precision: number;
-  };
-  dataset:
-    | {
-        chart: {
-          label: string;
-          data: Array<{ x: number; y: number }>;
-        };
-        meta: {
-          en: {
-            title: string;
-          };
-          bm: {
-            title: string;
-          };
-        };
-      }
-    | any;
+  config: any;
+  dataset: any;
+  translations: any;
   urls: {
     [key: string]: string;
   };
-  lang: "en" | "bm";
   onDownload?: (prop: DownloadOptions) => void;
 }
 
 const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
   className = "h-[450px] lg:h-[400px] max-w-lg mx-auto",
   config,
-  lang,
+  translations,
   dataset,
   urls,
   onDownload,
@@ -61,14 +44,14 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name_en: dataset.meta.en.title,
-              name_bm: dataset.meta.bm.title,
-              ext: "png",
-            });
+            // track("file_download", {
+            //   uid: dataset.meta.unique_id.concat("_png"),
+            //   type: "image",
+            //   id: dataset.meta.unique_id,
+            //   name_en: dataset.meta.en.title,
+            //   name_bm: dataset.meta.bm.title,
+            //   ext: "png",
+            // });
           },
         },
         {
@@ -80,15 +63,16 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  ext: "svg",
-                })
+              .then(
+                () => {}
+                // track("file_download", {
+                //   uid: dataset.meta.unique_id.concat("_svg"),
+                //   type: "image",
+                //   id: dataset.meta.unique_id,
+                //   name_en: dataset.meta.en.title,
+                //   name_bm: dataset.meta.bm.title,
+                //   ext: "svg",
+                // })
               )
               .catch(e => {
                 console.error(e);
@@ -118,13 +102,37 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
     [ctx]
   );
 
+  const _datasets = useMemo<ChartDataset<"scatter", any[]>[]>(() => {
+    const colors = [
+      AKSARA_COLOR.PRIMARY,
+      AKSARA_COLOR.GREY,
+      AKSARA_COLOR.DANGER,
+      AKSARA_COLOR.WARNING,
+    ]; // [blue, red]
+
+    return dataset.chart.map((item: any, index: number) => ({
+      type: "line",
+      data: item.data,
+      label: translations[item.label] ?? item.label,
+      borderColor: colors[index],
+      backgroundColor: colors[index],
+      borderWidth: 0,
+    }));
+  }, [dataset.chart]);
+
   useWatch(() => {
     if (onDownload) onDownload(availableDownloads);
-  }, [dataset.chart.x, ctx]);
+  }, [dataset.chart, ctx]);
 
   return (
     <>
-      <Scatter _ref={ref => setCtx(ref)} className={className} data={dataset.chart} />
+      <Scatter
+        _ref={ref => setCtx(ref)}
+        className={className}
+        data={_datasets}
+        enableRegression
+        enableLegend
+      />
     </>
   );
 };

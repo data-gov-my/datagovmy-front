@@ -13,28 +13,12 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
 interface CataloguePyramidProps {
   className?: string;
-  config: {
-    precision: number;
-  };
-  dataset:
-    | {
-        chart: {
-          x: number[];
-          y: number[];
-        };
-        meta: {
-          en: {
-            title: string;
-          };
-          bm: {
-            title: string;
-          };
-        };
-      }
-    | any;
+  config: any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
+  translations: Record<string, string>;
   onDownload?: (prop: DownloadOptions) => void;
 }
 
@@ -43,6 +27,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   config,
   dataset,
   urls,
+  translations,
   onDownload,
 }) => {
   const { t } = useTranslation();
@@ -59,14 +44,14 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name_en: dataset.meta.en.title,
-              name_bm: dataset.meta.bm.title,
-              ext: "png",
-            });
+            // track("file_download", {
+            //   uid: dataset.meta.unique_id.concat("_png"),
+            //   type: "image",
+            //   id: dataset.meta.unique_id,
+            //   name_en: dataset.meta.en.title,
+            //   name_bm: dataset.meta.bm.title,
+            //   ext: "png",
+            // });
           },
         },
         {
@@ -78,15 +63,16 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  ext: "svg",
-                })
+              .then(
+                () => {}
+                // track("file_download", {
+                //   uid: dataset.meta.unique_id.concat("_svg"),
+                //   type: "image",
+                //   id: dataset.meta.unique_id,
+                //   name_en: dataset.meta.en.title,
+                //   name_bm: dataset.meta.bm.title,
+                //   ext: "svg",
+                // })
               )
               .catch(e => {
                 console.error(e);
@@ -124,8 +110,8 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
       .filter(([key, _]) => key !== "x")
       .map(([key, y], index) => ({
         data: y as number[],
-        label: dataset.table.columns[key],
-        backgroundColor: colors[index].concat("33") ?? AKSARA_COLOR.PRIMARY_H,
+        label: translations[key] ?? key,
+        backgroundColor: colors[index].concat("1A") ?? AKSARA_COLOR.PRIMARY_H,
         borderColor: colors[index] ?? AKSARA_COLOR.PRIMARY,
         borderWidth: 1,
       }));

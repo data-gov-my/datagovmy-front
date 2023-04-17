@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { Input } from "..";
 import { useTranslation } from "next-i18next";
+import { clx } from "@lib/helpers";
 
 type CommonProps<L, V> = {
   className?: string;
@@ -113,18 +114,17 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
       >
         <div className={`relative text-sm ${disabled ? "cursor-not-allowed" : ""}`}>
           <Listbox.Button
-            className={[
+            className={clx(
               "relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:border-washed-dark dark:bg-black lg:items-center",
               className,
               width,
               darkMode
                 ? "border-outline/10 text-white active:bg-washed/10"
                 : "border-outline bg-white active:bg-washed",
-              ,
               disabled
                 ? "pointer-events-none bg-outline text-dim"
-                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0",
-            ].join(" ")}
+                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+            )}
           >
             <>
               {/* Icon */}
@@ -199,19 +199,19 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               {availableOptions.map((option, index) => (
                 <Listbox.Option
                   key={index}
-                  className={[
+                  className={clx(
                     "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
                     multiple ? "pl-10" : "pl-4",
                     darkMode
                       ? "text-white hover:bg-washed/10"
                       : "hover:bg-washed dark:text-white dark:hover:bg-washed-dark",
                     multiple &&
-                    selected &&
-                    Array.isArray(selected) &&
-                    selected.some((item: OptionType<L, V>) => item.value == option.value)
+                      selected &&
+                      Array.isArray(selected) &&
+                      selected.some((item: OptionType<L, V>) => item.value == option.value)
                       ? "bg-washed dark:bg-washed-dark"
-                      : "bg-inherit",
-                  ].join(" ")}
+                      : "bg-inherit"
+                  )}
                   onClick={() => (multiple ? handleChange(option) : null)}
                   value={option}
                 >

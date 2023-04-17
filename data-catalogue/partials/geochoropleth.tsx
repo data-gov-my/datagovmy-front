@@ -1,6 +1,5 @@
 import type { GeoChoroplethRef } from "@components/Chart/Choropleth/geochoropleth";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import type { Color } from "@hooks/useColor";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
 import type { DownloadOptions, Geotype } from "@lib/types";
@@ -11,30 +10,9 @@ const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochor
   ssr: false,
 });
 
-type ChoroPoint = {
-  id: string;
-  value: number;
-};
-
 interface CatalogueChoroplethProps {
-  config: {
-    color: Color;
-    geojson: Geotype;
-    precision: number;
-  };
-  dataset: {
-    chart: Array<ChoroPoint>; // ChoroplethData
-    meta: {
-      en: {
-        title: string;
-      };
-      bm: {
-        title: string;
-      };
-      unique_id: string;
-    };
-  };
-  lang: "en" | "bm";
+  config: any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
@@ -44,7 +22,6 @@ interface CatalogueChoroplethProps {
 const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   dataset,
   config,
-  lang,
   urls,
   onDownload,
 }) => {
@@ -67,7 +44,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           description: t("catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (ctx) ctx.current?.print(dataset.meta.unique_id.concat(".png"));
+            if (ctx) ctx.current?.print(dataset.meta.unique_id);
             // TODO: Add track by mixpanel
           },
         },
@@ -100,8 +77,8 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
         id={dataset.meta.unique_id}
         className="h-[350px] w-full lg:h-[450px]"
         data={{
-          labels: dataset.chart.map(({ id }: ChoroPoint) => id),
-          values: dataset.chart.map(({ value }: ChoroPoint) => value),
+          labels: dataset.chart.x,
+          values: dataset.chart.y,
         }}
         color={config.color}
         type={config.geojson}

@@ -1,6 +1,5 @@
 import { Color, useColor } from "@hooks/useColor";
 import { MapControl, MapControlRef } from "@hooks/useMap";
-import { useTranslation } from "@hooks/useTranslation";
 import { minMax, numFormat } from "@lib/helpers";
 import type { FeatureCollection } from "geojson";
 import { LatLng, LatLngBounds, LatLngExpression, LatLngTuple } from "leaflet";
@@ -8,7 +7,6 @@ import { useTheme } from "next-themes";
 import {
   ForwardedRef,
   FunctionComponent,
-  ReactElement,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -18,6 +16,7 @@ import { GeoJSON, MapContainer, TileLayer, Tooltip } from "react-leaflet";
 import type { ChoroplethData } from ".";
 import ChartHeader, { ChartHeaderProps } from "../ChartHeader";
 import type { Geotype } from "@lib/types";
+import { useTranslation } from "react-i18next";
 
 export interface GeoChoroplethRef {
   print: (text: string) => void;
@@ -32,15 +31,11 @@ interface GeoChoroplethProps extends ChartHeaderProps {
   data?: ChoroplethData;
   position?: LatLngExpression;
   enableZoom?: boolean;
+  enableFill?: boolean;
   zoom?: number;
   _ref?: ForwardedRef<GeoChoroplethRef>;
   onReady?: (value: true) => void;
 }
-
-type MarkerProp = {
-  position: LatLngExpression;
-  name?: string | ReactElement;
-};
 
 const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   id,
@@ -55,6 +50,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   precision = 1,
   unit,
   enableZoom = true,
+  enableFill = true,
   zoom = 5,
   onReady,
   _ref,
@@ -103,36 +99,35 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
 
         {/* GeoChoropleth */}
         <>
-          {data &&
-            choromap?.features.map(feature => {
-              const value = data.values[data.labels.indexOf(feature.properties![type])];
+          {choromap?.features.map(feature => {
+            const value = data?.values[data.labels.indexOf(feature.properties![type])];
 
-              return (
-                <GeoJSON
-                  key={feature.id}
-                  data={feature}
-                  style={{
-                    color: "#0000001A",
-                    fillColor: interpolate(value),
-                    fillOpacity: 0.6,
-                  }}
-                  onEachFeature={(_, layer) => {
-                    layer.on({
-                      mouseover: ref.current?.highlightFeature,
-                      mouseout: ref.current?.resetHighlight,
-                      click: ref.current?.zoomToFeature,
-                    });
-                  }}
-                >
-                  <Tooltip key={value} sticky>
-                    {feature.properties![type]}:{" "}
-                    {value !== null
-                      ? numFormat(value, "standard", precision).concat(unit ?? "")
-                      : t("common.no_data")}
-                  </Tooltip>
-                </GeoJSON>
-              );
-            })}
+            return (
+              <GeoJSON
+                key={feature.id}
+                data={feature}
+                style={{
+                  color: "#0000001A",
+                  fillColor: enableFill ? interpolate(value) : interpolate(0.33, true), // assuming with enableFill
+                  fillOpacity: 0.6,
+                }}
+                onEachFeature={(_, layer) => {
+                  layer.on({
+                    mouseover: ref.current?.highlightFeature,
+                    mouseout: ref.current?.resetHighlight,
+                    click: ref.current?.zoomToFeature,
+                  });
+                }}
+              >
+                <Tooltip key={value} sticky>
+                  {feature.properties![type]}:{" "}
+                  {value !== null && value !== undefined
+                    ? numFormat(value, "standard", precision).concat(unit ?? "")
+                    : t("common.no_data")}
+                </Tooltip>
+              </GeoJSON>
+            );
+          })}
         </>
         <TileLayer
           key={theme}

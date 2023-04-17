@@ -16,9 +16,10 @@ const At: FunctionComponent<AtProps> = ({
   className,
   scrollTop = true,
   enableIcon = false,
+  onClick,
 }) => {
   return (
-    <Link href={href} scroll={scrollTop} className={className}>
+    <Link href={href} scroll={scrollTop} className={className} onClick={onClick}>
       {enableIcon ? (
         <div className="group flex items-center gap-2">
           {children}
