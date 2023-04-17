@@ -1,17 +1,13 @@
 {
-  "name": "aksara-front",
+  "name": "datagovmy",
   "private": true,
-  "description": "AKSARA is an open data site by the Department of Statistics Malaysia to institutionalise transparency and make data accessible for all.",
+  "description": "Malaysia's official open data portal.",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "postbuild": "next-sitemap",
-    "start": "next start",
-    "prepare": "husky install"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx,css,md}": "prettier --write"
+    "start": "next start"
   },
   "sideEffects": false,
   "dependencies": {
