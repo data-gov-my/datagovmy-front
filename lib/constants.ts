@@ -217,20 +217,40 @@ export const PARTIES: Array<Record<string, any>> = [
     name: "Parti KDM",
   },
   {
+    key: "mca",
+    name: "Malaysian Chinese Association",
+  },
+  {
     key: "muda",
     name: "Malaysian United Democratic Alliance",
+  },
+  {
+    key: "pbm",
+    name: "Parti Bangsa Malaysia",
+  },
+  {
+    key: "pcs",
+    name: "Parti Cinta Sabah",
+  },
+  {
+    key: "pejuang",
+    name: "Parti Pejuang Tanah Air",
   },
   {
     key: "ph",
     name: "Pakatan Harapan",
   },
   {
+    key: "phrs",
+    name: "Parti Harapan Rakyat Sabah",
+  },
+  {
     key: "pn",
     name: "Perikatan Nasional",
   },
   {
-    key: "pbm",
-    name: "Parti Bangsa Malaysia",
+    key: "psb",
+    name: "Parti Sarawak Bersatu",
   },
   {
     key: "warisan",
@@ -254,7 +274,7 @@ export const PoliticalParty: Record<string, string> = (() => {
 export const PARTY_COLOURS: Array<Record<string, any>> = [
   {
     key: "bebas",
-    colour: "#FFFFFF",
+    colour: "#A7A7A7",
   },
   {
     key: "bn",
@@ -277,15 +297,31 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "#000000",
   },
   {
+    key: "pbm",
+    colour: "#E2E8F0",
+  },
+  {
+    key: "pcs",
+    colour: "#E2E8F0",
+  },
+  {
+    key: "pejuang",
+    colour: "#E2E8F0",
+  },
+  {
     key: "ph",
     colour: "#E2462F",
+  },
+  {
+    key: "phrs",
+    colour: "#E2E8F0",
   },
   {
     key: "pn",
     colour: "#003152",
   },
   {
-    key: "pbm",
+    key: "psb",
     colour: "#E2E8F0",
   },
   {
