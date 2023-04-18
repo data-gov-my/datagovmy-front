@@ -3,7 +3,7 @@ import AgencyBadge from "@components/AgencyBadge";
 import Hero from "@components/Hero";
 import Container from "@components/Container";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
-import { SPRIcon } from "@components/Icon/agency";
+import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
@@ -21,10 +21,11 @@ interface ElectionExplorerProps {}
 
 const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
   const { t, i18n } = useTranslation(["common", "dashboard-election-explorer"]);
+
   const PANELS = [
     {
       name: t("dashboard-election-explorer:elections"),
-      icon: <SPRIcon className="-mb-1" fillColor="#00000000" />,
+      icon: <SPRIconSolid className="-mb-1" />,
       data: <Election />,
     },
     {
@@ -57,7 +58,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
           <AgencyBadge
             agency={"Election Comission (EC)"}
             link="https://www.spr.gov.my/"
-            icon={<SPRIcon className="text-white" />}
+            icon={<SPRIcon />}
           />
         }
       />
