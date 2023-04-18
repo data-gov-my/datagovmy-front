@@ -1,18 +1,20 @@
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { Dropdown, Section, StateDropdown, Tabs } from "@components/index";
+import { Button, Dropdown, Modal, Section, StateDropdown, Tabs } from "@components/index";
+import Card from "@components/Card";
+import ComboBox from "@components/Combobox";
+import Label from "@components/Label";
+import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import { List, Panel } from "@components/Tabs";
+import { OptionType } from "@components/types";
 import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { OptionType } from "@components/types";
 import { CountryAndStates, PoliticalParty, PoliticalPartyColours } from "@lib/constants";
-import Card from "@components/Card";
 import { clx, numFormat } from "@lib/helpers";
-import ComboBox from "@components/Combobox";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { BarMeter } from "@components/Chart/Table/BorderlessTable";
+import { useWindowScroll } from "@hooks/useWindowWidth";
 
 /**
  * Election Explorer Dashboard - Elections Tab
@@ -31,6 +33,8 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
   const { t, i18n } = useTranslation();
   const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
+  const scroll = useWindowScroll();
+  const show = useMemo(() => scroll.scrollY > 350, [scroll.scrollY]);
 
   useEffect(() => {
     const div = divRef.current;
@@ -186,7 +190,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
   const dummyColumns: Array<ColumnDef<Candidate, any>> = [
     columnHelper.accessor("name", {
       id: "name",
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
       header: t("dashboard-election-explorer:candidate_name"),
     }),
     columnHelper.accessor((row: any) => row.party, {
@@ -194,7 +198,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex flex-row items-center gap-2">
+          <div className="flex items-center gap-2 pr-7 lg:pr-0">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -228,16 +232,91 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     <>
       <Section>
         <h4 className="text-center">{t("dashboard-election-explorer:election.section_1")}</h4>
+        <div className={clx(show ? "fixed right-0 top-16 z-10 lg:hidden" : "hidden")}>
+          <Modal
+            trigger={open => (
+              <Button
+                onClick={open}
+                className="mr-3 block self-center border border-outline bg-background px-3 py-1.5 shadow-lg dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark"
+              >
+                <span>{t("catalogue.filter")}:</span>
+                <span className="rounded-md bg-primary px-1 py-0.5 text-xs text-white dark:bg-primary-dark">
+                  {3}
+                </span>
+              </Button>
+            )}
+            title={
+              <Label
+                label={t("catalogue.filter") + ":"}
+                className="block text-sm font-bold text-black dark:text-white"
+              />
+            }
+          >
+            {close => (
+              <div className="flex-grow space-y-4 overflow-y-auto pt-4 pb-24">
+                <Label
+                  label={t("dashboard-election-explorer:election.election") + ":"}
+                  className="block text-sm font-medium text-black dark:text-white"
+                />
+                <div className="max-w-fit rounded-full border border-outline bg-white p-1 dark:border-washed-dark dark:bg-black">
+                  <List
+                    options={PANELS.map(item => item.name)}
+                    icons={PANELS.map(item => item.icon)}
+                    current={data.tabs}
+                    onChange={index => setData("tabs", index)}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2 border-y py-4 dark:border-outlineHover-dark">
+                  <Label
+                    label={t("dashboard-election-explorer:election.state") + ":"}
+                    className="block text-sm font-medium text-black dark:text-white"
+                  />
+                  <Label
+                    label={t("dashboard-election-explorer:election.election_year") + ":"}
+                    className="block text-sm font-medium text-black dark:text-white"
+                  />
+                  <StateDropdown
+                    currentState={data.state}
+                    onChange={selected => setData("state", selected.value)}
+                    exclude={["mys", "kul", "lbn", "pjy"]}
+                    width="w-full"
+                    anchor="left"
+                    disabled={data.tabs === 0}
+                  />
+                  <Dropdown
+                    width="w-full"
+                    placeholder={t("common.select")}
+                    options={ELECTION_OPTIONS}
+                    selected={ELECTION_OPTIONS.find(e => e.value === data.election.value)}
+                    onChange={e => setData("election", e)}
+                  />
+                </div>
+                <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white py-3 px-2 dark:bg-black">
+                  <Button className="btn btn-primary w-full justify-center" onClick={close}>
+                    {t("dashboard-election-explorer:election.apply_filters")}
+                  </Button>
+                  <Button className="btn btn-default w-full justify-center" onClick={close}>
+                    {t("common.close")}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Modal>
+        </div>
         <div
           ref={divRef}
-          className={clx("sticky top-16 z-10 mt-6 flex items-center justify-center gap-2 lg:pl-2")}
+          className={clx(
+            "sticky top-16 z-10 mt-6 hidden items-center justify-center gap-2 lg:flex lg:pl-2",
+            hasShadow ? "drop-shadow-xl" : "drop-shadow-none"
+          )}
         >
-          <div className="max-w-fit rounded-full border border-outline bg-white p-1 dark:border-washed-dark dark:bg-black">
+          <div
+            className={clx(
+              "max-w-fit rounded-full border border-outline bg-white p-1 dark:border-washed-dark dark:bg-black",
+              hasShadow ? "shadow-lg dark:shadow-neutral-700" : "shadow-none"
+            )}
+          >
             <List
-              shadow={clx(
-                hasShadow ? "shadow-2xl" : "shadow-none",
-                "shadow-black dark:shadow-white"
-              )}
               options={PANELS.map(item => item.name)}
               icons={PANELS.map(item => item.icon)}
               current={data.tabs}
@@ -245,7 +324,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             />
           </div>
           <StateDropdown
-            shadow={clx(hasShadow ? "shadow-2xl" : "shadow-none", "shadow-black dark:shadow-white")}
+            shadow={clx(hasShadow ? "shadow-lg dark:shadow-neutral-700" : "shadow-none")}
             currentState={data.state}
             onChange={selected => setData("state", selected.value)}
             exclude={["mys", "kul", "lbn", "pjy"]}
@@ -254,7 +333,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             disabled={data.tabs === 0}
           />
           <Dropdown
-            shadow={clx(hasShadow ? "shadow-2xl" : "shadow-none", "shadow-black dark:shadow-white")}
+            shadow={clx(hasShadow ? "shadow-lg dark:shadow-neutral-700" : "shadow-none")}
             anchor="left"
             width="max-w-fit"
             options={ELECTION_OPTIONS}
@@ -299,7 +378,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                             cols={74}
                             color={["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"]}
                           />
-                          <hr className="absolute inset-x-1/2 -top-3 h-[36px] w-0 border border-dashed border-background-dark dark:border-white lg:h-[72px]"></hr>
+                          <hr className="absolute inset-x-1/2 -top-3 h-[72px] w-0 border border-dashed border-background-dark dark:border-white"></hr>
                         </div>
                         <div className="flex flex-row flex-wrap items-center justify-center gap-6 text-dim">
                           {dummy.map(({ label, value }) => (
@@ -349,7 +428,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                       name={t("dashboard-election-explorer:election.table")}
                       icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                     >
-                      <BorderlessTable data={dummyData} columns={dummyColumns} />
+                      <BorderlessTable highlightedRow={4} data={dummyData} columns={dummyColumns} />
                     </Panel>
                   </Tabs>
                 </div>
@@ -386,8 +465,8 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
               }
               data={dummyData}
               columns={dummyColumns}
-              // highlightedRow={1}
-              // win={true}
+              highlightedRow={1}
+              win
             />
           </div>
         </div>
@@ -396,9 +475,9 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             <h4 className="py-4 text-center">
               {t("dashboard-election-explorer:election.section_3")}
             </h4>
-            <div className="flex flex-row justify-between gap-4 pb-6 sm:flex-row">
-              <div className="flex flex-row">
-                <div className="w-fit px-2 py-1 text-sm lg:px-4">{t("catalogue.filter")}</div>
+            <div className="flex flex-row justify-between gap-4 sm:flex-row">
+              <div className="flex flex-row items-baseline gap-4">
+                <p className="w-fit text-sm">{t("catalogue.filter")}</p>
                 <Dropdown
                   anchor="left"
                   width="w-fit"
@@ -429,12 +508,14 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 name={t("dashboard-election-explorer:election.map")}
                 icon={<MapIcon className="mr-1 h-5 w-5" />}
               >
-                <Card
-                  className="static h-[500px] rounded-xl border border-outline dark:border-washed-dark"
-                  type="gray"
-                >
-                  {/* <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} /> */}
-                </Card>
+                <div className="pt-6">
+                  <Card
+                    className="static h-[500px] rounded-xl border border-outline dark:border-washed-dark"
+                    type="gray"
+                  >
+                    <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />
+                  </Card>
+                </div>
               </Panel>
               <Panel
                 name={t("dashboard-election-explorer:election.table")}

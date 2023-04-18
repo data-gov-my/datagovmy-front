@@ -2,16 +2,16 @@ import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { BarMeter } from "@components/Chart/Table/BorderlessTable";
+import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { Section } from "@components/index";
 import { OptionType } from "@components/types";
-import { ArrowsPointingOutIcon, MinusIcon } from "@heroicons/react/24/solid";
+import { MinusIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
 import { PoliticalParty } from "@lib/constants";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import ElectionCard from "@components/Card/ElectionCard";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -28,18 +28,22 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
   const { t, i18n } = useTranslation();
 
   const SEAT_OPTIONS: Array<OptionType> = [
-    "P001 Padang Besar, Perlis",
-    "P002 Kangar, Perlis",
-    "P003 Arau, Perlis",
-    "P004 Langkawi, Kedah",
-    "P005 Jerlun, Kedah",
+    "P.001 Padang Besar, Perlis",
+    "P.002 Kangar, Perlis",
+    "P.003 Arau, Perlis",
+    "P.004 Langkawi, Kedah",
+    "P.005 Jerlun, Kedah",
   ].map((key: string) => ({
     label: key,
     value: key,
   }));
 
   const { data, setData } = useData({
-    popular_searches: ["P.001", "P.011", "P.111"],
+    popular_searches: [
+      "P.001 Padang Besar, Perlis",
+      "P.004 Langkawi, Kedah",
+      "P.005 Jerlun, Kedah",
+    ],
     seat: SEAT_OPTIONS[0],
 
     // query
@@ -97,14 +101,14 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
   const columns: ColumnDef<Seat, any>[] = [
     columnHelper.accessor("date", {
       header: t("dashboard-election-explorer:date"),
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor((row: any) => row.party, {
       header: t("dashboard-election-explorer:winning_party"),
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex items-center gap-2 pr-7 lg:pr-0">
+          <div className="flex items-center gap-1.5 pr-7 lg:pr-0">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -118,12 +122,12 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
     }),
     columnHelper.accessor("name", {
       header: t("dashboard-election-explorer:candidate_name"),
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor("majority", {
       header: t("dashboard-election-explorer:majority"),
       cell: (info: any) => (
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row items-center gap-1.5">
           <BarMeter perc={info.getValue()} />
           <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
         </div>
@@ -133,22 +137,22 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       header: t("dashboard-election-explorer:result"),
       cell: (info: any) =>
         info.getValue() === "comfortable" ? (
-          <span className="flex flex-row items-center gap-2 uppercase">
+          <span className="flex flex-row items-center gap-1.5 uppercase">
             <span className="w-4">💪</span>
             <p className="whitespace-nowrap text-[#10B981]">
               {t("dashboard-election-explorer:seat.comfortable")}
             </p>
           </span>
         ) : info.getValue() === "close" ? (
-          <span className="flex flex-row items-center gap-2 uppercase">
+          <span className="flex flex-row items-center gap-1.5 uppercase">
             <span className="w-4">🔥</span>
             <p className="whitespace-nowrap text-danger">
               {t("dashboard-election-explorer:seat.close")}
             </p>
           </span>
         ) : (
-          <span className="flex flex-row items-center gap-2 uppercase">
-            <MinusIcon className="h-4 w-4 text-black dark:text-white" />
+          <span className="flex flex-row items-center gap-1.5 uppercase text-dim">
+            <MinusIcon className="h-4 w-4" />
             <p className="whitespace-nowrap">{t("dashboard-election-explorer:seat.uncontested")}</p>
           </span>
         ),
@@ -157,16 +161,20 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       id: "fullResult",
       cell: () => (
         <ElectionCard
-          desc={t("dashboard-election-explorer:full_result")}
+          label={t("dashboard-election-explorer:full_result")}
           title={
             <div>
               <span className="text-lg font-bold uppercase text-black dark:text-white">
-                P148 - Ayer Hitam
+                {data.seat.value.split(",")[0]}
               </span>
-              <span className="pl-2 text-lg font-normal uppercase text-dim">Johor</span>
+              <span className="pl-2 text-lg font-normal uppercase text-dim">
+                {data.seat.value.split(",")[1]}
+              </span>
             </div>
           }
-        />
+        >
+          <BorderlessTable />
+        </ElectionCard>
       ),
     }),
   ];
@@ -181,7 +189,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                 placeholder={t("dashboard-election-explorer:seat.search_seat")}
                 options={SEAT_OPTIONS}
                 selected={
-                  data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : data.q_seat
+                  data.q_seat ? SEAT_OPTIONS.find(e => e.value === data.q_seat.value) : null
                 }
                 onChange={e => {
                   if (e) setData("seat", e);
@@ -193,15 +201,51 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                   {t("dashboard-election-explorer:popular_searches")}
                 </span>
                 <span>
-                  <span className="font-semibold text-primary dark:text-primary-dark">
+                  <span
+                    className="font-semibold text-primary dark:text-primary-dark"
+                    onClick={() => {
+                      setData(
+                        "seat",
+                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[0])
+                      );
+                      setData(
+                        "q_seat",
+                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[0])
+                      );
+                    }}
+                  >
                     {data.popular_searches[0]}
                   </span>
                   <span>, </span>
-                  <span className="font-semibold text-primary dark:text-primary-dark">
+                  <span
+                    className="font-semibold text-primary dark:text-primary-dark"
+                    onClick={() => {
+                      setData(
+                        "seat",
+                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[1])
+                      );
+                      setData(
+                        "q_seat",
+                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[1])
+                      );
+                    }}
+                  >
                     {data.popular_searches[1]}
                   </span>
                   <span>, </span>
-                  <span className="font-semibold text-primary dark:text-primary-dark">
+                  <span
+                    className="font-semibold text-primary dark:text-primary-dark"
+                    onClick={() => {
+                      setData(
+                        "seat",
+                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[2])
+                      );
+                      setData(
+                        "q_seat",
+                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[2])
+                      );
+                    }}
+                  >
                     {data.popular_searches[2]}
                   </span>
                 </span>
