@@ -8,6 +8,6 @@ module.exports = {
   },
   load: "all",
   preload: ["en-GB", "ms-MY"],
-  localePath: path.resolve("./public/locales"),
+  localePath: path.resolve("../../packages/i18n/locales"),
   reloadOnPrerender: true,
 };
