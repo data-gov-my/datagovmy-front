@@ -288,7 +288,7 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
 
   return matches.map(item => {
     const match = item.split("](");
-    if (match.length <= 1) return item;
+    if (match.length <= 1) return createElement("span", { className: "text-inherit" }, item);
     const [text, url] = match;
     return createElement(
       "a",

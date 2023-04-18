@@ -82,7 +82,7 @@ const Home: Page = ({
 
   return (
     <>
-      <Metadata keywords={"opendosm data negara inflasi"} />
+      <Metadata keywords={"data.gov.my data malaysia election prices harga"} />
 
       <Hero
         background="gray"
@@ -118,8 +118,9 @@ const Home: Page = ({
 
       <Container className="min-h-screen">
         <Section
-          title={"Explore out hottest dashboards"}
-          description="Explore how you compare to the national data"
+          title={t("home.section_1.title")}
+          description={t("home.section_1.description")}
+          date={analytics.data_as_of}
           menu={
             <Tabs.List
               options={PANELS.map(item => item.name)}
@@ -142,10 +143,8 @@ const Home: Page = ({
         </Section>
 
         <Section
-          title={"Study our most popular datasets"}
-          description={
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore odio ut facere sunt recusandae quas delectus animi error nemo exercitationem aut rerum, sint quos labore nostrum. Tempore earum distinctio in!"
-          }
+          title={t("home.section_2.title")}
+          description={t("home.section_2.description")}
           date={analytics.data_as_of}
           menu={
             <Tabs.List
