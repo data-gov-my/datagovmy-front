@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, ReactElement, useState } from "react";
+import { Fragment, FunctionComponent, ReactElement, ReactNode, useState } from "react";
 import { Button } from "..";
 import Font from "@config/font";
 import {
@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
 import { clx, numFormat } from "@lib/helpers";
-import BorderlessTable, { BarMeter, Lost, Won } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { PoliticalParty, PoliticalPartyColours } from "@lib/constants";
 import Image from "next/image";
@@ -18,22 +18,31 @@ import Image from "next/image";
 interface CardProps {
   data?: Candidate[];
   title?: string | ReactElement;
-  desc: string;
-  win?: Boolean;
+  children: ReactNode;
+  label: string;
+  page?: number;
+  win?: ReactNode;
 }
 
-const Card: FunctionComponent<CardProps> = ({ data = dummyData, title, desc, win = false }) => {
+const Card: FunctionComponent<CardProps> = ({
+  data = dummyData,
+  title,
+  children,
+  label,
+  page = 0,
+  win,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
   return (
     <>
       <div className="flex items-center justify-center">
         <Button
-          className="flex flex-row items-center gap-2 px-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+          className="flex flex-row items-center gap-1.5 px-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
           onClick={() => setIsOpen(true)}
         >
           <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-          <p>{desc}</p>
+          <p className="whitespace-nowrap">{label}</p>
         </Button>
       </div>
 
@@ -70,27 +79,14 @@ const Card: FunctionComponent<CardProps> = ({ data = dummyData, title, desc, win
                     "w-full max-w-4xl transform overflow-hidden rounded-xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-black"
                   )}
                 >
-                  <Dialog.Title as="h4" className="flex flex-row justify-between">
-                    <div>
-                      {title && typeof title === "string" ? (
-                        <span className="text-base font-bold dark:text-white">{title}</span>
-                      ) : (
-                        title
-                      )}
-                    </div>
-
-                    <div className="flex flex-row gap-2 text-base font-medium">
-                      <span>
-                        {win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />}
-                      </span>
-                      <span>
-                        <XMarkIcon
-                          onClick={() => setIsOpen(false)}
-                          className="h-6 w-6 cursor-pointer items-center text-dim"
-                        />
-                      </span>
-                    </div>
+                  <Dialog.Title as="h5" className="flex flex-row">
+                    <div>{title && typeof title === "string" ? <span>{title}</span> : title}</div>
                   </Dialog.Title>
+                  <span>{win}</span>
+                  <XMarkIcon
+                    onClick={() => setIsOpen(false)}
+                    className="absolute top-4 right-4 h-6 w-6 cursor-pointer items-center text-dim"
+                  />
                   <div className="space-x-3 py-3">
                     <span className="text-dim">23 Jan 2004</span>
                     <span className="uppercase text-black dark:text-white">GE-15</span>
@@ -117,15 +113,19 @@ const Card: FunctionComponent<CardProps> = ({ data = dummyData, title, desc, win
                       );
                     })}
                   </div>
-                  <BorderlessTable />
+                  {children}
 
                   <div className="mt-6 space-y-3">
-                    {/* <span className="flex items-center justify-center gap-2 text-center text-sm">
-                      {t("common.page_of", { 
-                          current: table.getState().pagination.pageIndex + 1,
-                          total: table.getPageCount(),
-                      })}
-                    </span> */}
+                    <div className="flex flex-row items-center justify-center gap-1.5">
+                      {data.map((d: Candidate, index: number) => (
+                        <div
+                          className={clx(
+                            "h-1 w-5 rounded-md",
+                            index === page ? "bg-black" : "bg-outline"
+                          )}
+                        ></div>
+                      ))}
+                    </div>
                     <div className={`flex items-center justify-center gap-4 text-sm`}>
                       <Button
                         className="group flex flex-row gap-2 rounded border py-2 px-3 disabled:bg-washed dark:disabled:bg-washed-dark"

@@ -38,15 +38,15 @@ const ComboBox = <L extends string | number = string, V = string>({
 
   return (
     <Combobox value={selected} onChange={onChange} nullable>
-      <div className="relative rounded-full">
+      <div className="relative w-5/6 rounded-full sm:w-3/4 md:w-1/2">
         <div
           className={clx(
             `relative w-full select-none overflow-hidden rounded-full border border-outline bg-white
               text-left text-base shadow-sm hover:border-outlineHover focus:outline-none
-              focus-visible:ring-0 dark:border-outlineHover-dark dark:bg-black lg:w-[434px]`
+              focus-visible:ring-0 dark:border-outlineHover-dark dark:bg-black `
           )}
         >
-          <Combobox.Button className={"w-full"}>
+          <Combobox.Button className="w-full">
             {({ open }) => (
               <>
                 <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-1.5">

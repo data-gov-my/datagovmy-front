@@ -1,4 +1,17 @@
 import { FunctionComponent, ReactNode } from "react";
+import Image from "next/image";
+import { Button } from "@components/index";
+import Card from "@components/Card";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/solid";
+import { useTranslation } from "@hooks/useTranslation";
+import { PoliticalParty } from "@lib/constants";
+import { clx, numFormat } from "@lib/helpers";
 import {
   ColumnDef,
   createColumnHelper,
@@ -6,19 +19,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { clx, numFormat } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import {
-  CheckCircleIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  FaceFrownIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/solid";
-import { Button } from "@components/index";
-import { PoliticalParty } from "@lib/constants";
-import Image from "next/image";
-import Card from "@components/Card";
 
 export interface BorderlessTableProps {
   className?: string;
@@ -41,7 +41,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   responsive = true,
   enablePagination = false,
   highlightedRow = false,
-  win = undefined,
+  win = true,
 }) => {
   const table = useReactTable({
     data,
@@ -70,7 +70,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    className="border-b-2 border-outline py-[10px] pl-2 font-medium dark:border-washed-dark"
+                    className="whitespace-nowrap border-b-2 border-outline py-[10px] px-2 font-medium dark:border-washed-dark"
                   >
                     {header.isPlaceholder
                       ? null
@@ -96,13 +96,15 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                     key={cell.id}
                     className={clx(
                       rowIndex === highlightedRow && colIndex === 0 ? "font-medium" : "font-normal",
-                      "py-[10px] pl-2"
+                      "whitespace-nowrap py-[10px] px-2 "
                     )}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    {rowIndex === highlightedRow &&
-                      colIndex === 0 &&
-                      (win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />)}
+                    <span className="flex flex-row gap-1.5">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {rowIndex === highlightedRow &&
+                        colIndex === 0 &&
+                        (win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />)}
+                    </span>
                   </td>
                 ))}
               </tr>
@@ -170,29 +172,27 @@ export const BarMeter: FunctionComponent<BarMeterProps> = ({ perc }) => {
 };
 
 interface WonProps {
-  desc: string;
+  desc?: string;
 }
 
 export const Won: FunctionComponent<WonProps> = ({ desc }) => {
-  const { t } = useTranslation();
   return (
-    <span className="ml-2 flex flex-row items-center gap-2">
+    <span className="flex flex-row items-center gap-1.5">
       <CheckCircleIcon className="h-4 w-4 self-center text-[#10B981]" />
-      <span className="whitespace-nowrap uppercase text-[#10B981]">{desc}</span>
+      {desc && <span className="whitespace-nowrap uppercase text-[#10B981]">{desc}</span>}
     </span>
   );
 };
 
 interface LostProps {
-  desc: string;
+  desc?: string;
 }
 
 export const Lost: FunctionComponent<LostProps> = ({ desc }) => {
-  const { t } = useTranslation();
   return (
-    <span className="ml-2 flex flex-row items-center gap-2">
+    <span className="flex flex-row items-center gap-1.5">
       <XCircleIcon className="h-4 w-4 self-center text-danger" />
-      <span className="whitespace-nowrap uppercase text-danger">{desc}</span>
+      {desc && <span className="whitespace-nowrap uppercase text-danger">{desc}</span>}
     </span>
   );
 };
@@ -250,7 +250,7 @@ const dummyColumns: Array<ColumnDef<Candidate, any>> = [
     cell: (info: any) => {
       const party = info.getValue() as string;
       return (
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row items-center gap-1.5 pr-7 lg:pr-0">
           <Image
             src={`/static/images/parties/${party}.png`}
             width={28}
