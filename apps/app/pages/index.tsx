@@ -82,7 +82,7 @@ const Home: Page = ({
 
   return (
     <>
-      <Metadata keywords={"opendosm data negara inflasi"} />
+      <Metadata keywords={"data.gov.my data malaysia election prices harga"} />
 
       <Hero
         background="gray"
@@ -106,6 +106,7 @@ const Home: Page = ({
         }
         agencyBadge={
           <AgencyBadge
+            prefixThe
             agency={t("agency.govt")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
@@ -117,8 +118,9 @@ const Home: Page = ({
 
       <Container className="min-h-screen">
         <Section
-          title={"Explore out hottest dashboards"}
-          description="Explore how you compare to the national data"
+          title={t("home.section_1.title")}
+          description={t("home.section_1.description")}
+          date={analytics.data_as_of}
           menu={
             <Tabs.List
               options={PANELS.map(item => item.name)}
@@ -134,17 +136,15 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                <Ranking ranks={panel.data.dashboard_views} />
+                <Ranking ranks={panel.data.dashboard} />
               </Tabs.Panel>
             ))}
           </Tabs>
         </Section>
 
         <Section
-          title={"Study our most popular datasets"}
-          description={
-            "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore odio ut facere sunt recusandae quas delectus animi error nemo exercitationem aut rerum, sint quos labore nostrum. Tempore earum distinctio in!"
-          }
+          title={t("home.section_2.title")}
+          description={t("home.section_2.description")}
           date={analytics.data_as_of}
           menu={
             <Tabs.List
@@ -161,7 +161,7 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                <Ranking ranks={panel.data.dataset_views} />
+                <Ranking ranks={panel.data.dataset} />
               </Tabs.Panel>
             ))}
           </Tabs>
@@ -296,23 +296,19 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       ...i18n,
       timeseries_callouts: data.statistics,
       timeseries: data.timeseries,
-      highlights: data.highlight,
       analytics: {
         data_as_of: data.table_summary.data_as_of,
         today: {
-          resource_views: data.metrics_stats.data.today.resource_views.count,
-          resource_downloads: data.metrics_stats.data.today.resource_downloads.count,
-          ...data.table_summary.data.today,
+          dataset: data.table_summary.data.today.dataset_views,
+          dashboard: data.table_summary.data.today.dashboard_views,
         },
         last_month: {
-          resource_views: data.metrics_stats.data.last_month.resource_views.count,
-          resource_downloads: data.metrics_stats.data.last_month.resource_downloads.count,
-          ...data.table_summary.data.last_month,
+          dataset: data.table_summary.data.last_month.dataset_views,
+          dashboard: data.table_summary.data.last_month.dashboard_views,
         },
         all_time: {
-          resource_views: data.metrics_stats.data.all_time.resource_views.count,
-          resource_downloads: data.metrics_stats.data.all_time.resource_downloads.count,
-          ...data.table_summary.data.all_time,
+          dataset: data.table_summary.data.all_time.dataset_views,
+          dashboard: data.table_summary.data.all_time.dataset_views,
         },
         total: {
           catalogue: data.total_catalog,

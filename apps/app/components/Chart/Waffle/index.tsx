@@ -1,17 +1,27 @@
 import { FunctionComponent, ReactElement } from "react";
-import { ResponsiveWaffle } from "@nivo/waffle";
-import { Colors } from "@nivo/core";
+import { ResponsiveWaffle, WaffleFillDirection } from "@nivo/waffle";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import { useTheme } from "next-themes";
 interface WaffleProps extends ChartHeaderProps {
   className?: string;
-  data?: any;
+  data?: {
+    id: string | number;
+    value: number;
+    label: string | number;
+  }[];
   total?: number;
   padding?: number;
-  color?: Colors;
+  color?: string | string[];
   rows?: number;
   cols?: number;
+  margin?: {
+    bottom?: number | undefined;
+    left?: number | undefined;
+    right?: number | undefined;
+    top?: number | undefined;
+  };
   children?: ReactElement | ReactElement[];
+  fillDirection?: WaffleFillDirection;
   interactive?: boolean;
 }
 
@@ -27,7 +37,9 @@ const Waffle: FunctionComponent<WaffleProps> = ({
   padding = 4,
   rows = 10,
   cols = 10,
+  margin = { top: 10, right: 0, bottom: 10, left: -20 },
   children,
+  fillDirection = "bottom",
   interactive = false,
 }) => {
   const { theme } = useTheme();
@@ -42,9 +54,10 @@ const Waffle: FunctionComponent<WaffleProps> = ({
           columns={cols}
           padding={padding}
           emptyColor={theme === "light" ? "#f1f5f9" : "#27272a"}
-          margin={{ top: 10, right: 0, bottom: 10, left: -20 }}
+          margin={margin}
           colors={color}
           animate={false}
+          fillDirection={fillDirection}
           isInteractive={interactive}
         />
       </div>

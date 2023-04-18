@@ -103,6 +103,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
     <>
       <Hero
         background="gray"
+        category={[t("home.category"), "text-primary dark:text-primary-dark"]}
         header={[
           t("dashboard.header").concat(
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
@@ -115,6 +116,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
             }
+            prefixThe
           />
         }
       />
@@ -152,30 +154,38 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         )}
 
         {/* Remaining sections for dashboard */}
-        {_collection.sort().map(([category, dashboards]) => {
-          return (
-            dashboards.length > 0 && (
-              <Section title={category} key={category}>
-                <div className="grid  grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-5">
-                  {dashboards.map((item: Dashboard) => (
-                    <At href={item.id} key={item.id}>
-                      <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
-                        <div className="relative flex items-center gap-4">
-                          <AgencyIcon agency={item.agency} />
-                          <p className="text-dim text-sm">{item.agency}</p>
-                          <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
-                        </div>
-                        <div className="relative overflow-hidden">
-                          <p className="truncate font-medium dark:text-white">{item.name}</p>
-                        </div>
-                      </Card>
-                    </At>
-                  ))}
-                </div>
-              </Section>
-            )
-          );
-        })}
+        <Section title={t("dashboard.section2_title")}>
+          <div className="columns-1 gap-6 sm:columns-2 md:columns-3 lg:columns-4">
+            {_collection.sort().map(([category, dashboards]) => {
+              return (
+                dashboards.length > 0 && (
+                  <Card
+                    className="border-outline bg-background dark:border-washed-dark dark:bg-background-dark my-3 inline-block h-min w-full rounded-xl border p-[18px]"
+                    key={category}
+                  >
+                    <h5 className="pb-1">{category}</h5>
+                    {dashboards.map((item: Dashboard, index: number) => (
+                      <div className="pt-2">
+                        <At href={item.id} key={item.id}>
+                          <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
+                            <div className="relative flex items-center gap-4">
+                              <AgencyIcon agency={item.agency} />
+                              <p className="text-dim text-sm">{item.agency}</p>
+                              <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+                            </div>
+                            <div className="relative overflow-hidden">
+                              <p className="truncate font-medium dark:text-white">{item.name}</p>
+                            </div>
+                          </Card>
+                        </At>
+                      </div>
+                    ))}
+                  </Card>
+                )
+              );
+            })}
+          </div>
+        </Section>
       </Container>
     </>
   );

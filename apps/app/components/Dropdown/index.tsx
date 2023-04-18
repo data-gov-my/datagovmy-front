@@ -23,6 +23,7 @@ type CommonProps<L, V> = {
   label?: string;
   sublabel?: ReactNode;
   darkMode?: boolean;
+  shadow?: string;
   anchor?: "left" | "right" | string;
   enableSearch?: boolean;
   enableFlag?: boolean;
@@ -63,6 +64,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
   width = "w-full lg:w-fit",
   label,
   sublabel,
+  shadow,
   darkMode = false,
   enableFlag = false,
   enableClear = false,
@@ -102,7 +104,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
   }, [options, search]);
 
   return (
-    <div className={["space-y-3", width].join(" ")}>
+    <div className={["space-y-3", shadow, width].join(" ")}>
       {label && <Label label={label}></Label>}
       <Listbox
         value={selected}
@@ -119,11 +121,11 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               className,
               width,
               darkMode
-                ? "border-outline/10 active:bg-washed/10 text-white"
-                : "border-outline active:bg-washed bg-white",
+                ? "border-outline/10  active:bg-washed/10"
+                : "border-outline active:bg-washed",
               disabled
                 ? "bg-outline text-dim pointer-events-none"
-                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+                : "hover:border-outlineHover bg-white focus:outline-none focus-visible:ring-0"
             )}
           >
             <>
@@ -148,7 +150,12 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               )}
 
               {/* Label */}
-              <span className="block w-full truncate dark:text-white lg:w-auto">
+              <span
+                className={clx(
+                  disabled ? "dark:text-dim" : "dark:text-white",
+                  "block w-full truncate lg:w-auto"
+                )}
+              >
                 {multiple
                   ? title
                   : (selected as OptionType<L, V>)?.label || placeholder || "Select"}
@@ -163,7 +170,10 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               {/* ChevronDown Icon */}
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
                 <ChevronDownIcon
-                  className="h-5 w-5 text-black dark:text-white"
+                  className={clx(
+                    disabled ? "dark:text-dim" : "dark:text-white",
+                    "h-5 w-5 text-black"
+                  )}
                   aria-hidden="true"
                 />
               </span>

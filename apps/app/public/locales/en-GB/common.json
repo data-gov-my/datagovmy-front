@@ -50,6 +50,8 @@
     "copied": "Copied!",
     "maximum": "Maximum",
     "minimum": "Minimum",
+    "won": "Won",
+    "lost": "Lost",
     "indicator": "Indicator",
     "charts": {
       "heatmap": "Heatmap",
@@ -63,7 +65,8 @@
     "state_first": "Select a state first",
     "district": "Select district",
     "facility": "Select facility",
-    "facility_type": "Select facility type"
+    "facility_type": "Select facility type",
+    "no_results": "No results"
   },
   "nav": {
     "home": "Home",
@@ -129,7 +132,8 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "brought_by": "Brought to you by the",
+    "brought_by": "Brought to you by",
+    "brought_by_the": "Brought to you by the",
     "visit_portal": "Visit our portal",
     "click_to_explore": "Click to explore",
     "ovs": "Malaysian-born Overseas"
@@ -151,7 +155,7 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "section_1": {
       "title": "Explore our hottest dashboards",
-      "description": "Explore how you compare to the national data",
+      "description": "These dashboards are the ones that have been getting attention, but we have way more to offer - don't forget to check out our full collection of dashboards!",
       "stats": {
         "population": "Current Population",
         "economic_growth": "Economic Growth",
@@ -165,9 +169,9 @@
     },
     "section_2": {
       "title": "Study our most popular datasets",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "past_24h": "Past 24h",
-      "past_month": "Past 1 month",
+      "description": "If you want to search for something specific, head on over to our data catalogue, where we serve data from every government agency in Malaysia!",
+      "past_24h": "24 hours",
+      "past_month": "1 month",
       "all_time": "All-time",
       "dashboards": "Dashboards",
       "datasets_available": "Datasets available",
@@ -184,9 +188,9 @@
       "total": "Total"
     },
     "keys": {
-      "users": "Daily Users",
+      "users": "Daily OpenAPI Usage",
       "views": "Daily Views",
-      "downloads": "Daily Data Downloads"
+      "downloads": "Daily Downloads"
     }
   },
   "dashboard": {
@@ -197,7 +201,7 @@
     "search_placeholder": "Search for dashboards",
     "section1_title": "Most Popular Dashboards",
     "section1_description": "Explore popular dashboards",
-    "section2_title": "Recommended for you",
+    "section2_title": "All dashboards",
     "index_filters": {
       "sex": "Sex",
       "ethnicity": "Ethnicity",

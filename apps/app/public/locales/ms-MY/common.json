@@ -50,6 +50,8 @@
     "copied": "Disalin!",
     "maximum": "Maksima",
     "minimum": "Minima",
+    "won": "Menang",
+    "lost": "Kalah",
     "indicator": "Penunjuk",
     "charts": {
       "heatmap": "Peta",
@@ -63,7 +65,8 @@
     "state_first": "Pilih negeri terlebih dahulu",
     "district": "Pilih daerah",
     "facility": "Pilih fasiliti",
-    "facility_type": "Pilih jenis fasiliti"
+    "facility_type": "Pilih jenis fasiliti",
+    "no_results": "Tiada hasil carian"
   },
   "nav": {
     "home": "Utama",
@@ -129,7 +132,8 @@
     "theme": "Tema",
     "light": "Terang",
     "dark": "Gelap",
-    "brought_by": "Dibawakan kepada anda oleh",
+    "brought_by": "Produk data digital oleh",
+    "brought_by_the": "Produk data digital oleh",
     "visit_portal": "Layari portal kami",
     "click_to_explore": "Click to explore",
     "ovs": "Lahir di Luar Negara"
@@ -149,7 +153,8 @@
     "title": "Terkini. Terperinci. Terbukti.",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "section_1": {
-      "title": "Malaysia secara Sepintas Lalu",
+      "title": "Terokailah papan pemuka paling popular!",
+      "description": "Papan pemuka inilah yang paling menular, tetapi kandung penuh lama ini luas sekali! Jangan lupa untuk lihat koleksi penuh papan pemuka kami!",
       "stats": {
         "population": "Penduduk Semasa",
         "economic_growth": "Pertumbuhan Ekonomi",
@@ -162,10 +167,11 @@
       }
     },
     "section_2": {
-      "title": "Lihat dataset paling hangat di data.gov.my",
-      "description": "Data ini bertujuan untuk membantu anda melihat bagaimana pengguna lain menggunakan data.gov.my. Jika anda sudah tahu apa yang anda ingin cari, anda boleh terus ke Katalog Data untuk mencari data yang paling relevan!",
+      "title": "Lihat dataset paling hangat!",
+      "description": "Sekiranya ada ingin membuat carian yang terperinci, layarilah katalog data kami yang membekalkan data daripada seluruh agensi kerajaan Malaysia!",
       "today": "Hari ini",
-      "past_month": "1 bulan lepas",
+      "past_24h": "24 jam",
+      "past_month": "1 bulan",
       "all_time": "Keseluruhan",
       "dashboards": "Papan Pemuka",
       "datasets_available": "Dataset Sedia Ada",
@@ -182,10 +188,17 @@
       "total": "Jumlah"
     },
     "keys": {
-      "users": "Pengguna Harian",
+      "users": "Penggunaan OpenAPI Harian",
       "views": "Paparan Harian",
-      "downloads": "Muat turun Data Harian"
+      "downloads": "Muat Turun Harian"
     }
+  },
+  "dashboard": {
+    "header": "Koleksi Papan Pemuka",
+    "source_placeholder": "Pilih Agensi",
+    "search_placeholder": "Cari papan pemuka",
+    "section1_title": "Papan Pemuka Paling Popular",
+    "section2_title": "Semua papan pemuka"
   },
   "catalogue": {
     "header": "Katalog Data",
