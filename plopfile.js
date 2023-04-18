@@ -1,4 +1,7 @@
+const path = require("path");
 const inquirerRecursivePrompt = require("inquirer-recursive");
+
+const base_dir = path.resolve(__dirname, "apps/app");
 
 module.exports = function (
   /** @type {import('plop').NodePlopAPI} */
@@ -60,26 +63,35 @@ module.exports = function (
         },
         {
           type: "add",
-          path: "dashboards/{{dashCase dashboard_category}}/{{dashCase dashboard_name}}/index.tsx",
-          templateFile: "plop-templates/dashboard-component.tsx.hbs",
+          path: path.join(
+            base_dir,
+            "dashboards/{{dashCase dashboard_category}}/{{dashCase dashboard_name}}/index.tsx"
+          ),
+          templateFile: path.join(base_dir, "templates/dashboard-component.tsx.hbs"),
           skipIfExists: true,
         },
         {
           type: "add",
-          path: "pages/dashboard/{{dashCase dashboard_name}}/index.tsx",
-          templateFile: "plop-templates/dashboard-page.tsx.hbs",
+          path: path.join(base_dir, "pages/dashboard/{{dashCase dashboard_name}}/index.tsx"),
+          templateFile: path.join(base_dir, "templates/dashboard-page.tsx.hbs"),
           skipIfExists: true,
         },
         {
           type: "add",
-          path: "public/locales/en-GB/dashboard-{{dashCase dashboard_name}}.json",
-          templateFile: "plop-templates/dashboard-translation.json.hbs",
+          path: path.join(
+            base_dir,
+            "public/locales/en-GB/dashboard-{{dashCase dashboard_name}}.json"
+          ),
+          templateFile: path.join(base_dir, "templates/dashboard-translation.json.hbs"),
           skipIfExists: true,
         },
         {
           type: "add",
-          path: "public/locales/ms-MY/dashboard-{{dashCase dashboard_name}}.json",
-          templateFile: "plop-templates/dashboard-translation.json.hbs",
+          path: path.join(
+            base_dir,
+            "public/locales/ms-MY/dashboard-{{dashCase dashboard_name}}.json"
+          ),
+          templateFile: path.join(base_dir, "plop-templates/dashboard-translation.json.hbs"),
           skipIfExists: true,
         },
       ],
