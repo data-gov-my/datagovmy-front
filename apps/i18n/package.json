@@ -1,0 +1,18 @@
+{
+  "name": "i18n",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "react": "*",
+    "@monaco-editor/react": "^4.5.0",
+    "@headlessui/react": "*",
+    "@heroicons/react": "*",
+    "lodash": "*"
+  }
+}

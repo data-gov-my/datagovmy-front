@@ -4,6 +4,7 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 module.exports = {
   darkMode: "class",
   content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
     "./hooks/**/*.{js,ts,jsx,tsx}",
@@ -48,6 +49,7 @@ module.exports = {
       backgroundImage: {
         "gradient-radial":
           "radial-gradient(59.1% 166.02% at 50% -66.02%, var(--tw-gradient-stops))",
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
     },
   },
