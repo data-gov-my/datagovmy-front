@@ -7,6 +7,7 @@ import { FunctionComponent, useMemo } from "react";
 import { default as Dropdown } from ".";
 
 interface StateDropdownProps {
+  anchor?: string;
   className?: string;
   url?: string;
   currentState?: string;
@@ -16,11 +17,13 @@ interface StateDropdownProps {
   exclude?: string[];
   hideOnScroll?: boolean;
   width?: string;
+  shadow?: string;
   sublabel?: string;
   darkMode?: boolean;
 }
 
 const StateDropdown: FunctionComponent<StateDropdownProps> = ({
+  anchor,
   className,
   url,
   currentState,
@@ -29,6 +32,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   exclude,
   width = "w-64",
   sublabel,
+  shadow,
   disabled = false,
   hideOnScroll = false,
   darkMode = false,
@@ -51,12 +55,14 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
     <div className={!hideOnScroll ? `block ${width}` : show ? "hidden lg:block" : "hidden"}>
       <Dropdown
         className="flex-row items-center"
+        shadow={shadow}
         onChange={selected => (onChange ? onChange(selected) : redirect(selected))}
         disabled={disabled}
         selected={options.find(state => state.value === currentState)}
         options={options.filter(option => !exclude?.includes(option.value))}
         placeholder={t("placeholder.state")}
         enableFlag
+        anchor={anchor}
         darkMode={darkMode}
         width={width}
         sublabel={sublabel}

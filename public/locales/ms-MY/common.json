@@ -50,6 +50,8 @@
     "copied": "Disalin!",
     "maximum": "Maksima",
     "minimum": "Minima",
+    "won": "Menang",
+    "lost": "Kalah",
     "indicator": "Penunjuk",
     "charts": {
       "heatmap": "Peta",
@@ -63,7 +65,8 @@
     "state_first": "Pilih negeri terlebih dahulu",
     "district": "Pilih daerah",
     "facility": "Pilih fasiliti",
-    "facility_type": "Pilih jenis fasiliti"
+    "facility_type": "Pilih jenis fasiliti",
+    "no_results": "Tiada hasil carian"
   },
   "nav": {
     "home": "Utama",
