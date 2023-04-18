@@ -25,6 +25,9 @@
         "section_1": "Terokailah data pilihan raya dari Merdeka sehingga kini!",
         "parliament": "Parlimen",
         "state": "Negeri",
+        "election": "Pilihan raya",
+        "election_year": "Tahun pilihan raya",
+        "apply_filters": "Tapiskan",
         "parliament_of": "Parlimen ",
         "summary": "Rumusan",
         "map": "Peta",
@@ -48,12 +51,14 @@
         "never_compete_state": "{{ name }} tidak pernah bertanding di Pilihan Raya Negeri",
         "never_compete_parliament": "{{ name }} tidak pernah bertanding di Pilihan Raya Umum",
         "won": "Menang",
-        "lost": "Kalah"
+        "won_uncontested": "Tidak Ditandingi",
+        "lost": "Kalah",
+        "lost_deposit": "Hilang Deposit"
     },
     "party": {
         "header": "Terokailah sejarah pilihan raya penuh parti politik",
         "search_party": "Carilah nama parti politik",
-        "title": "{{ party }}: Sejarah penuh pilihan raya di",
+        "title": "<strong>{{ party }}: Sejarah penuh</strong> di",
         "formed_gov": "Menjadi Kerajaan",
         "formed_opp": "Menjadi Pembangkang"
     },

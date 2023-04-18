@@ -25,6 +25,9 @@
         "section_1": "Explore any election from Merdeka to the present!",
         "parliament": "Parliament",
         "state": "State",
+        "election": "Election",
+        "election_year": "Election year",
+        "apply_filters": "Apply filter",
         "parliament_of": "Parliament of ",
         "summary": "Summary",
         "map": "Map",
@@ -48,23 +51,20 @@
         "never_compete_state": "{{ name }} has never competed in State elections",
         "never_compete_parliament": "{{ name }} has never competed in Parliament elections",
         "won": "Won",
-        "lost": "Lost"
+        "won_uncontested": "Won Uncontested",
+        "lost": "Lost",
+        "lost_deposit": "Lost Deposit"
     },
     "party": {
         "header": "Explore any party’s entire electoral history",
         "search_party": "Search for political party name",
-        "title": "{{ party }}’s electoral history in ",
+        "title": "<strong>{{ party }}’s electoral history</strong> in ",
         "formed_gov": "Formed the Government",
         "formed_opp": "Formed the Opposition"
     },
     "seat": {
         "header": "Explore the entire electoral history for your area",
         "search_seat": "Search for a seat (eg. P.051 Bayan Baru)",
-        "date": "Date",
-        "party": "Winning Party",
-        "name": "Candidate",
-        "majority": "Majority",
-        "result": "Result",
         "uncontested": "Uncontested",
         "close": "Close contest",
         "comfortable": "Comfortable win"
