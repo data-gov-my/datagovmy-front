@@ -245,6 +245,7 @@ type RankItem = {
   count: number;
   name_bm: string;
   name_en: string;
+  agency_abbr: string;
 };
 interface RankingProps {
   ranks: RankItem[];
@@ -262,7 +263,7 @@ const Ranking = ({ ranks }: RankingProps) => {
             <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
               <div className="relative flex items-center gap-4">
                 <div className="bg-outline h-4 w-4 rounded-full" />
-                <p className="text-dim text-sm">agency_name</p>
+                <p className="text-dim text-sm uppercase">{item.agency_abbr}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative overflow-hidden">
