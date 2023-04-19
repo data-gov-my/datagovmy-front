@@ -39,15 +39,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
   }));
 
   const { data, setData } = useData({
-    popular_searches: [
-      "P.001 Padang Besar, Perlis",
-      "P.004 Langkawi, Kedah",
-      "P.005 Jerlun, Kedah",
-    ],
-    seat: SEAT_OPTIONS[0],
+    popular_searches: ["P.001", "P.004", "P.005"],
+    seat: "",
 
     // query
-    q_seat: "",
+    q_seat: SEAT_OPTIONS[0],
   });
 
   type Seat = {
@@ -188,12 +184,10 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
               <ComboBox
                 placeholder={t("dashboard-election-explorer:seat.search_seat")}
                 options={SEAT_OPTIONS}
-                selected={
-                  data.q_seat ? SEAT_OPTIONS.find(e => e.value === data.q_seat.value) : null
-                }
+                selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
                 onChange={e => {
-                  if (e) setData("seat", e);
-                  setData("q_seat", e);
+                  if (e) setData("q_seat", e);
+                  setData("seat", e);
                 }}
               />
               <div className="flex flex-col text-center lg:flex-row">
@@ -206,11 +200,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                     onClick={() => {
                       setData(
                         "seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[0])
+                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[0]))
                       );
                       setData(
                         "q_seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[0])
+                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[0]))
                       );
                     }}
                   >
@@ -222,11 +216,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                     onClick={() => {
                       setData(
                         "seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[1])
+                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[1]))
                       );
                       setData(
                         "q_seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[1])
+                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[1]))
                       );
                     }}
                   >
@@ -238,11 +232,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                     onClick={() => {
                       setData(
                         "seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[2])
+                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[2]))
                       );
                       setData(
                         "q_seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[2])
+                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[2]))
                       );
                     }}
                   >
@@ -256,7 +250,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
             title={
               <div className="text-base font-bold">
                 {t("dashboard-election-explorer:candidate.title")}
-                <span className="text-primary">{data.seat.value}</span>
+                <span className="text-primary">{data.q_seat.value}</span>
               </div>
             }
             data={dummyData}

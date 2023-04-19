@@ -5,6 +5,7 @@ import { Button, Dropdown, Modal, Section, StateDropdown, Tabs } from "@componen
 import Card from "@components/Card";
 import ComboBox from "@components/Combobox";
 import Label from "@components/Label";
+import LeftRightCard from "@components/LeftRightCard";
 import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
@@ -83,11 +84,11 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
   }));
 
   const SEAT_OPTIONS: Array<OptionType> = [
-    "P001 Padang Besar, Perlis",
-    "P002 Kangar, Perlis",
-    "P003 Arau, Perlis",
-    "P004 Langkawi, Kedah",
-    "P005 Jerlun, Kedah",
+    "P.001 Padang Besar, Perlis",
+    "P.002 Kangar, Perlis",
+    "P.003 Arau, Perlis",
+    "P.004 Langkawi, Kedah",
+    "P.005 Jerlun, Kedah",
   ].map((key: string) => ({
     label: key,
     value: key,
@@ -104,7 +105,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     value: key,
   }));
 
-  const dummy = [
+  const waffleDummy = [
     {
       id: "ph",
       label: "ph",
@@ -132,17 +133,19 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     },
   ];
 
+  const waffleColours = ["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"];
+
   const { data, setData } = useData({
     tabs: 0,
-    tabs_section_1: 0,
-    tabs_section_3: 0,
+    tabs_section1: 0,
+    tabs_section3: 0,
     filter: FILTER_OPTIONS[0],
     election: ELECTION_OPTIONS[0],
+    seat: "",
     state: "",
-    seat: SEAT_OPTIONS[0].value,
 
     // query
-    q_seat: "",
+    q_seat: SEAT_OPTIONS[0],
   });
 
   type Candidate = {
@@ -227,6 +230,9 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
       header: t("dashboard-election-explorer:perc_votes"),
     }),
   ];
+
+  // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
+  const displayPercent = (percent: number) => `${percent.toFixed(2)}%`;
 
   return (
     <>
@@ -359,29 +365,29 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                         <span className="text-primary">{data.election.value}</span>
                       </div>
                     }
-                    current={data.tabs_section_1}
-                    onChange={index => setData("tabs_section_1", index)}
+                    current={data.tabs_section1}
+                    onChange={index => setData("tabs_section1", index)}
                   >
                     <Panel name={t("dashboard-election-explorer:election.summary")}>
                       <div className="space-y-6">
                         <p className="text-center text-sm font-medium">
                           {t("dashboard-election-explorer:election.majority")}
                         </p>
-                        <div className="relative">
+                        <div className="relative h-12 w-full">
                           <Waffle
                             className="h-[50px] min-h-max w-full"
                             fillDirection={"left"}
-                            data={dummy}
+                            data={waffleDummy}
                             margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
                             total={222}
                             rows={3}
                             cols={74}
-                            color={["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"]}
+                            color={waffleColours}
                           />
                           <hr className="border-background-dark absolute inset-x-1/2 -top-3 h-[72px] w-0 border border-dashed dark:border-white"></hr>
                         </div>
                         <div className="text-dim flex flex-row flex-wrap items-center justify-center gap-6">
-                          {dummy.map(({ label, value }) => (
+                          {waffleDummy.map(({ label, value }) => (
                             <div className="flex flex-row items-center gap-1">
                               {label === "Others" ? (
                                 <div className="bg-dim h-4 w-7 rounded-md"></div>
@@ -444,12 +450,10 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 <ComboBox
                   placeholder={t("dashboard-election-explorer:election.search_area")}
                   options={SEAT_OPTIONS}
-                  selected={
-                    data.q_seat ? SEAT_OPTIONS.find(e => e.value === data.q_seat.value) : null
-                  }
+                  selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
                   onChange={e => {
-                    if (e) setData("seat", e.value);
-                    setData("q_seat", e);
+                    if (e) setData("q_seat", e);
+                    setData("seat", e);
                   }}
                 />
               </div>
@@ -460,7 +464,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                   {t("dashboard-election-explorer:election.full_result", {
                     election: data.election.value,
                   })}
-                  <span className="text-primary">{data.seat}</span>
+                  <span className="text-primary">{data.q_seat.value}</span>
                 </div>
               }
               data={dummyData}
@@ -476,14 +480,14 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
               {t("dashboard-election-explorer:election.section_3")}
             </h4>
             <div className="flex flex-row justify-between gap-4 sm:flex-row">
-              <div className="flex flex-row items-baseline gap-4">
+              <div className="flex flex-row items-baseline gap-2 lg:gap-4">
                 <p className="w-fit text-sm">{t("catalogue.filter")}</p>
                 <Dropdown
                   anchor="left"
                   width="w-fit"
                   options={FILTER_OPTIONS}
                   selected={FILTER_OPTIONS.find(e => e.value === data.filter.value)}
-                  onChange={e => setData("filter_age", e)}
+                  onChange={e => setData("filter", e)}
                 />
               </div>
               <List
@@ -495,26 +499,56 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                   <MapIcon className="mr-1 h-5 w-5" />,
                   <TableCellsIcon className="mr-1 h-5 w-5" />,
                 ]}
-                current={data.tabs_section_3}
-                onChange={index => setData("tabs_section_3", index)}
+                current={data.tabs_section3}
+                onChange={index => setData("tabs_section3", index)}
               />
             </div>
             <Tabs
               hidden
-              current={data.tabs_section_3}
-              onChange={index => setData("tabs_section_3", index)}
+              current={data.tabs_section3}
+              onChange={index => setData("tabs_section3", index)}
             >
               <Panel
                 name={t("dashboard-election-explorer:election.map")}
                 icon={<MapIcon className="mr-1 h-5 w-5" />}
               >
                 <div className="pt-6">
-                  <Card
-                    className="border-outline dark:border-washed-dark static h-[500px] rounded-xl border"
-                    type="gray"
-                  >
-                    <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />
-                  </Card>
+                  <LeftRightCard
+                    left={
+                      <div className="flex h-full w-full flex-col space-y-6 p-8">
+                        <div className="flex flex-col gap-2">
+                          <h4>
+                            {t("dashboard-election-explorer:election.choro_header", {
+                              stat: t(`dashboard-election-explorer:election.${data.filter.value}`),
+                            })}
+                          </h4>
+                          <span className="text-dim text-sm">
+                            {/* {t("common.data_of", { date: choropleth.data_as_of })} */}
+                          </span>
+                        </div>
+                        <div className="flex grow flex-col justify-between space-y-6">
+                          <div className="space-y-3 pt-6">
+                            <p className="font-bold">
+                              {t("dashboard-election-explorer:election.choro_rank")}
+                            </p>
+                            {/* {topStateIndices.map((pos, i) => {
+                          return (
+                            <div className="flex space-x-3">
+                              <div className="text-dim font-medium">#{i + 1}</div>
+                              <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
+                              <div className="font-bold text-[#16A34A]">
+                                {displayPercent(choropleth.data.y.perc[pos])}
+                              </div>
+                              <ArrowRightIcon className="text-dim h-4 w-4 self-center stroke-[1.5px]" />
+                            </div>
+                          );
+                        })} */}
+                          </div>
+                        </div>
+                      </div>
+                    }
+                    right={<Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />}
+                  />
                 </div>
               </Panel>
               <Panel

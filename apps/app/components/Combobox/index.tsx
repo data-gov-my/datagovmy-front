@@ -69,18 +69,23 @@ const ComboBox = <L extends string | number = string, V = string>({
                   }}
                   spellCheck={false}
                 />
-                {/* {query.length > 0 && (
-                      <XMarkIcon
-                        className="absolute top-3 right-3 box-content flex h-5 w-5 items-center pr-1.5 text-black dark:text-dim"
-                        aria-hidden="true"
-                      />
-                    )} */}
+                {query.length > 0 && (
+                  <span className="absolute inset-y-0 right-2 box-content flex items-center pr-1.5">
+                    <XMarkIcon
+                      className="dark:text-dim h-5 w-5 text-black"
+                      onClick={() => onChange(undefined)}
+                      aria-hidden="true"
+                    />
+                  </span>
+                )}
                 {selected && (
-                  <XMarkIcon
-                    onClick={() => onChange(undefined)}
-                    className="dark:text-dim absolute right-3 top-3 box-content flex h-5 w-5 items-center pr-1.5 text-black"
-                    aria-hidden="true"
-                  />
+                  <span className="absolute inset-y-0 right-2 box-content flex items-center pr-1.5">
+                    <XMarkIcon
+                      className="dark:text-dim h-5 w-5 text-black"
+                      onClick={() => onChange(undefined)}
+                      aria-hidden="true"
+                    />
+                  </span>
                 )}
               </>
             )}

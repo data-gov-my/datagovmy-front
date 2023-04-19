@@ -41,12 +41,11 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
 
   const { data, setData } = useData({
     popular_searches: ["Wee Ka Siong", "Anwar Ibrahim", "Mahathir Muhammad"],
-    test: [],
     tabs: 0,
-    candidate: CANDIDATE_OPTIONS[7],
+    candidate: "",
 
     // query
-    q_candidate: "",
+    q_candidate: CANDIDATE_OPTIONS[7],
   });
 
   type Candidate = {
@@ -172,13 +171,13 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
                 placeholder={t("dashboard-election-explorer:candidate.search_candidate")}
                 options={CANDIDATE_OPTIONS}
                 selected={
-                  data.q_candidate
-                    ? CANDIDATE_OPTIONS.find(e => e.value === data.q_candidate.value)
+                  data.candidate
+                    ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate.value)
                     : null
                 }
                 onChange={e => {
-                  if (e) setData("candidate", e);
-                  setData("q_candidate", e);
+                  if (e) setData("q_candidate", e);
+                  setData("candidate", e);
                 }}
               />
               <div className="flex flex-col text-center lg:flex-row">
@@ -241,7 +240,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
             title={
               <div className="text-base font-bold">
                 {t("dashboard-election-explorer:candidate.title")}
-                <span className="text-primary">{data.candidate.value}</span>
+                <span className="text-primary">{data.q_candidate.value}</span>
               </div>
             }
             current={data.tabs}
@@ -254,7 +253,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
                 empty={
                   <p>
                     {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.candidate ? data.candidate.value : "",
+                      name: data.q_candidate ? data.q_candidate.value : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
                   </p>
@@ -263,12 +262,12 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
             </Panel>
             <Panel name={t("dashboard-election-explorer:state_elections")}>
               <BorderlessTable
-                data={dummyData}
+                data={[]}
                 columns={columns}
                 empty={
                   <p>
                     {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.candidate ? data.candidate.value : "",
+                      name: data.q_candidate ? data.q_candidate.value : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
                   </p>

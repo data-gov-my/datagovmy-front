@@ -38,6 +38,8 @@
         "full_result": "{{ election }}: Full result for ",
         "search_area": "Search for your area",
         "section_3": "Election analysis",
+        "choro_header": "How do {{ stat }} rates differ across the country?",
+        "choro_rank": "Ranking",
         "voter_turnout": "Voter Turnout",
         "majority_%": "Majority (%)", 
         "rejected_votes": "Rejected votes", 

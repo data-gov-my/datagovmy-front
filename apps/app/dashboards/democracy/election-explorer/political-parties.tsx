@@ -49,10 +49,10 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
   const { data, setData } = useData({
     state: "",
     tabs: 0,
-    party: PARTY_OPTIONS[0],
+    party: "",
 
     // query
-    q_party: "",
+    q_party: PARTY_OPTIONS[0],
   });
 
   type ElectionResult = {
@@ -266,14 +266,10 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
               <ComboBox
                 placeholder={t("dashboard-election-explorer:party.search_party")}
                 options={PARTY_OPTIONS}
-                selected={
-                  data.q_party
-                    ? PARTY_OPTIONS.find(e => e.value === data.q_party.value)
-                    : data.q_party
-                }
+                selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : null}
                 onChange={e => {
-                  if (e) setData("party", e);
-                  setData("q_party", e);
+                  if (e) setData("q_party", e);
+                  setData("party", e);
                 }}
                 enableFlag
               />
@@ -313,7 +309,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
                 columns={columns}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
+                    {t("dashboard-election-explorer:party.never_compete", {
                       name: data.q_party ? data.q_party.value : null,
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
@@ -327,8 +323,8 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
                 columns={columns}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.party ? data.party.value : "",
+                    {t("dashboard-election-explorer:party.never_compete", {
+                      name: data.q_party ? PoliticalParty[data.q_party.value] : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
                   </p>

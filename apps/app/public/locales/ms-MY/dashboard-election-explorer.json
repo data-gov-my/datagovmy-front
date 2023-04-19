@@ -38,6 +38,8 @@
         "search_area": "Carilah kawasan anda",
         "full_result": "{{ election }}: Keputusan penuh bagi ",
         "section_3": "Analisa pilihan raya",
+        "choro_header": "Bagaimanakan kadar {{ stat }} berbeza di seluruh negara?",
+        "choro_rank": "Kedudukan",
         "voter_turnout": "Keluar Mengundi",        
         "majority_%": "Majoriti (%)", 
         "rejected_votes": "Undi ditolak", 

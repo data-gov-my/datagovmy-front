@@ -64,7 +64,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
       />
 
       <Container className="min-h-fit">
-        <ContainerTabs current={data.tabs}>
+        <ContainerTabs current={data.tabs} onChange={index => setData("tabs", index)}>
           {PANELS.map((panel, index) => (
             <ContainerTabs.Panel name={panel.name} icon={panel.icon} key={index}>
               {panel.data}
