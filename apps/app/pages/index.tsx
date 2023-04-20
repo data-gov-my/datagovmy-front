@@ -20,6 +20,7 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
+import nextI18nextConfig from "next-i18next.config";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
@@ -288,8 +289,11 @@ const Ranking = ({ ranks }: RankingProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"], null, ["en-GB", "ms-MY"]);
+  console.log(locale);
+  const i18n = await serverSideTranslations(locale!, ["common"]);
   const { data } = await get("/dashboard", { dashboard: "homepage" });
+  console.log(i18n._nextI18Next?.initialLocale, "home_lang");
+  console.log(i18n._nextI18Next?.initialI18nStore, "home");
 
   return {
     props: {

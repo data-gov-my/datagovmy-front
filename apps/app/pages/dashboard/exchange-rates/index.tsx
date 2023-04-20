@@ -6,6 +6,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ExchangeRatesDashboard from "@dashboards/economy/exchange-rates";
+import nextI18nextConfig from "next-i18next.config";
 
 const ExchangeRates: Page = ({
   last_updated,
@@ -33,10 +34,7 @@ const ExchangeRates: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-exchange-rates"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-exchange-rates"]);
 
   const { data } = await get("/dashboard", { dashboard: "exchange_rates" });
 

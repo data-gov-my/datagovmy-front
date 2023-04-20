@@ -5,6 +5,7 @@ const { promisify } = require("util");
 require("dotenv").config();
 
 /**
+ * Does not work in Vercel. Vercel does not allow writing files in their serverless environment.
  * Constants & Functions
  */
 const lang_map = {
