@@ -197,6 +197,10 @@ export const SHORT_PERIOD_FORMAT = {
  */
 export const PARTIES: Array<Record<string, any>> = [
   {
+    key: "alliance",
+    name: "Parti Perikatan (PP)",
+  },
+  {
     key: "amanah",
     name: "Parti Amanah Negara (AMANAH)",
   },

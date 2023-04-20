@@ -24,9 +24,11 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
   ssr: false,
 });
 
-interface ElectionCandidatesProps {}
+interface ElectionCandidatesProps {
+  candidate: any;
+}
 
-const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
+const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candidate }) => {
   const { t, i18n } = useTranslation();
 
   type Candidate = {
@@ -124,9 +126,6 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
       ),
     }),
   ];
-  function displayPercent(percent: number) {
-    return `${percent.toFixed(2)}%`;
-  }
 
   const { data, setData } = useData({
     data: {},
@@ -136,7 +135,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
     p_candidate: "",
 
     // query
-    candidate: "Anwar Bin Ibrahim",
+    candidate: "Tunku Abdul Rahman Putra Al-Haj",
     loading: false,
   });
 
@@ -156,7 +155,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
     });
   }, []);
 
-  useEffect(() => {
+  useWatch(() => {
     setData("loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
@@ -165,7 +164,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
       type: data.tabs === 0 ? "parlimen" : "dun",
     })
       .then(({ data }) => {
-        setData("data", data);
+        setData("data", data.reverse());
       })
       .then(() => setData("loading", false));
   }, [data.candidate, data.tabs]);

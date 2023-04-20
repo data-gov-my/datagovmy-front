@@ -7,7 +7,7 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
 
-const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ElectionExplorer: Page = ({ candidate }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-election-explorer"]);
 
   return (
@@ -17,7 +17,7 @@ const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProp
         description={t("dashboard-election-explorer:description")}
         keywords={""}
       />
-      <ElectionExplorerDashboard />
+      <ElectionExplorerDashboard candidate={candidate} />
     </>
   );
 };
@@ -30,10 +30,17 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     ["en-GB", "ms-MY"]
   );
 
+  const { data: candidate } = await get("/explorer", {
+    explorer: "ELECTIONS",
+    chart: "candidates",
+    name: "Tunku Abdul Rahman Putra Al-Haj",
+    type: "parlimen",
+  });
   return {
     notFound: false,
     props: {
       ...i18n,
+      candidate: candidate.reverse(),
     },
   };
 };

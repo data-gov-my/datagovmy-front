@@ -39,7 +39,7 @@ const ComboBox = <L extends string | number = string, V = string>({
           .slice(0, 100);
 
   return (
-    <Combobox value={selected} onChange={onChange} nullable>
+    <Combobox value={selected} onChange={onChange}>
       <div className="relative w-5/6 rounded-full sm:w-3/4 md:w-1/2">
         <div
           className={clx(
@@ -100,10 +100,7 @@ const ComboBox = <L extends string | number = string, V = string>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options
-            static
-            className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm"
-          >
+          <Combobox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm">
             {filteredOptions.length === 0 && query !== "" ? (
               <div className="text-dim relative cursor-default select-none px-4 py-2">
                 {t("common:placeholder.no_results")}
