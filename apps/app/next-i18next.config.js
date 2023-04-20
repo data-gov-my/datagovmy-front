@@ -1,10 +1,5 @@
 const I18NextHttpBackend = require("i18next-http-backend");
-const lang_map = {
-  "en-GB": "en",
-  "en": "en",
-  "ms-MY": "bm",
-  "ms": "bm",
-};
+
 const namespace = [
   "common",
   "dashboard-999-tracker",
@@ -52,11 +47,7 @@ module.exports = {
     locales: ["en-GB", "ms-MY"],
     backend: {
       loadPath: (lang, namespace) => {
-        return `${process.env.NEXT_PUBLIC_API_URL}/i18n?lang=${lang_map[lang]}&filename=${namespace}.json`;
-      },
-      parse: data => {
-        const _data = JSON.parse(data).translation_json;
-        return _data;
+        return `${process.env.NEXT_PUBLIC_API_URL}i18n?lang=${lang}&filename=${namespace}`;
       },
       customHeaders: {
         Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
