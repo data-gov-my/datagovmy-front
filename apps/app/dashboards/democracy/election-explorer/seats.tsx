@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { BarMeter } from "@components/Chart/Table/BorderlessTable";
@@ -38,13 +38,26 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
     value: key,
   }));
 
-  const { data, setData } = useData({
-    popular_searches: ["P.001", "P.004", "P.005"],
-    seat: "",
-
-    // query
-    q_seat: SEAT_OPTIONS[0],
-  });
+  const results: { [key: string]: ReactNode } = {
+    comfortable: (
+      <span className="flex flex-row items-center gap-1.5 uppercase">
+        <span className="w-4">💪</span>
+        <p className="text-[#10B981]">{t("dashboard-election-explorer:seat.comfortable")}</p>
+      </span>
+    ),
+    close: (
+      <span className="flex flex-row items-center gap-1.5 uppercase">
+        <span className="w-4">🔥</span>
+        <p className="text-danger">{t("dashboard-election-explorer:seat.close")}</p>
+      </span>
+    ),
+    uncontested: (
+      <span className="text-dim flex flex-row items-center gap-1.5 uppercase">
+        <MinusIcon className="h-4 w-4" />
+        <p>{t("dashboard-election-explorer:seat.uncontested")}</p>
+      </span>
+    ),
+  };
 
   type Seat = {
     date: string;
@@ -97,28 +110,28 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
   const columns: ColumnDef<Seat, any>[] = [
     columnHelper.accessor("date", {
       header: t("dashboard-election-explorer:date"),
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor((row: any) => row.party, {
       header: t("dashboard-election-explorer:winning_party"),
       cell: (info: any) => {
-        const party = info.getValue() as string;
+        const party = info.getValue().toLowerCase() as string;
         return (
-          <div className="flex items-center gap-1.5 pr-7 lg:pr-0">
+          <div className="flex items-center gap-1.5 pr-7 xl:pr-0">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
               height={16}
               alt={PoliticalParty[party] as string}
             />
-            <span className="whitespace-nowrap">{PoliticalParty[party]}</span>
+            <span>{PoliticalParty[party]}</span>
           </div>
         );
       },
     }),
     columnHelper.accessor("name", {
       header: t("dashboard-election-explorer:candidate_name"),
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("majority", {
       header: t("dashboard-election-explorer:majority"),
@@ -131,27 +144,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
     }),
     columnHelper.accessor("result", {
       header: t("dashboard-election-explorer:result"),
-      cell: (info: any) =>
-        info.getValue() === "comfortable" ? (
-          <span className="flex flex-row items-center gap-1.5 uppercase">
-            <span className="w-4">💪</span>
-            <p className="whitespace-nowrap text-[#10B981]">
-              {t("dashboard-election-explorer:seat.comfortable")}
-            </p>
-          </span>
-        ) : info.getValue() === "close" ? (
-          <span className="flex flex-row items-center gap-1.5 uppercase">
-            <span className="w-4">🔥</span>
-            <p className="text-danger whitespace-nowrap">
-              {t("dashboard-election-explorer:seat.close")}
-            </p>
-          </span>
-        ) : (
-          <span className="text-dim flex flex-row items-center gap-1.5 uppercase">
-            <MinusIcon className="h-4 w-4" />
-            <p className="whitespace-nowrap">{t("dashboard-election-explorer:seat.uncontested")}</p>
-          </span>
-        ),
+      cell: (info: any) => results[info.getValue()],
     }),
     columnHelper.display({
       id: "fullResult",
@@ -161,19 +154,27 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
           title={
             <div>
               <span className="text-lg font-bold uppercase text-black dark:text-white">
-                {data.seat.value.split(",")[0]}
+                {data.q_seat.value.split(",")[0]}
               </span>
               <span className="text-dim pl-2 text-lg font-normal uppercase">
-                {data.seat.value.split(",")[1]}
+                {data.q_seat.value.split(",")[1]}
               </span>
             </div>
           }
-        >
-          <BorderlessTable />
-        </ElectionCard>
+        />
       ),
     }),
   ];
+
+  const { data, setData } = useData({
+    data: dummyData,
+    loading: false,
+    seat: "",
+
+    // query
+    q_seat: SEAT_OPTIONS[0],
+  });
+
   return (
     <Section>
       <div className="lg:grid lg:grid-cols-12">
@@ -190,60 +191,6 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                   setData("seat", e);
                 }}
               />
-              <div className="flex flex-col text-center lg:flex-row">
-                <span className="whitespace-pre">
-                  {t("dashboard-election-explorer:popular_searches")}
-                </span>
-                <span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "seat",
-                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[0]))
-                      );
-                      setData(
-                        "q_seat",
-                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[0]))
-                      );
-                    }}
-                  >
-                    {data.popular_searches[0]}
-                  </span>
-                  <span>, </span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "seat",
-                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[1]))
-                      );
-                      setData(
-                        "q_seat",
-                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[1]))
-                      );
-                    }}
-                  >
-                    {data.popular_searches[1]}
-                  </span>
-                  <span>, </span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "seat",
-                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[2]))
-                      );
-                      setData(
-                        "q_seat",
-                        SEAT_OPTIONS.find(e => e.value.startsWith(data.popular_searches[2]))
-                      );
-                    }}
-                  >
-                    {data.popular_searches[2]}
-                  </span>
-                </span>
-              </div>
             </div>
           </div>
           <BorderlessTable
@@ -253,8 +200,9 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                 <span className="text-primary">{data.q_seat.value}</span>
               </div>
             }
-            data={dummyData}
+            data={data.data}
             columns={columns}
+            isLoading={data.loading}
           />
         </div>
       </div>

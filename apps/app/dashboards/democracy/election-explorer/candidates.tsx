@@ -5,10 +5,14 @@ import { Panel, Section, Tabs } from "@components/index";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { OptionType } from "@components/types";
-import { Lost, Won } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter, Lost, Won } from "@components/Chart/Table/BorderlessTable";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
+import { useWatch } from "@hooks/useWatch";
+import { get } from "@lib/api";
 import { PoliticalParty } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
+import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 /**
@@ -20,76 +24,66 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
   ssr: false,
 });
 
-interface ElectionCandidatesProps {}
+interface ElectionCandidatesProps {
+  candidate_list: any;
+}
 
-const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
+const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candidate_list }) => {
   const { t, i18n } = useTranslation();
 
-  const CANDIDATE_OPTIONS: Array<OptionType> = [
-    "Abdul Ghani Bin Ahmad",
-    "Abdul Hadi Bin Awang",
-    "Abdul Khalib Abdullah",
-    "Abdul Latiff Bin Abdul Rahman",
-    "Abdul Rahman Bin Mohammad",
-    "Anwar Ibrahim",
-    "Mahathir Muhammad",
-    "Wee Ka Siong",
-  ].map((key: string) => ({
+  const CANDIDATE_OPTIONS: Array<OptionType> = candidate_list.map((key: string) => ({
     label: key,
     value: key,
   }));
 
-  const { data, setData } = useData({
-    popular_searches: ["Wee Ka Siong", "Anwar Ibrahim", "Mahathir Muhammad"],
-    tabs: 0,
-    candidate: "",
-
-    // query
-    q_candidate: CANDIDATE_OPTIONS[7],
-  });
-
   type Candidate = {
+    election_name: string;
     date: string;
-    area: string;
+    seat: string;
     party: string;
-    votes: string;
+    votes: Record<string, number>;
     result: string;
   };
 
   const dummyData: Candidate[] = [
     {
-      date: "23 Jan 2022",
-      area: "P148 - Ayer Hitam, Johor",
+      election_name: "GE-15",
+      date: "19 Nov 2022",
+      seat: "P148 - Ayer Hitam, Johor",
       party: "mca",
-      votes: "18,911 (40.5%)",
+      votes: { abs: 18911, perc: 40.5 },
       result: "won",
     },
     {
-      date: "23 Jan 2018",
-      area: "P148 - Ayer Hitam, Johor",
+      election_name: "GE-14",
+      date: "9 Mei 2018",
+      seat: "P148 - Ayer Hitam, Johor",
       party: "mca",
-      votes: "17,076 (44.0%)",
+      votes: { abs: 18911, perc: 40.5 },
       result: "won_uncontested",
     },
     {
-      date: "23 Jan 2013",
-      area: "P148 - Ayer Hitam, Johor",
-      party: "mca",
-      votes: "22,045 (59.8%)",
+      election_name: "GE-13",
+      date: "5 Mei 2013",
+      seat: "P148 - Ayer Hitam, Johor",
+      party: "bersatu",
+      votes: { abs: 18911, perc: 40.5 },
       result: "lost",
     },
     {
-      date: "23 Jan 2008",
-      area: "P148 - Ayer Hitam, Johor",
+      election_name: "GE-12",
+      date: "8 Mac 2008",
+      seat: "P148 - Ayer Hitam, Johor",
       party: "mca",
-      votes: "20,230 (76.1%)",
+      votes: { abs: 18911, perc: 40.5 },
       result: "lost_deposit",
     },
     {
-      date: "23 Jan 2004",
-      area: "P148 - Ayer Hitam, Johor",
+      election_name: "GE-11",
+      date: "21 Mac 2004",
+      seat: "P148 - Ayer Hitam, Johor",
       party: "mca",
-      votes: "20,065 (82.3%)",
+      votes: { abs: 18911, perc: 40.5 },
       result: "won",
     },
   ];
@@ -104,36 +98,60 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
   };
 
   const columns: ColumnDef<Candidate, any>[] = [
-    columnHelper.accessor((row: any) => row.date, {
-      header: t("dashboard-election-explorer:date"),
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+    columnHelper.accessor("election_name", {
+      id: "election_name",
+      header: t("dashboard-election-explorer:election_name"),
+      cell: (info: any) => info.getValue(),
     }),
-    columnHelper.accessor("area", {
+    columnHelper.accessor((row: any) => row.date, {
+      id: "date",
+      header: t("dashboard-election-explorer:date"),
+      cell: (info: any) => (
+        <p>
+          {DateTime.fromISO(info.getValue())
+            .setLocale(i18n.language)
+            .toLocaleString(DateTime.DATE_MED)}
+        </p>
+      ),
+    }),
+    columnHelper.accessor("seat", {
+      id: "seat",
       header: t("dashboard-election-explorer:constituency"),
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("party", {
+      id: "party",
       header: t("dashboard-election-explorer:party_name"),
       cell: (info: any) => {
-        const party = info.getValue() as string;
+        const party = info.getValue().toLowerCase() as string;
         return (
-          <div className="flex flex-row items-center gap-1.5 pr-7 lg:pr-0">
+          <div className="flex flex-row items-center gap-1.5 pr-7 xl:pr-0">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
               height={16}
               alt={PoliticalParty[party]}
             />
-            <span>{PoliticalParty[party]}</span>
+            <span>{PoliticalParty[party] ? PoliticalParty[party] : party}</span>
           </div>
         );
       },
     }),
     columnHelper.accessor("votes", {
+      id: "votes",
       header: t("dashboard-election-explorer:votes_won"),
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+      cell: (info: any) => {
+        const votes = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={votes.perc} />
+            <p>{`${numFormat(votes.abs, "standard")} (${displayPercent(votes.perc)})`}</p>
+          </div>
+        );
+      },
     }),
     columnHelper.accessor("result", {
+      id: "result",
       header: t("dashboard-election-explorer:result"),
       cell: (info: any) => results[info.getValue()],
     }),
@@ -150,15 +168,38 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
               <span className="text-dim font-normal">Johor</span>
             </div>
           }
-        >
-          <BorderlessTable
-            highlightedRow={0}
-            win={["won", "won_uncontested"].includes(info.getValue())}
-          />
-        </ElectionCard>
+        />
       ),
     }),
   ];
+  function displayPercent(percent: number) {
+    return `${percent.toFixed(2)}%`;
+  }
+
+  const { data, setData } = useData({
+    data: dummyData,
+    tabs: 0,
+    // placeholder in combobox
+    p_candidate: "",
+
+    // query
+    candidate: "Anwar Bin Ibrahim",
+    loading: false,
+  });
+
+  useWatch(() => {
+    setData("loading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "candidates",
+      name: data.candidate,
+      type: data.tabs === 0 ? "parlimen" : "dun",
+    })
+      .then(({ data }) => {
+        setData("data", data);
+      })
+      .then(() => setData("loading", false));
+  }, [data.candidate, data.tabs]);
 
   return (
     <Section>
@@ -171,76 +212,22 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
                 placeholder={t("dashboard-election-explorer:candidate.search_candidate")}
                 options={CANDIDATE_OPTIONS}
                 selected={
-                  data.candidate
-                    ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate.value)
+                  data.p_candidate
+                    ? CANDIDATE_OPTIONS.find(e => e.value === data.p_candidate.value)
                     : null
                 }
                 onChange={e => {
-                  if (e) setData("q_candidate", e);
-                  setData("candidate", e);
+                  if (e) setData("candidate", e.value);
+                  setData("p_candidate", e);
                 }}
               />
-              <div className="flex flex-col text-center lg:flex-row">
-                <span className="whitespace-pre">
-                  {t("dashboard-election-explorer:popular_searches")}
-                </span>
-                <div>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "candidate",
-                        CANDIDATE_OPTIONS.find(e => e.value === data.popular_searches[0])
-                      );
-                      setData(
-                        "q_candidate",
-                        CANDIDATE_OPTIONS.find(e => e.value === data.popular_searches[0])
-                      );
-                    }}
-                  >
-                    {data.popular_searches[0]}
-                  </span>
-                  <span>, </span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "candidate",
-                        CANDIDATE_OPTIONS.find(e => e.value === data.popular_searches[1])
-                      );
-                      setData(
-                        "q_candidate",
-                        CANDIDATE_OPTIONS.find(e => e.value === data.popular_searches[1])
-                      );
-                    }}
-                  >
-                    {data.popular_searches[1]}
-                  </span>
-                  <span>, </span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "candidate",
-                        CANDIDATE_OPTIONS.find(e => e.value === data.popular_searches[2])
-                      );
-                      setData(
-                        "q_candidate",
-                        CANDIDATE_OPTIONS.find(e => e.value === data.popular_searches[2])
-                      );
-                    }}
-                  >
-                    {data.popular_searches[2]}
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
           <Tabs
             title={
               <div className="text-base font-bold">
                 {t("dashboard-election-explorer:candidate.title")}
-                <span className="text-primary">{data.q_candidate.value}</span>
+                <span className="text-primary">{data.candidate}</span>
               </div>
             }
             current={data.tabs}
@@ -248,12 +235,13 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
           >
             <Panel name={t("dashboard-election-explorer:parliament_elections")}>
               <BorderlessTable
-                data={dummyData}
+                data={data.data}
                 columns={columns}
+                isLoading={data.loading}
                 empty={
                   <p>
                     {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.q_candidate ? data.q_candidate.value : "",
+                      name: data.candidate ? data.candidate : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
                   </p>
@@ -262,12 +250,13 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
             </Panel>
             <Panel name={t("dashboard-election-explorer:state_elections")}>
               <BorderlessTable
-                data={[]}
+                data={data.data}
                 columns={columns}
+                isLoading={data.loading}
                 empty={
                   <p>
                     {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.q_candidate ? data.q_candidate.value : "",
+                      name: data.candidate ? data.candidate : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
                   </p>

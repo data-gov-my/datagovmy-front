@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
 import { clx, numFormat } from "@lib/helpers";
-import { BarMeter } from "@components/Chart/Table/BorderlessTable";
+import BorderlessTable, { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { PoliticalParty, PoliticalPartyColours } from "@lib/constants";
 import Image from "next/image";
@@ -18,22 +18,106 @@ import Image from "next/image";
 interface CardProps {
   data?: Candidate[];
   title?: string | ReactElement;
-  children: ReactNode;
   label: string;
   page?: number;
   win?: ReactNode;
 }
 
-const Card: FunctionComponent<CardProps> = ({
-  data = dummyData,
-  title,
-  children,
-  label,
-  page = 0,
-  win,
-}) => {
+const Card: FunctionComponent<CardProps> = ({ data = dummyData, title, label, page = 0, win }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
+
+  type ElectionResult = {
+    party: string;
+    seats: string;
+    seats_perc: number;
+    perc: number;
+    votes: number;
+  };
+
+  const fullResultData: ElectionResult[] = [
+    {
+      party: "ph",
+      seats: "82 / 222",
+      seats_perc: 36.9,
+      votes: 18911,
+      perc: 40.5,
+    },
+    {
+      party: "pn",
+      seats: "74 / 222",
+      seats_perc: 33.3,
+      votes: 17076,
+      perc: 40.5,
+    },
+    {
+      party: "bn",
+      seats: "30 / 222",
+      seats_perc: 13.5,
+      votes: 22045,
+      perc: 40.5,
+    },
+    {
+      party: "gps",
+      seats: "23 / 222",
+      seats_perc: 10.4,
+      perc: 40.5,
+      votes: 20230,
+    },
+    {
+      party: "grs",
+      seats: "13 / 222",
+      seats_perc: 5.9,
+      votes: 20065,
+      perc: 40.5,
+    },
+  ];
+
+  const fullResultColumnHelper = createColumnHelper<ElectionResult>();
+
+  const fullResultColumns: ColumnDef<ElectionResult, any>[] = [
+    fullResultColumnHelper.accessor((row: any) => row.party, {
+      id: "party",
+      header: t("dashboard-election-explorer:party_name"),
+      cell: (info: any) => {
+        const party = info.getValue().toLowerCase() as string;
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <Image
+              src={`/static/images/parties/${party}.png`}
+              width={28}
+              height={16}
+              alt={PoliticalParty[party]}
+            />
+            <span>{PoliticalParty[party]}</span>
+          </div>
+        );
+      },
+    }),
+    fullResultColumnHelper.accessor((row: any) => `${row.seats} (${row.seats_perc}%)`, {
+      header: t("dashboard-election-explorer:seats_won"),
+      cell: (info: any) => (
+        <div className="flex flex-row items-center gap-2">
+          <BarMeter perc={info.row.original.seats_perc} />
+          <p>{info.getValue()}</p>
+        </div>
+      ),
+    }),
+    fullResultColumnHelper.accessor("votes", {
+      header: t("dashboard-election-explorer:total_votes"),
+      cell: (info: any) => numFormat(info.getValue(), "standard"),
+    }),
+    fullResultColumnHelper.accessor("perc", {
+      header: t("dashboard-election-explorer:perc_votes"),
+      cell: (info: any) => (
+        <div className="flex flex-row items-center gap-2">
+          <BarMeter perc={info.getValue()} />
+          <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
+        </div>
+      ),
+    }),
+  ];
+
   return (
     <>
       <div className="flex items-center justify-center">
@@ -113,7 +197,7 @@ const Card: FunctionComponent<CardProps> = ({
                       );
                     })}
                   </div>
-                  {children}
+                  <BorderlessTable isLoading={false} />
 
                   <div className="mt-6 space-y-3">
                     <div className="flex flex-row items-center justify-center gap-1.5">

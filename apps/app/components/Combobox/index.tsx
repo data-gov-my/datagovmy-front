@@ -27,14 +27,16 @@ const ComboBox = <L extends string | number = string, V = string>({
 
   const filteredOptions =
     query === ""
-      ? options
-      : options.filter(option =>
-          option.label
-            .toString()
-            .toLowerCase()
-            .replace(/\s+/g, "")
-            .includes(query.toLowerCase().replace(/\s+/g, ""))
-        );
+      ? options.slice(0, 100)
+      : options
+          .filter(option =>
+            option.label
+              .toString()
+              .toLowerCase()
+              .replace(/\s+/g, "")
+              .includes(query.toLowerCase().replace(/\s+/g, ""))
+          )
+          .slice(0, 100);
 
   return (
     <Combobox value={selected} onChange={onChange} nullable>

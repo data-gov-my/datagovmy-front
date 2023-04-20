@@ -197,64 +197,92 @@ export const SHORT_PERIOD_FORMAT = {
  */
 export const PARTIES: Array<Record<string, any>> = [
   {
+    key: "amanah",
+    name: "Parti Amanah Negara (AMANAH)",
+  },
+  {
     key: "bebas",
-    name: "Bebas",
+    name: "Bebas (BEBAS)",
+  },
+  {
+    key: "bersatu",
+    name: "Parti Pribumi Bersatu Malaysia (BERSATU)",
   },
   {
     key: "bn",
-    name: "Barisan Nasional",
+    name: "Barisan Nasional (BN)",
+  },
+  {
+    key: "dap",
+    name: "Parti Tindakan Demokratik (DAP)",
+  },
+  {
+    key: "gerakan",
+    name: "Parti Gerakan Rakyat Malaysia (GERAKAN)",
   },
   {
     key: "gps",
-    name: "Gabungan Parti Sarawak",
+    name: "Gabungan Parti Sarawak (GPS)",
   },
   {
     key: "grs",
-    name: "Gabungan Rakyat Sabah",
+    name: "Gabungan Rakyat Sabah (GRS)",
   },
   {
     key: "kdm",
-    name: "Parti KDM",
+    name: "Parti Kesejahteraan Demokratik Masyarakat (KDM)",
   },
   {
     key: "mca",
-    name: "Malaysian Chinese Association",
+    name: "Malaysian Chinese Association (MCA)",
   },
   {
     key: "muda",
-    name: "Malaysian United Democratic Alliance",
+    name: "Malaysian United Democratic Alliance (MUDA)",
+  },
+  {
+    key: "pas",
+    name: "Parti Islam Se-Malaysia (PAS)",
   },
   {
     key: "pbm",
-    name: "Parti Bangsa Malaysia",
+    name: "Parti Bangsa Malaysia (PBM)",
   },
   {
     key: "pcs",
-    name: "Parti Cinta Sabah",
+    name: "Parti Cinta Sabah (PCS)",
   },
   {
     key: "pejuang",
-    name: "Parti Pejuang Tanah Air",
+    name: "Parti Pejuang Tanah Air (PEJUANG)",
   },
   {
     key: "ph",
-    name: "Pakatan Harapan",
+    name: "Pakatan Harapan (PH)",
   },
   {
     key: "phrs",
-    name: "Parti Harapan Rakyat Sabah",
+    name: "Parti Harapan Rakyat Sabah (PHRS)",
+  },
+  {
+    key: "pkr",
+    name: "Parti Keadilan Rakyat (PKR)",
   },
   {
     key: "pn",
-    name: "Perikatan Nasional",
+    name: "Perikatan Nasional (PN)",
   },
   {
     key: "psb",
-    name: "Parti Sarawak Bersatu",
+    name: "Parti Sarawak Bersatu (PSB)",
+  },
+  {
+    key: "upko",
+    name: "Pertubuhan Kinabalu Progresif Bersatu (UPKO)",
   },
   {
     key: "warisan",
-    name: "Parti Warisan Sabah",
+    name: "Parti Warisan Sabah (WARISAN)",
   },
 ];
 
@@ -273,12 +301,28 @@ export const PoliticalParty: Record<string, string> = (() => {
  */
 export const PARTY_COLOURS: Array<Record<string, any>> = [
   {
+    key: "amanah",
+    colour: "#f7911f",
+  },
+  {
     key: "bebas",
     colour: "#A7A7A7",
   },
   {
+    key: "bersatu",
+    colour: "#e30007",
+  },
+  {
     key: "bn",
     colour: "#000080",
+  },
+  {
+    key: "dap",
+    colour: "#cc0000",
+  },
+  {
+    key: "gerakan",
+    colour: "ff0000",
   },
   {
     key: "gps",
@@ -295,6 +339,10 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
   {
     key: "muda",
     colour: "#000000",
+  },
+  {
+    key: "pas",
+    colour: "#008000",
   },
   {
     key: "pbm",
@@ -317,12 +365,20 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "#E2E8F0",
   },
   {
+    key: "pkr",
+    colour: "#00bfff",
+  },
+  {
     key: "pn",
     colour: "#003152",
   },
   {
     key: "psb",
     colour: "#E2E8F0",
+  },
+  {
+    key: "upko",
+    colour: "#183980",
   },
   {
     key: "warisan",

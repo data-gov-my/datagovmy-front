@@ -139,6 +139,9 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     tabs: 0,
     tabs_section1: 0,
     tabs_section3: 0,
+    section1_loading: false,
+    section2_loading: false,
+    section3_loading: false,
     filter: FILTER_OPTIONS[0],
     election: ELECTION_OPTIONS[0],
     seat: "",
@@ -193,15 +196,15 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
   const dummyColumns: Array<ColumnDef<Candidate, any>> = [
     columnHelper.accessor("name", {
       id: "name",
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+      cell: (info: any) => info.getValue(),
       header: t("dashboard-election-explorer:candidate_name"),
     }),
     columnHelper.accessor((row: any) => row.party, {
       id: "party",
       cell: (info: any) => {
-        const party = info.getValue() as string;
+        const party = info.getValue().toLowerCase() as string;
         return (
-          <div className="flex items-center gap-2 pr-7 lg:pr-0">
+          <div className="flex items-center gap-2 pr-7 xl:pr-0">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -232,7 +235,6 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
   ];
 
   // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
-  const displayPercent = (percent: number) => `${percent.toFixed(2)}%`;
 
   return (
     <>
@@ -434,7 +436,12 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                       name={t("dashboard-election-explorer:election.table")}
                       icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                     >
-                      <BorderlessTable highlightedRow={4} data={dummyData} columns={dummyColumns} />
+                      <BorderlessTable
+                        isLoading={data.section1_loading}
+                        highlightedRow={4}
+                        data={dummyData}
+                        columns={dummyColumns}
+                      />
                     </Panel>
                   </Tabs>
                 </div>
@@ -469,6 +476,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
               }
               data={dummyData}
               columns={dummyColumns}
+              isLoading={data.section2_loading}
               highlightedRow={1}
               win
             />
@@ -555,7 +563,11 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 name={t("dashboard-election-explorer:election.table")}
                 icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
               >
-                <BorderlessTable data={dummyData} columns={dummyColumns} />
+                <BorderlessTable
+                  isLoading={data.section3_loading}
+                  data={dummyData}
+                  columns={dummyColumns}
+                />
               </Panel>
             </Tabs>
           </div>

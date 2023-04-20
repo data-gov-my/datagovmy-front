@@ -19,6 +19,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import Spinner from "@components/Spinner";
 
 export interface BorderlessTableProps {
   className?: string;
@@ -30,6 +31,7 @@ export interface BorderlessTableProps {
   enablePagination?: false | number;
   highlightedRow?: false | number;
   win?: boolean;
+  isLoading: boolean;
 }
 
 const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
@@ -42,6 +44,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   enablePagination = false,
   highlightedRow = false,
   win = true,
+  isLoading = false,
 }) => {
   const table = useReactTable({
     data,
@@ -80,37 +83,50 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
               </tr>
             ))}
           </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row: any, rowIndex: number) => (
-              <tr
-                key={row.id}
-                className={clx(
-                  rowIndex === highlightedRow
-                    ? "bg-background dark:bg-background-dark"
-                    : "bg-inherit",
-                  "border-outline dark:border-washed-dark border-b"
-                )}
-              >
-                {row.getVisibleCells().map((cell: any, colIndex: number) => (
-                  <td
-                    key={cell.id}
-                    className={clx(
-                      rowIndex === highlightedRow && colIndex === 0 ? "font-medium" : "font-normal",
-                      "whitespace-nowrap px-2 py-[10px] "
-                    )}
-                  >
-                    <span className="flex flex-row gap-1.5">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      {rowIndex === highlightedRow &&
-                        colIndex === 0 &&
-                        (win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />)}
-                    </span>
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
+          {isLoading ? (
+            <></>
+          ) : (
+            <tbody>
+              {table.getRowModel().rows.map((row: any, rowIndex: number) => (
+                <tr
+                  key={row.id}
+                  className={clx(
+                    rowIndex === highlightedRow
+                      ? "bg-background dark:bg-background-dark"
+                      : "bg-inherit",
+                    "border-outline dark:border-washed-dark border-b"
+                  )}
+                >
+                  {row.getVisibleCells().map((cell: any, colIndex: number) => (
+                    <td
+                      key={cell.id}
+                      className={clx(
+                        rowIndex === highlightedRow && colIndex === 0
+                          ? "font-medium"
+                          : "font-normal",
+                        "whitespace-nowrap px-2 py-[10px] "
+                      )}
+                    >
+                      <span className="flex flex-row gap-1.5">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {rowIndex === highlightedRow &&
+                          colIndex === 0 &&
+                          (win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />)}
+                      </span>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
+        {isLoading && (
+          <div className="flex h-20 w-full">
+            <div className="mx-auto self-center">
+              <Spinner loading={isLoading} />
+            </div>
+          </div>
+        )}
         {!data.length && (
           <Card className="flex h-[200px] items-center justify-center">
             <Card className="bg-outline dark:bg-washed-dark mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md px-3 py-1.5">
@@ -248,9 +264,9 @@ const dummyColumns: Array<ColumnDef<Candidate, any>> = [
   columnHelper.accessor((row: any) => row.party, {
     id: "party",
     cell: (info: any) => {
-      const party = info.getValue() as string;
+      const party = info.getValue().toLowerCase() as string;
       return (
-        <div className="flex flex-row items-center gap-1.5 pr-7 lg:pr-0">
+        <div className="flex flex-row items-center gap-1.5 pr-7 xl:pr-0">
           <Image
             src={`/static/images/parties/${party}.png`}
             width={28}
