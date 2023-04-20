@@ -7,9 +7,7 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
 
-const ElectionExplorer: Page = ({
-  candidate_list,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-election-explorer"]);
 
   return (
@@ -19,11 +17,11 @@ const ElectionExplorer: Page = ({
         description={t("dashboard-election-explorer:description")}
         keywords={""}
       />
-      <ElectionExplorerDashboard candidate_list={candidate_list} />
+      <ElectionExplorerDashboard />
     </>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(
     locale!,
@@ -32,15 +30,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     ["en-GB", "ms-MY"]
   );
 
-  const { data: candidate_list } = await get("/explorer", {
-    explorer: "ELECTIONS",
-    dropdown: "candidate_list",
-  });
   return {
     notFound: false,
     props: {
       ...i18n,
-      candidate_list,
     },
   };
 };

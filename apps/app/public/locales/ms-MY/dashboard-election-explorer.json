@@ -53,7 +53,7 @@
         "never_compete_state": "{{ name }} tidak pernah bertanding di Pilihan Raya Negeri",
         "never_compete_parliament": "{{ name }} tidak pernah bertanding di Pilihan Raya Umum",
         "won": "Menang",
-        "won_uncontested": "Tidak Ditandingi",
+        "won_uncontested": "Menang Tanpa Bertanding",
         "lost": "Kalah",
         "lost_deposit": "Hilang Deposit"
     },

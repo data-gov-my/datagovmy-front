@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Panel, Section, Tabs } from "@components/index";
@@ -24,17 +24,10 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
   ssr: false,
 });
 
-interface ElectionCandidatesProps {
-  candidate_list: any;
-}
+interface ElectionCandidatesProps {}
 
-const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candidate_list }) => {
+const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
   const { t, i18n } = useTranslation();
-
-  const CANDIDATE_OPTIONS: Array<OptionType> = candidate_list.map((key: string) => ({
-    label: key,
-    value: key,
-  }));
 
   type Candidate = {
     election_name: string;
@@ -44,49 +37,6 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
     votes: Record<string, number>;
     result: string;
   };
-
-  const dummyData: Candidate[] = [
-    {
-      election_name: "GE-15",
-      date: "19 Nov 2022",
-      seat: "P148 - Ayer Hitam, Johor",
-      party: "mca",
-      votes: { abs: 18911, perc: 40.5 },
-      result: "won",
-    },
-    {
-      election_name: "GE-14",
-      date: "9 Mei 2018",
-      seat: "P148 - Ayer Hitam, Johor",
-      party: "mca",
-      votes: { abs: 18911, perc: 40.5 },
-      result: "won_uncontested",
-    },
-    {
-      election_name: "GE-13",
-      date: "5 Mei 2013",
-      seat: "P148 - Ayer Hitam, Johor",
-      party: "bersatu",
-      votes: { abs: 18911, perc: 40.5 },
-      result: "lost",
-    },
-    {
-      election_name: "GE-12",
-      date: "8 Mac 2008",
-      seat: "P148 - Ayer Hitam, Johor",
-      party: "mca",
-      votes: { abs: 18911, perc: 40.5 },
-      result: "lost_deposit",
-    },
-    {
-      election_name: "GE-11",
-      date: "21 Mac 2004",
-      seat: "P148 - Ayer Hitam, Johor",
-      party: "mca",
-      votes: { abs: 18911, perc: 40.5 },
-      result: "won",
-    },
-  ];
 
   const columnHelper = createColumnHelper<Candidate>();
 
@@ -145,7 +95,9 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
         return (
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
-            <p>{`${numFormat(votes.abs, "standard")} (${displayPercent(votes.perc)})`}</p>
+            <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
+              votes.perc !== null ? "(" + numFormat(votes.perc, "standard", 1).concat("%)") : ""
+            }`}</p>
           </div>
         );
       },
@@ -177,7 +129,8 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
   }
 
   const { data, setData } = useData({
-    data: dummyData,
+    data: {},
+    candidate_list: [],
     tabs: 0,
     // placeholder in combobox
     p_candidate: "",
@@ -187,7 +140,23 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
     loading: false,
   });
 
-  useWatch(() => {
+  const CANDIDATE_OPTIONS: Array<OptionType> =
+    data.candidate_list &&
+    data.candidate_list.map((key: string) => ({
+      label: key,
+      value: key,
+    }));
+
+  useEffect(() => {
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      dropdown: "candidate_list",
+    }).then(({ data }) => {
+      setData("candidate_list", data);
+    });
+  }, []);
+
+  useEffect(() => {
     setData("loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
