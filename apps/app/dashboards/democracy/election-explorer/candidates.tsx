@@ -128,14 +128,14 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
   ];
 
   const { data, setData } = useData({
-    data: {},
+    data: candidate,
     candidate_list: [],
     tabs: 0,
     // placeholder in combobox
     p_candidate: "",
 
     // query
-    candidate: "Tunku Abdul Rahman Putra Al-Haj",
+    q_candidate: "Tunku Abdul Rahman Putra Al-Haj",
     loading: false,
   });
 
@@ -160,14 +160,14 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "candidates",
-      name: data.candidate,
+      name: data.q_candidate,
       type: data.tabs === 0 ? "parlimen" : "dun",
     })
       .then(({ data }) => {
         setData("data", data.reverse());
       })
       .then(() => setData("loading", false));
-  }, [data.candidate, data.tabs]);
+  }, [data.q_candidate, data.tabs]);
 
   return (
     <Section>
@@ -185,7 +185,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
                     : null
                 }
                 onChange={e => {
-                  if (e) setData("candidate", e.value);
+                  if (e) setData("q_candidate", e.value);
                   setData("p_candidate", e);
                 }}
               />
@@ -195,7 +195,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
             title={
               <div className="text-base font-bold">
                 {t("dashboard-election-explorer:candidate.title")}
-                <span className="text-primary">{data.candidate}</span>
+                <span className="text-primary">{data.q_candidate}</span>
               </div>
             }
             current={data.tabs}
@@ -209,7 +209,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
                 empty={
                   <p>
                     {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.candidate ? data.candidate : "",
+                      name: data.q_candidate ? data.q_candidate : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
                   </p>
@@ -224,7 +224,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
                 empty={
                   <p>
                     {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.candidate ? data.candidate : "",
+                      name: data.q_candidate ? data.q_candidate : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
                   </p>
