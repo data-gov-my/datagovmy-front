@@ -7,16 +7,12 @@ import { useRouter } from "next/router";
 export const useLanguage = () => {
   const { i18n } = useTranslation();
   const { pathname, asPath, query, locale, push } = useRouter();
-  const exceptions = ["/data-catalogue", "/data-catalogue/[id]", "/dashboard"]; // for getServerSideProps pages.
 
   const onLanguageChange = (lang: any) => {
-    i18n.changeLanguage(lang.value).then(() =>
-      push({ pathname, query }, asPath, {
-        locale: lang.value,
-        scroll: false,
-        shallow: !exceptions.includes(pathname),
-      })
-    );
+    push({ pathname, query }, asPath, {
+      locale: lang.value,
+      scroll: false,
+    });
   };
 
   return {

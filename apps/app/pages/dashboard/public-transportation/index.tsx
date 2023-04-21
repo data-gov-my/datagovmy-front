@@ -23,12 +23,7 @@ const PublicTransportation: Page = ({}: InferGetStaticPropsType<typeof getStatic
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-public-transportation"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-public-transportation"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

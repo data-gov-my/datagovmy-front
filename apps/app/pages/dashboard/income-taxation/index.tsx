@@ -23,12 +23,7 @@ const IncomeTaxation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-income-taxation"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-income-taxation"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

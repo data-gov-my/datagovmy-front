@@ -33,12 +33,7 @@ const ConsumerPrices = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-consumer-prices"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-consumer-prices"]);
 
   const { data } = await get("/dashboard", { dashboard: "consumer_price_index" });
 

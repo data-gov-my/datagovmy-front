@@ -58,10 +58,7 @@ COVID19.layout = page => (
 );
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"]);
 
   const { data } = await get("/dashboard", { dashboard: "covid_epid", state: "mys" });
 

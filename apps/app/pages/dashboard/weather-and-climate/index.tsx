@@ -23,12 +23,7 @@ const WeatherandClimate: Page = ({}: InferGetStaticPropsType<typeof getStaticPro
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-weather-and-climate"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-weather-and-climate"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

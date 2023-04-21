@@ -52,3 +52,7 @@ public/robots.txt
 
 # bundle-analyzer
 analyze
+
+
+# app
+apps/app/public/locales

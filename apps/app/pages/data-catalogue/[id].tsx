@@ -60,7 +60,7 @@ const CatalogueShow: Page = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"], null, ["en-GB", "ms-MY"]);
+  const i18n = await serverSideTranslations(locale!, ["common"]);
 
   const { data } = await get("/data-variable/", {
     id: params!.id,
