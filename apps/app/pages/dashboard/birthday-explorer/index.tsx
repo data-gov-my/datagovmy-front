@@ -20,12 +20,7 @@ const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof get
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-birthday-explorer"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-explorer"]);
   const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
   return {
     props: {

@@ -80,10 +80,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-organ-donation"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-organ-donation"]);
   const { data } = await get("/dashboard", { dashboard: "organ_donation", state: params?.state });
 
   // transform:

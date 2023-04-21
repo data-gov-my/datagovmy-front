@@ -31,12 +31,10 @@ const InternationalReserves: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-international-reserves"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+  const i18n = await serverSideTranslations(locale!, [
+    "common",
+    "dashboard-international-reserves",
+  ]);
 
   const { data } = await get("/dashboard", { dashboard: "international_reserves" });
 

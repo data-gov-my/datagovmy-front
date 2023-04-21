@@ -31,10 +31,7 @@ const InterestRates = ({
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-interest-rates"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-interest-rates"]);
 
   const { data } = await get("/dashboard", { dashboard: "interest_rates" });
 

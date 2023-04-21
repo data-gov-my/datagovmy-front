@@ -26,8 +26,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(
     locale!,
     ["common", "dashboard-{{dashCase dashboard_name}}"],
-    null,
-    ["en-GB", "ms-MY"]
+    
   );
   //   const { data } = await get("/dashboard", { dashboard: "{{dashCase dashboard_name}}" });
 

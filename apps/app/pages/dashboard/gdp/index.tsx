@@ -29,10 +29,7 @@ const GDP = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-gdp"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-gdp"]);
 
   const { data } = await get("/dashboard", { dashboard: "gross_domestic_product" });
 

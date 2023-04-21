@@ -289,11 +289,8 @@ const Ranking = ({ ranks }: RankingProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  console.log(locale);
   const i18n = await serverSideTranslations(locale!, ["common"]);
   const { data } = await get("/dashboard", { dashboard: "homepage" });
-  console.log(i18n._nextI18Next?.initialLocale, "home_lang");
-  console.log(i18n._nextI18Next?.initialI18nStore, "home");
 
   return {
     props: {

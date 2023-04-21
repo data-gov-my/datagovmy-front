@@ -47,7 +47,7 @@ module.exports = {
     locales: ["en-GB", "ms-MY"],
     backend: {
       loadPath: (lang, namespace) => {
-        return `${process.env.NEXT_PUBLIC_API_URL}i18n?lang=${lang}&filename=${namespace}`;
+        return `${process.env.NEXT_PUBLIC_API_URL}/i18n?lang=${lang}&filename=${namespace}`;
       },
       customHeaders: {
         Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,

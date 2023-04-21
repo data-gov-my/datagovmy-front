@@ -90,10 +90,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"]);
 
   const { data } = await get("/dashboard", { dashboard: "covid_epid", state: params?.state });
   data.snapshot_table.data = sortMsiaFirst(data.snapshot_table.data, "state");

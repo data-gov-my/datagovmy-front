@@ -23,10 +23,7 @@ const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof ge
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-car-popularity"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
+  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-car-popularity"]);
   const { data } = await get("/dropdown", { dashboard: "car_popularity" });
   return {
     notFound: false,
