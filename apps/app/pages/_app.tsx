@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { appWithTranslation, useTranslation } from "next-i18next";
+import { appWithTranslation } from "next-i18next";
 import { AppPropsLayout } from "@lib/types";
 import Layout from "@components/Layout";
 import { useEffect, ReactNode, useState, createContext } from "react";
@@ -12,14 +12,12 @@ import Nexti18NextConfig from "../next-i18next.config";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
-  //   const { i18n } = useTranslation();
   const layout =
     Component.layout ??
     ((page: ReactNode) => (
       <Layout className={[Fonts.body.variable, "font-sans"].join(" ")}>{page}</Layout>
     ));
   const router = useRouter();
-  //   i18n.reloadResources();
 
   // Mixpanel initialisation
   useEffect(() => {
