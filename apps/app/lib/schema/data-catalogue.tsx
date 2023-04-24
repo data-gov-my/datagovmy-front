@@ -76,7 +76,7 @@ export const METADATA_TABLE_SCHEMA = (
             )}
             {index === 0 && !isTable && (
               <p className="text-dim font-normal">
-                <i>{t("catalogue.meta_chart_above")}</i>
+                <i>{t("common:catalogue.meta_chart_above")}</i>
               </p>
             )}
           </>

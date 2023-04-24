@@ -10,14 +10,14 @@ const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
   return (
     <>
-      <Metadata title={t("error.404.title") as string} keywords={""} />
+      <Metadata title={t("common:error.404.title") as string} keywords={""} />
 
       <Container className="min-h-[76vh] pt-7 text-black">
         <ErrorCode
-          title={t("error.404.title") as string}
-          description={t("error.404.description")}
+          title={t("common:error.404.title") as string}
+          description={t("common:error.404.description")}
           code={404}
-          reason={t("error.404.reason")}
+          reason={t("common:error.404.reason")}
         />
       </Container>
     </>

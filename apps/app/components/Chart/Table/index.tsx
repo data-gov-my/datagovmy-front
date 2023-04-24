@@ -299,7 +299,7 @@ const Table: FunctionComponent<TableProps> = ({
             ) : (
               <tr>
                 <td colSpan={table.getAllColumns().length} className="border-r border-black">
-                  <div>{t("common.no_entries")}. </div>
+                  <div>{t("common:common.no_entries")}. </div>
                 </td>
               </tr>
             )}
@@ -314,11 +314,11 @@ const Table: FunctionComponent<TableProps> = ({
             disabled={!table.getCanPreviousPage()}
           >
             <ArrowLeftIcon className="text-dim h-5 w-4" />
-            {t("common.previous")}
+            {t("common:common.previous")}
           </button>
 
           <span className="flex items-center gap-1 text-center text-sm">
-            {t("common.page_of", {
+            {t("common:common.page_of", {
               current: table.getState().pagination.pageIndex + 1,
               total: table.getPageCount(),
             })}
@@ -328,7 +328,7 @@ const Table: FunctionComponent<TableProps> = ({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            {t("common.next")} <ArrowRightIcon className="text-dim h-5 w-4" />
+            {t("common:common.next")} <ArrowRightIcon className="text-dim h-5 w-4" />
           </button>
         </div>
       )}

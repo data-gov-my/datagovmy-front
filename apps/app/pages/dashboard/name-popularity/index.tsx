@@ -11,7 +11,7 @@ const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticPr
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.name_popularity")}
+        title={t("common:nav.megamenu.dashboards.name_popularity")}
         description={t("dashboard-name-popularity:description")}
         keywords={""}
       />

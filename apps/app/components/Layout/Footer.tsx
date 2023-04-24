@@ -17,37 +17,37 @@ const Footer = () => {
           </div>
           <div>
             <div className="mb-2 uppercase">
-              <p className="text-base font-bold">{t("nav.gov")}</p>
+              <p className="text-base font-bold">{t("common:nav.gov")}</p>
             </div>
             <p className="text-dim">
-              © {new Date().getFullYear()} {t("nav.public_open_data")}
+              © {new Date().getFullYear()} {t("common:nav.public_open_data")}
             </p>
           </div>
         </div>
         <div className="flex flex-row gap-8 md:gap-14">
           {/* OPEN SOURCE CODE */}
           <div className="flex w-full flex-col gap-2 md:w-auto">
-            <p className="font-bold">{t("nav.open_source")}</p>
+            <p className="font-bold">{t("common:nav.open_source")}</p>
 
             <a className="text-footer-link" href="#" target="_blank">
-              {t("nav.frontend")}
+              {t("common:nav.frontend")}
             </a>
             <a className="text-footer-link" href="#" target="_blank">
-              {t("nav.backend")}
+              {t("common:nav.backend")}
             </a>
             <a className="text-footer-link" href="#" target="_blank">
-              {t("nav.uiux")}
+              {t("common:nav.uiux")}
             </a>
           </div>
           {/* OPEN SOURCE DATA */}
           <div className="flex w-full flex-col gap-2 md:w-auto">
-            <p className="font-bold">{t("nav.open_data")}</p>
+            <p className="font-bold">{t("common:nav.open_data")}</p>
 
             <a className="text-footer-link" href="#" target="_blank">
-              {t("nav.guiding_principles")}
+              {t("common:nav.guiding_principles")}
             </a>
             <At className="text-footer-link" href="#">
-              {t("nav.terms_of_use")}
+              {t("common:nav.terms_of_use")}
             </At>
           </div>
         </div>

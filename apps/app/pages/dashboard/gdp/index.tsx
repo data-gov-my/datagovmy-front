@@ -15,7 +15,7 @@ const GDP = ({
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.gdp")}
+        title={t("common:nav.megamenu.dashboards.gdp")}
         description={t("dashboard-gdp:description")}
         keywords={""}
       />

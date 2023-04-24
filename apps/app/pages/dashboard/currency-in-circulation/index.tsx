@@ -18,7 +18,7 @@ const CurrencyInCirculation: Page = ({
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.currency_in_circulation")}
+        title={t("common:nav.megamenu.dashboards.currency_in_circulation")}
         description={t("dashboard-currency-in-circulation:description")}
         keywords={""}
       />

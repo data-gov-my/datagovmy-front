@@ -239,7 +239,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 onClick={open}
                 className="border-outline bg-background dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-lg"
               >
-                <span>{t("catalogue.filter")}:</span>
+                <span>{t("common:catalogue.filter")}:</span>
                 <span className="bg-primary dark:bg-primary-dark rounded-md px-1 py-0.5 text-xs text-white">
                   {3}
                 </span>
@@ -247,7 +247,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             )}
             title={
               <Label
-                label={t("catalogue.filter") + ":"}
+                label={t("common:catalogue.filter") + ":"}
                 className="block text-sm font-bold text-black dark:text-white"
               />
             }
@@ -285,7 +285,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                   />
                   <Dropdown
                     width="w-full"
-                    placeholder={t("common.select")}
+                    placeholder={t("common:common.select")}
                     options={ELECTION_OPTIONS}
                     selected={ELECTION_OPTIONS.find(e => e.value === data.election.value)}
                     onChange={e => setData("election", e)}
@@ -296,7 +296,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                     {t("dashboard-election-explorer:election.apply_filters")}
                   </Button>
                   <Button className="btn btn-default w-full justify-center" onClick={close}>
-                    {t("common.close")}
+                    {t("common:common.close")}
                   </Button>
                 </div>
               </div>
@@ -477,7 +477,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             </h4>
             <div className="flex flex-row justify-between gap-4 sm:flex-row">
               <div className="flex flex-row items-baseline gap-4">
-                <p className="w-fit text-sm">{t("catalogue.filter")}</p>
+                <p className="w-fit text-sm">{t("common:catalogue.filter")}</p>
                 <Dropdown
                   anchor="left"
                   width="w-fit"

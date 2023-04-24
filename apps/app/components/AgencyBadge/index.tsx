@@ -35,7 +35,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
                 : t("common:components.brought_by_the")}
             </p>
             <p className="text-primary dark:text-primary-dark absolute -top-6 text-xs transition-transform group-hover:translate-y-6">
-              {t("components.visit_portal")}
+              {t("common:components.visit_portal")}
             </p>
 
             {/* Agency name */}

@@ -558,7 +558,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               value={data.minmax}
               onChange={e => setData("minmax", e)}
             />
-            <span className="text-dim text-sm">{t("common.slider")}</span>
+            <span className="text-dim text-sm">{t("common:common.slider")}</span>
           </div>
         </Section>
       </Container>

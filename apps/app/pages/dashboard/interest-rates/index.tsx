@@ -16,7 +16,7 @@ const InterestRates = ({
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.interest_rates")}
+        title={t("common:nav.megamenu.dashboards.interest_rates")}
         description={t("dashboard-interest-rates:description")}
         keywords={""}
       />

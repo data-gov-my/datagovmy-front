@@ -10,7 +10,7 @@ const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof get
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.birthday_explorer")}
+        title={t("common:nav.megamenu.dashboards.birthday_explorer")}
         description={t("dashboard-birthday-explorer:description")}
         keywords={""}
       />

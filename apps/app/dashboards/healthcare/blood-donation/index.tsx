@@ -108,7 +108,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
       <div className="flex flex-col gap-2">
         <h4>{t("dashboard-blood-donation:choro_header")}</h4>
         <span className="text-dim text-sm">
-          {t("common.data_of", { date: choropleth_malaysia_blood_donation.data_as_of })}
+          {t("common:common.data_of", { date: choropleth_malaysia_blood_donation.data_as_of })}
         </span>
       </div>
       <div className="flex grow flex-col justify-between space-y-6">

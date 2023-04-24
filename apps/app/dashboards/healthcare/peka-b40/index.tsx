@@ -119,7 +119,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
                 <div className="flex flex-col gap-2">
                   <h4>{t("dashboard-peka-b40:choro_header")}</h4>
                   <span className="text-dim text-sm">
-                    {t("common.data_of", { date: choropleth.data_as_of })}
+                    {t("common:common.data_of", { date: choropleth.data_as_of })}
                   </span>
                 </div>
                 <div className="flex grow flex-col justify-between space-y-6">

@@ -295,7 +295,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 className="flex-row items-center"
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="text h-4 w-4" />}
-                placeholder={t("catalogue.download")}
+                placeholder={t("common:catalogue.download")}
                 options={
                   downloads
                     ? downloads.chart.concat(downloads.data).map(item => ({
@@ -402,7 +402,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-12">
           {/* How is this data produced? */}
           <Section
-            title={t("catalogue.header_1")}
+            title={t("common:catalogue.header_1")}
             className=""
             description={
               <p className="text-dim whitespace-pre-line leading-relaxed ">
@@ -413,7 +413,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
           {/* Are there any pitfalls I should bear in mind when using this data? */}
           <Section
-            title={t("catalogue.header_2")}
+            title={t("common:catalogue.header_2")}
             className=""
             description={
               <p className="text-dim whitespace-pre-line leading-relaxed">
@@ -425,7 +425,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Publication using this Data */}
           {Boolean(explanation.publication) && (
             <Section
-              title={t("catalogue.header_3")}
+              title={t("common:catalogue.header_3")}
               className=""
               description={
                 <p className="text-dim whitespace-pre-line leading-relaxed">
@@ -445,12 +445,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             <div className="space-y-6">
               {/* Dataset description */}
               <div className="space-y-3">
-                <h5>{t("catalogue.meta_desc")}</h5>
+                <h5>{t("common:catalogue.meta_desc")}</h5>
                 <p className="text-dim leading-relaxed">{interpolate(metadata.description)}</p>
               </div>
               <div className="space-y-3">
                 {/* Variable definitions */}
-                <h5>{t("catalogue.meta_def")}</h5>
+                <h5>{t("common:catalogue.meta_def")}</h5>
                 {metadata.definitions?.length > 0 && (
                   <>
                     <ul className="text-dim ml-6 list-outside list-disc md:hidden">
@@ -494,21 +494,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               </div>
               {/* Last updated */}
               <div className="space-y-3">
-                <h5>{t("common.last_updated", { date: "" })}</h5>
+                <h5>{t("common:common.last_updated", { date: "" })}</h5>
                 <p className="text-dim whitespace-pre-line">
                   {toDate(metadata.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
                 </p>
               </div>
               {/* Next update */}
               <div className="space-y-3">
-                <h5>{t("common.next_update", { date: "" })}</h5>
+                <h5>{t("common:common.next_update", { date: "" })}</h5>
                 <p className="text-dim">
                   {toDate(metadata.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
                 </p>
               </div>
               {/* Data Source */}
               <div className="space-y-3">
-                <h5>{t("catalogue.meta_source")}</h5>
+                <h5>{t("common:catalogue.meta_source")}</h5>
                 <ul className="text-dim ml-6 list-outside list-disc">
                   {metadata.source?.map(source => (
                     <li key={source}>{source}</li>
@@ -517,7 +517,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               </div>
               {/* URLs to dataset */}
               <div className="space-y-3">
-                <h5>{t("catalogue.meta_url")}</h5>
+                <h5>{t("common:catalogue.meta_url")}</h5>
                 <ul className="text-dim ml-6 list-outside list-disc">
                   {Object.entries(metadata.url).map(([_, url]: [string, unknown]) =>
                     url ? (
@@ -546,16 +546,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               </div>
               {/* License */}
               <div className="space-y-3">
-                <h5>{t("catalogue.meta_license")}</h5>
+                <h5>{t("common:catalogue.meta_license")}</h5>
                 <p className="text-dim">
-                  {t("catalogue.license_text")}{" "}
+                  {t("common:catalogue.license_text")}{" "}
                   <a
                     className="text-primary dark:text-primary-dark lowercase hover:underline"
                     target="_blank"
                     rel="noopener"
                     href="https://creativecommons.org/licenses/by/4.0/"
                   >
-                    {t("common.here")}.
+                    {t("common:common.here")}.
                   </a>
                 </p>
               </div>
@@ -565,13 +565,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
         {/* Download */}
         <Section
-          title={t("catalogue.download")}
+          title={t("common:catalogue.download")}
           className="dark:border-b-outlineHover-dark mx-auto border-b py-12 "
         >
           <div className="space-y-5">
             {downloads!.chart?.length > 0 && (
               <>
-                <h5>{t("catalogue.chart")}</h5>
+                <h5>{t("common:catalogue.chart")}</h5>
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
                   {downloads?.chart.map(props => (
                     <DownloadCard
@@ -612,8 +612,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
         {/* Code */}
         <Section
-          title={t("catalogue.code")}
-          description={t("catalogue.code_desc")}
+          title={t("common:catalogue.code")}
+          description={t("common:catalogue.code_desc")}
           className="mx-auto w-full py-12"
         >
           <CatalogueCode type={dataset.type} url={urls?.parquet || urls[Object.keys(urls)[0]]} />

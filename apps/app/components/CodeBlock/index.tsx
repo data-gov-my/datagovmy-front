@@ -42,7 +42,7 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, event }) => {
 
   //   const template = useMemo<Record<string, string>>(
   //     () => ({
-  //       python: `# ${t("catalogue.code_note")}: pip install pandas fastparquet
+  //       python: `# ${t("common:catalogue.code_note")}: pip install pandas fastparquet
 
   // import pandas as pd
 

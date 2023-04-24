@@ -38,7 +38,11 @@ const BloodDonation = ({
 
   return (
     <>
-      <Metadata title={t("nav.megamenu.dashboards.blood_donation")} description="" keywords="" />
+      <Metadata
+        title={t("common:nav.megamenu.dashboards.blood_donation")}
+        description=""
+        keywords=""
+      />
       <BloodDonationDashboard
         last_updated={last_updated}
         timeseries_all={timeseries_all}

@@ -397,7 +397,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               anchor={"left"}
               width={"w-fit"}
               options={filterPeriods}
-              placeholder={t("catalogue.period")}
+              placeholder={t("common:catalogue.period")}
               selected={filterPeriods.find(period => period.value === data.groupBy)}
               onChange={({ value }) => setData("groupBy", value)}
             />

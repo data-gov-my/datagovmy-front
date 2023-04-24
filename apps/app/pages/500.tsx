@@ -10,13 +10,13 @@ const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
   return (
     <>
-      <Metadata title={t("error.500.title")} keywords={""} />
+      <Metadata title={t("common:error.500.title")} keywords={""} />
       <Container className="min-h-[76vh] pt-7 text-black">
         <ErrorCode
-          title={t("error.500.title")}
-          description={t("error.500.description")}
+          title={t("common:error.500.title")}
+          description={t("common:error.500.description")}
           code={500}
-          reason={t("error.500.reason")}
+          reason={t("common:error.500.reason")}
         />
       </Container>
     </>

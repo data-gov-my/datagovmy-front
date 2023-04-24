@@ -91,13 +91,13 @@ const Home: Page = ({
         header={[t("home.title")]}
         description={
           <div className="space-y-6">
-            <p className="text-dim xl:w-2/3">{t("home.description")}</p>
+            <p className="text-dim xl:w-2/3">{t("common:home.description")}</p>
             <div className="flex flex-wrap gap-3">
               <At className="btn btn-primary text-sm" href="/dashboard" enableIcon>
-                {t("nav.dashboards")}
+                {t("common:nav.dashboards")}
               </At>
               <At className="btn btn-default text-sm" href="/data-catalogue" enableIcon>
-                {t("nav.catalogue")}
+                {t("common:nav.catalogue")}
               </At>
               <At className="btn text-sm" href="#" enableIcon>
                 API Docs
@@ -108,7 +108,7 @@ const Home: Page = ({
         agencyBadge={
           <AgencyBadge
             prefixThe
-            agency={t("agency.govt")}
+            agency={t("common:agency.govt")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
@@ -119,8 +119,8 @@ const Home: Page = ({
 
       <Container className="min-h-screen">
         <Section
-          title={t("home.section_1.title")}
-          description={t("home.section_1.description")}
+          title={t("common:home.section_1.title")}
+          description={t("common:home.section_1.description")}
           date={analytics.data_as_of}
           menu={
             <Tabs.List
@@ -144,8 +144,8 @@ const Home: Page = ({
         </Section>
 
         <Section
-          title={t("home.section_2.title")}
-          description={t("home.section_2.description")}
+          title={t("common:home.section_2.title")}
+          description={t("common:home.section_2.description")}
           date={analytics.data_as_of}
           menu={
             <Tabs.List
@@ -167,11 +167,11 @@ const Home: Page = ({
             ))}
           </Tabs>
         </Section>
-        <Section title={t("home.section_3.title")} date={timeseries.data_as_of}>
+        <Section title={t("common:home.section_3.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <Timeseries
               className="h-[200px] w-full"
-              title={t("home.keys.views")}
+              title={t("common:home.keys.views")}
               data={{
                 labels: coordinate.x,
                 datasets: [
@@ -190,7 +190,7 @@ const Home: Page = ({
             />
             <Timeseries
               className="h-[200px] w-full"
-              title={t("home.keys.users")}
+              title={t("common:home.keys.users")}
               data={{
                 labels: coordinate.x,
                 datasets: [
@@ -209,7 +209,7 @@ const Home: Page = ({
             />
             <Timeseries
               className="h-[200px] w-full"
-              title={t("home.keys.downloads")}
+              title={t("common:home.keys.downloads")}
               data={{
                 labels: coordinate.x,
                 datasets: [
@@ -275,10 +275,10 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {item[`name_${lang as "en" | "bm"}`]}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {numFormat(item.count, "compact")} {t("common.views")}
+                  {numFormat(item.count, "compact")} {t("common:common.views")}
                 </p>
                 <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
-                  {t("components.click_to_explore")}
+                  {t("common:components.click_to_explore")}
                 </p>
               </div>
             </Card>

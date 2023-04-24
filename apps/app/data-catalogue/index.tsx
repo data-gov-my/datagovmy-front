@@ -77,16 +77,16 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       <Hero
         background="blue"
         category={[t("home.category"), "text-primary dark:text-primary-dark"]}
-        header={[`${t("catalogue.header")} ${filterRef.current?.source ?? ""}`]}
+        header={[`${t("common:catalogue.header")} ${filterRef.current?.source ?? ""}`]}
         description={
           <div className="space-y-6 xl:w-2/3">
-            <p className="text-dim">{t("catalogue.description")}</p>
+            <p className="text-dim">{t("common:catalogue.description")}</p>
             {filterRef.current?.sourceFilter()}
           </div>
         }
         agencyBadge={
           <AgencyBadge
-            agency={t("agency.govt")}
+            agency={t("common:agency.govt")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
@@ -137,7 +137,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
               );
             })
           ) : (
-            <p className="text-dim p-2 pt-16 lg:p-8">{t("common.no_entries")}.</p>
+            <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
           )}
         </Sidebar>
       </Container>
@@ -218,7 +218,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
           <Dropdown
             icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
             className="min-w-[250px]"
-            placeholder={t("catalogue.source_placeholder")}
+            placeholder={t("common:catalogue.source_placeholder")}
             anchor="left"
             options={filterSources}
             selected={filter.source}
@@ -235,7 +235,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         <div className="flex-grow">
           <Search
             className="border-0"
-            placeholder={t("catalogue.search_placeholder")}
+            placeholder={t("common:catalogue.search_placeholder")}
             query={filter.search}
             onChange={e => setFilter("search", e)}
           />
@@ -248,7 +248,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 onClick={open}
                 className="border-outline dark:border-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-sm"
               >
-                <span>{t("catalogue.filter")}</span>
+                <span>{t("common:catalogue.filter")}</span>
                 <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-white dark:text-black">
                   {actives.length}
                 </span>
@@ -256,7 +256,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             )}
             title={
               <Label
-                label={t("catalogue.filter") + ":"}
+                label={t("common:catalogue.filter") + ":"}
                 className="block text-sm font-medium text-black dark:text-white"
               />
             }
@@ -264,7 +264,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             {close => (
               <div className="flex-grow space-y-4 overflow-y-auto pb-28 pt-4">
                 <Radio
-                  label={t("catalogue.period")}
+                  label={t("common:catalogue.period")}
                   name="period"
                   className="flex flex-wrap gap-4 px-1 pt-2"
                   options={filterPeriods}
@@ -272,7 +272,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   onChange={e => setFilter("period", e)}
                 />
                 <Checkbox
-                  label={t("catalogue.geography")}
+                  label={t("common:catalogue.geography")}
                   className="flex flex-wrap gap-4 px-1 pt-2"
                   name="geography"
                   options={filterGeographics}
@@ -283,21 +283,21 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 <div className="grid grid-cols-2 gap-4">
                   <Dropdown
                     width="w-full"
-                    label={t("catalogue.begin")}
-                    sublabel={t("catalogue.begin") + ":"}
+                    label={t("common:catalogue.begin")}
+                    sublabel={t("common:catalogue.begin") + ":"}
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
-                    placeholder={t("common.select")}
+                    placeholder={t("common:common.select")}
                     onChange={e => setFilter("begin", e)}
                   />
                   <Dropdown
-                    label={t("catalogue.end")}
-                    sublabel={t("catalogue.end") + ":"}
+                    label={t("common:catalogue.end")}
+                    sublabel={t("common:catalogue.end") + ":"}
                     width="w-full"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
                     selected={filter.end}
-                    placeholder={t("common.select")}
+                    placeholder={t("common:common.select")}
                     onChange={e => setFilter("end", e)}
                   />
                 </div>
@@ -308,10 +308,10 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                     disabled={!actives.length}
                     onClick={reset}
                   >
-                    {t("common.reset")}
+                    {t("common:common.reset")}
                   </Button>
                   <Button className="btn btn-default w-full justify-center" onClick={close}>
-                    {t("common.close")}
+                    {t("common:common.close")}
                   </Button>
                 </div>
               </div>
@@ -328,20 +328,20 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 disabled={!actives.length}
                 onClick={reset}
               >
-                {t("common.clear_all")}
+                {t("common:common.clear_all")}
               </Button>
             </div>
           )}
           <Dropdown
             options={filterPeriods}
-            placeholder={t("catalogue.period")}
+            placeholder={t("common:catalogue.period")}
             selected={filterPeriods.find(item => item.value === filter.period?.value) ?? undefined}
             onChange={e => setFilter("period", e)}
           />
           <Dropdown
             multiple
             enableClear
-            title={t("catalogue.geography")}
+            title={t("common:catalogue.geography")}
             options={filterGeographics}
             selected={filter.geography}
             onChange={e => setFilter("geography", e)}

@@ -178,7 +178,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         description={[t("dashboard-consumer-prices:description"), "dark:text-white"]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge agency={t("agency_abbr.dosm")} link="https://open.dosm.gov.my/" />
+          <AgencyBadge agency={t("common:agency_abbr.dosm")} link="https://open.dosm.gov.my/" />
         }
       />
 

@@ -162,7 +162,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("agency.bnm")}
+            agency={t("common:agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BNMIcon />}
           />
