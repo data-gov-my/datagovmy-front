@@ -13,7 +13,7 @@ import { MOHIcon } from "@components/Icon/agency";
 interface HospitalBedUtilisationProps {}
 
 const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-hospital-bed-utilisation"]);
+  const { t, i18n } = useTranslation(["dashboard-hospital-bed-utilisation", "common"]);
 
   return (
     <>

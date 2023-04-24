@@ -6,7 +6,7 @@ import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-name-popularity"]);
+  const { t } = useTranslation(["dashboard-name-popularity", "common"]);
 
   return (
     <>
@@ -21,7 +21,7 @@ const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticPr
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-name-popularity"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-name-popularity", "common"]);
   return {
     props: {
       ...i18n,

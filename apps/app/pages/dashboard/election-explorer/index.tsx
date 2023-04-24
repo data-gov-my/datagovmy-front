@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
 
 const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-election-explorer"]);
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProp
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-election-explorer"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-election-explorer", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

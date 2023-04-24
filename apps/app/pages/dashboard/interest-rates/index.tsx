@@ -11,7 +11,7 @@ const InterestRates = ({
   timeseries_opr,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-interest-rates"]);
+  const { t } = useTranslation(["dashboard-interest-rates", "common"]);
 
   return (
     <>
@@ -31,7 +31,7 @@ const InterestRates = ({
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-interest-rates"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-interest-rates", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "interest_rates" });
 

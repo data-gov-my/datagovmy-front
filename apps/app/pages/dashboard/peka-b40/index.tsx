@@ -13,7 +13,7 @@ const PekaB40: Page = ({
   timeseries,
   choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
+  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
     <>
@@ -42,7 +42,7 @@ PekaB40.layout = page => (
 );
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-peka-b40", "common"]);
   const { data } = await get("/dashboard", { dashboard: "peka_b40", state: "mys" });
 
   return {

@@ -13,7 +13,7 @@ import { JIMIcon } from "@components/Icon/agency";
 interface ImmigrationProps {}
 
 const Immigration: FunctionComponent<ImmigrationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-immigration"]);
+  const { t, i18n } = useTranslation(["dashboard-immigration", "common"]);
 
   return (
     <>

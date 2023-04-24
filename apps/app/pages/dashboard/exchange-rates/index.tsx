@@ -14,7 +14,7 @@ const ExchangeRates: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-exchange-rates"]);
+  const { t } = useTranslation(["dashboard-exchange-rates", "common"]);
 
   return (
     <>
@@ -34,7 +34,7 @@ const ExchangeRates: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-exchange-rates"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-exchange-rates", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "exchange_rates" });
 

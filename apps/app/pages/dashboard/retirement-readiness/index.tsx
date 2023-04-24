@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import RetirementReadinessDashboard from "@dashboards/economy/retirement-readiness";
 
 const RetirementReadiness: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-retirement-readiness"]);
+  const { t } = useTranslation(["dashboard-retirement-readiness", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const RetirementReadiness: Page = ({}: InferGetStaticPropsType<typeof getStaticP
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-retirement-readiness"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-retirement-readiness", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

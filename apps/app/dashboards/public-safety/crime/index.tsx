@@ -13,7 +13,7 @@ import { PDRMIcon } from "@components/Icon/agency";
 interface CrimeProps {}
 
 const Crime: FunctionComponent<CrimeProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-crime"]);
+  const { t, i18n } = useTranslation(["dashboard-crime", "common"]);
 
   return (
     <>

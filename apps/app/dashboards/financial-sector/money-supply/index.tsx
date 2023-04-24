@@ -62,7 +62,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-money-supply"]);
+  const { t, i18n } = useTranslation(["dashboard-money-supply", "common"]);
 
   const tableData = table_summary.data.map(row => ({
     index: row.index + 1,

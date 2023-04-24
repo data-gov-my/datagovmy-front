@@ -20,7 +20,7 @@ import ElectionSeats from "./seats";
 interface ElectionExplorerProps {}
 
 const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-election-explorer"]);
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const PANELS = [
     {

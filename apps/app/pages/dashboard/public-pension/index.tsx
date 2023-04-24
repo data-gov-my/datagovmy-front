@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import PublicPensionDashboard from "@dashboards/economy/public-pension";
 
 const PublicPension: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-public-pension"]);
+  const { t } = useTranslation(["dashboard-public-pension", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const PublicPension: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>)
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-public-pension"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-public-pension", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

@@ -13,7 +13,7 @@ import { JPNIcon } from "@components/Icon/agency";
 interface CircleofLifeProps {}
 
 const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-circle-of-life"]);
+  const { t, i18n } = useTranslation(["dashboard-circle-of-life", "common"]);
 
   return (
     <>

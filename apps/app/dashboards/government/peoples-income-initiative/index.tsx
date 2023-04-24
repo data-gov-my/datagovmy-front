@@ -13,7 +13,7 @@ import { IPREPUIcon } from "@components/Icon/agency";
 interface PeoplesIncomeInitiativeProps {}
 
 const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-peoples-income-initiative"]);
+  const { t, i18n } = useTranslation(["dashboard-peoples-income-initiative", "common"]);
 
   return (
     <>

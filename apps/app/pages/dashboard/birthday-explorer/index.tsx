@@ -6,7 +6,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-birthday-explorer"]);
+  const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <>
       <Metadata
@@ -20,7 +20,7 @@ const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof get
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-explorer"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-birthday-explorer", "common"]);
   const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
   return {
     props: {

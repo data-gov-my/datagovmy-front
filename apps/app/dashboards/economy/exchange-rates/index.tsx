@@ -34,7 +34,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-exchange-rates"]);
+  const { t, i18n } = useTranslation(["dashboard-exchange-rates", "common"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
   const { data, setData } = useData({
     active_snapshot: 0,

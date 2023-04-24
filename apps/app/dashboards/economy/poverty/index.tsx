@@ -13,7 +13,7 @@ import { ICUJPMIcon } from "@components/Icon/agency";
 interface PovertyProps {}
 
 const Poverty: FunctionComponent<PovertyProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-poverty"]);
+  const { t, i18n } = useTranslation(["dashboard-poverty", "common"]);
 
   return (
     <>

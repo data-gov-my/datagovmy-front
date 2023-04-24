@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import CircleofLifeDashboard from "@dashboards/demography/circle-of-life";
 
 const CircleofLife: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-circle-of-life"]);
+  const { t } = useTranslation(["dashboard-circle-of-life", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const CircleofLife: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) 
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-circle-of-life"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-circle-of-life", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

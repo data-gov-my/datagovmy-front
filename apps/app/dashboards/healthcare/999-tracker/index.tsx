@@ -13,7 +13,7 @@ import { MERSIcon } from "@components/Icon/agency";
 interface Tracker999Props {}
 
 const Tracker999: FunctionComponent<Tracker999Props> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-999-tracker"]);
+  const { t, i18n } = useTranslation(["dashboard-999-tracker", "common"]);
 
   return (
     <>

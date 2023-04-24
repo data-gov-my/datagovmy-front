@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import SocialSecurityDashboard from "@dashboards/economy/social-security";
 
 const SocialSecurity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-social-security"]);
+  const { t } = useTranslation(["dashboard-social-security", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const SocialSecurity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-social-security"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-social-security", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

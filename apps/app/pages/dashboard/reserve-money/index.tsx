@@ -12,7 +12,7 @@ const ReserveMoney: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-reserve-money"]);
+  const { t } = useTranslation(["dashboard-reserve-money", "common"]);
 
   return (
     <>
@@ -31,7 +31,7 @@ const ReserveMoney: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-reserve-money"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-reserve-money", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "reserves" });
 

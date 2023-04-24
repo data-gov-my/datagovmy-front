@@ -23,7 +23,7 @@ const CivilService: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) 
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-civil-service"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-civil-service", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

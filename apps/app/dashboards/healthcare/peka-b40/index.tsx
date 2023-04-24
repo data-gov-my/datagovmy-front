@@ -29,7 +29,7 @@ interface PekaB40Props {
 }
 
 const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, choropleth }) => {
-  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
+  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   const router = useRouter();
   const windowWidth = useWindowWidth();

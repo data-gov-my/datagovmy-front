@@ -47,7 +47,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   barchart_age,
   barchart_time,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-organ-donation"]);
+  const { t, i18n } = useTranslation(["dashboard-organ-donation", "common"]);
 
   const router = useRouter();
   const windowWidth = useWindowWidth();

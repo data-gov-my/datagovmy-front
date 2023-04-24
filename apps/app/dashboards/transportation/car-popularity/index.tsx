@@ -26,7 +26,7 @@ interface CarPopularityProps {
 }
 
 const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-car-popularity"]);
+  const { t, i18n } = useTranslation(["dashboard-car-popularity", "common"]);
   const windowWidth = useWindowWidth();
   const { theme } = useTheme();
   const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });

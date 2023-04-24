@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import PeoplesIncomeInitiativeDashboard from "@dashboards/government/peoples-income-initiative";
 
 const PeoplesIncomeInitiative: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-peoples-income-initiative"]);
+  const { t } = useTranslation(["dashboard-peoples-income-initiative", "common"]);
 
   return (
     <>

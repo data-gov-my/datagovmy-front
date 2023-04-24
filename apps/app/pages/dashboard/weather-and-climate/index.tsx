@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import WeatherandClimateDashboard from "@dashboards/environment/weather-and-climate";
 
 const WeatherandClimate: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-weather-and-climate"]);
+  const { t } = useTranslation(["dashboard-weather-and-climate", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const WeatherandClimate: Page = ({}: InferGetStaticPropsType<typeof getStaticPro
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-weather-and-climate"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-weather-and-climate", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import PublicTransportationDashboard from "@dashboards/transportation/public-transportation";
 
 const PublicTransportation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-public-transportation"]);
+  const { t } = useTranslation(["dashboard-public-transportation", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const PublicTransportation: Page = ({}: InferGetStaticPropsType<typeof getStatic
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-public-transportation"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-public-transportation", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

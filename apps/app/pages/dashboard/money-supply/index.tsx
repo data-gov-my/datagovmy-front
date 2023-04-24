@@ -11,7 +11,7 @@ const MoneySupply = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-money-supply"]);
+  const { t } = useTranslation(["dashboard-money-supply", "common"]);
 
   return (
     <>
@@ -31,7 +31,7 @@ const MoneySupply = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-money-supply"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-money-supply", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "money_measures" });
 

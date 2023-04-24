@@ -12,7 +12,7 @@ const ConsumerPrices = ({
   timeseries_callouts,
   choropleth,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-consumer-prices"]);
+  const { t } = useTranslation(["dashboard-consumer-prices", "common"]);
 
   return (
     <>
@@ -33,7 +33,7 @@ const ConsumerPrices = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-consumer-prices"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-consumer-prices", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "consumer_price_index" });
 

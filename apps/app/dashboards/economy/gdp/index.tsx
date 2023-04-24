@@ -43,7 +43,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-gdp"]);
+  const { t, i18n } = useTranslation(["dashboard-gdp", "common"]);
   const INDEX_OPTIONS: Array<OptionType> = [
     "growth_real_yoy",
     "growth_nominal_yoy",

@@ -16,7 +16,7 @@ const OrganDonation: Page = ({
   barchart_age,
   barchart_time,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-organ-donation"]);
+  const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
     <>
@@ -47,7 +47,7 @@ OrganDonation.layout = page => (
 );
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-organ-donation"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-organ-donation", "common"]);
   const { data } = await get("/dashboard", { dashboard: "organ_donation", state: "mys" });
 
   // transform:

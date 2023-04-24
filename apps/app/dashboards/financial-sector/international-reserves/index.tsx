@@ -32,7 +32,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-international-reserves"]);
+  const { t, i18n } = useTranslation(["dashboard-international-reserves", "common"]);
 
   const SHADE_OPTIONS: Array<OptionType> = [
     { label: t("dashboard-international-reserves:keys.no_shade"), value: "no_shade" },

@@ -20,7 +20,7 @@ const BloodDonation = ({
   map_facility,
   choropleth_malaysia_blood_donation,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-blood-donation"]);
+  const { t } = useTranslation(["dashboard-blood-donation", "common"]);
 
   let vars: Record<string, any> = {};
 
@@ -61,7 +61,7 @@ const BloodDonation = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-blood-donation"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-blood-donation", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "blood_donation", state: "mys" });
 

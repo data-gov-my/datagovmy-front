@@ -13,7 +13,7 @@ import { KWAPIcon } from "@components/Icon/agency";
 interface PublicPensionProps {}
 
 const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-public-pension"]);
+  const { t, i18n } = useTranslation(["dashboard-public-pension", "common"]);
 
   return (
     <>

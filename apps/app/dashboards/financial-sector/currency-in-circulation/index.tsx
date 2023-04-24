@@ -42,7 +42,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-currency-in-circulation"]);
+  const { t, i18n } = useTranslation(["dashboard-currency-in-circulation", "common"]);
   const { theme } = useTheme();
   const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data).map((key: string) => ({
     label: t(`dashboard-currency-in-circulation:keys.${key}`),

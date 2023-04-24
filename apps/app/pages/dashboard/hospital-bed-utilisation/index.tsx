@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import HospitalBedUtilisationDashboard from "@dashboards/healthcare/hospital-bed-utilisation";
 
 const HospitalBedUtilisation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-hospital-bed-utilisation"]);
+  const { t } = useTranslation(["dashboard-hospital-bed-utilisation", "common"]);
 
   return (
     <>

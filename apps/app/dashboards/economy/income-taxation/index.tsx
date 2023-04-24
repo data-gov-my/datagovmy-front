@@ -13,7 +13,7 @@ import { LHDNIcon } from "@components/Icon/agency";
 interface IncomeTaxationProps {}
 
 const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-income-taxation"]);
+  const { t, i18n } = useTranslation(["dashboard-income-taxation", "common"]);
 
   return (
     <>

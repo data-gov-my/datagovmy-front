@@ -12,7 +12,7 @@ const InternationalReserves: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-international-reserves"]);
+  const { t } = useTranslation(["dashboard-international-reserves", "common"]);
 
   return (
     <>

@@ -13,7 +13,7 @@ import { MOTIcon } from "@components/Icon/agency";
 interface PublicTransportationProps {}
 
 const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-public-transportation"]);
+  const { t, i18n } = useTranslation(["dashboard-public-transportation", "common"]);
 
   return (
     <>

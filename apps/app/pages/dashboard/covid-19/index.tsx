@@ -21,7 +21,7 @@ const COVID19: Page = ({
   util_chart,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-19"]);
+  const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   return (
     <>
@@ -58,7 +58,7 @@ COVID19.layout = page => (
 );
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-covid-19", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "covid_epid", state: "mys" });
 

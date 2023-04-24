@@ -13,7 +13,7 @@ import { MOEIcon } from "@components/Icon/agency";
 interface SekolahkuProps {}
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-sekolahku"]);
+  const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
 
   return (
     <>

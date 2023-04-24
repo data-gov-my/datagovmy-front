@@ -25,7 +25,7 @@ const COVID19State: Page = ({
   statistics,
   state,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-19"]);
+  const { t } = useTranslation(["dashboard-covid-19", "common"]);
   return (
     <>
       <Metadata
@@ -90,7 +90,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-covid-19", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "covid_epid", state: params?.state });
   data.snapshot_table.data = sortMsiaFirst(data.snapshot_table.data, "state");

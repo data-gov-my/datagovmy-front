@@ -52,7 +52,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   timeseries_callouts,
   choropleth,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-consumer-prices"]);
+  const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);
 
   const { theme } = useTheme();
   const CPI_OPTIONS: Array<OptionType> = ["headline", "core"].map((key: string) => ({

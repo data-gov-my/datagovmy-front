@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
 
 const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-car-popularity"]);
+  const { t } = useTranslation(["dashboard-car-popularity", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof ge
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-car-popularity"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-car-popularity", "common"]);
   const { data } = await get("/dropdown", { dashboard: "car_popularity" });
   return {
     notFound: false,

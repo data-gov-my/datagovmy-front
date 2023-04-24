@@ -13,7 +13,7 @@ import { BOMBAIcon } from "@components/Icon/agency";
 interface FireandRescueProps {}
 
 const FireandRescue: FunctionComponent<FireandRescueProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-fire-and-rescue"]);
+  const { t, i18n } = useTranslation(["dashboard-fire-and-rescue", "common"]);
 
   return (
     <>

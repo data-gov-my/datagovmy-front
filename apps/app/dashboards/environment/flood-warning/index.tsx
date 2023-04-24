@@ -13,7 +13,7 @@ import { MET_FloodIcon } from "@components/Icon/agency";
 interface FloodWarningProps {}
 
 const FloodWarning: FunctionComponent<FloodWarningProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-flood-warning"]);
+  const { t, i18n } = useTranslation(["dashboard-flood-warning", "common"]);
 
   return (
     <>

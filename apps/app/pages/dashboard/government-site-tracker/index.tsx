@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import GovernmentSiteTrackerDashboard from "@dashboards/digitalisation/government-site-tracker";
 
 const GovernmentSiteTracker: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-government-site-tracker"]);
+  const { t } = useTranslation(["dashboard-government-site-tracker", "common"]);
 
   return (
     <>

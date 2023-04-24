@@ -13,7 +13,7 @@ import { SOCSOIcon } from "@components/Icon/agency";
 interface SocialSecurityProps {}
 
 const SocialSecurity: FunctionComponent<SocialSecurityProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-social-security"]);
+  const { t, i18n } = useTranslation(["dashboard-social-security", "common"]);
 
   return (
     <>

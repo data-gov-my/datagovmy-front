@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import Tracker999Dashboard from "@dashboards/healthcare/999-tracker";
 
 const Tracker999: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-999-tracker"]);
+  const { t } = useTranslation(["dashboard-999-tracker", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const Tracker999: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) =>
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-999-tracker"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-999-tracker", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

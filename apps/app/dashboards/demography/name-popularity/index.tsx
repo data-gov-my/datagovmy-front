@@ -26,7 +26,7 @@ const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 interface NamePopularityDashboardProps {}
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
-  const { t, i18n } = useTranslation(["common", "dashboard-name-popularity"]);
+  const { t, i18n } = useTranslation(["dashboard-name-popularity", "common"]);
   const windowWidth = useWindowWidth();
   const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
 

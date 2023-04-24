@@ -20,7 +20,7 @@ import { FunctionComponent, useMemo } from "react";
 const Scatter = dynamic(() => import("@components/Chart/Scatter"), { ssr: false });
 
 const InflationSnapshot: FunctionComponent = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-consumer-prices"]);
+  const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
   const HIGHLIGHT_COLOR = ["#DC2626", "#2563EB", "#FBBF24"];
 

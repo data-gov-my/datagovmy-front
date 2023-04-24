@@ -80,7 +80,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-vaccination"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-covid-vaccination", "common"]);
   const { data } = await get("/dashboard", { dashboard: "covid_vax", state: params?.state });
 
   return {

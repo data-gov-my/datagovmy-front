@@ -52,7 +52,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   map_facility,
   choropleth_malaysia_blood_donation,
 }) => {
-  const { t } = useTranslation(["common", "dashboard-blood-donation"]);
+  const { t } = useTranslation(["dashboard-blood-donation", "common"]);
 
   const router = useRouter();
   const windowWidth = useWindowWidth();

@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import SekolahkuDashboard from "@dashboards/education/sekolahku";
 
 const Sekolahku: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-sekolahku"]);
+  const { t } = useTranslation(["dashboard-sekolahku", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const Sekolahku: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => 
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-sekolahku"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-sekolahku", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

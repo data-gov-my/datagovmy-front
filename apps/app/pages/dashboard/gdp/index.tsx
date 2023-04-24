@@ -10,7 +10,7 @@ const GDP = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-gdp"]);
+  const { t } = useTranslation(["dashboard-gdp", "common"]);
 
   return (
     <>
@@ -29,7 +29,7 @@ const GDP = ({
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-gdp"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-gdp", "common"]);
 
   const { data } = await get("/dashboard", { dashboard: "gross_domestic_product" });
 

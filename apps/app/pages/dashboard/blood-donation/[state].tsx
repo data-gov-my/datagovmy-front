@@ -27,7 +27,7 @@ const BloodDonationState: Page = ({
   state,
   choropleth_malaysia_blood_donation,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-blood-donation"]);
+  const { t } = useTranslation(["dashboard-blood-donation", "common"]);
   let vars: Record<string, any> = {};
 
   Object.entries(barchart_variables.data).forEach(([key, values]: [string, any]) => {
@@ -114,7 +114,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-blood-donation"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-blood-donation", "common"]);
   const { data } = await get("/dashboard", { dashboard: "blood_donation", state: params?.state });
 
   // transfrom:

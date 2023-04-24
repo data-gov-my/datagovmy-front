@@ -32,7 +32,7 @@ interface BirthdayExplorerDashboardProps {
 const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProps> = ({
   timeseries,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-birthday-explorer"]);
+  const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common"]);
   const windowWidth = useWindowWidth();
 
   const filterPeriods: Array<OptionType> = [

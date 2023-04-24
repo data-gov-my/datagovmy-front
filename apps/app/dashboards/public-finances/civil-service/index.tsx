@@ -13,7 +13,7 @@ import { JPAIcon } from "@components/Icon/agency";
 interface CivilServiceProps {}
 
 const CivilService: FunctionComponent<CivilServiceProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-civil-service"]);
+  const { t, i18n } = useTranslation(["dashboard-civil-service", "common"]);
 
   return (
     <>

@@ -13,7 +13,7 @@ import { METIcon } from "@components/Icon/agency";
 interface WeatherandClimateProps {}
 
 const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-weather-and-climate"]);
+  const { t, i18n } = useTranslation(["dashboard-weather-and-climate", "common"]);
 
   return (
     <>

@@ -13,7 +13,7 @@ import { EPFIcon } from "@components/Icon/agency";
 interface RetirementReadinessProps {}
 
 const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-retirement-readiness"]);
+  const { t, i18n } = useTranslation(["dashboard-retirement-readiness", "common"]);
 
   return (
     <>

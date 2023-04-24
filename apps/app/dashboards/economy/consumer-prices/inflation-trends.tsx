@@ -23,7 +23,7 @@ import { FunctionComponent, useCallback } from "react";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 const InflationTrends: FunctionComponent = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-consumer-prices"]);
+  const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   const GRANULAR_OPTIONS: Array<OptionType> = [

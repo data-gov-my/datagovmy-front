@@ -13,7 +13,7 @@ const CovidVaccination: Page = ({
   barmeter,
   waffle,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
   return (
     <>
@@ -34,7 +34,7 @@ const CovidVaccination: Page = ({
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-vaccination"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-covid-vaccination", "common"]);
   const { data } = await get("/dashboard", { dashboard: "covid_vax", state: "mys" });
 
   return {

@@ -13,7 +13,7 @@ import { MCMCIcon } from "@components/Icon/agency";
 interface InternetPenetrationProps {}
 
 const InternetPenetration: FunctionComponent<InternetPenetrationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-internet-penetration"]);
+  const { t, i18n } = useTranslation(["dashboard-internet-penetration", "common"]);
 
   return (
     <>

@@ -34,7 +34,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   barmeter,
   waffle,
 }) => {
-  const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   const router = useRouter();
   const currentState = (router.query.state as string) ?? "mys";
 

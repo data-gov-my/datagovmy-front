@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import FireandRescueDashboard from "@dashboards/public-safety/fire-and-rescue";
 
 const FireandRescue: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-fire-and-rescue"]);
+  const { t } = useTranslation(["dashboard-fire-and-rescue", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const FireandRescue: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>)
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-fire-and-rescue"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-fire-and-rescue", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

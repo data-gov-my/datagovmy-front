@@ -58,7 +58,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
 }) => {
   const router = useRouter();
   const currentState = (router.query.state as string) ?? "mys";
-  const { t, i18n } = useTranslation(["common", "dashboard-covid-19"]);
+  const { t, i18n } = useTranslation(["dashboard-covid-19", "common"]);
 
   const filterCaseDeath = [
     { label: "Cases", value: "cases" },

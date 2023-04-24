@@ -8,7 +8,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import CrimeDashboard from "@dashboards/public-safety/crime";
 
 const Crime: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-crime"]);
+  const { t } = useTranslation(["dashboard-crime", "common"]);
 
   return (
     <>
@@ -23,7 +23,7 @@ const Crime: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 };
 // Disabled
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-crime"]);
+  const i18n = await serverSideTranslations(locale!, ["dashboard-crime", "common"]);
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {

@@ -13,7 +13,7 @@ import { MAMPUIcon } from "@components/Icon/agency";
 interface GovernmentSiteTrackerProps {}
 
 const GovernmentSiteTracker: FunctionComponent<GovernmentSiteTrackerProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-government-site-tracker"]);
+  const { t, i18n } = useTranslation(["dashboard-government-site-tracker", "common"]);
 
   return (
     <>
