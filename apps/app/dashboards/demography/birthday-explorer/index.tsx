@@ -205,7 +205,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 <StateDropdown
                   currentState={data.p_state}
                   onChange={selected => setData("p_state", selected.value)}
-                  include={[{ label: t("components.ovs"), value: "Overseas" }]}
+                  include={[{ label: t("common:components.ovs"), value: "Overseas" }]}
                   exclude={["kvy"]}
                   width="w-full"
                 />

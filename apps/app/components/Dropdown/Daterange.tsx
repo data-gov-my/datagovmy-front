@@ -64,8 +64,8 @@ const Range: FunctionComponent<DaterangeProps> = ({
               >
                 <ClockIcon className="h-4 w-4 text-black dark:text-white" />
                 <p className="text-sm">
-                  {(selected && selected[0] && selected[0].label) ?? t("catalogue.begin")} -{" "}
-                  {(selected && selected[1] && selected[1].label) ?? t("catalogue.end")}
+                  {(selected && selected[0] && selected[0].label) ?? t("common:catalogue.begin")} -{" "}
+                  {(selected && selected[1] && selected[1].label) ?? t("common:catalogue.end")}
                 </p>
 
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">

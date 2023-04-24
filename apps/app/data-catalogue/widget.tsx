@@ -48,10 +48,10 @@ export default "";
 //   const { t, i18n } = useTranslation();
 //   const showChart =
 //     dataset.type === "TABLE"
-//       ? [{ label: t("catalogue.table"), value: "table" }]
+//       ? [{ label: t("common:catalogue.table"), value: "table" }]
 //       : [
-//           { label: t("catalogue.chart"), value: "chart" },
-//           { label: t("catalogue.table"), value: "table" },
+//           { label: t("common:catalogue.chart"), value: "chart" },
+//           { label: t("common:catalogue.table"), value: "table" },
 //         ];
 
 //   const [show, setShow] = useState<OptionType>(showChart[0]);

@@ -30,7 +30,9 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
           <div className="relative overflow-hidden">
             {/* Brought to you by / Visit our portal */}
             <p className="text-dim text-xs transition-transform duration-200 group-hover:-translate-y-6">
-              {!prefixThe ? t("components.brought_by") : t("components.brought_by_the")}
+              {!prefixThe
+                ? t("common:components.brought_by")
+                : t("common:components.brought_by_the")}
             </p>
             <p className="text-primary dark:text-primary-dark absolute -top-6 text-xs transition-transform group-hover:translate-y-6">
               {t("components.visit_portal")}

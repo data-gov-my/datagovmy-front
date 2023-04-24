@@ -239,7 +239,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
               }}
               stats={[
                 {
-                  title: t("common.latest", {
+                  title: t("common:common.latest", {
                     date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                   }),
                   value: configs("total").callout,
@@ -289,7 +289,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("common.latest", {
+                      title: t("common:common.latest", {
                         date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                       }),
                       value: chartData.callout,
@@ -348,7 +348,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: chartData.callout,

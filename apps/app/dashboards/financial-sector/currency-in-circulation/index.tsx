@@ -287,7 +287,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
               }}
               stats={[
                 {
-                  title: t("common.latest", {
+                  title: t("common:common.latest", {
                     date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                   }),
                   value: configs("total").callout,
@@ -335,7 +335,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("note_1").callout,
@@ -381,7 +381,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("note_5").callout,
@@ -427,7 +427,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("note_10").callout,
@@ -473,7 +473,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("note_20").callout,
@@ -519,7 +519,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("note_50").callout,
@@ -565,7 +565,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("note_100").callout,
@@ -611,7 +611,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("coin_10").callout,
@@ -657,7 +657,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("coin_20").callout,
@@ -703,7 +703,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: configs("coin_50").callout,

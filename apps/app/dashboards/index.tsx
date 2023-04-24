@@ -66,15 +66,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
 
   const PANELS = [
     {
-      name: t("home.section_2.past_24h"),
+      name: t("common:home.section_2.past_24h"),
       data: analytics[lang].today,
     },
     {
-      name: t("home.section_2.past_month"),
+      name: t("common:home.section_2.past_month"),
       data: analytics[lang].last_month,
     },
     {
-      name: t("home.section_2.all_time"),
+      name: t("common:home.section_2.all_time"),
       data: analytics[lang].all_time,
     },
   ];
@@ -105,7 +105,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         background="gray"
         category={[t("home.category"), "text-primary dark:text-primary-dark"]}
         header={[
-          t("dashboard.header").concat(
+          t("common:dashboard.header").concat(
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
           ),
         ]}

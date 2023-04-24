@@ -20,7 +20,7 @@ const InternetPenetration: FunctionComponent<InternetPenetrationProps> = ({}) =>
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.digitalisation"),
+          t("common:nav.megamenu.categories.digitalisation"),
           "text-primary dark:text-primary-dark",
         ]}
         header={[t("dashboard-internet-penetration:header")]}

@@ -156,7 +156,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
                     }),
                     value: `USD ${numFormat(
@@ -206,7 +206,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
                     }),
                     value: `${numFormat(
@@ -254,7 +254,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
                     }),
                     value: `${numFormat(

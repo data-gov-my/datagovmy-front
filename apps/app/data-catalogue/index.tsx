@@ -163,18 +163,18 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
   ({ query, sources }, ref) => {
     const { t } = useTranslation();
     const filterPeriods: Array<OptionType> = [
-      { label: t("catalogue.index_filters.daily"), value: "DAILY" },
-      { label: t("catalogue.index_filters.weekly"), value: "WEEKLY" },
-      { label: t("catalogue.index_filters.monthly"), value: "MONTHLY" },
-      { label: t("catalogue.index_filters.quarterly"), value: "QUARTERLY" },
-      { label: t("catalogue.index_filters.yearly"), value: "YEARLY" },
+      { label: t("common:catalogue.index_filters.daily"), value: "DAILY" },
+      { label: t("common:catalogue.index_filters.weekly"), value: "WEEKLY" },
+      { label: t("common:catalogue.index_filters.monthly"), value: "MONTHLY" },
+      { label: t("common:catalogue.index_filters.quarterly"), value: "QUARTERLY" },
+      { label: t("common:catalogue.index_filters.yearly"), value: "YEARLY" },
     ];
     const filterGeographics: Array<OptionType> = [
-      { label: t("catalogue.index_filters.state"), value: "STATE" },
-      { label: t("catalogue.index_filters.district"), value: "DISTRICT" },
-      { label: t("catalogue.index_filters.parlimen"), value: "PARLIMEN" },
-      { label: t("catalogue.index_filters.dun"), value: "DUN" },
-      { label: t("catalogue.index_filters.national"), value: "NATIONAL" },
+      { label: t("common:catalogue.index_filters.state"), value: "STATE" },
+      { label: t("common:catalogue.index_filters.district"), value: "DISTRICT" },
+      { label: t("common:catalogue.index_filters.parlimen"), value: "PARLIMEN" },
+      { label: t("common:catalogue.index_filters.dun"), value: "DUN" },
+      { label: t("common:catalogue.index_filters.national"), value: "NATIONAL" },
     ];
     const filterSources: Array<OptionType> = sources.map(source => ({
       label: source,

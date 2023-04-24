@@ -267,7 +267,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               }}
               stats={[
                 {
-                  title: t("common.latest", {
+                  title: t("common:common.latest", {
                     date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                   }),
                   value: configs("overall").callout,
@@ -318,7 +318,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                     {
                       title:
                         chartData.callout !== "-" ? (
-                          t("common.latest", {
+                          t("common:common.latest", {
                             date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                           })
                         ) : (

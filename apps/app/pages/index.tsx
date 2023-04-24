@@ -44,13 +44,13 @@ const Home: Page = ({
   const yieldCallout = (key: string) => {
     return [
       {
-        title: t("home.section_3.daily"),
+        title: t("common:home.section_3.daily"),
         value:
           yieldPrefix(timeseries_callouts.data[key].callout1) +
           numFormat(timeseries_callouts.data[key].callout1, "standard"),
       },
       {
-        title: t("home.section_3.total"),
+        title: t("common:home.section_3.total"),
         value: numFormat(timeseries_callouts.data[key].callout2, "standard"),
       },
     ];
@@ -58,15 +58,15 @@ const Home: Page = ({
 
   const PANELS = [
     {
-      name: t("home.section_2.past_24h"),
+      name: t("common:home.section_2.past_24h"),
       data: analytics.today,
     },
     {
-      name: t("home.section_2.past_month"),
+      name: t("common:home.section_2.past_month"),
       data: analytics.last_month,
     },
     {
-      name: t("home.section_2.all_time"),
+      name: t("common:home.section_2.all_time"),
       data: analytics.all_time,
     },
   ];
@@ -179,7 +179,7 @@ const Home: Page = ({
                     type: "line",
                     data: coordinate.views,
                     borderColor: AKSARA_COLOR.PRIMARY,
-                    label: t("home.keys.views") as string,
+                    label: t("common:home.keys.views") as string,
                     borderWidth: 1.5,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     fill: true,
@@ -199,7 +199,7 @@ const Home: Page = ({
                     data: coordinate.users,
                     borderColor: AKSARA_COLOR.PRIMARY,
                     borderWidth: 1.5,
-                    label: t("home.keys.users") as string,
+                    label: t("common:home.keys.users") as string,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     fill: true,
                   },
@@ -217,7 +217,7 @@ const Home: Page = ({
                     type: "line",
                     data: coordinate.downloads,
                     borderColor: AKSARA_COLOR.PRIMARY,
-                    label: t("home.keys.downloads") as string,
+                    label: t("common:home.keys.downloads") as string,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     fill: true,
                     borderWidth: 1.5,

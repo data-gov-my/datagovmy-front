@@ -308,7 +308,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("common.latest", {
+                      title: t("common:common.latest", {
                         date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                       }),
                       value: chartData.callout,
@@ -351,7 +351,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: chartData.callout,
@@ -393,7 +393,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                     }),
                     value: chartData.callout,

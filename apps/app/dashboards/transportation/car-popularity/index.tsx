@@ -115,7 +115,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.transportation"),
+          t("common:nav.megamenu.categories.transportation"),
           "text-primary dark:text-primary-dark",
         ]}
         header={[t("dashboard-car-popularity:header")]}

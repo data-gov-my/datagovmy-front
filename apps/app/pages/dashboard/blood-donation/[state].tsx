@@ -45,7 +45,10 @@ const BloodDonationState: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("nav.megamenu.dashboards.blood_donation"))}
+        title={CountryAndStates[state].concat(
+          " - ",
+          t("common:nav.megamenu.dashboards.blood_donation")
+        )}
         description={t("dashboard-blood-donation:description")}
         keywords=""
       />
