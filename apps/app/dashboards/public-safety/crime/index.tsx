@@ -20,8 +20,8 @@ const Crime: FunctionComponent<CrimeProps> = ({}) => {
       <Hero
         background="gray"
         category={[t("common:nav.megamenu.categories.public_safety"), "text-black"]}
-        header={[t("dashboard-crime:header")]}
-        description={[t("dashboard-crime:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Royal Malaysian Police (PDRM)"}

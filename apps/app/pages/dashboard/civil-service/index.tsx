@@ -12,11 +12,7 @@ const CivilService: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) 
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-civil-service:header")}
-        description={t("dashboard-civil-service:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CivilServiceDashboard />
     </>
   );

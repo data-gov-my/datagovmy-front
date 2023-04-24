@@ -18,7 +18,7 @@ const ConsumerPrices = ({
     <>
       <Metadata
         title={t("common:nav.megamenu.dashboards.consumer_prices")}
-        description={t("dashboard-consumer-prices:description")}
+        description={t("description")}
         keywords={""}
       />
       <ConsumerPricesDashboard

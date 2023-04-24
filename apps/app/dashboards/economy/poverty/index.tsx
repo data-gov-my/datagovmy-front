@@ -20,8 +20,8 @@ const Poverty: FunctionComponent<PovertyProps> = ({}) => {
       <Hero
         background="gray"
         category={[t("common:nav.megamenu.categories.economy"), "text-black"]}
-        header={[t("dashboard-poverty:header")]}
-        description={[t("dashboard-poverty:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Internal Coordination Unit (ICU JPM)"}

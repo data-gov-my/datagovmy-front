@@ -12,11 +12,7 @@ const HospitalBedUtilisation: Page = ({}: InferGetStaticPropsType<typeof getStat
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-hospital-bed-utilisation:header")}
-        description={t("dashboard-hospital-bed-utilisation:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <HospitalBedUtilisationDashboard />
     </>
   );

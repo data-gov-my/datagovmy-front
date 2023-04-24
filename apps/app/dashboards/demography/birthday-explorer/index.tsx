@@ -36,8 +36,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   const windowWidth = useWindowWidth();
 
   const filterPeriods: Array<OptionType> = [
-    { label: t("dashboard-birthday-explorer:section_2.by_date"), value: "day" },
-    { label: t("dashboard-birthday-explorer:section_2.by_month"), value: "month" },
+    { label: t("section_2.by_date"), value: "day" },
+    { label: t("section_2.by_month"), value: "month" },
   ];
 
   const leapTicks: readonly number[] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 365];
@@ -122,13 +122,13 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     new Promise((resolve, reject) => {
       const year = Number(data.p_birthday.substring(0, 4));
       if (!data.p_birthday && data.p_birthday.length < 10) {
-        setData("validation", t("dashboard-birthday-explorer:section_1.validation_incomplete"));
+        setData("validation", t("section_1.validation_incomplete"));
         reject("Invalid date");
       } else if (year > 2017) {
-        setData("validation", t("dashboard-birthday-explorer:section_1.validation_max"));
+        setData("validation", t("section_1.validation_max"));
         reject("Date more than maximum");
       } else if (year < 1923) {
-        setData("validation", t("dashboard-birthday-explorer:section_1.validation_min"));
+        setData("validation", t("section_1.validation_min"));
         reject("Date less than maximum");
       } else {
         setData("validation", false);
@@ -145,12 +145,12 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       <Hero
         background="blue"
         category={[t("common:nav.megamenu.categories.demography"), "text-primary"]}
-        header={[t("dashboard-birthday-explorer:header")]}
+        header={[t("header")]}
         description={
           <p className={"text-dim dark:text-outline xl:w-2/3"}>
             <Trans>
-              {t("dashboard-birthday-explorer:description", {
-                quote: t("dashboard-birthday-explorer:quote"),
+              {t("description", {
+                quote: t("quote"),
               })}
             </Trans>
           </p>
@@ -164,19 +164,14 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         }
       />
       <Container className="min-h-screen">
-        <Section
-          title={t("dashboard-birthday-explorer:section_1.title")}
-          description={t("dashboard-birthday-explorer:section_1.description")}
-        >
+        <Section title={t("section_1.title")} description={t("section_1.description")}>
           <div className="flex flex-col gap-8 rounded-xl lg:flex-row">
             <Card
               className="border-outline dark:border-washed-dark flex basis-1/3 flex-col justify-between rounded-xl border p-6"
               type="gray"
             >
               <div>
-                <p className="mb-3 text-sm font-medium">
-                  {t("dashboard-birthday-explorer:enter_birthday")}
-                </p>
+                <p className="mb-3 text-sm font-medium">{t("enter_birthday")}</p>
                 <input
                   type="date"
                   className={`active:bg-washed relative w-full cursor-pointer gap-[6px] rounded-md bg-white py-[6px] pl-3 text-left
@@ -199,9 +194,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   max={"2017-12-31"}
                 ></input>
                 {data.validation && <p className="text-danger mt-1 text-xs">{data.validation}</p>}
-                <p className="mb-3 mt-6 text-sm font-medium">
-                  {t("dashboard-birthday-explorer:choose_state")}
-                </p>
+                <p className="mb-3 mt-6 text-sm font-medium">{t("choose_state")}</p>
                 <StateDropdown
                   currentState={data.p_state}
                   onChange={selected => setData("p_state", selected.value)}
@@ -218,10 +211,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   }}
                   icon={<SearchIcon className="h-4 w-4 text-white" />}
                 >
-                  {t("dashboard-birthday-explorer:search")}
+                  {t("search")}
                 </Button>
               </div>
-              <p className="text-dim text-sm">{t("dashboard-birthday-explorer:disclaimer")}</p>
+              <p className="text-dim text-sm">{t("disclaimer")}</p>
             </Card>
             <div className="basis-2/3">
               {data.birthday ? (
@@ -239,17 +232,17 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                       </div>
                       <div className="text-dim mx-auto mt-3 text-center text-sm">
                         <span>
-                          {t("dashboard-birthday-explorer:section_1.year", {
+                          {t("section_1.year", {
                             count: years,
                           })}
                         </span>
                         <span>
-                          {t("dashboard-birthday-explorer:section_1.month", {
+                          {t("section_1.month", {
                             count: months,
                           })}
                         </span>
                         <span>
-                          {t("dashboard-birthday-explorer:section_1.day", {
+                          {t("section_1.day", {
                             count: Math.floor(days!),
                           })}
                         </span>
@@ -258,35 +251,35 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                     <div className="flex h-auto basis-2/3 flex-col gap-3 self-center px-4 pb-4 text-lg font-bold lg:pl-0 lg:pr-8 lg:pt-4">
                       <div className="space-y-3 text-black dark:text-white">
                         <p>
-                          {t("dashboard-birthday-explorer:section_1.info1", {
+                          {t("section_1.info1", {
                             count: data.state_total,
                           })}
 
                           <span className="text-primary dark:text-primary-dark">
-                            {t("dashboard-birthday-explorer:section_1.count", {
+                            {t("section_1.count", {
                               count: data.state_total,
                             })}
                           </span>
-                          {t("dashboard-birthday-explorer:section_1.info2", {
+                          {t("section_1.info2", {
                             count: data.state_total,
                             context: data.state === "Overseas" && "overseas",
                           })}
 
                           <span className="text-primary dark:text-primary-dark">
                             {data.state === "Overseas"
-                              ? t("dashboard-birthday-explorer:section_1.overseas")
+                              ? t("section_1.overseas")
                               : CountryAndStates[data.state]}
                           </span>
                           {data.state !== "mys" ? (
                             <>
-                              <span>{t("dashboard-birthday-explorer:section_1.and")}</span>
+                              <span>{t("section_1.and")}</span>
                               <span className="text-primary dark:text-primary-dark">
-                                {t("dashboard-birthday-explorer:section_1.count", {
+                                {t("section_1.count", {
                                   count: data.nationwide_total,
                                 })}
                               </span>
                               <span>
-                                {t("dashboard-birthday-explorer:section_1.info3", {
+                                {t("section_1.info3", {
                                   count: data.nationwide_total,
                                 })}
                               </span>
@@ -296,21 +289,21 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           )}
                         </p>
                         <p>
-                          {t("dashboard-birthday-explorer:section_1.info4", {
+                          {t("section_1.info4", {
                             year: data.birthday.slice(0, 4),
                           })}
                           <span className="text-primary dark:text-primary-dark">
                             <span className="text-primary dark:text-primary-dark">
                               {data.rank === 1
-                                ? t("dashboard-birthday-explorer:section_1.most_popular")
+                                ? t("section_1.most_popular")
                                 : data.rank === 366 ||
                                   (!isLeap(+data.birthday.slice(0, 4)) && data.rank === 365)
-                                ? t("dashboard-birthday-explorer:section_1.most_rare")
-                                : t("dashboard-birthday-explorer:section_1.count", {
+                                ? t("section_1.most_rare")
+                                : t("section_1.count", {
                                     count: data.rank,
                                   })}
                             </span>
-                            {t("dashboard-birthday-explorer:section_1.rank", {
+                            {t("section_1.rank", {
                               count: data.rank,
                               ordinal: true,
                               context: isLeap(+data.birthday.slice(0, 4))
@@ -318,7 +311,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                                 : [1, 365].includes(data.rank) && "none",
                             })}
                           </span>
-                          {t("dashboard-birthday-explorer:section_1.popularity", {
+                          {t("section_1.popularity", {
                             count: isLeap(+data.birthday.slice(0, 4)) ? 366 : 365,
                             year: +data.birthday.slice(0, 4),
                             context: isLeap(+data.birthday.slice(0, 4))
@@ -327,24 +320,24 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           })}
                           {data.rank === 1
                             ? ""
-                            : t("dashboard-birthday-explorer:section_1.popular", {
+                            : t("section_1.popular", {
                                 context: data.rank === data.y.length && "while",
                               })}
                           {data.rank === 1
                             ? ""
-                            : t("dashboard-birthday-explorer:section_1.most_popular_date", {
+                            : t("section_1.most_popular_date", {
                                 count: new Date(data.popularity.year_popular).getDate(),
                                 ordinal: true,
                                 month: new Intl.DateTimeFormat(i18n.language, {
                                   month: "long",
                                 }).format(new Date(data.popularity.year_popular)),
                               })}
-                          {t("dashboard-birthday-explorer:section_1.rare", {
+                          {t("section_1.rare", {
                             context: data.rank === data.y.length && "none",
                           })}
                           {data.rank === data.y.length
                             ? ""
-                            : t("dashboard-birthday-explorer:section_1.most_rare_date", {
+                            : t("section_1.most_rare_date", {
                                 count: new Date(data.popularity.year_rare).getDate(),
                                 ordinal: true,
                                 month: new Intl.DateTimeFormat(i18n.language, {
@@ -353,7 +346,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                               })}
                         </p>
                         <p className="text-dim text-sm font-normal dark:text-white">
-                          {t("dashboard-birthday-explorer:section_1.explore")}
+                          {t("section_1.explore")}
                         </p>
                       </div>
                     </div>
@@ -369,7 +362,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 <Card className="border-outline dark:border-washed-dark hidden h-full items-center gap-6 rounded-xl border py-8 lg:flex">
                   <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md border px-3 py-1.5">
                     <SearchIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />
-                    <p>{t("dashboard-birthday-explorer:start_search")}</p>
+                    <p>{t("start_search")}</p>
                   </Card>
                 </Card>
               )}
@@ -380,12 +373,12 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         {/* Number of babies born on each date */}
         <Section
           className="py-12"
-          title={t("dashboard-birthday-explorer:section_2.title", {
+          title={t("section_2.title", {
             start_year: data.start,
             end_year: data.end,
             state:
               data.state === "Overseas"
-                ? t("dashboard-birthday-explorer:section_2.overseas")
+                ? t("section_2.overseas")
                 : CountryAndStates[data.state ? data.state : "mys"],
             context: data.start === data.end && "same_year",
           })}
@@ -441,7 +434,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   {
                     type: data.groupBy === "day" ? "line" : "bar",
                     data: data.y,
-                    label: t("dashboard-birthday-explorer:section_2.births"),
+                    label: t("section_2.births"),
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderColor: AKSARA_COLOR.PRIMARY,
                     borderWidth:

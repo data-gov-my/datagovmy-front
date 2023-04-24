@@ -20,11 +20,7 @@ const OrganDonation: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-organ-donation:header")}
-        description={t("dashboard-organ-donation:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <OrganDonationDashboard
         last_updated={last_updated}
         timeseries={timeseries}

@@ -20,8 +20,8 @@ const FloodWarning: FunctionComponent<FloodWarningProps> = ({}) => {
       <Hero
         background="green"
         category={[t("common:nav.megamenu.categories.environment"), "text-[#16A34A]"]}
-        header={[t("dashboard-flood-warning:header")]}
-        description={[t("dashboard-flood-warning:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Irrigation & Drainage Department (JPS)"}

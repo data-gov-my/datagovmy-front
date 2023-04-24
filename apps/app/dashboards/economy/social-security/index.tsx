@@ -23,8 +23,8 @@ const SocialSecurity: FunctionComponent<SocialSecurityProps> = ({}) => {
           t("common:nav.megamenu.categories.economy"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-social-security:header")]}
-        description={[t("dashboard-social-security:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Social Security Organisation (SOCSO)"}

@@ -23,8 +23,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
           t("common:nav.megamenu.categories.education"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-sekolahku:header")]}
-        description={[t("dashboard-sekolahku:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Education (MoE)"}

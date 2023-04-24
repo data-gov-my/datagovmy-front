@@ -18,7 +18,7 @@ const InternationalReserves: Page = ({
     <>
       <Metadata
         title={t("common:nav.megamenu.dashboards.international_reserves")}
-        description={t("dashboard-international-reserves:description")}
+        description={t("description")}
         keywords={""}
       />
       <InternationalReservesDashboard

@@ -12,11 +12,7 @@ const PublicContracting: Page = ({}: InferGetStaticPropsType<typeof getStaticPro
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-public-contracting:header")}
-        description={t("dashboard-public-contracting:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PublicContractingDashboard />
     </>
   );

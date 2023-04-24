@@ -12,11 +12,7 @@ const IncomeTaxation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-income-taxation:header")}
-        description={t("dashboard-income-taxation:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IncomeTaxationDashboard />
     </>
   );

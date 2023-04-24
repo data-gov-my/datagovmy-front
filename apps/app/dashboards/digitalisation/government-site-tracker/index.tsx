@@ -23,8 +23,8 @@ const GovernmentSiteTracker: FunctionComponent<GovernmentSiteTrackerProps> = ({}
           t("common:nav.megamenu.categories.digitalisation"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-government-site-tracker:header")]}
-        description={[t("dashboard-government-site-tracker:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge agency={"MAMPU"} link="https://www.mampu.gov.my/" icon={<MAMPUIcon />} />
         }

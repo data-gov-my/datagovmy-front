@@ -25,11 +25,7 @@ const COVID19: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-covid-19:header")}
-        description={t("dashboard-covid-19:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVID19Dashboard
         last_updated={last_updated}
         snapshot_bar={snapshot_bar}

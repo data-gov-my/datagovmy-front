@@ -12,11 +12,7 @@ const FloodWarning: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) 
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-flood-warning:header")}
-        description={t("dashboard-flood-warning:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <FloodWarningDashboard />
     </>
   );

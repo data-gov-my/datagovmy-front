@@ -12,11 +12,7 @@ const SocialSecurity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-social-security:header")}
-        description={t("dashboard-social-security:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SocialSecurityDashboard />
     </>
   );

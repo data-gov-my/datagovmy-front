@@ -23,8 +23,8 @@ const PublicContracting: FunctionComponent<PublicContractingProps> = ({}) => {
           t("common:nav.megamenu.categories.public_finances"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-public-contracting:header")]}
-        description={[t("dashboard-public-contracting:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Finance (MoF)"}

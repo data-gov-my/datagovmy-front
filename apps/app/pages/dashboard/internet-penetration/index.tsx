@@ -12,11 +12,7 @@ const InternetPenetration: Page = ({}: InferGetStaticPropsType<typeof getStaticP
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-internet-penetration:header")}
-        description={t("dashboard-internet-penetration:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternetPenetrationDashboard />
     </>
   );

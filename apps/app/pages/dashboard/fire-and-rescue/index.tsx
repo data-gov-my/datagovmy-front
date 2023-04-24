@@ -12,11 +12,7 @@ const FireandRescue: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>)
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-fire-and-rescue:header")}
-        description={t("dashboard-fire-and-rescue:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <FireandRescueDashboard />
     </>
   );

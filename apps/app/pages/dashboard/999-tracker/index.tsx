@@ -12,11 +12,7 @@ const Tracker999: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) =>
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-999-tracker:header")}
-        description={t("dashboard-999-tracker:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <Tracker999Dashboard />
     </>
   );

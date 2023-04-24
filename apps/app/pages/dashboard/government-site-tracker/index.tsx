@@ -12,11 +12,7 @@ const GovernmentSiteTracker: Page = ({}: InferGetStaticPropsType<typeof getStati
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-government-site-tracker:header")}
-        description={t("dashboard-government-site-tracker:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GovernmentSiteTrackerDashboard />
     </>
   );

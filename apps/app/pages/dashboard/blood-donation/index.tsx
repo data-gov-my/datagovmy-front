@@ -30,7 +30,7 @@ const BloodDonation = ({
         ...previous,
         [current[0]]: current[1].map((item: any) => ({
           ...item,
-          x: t("dashboard-blood-donation:".concat(item.x)),
+          x: t("".concat(item.x)),
         })),
       };
     }, {});

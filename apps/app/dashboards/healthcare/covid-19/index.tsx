@@ -67,7 +67,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
 
   const { data, setData } = useData({
     show_indicator: {
-      label: t(`dashboard-covid-19:opt_${filterCaseDeath[0].value}`),
+      label: t(`opt_${filterCaseDeath[0].value}`),
       value: filterCaseDeath[0].value,
     },
     filter_death: 0,
@@ -85,31 +85,31 @@ const COVID19: FunctionComponent<COVID19Props> = ({
 
   const BarTabsMenu = [
     {
-      name: t("dashboard-covid-19:tab_table2"),
-      title: t("dashboard-covid-19:tab_table2") + " per 100K",
+      name: t("tab_table2"),
+      title: t("tab_table2") + " per 100K",
       data: snapshot_bar.data.deaths,
     },
     {
       name: "Vent.",
-      title: t("dashboard-covid-19:utilisation_of", { param: "Vent." }).concat(" (%)"),
+      title: t("utilisation_of", { param: "Vent." }).concat(" (%)"),
       data: snapshot_bar.data.util_vent,
       unit: "%",
     },
     {
       name: "ICU",
-      title: t("dashboard-covid-19:utilisation_of", { param: "ICU" }).concat(" (%)"),
+      title: t("utilisation_of", { param: "ICU" }).concat(" (%)"),
       data: snapshot_bar.data.util_icu,
       unit: "%",
     },
     {
       name: "Hosp.",
-      title: t("dashboard-covid-19:utilisation_of", { param: "Hosp." }).concat(" (%)"),
+      title: t("utilisation_of", { param: "Hosp." }).concat(" (%)"),
       data: snapshot_bar.data.util_hosp,
       unit: "%",
     },
     {
-      name: t("dashboard-covid-19:tab_table4"),
-      title: t("dashboard-covid-19:tab_table4") + " per 100K",
+      name: t("tab_table4"),
+      title: t("tab_table4") + " per 100K",
       data: snapshot_bar.data.cases,
     },
   ];
@@ -119,10 +119,10 @@ const COVID19: FunctionComponent<COVID19Props> = ({
       <Hero
         background="red"
         category={[t("common:nav.megamenu.categories.healthcare"), "text-danger"]}
-        header={[t("dashboard-covid-19:header")]}
+        header={[t("header")]}
         description={
           <>
-            <p className={"text-dim xl:w-2/3"}>{t("dashboard-covid-19:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.COVID_19} currentState={currentState} />
             </div>
@@ -141,26 +141,26 @@ const COVID19: FunctionComponent<COVID19Props> = ({
       <Container className="min-h-screen">
         {/* What does the latest data show? */}
         <Section
-          title={t("dashboard-covid-19:diagram_header", { state: CountryAndStates[currentState] })}
+          title={t("diagram_header", { state: CountryAndStates[currentState] })}
           date={snapshot_graphic.data_as_of}
         >
           <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-5">
             <div className="col-span-1 xl:col-span-3">
               <Stages
-                title={t("dashboard-covid-19:diagram_subheader", {
+                title={t("diagram_subheader", {
                   state: CountryAndStates[currentState],
                 })}
                 className="h-full pt-4"
                 data={{
                   header: {
-                    name: t("dashboard-covid-19:diagram_title"),
+                    name: t("diagram_title"),
                     value: snapshot_graphic.data.cases_active,
                     delta: snapshot_graphic.data.cases_active_annot,
                     inverse: true,
                   },
                   col_1: [
                     {
-                      name: t("dashboard-covid-19:col1_title1"),
+                      name: t("col1_title1"),
                       value: snapshot_graphic.data.cases_local,
                       delta: snapshot_graphic.data.cases_local_annot,
                       inverse: true,
@@ -174,7 +174,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: t("dashboard-covid-19:col1_title2"),
+                      name: t("col1_title2"),
                       value: snapshot_graphic.data.cases_import,
                       delta: snapshot_graphic.data.cases_import_annot,
                       inverse: true,
@@ -182,7 +182,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   ],
                   col_2: [
                     {
-                      name: t("dashboard-covid-19:col2_title1"),
+                      name: t("col2_title1"),
                       value: snapshot_graphic.data.home,
                       delta: snapshot_graphic.data.home_annot,
                       unit: "%",
@@ -196,7 +196,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: t("dashboard-covid-19:col2_title2"),
+                      name: t("col2_title2"),
                       value: snapshot_graphic.data.pkrc,
                       delta: snapshot_graphic.data.pkrc_annot,
                       unit: "%",
@@ -210,7 +210,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: t("dashboard-covid-19:col2_title3"),
+                      name: t("col2_title3"),
                       value: snapshot_graphic.data.hosp,
                       delta: snapshot_graphic.data.hosp_annot,
                       unit: "%",
@@ -224,7 +224,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: t("dashboard-covid-19:col2_title4"),
+                      name: t("col2_title4"),
                       value: snapshot_graphic.data.icu,
                       delta: snapshot_graphic.data.icu_annot,
                       unit: "%",
@@ -238,7 +238,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: t("dashboard-covid-19:col2_title5"),
+                      name: t("col2_title5"),
                       value: snapshot_graphic.data.vent,
                       delta: snapshot_graphic.data.vent_annot,
                       unit: "%",
@@ -254,7 +254,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   ],
                   col_3: [
                     {
-                      name: t("dashboard-covid-19:col3_title1"),
+                      name: t("col3_title1"),
                       value: snapshot_graphic.data.cases_recovered,
                       delta: snapshot_graphic.data.cases_recovered_annot,
                       icon: (
@@ -267,7 +267,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: t("dashboard-covid-19:col3_title2"),
+                      name: t("col3_title2"),
                       value: snapshot_graphic.data.deaths,
                       delta: snapshot_graphic.data.deaths_annot,
                       inverse: true,
@@ -281,7 +281,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       ),
                     },
                     {
-                      name: t("dashboard-covid-19:col3_title3"),
+                      name: t("col3_title3"),
                       value: snapshot_graphic.data.deaths_bid,
                       delta: snapshot_graphic.data.deaths_bid_annot,
                       inverse: true,
@@ -317,7 +317,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
 
         {/* How are COVID-19 key indicators trending */}
         <Section
-          title={t("dashboard-covid-19:area_chart_header", {
+          title={t("area_chart_header", {
             state: CountryAndStates[currentState],
           })}
           date={timeseries_deaths.data_as_of}
@@ -325,14 +325,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
             <Timeseries
               className="h-[250px] w-full"
-              title={t("dashboard-covid-19:area_chart_title1")}
+              title={t("area_chart_title1")}
               stats={[
                 {
-                  title: t("dashboard-covid-19:deaths.annot1"),
+                  title: t("deaths.annot1"),
                   value: numFormat(statistics.data.deaths.annot1, "standard"),
                 },
                 {
-                  title: t("dashboard-covid-19:deaths.annot2"),
+                  title: t("deaths.annot2"),
                   value: numFormat(statistics.data.deaths.annot2, "standard"),
                 },
               ]}
@@ -341,7 +341,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 datasets: [
                   {
                     type: "line",
-                    label: `${t("dashboard-covid-19:area_chart_tooltip1")}`,
+                    label: `${t("area_chart_tooltip1")}`,
                     pointRadius: 0,
                     data: deaths_coordinate.line,
                     borderColor: "#2563EB",
@@ -349,14 +349,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart_tooltip2")}`,
+                    label: `${t("area_chart_tooltip2")}`,
                     data: deaths_coordinate.deaths_inpatient,
                     backgroundColor: "#6BABFA",
                     stack: "same",
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart_tooltip3")}`,
+                    label: `${t("area_chart_tooltip3")}`,
                     data: deaths_coordinate.deaths_brought_in,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
@@ -367,14 +367,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             />
             <Timeseries
               className="h-[250px] w-full"
-              title={t("dashboard-covid-19:area_chart_title2")}
+              title={t("area_chart_title2")}
               stats={[
                 {
-                  title: t("dashboard-covid-19:vent.annot1"),
+                  title: t("vent.annot1"),
                   value: numFormat(statistics.data.vent.annot1, "standard"),
                 },
                 {
-                  title: t("dashboard-covid-19:vent.annot2"),
+                  title: t("vent.annot2"),
                   value: numFormat(statistics.data.vent.annot2, "standard").concat("%"),
                 },
               ]}
@@ -383,7 +383,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 datasets: [
                   {
                     type: "line",
-                    label: `${t("dashboard-covid-19:area_chart2_tooltip1")}`,
+                    label: `${t("area_chart2_tooltip1")}`,
                     pointRadius: 0,
                     data: vents_coordinate.line,
                     borderColor: "#2563EB",
@@ -391,7 +391,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart2_tooltip2")}`,
+                    label: `${t("area_chart2_tooltip2")}`,
                     data: vents_coordinate.vent,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
@@ -402,14 +402,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             />
             <Timeseries
               className="h-[250px] w-full"
-              title={t("dashboard-covid-19:area_chart_title3")}
+              title={t("area_chart_title3")}
               stats={[
                 {
-                  title: t("dashboard-covid-19:icu.annot1"),
+                  title: t("icu.annot1"),
                   value: numFormat(statistics.data.icu.annot1, "standard"),
                 },
                 {
-                  title: t("dashboard-covid-19:icu.annot2"),
+                  title: t("icu.annot2"),
                   value: numFormat(statistics.data.icu.annot2, "standard").concat("%"),
                 },
               ]}
@@ -418,7 +418,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 datasets: [
                   {
                     type: "line",
-                    label: `${t("dashboard-covid-19:area_chart3_tooltip1")}`,
+                    label: `${t("area_chart3_tooltip1")}`,
                     pointRadius: 0,
                     data: icu_coordinate.line,
                     borderColor: "#2563EB",
@@ -426,7 +426,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart3_tooltip2")}`,
+                    label: `${t("area_chart3_tooltip2")}`,
                     data: icu_coordinate.icu,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
@@ -437,14 +437,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             />
             <Timeseries
               className="h-[250px] w-full"
-              title={t("dashboard-covid-19:area_chart_title4")}
+              title={t("area_chart_title4")}
               stats={[
                 {
-                  title: t("dashboard-covid-19:admitted.annot1"),
+                  title: t("admitted.annot1"),
                   value: numFormat(statistics.data.admitted.annot1, "standard"),
                 },
                 {
-                  title: t("dashboard-covid-19:admitted.annot2"),
+                  title: t("admitted.annot2"),
                   value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
                 },
               ]}
@@ -453,7 +453,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 datasets: [
                   {
                     type: "line",
-                    label: `${t("dashboard-covid-19:area_chart4_tooltip1")}`,
+                    label: `${t("area_chart4_tooltip1")}`,
                     pointRadius: 0,
                     data: admitted_coordinate.line,
                     borderColor: "#2563EB",
@@ -461,7 +461,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart4_tooltip2")}`,
+                    label: `${t("area_chart4_tooltip2")}`,
                     data: admitted_coordinate.admitted,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
@@ -472,14 +472,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             />
             <Timeseries
               className="h-[250px] w-full"
-              title={t("dashboard-covid-19:area_chart_title5")}
+              title={t("area_chart_title5")}
               stats={[
                 {
-                  title: t("dashboard-covid-19:cases.annot1"),
+                  title: t("cases.annot1"),
                   value: numFormat(statistics.data.cases.annot1, "standard"),
                 },
                 {
-                  title: t("dashboard-covid-19:cases.annot2"),
+                  title: t("cases.annot2"),
                   value: numFormat(statistics.data.cases.annot2, "standard"),
                 },
               ]}
@@ -488,7 +488,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 datasets: [
                   {
                     type: "line",
-                    label: `${t("dashboard-covid-19:area_chart5_tooltip1")}`,
+                    label: `${t("area_chart5_tooltip1")}`,
                     pointRadius: 0,
                     data: cases_coordinate.line,
                     borderColor: "#2563EB",
@@ -496,7 +496,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart5_tooltip2")}`,
+                    label: `${t("area_chart5_tooltip2")}`,
                     data: cases_coordinate.cases,
                     backgroundColor: "#2563EB4D",
                     stack: "same",
@@ -507,14 +507,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             />
             <Timeseries
               className="h-[250px] w-full"
-              title={t("dashboard-covid-19:area_chart_title6")}
+              title={t("area_chart_title6")}
               stats={[
                 {
-                  title: t("dashboard-covid-19:tests.annot1"),
+                  title: t("tests.annot1"),
                   value: numFormat(statistics.data.tests.annot1, "standard"),
                 },
                 {
-                  title: t("dashboard-covid-19:tests.annot2"),
+                  title: t("tests.annot2"),
                   value: numFormat(statistics.data.tests.annot2, "standard").concat("%"),
                 },
               ]}
@@ -524,7 +524,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 datasets: [
                   {
                     type: "line",
-                    label: `${t("dashboard-covid-19:area_chart6_tooltip1")}`,
+                    label: `${t("area_chart6_tooltip1")}`,
                     pointRadius: 0,
                     borderColor: "#2563EB",
                     data: tests_coordinate.tooltip,
@@ -534,14 +534,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart6_tooltip2")}`,
+                    label: `${t("area_chart6_tooltip2")}`,
                     data: tests_coordinate.tests_rtk,
                     backgroundColor: "#6BABFA",
                     stack: "same",
                   },
                   {
                     type: "bar",
-                    label: `${t("dashboard-covid-19:area_chart6_tooltip3")}`,
+                    label: `${t("area_chart6_tooltip3")}`,
                     data: tests_coordinate.tests_pcr,
                     backgroundColor: "#2563EB4D",
                     stack: "same",

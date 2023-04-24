@@ -17,11 +17,7 @@ const CovidVaccination: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-covid-vaccination:page_title")}
-        description={t("dashboard-covid-vaccination:description")}
-        keywords={""}
-      />
+      <Metadata title={t("page_title")} description={t("description")} keywords={""} />
       <COVIDVaccinationDashboard
         lastUpdated={Date.now()}
         timeseries={timeseries}

@@ -21,8 +21,8 @@ const PekaB40State: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-peka-b40:header"))}
-        description={t("dashboard-peka-b40:description")}
+        title={CountryAndStates[state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <PekaB40Dashboard

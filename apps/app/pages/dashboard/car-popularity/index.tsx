@@ -12,11 +12,7 @@ const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof ge
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-car-popularity:header")}
-        description={t("dashboard-car-popularity:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CarPopularityDashboard queryOptions={queryOptions} />
     </>
   );

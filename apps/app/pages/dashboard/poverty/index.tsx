@@ -12,11 +12,7 @@ const Poverty: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-poverty:header")}
-        description={t("dashboard-poverty:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PovertyDashboard />
     </>
   );

@@ -23,8 +23,8 @@ const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
           t("common:nav.megamenu.categories.economy"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-public-pension:header")]}
-        description={[t("dashboard-public-pension:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Retirement Fund Inc (KWAP)"}

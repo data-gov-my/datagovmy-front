@@ -45,12 +45,12 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data).map((key: string) => ({
-    label: t(`dashboard-reserve-money:keys.${key}`),
+    label: t(`keys.${key}`),
     value: key,
   }));
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("dashboard-reserve-money:keys.no_shade"), value: "no_shade" },
-    { label: t("dashboard-reserve-money:keys.recession"), value: "recession" },
+    { label: t("keys.no_shade"), value: "no_shade" },
+    { label: t("keys.recession"), value: "recession" },
   ];
 
   const { data, setData } = useData({
@@ -120,9 +120,9 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
 
   const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
     sectionHeaders.map(chartName => ({
-      title: t(`dashboard-reserve-money:keys.${chartName}`),
+      title: t(`keys.${chartName}`),
       unitY: configs(chartName).unit,
-      label: t(`dashboard-reserve-money:keys.${chartName}`),
+      label: t(`keys.${chartName}`),
       data: coordinate[chartName],
       fill: configs(chartName).fill,
       callout: configs(chartName).callout,
@@ -158,8 +158,8 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
       <Hero
         background="gray"
         category={[t("common:nav.megamenu.categories.financial_sector")]}
-        header={[t("dashboard-reserve-money:header")]}
-        description={[t("dashboard-reserve-money:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
@@ -173,8 +173,8 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
       <Container className="min-h-screen">
         {/* How is reserve money trending? */}
         <Section
-          title={t("dashboard-reserve-money:section_1.title")}
-          description={t("dashboard-reserve-money:section_1.description")}
+          title={t("section_1.title")}
+          description={t("section_1.description")}
           date={timeseries.data_as_of}
         >
           <div className="space-y-8">
@@ -201,7 +201,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
               onChange={e => setData("minmax", e)}
             />
             <Timeseries
-              title={t("dashboard-reserve-money:keys.total")}
+              title={t("keys.total")}
               className="h-[350px] w-full"
               interval="month"
               displayNumFormat={(value, type, precision) =>
@@ -228,7 +228,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
                   {
                     type: "line",
                     data: coordinate.total,
-                    label: t("dashboard-reserve-money:keys.total"),
+                    label: t("keys.total"),
                     borderColor: AKSARA_COLOR.PRIMARY,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderWidth: 1.5,
@@ -302,8 +302,8 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
         </Section>
         {/* Factors affecting Reserve Money */}
         <Section
-          title={t("dashboard-reserve-money:section_2.title")}
-          description={t("dashboard-reserve-money:section_2.description")}
+          title={t("section_2.title")}
+          description={t("section_2.description")}
           date={timeseries.data_as_of}
         >
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">

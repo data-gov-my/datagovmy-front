@@ -20,8 +20,8 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({}) => {
       <Hero
         background="red"
         category={[t("common:nav.megamenu.categories.public_safety"), "text-danger"]}
-        header={[t("dashboard-fire-and-rescue:header")]}
-        description={[t("dashboard-fire-and-rescue:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Fire and Rescue Department (BOMBA)"}

@@ -20,8 +20,8 @@ const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) =>
       <Hero
         background="orange"
         category={[t("common:nav.megamenu.categories.economy"), "text-[#FF820E]"]}
-        header={[t("dashboard-retirement-readiness:header")]}
-        description={[t("dashboard-retirement-readiness:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Employees Provident Fund"}

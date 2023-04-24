@@ -98,23 +98,23 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
   const columnHelper = createColumnHelper<Candidate>();
 
   const results: { [key: string]: ReactNode } = {
-    won: <Won desc={t("dashboard-election-explorer:candidate.won")} />,
-    won_uncontested: <Won desc={t("dashboard-election-explorer:candidate.won_uncontested")} />,
-    lost: <Lost desc={t("dashboard-election-explorer:candidate.lost")} />,
-    lost_deposit: <Lost desc={t("dashboard-election-explorer:candidate.lost_deposit")} />,
+    won: <Won desc={t("candidate.won")} />,
+    won_uncontested: <Won desc={t("candidate.won_uncontested")} />,
+    lost: <Lost desc={t("candidate.lost")} />,
+    lost_deposit: <Lost desc={t("candidate.lost_deposit")} />,
   };
 
   const columns: ColumnDef<Candidate, any>[] = [
     columnHelper.accessor((row: any) => row.date, {
-      header: t("dashboard-election-explorer:date"),
+      header: t("date"),
       cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor("area", {
-      header: t("dashboard-election-explorer:constituency"),
+      header: t("constituency"),
       cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor("party", {
-      header: t("dashboard-election-explorer:party_name"),
+      header: t("party_name"),
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
@@ -131,11 +131,11 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
       },
     }),
     columnHelper.accessor("votes", {
-      header: t("dashboard-election-explorer:votes_won"),
+      header: t("votes_won"),
       cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor("result", {
-      header: t("dashboard-election-explorer:result"),
+      header: t("result"),
       cell: (info: any) => results[info.getValue()],
     }),
     columnHelper.accessor("result", {
@@ -143,7 +143,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
       header: "",
       cell: (info: any) => (
         <ElectionCard
-          label={t("dashboard-election-explorer:full_result")}
+          label={t("full_result")}
           win={results[info.getValue()]}
           title={
             <div className="flex flex-row gap-2 uppercase">
@@ -165,11 +165,11 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
     <Section>
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("dashboard-election-explorer:candidate.header")}</h4>
+          <h4 className="text-center">{t("candidate.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex flex-col items-center justify-center space-y-3">
               <ComboBox
-                placeholder={t("dashboard-election-explorer:candidate.search_candidate")}
+                placeholder={t("candidate.search_candidate")}
                 options={CANDIDATE_OPTIONS}
                 selected={
                   data.q_candidate
@@ -182,9 +182,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
                 }}
               />
               <div className="flex flex-col text-center lg:flex-row">
-                <span className="whitespace-pre">
-                  {t("dashboard-election-explorer:popular_searches")}
-                </span>
+                <span className="whitespace-pre">{t("popular_searches")}</span>
                 <div>
                   <span
                     className="text-primary dark:text-primary-dark font-semibold"
@@ -240,20 +238,20 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
           <Tabs
             title={
               <div className="text-base font-bold">
-                {t("dashboard-election-explorer:candidate.title")}
+                {t("candidate.title")}
                 <span className="text-primary">{data.candidate.value}</span>
               </div>
             }
             current={data.tabs}
             onChange={index => setData("tabs", index)}
           >
-            <Panel name={t("dashboard-election-explorer:parliament_elections")}>
+            <Panel name={t("parliament_elections")}>
               <BorderlessTable
                 data={dummyData}
                 columns={columns}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
+                    {t("candidate.never_compete", {
                       name: data.candidate ? data.candidate.value : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
@@ -261,13 +259,13 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({}) => {
                 }
               />
             </Panel>
-            <Panel name={t("dashboard-election-explorer:state_elections")}>
+            <Panel name={t("state_elections")}>
               <BorderlessTable
                 data={dummyData}
                 columns={columns}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
+                    {t("candidate.never_compete", {
                       name: data.candidate ? data.candidate.value : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}

@@ -23,8 +23,8 @@ const CivilService: FunctionComponent<CivilServiceProps> = ({}) => {
           t("common:nav.megamenu.categories.public_finances"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-civil-service:header")]}
-        description={[t("dashboard-civil-service:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Public Service Department (JPA)"}

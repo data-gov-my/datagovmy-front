@@ -12,11 +12,7 @@ const CircleofLife: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) 
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-circle-of-life:header")}
-        description={t("dashboard-circle-of-life:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CircleofLifeDashboard />
     </>
   );

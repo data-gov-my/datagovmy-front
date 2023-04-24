@@ -17,11 +17,7 @@ const PekaB40: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-peka-b40:header")}
-        description={t("dashboard-peka-b40:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PekaB40Dashboard
         last_updated={last_updated}
         timeseries={timeseries}

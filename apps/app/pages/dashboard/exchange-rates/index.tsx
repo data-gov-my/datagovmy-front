@@ -20,7 +20,7 @@ const ExchangeRates: Page = ({
     <>
       <Metadata
         title={t("common:nav.megamenu.dashboards.exchange_rate")}
-        description={t("dashboard-exchange-rates:description")}
+        description={t("description")}
         keywords={""}
       />
       <ExchangeRatesDashboard

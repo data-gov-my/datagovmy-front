@@ -12,11 +12,7 @@ const RetirementReadiness: Page = ({}: InferGetStaticPropsType<typeof getStaticP
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-retirement-readiness:header")}
-        description={t("dashboard-retirement-readiness:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <RetirementReadinessDashboard />
     </>
   );

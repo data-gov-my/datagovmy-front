@@ -12,11 +12,7 @@ const WeatherandClimate: Page = ({}: InferGetStaticPropsType<typeof getStaticPro
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-weather-and-climate:header")}
-        description={t("dashboard-weather-and-climate:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WeatherandClimateDashboard />
     </>
   );

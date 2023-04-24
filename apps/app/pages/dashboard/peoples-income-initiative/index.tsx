@@ -12,11 +12,7 @@ const PeoplesIncomeInitiative: Page = ({}: InferGetStaticPropsType<typeof getSta
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-peoples-income-initiative:header")}
-        description={t("dashboard-peoples-income-initiative:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PeoplesIncomeInitiativeDashboard />
     </>
   );

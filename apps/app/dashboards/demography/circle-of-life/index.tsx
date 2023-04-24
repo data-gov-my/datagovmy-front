@@ -23,8 +23,8 @@ const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
           t("common:nav.megamenu.categories.demography"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-circle-of-life:header")]}
-        description={[t("dashboard-circle-of-life:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency="Jabatan Pendaftaran Negara"

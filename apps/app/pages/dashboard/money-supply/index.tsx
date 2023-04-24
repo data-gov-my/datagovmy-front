@@ -17,7 +17,7 @@ const MoneySupply = ({
     <>
       <Metadata
         title={t("common:nav.megamenu.dashboards.money_supply")}
-        description={t("dashboard-money-supply:description")}
+        description={t("description")}
         keywords={""}
       />
       <MoneySupplyDashboard

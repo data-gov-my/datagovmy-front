@@ -31,7 +31,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
-    type: { label: t("dashboard-name-popularity:first_name"), value: "first" },
+    type: { label: t("first_name"), value: "first" },
     name: "",
     validation: false,
     params: {},
@@ -40,7 +40,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   });
 
   const { data: compareData, setData: setCompareData } = useData({
-    type: { label: t("dashboard-name-popularity:first_name"), value: "compare_first" },
+    type: { label: t("first_name"), value: "compare_first" },
     name: "",
     names: [],
     validation: false,
@@ -72,13 +72,13 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   }, [compareData.params]);
 
   const filterTypes: Array<OptionType> = [
-    { label: t("dashboard-name-popularity:first_name"), value: "first" },
-    { label: t("dashboard-name-popularity:last_name"), value: "last" },
+    { label: t("first_name"), value: "first" },
+    { label: t("last_name"), value: "last" },
   ];
 
   const compareFilterTypes: Array<OptionType> = [
-    { label: t("dashboard-name-popularity:first_name"), value: "compare_first" },
-    { label: t("dashboard-name-popularity:last_name"), value: "compare_last" },
+    { label: t("first_name"), value: "compare_first" },
+    { label: t("last_name"), value: "compare_last" },
   ];
 
   const processName = (input: string): string => {
@@ -101,8 +101,8 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
       setSearchData(
         "validation",
         searchData.type.value === "first"
-          ? t("dashboard-name-popularity:search_validation_first")
-          : t("dashboard-name-popularity:search_validation_last")
+          ? t("search_validation_first")
+          : t("search_validation_last")
       );
     }
   };
@@ -138,7 +138,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         compare_name: "true",
       });
     } else {
-      setCompareData("validation", t("dashboard-name-popularity:compare_validation"));
+      setCompareData("validation", t("compare_validation"));
     }
     setCompareData("name", "");
   };
@@ -182,8 +182,8 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
           t("common:nav.megamenu.categories.demography"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-name-popularity:header")]}
-        description={[t("dashboard-name-popularity:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency="Jabatan Pendaftaran Negara"
@@ -193,14 +193,12 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         }
       />
       <Container className="min-h-screen">
-        <Section title={t("dashboard-name-popularity:section1_title")}>
+        <Section title={t("section1_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow">
                 <div className="flex flex-row gap-4">
-                  <span className="text-sm font-medium">
-                    {t("dashboard-name-popularity:search_radio_label")}
-                  </span>
+                  <span className="text-sm font-medium">{t("search_radio_label")}</span>
                   <Radio
                     name="type"
                     className="inline-flex gap-4"
@@ -240,13 +238,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     className="btn btn-primary"
                     onClick={searchHandler}
                   >
-                    {t("dashboard-name-popularity:search_button")}
+                    {t("search_button")}
                   </Button>
                 </div>
-                <p className="text-dim text-sm">{t("dashboard-name-popularity:search_details")}</p>
-                <p className="text-dim text-sm">
-                  {t("dashboard-name-popularity:search_disclaimer")}
-                </p>
+                <p className="text-dim text-sm">{t("search_details")}</p>
+                <p className="text-dim text-sm">{t("search_disclaimer")}</p>
               </Card>
             </div>
             {!showPlaceholder && !searchData.data ? (
@@ -272,18 +268,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                           <>
                             <p className="text-lg font-bold">
                               <span>
-                                {t(
-                                  `dashboard-name-popularity:bar_title_${searchData.params.type}`,
-                                  {
-                                    count: searchData.data.total || 0,
-                                  }
-                                )}
+                                {t(`bar_title_${searchData.params.type}`, {
+                                  count: searchData.data.total || 0,
+                                })}
                               </span>
                               <span>{`"${searchData.params.name}".`}</span>
                             </p>
                             <p className="text-dim text-sm">
                               <span>
-                                {t("dashboard-name-popularity:bar_description", {
+                                {t("bar_description", {
                                   name: searchData.params.name,
                                 })}
                               </span>
@@ -328,7 +321,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     />
                     <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
                       <MagnifyingGlassIcon className=" h-4 w-4" />
-                      <p>{t("dashboard-name-popularity:search_prompt")}</p>
+                      <p>{t("search_prompt")}</p>
                     </Card>
                   </div>
                 )}
@@ -337,15 +330,13 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
           </div>
         </Section>
 
-        <Section title={t("dashboard-name-popularity:section2_title")}>
+        <Section title={t("section2_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow">
                 <div className="flex flex-col justify-start gap-3">
                   <div className="flex flex-col gap-4">
-                    <span className="text-sm font-medium">
-                      {t("dashboard-name-popularity:compare_radio")}
-                    </span>
+                    <span className="text-sm font-medium">{t("compare_radio")}</span>
                     <Radio
                       name="compare_type"
                       className="inline-flex gap-4"
@@ -407,13 +398,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     className="btn btn-primary"
                     onClick={compareHandler}
                   >
-                    {t("dashboard-name-popularity:compare_button")}
+                    {t("compare_button")}
                   </Button>
                 </div>
 
-                <p className="text-dim text-sm">
-                  {t("dashboard-name-popularity:search_disclaimer")}
-                </p>
+                <p className="text-dim text-sm">{t("search_disclaimer")}</p>
               </Card>
             </div>
 
@@ -423,12 +412,12 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               <div className="col-span-full flex h-[460px] flex-col gap-3 lg:col-span-2">
                 <div className="flex flex-col gap-2 md:flex-row md:justify-between">
                   <p className="text-lg font-bold">
-                    <span>{t("dashboard-name-popularity:compare_title")}</span>
+                    <span>{t("compare_title")}</span>
                   </p>
                   <Toggle
                     enabled={false}
                     onStateChanged={checked => setCompareData("order", checked)}
-                    label={t("dashboard-name-popularity:compare_toggle")}
+                    label={t("compare_toggle")}
                   />
                 </div>
 
@@ -437,14 +426,10 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     <tr className="md:text-md border-b-outline dark:border-washed-dark max-w-full border-b-2 text-left text-sm [&>*]:p-2">
                       <th className="md:w-[50px]">#</th>
                       <th className="md:w-1/3">
-                        {compareData.params.type === "last"
-                          ? t("dashboard-name-popularity:last_name")
-                          : t("dashboard-name-popularity:first_name")}
+                        {compareData.params.type === "last" ? t("last_name") : t("first_name")}
                       </th>
-                      <th className="md:w-1/3">{t("dashboard-name-popularity:table_total")}</th>
-                      <th className="md:w-1/3">
-                        {t("dashboard-name-popularity:table_most_popular")}
-                      </th>
+                      <th className="md:w-1/3">{t("table_total")}</th>
+                      <th className="md:w-1/3">{t("table_most_popular")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -504,7 +489,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         <td colSpan={5}>
                           <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark my-3 hidden w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto lg:flex">
                             <MagnifyingGlassIcon className=" h-4 w-4" />
-                            <p>{t("dashboard-name-popularity:compare_prompt")}</p>
+                            <p>{t("compare_prompt")}</p>
                           </Card>
                         </td>
                       </tr>

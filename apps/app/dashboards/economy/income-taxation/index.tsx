@@ -20,8 +20,8 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({}) => {
       <Hero
         background="orange"
         category={[t("common:nav.megamenu.categories.economy"), "text-[#FF820E]"]}
-        header={[t("dashboard-income-taxation:header")]}
-        description={[t("dashboard-income-taxation:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Internal Revenue Board"}

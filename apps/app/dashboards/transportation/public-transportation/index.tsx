@@ -23,8 +23,8 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) 
           t("common:nav.megamenu.categories.transportation"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-public-transportation:header")]}
-        description={[t("dashboard-public-transportation:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Transport (MoT)"}

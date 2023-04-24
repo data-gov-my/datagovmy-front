@@ -36,7 +36,7 @@ const BloodDonationState: Page = ({
         ...previous,
         [current[0]]: current[1].map((item: any) => ({
           ...item,
-          x: t("dashboard-blood-donation:".concat(item.x)),
+          x: t("".concat(item.x)),
         })),
       };
     }, {});
@@ -49,7 +49,7 @@ const BloodDonationState: Page = ({
           " - ",
           t("common:nav.megamenu.dashboards.blood_donation")
         )}
-        description={t("dashboard-blood-donation:description")}
+        description={t("description")}
         keywords=""
       />
       <BloodDonationDashboard

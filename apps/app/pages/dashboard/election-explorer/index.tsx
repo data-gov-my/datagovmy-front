@@ -12,11 +12,7 @@ const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProp
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-election-explorer:header")}
-        description={t("dashboard-election-explorer:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionExplorerDashboard />
     </>
   );

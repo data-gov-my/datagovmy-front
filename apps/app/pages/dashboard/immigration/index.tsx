@@ -12,11 +12,7 @@ const Immigration: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) =
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-immigration:header")}
-        description={t("dashboard-immigration:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ImmigrationDashboard />
     </>
   );

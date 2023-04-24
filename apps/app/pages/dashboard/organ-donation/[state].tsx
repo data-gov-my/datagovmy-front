@@ -24,8 +24,8 @@ const OrganDonationState: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-organ-donation:header"))}
-        description={t("dashboard-organ-donation:description")}
+        title={CountryAndStates[state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <OrganDonationDashboard

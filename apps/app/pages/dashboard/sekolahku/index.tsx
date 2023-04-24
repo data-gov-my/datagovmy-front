@@ -12,11 +12,7 @@ const Sekolahku: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => 
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-sekolahku:header")}
-        description={t("dashboard-sekolahku:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SekolahkuDashboard />
     </>
   );
