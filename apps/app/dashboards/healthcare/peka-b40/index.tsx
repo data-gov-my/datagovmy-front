@@ -46,7 +46,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
     <>
       <Hero
         background="purple"
-        category={[t("nav.megamenu.categories.healthcare"), "text-purple"]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-purple"]}
         header={[t("dashboard-peka-b40:header")]}
         description={
           <>

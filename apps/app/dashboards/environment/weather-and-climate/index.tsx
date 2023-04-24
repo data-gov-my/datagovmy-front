@@ -19,7 +19,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({}) => {
     <>
       <Hero
         background="green"
-        category={[t("nav.megamenu.categories.environment"), "text-[#16A34A]"]}
+        category={[t("common:nav.megamenu.categories.environment"), "text-[#16A34A]"]}
         header={[t("dashboard-weather-and-climate:header")]}
         description={[t("dashboard-weather-and-climate:description")]}
         agencyBadge={

@@ -144,7 +144,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.demography"), "text-primary"]}
+        category={[t("common:nav.megamenu.categories.demography"), "text-primary"]}
         header={[t("dashboard-birthday-explorer:header")]}
         description={
           <p className={"text-dim dark:text-outline xl:w-2/3"}>

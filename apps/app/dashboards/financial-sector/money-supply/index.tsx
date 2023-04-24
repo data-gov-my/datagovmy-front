@@ -228,7 +228,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.financial_sector")]}
+        category={[t("common:nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-money-supply:header")]}
         description={[t("dashboard-money-supply:description")]}
         last_updated={last_updated}

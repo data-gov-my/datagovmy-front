@@ -103,7 +103,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
     <>
       <Hero
         background="gray"
-        category={[t("home.category"), "text-primary dark:text-primary-dark"]}
+        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[
           t("common:dashboard.header").concat(
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""

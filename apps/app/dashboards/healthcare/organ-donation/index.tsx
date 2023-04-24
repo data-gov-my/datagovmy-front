@@ -66,7 +66,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
     <>
       <Hero
         background="green"
-        category={[t("nav.megamenu.categories.healthcare"), "text-[#16A34A]"]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-[#16A34A]"]}
         header={[t("dashboard-organ-donation:header")]}
         description={
           <>

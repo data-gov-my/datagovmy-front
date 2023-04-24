@@ -19,7 +19,7 @@ const Tracker999: FunctionComponent<Tracker999Props> = ({}) => {
     <>
       <Hero
         background="red"
-        category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-danger"]}
         header={[t("dashboard-999-tracker:header")]}
         description={[t("dashboard-999-tracker:description")]}
         agencyBadge={

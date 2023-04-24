@@ -156,7 +156,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.financial_sector")]}
+        category={[t("common:nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-interest-rates:header")]}
         description={[t("dashboard-interest-rates:description")]}
         last_updated={last_updated}

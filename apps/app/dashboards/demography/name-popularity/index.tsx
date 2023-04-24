@@ -178,7 +178,10 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.demography"), "text-primary dark:text-primary-dark"]}
+        category={[
+          t("common:nav.megamenu.categories.demography"),
+          "text-primary dark:text-primary-dark",
+        ]}
         header={[t("dashboard-name-popularity:header")]}
         description={[t("dashboard-name-popularity:description")]}
         agencyBadge={

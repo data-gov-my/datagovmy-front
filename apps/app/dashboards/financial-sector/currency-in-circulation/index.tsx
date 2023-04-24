@@ -158,7 +158,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.financial_sector")]}
+        category={[t("common:nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-currency-in-circulation:header")]}
         description={[t("dashboard-currency-in-circulation:description")]}
         last_updated={last_updated}

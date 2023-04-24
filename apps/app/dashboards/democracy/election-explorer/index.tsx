@@ -51,7 +51,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({}) => {
     <>
       <Hero
         background="red"
-        category={[t("nav.megamenu.categories.democracy"), "text-danger"]}
+        category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
         header={[t("dashboard-election-explorer:header")]}
         description={[t("dashboard-election-explorer:description")]}
         agencyBadge={

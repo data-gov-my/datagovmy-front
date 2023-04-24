@@ -19,7 +19,7 @@ const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) =>
     <>
       <Hero
         background="orange"
-        category={[t("nav.megamenu.categories.economy"), "text-[#FF820E]"]}
+        category={[t("common:nav.megamenu.categories.economy"), "text-[#FF820E]"]}
         header={[t("dashboard-retirement-readiness:header")]}
         description={[t("dashboard-retirement-readiness:description")]}
         agencyBadge={

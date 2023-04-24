@@ -19,7 +19,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({}) => {
     <>
       <Hero
         background="purple"
-        category={[t("nav.megamenu.categories.demography"), "text-[#7C3AED]"]}
+        category={[t("common:nav.megamenu.categories.demography"), "text-[#7C3AED]"]}
         header={[t("dashboard-immigration:header")]}
         description={[t("dashboard-immigration:description")]}
         agencyBadge={

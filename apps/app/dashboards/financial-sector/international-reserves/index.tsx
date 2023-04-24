@@ -80,7 +80,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.financial_sector")]}
+        category={[t("common:nav.megamenu.categories.financial_sector")]}
         header={[t("dashboard-international-reserves:header")]}
         description={[t("dashboard-international-reserves:description")]}
         last_updated={last_updated}

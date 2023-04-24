@@ -19,7 +19,10 @@ const SocialSecurity: FunctionComponent<SocialSecurityProps> = ({}) => {
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.economy"), "text-primary dark:text-primary-dark"]}
+        category={[
+          t("common:nav.megamenu.categories.economy"),
+          "text-primary dark:text-primary-dark",
+        ]}
         header={[t("dashboard-social-security:header")]}
         description={[t("dashboard-social-security:description")]}
         agencyBadge={

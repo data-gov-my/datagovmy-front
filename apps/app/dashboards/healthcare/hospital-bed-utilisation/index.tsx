@@ -19,7 +19,7 @@ const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = (
     <>
       <Hero
         background="red"
-        category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-danger"]}
         header={[t("dashboard-hospital-bed-utilisation:header")]}
         description={[t("dashboard-hospital-bed-utilisation:description")]}
         agencyBadge={

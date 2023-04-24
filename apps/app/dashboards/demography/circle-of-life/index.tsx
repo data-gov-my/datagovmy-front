@@ -19,7 +19,10 @@ const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.demography"), "text-primary dark:text-primary-dark"]}
+        category={[
+          t("common:nav.megamenu.categories.demography"),
+          "text-primary dark:text-primary-dark",
+        ]}
         header={[t("dashboard-circle-of-life:header")]}
         description={[t("dashboard-circle-of-life:description")]}
         agencyBadge={

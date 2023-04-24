@@ -173,7 +173,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.economy"), "text-green-700"]}
+        category={[t("common:nav.megamenu.categories.economy"), "text-green-700"]}
         header={[t("dashboard-consumer-prices:header")]}
         description={[t("dashboard-consumer-prices:description"), "dark:text-white"]}
         last_updated={last_updated}

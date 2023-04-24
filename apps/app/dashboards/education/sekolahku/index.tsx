@@ -19,7 +19,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.education"), "text-primary dark:text-primary-dark"]}
+        category={[
+          t("common:nav.megamenu.categories.education"),
+          "text-primary dark:text-primary-dark",
+        ]}
         header={[t("dashboard-sekolahku:header")]}
         description={[t("dashboard-sekolahku:description")]}
         agencyBadge={

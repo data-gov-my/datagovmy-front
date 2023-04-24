@@ -87,8 +87,8 @@ const Home: Page = ({
 
       <Hero
         background="gray"
-        category={[t("home.category"), "text-primary dark:text-primary-dark"]}
-        header={[t("home.title")]}
+        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
+        header={[t("common:home.title")]}
         description={
           <div className="space-y-6">
             <p className="text-dim xl:w-2/3">{t("common:home.description")}</p>
