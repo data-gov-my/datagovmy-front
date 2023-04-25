@@ -1,9 +1,10 @@
 import AgencyBadge from "@components/AgencyBadge";
-import { Hero } from "@components/index";
+import { Hero, Section } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
 import { MOEIcon } from "@components/Icon/agency";
+import ComboBox from "@components/Combobox";
 
 /**
  * Sekolahku Dashboard
@@ -34,7 +35,23 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
         }
       />
       {/* Rest of page goes here */}
-      <Container className="min-h-screen"></Container>
+      <Container className="min-h-screen">
+        <Section>
+          <div className="space-y-6">
+            <h4 className="text-center">{t("section_1")}</h4>
+            <div className="flex items-center justify-center">
+              <ComboBox
+                placeholder={t("search_school")}
+                options={[]}
+                selected={null}
+                onChange={e => {
+                  null;
+                }}
+              />
+            </div>
+          </div>
+        </Section>
+      </Container>
     </>
   );
 };
