@@ -276,7 +276,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                   className="text-dim hover:bg-washed dark:hover:bg-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 py-2 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={Array.isArray(selected) && selected.length === 0}
                 >
-                  <p>{t("common.clear")}</p>
+                  <p>{t("common:common.clear")}</p>
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                     <XMarkIcon className="h-5 w-5" />
                   </span>

@@ -30,7 +30,7 @@ const ChartHeader: FunctionComponent<ChartHeaderProps> = ({
             )}
             {state && typeof state === "string" ? (
               <p className="text-dim pt-4 text-sm">
-                {t("common.data_for", { state: CountryAndStates[state] })}
+                {t("common:common.data_for", { state: CountryAndStates[state] })}
               </p>
             ) : (
               <>{state}</>

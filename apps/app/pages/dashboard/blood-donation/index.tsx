@@ -2,7 +2,7 @@ import Metadata from "@components/Metadata";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import { DateTime } from "luxon";
 
@@ -20,7 +20,7 @@ const BloodDonation = ({
   map_facility,
   choropleth_malaysia_blood_donation,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-blood-donation"]);
+  const { t } = useTranslation(["dashboard-blood-donation", "common"]);
 
   let vars: Record<string, any> = {};
 
@@ -30,7 +30,7 @@ const BloodDonation = ({
         ...previous,
         [current[0]]: current[1].map((item: any) => ({
           ...item,
-          x: t("dashboard-blood-donation:".concat(item.x)),
+          x: t(item.x),
         })),
       };
     }, {});
@@ -38,7 +38,11 @@ const BloodDonation = ({
 
   return (
     <>
-      <Metadata title={t("nav.megamenu.dashboards.blood_donation")} description="" keywords="" />
+      <Metadata
+        title={t("common:nav.megamenu.dashboards.blood_donation")}
+        description=""
+        keywords=""
+      />
       <BloodDonationDashboard
         last_updated={last_updated}
         timeseries_all={timeseries_all}
@@ -60,9 +64,7 @@ const BloodDonation = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-blood-donation"]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-blood-donation", async () => {
   const { data } = await get("/dashboard", { dashboard: "blood_donation", state: "mys" });
 
   // transform:
@@ -78,7 +80,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     notFound: false,
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       timeseries_all: data.timeseries_all,
       timeseries_bloodstock: data.timeseries_bloodstock,
@@ -94,6 +95,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default BloodDonation;

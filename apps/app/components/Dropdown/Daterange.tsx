@@ -64,8 +64,8 @@ const Range: FunctionComponent<DaterangeProps> = ({
               >
                 <ClockIcon className="h-4 w-4 text-black dark:text-white" />
                 <p className="text-sm">
-                  {(selected && selected[0] && selected[0].label) ?? t("catalogue.begin")} -{" "}
-                  {(selected && selected[1] && selected[1].label) ?? t("catalogue.end")}
+                  {(selected && selected[0] && selected[0].label) ?? t("common:catalogue.begin")} -{" "}
+                  {(selected && selected[1] && selected[1].label) ?? t("common:catalogue.end")}
                 </p>
 
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
@@ -90,13 +90,13 @@ const Range: FunctionComponent<DaterangeProps> = ({
                   <div className="relative">
                     <div className="dark:border-washed-dark sticky top-0 z-20 grid w-[250px] grid-cols-2 border-b bg-white px-4 py-3 dark:bg-black">
                       <p className="text-dim whitespace-nowrap">
-                        {t("catalogue.begin")}:{" "}
+                        {t("common:catalogue.begin")}:{" "}
                         <span className="text-black dark:text-white">
                           {selected && selected[0] && selected[0].label}
                         </span>
                       </p>
                       <p className="text-dim whitespace-nowrap">
-                        {t("catalogue.end")}:{" "}
+                        {t("common:catalogue.end")}:{" "}
                         <span className="text-black dark:text-white">
                           {selected && selected[1] && selected[1].label}
                         </span>
@@ -170,7 +170,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                     onClick={onReset}
                     disabled={selected?.every(item => item === undefined)}
                   >
-                    {t("common.reset_default")}
+                    {t("common:common.reset_default")}
                   </Button>
                 </Popover.Panel>
               </Transition>

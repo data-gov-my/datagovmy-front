@@ -13,18 +13,18 @@ import { MOFIcon } from "@components/Icon/agency";
 interface PublicContractingProps {}
 
 const PublicContracting: FunctionComponent<PublicContractingProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-public-contracting"]);
+  const { t, i18n } = useTranslation(["dashboard-public-contracting", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.public_finances"),
+          t("common:nav.megamenu.categories.public_finances"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-public-contracting:header")]}
-        description={[t("dashboard-public-contracting:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Finance (MoF)"}

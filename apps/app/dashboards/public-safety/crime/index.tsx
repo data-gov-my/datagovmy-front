@@ -13,15 +13,15 @@ import { PDRMIcon } from "@components/Icon/agency";
 interface CrimeProps {}
 
 const Crime: FunctionComponent<CrimeProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-crime"]);
+  const { t, i18n } = useTranslation(["dashboard-crime", "common"]);
 
   return (
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.public_safety"), "text-black"]}
-        header={[t("dashboard-crime:header")]}
-        description={[t("dashboard-crime:description")]}
+        category={[t("common:nav.megamenu.categories.public_safety"), "text-black"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Royal Malaysian Police (PDRM)"}

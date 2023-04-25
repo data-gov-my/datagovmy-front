@@ -17,13 +17,13 @@ const JitterplotOverlay: FunctionComponent<JitterplotOverlayProps> = ({ areaType
           <div className="-mt-20 grid grid-cols-3 items-center justify-items-center pb-4 lg:-mt-12">
             <p className="text-dim flex items-center gap-4 text-sm lg:text-base">
               <ChevronLeftIcon className="h-4 w-4" />
-              {t("kawasanku.below_median")}
+              {t("common:kawasanku.below_median")}
             </p>
             <p className="text-center text-sm font-medium lg:text-lg">
-              {t("kawasanku.median", { type: t(`kawasanku.area_types.${areaType}s`) })}
+              {t("common:kawasanku.median", { type: t(`kawasanku.area_types.${areaType}s`) })}
             </p>
             <p className="text-dim flex items-center gap-2 text-end text-sm lg:text-base">
-              {t("kawasanku.above_median")}
+              {t("common:kawasanku.above_median")}
               <ChevronRightIcon className="h-4 w-4" />
             </p>
           </div>

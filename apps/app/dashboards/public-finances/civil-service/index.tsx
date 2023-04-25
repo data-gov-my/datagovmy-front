@@ -13,18 +13,18 @@ import { JPAIcon } from "@components/Icon/agency";
 interface CivilServiceProps {}
 
 const CivilService: FunctionComponent<CivilServiceProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-civil-service"]);
+  const { t, i18n } = useTranslation(["dashboard-civil-service", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.public_finances"),
+          t("common:nav.megamenu.categories.public_finances"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-civil-service:header")]}
-        description={[t("dashboard-civil-service:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Public Service Department (JPA)"}

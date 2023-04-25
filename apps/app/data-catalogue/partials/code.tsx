@@ -14,22 +14,22 @@ const CatalogueCode: FunctionComponent<CatalogueCodeProps> = ({ type, url }) => 
   const template = useMemo(() => {
     switch (type) {
       case "GEOJSON":
-        return `# ${t("catalogue.code_note")}: pip install pandas matplotlib geopandas
+        return `# ${t("common:catalogue.code_note")}: pip install pandas matplotlib geopandas
 import pandas as pd
 import matplotlib.pyplot as plt
 import geopandas as gpd
 
-${t("catalogue.code_comments.geojson_1")}
+${t("common:catalogue.code_comments.geojson_1")}
 URL_GEOJSON = '${url}'
 URL_GEOJSON_LIGHT = URL_GEOJSON.replace('.geojson','_light.geojson')
 MAPSIZE = [10,5]
 
 geo = gpd.read_file(URL_GEOJSON_LIGHT)
 
-${t("catalogue.code_comments.geojson_2")}
+${t("common:catalogue.code_comments.geojson_2")}
 geo.loc[~geo.code_state.isin([12, 13, 15]), 'geometry'] = geo.geometry.translate(4.5, 0.5)
 
-${t("catalogue.code_comments.geojson_3")}
+${t("common:catalogue.code_comments.geojson_3")}
 # geo.loc[~geo.code_state.isin([12, 13, 15]), 'geometry'] = geo.geometry.translate(9, 4.5)
 # MAPSIZE = [7,7]
 
@@ -44,7 +44,7 @@ ax.set_title('Your Map Title')
 geo.plot(facecolor='#ffffff', linewidth=0.5, edgecolor='black', ax=ax)`;
 
       default: // TIMESERIES | CHOROPLETH | TABLE
-        return `# ${t("catalogue.code_note")}: pip install pandas fastparquet
+        return `# ${t("common:catalogue.code_note")}: pip install pandas fastparquet
 import pandas as pd
 
 URL_DATA = '${url}'

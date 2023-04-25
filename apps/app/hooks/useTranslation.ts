@@ -3,7 +3,6 @@ import { interpolate } from "@lib/helpers";
 
 /**
  * Modified translation hook. Supports anchor (<a>) tag generation.
- *
  * @param namespace i18n Translation file
  * @returns t, i18n
  */

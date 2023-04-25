@@ -1,10 +1,10 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import Dashboard from "@dashboards/index";
 import { get } from "@lib/api";
+import { withi18n } from "@lib/decorators";
 
 const DashboardIndex: Page = ({
   analytics,
@@ -16,20 +16,17 @@ const DashboardIndex: Page = ({
 
   return (
     <>
-      <Metadata title={t("nav.dashboards")} description={""} keywords={""} />
+      <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
       <Dashboard query={query} sources={sources} analytics={analytics} dashboards={dashboards} />
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getServerSideProps: GetServerSideProps = withi18n(null, async ({ query }) => {
   const { data } = await get("/dashboard/", { dashboard: "dashboards" });
 
   return {
     props: {
-      ...i18n,
       query: query ?? {},
       data: data,
       sources: data.agencies_all.data,
@@ -51,6 +48,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query }) 
       dashboards: data.dashboards_all.data,
     },
   };
-};
+});
 
 export default DashboardIndex;

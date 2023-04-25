@@ -13,15 +13,18 @@ import { KWAPIcon } from "@components/Icon/agency";
 interface PublicPensionProps {}
 
 const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-public-pension"]);
+  const { t, i18n } = useTranslation(["dashboard-public-pension", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.economy"), "text-primary dark:text-primary-dark"]}
-        header={[t("dashboard-public-pension:header")]}
-        description={[t("dashboard-public-pension:description")]}
+        category={[
+          t("common:nav.megamenu.categories.economy"),
+          "text-primary dark:text-primary-dark",
+        ]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Retirement Fund Inc (KWAP)"}

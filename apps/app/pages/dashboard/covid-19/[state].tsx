@@ -2,13 +2,12 @@ import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import COVID19Dashboard from "@dashboards/healthcare/covid-19";
 import { get } from "@lib/api";
 import { CountryAndStates, STATES } from "@lib/constants";
-import { sortMsiaFirst } from "@lib/helpers";
+import { clx, sortMsiaFirst } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useRouter } from "next/router";
+import { withi18n } from "@lib/decorators";
 import Fonts from "@config/font";
 
 const COVID19State: Page = ({
@@ -25,7 +24,7 @@ const COVID19State: Page = ({
   statistics,
   state,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-19"]);
+  const { t } = useTranslation(["dashboard-covid-19", "common"]);
   return (
     <>
       <Metadata
@@ -50,16 +49,10 @@ const COVID19State: Page = ({
   );
 };
 
-COVID19State.layout = page => (
+COVID19State.layout = (page, props) => (
   <Layout
-    className={[Fonts.body.variable, "font-sans"].join(" ")}
-    stateSelector={
-      <StateDropdown
-        url={routes.COVID_19}
-        currentState={(useRouter().query.state as string) ?? "mys"}
-        hideOnScroll
-      />
-    }
+    className={clx(Fonts.body.variable, "font-sans")}
+    stateSelector={<StateDropdown url={routes.COVID_19} currentState={props?.state} hideOnScroll />}
   >
     <StateModal url={routes.COVID_19} />
     {page}
@@ -89,9 +82,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", async ({ params }) => {
   const { data } = await get("/dashboard", { dashboard: "covid_epid", state: params?.state });
   data.snapshot_table.data = sortMsiaFirst(data.snapshot_table.data, "state");
 
@@ -108,11 +99,10 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
       timeseries_vents: data.timeseries_vents,
       util_chart: data.util_chart,
       statistics: data.statistics,
-      state: params?.state,
-      ...i18n,
+      state: params?.state ?? "mys",
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default COVID19State;

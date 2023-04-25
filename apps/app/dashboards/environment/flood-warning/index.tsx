@@ -13,15 +13,15 @@ import { MET_FloodIcon } from "@components/Icon/agency";
 interface FloodWarningProps {}
 
 const FloodWarning: FunctionComponent<FloodWarningProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-flood-warning"]);
+  const { t, i18n } = useTranslation(["dashboard-flood-warning", "common"]);
 
   return (
     <>
       <Hero
         background="green"
-        category={[t("nav.megamenu.categories.environment"), "text-[#16A34A]"]}
-        header={[t("dashboard-flood-warning:header")]}
-        description={[t("dashboard-flood-warning:description")]}
+        category={[t("common:nav.megamenu.categories.environment"), "text-[#16A34A]"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Irrigation & Drainage Department (JPS)"}

@@ -4,20 +4,20 @@ import Metadata from "@components/Metadata";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 
 const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
   return (
     <>
-      <Metadata title={t("error.404.title") as string} keywords={""} />
+      <Metadata title={t("common:error.404.title") as string} keywords={""} />
 
       <Container className="min-h-[76vh] pt-7 text-black">
         <ErrorCode
-          title={t("error.404.title") as string}
-          description={t("error.404.description")}
+          title={t("common:error.404.title") as string}
+          description={t("common:error.404.description")}
           code={404}
-          reason={t("error.404.reason")}
+          reason={t("common:error.404.reason")}
         />
       </Container>
     </>
@@ -26,11 +26,8 @@ const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Error404;
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"], null);
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
-    props: {
-      ...i18n,
-    },
+    props: {},
   };
-};
+});

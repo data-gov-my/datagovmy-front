@@ -1,18 +1,18 @@
 import Metadata from "@components/Metadata";
 import NamePopularityDashboard from "@dashboards/demography/name-popularity";
 import { useTranslation } from "@hooks/useTranslation";
+import { withi18n } from "@lib/decorators";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-name-popularity"]);
+  const { t } = useTranslation(["dashboard-name-popularity", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.name_popularity")}
-        description={t("dashboard-name-popularity:description")}
+        title={t("common:nav.megamenu.dashboards.name_popularity")}
+        description={t("description")}
         keywords={""}
       />
       <NamePopularityDashboard />
@@ -20,13 +20,10 @@ const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticPr
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-name-popularity"]);
+export const getStaticProps: GetStaticProps = withi18n("dashboard-name-popularity", async () => {
   return {
-    props: {
-      ...i18n,
-    },
+    props: {},
   };
-};
+});
 
 export default NamePopularity;

@@ -91,7 +91,7 @@ module.exports = function (
             base_dir,
             "public/locales/ms-MY/dashboard-{{dashCase dashboard_name}}.json"
           ),
-          templateFile: path.join(base_dir, "plop-templates/dashboard-translation.json.hbs"),
+          templateFile: path.join(base_dir, "templates/dashboard-translation.json.hbs"),
           skipIfExists: true,
         },
       ],

@@ -13,15 +13,15 @@ import { METIcon } from "@components/Icon/agency";
 interface WeatherandClimateProps {}
 
 const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-weather-and-climate"]);
+  const { t, i18n } = useTranslation(["dashboard-weather-and-climate", "common"]);
 
   return (
     <>
       <Hero
         background="green"
-        category={[t("nav.megamenu.categories.environment"), "text-[#16A34A]"]}
-        header={[t("dashboard-weather-and-climate:header")]}
-        description={[t("dashboard-weather-and-climate:description")]}
+        category={[t("common:nav.megamenu.categories.environment"), "text-[#16A34A]"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Metereology Department"}

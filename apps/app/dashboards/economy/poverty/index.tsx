@@ -13,15 +13,15 @@ import { ICUJPMIcon } from "@components/Icon/agency";
 interface PovertyProps {}
 
 const Poverty: FunctionComponent<PovertyProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-poverty"]);
+  const { t, i18n } = useTranslation(["dashboard-poverty", "common"]);
 
   return (
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.economy"), "text-black"]}
-        header={[t("dashboard-poverty:header")]}
-        description={[t("dashboard-poverty:description")]}
+        category={[t("common:nav.megamenu.categories.economy"), "text-black"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Internal Coordination Unit (ICU JPM)"}

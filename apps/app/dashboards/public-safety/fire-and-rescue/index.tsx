@@ -13,15 +13,15 @@ import { BOMBAIcon } from "@components/Icon/agency";
 interface FireandRescueProps {}
 
 const FireandRescue: FunctionComponent<FireandRescueProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-fire-and-rescue"]);
+  const { t, i18n } = useTranslation(["dashboard-fire-and-rescue", "common"]);
 
   return (
     <>
       <Hero
         background="red"
-        category={[t("nav.megamenu.categories.public_safety"), "text-danger"]}
-        header={[t("dashboard-fire-and-rescue:header")]}
-        description={[t("dashboard-fire-and-rescue:description")]}
+        category={[t("common:nav.megamenu.categories.public_safety"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Fire and Rescue Department (BOMBA)"}

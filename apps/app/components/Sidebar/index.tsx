@@ -28,7 +28,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
         <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/5">
           <ul className="sticky top-14 flex h-[90vh] flex-col gap-2 overflow-auto pt-3">
             <li>
-              <h5 className={styles.base}>{t("catalogue.category")}</h5>
+              <h5 className={styles.base}>{t("common:catalogue.category")}</h5>
             </li>
             {categories.length > 0 ? (
               categories.map(([category, subcategory]) => (
@@ -68,7 +68,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
               ))
             ) : (
               <p className={[styles.base, "text-dim text-sm italic"].join(" ")}>
-                {t("common.no_entries")}
+                {t("common:common.no_entries")}
               </p>
             )}
           </ul>
@@ -83,7 +83,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                 icon={<Bars3BottomLeftIcon className="h-4 w-4" />}
                 onClick={() => setShow(true)}
               >
-                {t("catalogue.category")}
+                {t("common:catalogue.category")}
               </Button>
             </div>
             <Transition
@@ -99,13 +99,13 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
             >
               <ul className="flex flex-col gap-1 overflow-auto pt-2">
                 <li className="flex items-baseline justify-between">
-                  <h5 className={styles.base}>{t("catalogue.category")}</h5>
+                  <h5 className={styles.base}>{t("common:catalogue.category")}</h5>
                   <Button
                     className="btn btn-default mr-3 border text-sm"
                     icon={<XMarkIcon className="h-4 w-4" />}
                     onClick={() => setShow(false)}
                   >
-                    {t("common.close")}
+                    {t("common:common.close")}
                   </Button>
                 </li>
 
@@ -147,7 +147,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                   ))
                 ) : (
                   <p className={[styles.base, "text-dim text-sm italic"].join(" ")}>
-                    {t("common.no_entries")}
+                    {t("common:common.no_entries")}
                   </p>
                 )}
               </ul>

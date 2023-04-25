@@ -1,4 +1,5 @@
 const I18NextHttpBackend = require("i18next-http-backend");
+const path = require("path");
 
 const namespace = [
   "common",
@@ -40,29 +41,49 @@ const namespace = [
   "dashboard-weather-and-climate",
 ];
 
-/** @type {import('next-i18next').UserConfig} */
-module.exports = {
-  i18n: {
-    defaultLocale: "en-GB",
-    locales: ["en-GB", "ms-MY"],
-    backend: {
-      loadPath: (lang, namespace) => {
-        return `${process.env.NEXT_PUBLIC_API_URL}/i18n?lang=${lang}&filename=${namespace}`;
-      },
-      customHeaders: {
-        Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
-      },
+const config = {
+  development: {
+    i18n: {
+      defaultLocale: "en-GB",
+      locales: ["en-GB", "ms-MY"],
+    },
+    localePath: path.resolve("./public/locales"),
+    load: "currentOnly",
+    preload: ["en-GB", "ms-MY"],
+    serializeConfig: false,
+    reloadOnPrerender: true,
+    react: {
+      bindI18n: "languageChanged",
+      bindI18nStore: "languageChanged",
+      useSuspense: true,
     },
   },
-  ns: namespace,
-  load: "currentOnly",
-  preload: ["en-GB", "ms-MY"],
-  serializeConfig: false,
-  reloadOnPrerender: true,
-  use: [I18NextHttpBackend],
-  react: {
-    bindI18n: "languageChanged loaded",
-    bindI18nStore: "languageChanged loaded",
-    useSuspense: true,
+  production: {
+    i18n: {
+      defaultLocale: "en-GB",
+      locales: ["en-GB", "ms-MY"],
+      backend: {
+        loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n?lang={{lng}}&filename={{ns}}`,
+        customHeaders: {
+          Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
+        },
+      },
+    },
+    ns: namespace,
+    load: "currentOnly",
+    preload: ["en-GB", "ms-MY"],
+    serializeConfig: false,
+    reloadOnPrerender: true,
+    use: [I18NextHttpBackend],
+    react: {
+      bindI18n: "languageChanged",
+      bindI18nStore: "languageChanged",
+      useSuspense: true,
+    },
   },
 };
+
+// Debug line: Uncomment to see production i18n on local
+// module.exports = config.production;
+
+module.exports = config[process.env.NODE_ENV];

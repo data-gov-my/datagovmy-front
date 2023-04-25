@@ -32,11 +32,11 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-international-reserves"]);
+  const { t, i18n } = useTranslation(["dashboard-international-reserves", "common"]);
 
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("dashboard-international-reserves:keys.no_shade"), value: "no_shade" },
-    { label: t("dashboard-international-reserves:keys.recession"), value: "recession" },
+    { label: t("keys.no_shade"), value: "no_shade" },
+    { label: t("keys.recession"), value: "recession" },
   ];
 
   const { data, setData } = useData({
@@ -80,13 +80,13 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.financial_sector")]}
-        header={[t("dashboard-international-reserves:header")]}
-        description={[t("dashboard-international-reserves:description")]}
+        category={[t("common:nav.megamenu.categories.financial_sector")]}
+        header={[t("header")]}
+        description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("agency.bnm")}
+            agency={t("common:agency.bnm")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BNMIcon />}
           />
@@ -95,10 +95,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
 
       <Container className="min-h-screen">
         {/* Key measures of BNM’s international reserves */}
-        <Section
-          title={t("dashboard-international-reserves:section_1.title")}
-          date={timeseries.data_as_of}
-        >
+        <Section title={t("section_1.title")} date={timeseries.data_as_of}>
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
@@ -119,7 +116,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
 
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
               <Timeseries
-                title={t("dashboard-international-reserves:keys.reserves_usd")}
+                title={t("keys.reserves_usd")}
                 className="h-[350px] w-full"
                 precision={[1, 1]}
                 interval="month"
@@ -144,7 +141,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("dashboard-international-reserves:keys.reserves_usd"),
+                      label: t("keys.reserves_usd"),
                       data: coordinate["reserves_usd"],
                       borderColor: AKSARA_COLOR.DARK_BLUE,
                       backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
@@ -156,7 +153,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
                     }),
                     value: `USD ${numFormat(
@@ -170,12 +167,12 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 ]}
               />
               <Timeseries
-                title={t("dashboard-international-reserves:keys.import_months")}
+                title={t("keys.import_months")}
                 className="h-[350px] w-full"
                 interval="month"
                 precision={[1, 1]}
                 tooltipFormat="dd MMM yyyy"
-                unitY={t("dashboard-international-reserves:section_1.months")}
+                unitY={t("section_1.months")}
                 axisY={{
                   y2: {
                     display: false,
@@ -194,7 +191,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("dashboard-international-reserves:keys.import_months"),
+                      label: t("keys.import_months"),
                       data: coordinate["import_months"],
                       borderColor: AKSARA_COLOR.DARK_BLUE,
                       backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
@@ -206,19 +203,19 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
                     }),
                     value: `${numFormat(
                       timeseries_callouts.data["import_months"].callout,
                       "standard",
                       [1, 1]
-                    )} ${t("dashboard-international-reserves:section_1.months_of_import")}`,
+                    )} ${t("section_1.months_of_import")}`,
                   },
                 ]}
               />
               <Timeseries
-                title={t("dashboard-international-reserves:keys.ed_scale")}
+                title={t("keys.ed_scale")}
                 className="h-[350px] w-full"
                 interval="month"
                 precision={[1, 1]}
@@ -242,7 +239,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   datasets: [
                     {
                       type: "line",
-                      label: t("dashboard-international-reserves:keys.ed_scale"),
+                      label: t("keys.ed_scale"),
                       data: coordinate["ed_scale"],
                       borderColor: AKSARA_COLOR.DARK_BLUE,
                       backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
@@ -254,16 +251,14 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 }}
                 stats={[
                   {
-                    title: t("common.latest", {
+                    title: t("common:common.latest", {
                       date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
                     }),
                     value: `${numFormat(
                       timeseries_callouts.data["ed_scale"].callout,
                       "standard",
                       [1, 1]
-                    )}x ${t(
-                      "dashboard-international-reserves:section_1.short_term_external_debt"
-                    )}`,
+                    )}x ${t("section_1.short_term_external_debt")}`,
                   },
                 ]}
               />
@@ -273,21 +268,21 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         {/* I want to understand more about BNM’s international reserves */}
         <Section
           className="py-12"
-          title={t("dashboard-international-reserves:section_2.title")}
+          title={t("section_2.title")}
           description={
             <p className="text-dim whitespace-pre-line text-base">
-              {t("dashboard-international-reserves:section_2.description_part_1")}
+              {t("section_2.description_part_1")}
               {
                 <a
                   className="cursor-pointer underline hover:text-black hover:underline"
-                  href={t("dashboard-international-reserves:section_2.ir_explainer_url")}
+                  href={t("section_2.ir_explainer_url")}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t("dashboard-international-reserves:section_2.ir_explainer")}
+                  {t("section_2.ir_explainer")}
                 </a>
               }
-              {t("dashboard-international-reserves:section_2.description_part_2")}
+              {t("section_2.description_part_2")}
               {
                 <a
                   className="cursor-pointer underline hover:text-black hover:underline"
@@ -295,7 +290,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t("dashboard-international-reserves:section_2.official_bnm_site")}
+                  {t("section_2.official_bnm_site")}
                 </a>
               }
               .

@@ -11,7 +11,7 @@ export type AppPropsLayout = AppProps & {
 };
 
 export type Page = NextPage & {
-  layout?: (page: ReactNode) => ReactElement;
+  layout?: (page: ReactNode, props: Record<string, any>) => ReactElement;
 };
 
 // CHART INTERFACE

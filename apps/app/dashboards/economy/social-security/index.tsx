@@ -13,15 +13,18 @@ import { SOCSOIcon } from "@components/Icon/agency";
 interface SocialSecurityProps {}
 
 const SocialSecurity: FunctionComponent<SocialSecurityProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-social-security"]);
+  const { t, i18n } = useTranslation(["dashboard-social-security", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.economy"), "text-primary dark:text-primary-dark"]}
-        header={[t("dashboard-social-security:header")]}
-        description={[t("dashboard-social-security:description")]}
+        category={[
+          t("common:nav.megamenu.categories.economy"),
+          "text-primary dark:text-primary-dark",
+        ]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Social Security Organisation (SOCSO)"}

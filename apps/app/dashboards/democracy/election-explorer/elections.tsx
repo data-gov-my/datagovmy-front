@@ -52,11 +52,11 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
 
   const PANELS = [
     {
-      name: t("dashboard-election-explorer:election.parliament"),
+      name: t("election.parliament"),
       icon: <BuildingLibraryIcon className="mr-1 h-5 w-5" />,
     },
     {
-      name: t("dashboard-election-explorer:election.state"),
+      name: t("election.state"),
       icon: <FlagIcon className="mr-1 h-5 w-5" />,
     },
   ];
@@ -100,7 +100,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     "%_PH",
     "num_voters",
   ].map((key: string) => ({
-    label: t(`dashboard-election-explorer:election.${key}`),
+    label: t(`election.${key}`),
     value: key,
   }));
 
@@ -191,7 +191,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     columnHelper.accessor("name", {
       id: "name",
       cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
-      header: t("dashboard-election-explorer:candidate_name"),
+      header: t("candidate_name"),
     }),
     columnHelper.accessor((row: any) => row.party, {
       id: "party",
@@ -209,12 +209,12 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
           </div>
         );
       },
-      header: t("dashboard-election-explorer:party_name"),
+      header: t("party_name"),
     }),
     columnHelper.accessor("votes", {
       id: "votes",
       cell: (info: any) => numFormat(info.getValue(), "standard"),
-      header: t("dashboard-election-explorer:total_votes"),
+      header: t("total_votes"),
     }),
     columnHelper.accessor("perc", {
       id: "perc",
@@ -224,14 +224,14 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
           <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
         </div>
       ),
-      header: t("dashboard-election-explorer:perc_votes"),
+      header: t("perc_votes"),
     }),
   ];
 
   return (
     <>
       <Section>
-        <h4 className="text-center">{t("dashboard-election-explorer:election.section_1")}</h4>
+        <h4 className="text-center">{t("election.section_1")}</h4>
         <div className={clx(show ? "fixed right-0 top-16 z-10 lg:hidden" : "hidden")}>
           <Modal
             trigger={open => (
@@ -239,7 +239,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 onClick={open}
                 className="border-outline bg-background dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-lg"
               >
-                <span>{t("catalogue.filter")}:</span>
+                <span>{t("common:catalogue.filter")}:</span>
                 <span className="bg-primary dark:bg-primary-dark rounded-md px-1 py-0.5 text-xs text-white">
                   {3}
                 </span>
@@ -247,7 +247,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             )}
             title={
               <Label
-                label={t("catalogue.filter") + ":"}
+                label={t("common:catalogue.filter") + ":"}
                 className="block text-sm font-bold text-black dark:text-white"
               />
             }
@@ -255,7 +255,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             {close => (
               <div className="flex-grow space-y-4 overflow-y-auto pb-24 pt-4">
                 <Label
-                  label={t("dashboard-election-explorer:election.election") + ":"}
+                  label={t("election.election") + ":"}
                   className="block text-sm font-medium text-black dark:text-white"
                 />
                 <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
@@ -268,11 +268,11 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 </div>
                 <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
                   <Label
-                    label={t("dashboard-election-explorer:election.state") + ":"}
+                    label={t("election.state") + ":"}
                     className="block text-sm font-medium text-black dark:text-white"
                   />
                   <Label
-                    label={t("dashboard-election-explorer:election.election_year") + ":"}
+                    label={t("election.election_year") + ":"}
                     className="block text-sm font-medium text-black dark:text-white"
                   />
                   <StateDropdown
@@ -285,7 +285,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                   />
                   <Dropdown
                     width="w-full"
-                    placeholder={t("common.select")}
+                    placeholder={t("common:common.select")}
                     options={ELECTION_OPTIONS}
                     selected={ELECTION_OPTIONS.find(e => e.value === data.election.value)}
                     onChange={e => setData("election", e)}
@@ -293,10 +293,10 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 </div>
                 <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
                   <Button className="btn btn-primary w-full justify-center" onClick={close}>
-                    {t("dashboard-election-explorer:election.apply_filters")}
+                    {t("election.apply_filters")}
                   </Button>
                   <Button className="btn btn-default w-full justify-center" onClick={close}>
-                    {t("common.close")}
+                    {t("common:common.close")}
                   </Button>
                 </div>
               </div>
@@ -349,7 +349,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                   <Tabs
                     title={
                       <div className="text-base font-bold">
-                        {t("dashboard-election-explorer:election.parliament_of")}
+                        {t("election.parliament_of")}
                         <span className="text-primary">
                           {data.tabs === 1 && data.state
                             ? CountryAndStates[data.state]
@@ -362,11 +362,9 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                     current={data.tabs_section_1}
                     onChange={index => setData("tabs_section_1", index)}
                   >
-                    <Panel name={t("dashboard-election-explorer:election.summary")}>
+                    <Panel name={t("election.summary")}>
                       <div className="space-y-6">
-                        <p className="text-center text-sm font-medium">
-                          {t("dashboard-election-explorer:election.majority")}
-                        </p>
+                        <p className="text-center text-sm font-medium">{t("election.majority")}</p>
                         <div className="relative">
                           <Waffle
                             className="h-[50px] min-h-max w-full"
@@ -409,14 +407,11 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                           ))}
                         </div>
                         <p className="text-dim whitespace-pre-line text-center text-sm ">
-                          {t("dashboard-election-explorer:election.explore")}
+                          {t("election.explore")}
                         </p>
                       </div>
                     </Panel>
-                    <Panel
-                      name={t("dashboard-election-explorer:election.map")}
-                      icon={<MapIcon className="mr-1 h-5 w-5" />}
-                    >
+                    <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
                       <Card
                         className="border-outline dark:border-washed-dark static h-[500px] rounded-xl border"
                         type="gray"
@@ -425,7 +420,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                       </Card>
                     </Panel>
                     <Panel
-                      name={t("dashboard-election-explorer:election.table")}
+                      name={t("election.table")}
                       icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                     >
                       <BorderlessTable highlightedRow={4} data={dummyData} columns={dummyColumns} />
@@ -439,10 +434,10 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
         <div className="dark:border-t-outlineHover-dark border-t py-12 lg:grid lg:grid-cols-12">
           <div className="space-y-12 lg:col-span-10 lg:col-start-2">
             <div className="space-y-6">
-              <h4 className="text-center">{t("dashboard-election-explorer:election.section_2")}</h4>
+              <h4 className="text-center">{t("election.section_2")}</h4>
               <div className="flex items-center justify-center">
                 <ComboBox
-                  placeholder={t("dashboard-election-explorer:election.search_area")}
+                  placeholder={t("election.search_area")}
                   options={SEAT_OPTIONS}
                   selected={
                     data.q_seat ? SEAT_OPTIONS.find(e => e.value === data.q_seat.value) : null
@@ -457,7 +452,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
             <BorderlessTable
               title={
                 <div className="text-base font-bold">
-                  {t("dashboard-election-explorer:election.full_result", {
+                  {t("election.full_result", {
                     election: data.election.value,
                   })}
                   <span className="text-primary">{data.seat}</span>
@@ -472,12 +467,10 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
         </div>
         <div className="dark:border-t-outlineHover-dark border-t py-12 lg:grid lg:grid-cols-12">
           <div className="lg:col-span-10 lg:col-start-2">
-            <h4 className="py-4 text-center">
-              {t("dashboard-election-explorer:election.section_3")}
-            </h4>
+            <h4 className="py-4 text-center">{t("election.section_3")}</h4>
             <div className="flex flex-row justify-between gap-4 sm:flex-row">
               <div className="flex flex-row items-baseline gap-4">
-                <p className="w-fit text-sm">{t("catalogue.filter")}</p>
+                <p className="w-fit text-sm">{t("common:catalogue.filter")}</p>
                 <Dropdown
                   anchor="left"
                   width="w-fit"
@@ -487,10 +480,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 />
               </div>
               <List
-                options={[
-                  t("dashboard-election-explorer:election.map"),
-                  t("dashboard-election-explorer:election.table"),
-                ]}
+                options={[t("election.map"), t("election.table")]}
                 icons={[
                   <MapIcon className="mr-1 h-5 w-5" />,
                   <TableCellsIcon className="mr-1 h-5 w-5" />,
@@ -504,10 +494,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
               current={data.tabs_section_3}
               onChange={index => setData("tabs_section_3", index)}
             >
-              <Panel
-                name={t("dashboard-election-explorer:election.map")}
-                icon={<MapIcon className="mr-1 h-5 w-5" />}
-              >
+              <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
                 <div className="pt-6">
                   <Card
                     className="border-outline dark:border-washed-dark static h-[500px] rounded-xl border"
@@ -517,10 +504,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                   </Card>
                 </div>
               </Panel>
-              <Panel
-                name={t("dashboard-election-explorer:election.table")}
-                icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
-              >
+              <Panel name={t("election.table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
                 <BorderlessTable data={dummyData} columns={dummyColumns} />
               </Panel>
             </Tabs>

@@ -13,18 +13,18 @@ import { MAMPUIcon } from "@components/Icon/agency";
 interface GovernmentSiteTrackerProps {}
 
 const GovernmentSiteTracker: FunctionComponent<GovernmentSiteTrackerProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-government-site-tracker"]);
+  const { t, i18n } = useTranslation(["dashboard-government-site-tracker", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.digitalisation"),
+          t("common:nav.megamenu.categories.digitalisation"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-government-site-tracker:header")]}
-        description={[t("dashboard-government-site-tracker:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge agency={"MAMPU"} link="https://www.mampu.gov.my/" icon={<MAMPUIcon />} />
         }
