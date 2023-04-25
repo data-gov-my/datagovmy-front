@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Trans } from "next-i18next";
@@ -9,9 +9,11 @@ import { Panel, Section, StateDropdown, Tabs } from "@components/index";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { PoliticalParty } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { useWatch } from "@hooks/useWatch";
+import { get } from "@lib/api";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -22,98 +24,32 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
   ssr: false,
 });
 
-interface ElectionPartiesProps {}
+interface ElectionPartiesProps {
+  party: any;
+}
 
-const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
+const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => {
   const { t, i18n } = useTranslation();
 
-  const PARTY_OPTIONS: Array<OptionType> = [
-    "pn",
-    "ph",
-    "bn",
-    "gps",
-    "grs",
-    "warisan",
-    "kdm",
-    "mca",
-    "pbm",
-    "pcs",
-    "phrs",
-    "psb",
-    "pejuang",
-    "pas",
-    "bebas",
-    "pkr",
-    "dap",
-    "bersatu",
-    "upko",
-    "amanah",
-  ].map((key: string) => ({
-    label: key,
-    value: key,
-  }));
-
   const { data, setData } = useData({
-    state: "",
+    data: party,
+    party_list: [],
+    state: "mys",
     tabs: 0,
     party: "",
 
     // query
-    q_party: PARTY_OPTIONS[0],
+    q_party: "perikatan",
     loading: false,
   });
 
   type Party = {
+    election_name: string;
     date: string;
-    seats: [string, number];
-    seats_perc: number;
-    perc: number;
-    votes: string;
+    seats: Record<string, number>;
+    votes: Record<string, number>;
     result: string;
   };
-
-  const dummyData: Party[] = [
-    {
-      date: "23 Jan 2022",
-      seats: ["111 / 222", 50],
-      seats_perc: 50,
-      perc: 40.5,
-      votes: "18,911 (40.5%)",
-      result: "formed_gov",
-    },
-    {
-      date: "23 Jan 2018",
-      seats: ["111 / 222", 50],
-      seats_perc: 50,
-      perc: 40.5,
-      votes: "17,076 (44.0%)",
-      result: "formed_opp",
-    },
-    {
-      date: "23 Jan 2013",
-      seats: ["111 / 222", 50],
-      seats_perc: 50,
-      perc: 40.5,
-      votes: "22,045 (59.8%)",
-      result: "formed_opp",
-    },
-    {
-      date: "23 Jan 2008",
-      seats: ["111 / 222", 50],
-      seats_perc: 50,
-      perc: 40.5,
-      votes: "20,230 (76.1%)",
-      result: "formed_opp",
-    },
-    {
-      date: "23 Jan 2004",
-      seats: ["111 / 222", 50.148176],
-      seats_perc: 50,
-      perc: 40.5,
-      votes: "20,065 (82.3%)",
-      result: "formed_opp",
-    },
-  ];
 
   const columnHelper = createColumnHelper<Party>();
 
@@ -123,35 +59,45 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
   };
 
   const columns: ColumnDef<Party, any>[] = [
+    columnHelper.accessor("election_name", {
+      id: "election_name",
+      header: t("dashboard-election-explorer:election_name"),
+      cell: (info: any) => info.getValue(),
+    }),
     columnHelper.accessor((row: any) => row.date, {
+      id: "date",
       header: t("dashboard-election-explorer:date"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("seats", {
+      id: "seats",
       header: t("dashboard-election-explorer:seats_won"),
-      cell: (info: any) => (
-        <div className="flex flex-row items-center gap-2">
-          <BarMeter perc={info.getValue()[1]} />
-          <p>{info.getValue()[0] + ` (${numFormat(info.getValue()[1], "standard")}%)`}</p>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("perc", {
-      header: t("dashboard-election-explorer:perc_votes_won"),
-      cell: (info: any) => (
-        <div className="flex flex-row items-center gap-2">
-          <BarMeter perc={info.getValue()} />
-          <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
-        </div>
-      ),
+      cell: (info: any) => {
+        const seats = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={seats.perc} />
+            <p>{`${seats.abs === 0 ? "—" : seats.won + "/" + seats.total} ${
+              seats.perc !== null ? `(${+seats.perc.toFixed(1)}%)` : ""
+            }`}</p>
+          </div>
+        );
+      },
     }),
     columnHelper.accessor("votes", {
+      id: "votes",
       header: t("dashboard-election-explorer:votes_won"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.accessor("result", {
-      header: t("dashboard-election-explorer:result"),
-      cell: (info: any) => results[info.getValue()],
+      cell: (info: any) => {
+        const votes = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={votes.perc} />
+            <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
+              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
+            }`}</p>
+          </div>
+        );
+      },
     }),
     columnHelper.accessor("result", {
       id: "fullResult",
@@ -166,6 +112,37 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
     }),
   ];
 
+  const PARTY_OPTIONS: Array<OptionType> =
+    data.party_list &&
+    data.party_list.map((key: string) => ({
+      label: key,
+      value: key,
+    }));
+
+  useEffect(() => {
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      dropdown: "party_list",
+    }).then(({ data }) => {
+      setData("party_list", data);
+    });
+  }, []);
+
+  useWatch(() => {
+    setData("loading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "party",
+      party_name: data.q_party,
+      type: data.tabs === 0 ? "parlimen" : "dun",
+      state: data.state,
+    })
+      .then(({ data }) => {
+        setData("data", data.reverse());
+      })
+      .then(() => setData("loading", false));
+  }, [data.q_party, data.state, data.tabs]);
+
   return (
     <Section>
       <div className="lg:grid lg:grid-cols-12">
@@ -178,7 +155,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
                 options={PARTY_OPTIONS}
                 selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : null}
                 onChange={e => {
-                  if (e) setData("q_party", e);
+                  if (e) setData("q_party", e.value.toUpperCase());
                   setData("party", e);
                 }}
                 enableFlag
@@ -191,21 +168,19 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
                 <span className="text-lg font-normal leading-9">
                   <Image
                     className="mr-2 inline-flex items-center"
-                    src={`/static/images/parties/${data.q_party.value}.png`}
+                    src={`/static/images/parties/${data.q_party}.png`}
                     width={28}
                     height={16}
-                    alt={PoliticalParty[data.q_party.value]}
+                    alt={t(`dashboard-election-explorer:${data.q_party}`)}
                   />
                   {t("dashboard-election-explorer:party.title", {
-                    party: PoliticalParty[data.q_party.value],
+                    party: `$t(dashboard-election-explorer:${data.q_party})`,
                   })}
                   <StateDropdown
                     currentState={data.state}
                     onChange={selected => setData("state", selected.value)}
-                    exclude={["mys"]}
                     width="inline-block pl-1 min-w-max"
                     anchor="left"
-                    disabled={data.tabs === 0}
                   />
                 </span>
               </Trans>
@@ -215,31 +190,32 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
           >
             <Panel name={t("dashboard-election-explorer:parliament_elections")}>
               <BorderlessTable
-                data={dummyData}
+                data={data.data}
                 columns={columns}
                 isLoading={data.loading}
                 empty={
-                  <p>
-                    {t("dashboard-election-explorer:party.never_compete", {
-                      name: data.q_party ? data.q_party.value : null,
-                      context: data.tabs === 0 ? "parliament" : "state",
+                  <Trans>
+                    {t("dashboard-election-explorer:party.no_data", {
+                      party: `$t(dashboard-election-explorer:${data.q_party})`,
+                      context: "parliament",
                     })}
-                  </p>
+                  </Trans>
                 }
               />
             </Panel>
             <Panel name={t("dashboard-election-explorer:state_elections")}>
               <BorderlessTable
-                data={[]}
+                data={data.data}
                 columns={columns}
                 isLoading={data.loading}
                 empty={
-                  <p>
-                    {t("dashboard-election-explorer:party.never_compete", {
-                      name: data.q_party ? PoliticalParty[data.q_party.value] : "",
-                      context: data.tabs === 0 ? "parliament" : "state",
+                  <Trans>
+                    {t("dashboard-election-explorer:party.no_data", {
+                      party: `$t(dashboard-election-explorer:${data.q_party})`,
+                      state: CountryAndStates[data.state],
+                      context: data.state === "mys" ? "dun_mys" : "dun",
                     })}
-                  </p>
+                  </Trans>
                 }
               />
             </Panel>

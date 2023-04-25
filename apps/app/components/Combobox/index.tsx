@@ -4,7 +4,6 @@ import { OptionType } from "@components/types";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { PoliticalParty } from "@lib/constants";
 import { clx } from "@lib/helpers";
 
 type ComboBoxProps<L, V> = {
@@ -63,7 +62,9 @@ const ComboBox = <L extends string | number = string, V = string>({
                     "w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
                   )}
                   displayValue={(option: OptionType<L, V>) =>
-                    enableFlag ? PoliticalParty[option?.label as string] : (option?.label as string)
+                    option && option.label
+                      ? t(`dashboard-election-explorer:${String(option?.label).toLowerCase()}`)
+                      : (option?.label as string)
                   }
                   onChange={event => setQuery(event.target.value)}
                   onClick={(e: any) => {
@@ -132,7 +133,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                               selected ? "font-medium" : "font-normal"
                             )}
                           >
-                            {PoliticalParty[option.label as string]}
+                            {t(`dashboard-election-explorer:${String(option.label).toLowerCase()}`)}
                           </span>
                         </>
                       ) : (

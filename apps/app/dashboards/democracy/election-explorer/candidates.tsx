@@ -77,14 +77,18 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
       cell: (info: any) => {
         const party = info.getValue().toLowerCase() as string;
         return (
-          <div className="flex flex-row items-center gap-1.5 pr-7 xl:pr-0">
+          <div className="flex flex-row items-center gap-2 pr-7 xl:pr-0">
             <Image
-              src={`/static/images/parties/${party}.png`}
+              src={
+                `/static/images/parties/${party}.png`
+                  ? `/static/images/parties/${party}.png`
+                  : `/static/images/parties/bebas.png`
+              }
               width={28}
               height={16}
-              alt={PoliticalParty[party]}
+              alt={t(`dashboard-election-explorer:${party}`)}
             />
-            <span>{PoliticalParty[party] ? PoliticalParty[party] : party}</span>
+            <span>{t(`dashboard-election-explorer:${party}`)}</span>
           </div>
         );
       },
@@ -98,7 +102,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
             <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc !== null ? "(" + numFormat(votes.perc, "standard", 1).concat("%)") : ""
+              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
             }`}</p>
           </div>
         );
@@ -208,9 +212,9 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
                 isLoading={data.loading}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.q_candidate ? data.q_candidate : "",
-                      context: data.tabs === 0 ? "parliament" : "state",
+                    {t("dashboard-election-explorer:candidate.no_data", {
+                      name: data.q_candidate,
+                      context: "parliament",
                     })}
                   </p>
                 }
@@ -223,9 +227,9 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
                 isLoading={data.loading}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
-                      name: data.q_candidate ? data.q_candidate : "",
-                      context: data.tabs === 0 ? "parliament" : "state",
+                    {t("dashboard-election-explorer:candidate.no_data", {
+                      name: data.q_candidate,
+                      context: "dun",
                     })}
                   </p>
                 }

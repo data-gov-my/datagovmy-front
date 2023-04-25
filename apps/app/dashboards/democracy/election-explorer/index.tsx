@@ -19,9 +19,11 @@ import ElectionSeats from "./seats";
 
 interface ElectionExplorerProps {
   candidate: any;
+  party: any;
+  seat: any;
 }
 
-const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ candidate }) => {
+const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ candidate, party, seat }) => {
   const { t, i18n } = useTranslation(["common", "dashboard-election-explorer"]);
 
   const PANELS = [
@@ -38,12 +40,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ candidate 
     {
       name: t("dashboard-election-explorer:parties"),
       icon: <FlagIcon className="m-1 h-5 w-5" />,
-      data: <ElectionParties />,
+      data: <ElectionParties party={party} />,
     },
     {
       name: t("dashboard-election-explorer:seats"),
       icon: <MapIcon className="m-1 h-5 w-5" />,
-      data: <ElectionSeats />,
+      data: <ElectionSeats seat={seat} />,
     },
   ];
   const { data, setData } = useData({

@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { BarMeter } from "@components/Chart/Table/BorderlessTable";
@@ -6,12 +6,14 @@ import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { Section } from "@components/index";
 import { OptionType } from "@components/types";
-import { MinusIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
 import { PoliticalParty } from "@lib/constants";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { get } from "@lib/api";
+import { useWatch } from "@hooks/useWatch";
+import { DateTime } from "luxon";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -22,109 +24,72 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
   ssr: false,
 });
 
-interface ElectionSeatsProps {}
+interface ElectionSeatsProps {
+  seat: any;
+}
 
-const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
+const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
   const { t, i18n } = useTranslation();
 
-  const SEAT_OPTIONS: Array<OptionType> = [
-    "P.001 Padang Besar, Perlis",
-    "P.002 Kangar, Perlis",
-    "P.003 Arau, Perlis",
-    "P.004 Langkawi, Kedah",
-    "P.005 Jerlun, Kedah",
-  ].map((key: string) => ({
-    label: key,
-    value: key,
-  }));
-
-  const results: { [key: string]: ReactNode } = {
-    comfortable: (
-      <span className="flex flex-row items-center gap-1.5 uppercase">
-        <span className="w-4">💪</span>
-        <p className="text-[#10B981]">{t("dashboard-election-explorer:seat.comfortable")}</p>
-      </span>
-    ),
-    close: (
-      <span className="flex flex-row items-center gap-1.5 uppercase">
-        <span className="w-4">🔥</span>
-        <p className="text-danger">{t("dashboard-election-explorer:seat.close")}</p>
-      </span>
-    ),
-    uncontested: (
-      <span className="text-dim flex flex-row items-center gap-1.5 uppercase">
-        <MinusIcon className="h-4 w-4" />
-        <p>{t("dashboard-election-explorer:seat.uncontested")}</p>
-      </span>
-    ),
-  };
+  // const SEAT_OPTIONS: Array<OptionType> = [
+  //   "Padang Besar, Perlis",
+  //   "Kangar, Perlis",
+  //   "Arau, Perlis",
+  //   "Langkawi, Kedah",
+  //   "Jerlun, Kedah",
+  // ].map((key: string) => ({
+  //   label: key,
+  //   value: key,
+  // }));
 
   type Seat = {
+    election_name: string;
     date: string;
+    seat: string;
     party: string;
     name: string;
-    majority: number;
+    majority: Record<string, number>;
     result: string;
   };
-
-  const dummyData: Seat[] = [
-    {
-      date: "23 Jan 2022",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "comfortable",
-    },
-    {
-      date: "23 Jan 2018",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "close",
-    },
-    {
-      date: "23 Jan 2013",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "comfortable",
-    },
-    {
-      date: "23 Jan 2008",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "uncontested",
-    },
-    {
-      date: "23 Jan 2004",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "comfortable",
-    },
-  ];
 
   const columnHelper = createColumnHelper<Seat>();
 
   const columns: ColumnDef<Seat, any>[] = [
-    columnHelper.accessor("date", {
-      header: t("dashboard-election-explorer:date"),
+    columnHelper.accessor("election_name", {
+      id: "election_name",
+      header: t("dashboard-election-explorer:election_name"),
       cell: (info: any) => info.getValue(),
     }),
+    columnHelper.accessor("date", {
+      id: "date",
+      header: t("dashboard-election-explorer:date"),
+      cell: (info: any) => (
+        <p>
+          {DateTime.fromISO(info.getValue())
+            .setLocale(i18n.language)
+            .toLocaleString(DateTime.DATE_MED)}
+        </p>
+      ),
+    }),
+    columnHelper.accessor("seat", {
+      id: "seat",
+      header: t("dashboard-election-explorer:constituency"),
+      cell: (info: any) => info.getValue().split(",")[0],
+    }),
     columnHelper.accessor((row: any) => row.party, {
+      id: "party",
       header: t("dashboard-election-explorer:winning_party"),
       cell: (info: any) => {
         const party = info.getValue().toLowerCase() as string;
         return (
-          <div className="flex items-center gap-1.5 pr-7 xl:pr-0">
+          <div className="flex items-center gap-2 pr-7 xl:pr-0">
             <Image
               src={`/static/images/parties/${party}.png`}
               width={28}
               height={16}
               alt={PoliticalParty[party] as string}
             />
-            <span>{PoliticalParty[party]}</span>
+            <span>{PoliticalParty[party] ? PoliticalParty[party] : party}</span>
           </div>
         );
       },
@@ -135,16 +100,17 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
     }),
     columnHelper.accessor("majority", {
       header: t("dashboard-election-explorer:majority"),
-      cell: (info: any) => (
-        <div className="flex flex-row items-center gap-1.5">
-          <BarMeter perc={info.getValue()} />
-          <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("result", {
-      header: t("dashboard-election-explorer:result"),
-      cell: (info: any) => results[info.getValue()],
+      cell: (info: any) => {
+        const majority = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={majority.perc} />
+            <p>{`${majority.abs === 0 ? "—" : numFormat(majority.abs, "standard")} ${
+              majority.perc !== null ? `(${+majority.perc.toFixed(1)}%)` : ""
+            }`}</p>
+          </div>
+        );
+      },
     }),
     columnHelper.display({
       id: "fullResult",
@@ -154,10 +120,10 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
           title={
             <div>
               <span className="text-lg font-bold uppercase text-black dark:text-white">
-                {data.q_seat.value.split(",")[0]}
+                {data.q_seat.split(",")[0]}
               </span>
               <span className="text-dim pl-2 text-lg font-normal uppercase">
-                {data.q_seat.value.split(",")[1]}
+                {data.q_seat.split(",")[1]}
               </span>
             </div>
           }
@@ -167,13 +133,43 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
   ];
 
   const { data, setData } = useData({
-    data: dummyData,
+    data: seat,
+    seats_list: [],
     loading: false,
     seat: "",
 
     // query
-    q_seat: SEAT_OPTIONS[0],
+    q_seat: "Padang Besar, Perlis",
   });
+
+  const SEAT_OPTIONS: Array<OptionType> =
+    data.seats_list &&
+    data.seats_list.map((key: string) => ({
+      label: key,
+      value: key,
+    }));
+
+  useEffect(() => {
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      dropdown: "seats_list",
+    }).then(({ data }) => {
+      setData("seats_list", data);
+    });
+  }, []);
+
+  useWatch(() => {
+    setData("loading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "seats",
+      seat_name: data.q_seat,
+    })
+      .then(({ data }) => {
+        setData("data", data.reverse());
+      })
+      .then(() => setData("loading", false));
+  }, [data.q_seat]);
 
   return (
     <Section>
@@ -187,7 +183,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                 options={SEAT_OPTIONS}
                 selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
                 onChange={e => {
-                  if (e) setData("q_seat", e);
+                  if (e) setData("q_seat", e.value);
                   setData("seat", e);
                 }}
               />
@@ -197,7 +193,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
             title={
               <div className="text-base font-bold">
                 {t("dashboard-election-explorer:candidate.title")}
-                <span className="text-primary">{data.q_seat.value}</span>
+                <span className="text-primary">{data.q_seat}</span>
               </div>
             }
             data={data.data}
