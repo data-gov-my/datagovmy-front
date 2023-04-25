@@ -2,7 +2,7 @@ import Metadata from "@components/Metadata";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import { DateTime } from "luxon";
 
@@ -60,9 +60,7 @@ const BloodDonation = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-blood-donation"]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-blood-donation", async () => {
   const { data } = await get("/dashboard", { dashboard: "blood_donation", state: "mys" });
 
   // transform:
@@ -78,7 +76,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     notFound: false,
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       timeseries_all: data.timeseries_all,
       timeseries_bloodstock: data.timeseries_bloodstock,
@@ -94,6 +91,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default BloodDonation;

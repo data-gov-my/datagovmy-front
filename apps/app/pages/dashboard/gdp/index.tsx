@@ -3,7 +3,7 @@ import GDPDashboard from "@dashboards/economy/gdp";
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 
 const GDP = ({
   last_updated,
@@ -28,20 +28,17 @@ const GDP = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-gdp"]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-gdp", async () => {
   const { data } = await get("/dashboard", { dashboard: "gross_domestic_product" });
 
   return {
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default GDP;

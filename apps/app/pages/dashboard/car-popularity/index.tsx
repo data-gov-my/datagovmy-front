@@ -2,7 +2,7 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
@@ -22,17 +22,18 @@ const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof ge
   );
 };
 // Disabled
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-car-popularity"]);
-  const { data } = await get("/dropdown", { dashboard: "car_popularity" });
-  return {
-    notFound: false,
-    props: {
-      ...i18n,
-      queryOptions: data.query_values.data.data,
-    },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
-  };
-};
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-car-popularity",
+  async ({ locale }) => {
+    const { data } = await get("/dropdown", { dashboard: "car_popularity" });
+    return {
+      notFound: false,
+      props: {
+        queryOptions: data.query_values.data.data,
+      },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    };
+  }
+);
 
 export default CarPopularity;

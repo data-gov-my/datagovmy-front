@@ -3,7 +3,7 @@ import BirthdayExplorerDashboard from "@dashboards/demography/birthday-explorer"
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 
 const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-birthday-explorer"]);
@@ -19,12 +19,10 @@ const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof get
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-birthday-explorer"]);
+export const getStaticProps: GetStaticProps = withi18n("dashboard-birthday-explorer", async () => {
   const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
   return {
     props: {
-      ...i18n,
       timeseries: {
         data: {
           x: data.x,
@@ -33,6 +31,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       },
     },
   };
-};
+});
 
 export default BirthdayExplorer;

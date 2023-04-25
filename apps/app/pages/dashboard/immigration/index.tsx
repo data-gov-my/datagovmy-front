@@ -28,9 +28,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   return {
     notFound: false,
-    props: {
-      ...i18n,
-    },
+    props: {},
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };

@@ -8,6 +8,7 @@ import { get } from "@lib/api";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { DateTime } from "luxon";
+import { withi18n } from "@lib/decorators";
 
 const OrganDonation: Page = ({
   last_updated,
@@ -46,8 +47,7 @@ OrganDonation.layout = page => (
   </Layout>
 );
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-organ-donation"]);
+export const getStaticProps: GetStaticProps = withi18n("dashboard-organ-donation", async () => {
   const { data } = await get("/dashboard", { dashboard: "organ_donation", state: "mys" });
 
   // transform:
@@ -59,7 +59,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     notFound: false,
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       choropleth: data.choropleth_malaysia,
@@ -68,6 +67,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default OrganDonation;

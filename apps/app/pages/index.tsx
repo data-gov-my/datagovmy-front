@@ -1,6 +1,5 @@
 import AgencyBadge from "@components/AgencyBadge";
 import At from "@components/At";
-import Image from "next/image";
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
 import Container from "@components/Container";
@@ -14,13 +13,13 @@ import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
+import { withi18n } from "@lib/decorators";
 import { numFormat } from "@lib/helpers";
 import type { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect } from "react";
-import nextI18nextConfig from "next-i18next.config";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
@@ -288,13 +287,11 @@ const Ranking = ({ ranks }: RankingProps) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   const { data } = await get("/dashboard", { dashboard: "homepage" });
 
   return {
     props: {
-      ...i18n,
       timeseries_callouts: data.statistics,
       timeseries: data.timeseries,
       analytics: {
@@ -318,6 +315,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default Home;

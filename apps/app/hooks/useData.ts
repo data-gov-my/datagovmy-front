@@ -6,10 +6,10 @@ import { useReducer } from "react";
  * @returns data, setData
  */
 export const useData = (data: Record<string, any> = {}) => {
-  const reducer = (state: any, action: any) => {
+  const reducer = (state: any, action: { type: "SET"; key: string; value: any }) => {
     switch (action.type) {
       case "SET":
-        return { ...state, [action.key]: action.value };
+        return Object.assign({}, state, { [action.key]: action.value });
       default:
         throw new Error("Unrecognized dispatch command");
     }

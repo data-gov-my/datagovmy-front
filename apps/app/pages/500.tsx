@@ -1,10 +1,10 @@
 import Container from "@components/Container";
 import ErrorCode from "@components/Error";
 import Metadata from "@components/Metadata";
+import { withi18n } from "@lib/decorators";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
@@ -25,11 +25,8 @@ const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Error500;
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
-    props: {
-      ...i18n,
-    },
+    props: {},
   };
-};
+});

@@ -6,6 +6,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import InternetPenetrationDashboard from "@dashboards/digitalisation/internet-penetration";
+import { withi18n } from "@lib/decorators";
 
 const InternetPenetration: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common", "dashboard-internet-penetration"]);
@@ -22,17 +23,17 @@ const InternetPenetration: Page = ({}: InferGetStaticPropsType<typeof getStaticP
   );
 };
 // Disabled
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-internet-penetration"]);
-  //   const { data } = await get("/dashboard", { dashboard: "currency" });
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-internet-penetration",
+  async () => {
+    //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
-  return {
-    notFound: false,
-    props: {
-      ...i18n,
-    },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
-  };
-};
+    return {
+      notFound: false,
+      props: {},
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    };
+  }
+);
 
 export default InternetPenetration;

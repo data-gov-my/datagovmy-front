@@ -27,8 +27,6 @@ export default Fallback;
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
   return {
-    props: {
-      ...i18n,
-    },
+    props: {},
   };
 };
