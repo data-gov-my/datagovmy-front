@@ -13,15 +13,15 @@ import { JIMIcon } from "@components/Icon/agency";
 interface ImmigrationProps {}
 
 const Immigration: FunctionComponent<ImmigrationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-immigration"]);
+  const { t, i18n } = useTranslation(["dashboard-immigration", "common"]);
 
   return (
     <>
       <Hero
         background="purple"
-        category={[t("nav.megamenu.categories.demography"), "text-[#7C3AED]"]}
-        header={[t("dashboard-immigration:header")]}
-        description={[t("dashboard-immigration:description")]}
+        category={[t("common:nav.megamenu.categories.demography"), "text-[#7C3AED]"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Immigration Department of Malaysia"}

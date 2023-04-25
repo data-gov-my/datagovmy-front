@@ -97,7 +97,7 @@ const Hero: FunctionComponent<HeroProps> = ({
 
               {last_updated && (
                 <p className="text-dim text-sm">
-                  {t("common.last_updated", {
+                  {t("common:common.last_updated", {
                     date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
                   })}
                 </p>

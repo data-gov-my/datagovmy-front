@@ -13,15 +13,18 @@ import { JPNIcon } from "@components/Icon/agency";
 interface CircleofLifeProps {}
 
 const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-circle-of-life"]);
+  const { t, i18n } = useTranslation(["dashboard-circle-of-life", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
-        category={[t("nav.megamenu.categories.demography"), "text-primary dark:text-primary-dark"]}
-        header={[t("dashboard-circle-of-life:header")]}
-        description={[t("dashboard-circle-of-life:description")]}
+        category={[
+          t("common:nav.megamenu.categories.demography"),
+          "text-primary dark:text-primary-dark",
+        ]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency="Jabatan Pendaftaran Negara"

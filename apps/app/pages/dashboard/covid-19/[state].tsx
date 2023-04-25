@@ -24,7 +24,7 @@ const COVID19State: Page = ({
   statistics,
   state,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-19"]);
+  const { t } = useTranslation(["dashboard-covid-19", "common"]);
   return (
     <>
       <Metadata

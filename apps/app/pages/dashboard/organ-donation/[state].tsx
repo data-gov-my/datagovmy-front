@@ -19,13 +19,13 @@ const OrganDonationState: Page = ({
   barchart_age,
   barchart_time,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-organ-donation"]);
+  const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-organ-donation:header"))}
-        description={t("dashboard-organ-donation:description")}
+        title={CountryAndStates[state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <OrganDonationDashboard
@@ -43,22 +43,17 @@ OrganDonationState.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={
-      <StateDropdown
-        url={routes.ORGAN_DONATION}
-        currentState={props?.state}
-        exclude={["kvy"]}
-        hideOnScroll
-      />
+      <StateDropdown url={routes.ORGAN_DONATION} currentState={props?.state} hideOnScroll />
     }
   >
-    <StateModal url={routes.ORGAN_DONATION} exclude={["kvy"]} />
+    <StateModal url={routes.ORGAN_DONATION} />
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
   let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
+  STATES.forEach(state => {
     paths = paths.concat([
       {
         params: {

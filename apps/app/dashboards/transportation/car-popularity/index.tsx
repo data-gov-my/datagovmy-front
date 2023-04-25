@@ -26,7 +26,7 @@ interface CarPopularityProps {
 }
 
 const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-car-popularity"]);
+  const { t, i18n } = useTranslation(["dashboard-car-popularity", "common"]);
   const windowWidth = useWindowWidth();
   const { theme } = useTheme();
   const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
@@ -115,11 +115,11 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.transportation"),
+          t("common:nav.megamenu.categories.transportation"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-car-popularity:header")]}
-        description={[t("dashboard-car-popularity:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Road Transport Department (JPJ)"}
@@ -129,12 +129,12 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         }
       />
       <Container className="min-h-screen">
-        <Section title={t("dashboard-car-popularity:section_title")} date={data.data_as_of}>
+        <Section title={t("section_title")} date={data.data_as_of}>
           <div className="flex flex-col gap-8 lg:flex-row">
             <div className="w-full lg:w-fit">
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex w-full flex-col justify-items-start gap-6	rounded-xl border p-6 shadow lg:w-96">
                 <Dropdown
-                  label={t("dashboard-car-popularity:label_manufacturer")}
+                  label={t("label_manufacturer")}
                   width="w-full"
                   options={filterManufacturers}
                   selected={data.manufacturer}
@@ -142,7 +142,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   enableSearch
                 />
                 <Dropdown
-                  label={t("dashboard-car-popularity:label_model")}
+                  label={t("label_model")}
                   width="w-full"
                   options={filterModels}
                   selected={data.model}
@@ -150,7 +150,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   enableSearch
                 />
                 <Dropdown
-                  label={t("dashboard-car-popularity:label_colour")}
+                  label={t("label_colour")}
                   width="w-full"
                   options={filterColours}
                   selected={data.colour}
@@ -162,7 +162,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                     className="btn btn-primary"
                     onClick={searchHandler}
                   >
-                    {t("dashboard-car-popularity:search_button")}
+                    {t("search_button")}
                   </Button>
                 </div>
               </Card>
@@ -180,16 +180,16 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                       <div className="flex flex-col gap-3">
                         <p className="text-lg font-bold">
                           <span className="capitalize">
-                            {t("dashboard-car-popularity:timeseries_car_description", {
+                            {t("timeseries_car_description", {
                               car: data.params.model,
                               manufacturer: data.params.manufacturer,
                               colour: data.params.colour,
                             })}
                           </span>
-                          <span>{t("dashboard-car-popularity:timeseries_title")}</span>
+                          <span>{t("timeseries_title")}</span>
                         </p>
                         <p className="text-dim text-sm">
-                          <span>{t("dashboard-car-popularity:timeseries_description")}</span>
+                          <span>{t("timeseries_description")}</span>
                         </p>
                       </div>
                     }
@@ -200,7 +200,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                         {
                           type: "line",
                           data: data.y,
-                          label: t("dashboard-car-popularity:label"),
+                          label: t("label"),
                           backgroundColor: AKSARA_COLOR.PRIMARY_H,
                           borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth:
@@ -243,7 +243,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   />
                   <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
                     <MagnifyingGlassIcon className=" h-4 w-4" />
-                    <p>{t("dashboard-car-popularity:search_prompt")}</p>
+                    <p>{t("search_prompt")}</p>
                   </Card>
                 </div>
               )}

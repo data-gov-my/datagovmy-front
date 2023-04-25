@@ -8,15 +8,11 @@ import SekolahkuDashboard from "@dashboards/education/sekolahku";
 import { withi18n } from "@lib/decorators";
 
 const Sekolahku: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-sekolahku"]);
+  const { t } = useTranslation(["dashboard-sekolahku", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-sekolahku:header")}
-        description={t("dashboard-sekolahku:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SekolahkuDashboard />
     </>
   );

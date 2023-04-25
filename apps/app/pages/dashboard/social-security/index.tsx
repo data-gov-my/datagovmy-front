@@ -8,15 +8,11 @@ import SocialSecurityDashboard from "@dashboards/economy/social-security";
 import { withi18n } from "@lib/decorators";
 
 const SocialSecurity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-social-security"]);
+  const { t } = useTranslation(["dashboard-social-security", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-social-security:header")}
-        description={t("dashboard-social-security:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SocialSecurityDashboard />
     </>
   );

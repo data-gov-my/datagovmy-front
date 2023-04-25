@@ -12,13 +12,13 @@ const ReserveMoney: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-reserve-money"]);
+  const { t } = useTranslation(["dashboard-reserve-money", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.reserve_money")}
-        description={t("dashboard-reserve-money:description")}
+        title={t("common:nav.megamenu.dashboards.reserve_money")}
+        description={t("description")}
         keywords={""}
       />
       <ReserveMoneyDashboard

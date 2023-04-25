@@ -8,32 +8,25 @@ import { useTranslation } from "@hooks/useTranslation";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
 
 const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-car-popularity"]);
+  const { t } = useTranslation(["dashboard-car-popularity", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-car-popularity:header")}
-        description={t("dashboard-car-popularity:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CarPopularityDashboard queryOptions={queryOptions} />
     </>
   );
 };
 // Disabled
-export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-car-popularity",
-  async ({ locale }) => {
-    const { data } = await get("/dropdown", { dashboard: "car_popularity" });
-    return {
-      notFound: false,
-      props: {
-        queryOptions: data.query_values.data.data,
-      },
-      revalidate: 60 * 60 * 24, // 1 day (in seconds)
-    };
-  }
-);
+export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
+  const { data } = await get("/dropdown", { dashboard: "car_popularity" });
+  return {
+    notFound: false,
+    props: {
+      queryOptions: data.query_values.data.data,
+    },
+    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+  };
+});
 
 export default CarPopularity;

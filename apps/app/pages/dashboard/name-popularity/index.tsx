@@ -6,13 +6,13 @@ import { Page } from "@lib/types";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 
 const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-name-popularity"]);
+  const { t } = useTranslation(["dashboard-name-popularity", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.name_popularity")}
-        description={t("dashboard-name-popularity:description")}
+        title={t("common:nav.megamenu.dashboards.name_popularity")}
+        description={t("description")}
         keywords={""}
       />
       <NamePopularityDashboard />

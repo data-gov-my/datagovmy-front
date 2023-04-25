@@ -8,15 +8,11 @@ import WeatherandClimateDashboard from "@dashboards/environment/weather-and-clim
 import { withi18n } from "@lib/decorators";
 
 const WeatherandClimate: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-weather-and-climate"]);
+  const { t } = useTranslation(["dashboard-weather-and-climate", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-weather-and-climate:header")}
-        description={t("dashboard-weather-and-climate:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WeatherandClimateDashboard />
     </>
   );

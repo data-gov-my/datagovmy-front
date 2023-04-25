@@ -8,15 +8,11 @@ import PublicContractingDashboard from "@dashboards/public-finances/public-contr
 import { withi18n } from "@lib/decorators";
 
 const PublicContracting: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-public-contracting"]);
+  const { t } = useTranslation(["dashboard-public-contracting", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-public-contracting:header")}
-        description={t("dashboard-public-contracting:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PublicContractingDashboard />
     </>
   );

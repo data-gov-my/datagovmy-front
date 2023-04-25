@@ -13,15 +13,15 @@ import { LHDNIcon } from "@components/Icon/agency";
 interface IncomeTaxationProps {}
 
 const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-income-taxation"]);
+  const { t, i18n } = useTranslation(["dashboard-income-taxation", "common"]);
 
   return (
     <>
       <Hero
         background="orange"
-        category={[t("nav.megamenu.categories.economy"), "text-[#FF820E]"]}
-        header={[t("dashboard-income-taxation:header")]}
-        description={[t("dashboard-income-taxation:description")]}
+        category={[t("common:nav.megamenu.categories.economy"), "text-[#FF820E]"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Internal Revenue Board"}

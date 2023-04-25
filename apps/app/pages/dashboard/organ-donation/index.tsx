@@ -1,5 +1,4 @@
 import { InferGetStaticPropsType, GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
 import OrganDonationDashboard from "@dashboards/healthcare/organ-donation";
@@ -9,6 +8,7 @@ import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { DateTime } from "luxon";
 import { withi18n } from "@lib/decorators";
+import { clx } from "@lib/helpers";
 
 const OrganDonation: Page = ({
   last_updated,
@@ -17,15 +17,11 @@ const OrganDonation: Page = ({
   barchart_age,
   barchart_time,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-organ-donation"]);
+  const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-organ-donation:header")}
-        description={t("dashboard-organ-donation:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <OrganDonationDashboard
         last_updated={last_updated}
         timeseries={timeseries}
@@ -39,7 +35,7 @@ const OrganDonation: Page = ({
 
 OrganDonation.layout = page => (
   <Layout
-    className={[Fonts.body.variable, "font-sans"].join(" ")}
+    className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={<StateDropdown url={routes.ORGAN_DONATION} currentState={"mys"} hideOnScroll />}
   >
     <StateModal url={routes.ORGAN_DONATION} />

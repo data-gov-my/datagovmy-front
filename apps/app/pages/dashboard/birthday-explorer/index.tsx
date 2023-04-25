@@ -6,12 +6,12 @@ import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 
 const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-birthday-explorer"]);
+  const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.birthday_explorer")}
-        description={t("dashboard-birthday-explorer:description")}
+        title={t("common:nav.megamenu.dashboards.birthday_explorer")}
+        description={t("description")}
         keywords={""}
       />
       <BirthdayExplorerDashboard timeseries={timeseries} />

@@ -7,15 +7,11 @@ import PeoplesIncomeInitiativeDashboard from "@dashboards/government/peoples-inc
 import { withi18n } from "@lib/decorators";
 
 const PeoplesIncomeInitiative: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-peoples-income-initiative"]);
+  const { t } = useTranslation(["dashboard-peoples-income-initiative", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-peoples-income-initiative:header")}
-        description={t("dashboard-peoples-income-initiative:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PeoplesIncomeInitiativeDashboard />
     </>
   );

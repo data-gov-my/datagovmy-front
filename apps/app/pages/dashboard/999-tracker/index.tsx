@@ -8,15 +8,11 @@ import Tracker999Dashboard from "@dashboards/healthcare/999-tracker";
 import { withi18n } from "@lib/decorators";
 
 const Tracker999: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-999-tracker"]);
+  const { t } = useTranslation(["dashboard-999-tracker", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-999-tracker:header")}
-        description={t("dashboard-999-tracker:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <Tracker999Dashboard />
     </>
   );

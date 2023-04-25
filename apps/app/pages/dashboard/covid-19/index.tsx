@@ -21,15 +21,11 @@ const COVID19: Page = ({
   util_chart,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-19"]);
+  const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-covid-19:header")}
-        description={t("dashboard-covid-19:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVID19Dashboard
         last_updated={last_updated}
         snapshot_bar={snapshot_bar}

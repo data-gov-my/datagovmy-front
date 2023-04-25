@@ -8,15 +8,11 @@ import HospitalBedUtilisationDashboard from "@dashboards/healthcare/hospital-bed
 import { withi18n } from "@lib/decorators";
 
 const HospitalBedUtilisation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-hospital-bed-utilisation"]);
+  const { t } = useTranslation(["dashboard-hospital-bed-utilisation", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-hospital-bed-utilisation:header")}
-        description={t("dashboard-hospital-bed-utilisation:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <HospitalBedUtilisationDashboard />
     </>
   );

@@ -106,7 +106,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
   const fullResultColumns: ColumnDef<ElectionResult, any>[] = [
     fullResultColumnHelper.accessor((row: any) => row.party, {
       id: "party",
-      header: t("dashboard-election-explorer:party_name"),
+      header: t("party_name"),
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
@@ -123,7 +123,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
       },
     }),
     fullResultColumnHelper.accessor((row: any) => `${row.seats} (${row.seats_perc}%)`, {
-      header: t("dashboard-election-explorer:seats_won"),
+      header: t("seats_won"),
       cell: (info: any) => (
         <div className="flex flex-row items-center gap-2">
           <BarMeter perc={info.row.original.seats_perc} />
@@ -132,11 +132,11 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
       ),
     }),
     fullResultColumnHelper.accessor("votes", {
-      header: t("dashboard-election-explorer:total_votes"),
+      header: t("total_votes"),
       cell: (info: any) => numFormat(info.getValue(), "standard"),
     }),
     fullResultColumnHelper.accessor("perc", {
-      header: t("dashboard-election-explorer:perc_votes"),
+      header: t("perc_votes"),
       cell: (info: any) => (
         <div className="flex flex-row items-center gap-2">
           <BarMeter perc={info.getValue()} />
@@ -201,17 +201,17 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
   const columnHelper = createColumnHelper<Party>();
 
   const results: { [key: string]: ReactNode } = {
-    formed_gov: <Won desc={t("dashboard-election-explorer:party.formed_gov")} />,
-    formed_opp: <Lost desc={t("dashboard-election-explorer:party.formed_opp")} />,
+    formed_gov: <Won desc={t("party.formed_gov")} />,
+    formed_opp: <Lost desc={t("party.formed_opp")} />,
   };
 
   const columns: ColumnDef<Party, any>[] = [
     columnHelper.accessor((row: any) => row.date, {
-      header: t("dashboard-election-explorer:date"),
+      header: t("date"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor((row: any) => `${row.seats} (${row.seats_perc}%)`, {
-      header: t("dashboard-election-explorer:seats_won"),
+      header: t("seats_won"),
       cell: (info: any) => (
         <div className="flex flex-row items-center gap-2">
           <BarMeter perc={info.row.original.seats_perc} />
@@ -220,7 +220,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
       ),
     }),
     columnHelper.accessor("perc", {
-      header: t("dashboard-election-explorer:perc_votes_won"),
+      header: t("perc_votes_won"),
       cell: (info: any) => (
         <div className="flex flex-row items-center gap-2">
           <BarMeter perc={info.getValue()} />
@@ -229,11 +229,11 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
       ),
     }),
     columnHelper.accessor("votes", {
-      header: t("dashboard-election-explorer:votes_won"),
+      header: t("votes_won"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("result", {
-      header: t("dashboard-election-explorer:result"),
+      header: t("result"),
       cell: (info: any) => results[info.getValue()],
     }),
     columnHelper.accessor("result", {
@@ -241,7 +241,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
       header: "",
       cell: (info: any) => (
         <ElectionCard
-          label={t("dashboard-election-explorer:full_result")}
+          label={t("full_result")}
           win={results[info.getValue()]}
           title={"GE-15 Result"}
         >
@@ -260,11 +260,11 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
     <Section>
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("dashboard-election-explorer:party.header")}</h4>
+          <h4 className="text-center">{t("party.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex items-center justify-center">
               <ComboBox
-                placeholder={t("dashboard-election-explorer:party.search_party")}
+                placeholder={t("party.search_party")}
                 options={PARTY_OPTIONS}
                 selected={
                   data.q_party
@@ -290,7 +290,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
                     height={16}
                     alt={PoliticalParty[data.party.value]}
                   />
-                  {t("dashboard-election-explorer:party.title", {
+                  {t("party.title", {
                     party: PoliticalParty[data.party.value],
                   })}
                   <StateDropdown
@@ -307,13 +307,13 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
             current={data.tabs}
             onChange={index => setData("tabs", index)}
           >
-            <Panel name={t("dashboard-election-explorer:parliament_elections")}>
+            <Panel name={t("parliament_elections")}>
               <BorderlessTable
                 data={dummyData}
                 columns={columns}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
+                    {t("candidate.never_compete", {
                       name: data.q_party ? data.q_party.value : null,
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}
@@ -321,13 +321,13 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({}) => {
                 }
               />
             </Panel>
-            <Panel name={t("dashboard-election-explorer:state_elections")}>
+            <Panel name={t("state_elections")}>
               <BorderlessTable
                 data={[]}
                 columns={columns}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.never_compete", {
+                    {t("candidate.never_compete", {
                       name: data.party ? data.party.value : "",
                       context: data.tabs === 0 ? "parliament" : "state",
                     })}

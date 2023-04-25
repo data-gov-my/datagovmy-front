@@ -13,15 +13,15 @@ import { IPREPUIcon } from "@components/Icon/agency";
 interface PeoplesIncomeInitiativeProps {}
 
 const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-peoples-income-initiative"]);
+  const { t, i18n } = useTranslation(["dashboard-peoples-income-initiative", "common"]);
 
   return (
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.government_programs"), "text-black"]}
-        header={[t("dashboard-peoples-income-initiative:header")]}
-        description={[t("dashboard-peoples-income-initiative:description")]}
+        category={[t("common:nav.megamenu.categories.government_programs"), "text-black"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of the Economy"}

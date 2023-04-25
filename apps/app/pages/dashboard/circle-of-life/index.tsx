@@ -8,15 +8,11 @@ import CircleofLifeDashboard from "@dashboards/demography/circle-of-life";
 import { withi18n } from "@lib/decorators";
 
 const CircleofLife: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-circle-of-life"]);
+  const { t } = useTranslation(["dashboard-circle-of-life", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-circle-of-life:header")}
-        description={t("dashboard-circle-of-life:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CircleofLifeDashboard />
     </>
   );

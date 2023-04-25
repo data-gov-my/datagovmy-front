@@ -2,7 +2,6 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import COVIDVaccinationDashboard from "@dashboards/healthcare/covid-vaccination";
@@ -14,15 +13,11 @@ const CovidVaccination: Page = ({
   barmeter,
   waffle,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-covid-vaccination:page_title")}
-        description={t("dashboard-covid-vaccination:description")}
-        keywords={""}
-      />
+      <Metadata title={t("page_title")} description={t("description")} keywords={""} />
       <COVIDVaccinationDashboard
         lastUpdated={Date.now()}
         timeseries={timeseries}

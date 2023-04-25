@@ -28,7 +28,7 @@ const BloodDonationState: Page = ({
   state,
   choropleth_malaysia_blood_donation,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-blood-donation"]);
+  const { t } = useTranslation(["dashboard-blood-donation", "common"]);
   let vars: Record<string, any> = {};
 
   Object.entries(barchart_variables.data).forEach(([key, values]: [string, any]) => {
@@ -37,7 +37,7 @@ const BloodDonationState: Page = ({
         ...previous,
         [current[0]]: current[1].map((item: any) => ({
           ...item,
-          x: t("dashboard-blood-donation:".concat(item.x)),
+          x: t("".concat(item.x)),
         })),
       };
     }, {});
@@ -46,8 +46,11 @@ const BloodDonationState: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("nav.megamenu.dashboards.blood_donation"))}
-        description={t("dashboard-blood-donation:description")}
+        title={CountryAndStates[state].concat(
+          " - ",
+          t("common:nav.megamenu.dashboards.blood_donation")
+        )}
+        description={t("description")}
         keywords=""
       />
       <BloodDonationDashboard

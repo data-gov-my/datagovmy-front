@@ -8,6 +8,7 @@ import { routes } from "@lib/routes";
 import Fonts from "@config/font";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
 import { withi18n } from "@lib/decorators";
+import { clx } from "@lib/helpers";
 
 const PekaB40State: Page = ({
   last_updated,
@@ -15,13 +16,13 @@ const PekaB40State: Page = ({
   state,
   choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
+  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-peka-b40:header"))}
-        description={t("dashboard-peka-b40:description")}
+        title={CountryAndStates[state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <PekaB40Dashboard
@@ -35,7 +36,7 @@ const PekaB40State: Page = ({
 
 PekaB40State.layout = (page, props) => (
   <Layout
-    className={[Fonts.body.variable, "font-sans"].join(" ")}
+    className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={<StateDropdown url={routes.PEKA_B40} currentState={props?.state} hideOnScroll />}
   >
     <StateModal url={routes.PEKA_B40} />

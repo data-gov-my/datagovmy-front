@@ -100,11 +100,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
 
   const columns: ColumnDef<Seat, any>[] = [
     columnHelper.accessor("date", {
-      header: t("dashboard-election-explorer:date"),
+      header: t("date"),
       cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor((row: any) => row.party, {
-      header: t("dashboard-election-explorer:winning_party"),
+      header: t("winning_party"),
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
@@ -121,11 +121,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       },
     }),
     columnHelper.accessor("name", {
-      header: t("dashboard-election-explorer:candidate_name"),
+      header: t("candidate_name"),
       cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
     }),
     columnHelper.accessor("majority", {
-      header: t("dashboard-election-explorer:majority"),
+      header: t("majority"),
       cell: (info: any) => (
         <div className="flex flex-row items-center gap-1.5">
           <BarMeter perc={info.getValue()} />
@@ -134,26 +134,22 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       ),
     }),
     columnHelper.accessor("result", {
-      header: t("dashboard-election-explorer:result"),
+      header: t("result"),
       cell: (info: any) =>
         info.getValue() === "comfortable" ? (
           <span className="flex flex-row items-center gap-1.5 uppercase">
             <span className="w-4">💪</span>
-            <p className="whitespace-nowrap text-[#10B981]">
-              {t("dashboard-election-explorer:seat.comfortable")}
-            </p>
+            <p className="whitespace-nowrap text-[#10B981]">{t("seat.comfortable")}</p>
           </span>
         ) : info.getValue() === "close" ? (
           <span className="flex flex-row items-center gap-1.5 uppercase">
             <span className="w-4">🔥</span>
-            <p className="text-danger whitespace-nowrap">
-              {t("dashboard-election-explorer:seat.close")}
-            </p>
+            <p className="text-danger whitespace-nowrap">{t("seat.close")}</p>
           </span>
         ) : (
           <span className="text-dim flex flex-row items-center gap-1.5 uppercase">
             <MinusIcon className="h-4 w-4" />
-            <p className="whitespace-nowrap">{t("dashboard-election-explorer:seat.uncontested")}</p>
+            <p className="whitespace-nowrap">{t("seat.uncontested")}</p>
           </span>
         ),
     }),
@@ -161,7 +157,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
       id: "fullResult",
       cell: () => (
         <ElectionCard
-          label={t("dashboard-election-explorer:full_result")}
+          label={t("full_result")}
           title={
             <div>
               <span className="text-lg font-bold uppercase text-black dark:text-white">
@@ -182,11 +178,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
     <Section>
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("dashboard-election-explorer:seat.header")}</h4>
+          <h4 className="text-center">{t("seat.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex flex-col items-center justify-center space-y-3">
               <ComboBox
-                placeholder={t("dashboard-election-explorer:seat.search_seat")}
+                placeholder={t("seat.search_seat")}
                 options={SEAT_OPTIONS}
                 selected={
                   data.q_seat ? SEAT_OPTIONS.find(e => e.value === data.q_seat.value) : null
@@ -197,9 +193,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
                 }}
               />
               <div className="flex flex-col text-center lg:flex-row">
-                <span className="whitespace-pre">
-                  {t("dashboard-election-explorer:popular_searches")}
-                </span>
+                <span className="whitespace-pre">{t("popular_searches")}</span>
                 <span>
                   <span
                     className="text-primary dark:text-primary-dark font-semibold"
@@ -255,7 +249,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
           <BorderlessTable
             title={
               <div className="text-base font-bold">
-                {t("dashboard-election-explorer:candidate.title")}
+                {t("candidate.title")}
                 <span className="text-primary">{data.seat.value}</span>
               </div>
             }

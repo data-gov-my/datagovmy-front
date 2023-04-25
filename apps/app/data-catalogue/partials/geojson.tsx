@@ -41,8 +41,8 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
         {
           key: "png",
           image: png,
-          title: t("catalogue.image.title"),
-          description: t("catalogue.image.desc"),
+          title: t("common:catalogue.image.title"),
+          description: t("common:catalogue.image.desc"),
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             if (ctx) ctx.current?.print(dataset.meta.unique_id);
@@ -63,8 +63,8 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
         {
           key: "geojson",
           image: "/static/images/icons/geojson.png",
-          title: t("catalogue.geojson.title"),
-          description: t("catalogue.geojson.desc"),
+          title: t("common:catalogue.geojson.title"),
+          description: t("common:catalogue.geojson.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: urls[Object.keys(urls)[0]],
         },

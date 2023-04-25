@@ -10,13 +10,13 @@ const GDP = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-gdp"]);
+  const { t } = useTranslation(["dashboard-gdp", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.gdp")}
-        description={t("dashboard-gdp:description")}
+        title={t("common:nav.megamenu.dashboards.gdp")}
+        description={t("description")}
         keywords={""}
       />
       <GDPDashboard

@@ -133,14 +133,14 @@ const Card: FunctionComponent<CardProps> = ({
                         //   disabled={!table.getCanPreviousPage()}
                       >
                         <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
-                        {t("common.previous")}
+                        {t("common:common.previous")}
                       </Button>
                       <Button
                         className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2"
                         //   onClick={() => table.nextPage()}
                         //   disabled={!table.getCanNextPage()}
                       >
-                        {t("common.next")}{" "}
+                        {t("common:common.next")}{" "}
                         <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
                       </Button>
                     </div>

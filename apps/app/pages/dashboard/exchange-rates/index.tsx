@@ -13,13 +13,13 @@ const ExchangeRates: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-exchange-rates"]);
+  const { t } = useTranslation(["dashboard-exchange-rates", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.exchange_rate")}
-        description={t("dashboard-exchange-rates:description")}
+        title={t("common:nav.megamenu.dashboards.exchange_rate")}
+        description={t("description")}
         keywords={""}
       />
       <ExchangeRatesDashboard

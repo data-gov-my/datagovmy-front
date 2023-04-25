@@ -8,15 +8,11 @@ import GovernmentSiteTrackerDashboard from "@dashboards/digitalisation/governmen
 import { withi18n } from "@lib/decorators";
 
 const GovernmentSiteTracker: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-government-site-tracker"]);
+  const { t } = useTranslation(["dashboard-government-site-tracker", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-government-site-tracker:header")}
-        description={t("dashboard-government-site-tracker:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GovernmentSiteTrackerDashboard />
     </>
   );

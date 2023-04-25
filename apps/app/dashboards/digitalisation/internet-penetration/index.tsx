@@ -13,18 +13,18 @@ import { MCMCIcon } from "@components/Icon/agency";
 interface InternetPenetrationProps {}
 
 const InternetPenetration: FunctionComponent<InternetPenetrationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-internet-penetration"]);
+  const { t, i18n } = useTranslation(["dashboard-internet-penetration", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.digitalisation"),
+          t("common:nav.megamenu.categories.digitalisation"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-internet-penetration:header")]}
-        description={[t("dashboard-internet-penetration:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge agency={"MCMC"} link="https://www.mcmc.gov.my/en/home" icon={<MCMCIcon />} />
         }

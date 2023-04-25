@@ -20,7 +20,7 @@ const BloodDonation = ({
   map_facility,
   choropleth_malaysia_blood_donation,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-blood-donation"]);
+  const { t } = useTranslation(["dashboard-blood-donation", "common"]);
 
   let vars: Record<string, any> = {};
 
@@ -30,7 +30,7 @@ const BloodDonation = ({
         ...previous,
         [current[0]]: current[1].map((item: any) => ({
           ...item,
-          x: t("dashboard-blood-donation:".concat(item.x)),
+          x: t(item.x),
         })),
       };
     }, {});
@@ -38,7 +38,11 @@ const BloodDonation = ({
 
   return (
     <>
-      <Metadata title={t("nav.megamenu.dashboards.blood_donation")} description="" keywords="" />
+      <Metadata
+        title={t("common:nav.megamenu.dashboards.blood_donation")}
+        description=""
+        keywords=""
+      />
       <BloodDonationDashboard
         last_updated={last_updated}
         timeseries_all={timeseries_all}

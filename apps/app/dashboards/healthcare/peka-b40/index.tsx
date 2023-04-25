@@ -29,7 +29,7 @@ interface PekaB40Props {
 }
 
 const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, choropleth }) => {
-  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
+  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   const router = useRouter();
   const windowWidth = useWindowWidth();
@@ -46,11 +46,11 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
     <>
       <Hero
         background="purple"
-        category={[t("nav.megamenu.categories.healthcare"), "text-purple"]}
-        header={[t("dashboard-peka-b40:header")]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-purple"]}
+        header={[t("header")]}
         description={
           <>
-            <p className={"text-dim xl:w-2/3"}>{t("dashboard-peka-b40:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.PEKA_B40} currentState={currentState} />
             </div>
@@ -69,15 +69,15 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
       <Container className="min-h-screen">
         {/* What are the latest screening trends in Malaysia? */}
         <Section
-          title={t("dashboard-peka-b40:screening_header", {
+          title={t("screening_header", {
             state: CountryAndStates[currentState],
           })}
-          description={t("dashboard-peka-b40:screening_description")}
+          description={t("screening_description")}
           date={timeseries.data_as_of}
         >
           <Timeseries
             className="h-[350px] w-full"
-            title={t("dashboard-peka-b40:timeseries_title", {
+            title={t("timeseries_title", {
               state: CountryAndStates[currentState],
             })}
             interval="auto"
@@ -87,14 +87,14 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
                 {
                   type: "line",
                   data: coordinate.line,
-                  label: t("dashboard-peka-b40:tooltip1"),
+                  label: t("tooltip1"),
                   borderColor: AKSARA_COLOR.PURPLE,
                   borderWidth: 1.5,
                   backgroundColor: AKSARA_COLOR.PURPLE_H,
                   fill: true,
                 },
                 {
-                  label: t("dashboard-peka-b40:tooltip2"),
+                  label: t("tooltip2"),
                   data: coordinate.daily,
                   borderColor: "#00000000",
                   backgroundColor: "#00000000",
@@ -117,15 +117,15 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
             left={
               <div className="flex h-full w-full flex-col space-y-6 p-8">
                 <div className="flex flex-col gap-2">
-                  <h4>{t("dashboard-peka-b40:choro_header")}</h4>
+                  <h4>{t("choro_header")}</h4>
                   <span className="text-dim text-sm">
-                    {t("common.data_of", { date: choropleth.data_as_of })}
+                    {t("common:common.data_of", { date: choropleth.data_as_of })}
                   </span>
                 </div>
                 <div className="flex grow flex-col justify-between space-y-6">
-                  <p className="text-dim">{t("dashboard-peka-b40:choro_description")}</p>
+                  <p className="text-dim">{t("choro_description")}</p>
                   <div className="space-y-3 border-t pt-6">
-                    <p className="font-bold">{t("dashboard-peka-b40:choro_ranking")}</p>
+                    <p className="font-bold">{t("choro_ranking")}</p>
 
                     {topStateIndices.map((pos, i) => {
                       return (

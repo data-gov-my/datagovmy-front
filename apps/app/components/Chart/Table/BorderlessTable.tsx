@@ -103,7 +103,11 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       {rowIndex === highlightedRow &&
                         colIndex === 0 &&
-                        (win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />)}
+                        (win ? (
+                          <Won desc={t("common:common.won")} />
+                        ) : (
+                          <Lost desc={t("common:common.lost")} />
+                        ))}
                     </span>
                   </td>
                 ))}
@@ -123,7 +127,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
       {enablePagination && (
         <div className="space-y-3">
           <span className="flex items-center justify-center gap-2 text-center text-sm">
-            {t("common.page_of", {
+            {t("common:common.page_of", {
               current: table.getState().pagination.pageIndex + 1,
               total: table.getPageCount(),
             })}
@@ -135,14 +139,15 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
               disabled={!table.getCanPreviousPage()}
             >
               <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
-              {t("common.previous")}
+              {t("common:common.previous")}
             </Button>
             <Button
               className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              {t("common.next")} <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
+              {t("common:common.next")}{" "}
+              <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
             </Button>
           </div>
         </div>

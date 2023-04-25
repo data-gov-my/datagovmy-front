@@ -8,15 +8,11 @@ import PovertyDashboard from "@dashboards/economy/poverty";
 import { withi18n } from "@lib/decorators";
 
 const Poverty: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-poverty"]);
+  const { t } = useTranslation(["dashboard-poverty", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-poverty:header")}
-        description={t("dashboard-poverty:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PovertyDashboard />
     </>
   );

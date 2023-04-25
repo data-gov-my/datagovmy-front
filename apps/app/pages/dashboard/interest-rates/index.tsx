@@ -11,13 +11,13 @@ const InterestRates = ({
   timeseries_opr,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-interest-rates"]);
+  const { t } = useTranslation(["dashboard-interest-rates", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.interest_rates")}
-        description={t("dashboard-interest-rates:description")}
+        title={t("common:nav.megamenu.dashboards.interest_rates")}
+        description={t("description")}
         keywords={""}
       />
       <InterestRatesDashboard

@@ -8,15 +8,11 @@ import RetirementReadinessDashboard from "@dashboards/economy/retirement-readine
 import { withi18n } from "@lib/decorators";
 
 const RetirementReadiness: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-retirement-readiness"]);
+  const { t } = useTranslation(["dashboard-retirement-readiness", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-retirement-readiness:header")}
-        description={t("dashboard-retirement-readiness:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <RetirementReadinessDashboard />
     </>
   );

@@ -12,13 +12,13 @@ const InternationalReserves: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-international-reserves"]);
+  const { t } = useTranslation(["dashboard-international-reserves", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.international_reserves")}
-        description={t("dashboard-international-reserves:description")}
+        title={t("common:nav.megamenu.dashboards.international_reserves")}
+        description={t("description")}
         keywords={""}
       />
       <InternationalReservesDashboard

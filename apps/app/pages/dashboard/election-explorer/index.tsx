@@ -8,15 +8,11 @@ import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
 import { withi18n } from "@lib/decorators";
 
 const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-election-explorer"]);
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-election-explorer:header")}
-        description={t("dashboard-election-explorer:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionExplorerDashboard />
     </>
   );

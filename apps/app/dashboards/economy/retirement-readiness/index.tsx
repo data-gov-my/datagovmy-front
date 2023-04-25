@@ -13,15 +13,15 @@ import { EPFIcon } from "@components/Icon/agency";
 interface RetirementReadinessProps {}
 
 const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-retirement-readiness"]);
+  const { t, i18n } = useTranslation(["dashboard-retirement-readiness", "common"]);
 
   return (
     <>
       <Hero
         background="orange"
-        category={[t("nav.megamenu.categories.economy"), "text-[#FF820E]"]}
-        header={[t("dashboard-retirement-readiness:header")]}
-        description={[t("dashboard-retirement-readiness:description")]}
+        category={[t("common:nav.megamenu.categories.economy"), "text-[#FF820E]"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Employees Provident Fund"}

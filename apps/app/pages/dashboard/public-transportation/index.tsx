@@ -8,15 +8,11 @@ import PublicTransportationDashboard from "@dashboards/transportation/public-tra
 import { withi18n } from "@lib/decorators";
 
 const PublicTransportation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-public-transportation"]);
+  const { t } = useTranslation(["dashboard-public-transportation", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-public-transportation:header")}
-        description={t("dashboard-public-transportation:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PublicTransportationDashboard />
     </>
   );

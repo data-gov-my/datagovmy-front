@@ -3,7 +3,7 @@ import Container from "@components/Container";
 import Metadata from "@components/Metadata";
 import ErrorCode from "@components/Error";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 
 const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
@@ -24,9 +24,8 @@ const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Fallback;
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
     props: {},
   };
-};
+});

@@ -8,15 +8,11 @@ import PublicPensionDashboard from "@dashboards/economy/public-pension";
 import { withi18n } from "@lib/decorators";
 
 const PublicPension: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-public-pension"]);
+  const { t } = useTranslation(["dashboard-public-pension", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-public-pension:header")}
-        description={t("dashboard-public-pension:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PublicPensionDashboard />
     </>
   );

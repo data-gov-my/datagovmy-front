@@ -24,7 +24,7 @@ const Error: FunctionComponent<ErrorProps> = ({ title, description, code, reason
           <h1 className="text-dim text-7xl font-black opacity-50">{code}</h1>
         </div>
         <div>
-          <p className=" text-dim pb-2 text-sm font-bold uppercase">{t("error.output")}</p>
+          <p className=" text-dim pb-2 text-sm font-bold uppercase">{t("common:error.output")}</p>
 
           <div className="rounded-xl bg-black ">
             {/* <div className="flex justify-between border-b border-outline border-opacity-20 p-2.5 text-white">
@@ -47,7 +47,7 @@ const Error: FunctionComponent<ErrorProps> = ({ title, description, code, reason
           </div>
 
           <small className="text-xs">
-            <i>{t("error.disclaimer")}</i>
+            <i>{t("common:error.disclaimer")}</i>
           </small>
         </div>
       </div>

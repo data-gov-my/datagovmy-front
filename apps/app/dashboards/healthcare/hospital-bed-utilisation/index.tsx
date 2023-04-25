@@ -13,15 +13,15 @@ import { MOHIcon } from "@components/Icon/agency";
 interface HospitalBedUtilisationProps {}
 
 const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-hospital-bed-utilisation"]);
+  const { t, i18n } = useTranslation(["dashboard-hospital-bed-utilisation", "common"]);
 
   return (
     <>
       <Hero
         background="red"
-        category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
-        header={[t("dashboard-hospital-bed-utilisation:header")]}
-        description={[t("dashboard-hospital-bed-utilisation:description")]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Health (MoH)"}
