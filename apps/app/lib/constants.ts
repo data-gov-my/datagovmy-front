@@ -310,7 +310,7 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
   },
   {
     key: "bebas",
-    colour: "#A7A7A7",
+    colour: "#ffffff",
   },
   {
     key: "bersatu",
@@ -330,15 +330,7 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
   },
   {
     key: "gps",
-    colour: "#FF9B0E",
-  },
-  {
-    key: "grs",
-    colour: "#E2E8F0",
-  },
-  {
-    key: "kdm",
-    colour: "#E2E8F0",
+    colour: "#ff9b0e",
   },
   {
     key: "muda",
@@ -349,24 +341,12 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "#008000",
   },
   {
-    key: "pbm",
-    colour: "#E2E8F0",
-  },
-  {
-    key: "pcs",
-    colour: "#E2E8F0",
-  },
-  {
     key: "pejuang",
-    colour: "#E2E8F0",
+    colour: "#006a8e",
   },
   {
     key: "ph",
     colour: "#E2462F",
-  },
-  {
-    key: "phrs",
-    colour: "#E2E8F0",
   },
   {
     key: "pkr",
@@ -377,16 +357,12 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "#003152",
   },
   {
-    key: "psb",
-    colour: "#E2E8F0",
+    key: "umno",
+    colour: "c00000",
   },
   {
     key: "upko",
     colour: "#183980",
-  },
-  {
-    key: "warisan",
-    colour: "#E2E8F0",
   },
 ];
 
