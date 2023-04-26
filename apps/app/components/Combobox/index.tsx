@@ -1,5 +1,5 @@
-import { default as Image } from "next/image";
 import { Fragment, useState } from "react";
+import ImageWithFallback from "@components/ImageWithFallback";
 import { OptionType } from "@components/types";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -117,7 +117,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                     <div className="flex w-full items-center gap-2">
                       {enableFlag ? (
                         <>
-                          <Image
+                          <ImageWithFallback
                             src={`/static/images/parties/${option.value}.png`}
                             width={20}
                             height={12}

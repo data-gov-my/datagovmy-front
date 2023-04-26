@@ -1,10 +1,10 @@
 import { FunctionComponent, ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { Trans } from "next-i18next";
 import { BarMeter, Lost, Won } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
+import ImageWithFallback from "@components/ImageWithFallback";
 import { Panel, Section, StateDropdown, Tabs } from "@components/index";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
@@ -166,7 +166,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
             title={
               <Trans>
                 <span className="text-lg font-normal leading-9">
-                  <Image
+                  <ImageWithFallback
                     className="mr-2 inline-flex items-center"
                     src={`/static/images/parties/${data.q_party}.png`}
                     width={28}

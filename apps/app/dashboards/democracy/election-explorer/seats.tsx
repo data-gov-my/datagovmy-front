@@ -1,15 +1,14 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
+import ImageWithFallback from "@components/ImageWithFallback";
 import { Section } from "@components/index";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
-import { PoliticalParty } from "@lib/constants";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { get } from "@lib/api";
 import { useWatch } from "@hooks/useWatch";
@@ -30,17 +29,6 @@ interface ElectionSeatsProps {
 
 const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-
-  // const SEAT_OPTIONS: Array<OptionType> = [
-  //   "Padang Besar, Perlis",
-  //   "Kangar, Perlis",
-  //   "Arau, Perlis",
-  //   "Langkawi, Kedah",
-  //   "Jerlun, Kedah",
-  // ].map((key: string) => ({
-  //   label: key,
-  //   value: key,
-  // }));
 
   type Seat = {
     election_name: string;
@@ -80,16 +68,16 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
       id: "party",
       header: t("winning_party"),
       cell: (info: any) => {
-        const party = info.getValue().toLowerCase() as string;
+        const party = info.getValue() as string;
         return (
           <div className="flex items-center gap-2 pr-7 xl:pr-0">
-            <Image
+            <ImageWithFallback
               src={`/static/images/parties/${party}.png`}
               width={28}
               height={16}
-              alt={PoliticalParty[party] as string}
+              alt={t(`${party}`)}
             />
-            <span>{PoliticalParty[party] ? PoliticalParty[party] : party}</span>
+            <span>{t(`${party}`)}</span>
           </div>
         );
       },

@@ -1,9 +1,9 @@
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { Button, Dropdown, Modal, Section, StateDropdown, Tabs } from "@components/index";
 import Card from "@components/Card";
 import ComboBox from "@components/Combobox";
+import ImageWithFallback from "@components/ImageWithFallback";
 import Label from "@components/Label";
 import LeftRightCard from "@components/LeftRightCard";
 import { BarMeter } from "@components/Chart/Table/BorderlessTable";
@@ -205,7 +205,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
         const party = info.getValue().toLowerCase() as string;
         return (
           <div className="flex items-center gap-2 pr-7 xl:pr-0">
-            <Image
+            <ImageWithFallback
               src={`/static/images/parties/${party}.png`}
               width={28}
               height={16}
@@ -392,7 +392,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                               {label === "Others" ? (
                                 <div className="bg-dim h-4 w-7 rounded-md"></div>
                               ) : (
-                                <Image
+                                <ImageWithFallback
                                   src={`/static/images/parties/${label}.png`}
                                   width={28}
                                   height={16}

@@ -1,16 +1,15 @@
 import { FunctionComponent, ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { Panel, Section, Tabs } from "@components/index";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
-import { OptionType } from "@components/types";
+import ImageWithFallback from "@components/ImageWithFallback";
 import { BarMeter, Lost, Won } from "@components/Chart/Table/BorderlessTable";
+import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
-import { PoliticalParty } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
@@ -78,12 +77,8 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
         const party = info.getValue().toLowerCase() as string;
         return (
           <div className="flex flex-row items-center gap-2 pr-7 xl:pr-0">
-            <Image
-              src={
-                `/static/images/parties/${party}.png`
-                  ? `/static/images/parties/${party}.png`
-                  : `/static/images/parties/bebas.png`
-              }
+            <ImageWithFallback
+              src={`/static/images/parties/${party}.png`}
               width={28}
               height={16}
               alt={t(`${party}`)}
