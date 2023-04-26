@@ -7,7 +7,7 @@ import { MOEIcon } from "@components/Icon/agency";
 import ComboBox from "@components/Combobox";
 import BarMeter from "@components/Chart/BarMeter";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
-
+import dynamic from "next/dynamic";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -17,6 +17,8 @@ interface SekolahkuProps {}
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
+  const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
+  const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
 
   const KEY_VARIABLES_SCHEMA = [
     {
@@ -28,6 +30,22 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
       data: [],
     },
   ];
+
+  const lineDummy = {
+    labels: [0, 10, 20, 30, 40, 50, 60, 70, 80], // x-values
+    datasets: [
+      {
+        type: "line",
+        data: [110, 240, 480, 525, 470, 354, 253, 100, 90],
+        label: t("label"),
+        backgroundColor: "#94A3B81A",
+        borderColor: "#94A3B8",
+        borderWidth: 1.5,
+        lineTension: 0.5,
+        fill: true,
+      },
+    ],
+  };
 
   return (
     <>
@@ -62,11 +80,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
                     null;
                   }}
                 />
-                <span className="text-dim font-body text-sm">
-                  {t(
-                    "Note: Private schools are omitted, as they are not operated by MoE (only regulated)"
-                  )}
-                </span>
+                <span className="text-dim font-body text-sm">{t("disclaimer")}</span>
               </div>
             </div>
 
@@ -95,7 +109,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
                 </div>
               </div>
               <div className="basis-1/2 rounded-b-xl bg-slate-50 dark:bg-zinc-900 lg:rounded-br-xl lg:rounded-tr-xl">
-                Map Area
+                <MapPlot className="h-full w-full" />
               </div>
             </div>
           </div>
@@ -105,8 +119,9 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
             {[0, 1, 2, 3, 4, 5].map(i => (
               <div className="flex flex-col space-y-6">
-                <span className="text-lg font-bold">{t("Sex")}</span>
+                {/* <span className="text-lg font-bold">{t("Sex")}</span> */}
                 <BarMeter
+                  title="Sex"
                   layout="horizontal"
                   unit="%"
                   data={[
@@ -132,11 +147,32 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
           }
           date={Date.now()}
         >
-          {/* <Tabs hidden current={0}>
-            {KEY_VARIABLES_SCHEMA.map(({ name, data }) => {
-              return <Panel key={name} name={name}></Panel>;
-            })}
-          </Tabs> */}
+          <Tabs hidden current={0}>
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
+              <Panel key={1} name={"1"}>
+                <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-3">
+                  {[0, 1, 2, 3, 4, 5].map(_ => (
+                    <Line
+                      className="h-[250px] w-full"
+                      title={"Number of Students"}
+                      enableGridX={false}
+                      data={lineDummy}
+                      stats={[
+                        {
+                          title: "Your School",
+                          value: "919",
+                        },
+                        {
+                          title: "National median",
+                          value: "1,147",
+                        },
+                      ]}
+                    />
+                  ))}
+                </div>
+              </Panel>
+            </div>
+          </Tabs>
         </Section>
       </Container>
     </>
