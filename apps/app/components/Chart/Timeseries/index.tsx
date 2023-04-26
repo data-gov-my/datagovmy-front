@@ -434,13 +434,13 @@ interface StatsProps {
   className?: string;
 }
 
-type StatProps = {
+export type StatProps = {
   title: ReactNode;
   value?: string | false;
   tooltip?: string;
 };
 
-const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
+export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
   const cols: Record<number, string> = {
     1: "grid-cols-1",
     2: "grid-cols-2",

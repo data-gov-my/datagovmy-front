@@ -15,6 +15,7 @@ import {
 import { Line as LineCanvas } from "react-chartjs-2";
 import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
+import { Stats, StatProps } from "../Timeseries";
 
 interface LineProps extends ChartHeaderProps {
   className?: string;
@@ -27,6 +28,7 @@ interface LineProps extends ChartHeaderProps {
   maxY?: number | "auto";
   enableGridX?: boolean;
   enableGridY?: boolean;
+  stats?: Array<StatProps> | null;
 }
 
 const Line: FunctionComponent<LineProps> = ({
@@ -44,6 +46,7 @@ const Line: FunctionComponent<LineProps> = ({
   enableGridY = true,
   minY,
   maxY,
+  stats,
 }) => {
   ChartJS.register(
     CategoryScale,
@@ -119,6 +122,7 @@ const Line: FunctionComponent<LineProps> = ({
   return (
     <div>
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      {stats && <Stats data={stats} />}
       {subheader && <div className="py-4">{subheader}</div>}
       <div className={className}>
         <LineCanvas options={options} data={data} />
