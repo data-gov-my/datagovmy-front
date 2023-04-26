@@ -178,15 +178,17 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
           <h4 className="text-center">{t("seat.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex flex-col items-center justify-center space-y-3">
-              <ComboBox
-                placeholder={t("seat.search_seat")}
-                options={SEAT_OPTIONS}
-                selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
-                onChange={e => {
-                  if (e) setData("q_seat", e.value);
-                  setData("seat", e);
-                }}
-              />
+              <div className="lg:col-span-4 lg:col-start-5">
+                <ComboBox
+                  placeholder={t("seat.search_seat")}
+                  options={SEAT_OPTIONS}
+                  selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
+                  onChange={e => {
+                    if (e) setData("q_seat", e.value);
+                    setData("seat", e);
+                  }}
+                />
+              </div>
             </div>
           </div>
           <BorderlessTable

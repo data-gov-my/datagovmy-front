@@ -127,7 +127,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
             </div>
           </div>
         )}
-        {!data.length && (
+        {!data.length && !isLoading && (
           <Card className="flex h-[200px] items-center justify-center">
             <Card className="bg-outline dark:bg-washed-dark mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md px-3 py-1.5">
               <FaceFrownIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />

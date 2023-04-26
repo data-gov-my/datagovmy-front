@@ -39,7 +39,7 @@ const ComboBox = <L extends string | number = string, V = string>({
 
   return (
     <Combobox value={selected} onChange={onChange}>
-      <div className="relative w-5/6 rounded-full sm:w-3/4 md:w-1/2">
+      <div className="relative w-full rounded-full">
         <div
           className={clx(
             `border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none overflow-hidden rounded-full
@@ -61,11 +61,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                   className={clx(
                     "w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
                   )}
-                  displayValue={(option: OptionType<L, V>) =>
-                    option && option.label
-                      ? t(`dashboard-election-explorer:${String(option?.label).toLowerCase()}`)
-                      : (option?.label as string)
-                  }
+                  displayValue={(option: OptionType<L, V>) => option?.label as string}
                   onChange={event => setQuery(event.target.value)}
                   onClick={(e: any) => {
                     if (open) e.stopPropagation();
@@ -125,7 +121,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                             src={`/static/images/parties/${option.value}.png`}
                             width={20}
                             height={12}
-                            alt={option.label as string}
+                            alt={option.value as string}
                           />
                           <span
                             className={clx(
@@ -133,7 +129,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                               selected ? "font-medium" : "font-normal"
                             )}
                           >
-                            {t(`dashboard-election-explorer:${String(option.label).toLowerCase()}`)}
+                            {option.label}
                           </span>
                         </>
                       ) : (

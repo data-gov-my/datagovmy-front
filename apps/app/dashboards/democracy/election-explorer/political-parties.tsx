@@ -39,7 +39,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
     party: "",
 
     // query
-    q_party: "perikatan",
+    q_party: "PERIKATAN",
     loading: false,
   });
 
@@ -115,7 +115,7 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
   const PARTY_OPTIONS: Array<OptionType> =
     data.party_list &&
     data.party_list.map((key: string) => ({
-      label: key,
+      label: t(`${key}`),
       value: key,
     }));
 
@@ -150,16 +150,20 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
           <h4 className="text-center">{t("party.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex items-center justify-center">
-              <ComboBox
-                placeholder={t("party.search_party")}
-                options={PARTY_OPTIONS}
-                selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : null}
-                onChange={e => {
-                  if (e) setData("q_party", e.value.toUpperCase());
-                  setData("party", e);
-                }}
-                enableFlag
-              />
+              <div className="lg:col-span-4 lg:col-start-5">
+                <ComboBox
+                  placeholder={t("party.search_party")}
+                  options={PARTY_OPTIONS}
+                  selected={
+                    data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : null
+                  }
+                  onChange={e => {
+                    if (e) setData("q_party", e.value.toUpperCase());
+                    setData("party", e);
+                  }}
+                  enableFlag
+                />
+              </div>
             </div>
           </div>
           <Tabs

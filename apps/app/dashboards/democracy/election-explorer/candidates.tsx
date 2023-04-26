@@ -180,19 +180,21 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
           <h4 className="text-center">{t("candidate.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex flex-col items-center justify-center space-y-3">
-              <ComboBox
-                placeholder={t("candidate.search_candidate")}
-                options={CANDIDATE_OPTIONS}
-                selected={
-                  data.p_candidate
-                    ? CANDIDATE_OPTIONS.find(e => e.value === data.p_candidate.value)
-                    : null
-                }
-                onChange={e => {
-                  if (e) setData("q_candidate", e.value);
-                  setData("p_candidate", e);
-                }}
-              />
+              <div className="lg:col-span-4 lg:col-start-5">
+                <ComboBox
+                  placeholder={t("candidate.search_candidate")}
+                  options={CANDIDATE_OPTIONS}
+                  selected={
+                    data.p_candidate
+                      ? CANDIDATE_OPTIONS.find(e => e.value === data.p_candidate.value)
+                      : null
+                  }
+                  onChange={e => {
+                    if (e) setData("q_candidate", e.value);
+                    setData("p_candidate", e);
+                  }}
+                />
+              </div>
             </div>
           </div>
           <Tabs
