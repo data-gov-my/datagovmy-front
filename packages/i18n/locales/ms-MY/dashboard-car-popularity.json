@@ -1,0 +1,17 @@
+{
+  "label": "Kereta",
+  "header": "Populariti Kereta",
+  "description": "Di Malaysia, kenderaan perlu didaftarkan dengan Jabatan Pengangkutan Jalan (JPJ) sebelum ia boleh dipandu secara sah. Oleh itu, JPJ mempunyai pangkalan data setiap kenderaan yang pernah digunakan di Malaysia. Papan pemuka ini mengambil data tersebut untuk memberikan pandangan mengenai populariti pembuat dan model kereta yang berbeza. Sama ada anda seorang peminat kereta yang ingin melihat trend terkini atau pembeli bakal yang cuba memilih kereta pertama anda, kami berharap papan pemuka ini menjadi sumber yang berharga untuk anda!",
+  "label_model": "Model",
+  "label_colour": "Warna",
+  "option_model": "Pilih model kereta",
+  "option_colour": "Pilih warna kereta",
+  "search_button": "Cari kereta",
+  "search_prompt": "Mula carian untuk jenama kereta untuk melihat populariti kereta anda",
+  "section_title": "Seberapa popular kereta anda?",
+  "timeseries_title": "Populariti Selama Beberapa Tahun",
+  "label_manufacturer": "Pembuat",
+  "option_manufacturer": "Pilih pembuat kereta",
+  "timeseries_description": "Nota: Data ini berdasarkan tahun kereta didaftarkan dengan JPJ, bukan tahun ia dibuat",
+  "timeseries_car_description": "{{colour}} {{manufacturer}} {{car}}: "
+}

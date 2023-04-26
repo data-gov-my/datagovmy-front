@@ -47,7 +47,7 @@ class HTMLDocument extends Document {
             
               gtag('config', '${process.env.NEXT_PUBLIC_GA_TAG}', {
                   page_path: window.location.pathname,
-                  debug_mode: ${process.env.NODE_ENV === "development"}
+                  debug_mode: ${process.env.NEXT_PUBLIC_APP_ENV === "development"}
               });
           `,
             }}
