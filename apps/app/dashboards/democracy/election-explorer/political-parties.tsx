@@ -29,7 +29,7 @@ interface ElectionPartiesProps {
 }
 
 const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const { data, setData } = useData({
     data: party,
@@ -148,22 +148,18 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-10 lg:col-start-2">
           <h4 className="text-center">{t("party.header")}</h4>
-          <div className="pb-12 pt-6">
-            <div className="flex items-center justify-center">
-              <div className="lg:col-span-4 lg:col-start-5">
-                <ComboBox
-                  placeholder={t("party.search_party")}
-                  options={PARTY_OPTIONS}
-                  selected={
-                    data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : null
-                  }
-                  onChange={e => {
-                    if (e) setData("q_party", e.value.toUpperCase());
-                    setData("party", e);
-                  }}
-                  enableFlag
-                />
-              </div>
+          <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
+            <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+              <ComboBox
+                placeholder={t("party.search_party")}
+                options={PARTY_OPTIONS}
+                selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : null}
+                onChange={e => {
+                  if (e) setData("q_party", e.value.toUpperCase());
+                  setData("party", e);
+                }}
+                enableFlag
+              />
             </div>
           </div>
           <Tabs

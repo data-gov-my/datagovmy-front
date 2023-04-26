@@ -31,7 +31,7 @@ const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false })
 interface ElectionProps {}
 
 const Election: FunctionComponent<ElectionProps> = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
   const scroll = useWindowScroll();
@@ -448,8 +448,8 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
           <div className="space-y-12 lg:col-span-10 lg:col-start-2">
             <div className="space-y-6">
               <h4 className="text-center">{t("election.section_2")}</h4>
-              <div className="flex items-center justify-center">
-                <div className="lg:col-span-4 lg:col-start-5">
+              <div className="grid grid-cols-12 lg:grid-cols-10">
+                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
                   <ComboBox
                     placeholder={t("election.search_area")}
                     options={SEAT_OPTIONS}

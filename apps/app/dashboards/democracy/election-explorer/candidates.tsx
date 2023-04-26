@@ -29,7 +29,7 @@ interface ElectionCandidatesProps {
 }
 
 const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candidate }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   type Candidate = {
     election_name: string;
@@ -178,23 +178,21 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-10 lg:col-start-2">
           <h4 className="text-center">{t("candidate.header")}</h4>
-          <div className="pb-12 pt-6">
-            <div className="flex flex-col items-center justify-center space-y-3">
-              <div className="lg:col-span-4 lg:col-start-5">
-                <ComboBox
-                  placeholder={t("candidate.search_candidate")}
-                  options={CANDIDATE_OPTIONS}
-                  selected={
-                    data.p_candidate
-                      ? CANDIDATE_OPTIONS.find(e => e.value === data.p_candidate.value)
-                      : null
-                  }
-                  onChange={e => {
-                    if (e) setData("q_candidate", e.value);
-                    setData("p_candidate", e);
-                  }}
-                />
-              </div>
+          <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
+            <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+              <ComboBox
+                placeholder={t("candidate.search_candidate")}
+                options={CANDIDATE_OPTIONS}
+                selected={
+                  data.p_candidate
+                    ? CANDIDATE_OPTIONS.find(e => e.value === data.p_candidate.value)
+                    : null
+                }
+                onChange={e => {
+                  if (e) setData("q_candidate", e.value);
+                  setData("p_candidate", e);
+                }}
+              />
             </div>
           </div>
           <Tabs

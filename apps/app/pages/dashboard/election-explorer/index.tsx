@@ -16,11 +16,7 @@ const ElectionExplorer: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-election-explorer:header")}
-        description={t("dashboard-election-explorer:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionExplorerDashboard candidate={candidate} seat={seat} party={party} />
     </>
   );

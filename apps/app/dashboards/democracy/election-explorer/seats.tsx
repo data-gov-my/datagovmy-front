@@ -29,7 +29,7 @@ interface ElectionSeatsProps {
 }
 
 const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   // const SEAT_OPTIONS: Array<OptionType> = [
   //   "Padang Besar, Perlis",
@@ -173,22 +173,20 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
 
   return (
     <Section>
-      <div className="lg:grid lg:grid-cols-12">
-        <div className="lg:col-span-10 lg:col-start-2">
+      <div className="grid grid-cols-12">
+        <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
           <h4 className="text-center">{t("seat.header")}</h4>
-          <div className="pb-12 pt-6">
-            <div className="flex flex-col items-center justify-center space-y-3">
-              <div className="lg:col-span-4 lg:col-start-5">
-                <ComboBox
-                  placeholder={t("seat.search_seat")}
-                  options={SEAT_OPTIONS}
-                  selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
-                  onChange={e => {
-                    if (e) setData("q_seat", e.value);
-                    setData("seat", e);
-                  }}
-                />
-              </div>
+          <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
+            <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+              <ComboBox
+                placeholder={t("seat.search_seat")}
+                options={SEAT_OPTIONS}
+                selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
+                onChange={e => {
+                  if (e) setData("q_seat", e.value);
+                  setData("seat", e);
+                }}
+              />
             </div>
           </div>
           <BorderlessTable
