@@ -2,13 +2,13 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 // import { get } from "@lib/api"; 
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
+import { withi18n } from "@lib/decorators";
 import {{pascalCase dashboard_name}}Dashboard from "@dashboards/{{dashCase dashboard_category}}/{{dashCase dashboard_name}}";
 
 const {{pascalCase dashboard_name}}: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-{{dashCase dashboard_name}}"]);
+  const { t } = useTranslation(["dashboard-{{dashCase dashboard_name}}", "common"]);
 
   return (
     <>
@@ -22,22 +22,13 @@ const {{pascalCase dashboard_name}}: Page = ({}: InferGetStaticPropsType<typeof 
   );
 };
 // Disabled
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-{{dashCase dashboard_name}}"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+export const getStaticProps: GetStaticProps = withi18n("dashboard-{{dashCase dashboard_name}}", async () => {
   //   const { data } = await get("/dashboard", { dashboard: "{{dashCase dashboard_name}}" });
 
   return {
     notFound: false,
-    props: {
-      ...i18n,
-    },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    props: {},
   };
-};
+});
 
 export default {{pascalCase dashboard_name}};

@@ -5,15 +5,15 @@ import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import CovidVaccinationDashboard from "@dashboards/healthcare/covid-vaccination";
 import { CountryAndStates, STATES } from "@lib/constants";
 import { get } from "@lib/api";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import { useTranslation } from "next-i18next";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import { JSXElementConstructor, ReactElement } from "react";
 import Fonts from "@config/font";
+import { clx } from "@lib/helpers";
+import { withi18n } from "@lib/decorators";
+import { Page } from "@lib/types";
 
-const CovidVaccinationState = ({
+const CovidVaccinationState: Page = ({
   lastUpdated,
   waffle,
   barmeter,
@@ -25,8 +25,8 @@ const CovidVaccinationState = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-covid-vaccination:page_title"))}
-        description={t("dashboard-covid-vaccination:description")}
+        title={CountryAndStates[state].concat(" - ", t("page_title"))}
+        description={t("description")}
         keywords=""
       />
       <CovidVaccinationDashboard
@@ -40,15 +40,11 @@ const CovidVaccinationState = ({
   );
 };
 
-CovidVaccinationState.layout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => (
+CovidVaccinationState.layout = (page, props) => (
   <Layout
-    className={[Fonts.body.variable, "font-sans"].join(" ")}
+    className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={
-      <StateDropdown
-        url={routes.COVID_VACCINATION}
-        currentState={(useRouter().query.state as string) ?? "mys"}
-        hideOnScroll
-      />
+      <StateDropdown url={routes.COVID_VACCINATION} currentState={props?.state} hideOnScroll />
     }
   >
     <StateModal url={routes.COVID_VACCINATION} />
@@ -79,26 +75,22 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-covid-vaccination"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
-  const { data } = await get("/dashboard", { dashboard: "covid_vax", state: params?.state });
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-covid-vaccination",
+  async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "covid_vax", state: params?.state });
 
-  return {
-    props: {
-      ...i18n,
-      lastUpdated: new Date().valueOf(),
-      waffle: data.waffle,
-      barmeter: data.bar_chart,
-      timeseries: data.timeseries,
-      statistics: data.statistics,
-      state: params?.state,
-    },
-  };
-};
+    return {
+      props: {
+        lastUpdated: new Date().valueOf(),
+        waffle: data.waffle,
+        barmeter: data.bar_chart,
+        timeseries: data.timeseries,
+        statistics: data.statistics,
+        state: params?.state ?? "mys",
+      },
+    };
+  }
+);
 
 export default CovidVaccinationState;

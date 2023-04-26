@@ -2,10 +2,10 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CurrencyInCirculationDashboard from "@dashboards/financial-sector/currency-in-circulation";
+import { withi18n } from "@lib/decorators";
 
 const CurrencyInCirculation: Page = ({
   last_updated,
@@ -18,8 +18,8 @@ const CurrencyInCirculation: Page = ({
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.currency_in_circulation")}
-        description={t("dashboard-currency-in-circulation:description")}
+        title={t("common:nav.megamenu.dashboards.currency_in_circulation")}
+        description={t("description")}
         keywords={""}
       />
       <CurrencyInCirculationDashboard
@@ -32,27 +32,22 @@ const CurrencyInCirculation: Page = ({
   );
 };
 // Disabled
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-currency-in-circulation"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-currency-in-circulation",
+  async () => {
+    const { data } = await get("/dashboard", { dashboard: "currency" });
 
-  const { data } = await get("/dashboard", { dashboard: "currency" });
-
-  return {
-    notFound: false,
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      bar: data.bar_chart,
-      timeseries: data.timeseries,
-      timeseries_callouts: data.statistics,
-    },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
-  };
-};
+    return {
+      notFound: false,
+      props: {
+        last_updated: new Date().valueOf(),
+        bar: data.bar_chart,
+        timeseries: data.timeseries,
+        timeseries_callouts: data.statistics,
+      },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    };
+  }
+);
 
 export default CurrencyInCirculation;

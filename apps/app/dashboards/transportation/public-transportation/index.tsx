@@ -13,18 +13,18 @@ import { MOTIcon } from "@components/Icon/agency";
 interface PublicTransportationProps {}
 
 const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-public-transportation"]);
+  const { t, i18n } = useTranslation(["dashboard-public-transportation", "common"]);
 
   return (
     <>
       <Hero
         background="blue"
         category={[
-          t("nav.megamenu.categories.transportation"),
+          t("common:nav.megamenu.categories.transportation"),
           "text-primary dark:text-primary-dark",
         ]}
-        header={[t("dashboard-public-transportation:header")]}
-        description={[t("dashboard-public-transportation:description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Transport (MoT)"}

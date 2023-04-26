@@ -66,15 +66,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
 
   const PANELS = [
     {
-      name: t("home.section_2.past_24h"),
+      name: t("common:home.section_2.past_24h"),
       data: analytics[lang].today,
     },
     {
-      name: t("home.section_2.past_month"),
+      name: t("common:home.section_2.past_month"),
       data: analytics[lang].last_month,
     },
     {
-      name: t("home.section_2.all_time"),
+      name: t("common:home.section_2.all_time"),
       data: analytics[lang].all_time,
     },
   ];
@@ -103,15 +103,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
     <>
       <Hero
         background="gray"
-        category={[t("home.category"), "text-primary dark:text-primary-dark"]}
+        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[
-          t("dashboard.header").concat(
+          t("common:dashboard.header").concat(
             filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
           ),
         ]}
         agencyBadge={
           <AgencyBadge
-            agency={t("agency.govt")}
+            agency={t("common:agency.govt")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
@@ -130,7 +130,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
           <Section
             title={
               <>
-                <h4>{t("dashboard.section1_title")}</h4>
+                <h4>{t("common:dashboard.section1_title")}</h4>
                 <Tabs.List
                   options={PANELS.map(item => item.name)}
                   current={data.tabs_section_1}
@@ -154,7 +154,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         )}
 
         {/* Remaining sections for dashboard */}
-        <Section title={t("dashboard.section2_title")}>
+        <Section title={t("common:dashboard.section2_title")}>
           <div className="columns-1 gap-6 sm:columns-2 md:columns-3 lg:columns-4">
             {_collection.sort().map(([category, dashboards]) => {
               return (
@@ -239,7 +239,7 @@ const DashboardFilter: ForwardRefExoticComponent<DashboardFilterProps> = forward
               disabled={!actives.length}
               onClick={reset}
             >
-              {t("common.clear_all")}
+              {t("common:common.clear_all")}
             </Button>
           </div>
         )
@@ -254,7 +254,7 @@ const DashboardFilter: ForwardRefExoticComponent<DashboardFilterProps> = forward
             <Dropdown
               icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
               className="w-fit min-w-fit"
-              placeholder={t("dashboard.source_placeholder")}
+              placeholder={t("common:dashboard.source_placeholder")}
               anchor="left"
               options={filterSources}
               selected={filter.source}
@@ -265,7 +265,7 @@ const DashboardFilter: ForwardRefExoticComponent<DashboardFilterProps> = forward
             <Input
               className="border-0 "
               type="search"
-              placeholder={t("dashboard.search_placeholder")}
+              placeholder={t("common:dashboard.search_placeholder")}
               autoFocus
               value={filter.search}
               onChange={e => setFilter("search", e)}
@@ -312,10 +312,10 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {item.description}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {`${numFormat(item.views, "compact")} ${t("common.views")}`}
+                  {`${numFormat(item.views, "compact")} ${t("common:common.views")}`}
                 </p>
                 <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
-                  {t("components.click_to_explore")}
+                  {t("common:components.click_to_explore")}
                 </p>
               </div>
             </div>

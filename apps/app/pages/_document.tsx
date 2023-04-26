@@ -7,16 +7,18 @@ import Document, {
   NextScript,
 } from "next/document";
 import Script from "next/script";
+import i18nextConfig from "../next-i18next.config";
 
 class HTMLDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
     const initialProps = await Document.getInitialProps(ctx);
     return initialProps;
   }
+  currentLocale = this.props.__NEXT_DATA__.locale || i18nextConfig.i18n.defaultLocale;
 
   render() {
     return (
-      <Html>
+      <Html lang={this.currentLocale}>
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />

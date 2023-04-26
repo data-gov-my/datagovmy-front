@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
+    "i18n": "node script/fetch_i18n.js",
     "postbuild": "next-sitemap",
     "start": "next start"
   },
@@ -31,6 +32,7 @@
     "dom-to-image": "^2.6.0",
     "highlight.js": "^11.6.0",
     "i18next": "^22.4.14",
+    "i18next-http-backend": "^2.2.0",
     "leaflet": "^1.9.1",
     "leaflet-easyprint": "^2.1.9",
     "leaflet.markercluster": "^1.5.3",
@@ -63,6 +65,7 @@
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
     "autoprefixer": "^10.4.7",
+    "dotenv": "^16.0.3",
     "geojson-bbox": "^0.0.1",
     "postcss": "^8.4.14",
     "postcss-import": "^14.1.0",

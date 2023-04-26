@@ -1,5 +1,4 @@
 import { InferGetStaticPropsType, GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
 import COVID19Dashboard from "@dashboards/healthcare/covid-19";
@@ -7,6 +6,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
+import { withi18n } from "@lib/decorators";
 
 const COVID19: Page = ({
   last_updated,
@@ -21,15 +21,11 @@ const COVID19: Page = ({
   util_chart,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-covid-19"]);
+  const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("dashboard-covid-19:header")}
-        description={t("dashboard-covid-19:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVID19Dashboard
         last_updated={last_updated}
         snapshot_bar={snapshot_bar}
@@ -57,18 +53,12 @@ COVID19.layout = page => (
   </Layout>
 );
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-covid-19"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", async () => {
   const { data } = await get("/dashboard", { dashboard: "covid_epid", state: "mys" });
 
   return {
     notFound: false,
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       snapshot_bar: data.snapshot_bar,
       snapshot_graphic: data.snapshot_graphic,
@@ -83,6 +73,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default COVID19;

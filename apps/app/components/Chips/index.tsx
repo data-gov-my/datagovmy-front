@@ -40,7 +40,7 @@ const Chips: FunctionComponent<ChipsProps> = ({
           className="text-dim flex cursor-pointer flex-row items-center gap-0.5 rounded-full px-2.5 py-1 text-sm font-medium outline-none transition-colors"
           onClick={onClearAll}
         >
-          <span> {t("common.clear_all")}</span>
+          <span> {t("common:common.clear_all")}</span>
         </li>
       )}
     </ul>

@@ -13,15 +13,15 @@ import { MERSIcon } from "@components/Icon/agency";
 interface Tracker999Props {}
 
 const Tracker999: FunctionComponent<Tracker999Props> = ({}) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-999-tracker"]);
+  const { t, i18n } = useTranslation(["dashboard-999-tracker", "common"]);
 
   return (
     <>
       <Hero
         background="red"
-        category={[t("nav.megamenu.categories.healthcare"), "text-danger"]}
-        header={[t("dashboard-999-tracker:header")]}
-        description={[t("dashboard-999-tracker:description")]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Emergency Response System (MERS)"}

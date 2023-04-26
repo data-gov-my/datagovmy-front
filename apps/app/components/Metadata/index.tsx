@@ -14,7 +14,7 @@ const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywor
   const META = {
     title: title ? title.concat(" | data.gov.my") : "data.gov.my",
     icon: "/favicon.ico",
-    description: description ? description : t("site.description"),
+    description: description ? description : t("common:site.description"),
     author: "Department of Statistics Malaysia",
     themeColor: "#13293D",
     keywords: keywords ?? "data dosm statistics malaysia",

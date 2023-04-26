@@ -57,12 +57,12 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
   const columns: ColumnDef<Seat, any>[] = [
     columnHelper.accessor("election_name", {
       id: "election_name",
-      header: t("dashboard-election-explorer:election_name"),
+      header: t("election_name"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("date", {
       id: "date",
-      header: t("dashboard-election-explorer:date"),
+      header: t("date"),
       cell: (info: any) => (
         <p>
           {DateTime.fromISO(info.getValue())
@@ -73,12 +73,12 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
     }),
     columnHelper.accessor("seat", {
       id: "seat",
-      header: t("dashboard-election-explorer:constituency"),
+      header: t("constituency"),
       cell: (info: any) => info.getValue().split(",")[0],
     }),
     columnHelper.accessor((row: any) => row.party, {
       id: "party",
-      header: t("dashboard-election-explorer:winning_party"),
+      header: t("winning_party"),
       cell: (info: any) => {
         const party = info.getValue().toLowerCase() as string;
         return (
@@ -95,11 +95,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
       },
     }),
     columnHelper.accessor("name", {
-      header: t("dashboard-election-explorer:candidate_name"),
+      header: t("candidate_name"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("majority", {
-      header: t("dashboard-election-explorer:majority"),
+      header: t("majority"),
       cell: (info: any) => {
         const majority = info.getValue();
         return (
@@ -116,7 +116,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
       id: "fullResult",
       cell: () => (
         <ElectionCard
-          label={t("dashboard-election-explorer:full_result")}
+          label={t("full_result")}
           title={
             <div>
               <span className="text-lg font-bold uppercase text-black dark:text-white">
@@ -175,11 +175,11 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
     <Section>
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("dashboard-election-explorer:seat.header")}</h4>
+          <h4 className="text-center">{t("seat.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex flex-col items-center justify-center space-y-3">
               <ComboBox
-                placeholder={t("dashboard-election-explorer:seat.search_seat")}
+                placeholder={t("seat.search_seat")}
                 options={SEAT_OPTIONS}
                 selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
                 onChange={e => {
@@ -192,7 +192,7 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
           <BorderlessTable
             title={
               <div className="text-base font-bold">
-                {t("dashboard-election-explorer:candidate.title")}
+                {t("candidate.title")}
                 <span className="text-primary">{data.q_seat}</span>
               </div>
             }

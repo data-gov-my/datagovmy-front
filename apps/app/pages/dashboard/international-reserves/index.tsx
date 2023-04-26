@@ -2,23 +2,23 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import InternationalReservesDashboard from "@dashboards/financial-sector/international-reserves";
+import { withi18n } from "@lib/decorators";
 
 const InternationalReserves: Page = ({
   last_updated,
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-international-reserves"]);
+  const { t } = useTranslation(["dashboard-international-reserves", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.international_reserves")}
-        description={t("dashboard-international-reserves:description")}
+        title={t("common:nav.megamenu.dashboards.international_reserves")}
+        description={t("description")}
         keywords={""}
       />
       <InternationalReservesDashboard
@@ -30,26 +30,21 @@ const InternationalReserves: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(
-    locale!,
-    ["common", "dashboard-international-reserves"],
-    null,
-    ["en-GB", "ms-MY"]
-  );
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-international-reserves",
+  async () => {
+    const { data } = await get("/dashboard", { dashboard: "international_reserves" });
 
-  const { data } = await get("/dashboard", { dashboard: "international_reserves" });
-
-  return {
-    notFound: false,
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries: data.timeseries,
-      timeseries_callouts: data.statistics,
-    },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
-  };
-};
+    return {
+      notFound: false,
+      props: {
+        last_updated: new Date().valueOf(),
+        timeseries: data.timeseries,
+        timeseries_callouts: data.statistics,
+      },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    };
+  }
+);
 
 export default InternationalReserves;

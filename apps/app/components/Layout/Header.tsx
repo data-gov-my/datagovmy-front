@@ -28,15 +28,15 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
           <Nav stateSelector={stateSelector}>
             {close => (
               <>
-                <Nav.Item key={"/"} title={t("nav.home")} link="/" onClick={close} />
+                <Nav.Item key={"/"} title={t("common:nav.home")} link="/" onClick={close} />
                 <Nav.Item
-                  title={t("nav.dashboards")}
+                  title={t("common:nav.dashboards")}
                   link="/dashboard"
                   key="/dashboard"
                   onClick={close}
                 />
                 <Nav.Item
-                  title={t("nav.catalogue")}
+                  title={t("common:nav.catalogue")}
                   key="/data-catalogue"
                   link="/data-catalogue"
                   onClick={close}

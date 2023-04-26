@@ -34,7 +34,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-exchange-rates"]);
+  const { t, i18n } = useTranslation(["dashboard-exchange-rates", "common"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
   const { data, setData } = useData({
     active_snapshot: 0,
@@ -81,25 +81,25 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
     <>
       <Hero
         background="gray"
-        category={[t("nav.megamenu.categories.economy"), "text-green-300"]}
-        header={[t("dashboard-exchange-rates:header"), "dark:text-white"]}
-        description={[t("dashboard-exchange-rates:description"), "dark:text-white"]}
+        category={[t("common:nav.megamenu.categories.economy"), "text-green-300"]}
+        header={[t("header"), "dark:text-white"]}
+        description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge agency={t("agency_abbr.mampu")} link="https://www.mampu.gov.my/en/" />
+          <AgencyBadge agency={t("common:agency_abbr.mampu")} link="https://www.mampu.gov.my/en/" />
         }
       />
 
       <Container className="start-h-screen">
         {/* A snapshot of the Ringgit's performance against major trade partners */}
         <Section
-          title={t("dashboard-exchange-rates:section_1.title")}
-          description={t("dashboard-exchange-rates:section_1.description")}
+          title={t("section_1.title")}
+          description={t("section_1.description")}
           date={bar.data_as_of}
         >
           <Tabs
-            title={t("dashboard-exchange-rates:section_1.bar_header", {
-              period: t(`dashboard-exchange-rates:keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
+            title={t("section_1.bar_header", {
+              period: t(`keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
             })}
             onChange={(index: number) => setData("active_snapshot", index)}
           >
@@ -107,7 +107,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
               const sorted_data = sortMulti(bar.data[key], "y", (a: number, b: number) => b - a);
               const zero_index = closestIndex(sorted_data.y, 0);
               return (
-                <Panel name={t(`dashboard-exchange-rates:keys.${key}`)} key={key}>
+                <Panel name={t(`keys.${key}`)} key={key}>
                   <Bar
                     className="hidden h-[350px] w-full lg:block"
                     layout="vertical"
@@ -120,10 +120,8 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                       labels: sorted_data.x,
                       datasets: [
                         {
-                          label: t("dashboard-exchange-rates:section_1.bar_header", {
-                            period: t(
-                              `dashboard-exchange-rates:keys.${SNAPSHOT_TAB[data.active_snapshot]}`
-                            ),
+                          label: t("section_1.bar_header", {
+                            period: t(`keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
                           }),
                           data: sorted_data.y,
                           backgroundColor(ctx) {
@@ -144,10 +142,8 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                       labels: sorted_data.x.slice().reverse(),
                       datasets: [
                         {
-                          label: t("dashboard-exchange-rates:section_1.bar_header", {
-                            period: t(
-                              `dashboard-exchange-rates:keys.${SNAPSHOT_TAB[data.active_snapshot]}`
-                            ),
+                          label: t("section_1.bar_header", {
+                            period: t(`keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
                           }),
                           data: sorted_data.y.slice().reverse(),
                           backgroundColor(ctx) {
@@ -165,14 +161,14 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
 
         {/* How is the Ringgit trending? */}
         <Section
-          title={t("dashboard-exchange-rates:section_2.title")}
-          description={t("dashboard-exchange-rates:section_2.description")}
+          title={t("section_2.title")}
+          description={t("section_2.description")}
           date={timeseries.data_as_of}
         >
           <Tabs onChange={e => setData("active_trend", e)}>
-            {/* title={t("dashboard-exchange-rates:keys.currency0")} */}
+            {/* title={t("keys.currency0")} */}
             {TREND_TAB.map(key => (
-              <Panel name={t(`dashboard-exchange-rates:keys.${key}`)} key={key}>
+              <Panel name={t(`keys.${key}`)} key={key}>
                 <div className="space-y-12">
                   {/* <Timeseries
                     className="h-[300px] w-full"
@@ -184,7 +180,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                         {
                           type: "line",
                           data: timeseries.data[key].currency0,
-                          label: t("dashboard-exchange-rates:keys.currency0"),
+                          label: t("keys.currency0"),
                           borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth: 1.5,
                           backgroundColor: AKSARA_COLOR.PRIMARY_H,
@@ -194,7 +190,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                     }}
                     stats={[
                       {
-                        title: t("dashboard-exchange-rates:latest"),
+                        title: t("latest"),
                         value: timeseries_callouts.data.currency0.callout,
                       },
                     ]}
@@ -230,7 +226,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                         }}
                         stats={[
                           {
-                            title: t("dashboard-exchange-rates:latest"),
+                            title: t("latest"),
                             value: timeseries_callouts.data[index].callout,
                           },
                         ]}

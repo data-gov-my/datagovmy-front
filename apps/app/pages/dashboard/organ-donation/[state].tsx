@@ -3,13 +3,13 @@ import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import { CountryAndStates, STATES } from "@lib/constants";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "@hooks/useTranslation";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
 import Fonts from "@config/font";
 import OrganDonationDashboard from "@dashboards/healthcare/organ-donation";
 import { DateTime } from "luxon";
+import { clx } from "@lib/helpers";
+import { withi18n } from "@lib/decorators";
 
 const OrganDonationState: Page = ({
   last_updated,
@@ -19,13 +19,13 @@ const OrganDonationState: Page = ({
   barchart_age,
   barchart_time,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-organ-donation"]);
+  const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-organ-donation:header"))}
-        description={t("dashboard-organ-donation:description")}
+        title={CountryAndStates[state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <OrganDonationDashboard
@@ -39,26 +39,21 @@ const OrganDonationState: Page = ({
   );
 };
 
-OrganDonationState.layout = page => (
+OrganDonationState.layout = (page, props) => (
   <Layout
-    className={[Fonts.body.variable, "font-sans"].join(" ")}
+    className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={
-      <StateDropdown
-        url={routes.ORGAN_DONATION}
-        currentState={(useRouter().query.state as string) ?? "mys"}
-        exclude={["kvy"]}
-        hideOnScroll
-      />
+      <StateDropdown url={routes.ORGAN_DONATION} currentState={props?.state} hideOnScroll />
     }
   >
-    <StateModal url={routes.ORGAN_DONATION} exclude={["kvy"]} />
+    <StateModal url={routes.ORGAN_DONATION} />
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
   let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
+  STATES.forEach(state => {
     paths = paths.concat([
       {
         params: {
@@ -79,31 +74,29 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-organ-donation"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
-  const { data } = await get("/dashboard", { dashboard: "organ_donation", state: params?.state });
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-organ-donation",
+  async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "organ_donation", state: params?.state });
 
-  // transform:
-  data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
-    const period = DateTime.fromFormat(item, "yyyy-MM-dd");
-    return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
-  });
+    // transform:
+    data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
+      const period = DateTime.fromFormat(item, "yyyy-MM-dd");
+      return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
+    });
 
-  return {
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries: data.timeseries,
-      state: params?.state,
-      choropleth: data.choropleth_malaysia,
-      barchart_age: data.barchart_age,
-      barchart_time: data.barchart_time,
-    },
-    revalidate: 60 * 60 * 24,
-  };
-};
+    return {
+      props: {
+        last_updated: new Date().valueOf(),
+        timeseries: data.timeseries,
+        state: params?.state ?? "mys",
+        choropleth: data.choropleth_malaysia,
+        barchart_age: data.barchart_age,
+        barchart_time: data.barchart_time,
+      },
+      revalidate: 60 * 60 * 24,
+    };
+  }
+);
 
 export default OrganDonationState;

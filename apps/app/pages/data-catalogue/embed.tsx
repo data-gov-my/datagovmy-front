@@ -2,7 +2,6 @@ import type { OptionType } from "@components/types";
 import { get } from "@lib/api";
 import { Page } from "@lib/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import dynamic from "next/dynamic";
 // const CatalogueWidget = dynamic(() => import("@data-catalogue/widget"), { ssr: false });

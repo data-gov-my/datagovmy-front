@@ -47,7 +47,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   barchart_age,
   barchart_time,
 }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-organ-donation"]);
+  const { t, i18n } = useTranslation(["dashboard-organ-donation", "common"]);
 
   const router = useRouter();
   const windowWidth = useWindowWidth();
@@ -66,11 +66,11 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
     <>
       <Hero
         background="green"
-        category={[t("nav.megamenu.categories.healthcare"), "text-[#16A34A]"]}
-        header={[t("dashboard-organ-donation:header")]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-[#16A34A]"]}
+        header={[t("header")]}
         description={
           <>
-            <p className={"text-dim xl:w-2/3"}>{t("dashboard-organ-donation:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
             <div className="pt-3">
               <StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />
             </div>
@@ -89,15 +89,15 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
       <Container className="min-h-screen">
         {/* What are the latest organ pledger trends in Malaysia? */}
         <Section
-          title={t("dashboard-organ-donation:timeseries_header", {
+          title={t("timeseries_header", {
             state: CountryAndStates[currentState],
           })}
-          description={t("dashboard-organ-donation:timeseries_description")}
+          description={t("timeseries_description")}
           date={timeseries.data_as_of}
         >
           <Timeseries
             className="h-[350px] w-full"
-            title={t("dashboard-organ-donation:timeseries_title", {
+            title={t("timeseries_title", {
               state: CountryAndStates[currentState],
             })}
             interval="auto"
@@ -107,14 +107,14 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                 {
                   type: "line",
                   data: coordinate.line,
-                  label: t("dashboard-organ-donation:tooltip1"),
+                  label: t("tooltip1"),
                   borderColor: "#16A34A",
                   borderWidth: 1.5,
                   backgroundColor: "#16A34A1A",
                   fill: true,
                 },
                 {
-                  label: t("dashboard-organ-donation:tooltip2"),
+                  label: t("tooltip2"),
                   data: coordinate.daily,
                   borderColor: "#00000000",
                   backgroundColor: "#00000000",
@@ -138,15 +138,15 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
             left={
               <div className="flex h-full w-full flex-col space-y-6 p-8">
                 <div className="flex flex-col gap-2">
-                  <h4>{t("dashboard-organ-donation:choro_header")}</h4>
+                  <h4>{t("choro_header")}</h4>
                   <span className="text-dim text-sm">
-                    {t("common.data_of", { date: choropleth.data_as_of })}
+                    {t("common:common.data_of", { date: choropleth.data_as_of })}
                   </span>
                 </div>
                 <div className="flex grow flex-col justify-between space-y-6">
-                  <p className="text-dim">{t("dashboard-organ-donation:choro_description")}</p>
+                  <p className="text-dim">{t("choro_description")}</p>
                   <div className="space-y-3 border-t pt-6">
-                    <p className="font-bold">{t("dashboard-organ-donation:choro_ranking")}</p>
+                    <p className="font-bold">{t("choro_ranking")}</p>
                     {topStateIndices.map((pos, i) => {
                       return (
                         <div className="flex space-x-3">
@@ -182,23 +182,23 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
 
         {/* How strong is new pledger recruitment in Malaysia? */}
         <Section
-          title={t("dashboard-organ-donation:bar_header", {
+          title={t("bar_header", {
             state: CountryAndStates[currentState],
           })}
-          description={t("dashboard-organ-donation:bar_description")}
+          description={t("bar_description")}
           date={barchart_time.date_as_of}
         >
           <div className="grid w-full grid-cols-1 gap-12 xl:grid-cols-2">
             <div>
-              <Tabs title={t("dashboard-organ-donation:bar1_title")}>
-                <Panel name={t("dashboard-organ-donation:annual")}>
+              <Tabs title={t("bar1_title")}>
+                <Panel name={t("annual")}>
                   <Bar
                     className="h-[250px]"
                     data={{
                       labels: barchart_time.data.annual.x,
                       datasets: [
                         {
-                          label: `${t("dashboard-organ-donation:bar_tooltip")}`,
+                          label: `${t("bar_tooltip")}`,
                           data: barchart_time.data.annual.y,
                           borderRadius: 12,
                           barThickness: 12,
@@ -210,14 +210,14 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                     enableGridX={false}
                   />{" "}
                 </Panel>
-                <Panel name={t("dashboard-organ-donation:monthly")}>
+                <Panel name={t("monthly")}>
                   <Bar
                     className="h-[250px]"
                     data={{
                       labels: barchart_time.data.monthly.x,
                       datasets: [
                         {
-                          label: `${t("dashboard-organ-donation:bar_tooltip")}`,
+                          label: `${t("bar_tooltip")}`,
                           data: barchart_time.data.monthly.y,
                           borderRadius: 12,
                           barThickness: 12,
@@ -232,15 +232,15 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
               </Tabs>
             </div>
             <div>
-              <Tabs title={t("dashboard-organ-donation:bar2_title")}>
-                <Panel name={t("dashboard-organ-donation:year")}>
+              <Tabs title={t("bar2_title")}>
+                <Panel name={t("year")}>
                   <Bar
                     className="h-[250px]"
                     data={{
                       labels: barchart_age.data.past_year.x,
                       datasets: [
                         {
-                          label: `${t("dashboard-organ-donation:bar_tooltip")}`,
+                          label: `${t("bar_tooltip")}`,
                           data: barchart_age.data.past_year.y,
                           borderRadius: 12,
                           barThickness: 12,
@@ -252,14 +252,14 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                     enableGridX={false}
                   />
                 </Panel>
-                <Panel name={t("dashboard-organ-donation:month")}>
+                <Panel name={t("month")}>
                   <Bar
                     className="h-[250px]"
                     data={{
                       labels: barchart_age.data.past_month.x,
                       datasets: [
                         {
-                          label: `${t("dashboard-organ-donation:bar_tooltip")}`,
+                          label: `${t("bar_tooltip")}`,
                           data: barchart_age.data.past_month.y,
                           borderRadius: 12,
                           barThickness: 12,

@@ -34,7 +34,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   barmeter,
   waffle,
 }) => {
-  const { t } = useTranslation(["common", "dashboard-covid-vaccination"]);
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   const router = useRouter();
   const currentState = (router.query.state as string) ?? "mys";
 
@@ -44,13 +44,13 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
 
   const AGE_OPTIONS: Array<OptionType> = ["total", "child", "adolescent", "adult", "elderly"].map(
     (key: string) => ({
-      label: t(`dashboard-covid-vaccination:${key}`),
+      label: t(`${key}`),
       value: key,
     })
   );
   const DOSE_OPTIONS: Array<OptionType> = ["dose1", "dose2", "booster1", "booster2"].map(
     (key: string) => ({
-      label: t(`dashboard-covid-vaccination:${key}`),
+      label: t(`${key}`),
       value: key,
     })
   );
@@ -69,7 +69,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose1",
       color: "#9FE8B1",
       dosePerc: (
-        <Tooltip tip={<span>{t("dashboard-covid-vaccination:tooltips_dose1")}</span>}>
+        <Tooltip tip={<span>{t("tooltips_dose1")}</span>}>
           {open => (
             <>
               <p
@@ -87,7 +87,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose2",
       color: "#31C752",
       dosePerc: (
-        <Tooltip tip={<span>{t("dashboard-covid-vaccination:tooltips_dose2")}</span>}>
+        <Tooltip tip={<span>{t("tooltips_dose2")}</span>}>
           {open => (
             <>
               <p
@@ -127,11 +127,11 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
     <>
       <Hero
         background="green"
-        category={[t("nav.megamenu.categories.healthcare"), "text-green-600"]}
-        header={[t("dashboard-covid-vaccination:header")]}
+        category={[t("common:nav.megamenu.categories.healthcare"), "text-green-600"]}
+        header={[t("header")]}
         description={
           <>
-            <p className={"text-dim xl:w-2/3"}>{t("dashboard-covid-vaccination:description")}</p>
+            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
             <div className="pt-6">
               <StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />
             </div>
@@ -149,7 +149,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       <Container className="min-h-screen">
         {/* How vaccinated against COVID-19 are we? */}
         <Section
-          title={t("dashboard-covid-vaccination:waffle_header", {
+          title={t("waffle_header", {
             state: CountryAndStates[currentState],
           })}
           date={waffle.data_as_of}
@@ -173,27 +173,21 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
               />
             )}
             <Tabs.List
-              options={[
-                t("dashboard-covid-vaccination:filter_age"),
-                t("dashboard-covid-vaccination:filter_dose"),
-              ]}
+              options={[t("filter_age"), t("filter_dose")]}
               current={data.vax_tab}
               onChange={i => setData("vax_tab", i)}
             />
           </div>
 
           <Tabs hidden current={data.vax_tab} onChange={i => setData("vax_tab", i)}>
-            <Panel
-              name={t("dashboard-covid-vaccination:filter_age")}
-              key={t("dashboard-covid-vaccination:filter_age")}
-            >
+            <Panel name={t("filter_age")} key={t("filter_age")}>
               <div className="grid grid-cols-2 gap-x-2 gap-y-10 py-5 lg:grid-cols-4 lg:gap-6">
                 {WAFFLE_LIST.map(({ doseType, dosePerc, color }) => (
                   <Waffle
                     className="aspect-square w-full lg:h-[250px] lg:w-auto"
                     title={
                       <div className="flex self-center text-base font-bold">
-                        {t(`dashboard-covid-vaccination:${doseType}`).concat(` - `)}
+                        {t(`${doseType}`).concat(` - `)}
                         {dosePerc}
                       </div>
                     }
@@ -202,7 +196,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                   >
                     <div className="text-dim">
                       <p>
-                        {`${t("dashboard-covid-vaccination:total")} - `}
+                        {`${t("total")} - `}
                         <span className="font-medium">
                           {(
                             waffle.data[data.filter_age.value][doseType].total as number
@@ -210,7 +204,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                         </span>
                       </p>
                       <p>
-                        {`${t("dashboard-covid-vaccination:daily")} - `}
+                        {`${t("daily")} - `}
                         <span className="font-medium">
                           {waffle.data[data.filter_age.value][doseType].daily}
                         </span>
@@ -220,10 +214,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 ))}
               </div>
             </Panel>
-            <Panel
-              name={t("dashboard-covid-vaccination:filter_dose")}
-              key={t("dashboard-covid-vaccination:filter_dose")}
-            >
+            <Panel name={t("filter_dose")} key={t("filter_dose")}>
               <BarMeter
                 className="col-span-2"
                 data={barmeter.data[data.filter_dose.value]}
@@ -235,12 +226,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         </Section>
 
         {/* What is the current state of the COVID-19 vaccination program? */}
-        <Section
-          title={t("dashboard-covid-vaccination:combine_header")}
-          date={timeseries.data_as_of}
-        >
+        <Section title={t("combine_header")} date={timeseries.data_as_of}>
           <Timeseries
-            title={t("dashboard-covid-vaccination:combine_title", {
+            title={t("combine_title", {
               state: CountryAndStates[currentState],
             })}
             interval="auto"
@@ -250,7 +238,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                 {
                   type: "line",
                   data: coordinate.line_stacked,
-                  label: t("dashboard-covid-vaccination:combine_tooltip1"),
+                  label: t("combine_tooltip1"),
                   borderColor: AKSARA_COLOR.GREEN,
                   borderWidth: 1.5,
                   backgroundColor: AKSARA_COLOR.GREEN_H,
@@ -269,7 +257,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
 
         {/*  How are COVID-19 key indicators trending */}
         <Section
-          title={t("dashboard-covid-vaccination:area_chart_header", {
+          title={t("area_chart_header", {
             state: CountryAndStates[currentState],
           })}
           date={timeseries.data_as_of}
@@ -282,7 +270,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
               return (
                 <Timeseries
                   className="h-[250px]"
-                  title={t(`dashboard-covid-vaccination:${title}`)}
+                  title={t(`${title}`)}
                   enableGridX={false}
                   precision={0}
                   data={{
@@ -291,7 +279,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                       {
                         type: "line",
                         data: coordinate[y_key],
-                        label: t("dashboard-covid-vaccination:combine_tooltip1"),
+                        label: t("combine_tooltip1"),
                         borderColor: AKSARA_COLOR.GREEN,
                         borderWidth: 1.5,
                         backgroundColor: AKSARA_COLOR.GREEN_H,
@@ -301,11 +289,11 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("dashboard-covid-vaccination:daily"),
+                      title: t("daily"),
                       value: `+${numFormat(statistics.data[statistic_key].latest, "standard")}`,
                     },
                     {
-                      title: t("dashboard-covid-vaccination:total"),
+                      title: t("total"),
                       value: `${numFormat(statistics.data[statistic_key].total, "standard")}`,
                     },
                   ]}

@@ -2,19 +2,21 @@ import "../styles/globals.css";
 import { appWithTranslation } from "next-i18next";
 import { AppPropsLayout } from "@lib/types";
 import Layout from "@components/Layout";
-import { useEffect, ReactNode, useState, createContext } from "react";
+import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import mixpanelConfig from "@config/mixpanel";
 import { ga_track, init_session } from "@lib/mixpanel";
 import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
+import Nexti18NextConfig from "../next-i18next.config";
+import { clx } from "@lib/helpers";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
   const layout =
     Component.layout ??
     ((page: ReactNode) => (
-      <Layout className={[Fonts.body.variable, "font-sans"].join(" ")}>{page}</Layout>
+      <Layout className={clx(Fonts.body.variable, "font-sans")}>{page}</Layout>
     ));
   const router = useRouter();
 
@@ -39,20 +41,12 @@ function App({ Component, pageProps }: AppPropsLayout) {
   }, [router.events]);
 
   return (
-    <>
+    <div className={clx(Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black")}>
       <ThemeProvider attribute="class" enableSystem={false}>
-        {layout(
-          <div
-            className={[Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black"].join(
-              " "
-            )}
-          >
-            <Component {...pageProps} />
-          </div>
-        )}
+        {layout(<Component {...pageProps} />, pageProps)}
       </ThemeProvider>
-    </>
+    </div>
   );
 }
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, Nexti18NextConfig);

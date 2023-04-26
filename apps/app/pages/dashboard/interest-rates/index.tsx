@@ -3,7 +3,7 @@ import InterestRatesDashboard from "@dashboards/financial-sector/interest-rates"
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 
 const InterestRates = ({
   last_updated,
@@ -11,13 +11,13 @@ const InterestRates = ({
   timeseries_opr,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-interest-rates"]);
+  const { t } = useTranslation(["dashboard-interest-rates", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.interest_rates")}
-        description={t("dashboard-interest-rates:description")}
+        title={t("common:nav.megamenu.dashboards.interest_rates")}
+        description={t("description")}
         keywords={""}
       />
       <InterestRatesDashboard
@@ -30,12 +30,7 @@ const InterestRates = ({
   );
 };
 // Disabled
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-interest-rates"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-interest-rates", async () => {
   const { data } = await get("/dashboard", { dashboard: "interest_rates" });
 
   // Fill the "in-betweens".
@@ -110,13 +105,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     notFound: false,
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
       timeseries_opr: data.timeseries_opr,
     },
   };
-};
+});
 
 export default InterestRates;

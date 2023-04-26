@@ -24,26 +24,26 @@ interface ElectionExplorerProps {
 }
 
 const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ candidate, party, seat }) => {
-  const { t, i18n } = useTranslation(["common", "dashboard-election-explorer"]);
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const PANELS = [
     {
-      name: t("dashboard-election-explorer:elections"),
+      name: t("elections"),
       icon: <SPRIconSolid className="-mb-1" />,
       data: <Election />,
     },
     {
-      name: t("dashboard-election-explorer:candidates"),
+      name: t("candidates"),
       icon: <UserIcon className="m-1 h-5 w-5" />,
       data: <ElectionCandidates candidate={candidate} />,
     },
     {
-      name: t("dashboard-election-explorer:parties"),
+      name: t("parties"),
       icon: <FlagIcon className="m-1 h-5 w-5" />,
       data: <ElectionParties party={party} />,
     },
     {
-      name: t("dashboard-election-explorer:seats"),
+      name: t("seats"),
       icon: <MapIcon className="m-1 h-5 w-5" />,
       data: <ElectionSeats seat={seat} />,
     },
@@ -55,9 +55,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ candidate,
     <>
       <Hero
         background="red"
-        category={[t("nav.megamenu.categories.democracy"), "text-danger"]}
-        header={[t("dashboard-election-explorer:header")]}
-        description={[t("dashboard-election-explorer:description")]}
+        category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency={"Election Comission (EC)"}

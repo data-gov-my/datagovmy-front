@@ -2,10 +2,10 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ExchangeRatesDashboard from "@dashboards/economy/exchange-rates";
+import { withi18n } from "@lib/decorators";
 
 const ExchangeRates: Page = ({
   last_updated,
@@ -13,13 +13,13 @@ const ExchangeRates: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-exchange-rates"]);
+  const { t } = useTranslation(["dashboard-exchange-rates", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.exchange_rate")}
-        description={t("dashboard-exchange-rates:description")}
+        title={t("common:nav.megamenu.dashboards.exchange_rate")}
+        description={t("description")}
         keywords={""}
       />
       <ExchangeRatesDashboard
@@ -32,17 +32,11 @@ const ExchangeRates: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-exchange-rates"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rate", async () => {
   const { data } = await get("/dashboard", { dashboard: "exchange_rates" });
 
   return {
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       bar: data.bar_chart,
       timeseries: data.timeseries,
@@ -50,6 +44,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default ExchangeRates;

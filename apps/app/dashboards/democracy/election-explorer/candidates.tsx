@@ -43,21 +43,21 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
   const columnHelper = createColumnHelper<Candidate>();
 
   const results: { [key: string]: ReactNode } = {
-    won: <Won desc={t("dashboard-election-explorer:candidate.won")} />,
-    won_uncontested: <Won desc={t("dashboard-election-explorer:candidate.won_uncontested")} />,
-    lost: <Lost desc={t("dashboard-election-explorer:candidate.lost")} />,
-    lost_deposit: <Lost desc={t("dashboard-election-explorer:candidate.lost_deposit")} />,
+    won: <Won desc={t("candidate.won")} />,
+    won_uncontested: <Won desc={t("candidate.won_uncontested")} />,
+    lost: <Lost desc={t("candidate.lost")} />,
+    lost_deposit: <Lost desc={t("candidate.lost_deposit")} />,
   };
 
   const columns: ColumnDef<Candidate, any>[] = [
     columnHelper.accessor("election_name", {
       id: "election_name",
-      header: t("dashboard-election-explorer:election_name"),
+      header: t("election_name"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor((row: any) => row.date, {
       id: "date",
-      header: t("dashboard-election-explorer:date"),
+      header: t("date"),
       cell: (info: any) => (
         <p>
           {DateTime.fromISO(info.getValue())
@@ -68,12 +68,12 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
     }),
     columnHelper.accessor("seat", {
       id: "seat",
-      header: t("dashboard-election-explorer:constituency"),
+      header: t("constituency"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("party", {
       id: "party",
-      header: t("dashboard-election-explorer:party_name"),
+      header: t("party_name"),
       cell: (info: any) => {
         const party = info.getValue().toLowerCase() as string;
         return (
@@ -86,16 +86,16 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
               }
               width={28}
               height={16}
-              alt={t(`dashboard-election-explorer:${party}`)}
+              alt={t(`${party}`)}
             />
-            <span>{t(`dashboard-election-explorer:${party}`)}</span>
+            <span>{t(`${party}`)}</span>
           </div>
         );
       },
     }),
     columnHelper.accessor("votes", {
       id: "votes",
-      header: t("dashboard-election-explorer:votes_won"),
+      header: t("votes_won"),
       cell: (info: any) => {
         const votes = info.getValue();
         return (
@@ -110,7 +110,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
     }),
     columnHelper.accessor("result", {
       id: "result",
-      header: t("dashboard-election-explorer:result"),
+      header: t("result"),
       cell: (info: any) => results[info.getValue()],
     }),
     columnHelper.accessor("result", {
@@ -118,7 +118,7 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
       header: "",
       cell: (info: any) => (
         <ElectionCard
-          label={t("dashboard-election-explorer:full_result")}
+          label={t("full_result")}
           win={results[info.getValue()]}
           title={
             <div className="flex flex-row gap-2 uppercase">
@@ -177,11 +177,11 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
     <Section>
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("dashboard-election-explorer:candidate.header")}</h4>
+          <h4 className="text-center">{t("candidate.header")}</h4>
           <div className="pb-12 pt-6">
             <div className="flex flex-col items-center justify-center space-y-3">
               <ComboBox
-                placeholder={t("dashboard-election-explorer:candidate.search_candidate")}
+                placeholder={t("candidate.search_candidate")}
                 options={CANDIDATE_OPTIONS}
                 selected={
                   data.p_candidate
@@ -198,21 +198,21 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
           <Tabs
             title={
               <div className="text-base font-bold">
-                {t("dashboard-election-explorer:candidate.title")}
+                {t("candidate.title")}
                 <span className="text-primary">{data.q_candidate}</span>
               </div>
             }
             current={data.tabs}
             onChange={index => setData("tabs", index)}
           >
-            <Panel name={t("dashboard-election-explorer:parliament_elections")}>
+            <Panel name={t("parliament_elections")}>
               <BorderlessTable
                 data={data.data}
                 columns={columns}
                 isLoading={data.loading}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.no_data", {
+                    {t("candidate.no_data", {
                       name: data.q_candidate,
                       context: "parliament",
                     })}
@@ -220,14 +220,14 @@ const ElectionCandidates: FunctionComponent<ElectionCandidatesProps> = ({ candid
                 }
               />
             </Panel>
-            <Panel name={t("dashboard-election-explorer:state_elections")}>
+            <Panel name={t("state_elections")}>
               <BorderlessTable
                 data={data.data}
                 columns={columns}
                 isLoading={data.loading}
                 empty={
                   <p>
-                    {t("dashboard-election-explorer:candidate.no_data", {
+                    {t("candidate.no_data", {
                       name: data.q_candidate,
                       context: "dun",
                     })}

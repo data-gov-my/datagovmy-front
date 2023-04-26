@@ -123,7 +123,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
                   {feature.properties![type]}:{" "}
                   {value !== null && value !== undefined
                     ? numFormat(value, "standard", precision).concat(unit ?? "")
-                    : t("common.no_data")}
+                    : t("common:common.no_data")}
                 </Tooltip>
               </GeoJSON>
             );

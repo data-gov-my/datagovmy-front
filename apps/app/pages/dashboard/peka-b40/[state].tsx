@@ -3,12 +3,12 @@ import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import { CountryAndStates, STATES } from "@lib/constants";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "@hooks/useTranslation";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
 import Fonts from "@config/font";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
+import { withi18n } from "@lib/decorators";
+import { clx } from "@lib/helpers";
 
 const PekaB40State: Page = ({
   last_updated,
@@ -16,13 +16,13 @@ const PekaB40State: Page = ({
   state,
   choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-peka-b40"]);
+  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-peka-b40:header"))}
-        description={t("dashboard-peka-b40:description")}
+        title={CountryAndStates[state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <PekaB40Dashboard
@@ -34,16 +34,10 @@ const PekaB40State: Page = ({
   );
 };
 
-PekaB40State.layout = page => (
+PekaB40State.layout = (page, props) => (
   <Layout
-    className={[Fonts.body.variable, "font-sans"].join(" ")}
-    stateSelector={
-      <StateDropdown
-        url={routes.PEKA_B40}
-        currentState={(useRouter().query.state as string) ?? "mys"}
-        hideOnScroll
-      />
-    }
+    className={clx(Fonts.body.variable, "font-sans")}
+    stateSelector={<StateDropdown url={routes.PEKA_B40} currentState={props?.state} hideOnScroll />}
   >
     <StateModal url={routes.PEKA_B40} />
     {page}
@@ -73,24 +67,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-peka-b40"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", async ({ params }) => {
   const { data } = await get("/dashboard", { dashboard: "peka_b40", state: params?.state });
 
   return {
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
-      state: params?.state,
+      state: params?.state ?? "mys",
       choropleth: data.choropleth_malaysia,
     },
     revalidate: 300,
   };
-};
+});
 
 export default PekaB40State;

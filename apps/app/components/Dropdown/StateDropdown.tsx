@@ -60,7 +60,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
         disabled={disabled}
         selected={options.find(state => state.value === currentState)}
         options={options.filter(option => !exclude?.includes(option.value))}
-        placeholder={t("placeholder.state")}
+        placeholder={t("common:placeholder.state")}
         enableFlag
         anchor={anchor}
         darkMode={darkMode}

@@ -3,7 +3,7 @@ import MoneySupplyDashboard from "@dashboards/financial-sector/money-supply";
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { withi18n } from "@lib/decorators";
 
 const MoneySupply = ({
   last_updated,
@@ -11,13 +11,13 @@ const MoneySupply = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common", "dashboard-money-supply"]);
+  const { t } = useTranslation(["dashboard-money-supply", "common"]);
 
   return (
     <>
       <Metadata
-        title={t("nav.megamenu.dashboards.money_supply")}
-        description={t("dashboard-money-supply:description")}
+        title={t("common:nav.megamenu.dashboards.money_supply")}
+        description={t("description")}
         keywords={""}
       />
       <MoneySupplyDashboard
@@ -30,18 +30,12 @@ const MoneySupply = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common", "dashboard-money-supply"], null, [
-    "en-GB",
-    "ms-MY",
-  ]);
-
+export const getStaticProps: GetStaticProps = withi18n("dashboard-money-supply", async () => {
   const { data } = await get("/dashboard", { dashboard: "money_measures" });
 
   return {
     notFound: false,
     props: {
-      ...i18n,
       last_updated: new Date().valueOf(),
       table_summary: data.table_summary,
       timeseries: data.timeseries,
@@ -49,6 +43,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default MoneySupply;
