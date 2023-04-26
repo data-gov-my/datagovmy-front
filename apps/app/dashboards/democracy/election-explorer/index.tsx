@@ -18,19 +18,25 @@ import ElectionSeats from "./seats";
  */
 
 interface ElectionExplorerProps {
+  election: any;
   candidate: any;
   party: any;
   seat: any;
 }
 
-const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ candidate, party, seat }) => {
+const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
+  election,
+  candidate,
+  party,
+  seat,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const PANELS = [
     {
       name: t("elections"),
       icon: <SPRIconSolid className="-mb-1" />,
-      data: <Election />,
+      data: <Election election={election} />,
     },
     {
       name: t("candidates"),

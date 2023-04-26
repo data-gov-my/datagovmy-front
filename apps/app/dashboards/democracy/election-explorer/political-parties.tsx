@@ -7,6 +7,7 @@ import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import { Panel, Section, StateDropdown, Tabs } from "@components/index";
 import { OptionType } from "@components/types";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates } from "@lib/constants";
@@ -14,6 +15,7 @@ import { numFormat } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
+import { DateTime } from "luxon";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -36,11 +38,16 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
     party_list: [],
     state: "mys",
     tabs: 0,
-    party: "",
+    index: 0,
+    open: false,
+    result: [],
+    // placeholder
+    p_party: "",
 
     // query
     q_party: "PERIKATAN",
     loading: false,
+    modalLoading: false,
   });
 
   type Party = {
@@ -99,16 +106,84 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
         );
       },
     }),
-    columnHelper.accessor("result", {
+    columnHelper.display({
       id: "fullResult",
-      header: "",
-      cell: (info: any) => (
-        <ElectionCard
-          label={t("full_result")}
-          win={results[info.getValue()]}
-          title={"GE-15 Result"}
-        />
-      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex items-center justify-center">
+            <button
+              className="flex flex-row items-center gap-1.5 px-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+              onClick={() => {
+                setData("open", true);
+                setData("index", row.index);
+              }}
+            >
+              <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
+              <p>{t("full_result")}</p>
+            </button>
+          </div>
+        );
+      },
+    }),
+  ];
+
+  type Result = {
+    name: string;
+    party: string;
+    seats: Record<string, number>;
+    votes: Record<string, number>;
+  };
+
+  const resultsColumnHelper = createColumnHelper<Result>();
+
+  const resultsColumns: ColumnDef<Result, any>[] = [
+    resultsColumnHelper.accessor("party", {
+      id: "party",
+      header: t("party_name"),
+      cell: (info: any) => {
+        const party = info.getValue() as string;
+        return (
+          <div className="flex flex-row items-center gap-2 pr-7 xl:pr-0">
+            <ImageWithFallback
+              src={`/static/images/parties/${party}.png`}
+              width={28}
+              height={16}
+              alt={t(`${party}`)}
+            />
+            <span>{t(`${party}`)}</span>
+          </div>
+        );
+      },
+    }),
+    resultsColumnHelper.accessor("seats", {
+      id: "seats",
+      header: t("seats_won"),
+      cell: (info: any) => {
+        const seats = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={seats.perc} />
+            <p>{`${seats.abs === 0 ? "—" : seats.won + "/" + seats.total} ${
+              seats.perc !== null ? `(${+seats.perc.toFixed(1)}%)` : ""
+            }`}</p>
+          </div>
+        );
+      },
+    }),
+    resultsColumnHelper.accessor("votes", {
+      id: "votes",
+      header: t("votes_won"),
+      cell: (info: any) => {
+        const votes = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={votes.perc} />
+            <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
+              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
+            }`}</p>
+          </div>
+        );
+      },
     }),
   ];
 
@@ -143,6 +218,21 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
       .then(() => setData("loading", false));
   }, [data.q_party, data.state, data.tabs]);
 
+  useWatch(() => {
+    setData("modalLoading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "full_result",
+      type: "party",
+      election: data.data[data.index].election_name,
+      state: data.state,
+    })
+      .then(({ data }) => {
+        setData("result", data);
+      })
+      .then(() => setData("modalLoading", false));
+  }, [data.index, data.open]);
+
   return (
     <Section>
       <div className="lg:grid lg:grid-cols-12">
@@ -153,7 +243,9 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
               <ComboBox
                 placeholder={t("party.search_party")}
                 options={PARTY_OPTIONS}
-                selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party.value) : null}
+                selected={
+                  data.p_party ? PARTY_OPTIONS.find(e => e.value === data.p_party.value) : null
+                }
                 onChange={e => {
                   if (e) setData("q_party", e.value.toUpperCase());
                   setData("party", e);
@@ -222,6 +314,29 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
           </Tabs>
         </div>
       </div>
+      {data.open && (
+        <ElectionCard
+          open={data.open}
+          onClose={() => setData("open", false)}
+          onNext={() => (data.index === data.data.length ? null : setData("index", data.index + 1))}
+          onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+          election_name={data.data[data.index].election_name}
+          date={DateTime.fromISO(data.data[data.index].date)
+            .setLocale(i18n.language)
+            .toLocaleString(DateTime.DATE_MED)}
+          title={
+            <div className="flex flex-row gap-2 uppercase">
+              <h5>{data.data[data.index].election_name.concat(" Results")}</h5>
+            </div>
+          }
+          isLoading={data.modalLoading}
+          data={data.result}
+          columns={resultsColumns}
+          highlightedRow={data.result.findIndex((r: Result) => r.party === data.q_party)}
+          page={data.index}
+          total={data.data.length}
+        />
+      )}
     </Section>
   );
 };

@@ -6,6 +6,7 @@ import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import { Section } from "@components/index";
 import { OptionType } from "@components/types";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
@@ -102,32 +103,38 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
     }),
     columnHelper.display({
       id: "fullResult",
-      cell: () => (
-        <ElectionCard
-          label={t("full_result")}
-          title={
-            <div>
-              <span className="text-lg font-bold uppercase text-black dark:text-white">
-                {data.q_seat.split(",")[0]}
-              </span>
-              <span className="text-dim pl-2 text-lg font-normal uppercase">
-                {data.q_seat.split(",")[1]}
-              </span>
-            </div>
-          }
-        />
-      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex items-center justify-center">
+            <button
+              className="flex flex-row items-center gap-1.5 px-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+              onClick={() => {
+                setData("open", true);
+                setData("index", row.index);
+              }}
+            >
+              <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
+              <p>{t("full_result")}</p>
+            </button>
+          </div>
+        );
+      },
     }),
   ];
 
   const { data, setData } = useData({
     data: seat,
     seats_list: [],
-    loading: false,
-    seat: "",
+    index: 0,
+    open: false,
+    result: [],
+    // placeholder
+    p_seat: "",
 
     // query
     q_seat: "Padang Besar, Perlis",
+    loading: false,
+    modalLoading: false,
   });
 
   const SEAT_OPTIONS: Array<OptionType> =
@@ -159,6 +166,21 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
       .then(() => setData("loading", false));
   }, [data.q_seat]);
 
+  useWatch(() => {
+    setData("modalLoading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "full_result",
+      type: "seats",
+      election: data.data[data.index].election_name,
+      seat: data.data[data.index].seat,
+    })
+      .then(({ data }) => {
+        setData("result", data);
+      })
+      .then(() => setData("modalLoading", false));
+  }, [data.index, data.open]);
+
   return (
     <Section>
       <div className="grid grid-cols-12">
@@ -169,7 +191,9 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
               <ComboBox
                 placeholder={t("seat.search_seat")}
                 options={SEAT_OPTIONS}
-                selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null}
+                selected={
+                  data.p_seat ? SEAT_OPTIONS.find(e => e.value === data.p_seat.value) : null
+                }
                 onChange={e => {
                   if (e) setData("q_seat", e.value);
                   setData("seat", e);
@@ -190,6 +214,30 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
           />
         </div>
       </div>
+      {data.open && (
+        <ElectionCard
+          open={data.open}
+          onClose={() => setData("open", false)}
+          onNext={() => (data.index === data.data.length ? null : setData("index", data.index + 1))}
+          onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+          election_name={data.data[data.index].election_name}
+          date={DateTime.fromISO(data.data[data.index].date)
+            .setLocale(i18n.language)
+            .toLocaleString(DateTime.DATE_MED)}
+          title={
+            <div className="flex flex-row gap-2 uppercase">
+              <h5>{data.data[data.index].seat.split(",")[0]}</h5>
+              <span className="text-dim font-normal">
+                {data.data[data.index].seat.split(",")[1]}
+              </span>
+            </div>
+          }
+          isLoading={data.modalLoading}
+          data={data.result}
+          page={data.index}
+          total={data.data.length}
+        />
+      )}
     </Section>
   );
 };

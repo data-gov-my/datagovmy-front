@@ -8,6 +8,7 @@ import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
 import { withi18n } from "@lib/decorators";
 
 const ElectionExplorer: Page = ({
+  election,
   candidate,
   party,
   seat,
@@ -17,23 +18,30 @@ const ElectionExplorer: Page = ({
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard candidate={candidate} seat={seat} party={party} />
+      <ElectionExplorerDashboard
+        election={election}
+        candidate={candidate}
+        party={party}
+        seat={seat}
+      />
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
+  const { data: election } = await get("/explorer", {
+    explorer: "ELECTIONS",
+    chart: "full_result",
+    type: "seats",
+    election: "GE-15",
+    seat: "Padang Besar, Perlis",
+  });
+
   const { data: candidate } = await get("/explorer", {
     explorer: "ELECTIONS",
     chart: "candidates",
     name: "Tunku Abdul Rahman Putra Al-Haj",
     type: "parlimen",
-  });
-
-  const { data: seat } = await get("/explorer", {
-    explorer: "ELECTIONS",
-    chart: "seats",
-    seat_name: "Padang Besar, Perlis",
   });
 
   const { data: party } = await get("/explorer", {
@@ -44,12 +52,19 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
     type: "parlimen",
   });
 
+  const { data: seat } = await get("/explorer", {
+    explorer: "ELECTIONS",
+    chart: "seats",
+    seat_name: "Padang Besar, Perlis",
+  });
+
   return {
     notFound: false,
     props: {
+      election: election,
       candidate: candidate.reverse(),
-      seat: seat.reverse(),
       party: party.reverse(),
+      seat: seat.reverse(),
     },
   };
 });

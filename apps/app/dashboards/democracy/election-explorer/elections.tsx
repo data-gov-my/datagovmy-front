@@ -6,16 +6,16 @@ import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import Label from "@components/Label";
 import LeftRightCard from "@components/LeftRightCard";
-import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
 import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates, PoliticalParty, PoliticalPartyColours } from "@lib/constants";
-import { clx, numFormat } from "@lib/helpers";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { clx } from "@lib/helpers";
 import { useWindowScroll } from "@hooks/useWindowWidth";
+import { useWatch } from "@hooks/useWatch";
+import { get } from "@lib/api";
 
 /**
  * Election Explorer Dashboard - Elections Tab
@@ -28,9 +28,11 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
 
-interface ElectionProps {}
+interface ElectionProps {
+  election: any;
+}
 
-const Election: FunctionComponent<ElectionProps> = ({}) => {
+const Election: FunctionComponent<ElectionProps> = ({ election }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
@@ -69,26 +71,16 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     "GE-12 (2008)",
     "GE-11 (2004)",
     "GE-10 (1999)",
-    "GE-9 (1995)",
-    "GE-8 (1990)",
-    "GE-7 (1986)",
-    "GE-6 (1982)",
-    "GE-5 (1978)",
-    "GE-4 (1974)",
-    "GE-3 (1969)",
-    "GE-2 (1964)",
-    "GE-1 (1959)",
-  ].map((key: string) => ({
-    label: key,
-    value: key,
-  }));
-
-  const SEAT_OPTIONS: Array<OptionType> = [
-    "P.001 Padang Besar, Perlis",
-    "P.002 Kangar, Perlis",
-    "P.003 Arau, Perlis",
-    "P.004 Langkawi, Kedah",
-    "P.005 Jerlun, Kedah",
+    "GE-09 (1995)",
+    "GE-08 (1990)",
+    "GE-07 (1986)",
+    "GE-06 (1982)",
+    "GE-05 (1978)",
+    "GE-04 (1974)",
+    "GE-03 (1969)",
+    "GE-02 (1964)",
+    "GE-01 (1959)",
+    "GE-00 (1955)",
   ].map((key: string) => ({
     label: key,
     value: key,
@@ -139,100 +131,50 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
     tabs: 0,
     tabs_section1: 0,
     tabs_section3: 0,
-    section1_loading: false,
-    section2_loading: false,
-    section3_loading: false,
     filter: FILTER_OPTIONS[0],
-    election: ELECTION_OPTIONS[0],
-    seat: "",
+    election: ELECTION_OPTIONS[0].value,
+    data: election,
+    seats_list: [],
+    p_seat: "",
     state: "",
 
     // query
-    q_seat: SEAT_OPTIONS[0],
+    q_seat: "Padang Besar, Perlis",
+    section1_loading: false,
+    section2_loading: false,
+    section3_loading: false,
   });
 
-  type Candidate = {
-    name: string;
-    party: string;
-    votes: number;
-    perc: number;
-  };
+  const SEAT_OPTIONS: Array<OptionType> =
+    data.seats_list &&
+    data.seats_list.map((key: string) => ({
+      label: key,
+      value: key,
+    }));
 
-  const dummyData: Candidate[] = [
-    {
-      name: "Rushdan Bin Rusmi",
-      party: "pn",
-      votes: 24267,
-      perc: 60.45,
-    },
-    {
-      name: "Ko Chu Liang",
-      party: "ph",
-      votes: 11753,
-      perc: 30.05,
-    },
-    {
-      name: "Zahida Binti Zarik Khan",
-      party: "bn",
-      votes: 9267,
-      perc: 4.5,
-    },
-    {
-      name: "Kapt (B) Hj Mohamad Yahya",
-      party: "warisan",
-      votes: 7085,
-      perc: 3.5,
-    },
-    {
-      name: "Zahidi Zainul Abidin",
-      party: "bebas",
-      votes: 244,
-      perc: 1.5,
-    },
-  ];
+  useEffect(() => {
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      dropdown: "seats_list",
+    }).then(({ data }) => {
+      setData("seats_list", data);
+    });
+  }, []);
 
-  const columnHelper = createColumnHelper<Candidate>();
-
-  const dummyColumns: Array<ColumnDef<Candidate, any>> = [
-    columnHelper.accessor("name", {
-      id: "name",
-      cell: (info: any) => info.getValue(),
-      header: t("candidate_name"),
-    }),
-    columnHelper.accessor((row: any) => row.party, {
-      id: "party",
-      cell: (info: any) => {
-        const party = info.getValue().toLowerCase() as string;
-        return (
-          <div className="flex items-center gap-2 pr-7 xl:pr-0">
-            <ImageWithFallback
-              src={`/static/images/parties/${party}.png`}
-              width={28}
-              height={16}
-              alt={PoliticalParty[party]}
-            />
-            <span className="text-center">{PoliticalParty[party]}</span>
-          </div>
-        );
-      },
-      header: t("party_name"),
-    }),
-    columnHelper.accessor("votes", {
-      id: "votes",
-      cell: (info: any) => numFormat(info.getValue(), "standard"),
-      header: t("total_votes"),
-    }),
-    columnHelper.accessor("perc", {
-      id: "perc",
-      cell: (info: any) => (
-        <div className="flex flex-row items-center gap-2">
-          <BarMeter perc={info.getValue()} />
-          <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
-        </div>
-      ),
-      header: t("perc_votes"),
-    }),
-  ];
+  useWatch(() => {
+    setData("section2_loading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "full_result",
+      type: "seats",
+      election: data.election.split(" ")[0],
+      seat: data.q_seat,
+    })
+      .then(({ data }) => {
+        setData("data", data);
+      })
+      .then(() => setData("section2_loading", false));
+  }, [data.q_seat]);
 
   // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
 
@@ -295,7 +237,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                     width="w-full"
                     placeholder={t("common:common.select")}
                     options={ELECTION_OPTIONS}
-                    selected={ELECTION_OPTIONS.find(e => e.value === data.election.value)}
+                    selected={ELECTION_OPTIONS.find(e => e.value === data.election)}
                     onChange={e => setData("election", e)}
                   />
                 </div>
@@ -364,12 +306,26 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                             : CountryAndStates["mys"]}
                         </span>
                         <span>: </span>
-                        <span className="text-primary">{data.election.value}</span>
+                        <span className="text-primary">{data.election}</span>
                       </div>
                     }
                     current={data.tabs_section1}
                     onChange={index => setData("tabs_section1", index)}
                   >
+                    <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
+                      <Card
+                        className="border-outline dark:border-washed-dark static h-[500px] rounded-xl border"
+                        type="gray"
+                      >
+                        <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />
+                      </Card>
+                    </Panel>
+                    <Panel
+                      name={t("election.table")}
+                      icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
+                    >
+                      <BorderlessTable isLoading={data.section1_loading} data={data.data} />
+                    </Panel>
                     <Panel name={t("election.summary")}>
                       <div className="space-y-6">
                         <p className="text-center text-sm font-medium">{t("election.majority")}</p>
@@ -419,25 +375,6 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                         </p>
                       </div>
                     </Panel>
-                    <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
-                      <Card
-                        className="border-outline dark:border-washed-dark static h-[500px] rounded-xl border"
-                        type="gray"
-                      >
-                        <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />
-                      </Card>
-                    </Panel>
-                    <Panel
-                      name={t("election.table")}
-                      icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
-                    >
-                      <BorderlessTable
-                        isLoading={data.section1_loading}
-                        highlightedRow={4}
-                        data={dummyData}
-                        columns={dummyColumns}
-                      />
-                    </Panel>
                   </Tabs>
                 </div>
               </div>
@@ -454,10 +391,10 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                     placeholder={t("election.search_area")}
                     options={SEAT_OPTIONS}
                     selected={
-                      data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null
+                      data.p_seat ? SEAT_OPTIONS.find(e => e.value === data.p_seat.value) : null
                     }
                     onChange={e => {
-                      if (e) setData("q_seat", e);
+                      if (e) setData("q_seat", e.value);
                       setData("seat", e);
                     }}
                   />
@@ -468,16 +405,13 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
               title={
                 <div className="text-base font-bold">
                   {t("election.full_result", {
-                    election: data.election.value,
+                    election: data.election,
                   })}
-                  <span className="text-primary">{data.q_seat.value}</span>
+                  <span className="text-primary">{data.q_seat}</span>
                 </div>
               }
-              data={dummyData}
-              columns={dummyColumns}
+              data={data.data}
               isLoading={data.section2_loading}
-              highlightedRow={1}
-              win
             />
           </div>
         </div>
@@ -549,11 +483,7 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
                 </div>
               </Panel>
               <Panel name={t("election.table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
-                <BorderlessTable
-                  isLoading={data.section3_loading}
-                  data={dummyData}
-                  columns={dummyColumns}
-                />
+                <BorderlessTable isLoading={data.section3_loading} data={data.data} />
               </Panel>
             </Tabs>
           </div>

@@ -1,16 +1,10 @@
 import { FunctionComponent, ReactNode } from "react";
-import Image from "next/image";
-import { Button } from "@components/index";
 import Card from "@components/Card";
+import ImageWithFallback from "@components/ImageWithFallback";
+import Spinner from "@components/Spinner";
 import { FaceFrownIcon } from "@heroicons/react/24/outline";
-import {
-  CheckCircleIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/solid";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { PoliticalParty } from "@lib/constants";
 import { clx, numFormat } from "@lib/helpers";
 import {
   ColumnDef,
@@ -19,7 +13,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Spinner from "@components/Spinner";
 
 export interface BorderlessTableProps {
   className?: string;
@@ -28,31 +21,78 @@ export interface BorderlessTableProps {
   data?: any;
   columns?: Array<ColumnDef<any, any>>;
   responsive?: Boolean;
-  enablePagination?: false | number;
   highlightedRow?: false | number;
   win?: boolean;
   isLoading: boolean;
 }
 
+export type Result = {
+  name: string;
+  party: string;
+  votes: Record<string, number>;
+};
+
 const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   className = "",
   title,
   empty,
-  data = dummyData,
-  columns = dummyColumns,
+  data,
+  columns,
   responsive = true,
-  enablePagination = false,
   highlightedRow = false,
   win = true,
   isLoading = false,
 }) => {
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
+
+  const columnHelper = createColumnHelper<Result>();
+
+  const dummyColumns: ColumnDef<Result, any>[] = [
+    columnHelper.accessor("name", {
+      id: "candidate_name",
+      header: t("candidate_name"),
+      cell: (info: any) => info.getValue(),
+    }),
+    columnHelper.accessor("party", {
+      id: "party",
+      header: t("party_name"),
+      cell: (info: any) => {
+        const party = info.getValue() as string;
+        return (
+          <div className="flex flex-row items-center gap-2 pr-7 xl:pr-0">
+            <ImageWithFallback
+              src={`/static/images/parties/${party}.png`}
+              width={28}
+              height={16}
+              alt={t(`${party}`)}
+            />
+            <span>{t(`${party}`)}</span>
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("votes", {
+      id: "votes",
+      header: t("votes_won"),
+      cell: (info: any) => {
+        const votes = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={votes.perc} />
+            <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
+              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
+            }`}</p>
+          </div>
+        );
+      },
+    }),
+  ];
+
   const table = useReactTable({
     data,
-    columns,
+    columns: columns ? columns : dummyColumns,
     getCoreRowModel: getCoreRowModel(),
   });
-  const { t } = useTranslation();
-
   return (
     <div className="space-y-6">
       <div className={clx("flex flex-wrap items-start justify-between gap-2", className)}>
@@ -111,7 +151,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         {rowIndex === highlightedRow &&
                           colIndex === 0 &&
-                          (win ? <Won desc={t("common.won")} /> : <Lost desc={t("common.lost")} />)}
+                          (win ? <Won /> : <Lost />)}
                       </span>
                     </td>
                   ))}
@@ -136,34 +176,6 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
           </Card>
         )}
       </div>
-      {enablePagination && (
-        <div className="space-y-3">
-          <span className="flex items-center justify-center gap-2 text-center text-sm">
-            {t("common:common.page_of", {
-              current: table.getState().pagination.pageIndex + 1,
-              total: table.getPageCount(),
-            })}
-          </span>
-          <div className={`flex items-center justify-center gap-4 text-sm ${className}`}>
-            <Button
-              className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
-              {t("common:common.previous")}
-            </Button>
-            <Button
-              className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {t("common:common.next")}{" "}
-              <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -213,86 +225,3 @@ export const Lost: FunctionComponent<LostProps> = ({ desc }) => {
     </span>
   );
 };
-
-export type Candidate = {
-  name: string;
-  party: string;
-  votes: number;
-  perc: number;
-};
-
-const dummyData: Candidate[] = [
-  {
-    name: "Rushdan Bin Rusmi",
-    party: "pn",
-    votes: 24267,
-    perc: 60.45,
-  },
-  {
-    name: "Ko Chu Liang",
-    party: "ph",
-    votes: 11753,
-    perc: 30.05,
-  },
-  {
-    name: "Zahida Binti Zarik Khan",
-    party: "bn",
-    votes: 9267,
-    perc: 4.5,
-  },
-  {
-    name: "Kapt (B) Hj Mohamad Yahya",
-    party: "warisan",
-    votes: 7085,
-    perc: 3.5,
-  },
-  {
-    name: "Zahidi Zainul Abidin",
-    party: "bebas",
-    votes: 244,
-    perc: 1.5,
-  },
-];
-
-const columnHelper = createColumnHelper<Candidate>();
-
-const dummyColumns: Array<ColumnDef<Candidate, any>> = [
-  columnHelper.accessor("name", {
-    id: "name",
-    cell: (info: any) => info.getValue(),
-    header: "Candidate name",
-  }),
-  columnHelper.accessor((row: any) => row.party, {
-    id: "party",
-    cell: (info: any) => {
-      const party = info.getValue().toLowerCase() as string;
-      return (
-        <div className="flex flex-row items-center gap-1.5 pr-7 xl:pr-0">
-          <Image
-            src={`/static/images/parties/${party}.png`}
-            width={28}
-            height={16}
-            alt={PoliticalParty[party]}
-          />
-          <span className="text-center">{PoliticalParty[party]}</span>
-        </div>
-      );
-    },
-    header: "Party",
-  }),
-  columnHelper.accessor("votes", {
-    id: "votes",
-    cell: (info: any) => numFormat(info.getValue(), "standard"),
-    header: "Total votes",
-  }),
-  columnHelper.accessor("perc", {
-    id: "perc",
-    cell: (info: any) => (
-      <div className="flex flex-row items-center gap-2">
-        <BarMeter perc={info.getValue()} />
-        <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
-      </div>
-    ),
-    header: "% of votes",
-  }),
-];
