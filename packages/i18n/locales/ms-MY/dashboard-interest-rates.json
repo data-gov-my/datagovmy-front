@@ -1,0 +1,20 @@
+{
+  "keys": {
+    "opr": "Kadar Dasar Semalaman (OPR)",
+    "base": "Kadar Asas (purata berwajaran)",
+    "walr": "Kadar Pinjaman (purata bagi pinjaman terkumpul)",
+    "no_shade": "Tiada lorekan",
+    "value_rm": "Nilai (RM)",
+    "recession": "Kemelesetan",
+    "growth_mom": "Pertumbuhan Bulanan",
+    "growth_yoy": "Pertumbuhan Tahunan",
+    "deposit_saving": "Kadar Deposit Tabungan",
+    "deposit_fixed_12mo": "Kadar Deposit Tetap (12 bulan)"
+  },
+  "header": "Kadar Faedah",
+  "section_1": {
+    "title": "Bagaimanakah tren kadar faedah yang utama?",
+    "description": ""
+  },
+  "description": "Terdapat banyak kadar faedah yang berbeza dalam ekonomi - kadar yang anda dapat apabila membuka akaun simpanan, kadar apabila anda membuka akaun deposit tetap, dan kadar apabila anda meminjam duit daripada sebuah bank, antara lain lagi. Segala kadar faedah mampu memberi kesan kepada aktiviti ekonomi, dan dipengaruhi oleh Kadar Dasar Semalaman (OPR), iaitu alat polisi utama Bank Negara Malayia (BNM). Papan pemuka ini menggunakan data daripada Sorotan dan Perangkaan Bulanan (MHS) terbitan BNM untuk menjejaki beberapa kadar faedah yang penting secara sepintas lalu."
+}

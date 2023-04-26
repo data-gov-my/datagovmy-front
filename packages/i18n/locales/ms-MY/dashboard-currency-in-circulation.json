@@ -1,0 +1,47 @@
+{
+  "keys": {
+    "cny": "Tahun Baru Cina",
+    "eid": "Raya Aidilfitri",
+    "value": "Nilai (RM)",
+    "coin_1": "1 sen",
+    "coin_5": "5 sen",
+    "note_1": "RM1",
+    "note_5": "RM5",
+    "others": "Lain-lain",
+    "coin_10": "10 sen",
+    "coin_20": "20 sen",
+    "coin_50": "50 sen",
+    "note_10": "RM10",
+    "note_20": "RM20",
+    "note_50": "RM50",
+    "overall": "Keseluruhan",
+    "no_shade": "Tiada lorekan",
+    "note_100": "RM100",
+    "recession": "Kemelesetan",
+    "rm1_notes": "Duit kertas RM1",
+    "rm5_notes": "Duit kertas RM5",
+    "growth_mom": "Pertumbuhan Bulanan",
+    "growth_yoy": "Pertumbuhan Tahunan",
+    "rm10_notes": "Duit kertas RM10",
+    "rm20_notes": "Duit kertas RM20",
+    "rm50_notes": "Duit kertas RM50",
+    "rm100_notes": "Duit kertas RM100",
+    "10_sen_coins": "Duit syiling 10 sen",
+    "20_sen_coins": "Duit syiling 20 sen",
+    "50_sen_coins": "Duit syiling 50 sen"
+  },
+  "header": "Mata Wang Dalam Edaran",
+  "section_1": {
+    "title": "Ringkasan mata wang dalam edaran",
+    "bar1_header": "Duit Kertas Mengikut Mata Wang",
+    "bar2_header": "Bilangan Helaian Duit Kertas Dalam Edaran",
+    "bar3_header": "Duit Syiling Mengikut Mata Wang",
+    "bar4_header": "Bilangan Kepingan Duit Syiling Dalam Edaran"
+  },
+  "section_2": {
+    "title": "Apakah tren mata wang dalam edaran?"
+  },
+  "mom_growth": "Pertumbuhan Bulanan",
+  "yoy_growth": "Pertumbuhan Tahunan",
+  "description": "Papan pemuka ini merupakan sebuah gambaran menyeluruh terhadap mata wang dalam edaran di Malaysia yang terdiri daripada lebih RM150 bilion nilai mata wang dan duit syiling dalam edaran dalam ekonomi Malaysia, membolehkan pengguna meneliti komposisi dan pertumbuhan mata wang dalam edaran berdasarkan data dari Sorotan dan Perangkaan Bulanan (MHS) terbitan Bank Negara Malaysia. Untuk makluman, mata wang dalam edaran mengambil kira mata wang yang dikira wang sah sahaja. Contohnya, duit syiling RM1 yang sudah dihentikan pengedarannya tidak termasuk dalam data dan papan pemuka ini."
+}

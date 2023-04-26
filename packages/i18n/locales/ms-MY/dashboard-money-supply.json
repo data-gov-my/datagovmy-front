@@ -1,0 +1,40 @@
+{
+  "keys": {
+    "m2_nid": "Deposit surat cara boleh niaga (NID)",
+    "m2_repo": "Repo",
+    "m1_total": "Penawaran M1 (Wang Sempit)",
+    "m2_total": "Penawaran M2 (M1 + Wang Kuasi)",
+    "m3_total": "Penawaran M3 (M2 + Wang Luas)",
+    "no_shade": "Tiada lorekan",
+    "value_rm": "Nilai (RM)",
+    "recession": "Kemelesetan",
+    "growth_mom": "Pertumbuhan Bulanan",
+    "growth_yoy": "Pertumbuhan Tahunan",
+    "m1_currency": "Mata Wang Dalam Edaran",
+    "m2_deposit_fx": " Deposit mata wang asing",
+    "m2_deposit_fixed": "Deposit tetap",
+    "m2_deposit_other": "Deposit lain",
+    "m3_deposit_other": "Deposit dengan institusi perbankan lain",
+    "m1_deposit_demand": "Deposit permintaan",
+    "m2_deposit_saving": "Deposit simpanan"
+  },
+  "header": "Penawaran Wang",
+  "section_1": {
+    "title": "Apakah kaedah mengukur kadar penawaran wang di Malaysia?",
+    "description": "Terdapat pelbagai kaedah untuk mengukur penawaran wang. Papan pemuka ini memaparkan 3 jenis kayu ukur - M1, M2 dan M3.\n\nM1 ialah 'separuh wang' ('narrow money') ataupun aset yang paling cair.\nM2 terdiri daripada M1 dan 'separuh wang secara kecil' ('narrow quasi-money').\nM3 terdiri daripada M2 dan 'wang luas' ('broad money').\n\nJadual di bawah merumuskan definisi kayu ukur tersebut:",
+    "m1_col_name": "% Wang M1",
+    "m2_col_name": "% Wang M2",
+    "m3_col_name": "% Wang M3",
+    "component_col_name": "Komponen"
+  },
+  "section_2": {
+    "title": "Apakah tren penawaran wang?"
+  },
+  "section_3": {
+    "title": "Butiran M1 (wang sempit)"
+  },
+  "section_4": {
+    "title": "Butiran M2 (wang kuasi)"
+  },
+  "description": "Papan pemuka ini merupakan sebuah gambaran menyeluruh terhadap mata wang dalam edaran di Malaysia yang terdiri daripada lebih RM150 bilion nilai mata wang dan duit syiling dalam edaran dalam ekonomi Malaysia, membolehkan pengguna meneliti komposisi dan pertumbuhan mata wang dalam edaran berdasarkan data dari Sorotan dan Perangkaan Bulanan (MHS) terbitan Bank Negara Malaysia. Untuk makluman, mata wang dalam edaran mengambil kira mata wang yang dikira wang sah sahaja. Contohnya, duit syiling RM1 yang sudah dihentikan pengedarannya tidak termasuk dalam data dan papan pemuka ini."
+}
