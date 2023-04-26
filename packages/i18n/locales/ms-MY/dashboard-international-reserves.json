@@ -1,0 +1,26 @@
+{
+  "keys": {
+    "ed_scale": "Liputan ke atas Hutang Luar Negeri",
+    "no_shade": "Tiada lorekan",
+    "recession": "Kemelesetan",
+    "growth_yoy": "Pertumbuhan Tahunan",
+    "reserves_usd": "Rizab Antarabangsa (USD bil)",
+    "import_months": "Liputan ke atas Pembiayaan Import (bulan)"
+  },
+  "header": "Rizab Antarabangsa",
+  "section_1": {
+    "title": "Kayu ukur utama rizab antarabangsa BNM",
+    "months": " bulan",
+    "months_of_import": "bulan liputan import",
+    "short_term_external_debt": "hutang luar negeri jangka pendek"
+  },
+  "section_2": {
+    "title": "Saya ingin tahu lebih lanjut tentang rizab antarabangsa BNM",
+    "ir_explainer": "di sini",
+    "ir_explainer_url": "https://www.bnm.gov.my/documents/20124/3026128/ar2020_bm_box1_reserves.pdf",
+    "official_bnm_site": "laman web rasmi BNM",
+    "description_part_1": "BNM menerbitkan sebuah penjelasan lebih dalam tentang rizab antarabangsa BNM yang boleh didapati ",
+    "description_part_2": ". Anda juga boleh mendapatkan data butiran terkini untuk rizab antarabangsa BNM di "
+  },
+  "description": "Akta Bank Negara Malaysia 2009 (CBA 2009) mengamanahkan BNM untuk memegang dan mengurus rizab antarabangsa bagi tujuan menggalakkan kestabilan kewangan dan monetari, serta mengekalkan keyakinan orang ramai. Pengurusan rizab antarabangsa oleh BNM tertakluk kepada tadbir urus yang ketat dan rangka kerja pengurusan risiko yang diwujudkan menurut CBA 2009. Papan pemuka ini menunjukkan 3 kayu ukur utama kecukupan rizab antarabangsa yang diumumkan oleh BNM dua kali sebulan."
+}

@@ -1,0 +1,40 @@
+{
+  "keys": {
+    "m2_nid": "Negotiable instruments of deposit (NID)",
+    "m2_repo": "Repos",
+    "m1_total": "M1 Supply (Narrow Money)",
+    "m2_total": "M2 Supply (M1 + Quasi-Money)",
+    "m3_total": "M3 Supply (M2 + Broad Money)",
+    "no_shade": "No shading",
+    "value_rm": "Value (RM)",
+    "recession": "Recession",
+    "growth_mom": "MoM Growth",
+    "growth_yoy": "YoY Growth",
+    "m1_currency": "Currency in Circulation",
+    "m2_deposit_fx": "Foreign currency deposits",
+    "m2_deposit_fixed": "Fixed deposits",
+    "m2_deposit_other": "Other deposits",
+    "m3_deposit_other": "Deposits with other banking institutions",
+    "m1_deposit_demand": "Demand deposits",
+    "m2_deposit_saving": "Savings deposits"
+  },
+  "header": "Money Supply",
+  "section_1": {
+    "title": "What are the various ways to measure the supply of money in Malaysia?",
+    "description": "Rather than one single 'correct' method of measurement, there are multiple ways of tracking the money supply. This dashboard tracks 3 measures - M1, M2, and M3.\n\nM1 is comprised of 'narrow money', covering only the most liquid assets.\nM2 is comprised of M1 and narrow quasi-money.\nM3 is comprised of M2 and broad money.\n\nThe table below summarises the definitions:",
+    "m1_col_name": "% of M1 Money",
+    "m2_col_name": "% of M2 Money",
+    "m3_col_name": "% of M3 Money",
+    "component_col_name": "Component"
+  },
+  "section_2": {
+    "title": "How is the money supply trending?"
+  },
+  "section_3": {
+    "title": "A deeper look at M1 (narrow money)"
+  },
+  "section_4": {
+    "title": "A deeper look at M2 (quasi money)"
+  },
+  "description": "There are over RM150 billion in coins and notes circulating in the Malaysian economy. This dashboard, which builds on Bank Negara Malaysia's Monthly Highlights and Statistics, provides an overview allowing users to track the composition and growth of currency in circulation. It should be noted that currency in circulation only captures currency which is still valid legal tender, which is a subset of all notes and coins that have ever existed. For instance, the RM1 coin has been discontinued."
+}
