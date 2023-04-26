@@ -112,7 +112,7 @@ const ensureDirectoryExists = filePath => {
 /** ---------------------------------------------------------------------------------------------------------------------------- */
 
 /**
- * @deprecated i18ns are now managed in `datagovmy-meta`. For development, run `yarn link`
+ * @deprecated Production i18ns are now managed in `datagovmy-meta`.
  * CLI commands to manage i18n.
  * @example yarn i18n pull ... | (turborepo) yarn workspace app i18n pull ...
  * @example yarn i18n push ... | (turborepo) yarn workspace app i18n push ...
