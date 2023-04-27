@@ -9,6 +9,7 @@ import BarMeter from "@components/Chart/BarMeter";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
 import { CountryAndStates } from "@lib/constants";
+import { useData } from "@hooks/useData";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -29,18 +30,43 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   bellcurve_callout,
   bellcurve_linechart,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
   const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
   const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
+  const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
 
+  const { data, setData } = useData({
+    tabs_section3: 0,
+  });
+
+  const formatCallout = (type: string, value: number): string => {
+    switch (type) {
+      case "gpa":
+        return value.toFixed(2);
+      case "st_ratio":
+        return value.toFixed(1);
+      case "students":
+        return value.toLocaleString();
+      case "max_ethnic":
+        return value.toFixed(1) + "%";
+      case "household_income":
+        return (
+          "RM" +
+          value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        );
+      case "closest_school_dist":
+        return value.toFixed(1) + "km";
+      default:
+        return value.toLocaleString();
+    }
+  };
   const KEY_VARIABLES_SCHEMA = [
     {
       name: t("section_3.national"),
-      data: [],
+      data: bellcurve_linechart["mys"],
     },
     {
       name: t("section_3.state"),
-      data: [],
+      data: bellcurve_linechart[sekolahku_info.state],
     },
   ];
 
@@ -146,51 +172,63 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
           menu={
             <Tabs.List
               options={KEY_VARIABLES_SCHEMA.map(item => item.name)}
-              current={0}
-              onChange={index => null}
+              current={data.tabs_section3}
+              onChange={index => setData("tabs_section3", index)}
             />
           }
           date={Date.now()}
         >
-          <Tabs hidden current={0}>
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-              <Panel key={1} name={"1"}>
-                <div className="grid w-full grid-cols-1 gap-12 lg:grid-cols-3">
-                  {[0, 1, 2, 3, 4, 5].map(_ => (
-                    <Line
-                      className="h-[250px] w-full"
-                      title={"Number of Students"}
-                      enableGridX={false}
-                      data={{
-                        labels: [0, 10, 20, 30, 40, 50, 60, 70, 80], // x-values
-                        datasets: [
-                          {
-                            type: "line",
-                            data: [110, 240, 480, 525, 470, 354, 253, 100, 90],
-                            label: t("label"),
-                            backgroundColor: "#94A3B81A",
-                            borderColor: "#94A3B8",
-                            borderWidth: 1.5,
-                            lineTension: 0.5,
-                            fill: true,
-                          },
-                        ],
-                      }}
-                      stats={[
-                        {
-                          title: "Your School",
-                          value: "919",
-                        },
-                        {
-                          title: "National median",
-                          value: "1,147",
-                        },
-                      ]}
-                    />
-                  ))}
-                </div>
-              </Panel>
-            </div>
+          <Tabs hidden current={data.tabs_section3}>
+            {KEY_VARIABLES_SCHEMA.map(({ name, data: lineData }) => {
+              return (
+                <Panel key={name} name={name}>
+                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
+                    {Object.entries(lineData[sekolahku_info.level]).map(([k, v]) => {
+                      const { x, y } = v as { x: number[]; y: number[] };
+                      return (
+                        <Line
+                          className="h-[250px] w-full"
+                          title={t(`section_3.${k}`)}
+                          enableGridX={false}
+                          data={{
+                            labels: x, // x-values
+                            datasets: [
+                              {
+                                type: "line",
+                                data: y,
+                                label: t("label"),
+                                backgroundColor: "#94A3B81A",
+                                borderColor: "#94A3B8",
+                                borderWidth: 1.5,
+                                lineTension: 0.5,
+                                fill: true,
+                              },
+                            ],
+                          }}
+                          stats={[
+                            {
+                              title: t("section_3.stat_school"),
+                              value: formatCallout(k, bellcurve_school[k]),
+                            },
+                            {
+                              title: t(`section_3.stat_median${data.tabs_section3}`),
+                              value: formatCallout(
+                                k,
+
+                                data.tabs_section3 === 0
+                                  ? bellcurve_callout["mys"][sekolahku_info.level][k].callout
+                                  : bellcurve_callout[sekolahku_info.state][sekolahku_info.level][k]
+                                      .callout
+                              ),
+                            },
+                          ]}
+                        />
+                      );
+                    })}
+                  </div>
+                </Panel>
+              );
+            })}
           </Tabs>
         </Section>
       </Container>
