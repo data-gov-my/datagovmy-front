@@ -90,7 +90,10 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     columnHelper.accessor((row: any) => row.date, {
       id: "date",
       header: t("date"),
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) =>
+        DateTime.fromISO(info.getValue())
+          .setLocale(i18n.language)
+          .toLocaleString(DateTime.DATE_MED),
     }),
     columnHelper.accessor("seats", {
       id: "seats",

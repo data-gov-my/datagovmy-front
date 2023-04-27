@@ -66,13 +66,10 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     columnHelper.accessor((row: any) => row.date, {
       id: "date",
       header: t("date"),
-      cell: (info: any) => (
-        <p>
-          {DateTime.fromISO(info.getValue())
-            .setLocale(i18n.language)
-            .toLocaleString(DateTime.DATE_MED)}
-        </p>
-      ),
+      cell: (info: any) =>
+        DateTime.fromISO(info.getValue())
+          .setLocale(i18n.language)
+          .toLocaleString(DateTime.DATE_MED),
     }),
     columnHelper.accessor("seat", {
       id: "seat",
