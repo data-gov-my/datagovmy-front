@@ -9,6 +9,7 @@ import { clx } from "@lib/helpers";
 
 interface CardProps {
   open: boolean;
+  onChange: (index: number) => void;
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
@@ -26,6 +27,7 @@ interface CardProps {
 
 const Card: FunctionComponent<CardProps> = ({
   open,
+  onChange,
   onClose,
   onNext,
   onPrev,
@@ -104,12 +106,15 @@ const Card: FunctionComponent<CardProps> = ({
                   <div className="mt-6 space-y-3">
                     <div className="flex flex-row items-center justify-center gap-1.5">
                       {[...Array(total)].map((num, index: number) => (
-                        <div
+                        <button
+                          onClick={() => onChange(index)}
                           className={clx(
                             "h-1 w-5 rounded-md",
-                            index === page ? "bg-black" : "bg-outline"
+                            index === page
+                              ? "bg-black dark:bg-white"
+                              : "bg-outline dark:bg-outlineHover-dark"
                           )}
-                        ></div>
+                        ></button>
                       ))}
                     </div>
                     <div className={`flex items-center justify-center gap-4 text-sm`}>
