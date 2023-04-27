@@ -40,8 +40,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   const { data, setData } = useData({
     tabs_section3: 0,
     selected_school: {
-      label: "PEB1094 | PENANG FREE SCHOOL | 11600 | Pulau Pinang",
-      value: "PEB1094",
+      label: `${sekolahku_info.school} (${sekolahku_info.code}) - ${sekolahku_info.postcode} ${sekolahku_info.state}`,
+      value: sekolahku_info.code,
     },
   });
 
@@ -58,7 +58,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
       case "household_income":
         return (
           "RM" +
-          value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+          value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })
         );
       case "closest_school_dist":
         return value.toFixed(1) + "km";
@@ -80,7 +80,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   const SCHOOL_OPTIONS: Array<OptionType> = dropdown_data.map(
     ({ code, school, postcode, state }) => {
       return {
-        label: `${code} | ${school} | ${postcode} | ${state}`,
+        label: `${school} (${code}) - ${postcode} ${state}`,
         value: code,
       };
     }
@@ -117,7 +117,9 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
                   onChange={e => {
                     setData("selected_school", e);
-                    router.push(`/dashboard/sekolahku/${e?.value}`);
+                    router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
+                      scroll: false,
+                    });
                   }}
                 />
                 <span className="text-dim font-body text-center text-sm">
