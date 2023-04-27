@@ -44,7 +44,7 @@ const Slider: FunctionComponent<SliderProps> = ({
   const { i18n } = useTranslation();
   const { play, setPlaying } = useContext(SliderContext);
   const timer = useRef<NodeJS.Timeout | null>(null);
-  //   const [minmax, setMinmax] = useState(value);
+  const [minmax, setMinmax] = useState(value);
 
   const dateFormat = {
     auto: "dd MMM yyyy",
@@ -103,6 +103,9 @@ const Slider: FunctionComponent<SliderProps> = ({
     if (timer.current) cancelTimer();
     onChange([0, data.length - 1]);
   }, [data]);
+  useWatch(() => {
+    setMinmax(value);
+  }, [value]);
 
   const togglePlayPause = () => {
     if (timer.current) cancelTimer();
@@ -129,12 +132,12 @@ const Slider: FunctionComponent<SliderProps> = ({
 
       <Root
         className="group relative flex h-5 w-full touch-none select-none items-center "
-        value={value}
+        value={minmax as number[]}
         min={0}
         max={data.length - 1}
         onValueChange={e => {
           if (timer.current) cancelTimer();
-          onChange(e);
+          setMinmax(e);
         }}
         onValueCommit={e => {
           if (timer.current) cancelTimer();
