@@ -101,7 +101,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={seats.perc} />
             <p>{`${seats.abs === 0 ? "—" : seats.won + "/" + seats.total} ${
-              seats.perc !== null ? `(${+seats.perc.toFixed(1)}%)` : ""
+              seats.perc !== null ? `(${Number(seats.perc).toFixed(1)}%)` : ""
             }`}</p>
           </div>
         );
@@ -116,7 +116,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
             <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
+              votes.perc !== null ? `(${Number(votes.perc).toFixed(1)}%)` : ""
             }`}</p>
           </div>
         );
@@ -157,7 +157,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex flex-row items-center gap-2 pr-7 xl:pr-0">
+          <div className="flex flex-row items-center gap-2 pr-7">
             <ImageWithFallback
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -171,14 +171,16 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     }),
     resultsColumnHelper.accessor("seats", {
       id: "seats",
-      header: t("seats_won"),
+      header: data.data[0]
+        ? t("seats_won").concat(` / ${data.data[0].seats.total}`)
+        : t("seats_won"),
       cell: (info: any) => {
         const seats = info.getValue();
         return (
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={seats.perc} />
-            <p>{`${seats.abs === 0 ? "—" : seats.won + "/" + seats.total} ${
-              seats.perc !== null ? `(${+seats.perc.toFixed(1)}%)` : ""
+            <p>{`${seats.abs === 0 ? "—" : seats.won} ${
+              seats.perc !== null ? `(${Number(seats.perc).toFixed(1)}%)` : ""
             }`}</p>
           </div>
         );
@@ -193,7 +195,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
             <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
+              votes.perc !== null ? `(${Number(votes.perc).toFixed(1)}%)` : ""
             }`}</p>
           </div>
         );
@@ -401,6 +403,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                 data.index === data.data.length ? null : setData("index", data.index + 1)
               }
               onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+              win={data.data[data.index].result}
               election_name={data.data[data.index].election_name}
               date={DateTime.fromISO(data.data[data.index].date)
                 .setLocale(i18n.language)

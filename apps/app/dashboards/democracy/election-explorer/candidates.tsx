@@ -85,7 +85,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex flex-row items-center gap-2 pr-7 xl:pr-0">
+          <div className="flex flex-row items-center gap-2 pr-7">
             <ImageWithFallback
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -106,7 +106,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
             <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
+              votes.perc !== null ? `(${Number(votes.perc).toFixed(1)}%)` : ""
             }`}</p>
           </div>
         );
@@ -333,7 +333,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 data.index === data.data.length ? null : setData("index", data.index + 1)
               }
               onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
-              win={data.data[data.index].result === "won"}
+              win={data.data[data.index].result}
               election_name={data.data[data.index].election_name}
               date={DateTime.fromISO(data.data[data.index].date)
                 .setLocale(i18n.language)

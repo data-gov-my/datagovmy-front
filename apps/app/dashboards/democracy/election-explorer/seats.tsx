@@ -74,7 +74,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
       cell: (info: any) => {
         const party = info.getValue() as string;
         return (
-          <div className="flex items-center gap-2 pr-7 xl:pr-0">
+          <div className="flex items-center gap-2 pr-7">
             <ImageWithFallback
               src={`/static/images/parties/${party}.png`}
               width={28}
@@ -98,7 +98,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={majority.perc} />
             <p>{`${majority.abs === 0 ? "—" : numFormat(majority.abs, "standard")} ${
-              majority.perc !== null ? `(${+majority.perc.toFixed(1)}%)` : ""
+              majority.perc !== null ? `(${Number(majority.perc).toFixed(1)}%)` : ""
             }`}</p>
           </div>
         );

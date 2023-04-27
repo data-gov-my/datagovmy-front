@@ -16,7 +16,7 @@ interface CardProps {
   data?: any;
   columns?: any;
   title?: string | ReactElement;
-  win?: boolean;
+  win?: string;
   date: string;
   election_name: string;
   isLoading: boolean;

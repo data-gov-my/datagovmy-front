@@ -22,7 +22,7 @@ export interface BorderlessTableProps {
   columns?: Array<ColumnDef<any, any>>;
   responsive?: Boolean;
   highlightedRow?: false | number;
-  win?: boolean;
+  win?: string;
   isLoading: boolean;
 }
 
@@ -40,7 +40,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   columns,
   responsive = true,
   highlightedRow = false,
-  win = true,
+  win = "null",
   isLoading = false,
 }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
@@ -87,6 +87,14 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
       },
     }),
   ];
+
+  const results: { [key: string]: ReactNode } = {
+    won: <Won />,
+    won_uncontested: <Won />,
+    lost: <Lost />,
+    lost_deposit: <Lost />,
+    null: <></>,
+  };
 
   const table = useReactTable({
     data,
@@ -149,9 +157,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                     >
                       <span className="flex flex-row gap-1.5">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        {rowIndex === highlightedRow &&
-                          colIndex === 0 &&
-                          (win ? <Won /> : <Lost />)}
+                        {rowIndex === highlightedRow && colIndex === 0 && results[win]}
                       </span>
                     </td>
                   ))}

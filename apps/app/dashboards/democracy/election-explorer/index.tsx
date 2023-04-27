@@ -482,7 +482,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               <h4 className="py-4 text-center">{t("election.section_3")}</h4>
               <div className="flex flex-row justify-between gap-4 sm:flex-row">
                 <div className="flex flex-row items-baseline gap-2 lg:gap-4">
-                  <p className="w-fit text-sm">{t("common:catalogue.filter")}</p>
                   <Dropdown
                     anchor="left"
                     width="w-fit"
