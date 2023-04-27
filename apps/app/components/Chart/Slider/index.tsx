@@ -1,9 +1,10 @@
-import { FunctionComponent, ReactNode, useEffect, useRef, useState } from "react";
+import { FunctionComponent, ReactNode, useContext, useRef, useState } from "react";
 import { clx, toDate } from "@lib/helpers";
 import { Root, Track, Range, Thumb } from "@radix-ui/react-slider";
 import { useTranslation } from "@hooks/useTranslation";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useWatch } from "@hooks/useWatch";
+import { SliderContext } from "./context";
 
 type BaseProps = {
   className?: string;
@@ -30,6 +31,7 @@ type SingleProps = BaseProps & {
 type SliderProps = RangeProps | SingleProps;
 
 const Slider: FunctionComponent<SliderProps> = ({
+  className = "pt-10",
   type,
   onChange,
   step,
@@ -40,8 +42,9 @@ const Slider: FunctionComponent<SliderProps> = ({
   enablePlayer = true,
 }) => {
   const { i18n } = useTranslation();
-  const [play, setPlay] = useState<boolean>(false);
+  const { play, setPlaying } = useContext(SliderContext);
   const timer = useRef<NodeJS.Timeout | null>(null);
+  const [minmax, setMinmax] = useState(value);
 
   const dateFormat = {
     auto: "dd MMM yyyy",
@@ -82,23 +85,27 @@ const Slider: FunctionComponent<SliderProps> = ({
     );
 
   const startTimer = () => {
-    setPlay(true);
+    setPlaying(true);
     let init = value[1] >= data.length - 1 ? value[0] : value[1];
     timer.current = setInterval(() => {
       if (init >= data.length - 1) cancelTimer();
       else onChange([value[0], ++init]);
-    }, 50);
+    }, 150);
   };
 
   const cancelTimer = () => {
-    setPlay(false);
+    setPlaying(false);
     timer.current && clearInterval(timer.current);
     timer.current = null;
   };
 
   useWatch(() => {
     if (timer.current) cancelTimer();
+    onChange([0, data.length - 1]);
   }, [data]);
+  useWatch(() => {
+    setMinmax(value);
+  }, [value]);
 
   const togglePlayPause = () => {
     if (timer.current) cancelTimer();
@@ -106,7 +113,7 @@ const Slider: FunctionComponent<SliderProps> = ({
   };
 
   return (
-    <div className="flex w-full items-center pt-10">
+    <div className={clx("flex w-full items-center", className)}>
       {enablePlayer && (
         <button
           type="button"
@@ -125,12 +132,12 @@ const Slider: FunctionComponent<SliderProps> = ({
 
       <Root
         className="group relative flex h-5 w-full touch-none select-none items-center "
-        value={value}
+        value={minmax as number[]}
         min={0}
         max={data.length - 1}
         onValueChange={e => {
           if (timer.current) cancelTimer();
-          onChange(e);
+          setMinmax(e);
         }}
         onValueCommit={e => {
           if (timer.current) cancelTimer();

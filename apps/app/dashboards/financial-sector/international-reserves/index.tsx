@@ -13,6 +13,7 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import AgencyBadge from "@components/AgencyBadge";
 import { BNMIcon } from "@components/Icon/agency";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * International Reserves Dashboard
@@ -106,163 +107,173 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
               />
             </div>
 
-            <Slider
-              type="range"
-              value={data.minmax}
-              data={timeseries.data.x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
+            <SliderProvider>
+              {play => (
+                <>
+                  <Slider
+                    className=""
+                    type="range"
+                    value={data.minmax}
+                    data={timeseries.data.x}
+                    period="month"
+                    onChange={e => setData("minmax", e)}
+                  />
 
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-              <Timeseries
-                title={t("keys.reserves_usd")}
-                className="h-[350px] w-full"
-                precision={[1, 1]}
-                interval="month"
-                tooltipFormat="dd MMM yyyy"
-                prefixY="$"
-                unitY=" bil"
-                axisY={{
-                  y2: {
-                    display: false,
-                    grid: {
-                      drawTicks: false,
-                      drawBorder: false,
-                      lineWidth: 0.5,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                }}
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: t("keys.reserves_usd"),
-                      data: coordinate["reserves_usd"],
-                      borderColor: AKSARA_COLOR.DARK_BLUE,
-                      backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
-                      fill: data.shade_type.value === "no_shade",
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common:common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
-                    }),
-                    value: `USD ${numFormat(
-                      timeseries_callouts.data["reserves_usd"].callout,
-                      "standard",
-                      [1, 1],
-                      "short",
-                      i18n.language
-                    )} bil`,
-                  },
-                ]}
-              />
-              <Timeseries
-                title={t("keys.import_months")}
-                className="h-[350px] w-full"
-                interval="month"
-                precision={[1, 1]}
-                tooltipFormat="dd MMM yyyy"
-                unitY={t("section_1.months")}
-                axisY={{
-                  y2: {
-                    display: false,
-                    grid: {
-                      drawTicks: false,
-                      drawBorder: false,
-                      lineWidth: 0.5,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                }}
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: t("keys.import_months"),
-                      data: coordinate["import_months"],
-                      borderColor: AKSARA_COLOR.DARK_BLUE,
-                      backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
-                      fill: data.shade_type.value === "no_shade",
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common:common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
-                    }),
-                    value: `${numFormat(
-                      timeseries_callouts.data["import_months"].callout,
-                      "standard",
-                      [1, 1]
-                    )} ${t("section_1.months_of_import")}`,
-                  },
-                ]}
-              />
-              <Timeseries
-                title={t("keys.ed_scale")}
-                className="h-[350px] w-full"
-                interval="month"
-                precision={[1, 1]}
-                tooltipFormat="dd MMM yyyy"
-                unitY="x"
-                axisY={{
-                  y2: {
-                    display: false,
-                    grid: {
-                      drawTicks: false,
-                      drawBorder: false,
-                      lineWidth: 0.5,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                }}
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: t("keys.ed_scale"),
-                      data: coordinate["ed_scale"],
-                      borderColor: AKSARA_COLOR.DARK_BLUE,
-                      backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
-                      fill: data.shade_type.value === "no_shade",
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common:common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
-                    }),
-                    value: `${numFormat(
-                      timeseries_callouts.data["ed_scale"].callout,
-                      "standard",
-                      [1, 1]
-                    )}x ${t("section_1.short_term_external_debt")}`,
-                  },
-                ]}
-              />
-            </div>
+                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                    <Timeseries
+                      title={t("keys.reserves_usd")}
+                      className="h-[350px] w-full"
+                      precision={[1, 1]}
+                      interval="month"
+                      tooltipFormat="dd MMM yyyy"
+                      enableAnimation={!play}
+                      prefixY="$"
+                      unitY=" bil"
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
+                            display: false,
+                          },
+                        },
+                      }}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            label: t("keys.reserves_usd"),
+                            data: coordinate["reserves_usd"],
+                            borderColor: AKSARA_COLOR.DARK_BLUE,
+                            backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
+                            fill: data.shade_type.value === "no_shade",
+                            borderWidth: 1.5,
+                          },
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
+                          }),
+                          value: `USD ${numFormat(
+                            timeseries_callouts.data["reserves_usd"].callout,
+                            "standard",
+                            [1, 1],
+                            "short",
+                            i18n.language
+                          )} bil`,
+                        },
+                      ]}
+                    />
+                    <Timeseries
+                      title={t("keys.import_months")}
+                      className="h-[350px] w-full"
+                      interval="month"
+                      enableAnimation={!play}
+                      precision={[1, 1]}
+                      tooltipFormat="dd MMM yyyy"
+                      unitY={t("section_1.months")}
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
+                            display: false,
+                          },
+                        },
+                      }}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            label: t("keys.import_months"),
+                            data: coordinate["import_months"],
+                            borderColor: AKSARA_COLOR.DARK_BLUE,
+                            backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
+                            fill: data.shade_type.value === "no_shade",
+                            borderWidth: 1.5,
+                          },
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
+                          }),
+                          value: `${numFormat(
+                            timeseries_callouts.data["import_months"].callout,
+                            "standard",
+                            [1, 1]
+                          )} ${t("section_1.months_of_import")}`,
+                        },
+                      ]}
+                    />
+                    <Timeseries
+                      title={t("keys.ed_scale")}
+                      className="h-[350px] w-full"
+                      interval="month"
+                      precision={[1, 1]}
+                      enableAnimation={!play}
+                      tooltipFormat="dd MMM yyyy"
+                      unitY="x"
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
+                            display: false,
+                          },
+                        },
+                      }}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            label: t("keys.ed_scale"),
+                            data: coordinate["ed_scale"],
+                            borderColor: AKSARA_COLOR.DARK_BLUE,
+                            backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
+                            fill: data.shade_type.value === "no_shade",
+                            borderWidth: 1.5,
+                          },
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
+                          }),
+                          value: `${numFormat(
+                            timeseries_callouts.data["ed_scale"].callout,
+                            "standard",
+                            [1, 1]
+                          )}x ${t("section_1.short_term_external_debt")}`,
+                        },
+                      ]}
+                    />
+                  </div>
+                </>
+              )}
+            </SliderProvider>
           </div>
         </Section>
         {/* I want to understand more about BNM’s international reserves */}

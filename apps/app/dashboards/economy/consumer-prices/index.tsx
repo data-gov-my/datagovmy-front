@@ -18,6 +18,7 @@ import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
 import { useTheme } from "next-themes";
 import AgencyBadge from "@components/AgencyBadge";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -221,118 +222,126 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                 onChange={e => setData("shade_type", e)}
               />
             </div>
-
-            <Slider
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
-            <Timeseries
-              title={t("keys.overall")}
-              className="h-[350px] w-full"
-              interval="month"
-              unitY={configs("overall").unit}
-              displayNumFormat={value =>
-                numFormat(value, "compact", [1, 1], "short", i18n.language, true)
-              }
-              axisY={{
-                y2: {
-                  display: false,
-                  grid: {
-                    drawTicks: false,
-                    drawBorder: false,
-                    lineWidth: 0.5,
-                  },
-                  ticks: {
-                    display: false,
-                  },
-                },
-              }}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.overall,
-                    label: t("keys.overall"),
-                    borderColor: AKSARA_COLOR.TURQUOISE,
-                    backgroundColor: AKSARA_COLOR.TURQUOISE_H,
-                    borderWidth: 1.5,
-                    fill: configs("overall").fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common:common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: configs("overall").callout,
-                },
-              ]}
-            />
-
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-              {section1ChartData.map(chartData => (
-                <Timeseries
-                  key={chartData.title}
-                  title={chartData.title}
-                  className="h-[350px] w-full"
-                  interval="month"
-                  displayNumFormat={value =>
-                    numFormat(value, "compact", [1, 1], "short", i18n.language, true)
-                  }
-                  unitY={chartData.unitY}
-                  axisY={{
-                    y2: {
-                      display: false,
-                      grid: {
-                        drawTicks: false,
-                        drawBorder: false,
-                        lineWidth: 0.5,
-                      },
-                      ticks: {
+            <SliderProvider>
+              {play => (
+                <>
+                  <Slider
+                    className=""
+                    type="range"
+                    value={data.minmax}
+                    data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
+                    period="month"
+                    onChange={e => setData("minmax", e)}
+                  />
+                  <Timeseries
+                    title={t("keys.overall")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY={configs("overall").unit}
+                    displayNumFormat={value =>
+                      numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+                    }
+                    axisY={{
+                      y2: {
                         display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
+                          display: false,
+                        },
                       },
-                    },
-                  }}
-                  data={{
-                    labels: coordinate.x,
-                    datasets: [
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.overall,
+                          label: t("keys.overall"),
+                          borderColor: AKSARA_COLOR.TURQUOISE,
+                          backgroundColor: AKSARA_COLOR.TURQUOISE_H,
+                          borderWidth: 1.5,
+                          fill: configs("overall").fill,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
                       {
-                        type: "line",
-                        label: chartData.label,
-                        data: chartData.data,
-                        borderColor: AKSARA_COLOR.GREY,
-                        backgroundColor: AKSARA_COLOR.GREY_H,
-                        fill: chartData.fill,
-                        borderWidth: 1.5,
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("overall").callout,
                       },
-                      shader(data.shade_type.value),
-                    ],
-                  }}
-                  stats={[
-                    {
-                      title:
-                        chartData.callout !== "-" ? (
-                          t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          })
-                        ) : (
-                          <span>
-                            <InformationCircleIcon className="mr-2 inline-block h-4 w-4" />
-                            {t("section_2.null_alcohol_tobacco")}
-                          </span>
-                        ),
-                      value: chartData.callout !== "-" && chartData.callout,
-                    },
-                  ]}
-                />
-              ))}
-            </div>
+                    ]}
+                  />
+
+                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                    {section1ChartData.map(chartData => (
+                      <Timeseries
+                        key={chartData.title}
+                        title={chartData.title}
+                        className="h-[350px] w-full"
+                        interval="month"
+                        enableAnimation={!play}
+                        displayNumFormat={value =>
+                          numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+                        }
+                        unitY={chartData.unitY}
+                        axisY={{
+                          y2: {
+                            display: false,
+                            grid: {
+                              drawTicks: false,
+                              drawBorder: false,
+                              lineWidth: 0.5,
+                            },
+                            ticks: {
+                              display: false,
+                            },
+                          },
+                        }}
+                        data={{
+                          labels: coordinate.x,
+                          datasets: [
+                            {
+                              type: "line",
+                              label: chartData.label,
+                              data: chartData.data,
+                              borderColor: AKSARA_COLOR.GREY,
+                              backgroundColor: AKSARA_COLOR.GREY_H,
+                              fill: chartData.fill,
+                              borderWidth: 1.5,
+                            },
+                            shader(data.shade_type.value),
+                          ],
+                        }}
+                        stats={[
+                          {
+                            title:
+                              chartData.callout !== "-" ? (
+                                t("common:common.latest", {
+                                  date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                                })
+                              ) : (
+                                <span>
+                                  <InformationCircleIcon className="mr-2 inline-block h-4 w-4" />
+                                  {t("section_2.null_alcohol_tobacco")}
+                                </span>
+                              ),
+                            value: chartData.callout !== "-" && chartData.callout,
+                          },
+                        ]}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </SliderProvider>
           </div>
         </Section>
 
