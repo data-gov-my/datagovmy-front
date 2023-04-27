@@ -1,7 +1,7 @@
-import { FunctionComponent, ReactNode, useEffect } from "react";
+import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Trans } from "next-i18next";
-import { BarMeter, Lost, Won } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
@@ -19,7 +19,7 @@ import { ArrowsPointingOutIcon, FlagIcon, MapIcon, UserIcon } from "@heroicons/r
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
@@ -27,6 +27,7 @@ import { DateTime } from "luxon";
 import { routes } from "@lib/routes";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
+import { useFilter } from "@hooks/useFilter";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -39,26 +40,37 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
 
 interface ElectionPartiesProps {
   party: any;
+  query: any;
 }
 
-const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ party }) => {
+const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ party, query }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const { data, setData } = useData({
-    data: party,
-    party_list: [],
-    state: "mys",
     tabs: 0,
-    index: 0,
+
+    // Placeholder for Combobox
+    p_party: "",
+    party_list: [],
+
+    // Query for Table
+    q_party: query.party ? query.party : "PERIKATAN",
+    state: query.state ? query.state : "mys",
+    type: query.type ? query.type : "parlimen",
+    loading: false,
+    data: party,
+
+    // Election full result
+    modalLoading: false,
     open: false,
     result: [],
-    // placeholder
-    p_party: "",
+    index: 0,
+  });
 
-    // query
-    q_party: "PERIKATAN",
-    loading: false,
-    modalLoading: false,
+  const { filter, setFilter } = useFilter({
+    party: query.party ? query.party : "",
+    type: query.type ? query.type : "",
+    state: query.state ? query.state : "",
   });
 
   type Party = {
@@ -68,14 +80,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     votes: Record<string, number>;
     result: string;
   };
-
   const columnHelper = createColumnHelper<Party>();
-
-  const results: { [key: string]: ReactNode } = {
-    formed_gov: <Won desc={t("party.formed_gov")} />,
-    formed_opp: <Lost desc={t("party.formed_opp")} />,
-  };
-
   const columns: ColumnDef<Party, any>[] = [
     columnHelper.accessor("election_name", {
       id: "election_name",
@@ -144,9 +149,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     seats: Record<string, number>;
     votes: Record<string, number>;
   };
-
   const resultsColumnHelper = createColumnHelper<Result>();
-
   const resultsColumns: ColumnDef<Result, any>[] = [
     resultsColumnHelper.accessor("party", {
       id: "party",
@@ -216,18 +219,21 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
 
   useWatch(() => {
     setData("loading", true);
+    setFilter("party", data.q_party);
+    setFilter("type", data.type);
+    setFilter("state", data.state);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "party",
       party_name: data.q_party,
-      type: data.tabs === 0 ? "parlimen" : "dun",
+      type: data.type,
       state: data.state,
     })
       .then(({ data }) => {
         setData("data", data.reverse());
       })
       .then(() => setData("loading", false));
-  }, [data.q_party, data.state, data.tabs]);
+  }, [data.q_party, data.state, data.type]);
 
   useWatch(() => {
     setData("modalLoading", true);
@@ -239,13 +245,22 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       state: data.state,
     })
       .then(({ data }) => {
-        setData("result", data);
+        setData(
+          "result",
+          data.sort((a: Result, b: Result) => {
+            if (a.seats.won === b.seats.won) {
+              return b.votes.perc - a.votes.perc;
+            } else {
+              return b.seats.won - a.seats.won;
+            }
+          })
+        );
       })
       .then(() => setData("modalLoading", false));
   }, [data.index, data.open]);
 
   return (
-    <>
+    <div className={clx(data.modalLoading ? "cursor-wait" : "")}>
       <Hero
         background="red"
         category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
@@ -298,7 +313,10 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                       data.p_party ? PARTY_OPTIONS.find(e => e.value === data.p_party.value) : null
                     }
                     onChange={e => {
-                      if (e) setData("q_party", e.value.toUpperCase());
+                      if (e) {
+                        setData("q_party", e.value.toUpperCase());
+                        setFilter("party", e.value);
+                      }
                       setData("party", e);
                     }}
                     enableFlag
@@ -317,11 +335,14 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                         alt={t(`${data.q_party}`)}
                       />
                       {t("party.title", {
-                        party: `$t(${data.q_party})`,
+                        party: `$t(dashboard-election-explorer:${data.q_party})`,
                       })}
                       <StateDropdown
                         currentState={data.state}
-                        onChange={selected => setData("state", selected.value)}
+                        onChange={selected => {
+                          setData("state", selected.value);
+                          setFilter("state", selected.value);
+                        }}
                         width="inline-block pl-1 min-w-max"
                         anchor="left"
                       />
@@ -329,7 +350,11 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                   </Trans>
                 }
                 current={data.tabs}
-                onChange={index => setData("tabs", index)}
+                onChange={index => {
+                  setData("tabs", index);
+                  setData("type", index === 0 ? "parlimen" : "dun");
+                  setFilter("type", index === 0 ? "parlimen" : "dun");
+                }}
               >
                 <Panel name={t("parliament_elections")}>
                   <BorderlessTable
@@ -339,7 +364,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                     empty={
                       <Trans>
                         {t("party.no_data", {
-                          party: `$t(${data.q_party})`,
+                          party: `$t(dashboard-election-explorer:${data.q_party})`,
                           context: "parliament",
                         })}
                       </Trans>
@@ -354,7 +379,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                     empty={
                       <Trans>
                         {t("party.no_data", {
-                          party: `$t(${data.q_party})`,
+                          party: `$t(dashboard-election-explorer:${data.q_party})`,
                           state: CountryAndStates[data.state],
                           context: data.state === "mys" ? "dun_mys" : "dun",
                         })}
@@ -368,6 +393,9 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           {data.open && (
             <ElectionCard
               open={data.open}
+              onChange={(index: number) =>
+                index < data.data.length && index > 0 ? setData("index", index) : null
+              }
               onClose={() => setData("open", false)}
               onNext={() =>
                 data.index === data.data.length ? null : setData("index", data.index + 1)
@@ -392,7 +420,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           )}
         </Section>
       </Container>
-    </>
+    </div>
   );
 };
 

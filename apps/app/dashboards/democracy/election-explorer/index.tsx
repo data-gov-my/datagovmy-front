@@ -48,9 +48,10 @@ const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: 
 const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
 interface ElectionExplorerProps {
   election: any;
+  query: any;
 }
 
-const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election }) => {
+const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, query }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);

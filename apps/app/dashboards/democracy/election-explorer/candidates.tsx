@@ -17,6 +17,7 @@ import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { useFilter } from "@hooks/useFilter";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -29,9 +30,13 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
 
 interface ElectionCandidatesProps {
   candidate: any;
+  query: any;
 }
 
-const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = ({ candidate }) => {
+const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = ({
+  candidate,
+  query,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   type Candidate = {
@@ -135,19 +140,27 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   ];
 
   const { data, setData } = useData({
-    data: candidate,
-    candidate_list: [],
     tabs: 0,
-    index: 0,
+    // Placeholder for Combobox
+    p_candidate: "",
+    candidate_list: [],
+
+    // Query for Table
+    q_candidate: query.name ? query.name : "Tunku Abdul Rahman Putra Al-Haj",
+    type: query.type ? query.type : "parlimen",
+    loading: false,
+    data: candidate,
+
+    // Election full result
+    modalLoading: false,
     open: false,
     result: [],
-    // placeholder
-    p_candidate: "",
+    index: 0,
+  });
 
-    // query
-    q_candidate: "Tunku Abdul Rahman Putra Al-Haj",
-    loading: false,
-    modalLoading: false,
+  const { filter, setFilter } = useFilter({
+    name: query.name ? query.name : "",
+    type: query.type ? query.type : "",
   });
 
   const CANDIDATE_OPTIONS: Array<OptionType> =
@@ -168,17 +181,19 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
 
   useWatch(() => {
     setData("loading", true);
+    setFilter("name", data.q_candidate);
+    setFilter("type", data.type);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "candidates",
       name: data.q_candidate,
-      type: data.tabs === 0 ? "parlimen" : "dun",
+      type: data.type,
     })
       .then(({ data }) => {
         setData("data", data.reverse());
       })
       .then(() => setData("loading", false));
-  }, [data.q_candidate, data.tabs]);
+  }, [data.q_candidate, data.type]);
 
   useWatch(() => {
     setData("modalLoading", true);
@@ -190,7 +205,10 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       seat: data.data[data.index].seat,
     })
       .then(({ data }) => {
-        setData("result", data);
+        setData(
+          "result",
+          data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+        );
       })
       .then(() => setData("modalLoading", false));
   }, [data.index, data.open]);
@@ -265,7 +283,11 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                   </div>
                 }
                 current={data.tabs}
-                onChange={index => setData("tabs", index)}
+                onChange={index => {
+                  setData("tabs", index);
+                  setData("type", index === 0 ? "parlimen" : "dun");
+                  setFilter("type", index === 0 ? "parlimen" : "dun");
+                }}
               >
                 <Panel name={t("parliament_elections")}>
                   <BorderlessTable
@@ -303,6 +325,9 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           {data.open && (
             <ElectionCard
               open={data.open}
+              onChange={(index: number) =>
+                index < data.data.length && index > 0 ? setData("index", index) : null
+              }
               onClose={() => setData("open", false)}
               onNext={() =>
                 data.index === data.data.length ? null : setData("index", data.index + 1)
@@ -314,12 +339,12 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 .setLocale(i18n.language)
                 .toLocaleString(DateTime.DATE_MED)}
               title={
-                <div className="flex flex-row gap-2 uppercase">
+                <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
                   <h5>{data.data[data.index].seat.split(",")[0]}</h5>
                   <span className="text-dim font-normal">
                     {data.data[data.index].seat.split(",")[1]}
                   </span>
-                  <span className="ml-4">{results[data.data[data.index].result]}</span>
+                  <span>{results[data.data[data.index].result]}</span>
                 </div>
               }
               isLoading={data.modalLoading}

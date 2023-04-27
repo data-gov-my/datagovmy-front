@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { BarMeter } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter, Result } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
@@ -17,6 +17,7 @@ import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { useFilter } from "@hooks/useFilter";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -28,10 +29,11 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
 });
 
 interface ElectionSeatsProps {
+  query: any;
   seat: any;
 }
 
-const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
+const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, seat }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   type Seat = {
@@ -43,9 +45,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ seat })
     majority: Record<string, number>;
     result: string;
   };
-
   const columnHelper = createColumnHelper<Seat>();
-
   const columns: ColumnDef<Seat, any>[] = [
     columnHelper.accessor("election_name", {
       id: "election_name",
@@ -126,18 +126,24 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ seat })
   ];
 
   const { data, setData } = useData({
-    data: seat,
+    // Placeholder for Combobox
+    p_seat: "",
     seats_list: [],
+
+    // Query for Table
+    q_seat: "Padang Besar, Perlis",
+    loading: false,
+    data: seat,
+
+    // Election full result
+    modalLoading: false,
     index: 0,
     open: false,
     result: [],
-    // placeholder
-    p_seat: "",
+  });
 
-    // query
-    q_seat: "Padang Besar, Perlis",
-    loading: false,
-    modalLoading: false,
+  const { filter, setFilter } = useFilter({
+    seat: query.seat ? query.seat : "",
   });
 
   const SEAT_OPTIONS: Array<OptionType> =
@@ -171,6 +177,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ seat })
 
   useWatch(() => {
     setData("modalLoading", true);
+    setFilter("seat", data.q_seat);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
@@ -179,7 +186,10 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ seat })
       seat: data.data[data.index].seat,
     })
       .then(({ data }) => {
-        setData("result", data);
+        setData(
+          "result",
+          data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+        );
       })
       .then(() => setData("modalLoading", false));
   }, [data.index, data.open]);
@@ -260,6 +270,9 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ seat })
           {data.open && (
             <ElectionCard
               open={data.open}
+              onChange={(index: number) =>
+                index < data.data.length && index > 0 ? setData("index", index) : null
+              }
               onClose={() => setData("open", false)}
               onNext={() =>
                 data.index === data.data.length ? null : setData("index", data.index + 1)
