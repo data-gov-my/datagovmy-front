@@ -4,35 +4,35 @@ import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
-import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
+import ElectionPartiesDashboard from "@dashboards/democracy/election-explorer/parties";
 import { withi18n } from "@lib/decorators";
 
-const ElectionExplorer: Page = ({ election }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ElectionParties: Page = ({ party }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard election={election} />
+      <ElectionPartiesDashboard party={party} />
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
-  const { data: election } = await get("/explorer", {
+  const { data: party } = await get("/explorer", {
     explorer: "ELECTIONS",
-    chart: "full_result",
-    type: "seats",
-    election: "GE-15",
-    seat: "Padang Besar, Perlis",
+    chart: "party",
+    party_name: "PERIKATAN",
+    state: "mys",
+    type: "parlimen",
   });
 
   return {
     notFound: false,
     props: {
-      election: election,
+      party: party.reverse(),
     },
   };
 });
 
-export default ElectionExplorer;
+export default ElectionParties;

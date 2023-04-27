@@ -5,9 +5,17 @@ import { BarMeter, Lost, Won } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
-import { Panel, Section, StateDropdown, Tabs } from "@components/index";
+import {
+  AgencyBadge,
+  Container,
+  Hero,
+  Panel,
+  Section,
+  StateDropdown,
+  Tabs,
+} from "@components/index";
 import { OptionType } from "@components/types";
-import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
+import { ArrowsPointingOutIcon, FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates } from "@lib/constants";
@@ -16,6 +24,9 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
 import { DateTime } from "luxon";
+import { routes } from "@lib/routes";
+import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
+import ContainerTabs from "@components/Tabs/ContainerTabs";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -30,7 +41,7 @@ interface ElectionPartiesProps {
   party: any;
 }
 
-const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => {
+const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ party }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const { data, setData } = useData({
@@ -234,111 +245,155 @@ const ElectionParties: FunctionComponent<ElectionPartiesProps> = ({ party }) => 
   }, [data.index, data.open]);
 
   return (
-    <Section>
-      <div className="lg:grid lg:grid-cols-12">
-        <div className="lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("party.header")}</h4>
-          <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-            <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
-              <ComboBox
-                placeholder={t("party.search_party")}
-                options={PARTY_OPTIONS}
-                selected={
-                  data.p_party ? PARTY_OPTIONS.find(e => e.value === data.p_party.value) : null
+    <>
+      <Hero
+        background="red"
+        category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
+        agencyBadge={
+          <AgencyBadge
+            agency={"Election Comission (EC)"}
+            link="https://www.spr.gov.my/"
+            icon={<SPRIcon />}
+          />
+        }
+      />
+
+      <Container className="min-h-fit">
+        <ContainerTabs.List
+          options={[
+            {
+              name: t("elections"),
+              icon: <SPRIconSolid className="-mb-1" />,
+              url: routes.ELECTION_EXPLORER,
+            },
+            {
+              name: t("candidates"),
+              icon: <UserIcon className="m-1 h-5 w-5" />,
+              url: routes.ELECTION_EXPLORER.concat("/candidates"),
+            },
+            {
+              name: t("parties"),
+              icon: <FlagIcon className="m-1 h-5 w-5" />,
+            },
+            {
+              name: t("seats"),
+              icon: <MapIcon className="m-1 h-5 w-5" />,
+              url: routes.ELECTION_EXPLORER.concat("/seats"),
+            },
+          ]}
+          current={2}
+        />
+        <Section>
+          <div className="lg:grid lg:grid-cols-12">
+            <div className="lg:col-span-10 lg:col-start-2">
+              <h4 className="text-center">{t("party.header")}</h4>
+              <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
+                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+                  <ComboBox
+                    placeholder={t("party.search_party")}
+                    options={PARTY_OPTIONS}
+                    selected={
+                      data.p_party ? PARTY_OPTIONS.find(e => e.value === data.p_party.value) : null
+                    }
+                    onChange={e => {
+                      if (e) setData("q_party", e.value.toUpperCase());
+                      setData("party", e);
+                    }}
+                    enableFlag
+                  />
+                </div>
+              </div>
+              <Tabs
+                title={
+                  <Trans>
+                    <span className="text-lg font-normal leading-9">
+                      <ImageWithFallback
+                        className="mr-2 inline-flex items-center"
+                        src={`/static/images/parties/${data.q_party}.png`}
+                        width={28}
+                        height={16}
+                        alt={t(`${data.q_party}`)}
+                      />
+                      {t("party.title", {
+                        party: `$t(${data.q_party})`,
+                      })}
+                      <StateDropdown
+                        currentState={data.state}
+                        onChange={selected => setData("state", selected.value)}
+                        width="inline-block pl-1 min-w-max"
+                        anchor="left"
+                      />
+                    </span>
+                  </Trans>
                 }
-                onChange={e => {
-                  if (e) setData("q_party", e.value.toUpperCase());
-                  setData("party", e);
-                }}
-                enableFlag
-              />
+                current={data.tabs}
+                onChange={index => setData("tabs", index)}
+              >
+                <Panel name={t("parliament_elections")}>
+                  <BorderlessTable
+                    data={data.data}
+                    columns={columns}
+                    isLoading={data.loading}
+                    empty={
+                      <Trans>
+                        {t("party.no_data", {
+                          party: `$t(${data.q_party})`,
+                          context: "parliament",
+                        })}
+                      </Trans>
+                    }
+                  />
+                </Panel>
+                <Panel name={t("state_elections")}>
+                  <BorderlessTable
+                    data={data.data}
+                    columns={columns}
+                    isLoading={data.loading}
+                    empty={
+                      <Trans>
+                        {t("party.no_data", {
+                          party: `$t(${data.q_party})`,
+                          state: CountryAndStates[data.state],
+                          context: data.state === "mys" ? "dun_mys" : "dun",
+                        })}
+                      </Trans>
+                    }
+                  />
+                </Panel>
+              </Tabs>
             </div>
           </div>
-          <Tabs
-            title={
-              <Trans>
-                <span className="text-lg font-normal leading-9">
-                  <ImageWithFallback
-                    className="mr-2 inline-flex items-center"
-                    src={`/static/images/parties/${data.q_party}.png`}
-                    width={28}
-                    height={16}
-                    alt={t(`${data.q_party}`)}
-                  />
-                  {t("party.title", {
-                    party: `$t(${data.q_party})`,
-                  })}
-                  <StateDropdown
-                    currentState={data.state}
-                    onChange={selected => setData("state", selected.value)}
-                    width="inline-block pl-1 min-w-max"
-                    anchor="left"
-                  />
-                </span>
-              </Trans>
-            }
-            current={data.tabs}
-            onChange={index => setData("tabs", index)}
-          >
-            <Panel name={t("parliament_elections")}>
-              <BorderlessTable
-                data={data.data}
-                columns={columns}
-                isLoading={data.loading}
-                empty={
-                  <Trans>
-                    {t("party.no_data", {
-                      party: `$t(${data.q_party})`,
-                      context: "parliament",
-                    })}
-                  </Trans>
-                }
-              />
-            </Panel>
-            <Panel name={t("state_elections")}>
-              <BorderlessTable
-                data={data.data}
-                columns={columns}
-                isLoading={data.loading}
-                empty={
-                  <Trans>
-                    {t("party.no_data", {
-                      party: `$t(${data.q_party})`,
-                      state: CountryAndStates[data.state],
-                      context: data.state === "mys" ? "dun_mys" : "dun",
-                    })}
-                  </Trans>
-                }
-              />
-            </Panel>
-          </Tabs>
-        </div>
-      </div>
-      {data.open && (
-        <ElectionCard
-          open={data.open}
-          onClose={() => setData("open", false)}
-          onNext={() => (data.index === data.data.length ? null : setData("index", data.index + 1))}
-          onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
-          election_name={data.data[data.index].election_name}
-          date={DateTime.fromISO(data.data[data.index].date)
-            .setLocale(i18n.language)
-            .toLocaleString(DateTime.DATE_MED)}
-          title={
-            <div className="flex flex-row gap-2 uppercase">
-              <h5>{data.data[data.index].election_name.concat(" Results")}</h5>
-            </div>
-          }
-          isLoading={data.modalLoading}
-          data={data.result}
-          columns={resultsColumns}
-          highlightedRow={data.result.findIndex((r: Result) => r.party === data.q_party)}
-          page={data.index}
-          total={data.data.length}
-        />
-      )}
-    </Section>
+          {data.open && (
+            <ElectionCard
+              open={data.open}
+              onClose={() => setData("open", false)}
+              onNext={() =>
+                data.index === data.data.length ? null : setData("index", data.index + 1)
+              }
+              onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+              election_name={data.data[data.index].election_name}
+              date={DateTime.fromISO(data.data[data.index].date)
+                .setLocale(i18n.language)
+                .toLocaleString(DateTime.DATE_MED)}
+              title={
+                <div className="flex flex-row gap-2 uppercase">
+                  <h5>{data.data[data.index].election_name.concat(" Results")}</h5>
+                </div>
+              }
+              isLoading={data.modalLoading}
+              data={data.result}
+              columns={resultsColumns}
+              highlightedRow={data.result.findIndex((r: Result) => r.party === data.q_party)}
+              page={data.index}
+              total={data.data.length}
+            />
+          )}
+        </Section>
+      </Container>
+    </>
   );
 };
 
-export default ElectionParties;
+export default ElectionPartiesDashboard;

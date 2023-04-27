@@ -4,16 +4,19 @@ import { BarMeter } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
-import { Section } from "@components/index";
+import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
+import { AgencyBadge, Container, Hero, Section } from "@components/index";
+import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
-import { ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
+import { ArrowsPointingOutIcon, FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { numFormat } from "@lib/helpers";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { get } from "@lib/api";
 import { useWatch } from "@hooks/useWatch";
+import { get } from "@lib/api";
+import { numFormat } from "@lib/helpers";
+import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -28,7 +31,7 @@ interface ElectionSeatsProps {
   seat: any;
 }
 
-const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
+const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   type Seat = {
@@ -182,64 +185,108 @@ const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({ seat }) => {
   }, [data.index, data.open]);
 
   return (
-    <Section>
-      <div className="grid grid-cols-12">
-        <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("seat.header")}</h4>
-          <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-            <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
-              <ComboBox
-                placeholder={t("seat.search_seat")}
-                options={SEAT_OPTIONS}
-                selected={
-                  data.p_seat ? SEAT_OPTIONS.find(e => e.value === data.p_seat.value) : null
+    <>
+      <Hero
+        background="red"
+        category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
+        agencyBadge={
+          <AgencyBadge
+            agency={"Election Comission (EC)"}
+            link="https://www.spr.gov.my/"
+            icon={<SPRIcon />}
+          />
+        }
+      />
+
+      <Container className="min-h-fit">
+        <ContainerTabs.List
+          options={[
+            {
+              name: t("elections"),
+              icon: <SPRIconSolid className="-mb-1" />,
+              url: routes.ELECTION_EXPLORER,
+            },
+            {
+              name: t("candidates"),
+              icon: <UserIcon className="m-1 h-5 w-5" />,
+              url: routes.ELECTION_EXPLORER.concat("/candidates"),
+            },
+            {
+              name: t("parties"),
+              icon: <FlagIcon className="m-1 h-5 w-5" />,
+              url: routes.ELECTION_EXPLORER.concat("/parties"),
+            },
+            {
+              name: t("seats"),
+              icon: <MapIcon className="m-1 h-5 w-5" />,
+            },
+          ]}
+          current={3}
+        />
+        <Section>
+          <div className="grid grid-cols-12">
+            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
+              <h4 className="text-center">{t("seat.header")}</h4>
+              <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
+                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+                  <ComboBox
+                    placeholder={t("seat.search_seat")}
+                    options={SEAT_OPTIONS}
+                    selected={
+                      data.p_seat ? SEAT_OPTIONS.find(e => e.value === data.p_seat.value) : null
+                    }
+                    onChange={e => {
+                      if (e) setData("q_seat", e.value);
+                      setData("seat", e);
+                    }}
+                  />
+                </div>
+              </div>
+              <BorderlessTable
+                title={
+                  <div className="text-base font-bold">
+                    {t("candidate.title")}
+                    <span className="text-primary">{data.q_seat}</span>
+                  </div>
                 }
-                onChange={e => {
-                  if (e) setData("q_seat", e.value);
-                  setData("seat", e);
-                }}
+                data={data.data}
+                columns={columns}
+                isLoading={data.loading}
               />
             </div>
           </div>
-          <BorderlessTable
-            title={
-              <div className="text-base font-bold">
-                {t("candidate.title")}
-                <span className="text-primary">{data.q_seat}</span>
-              </div>
-            }
-            data={data.data}
-            columns={columns}
-            isLoading={data.loading}
-          />
-        </div>
-      </div>
-      {data.open && (
-        <ElectionCard
-          open={data.open}
-          onClose={() => setData("open", false)}
-          onNext={() => (data.index === data.data.length ? null : setData("index", data.index + 1))}
-          onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
-          election_name={data.data[data.index].election_name}
-          date={DateTime.fromISO(data.data[data.index].date)
-            .setLocale(i18n.language)
-            .toLocaleString(DateTime.DATE_MED)}
-          title={
-            <div className="flex flex-row gap-2 uppercase">
-              <h5>{data.data[data.index].seat.split(",")[0]}</h5>
-              <span className="text-dim font-normal">
-                {data.data[data.index].seat.split(",")[1]}
-              </span>
-            </div>
-          }
-          isLoading={data.modalLoading}
-          data={data.result}
-          page={data.index}
-          total={data.data.length}
-        />
-      )}
-    </Section>
+          {data.open && (
+            <ElectionCard
+              open={data.open}
+              onClose={() => setData("open", false)}
+              onNext={() =>
+                data.index === data.data.length ? null : setData("index", data.index + 1)
+              }
+              onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+              election_name={data.data[data.index].election_name}
+              date={DateTime.fromISO(data.data[data.index].date)
+                .setLocale(i18n.language)
+                .toLocaleString(DateTime.DATE_MED)}
+              title={
+                <div className="flex flex-row gap-2 uppercase">
+                  <h5>{data.data[data.index].seat.split(",")[0]}</h5>
+                  <span className="text-dim font-normal">
+                    {data.data[data.index].seat.split(",")[1]}
+                  </span>
+                </div>
+              }
+              isLoading={data.modalLoading}
+              data={data.result}
+              page={data.index}
+              total={data.data.length}
+            />
+          )}
+        </Section>
+      </Container>
+    </>
   );
 };
 
-export default ElectionSeats;
+export default ElectionSeatsDashboard;

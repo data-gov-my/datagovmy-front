@@ -1,38 +1,39 @@
 import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
+import ElectionCandidatesDashboard from "@dashboards/democracy/election-explorer/candidates";
 import { useTranslation } from "@hooks/useTranslation";
-import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
+import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
+import type { Page } from "@lib/types";
 
-const ElectionExplorer: Page = ({ election }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ElectionCandidates: Page = ({
+  candidate,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard election={election} />
+      <ElectionCandidatesDashboard candidate={candidate} />
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
-  const { data: election } = await get("/explorer", {
+  const { data: candidate } = await get("/explorer", {
     explorer: "ELECTIONS",
-    chart: "full_result",
-    type: "seats",
-    election: "GE-15",
-    seat: "Padang Besar, Perlis",
+    chart: "candidates",
+    name: "Tunku Abdul Rahman Putra Al-Haj",
+    type: "parlimen",
   });
 
   return {
     notFound: false,
     props: {
-      election: election,
+      candidate: candidate.reverse(),
     },
   };
 });
 
-export default ElectionExplorer;
+export default ElectionCandidates;
