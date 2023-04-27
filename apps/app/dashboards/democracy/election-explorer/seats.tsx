@@ -98,7 +98,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={majority.perc} />
             <p>{`${majority.abs === 0 ? "—" : numFormat(majority.abs, "standard")} ${
-              majority.perc !== null ? `(${Number(majority.perc).toFixed(1)}%)` : ""
+              majority.perc === 0 ? "(—)" : `(${Number(majority.perc).toFixed(1)}%)`
             }`}</p>
           </div>
         );

@@ -104,7 +104,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={seats.perc} />
             <p>{`${seats.abs === 0 ? "—" : seats.won + "/" + seats.total} ${
-              seats.perc !== null ? `(${Number(seats.perc).toFixed(1)}%)` : ""
+              seats.perc === 0 ? "(—)" : `(${Number(seats.perc).toFixed(1)}%)`
             }`}</p>
           </div>
         );
@@ -119,7 +119,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
             <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc !== null ? `(${Number(votes.perc).toFixed(1)}%)` : ""
+              votes.perc === 0 ? "(—)" : `(${Number(votes.perc).toFixed(1)}%)`
             }`}</p>
           </div>
         );
@@ -183,7 +183,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={seats.perc} />
             <p>{`${seats.abs === 0 ? "—" : seats.won} ${
-              seats.perc !== null ? `(${Number(seats.perc).toFixed(1)}%)` : ""
+              seats.perc === 0 ? "(—)" : `(${Number(seats.perc).toFixed(1)}%)`
             }`}</p>
           </div>
         );
@@ -198,7 +198,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
             <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc !== null ? `(${Number(votes.perc).toFixed(1)}%)` : ""
+              votes.perc === 0 ? "(—)" : `(${Number(votes.perc).toFixed(1)}%)`
             }`}</p>
           </div>
         );

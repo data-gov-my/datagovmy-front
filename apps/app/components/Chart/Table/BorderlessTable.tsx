@@ -80,7 +80,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
           <div className="flex flex-row items-center gap-2">
             <BarMeter perc={votes.perc} />
             <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc !== null ? `(${+votes.perc.toFixed(1)}%)` : ""
+              votes.perc === 0 ? "(—)" : `(${+votes.perc.toFixed(1)}%)`
             }`}</p>
           </div>
         );
