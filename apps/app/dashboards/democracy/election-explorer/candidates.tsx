@@ -323,7 +323,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
             <ElectionCard
               open={data.open}
               onChange={(index: number) =>
-                index < data.data.length && index > 0 ? setData("index", index) : null
+                index < data.data.length && index >= 0 ? setData("index", index) : null
               }
               onClose={() => setData("open", false)}
               onNext={() =>

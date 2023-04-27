@@ -107,6 +107,7 @@ const Card: FunctionComponent<CardProps> = ({
                       {[...Array(total)].map((num, index: number) => (
                         <button
                           onClick={() => onChange(index)}
+                          disabled={index === page}
                           className={clx(
                             "h-1 w-5 rounded-md",
                             index === page
