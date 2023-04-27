@@ -74,7 +74,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   const { coordinate } = useSlice(timeseries_all.data, data.minmax);
   const { theme } = useTheme();
   const topStateIndices = getTopIndices(choropleth_malaysia_blood_donation.data.y.perc, 3, true);
-  console.log(coordinate);
 
   const KEY_VARIABLES_SCHEMA = [
     {
