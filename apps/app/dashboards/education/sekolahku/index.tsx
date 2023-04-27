@@ -126,8 +126,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
               </div>
             </div>
 
-            <div className="flex h-[400px] max-w-[800px] flex-col items-stretch rounded-xl border border-slate-200 dark:border-zinc-800 lg:flex-row">
-              <div className="flex basis-1/2 items-center border-slate-200 dark:border-zinc-800 dark:bg-zinc-800/50 lg:border-r">
+            <div className="flex flex-col rounded-xl border border-slate-200 dark:border-zinc-800 lg:max-h-[400px] lg:max-w-[800px] lg:flex-row">
+              <div className="flex items-center border-slate-200 dark:border-zinc-800 dark:bg-zinc-800/50 lg:basis-1/2 lg:border-r">
                 <div className="flex flex-col gap-6 p-8 text-center">
                   <div className="flex flex-col gap-2">
                     <BookOpenIcon className="text-primary mx-auto h-10 w-10" />
@@ -159,9 +159,9 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   </span>
                 </div>
               </div>
-              <div className="basis-1/2 rounded-b-xl bg-slate-50 dark:bg-zinc-900 lg:rounded-br-xl lg:rounded-tr-xl">
+              <div className="overflow-hidden rounded-b-xl bg-slate-50 dark:bg-zinc-900 lg:basis-1/2 lg:rounded-bl-none lg:rounded-br-xl lg:rounded-tr-xl">
                 <MapPlot
-                  className="h-full w-full"
+                  className="h-[400px] lg:h-full lg:w-full"
                   position={[sekolahku_info.lat, sekolahku_info.lon]}
                   markers={[
                     {
