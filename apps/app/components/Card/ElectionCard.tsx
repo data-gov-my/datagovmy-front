@@ -83,7 +83,6 @@ const Card: FunctionComponent<CardProps> = ({
                   <Dialog.Title as="h5" className="flex flex-row">
                     <div>{title && typeof title === "string" ? <span>{title}</span> : title}</div>
                   </Dialog.Title>
-                  <span>{win}</span>
                   <XMarkIcon
                     onClick={() => {
                       onClose();
