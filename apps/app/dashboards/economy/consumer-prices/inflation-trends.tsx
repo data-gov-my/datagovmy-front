@@ -14,6 +14,7 @@ import groupBy from "lodash/groupBy";
 import { useTranslation } from "@hooks/useTranslation";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * Consumer Prices (CPI) - Inflation Trends Section
@@ -189,30 +190,36 @@ const InflationTrends: FunctionComponent = ({}) => {
         />
       </div>
 
-      <Timeseries
-        className="h-[500px] w-full"
-        interval="month"
-        tooltipFormat="MMM yyyy"
-        mode="grouped"
-        unitY="%"
-        displayNumFormat={value =>
-          numFormat(value, "compact", [1, 1], "short", i18n.language, true)
-        }
-        enableCallout
-        data={{
-          labels: coordinate.x,
-          datasets: activeInflation(),
-        }}
-      />
+      <SliderProvider>
+        {play => (
+          <>
+            <Timeseries
+              className="h-[500px] w-full"
+              interval="month"
+              tooltipFormat="MMM yyyy"
+              mode="grouped"
+              unitY="%"
+              enableAnimation={!play}
+              displayNumFormat={value =>
+                numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+              }
+              enableCallout
+              data={{
+                labels: coordinate.x,
+                datasets: activeInflation(),
+              }}
+            />
 
-      <Slider
-        className="pt-7"
-        type="range"
-        value={data.inflation_minmax}
-        data={data.inflation_x}
-        period="month"
-        onChange={e => setData("inflation_minmax", e)}
-      />
+            <Slider
+              type="range"
+              value={data.inflation_minmax}
+              data={data.inflation_x}
+              period="month"
+              onChange={e => setData("inflation_minmax", e)}
+            />
+          </>
+        )}
+      </SliderProvider>
     </div>
   );
 };

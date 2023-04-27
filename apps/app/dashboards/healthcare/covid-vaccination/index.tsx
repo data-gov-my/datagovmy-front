@@ -13,6 +13,7 @@ import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { OptionType } from "@components/types";
 import { numFormat } from "@lib/helpers";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * COVID Vaccination Dashboard
@@ -226,59 +227,22 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         </Section>
 
         {/* What is the current state of the COVID-19 vaccination program? */}
-        <Section title={t("combine_header")} date={timeseries.data_as_of}>
-          <Timeseries
-            title={t("combine_title", {
-              state: CountryAndStates[currentState],
-            })}
-            interval="auto"
-            data={{
-              labels: coordinate.x,
-              datasets: [
-                {
-                  type: "line",
-                  data: coordinate.line_stacked,
-                  label: t("combine_tooltip1"),
-                  borderColor: AKSARA_COLOR.GREEN,
-                  borderWidth: 1.5,
-                  backgroundColor: AKSARA_COLOR.GREEN_H,
-                  fill: true,
-                },
-              ],
-            }}
-          />
-          <Slider
-            type="range"
-            value={data.minmax}
-            data={timeseries.data.x}
-            onChange={e => setData("minmax", e)}
-          />
-        </Section>
-
-        {/*  How are COVID-19 key indicators trending */}
-        <Section
-          title={t("area_chart_header", {
-            state: CountryAndStates[currentState],
-          })}
-          date={timeseries.data_as_of}
-        >
-          <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
-            {TIMESERIES_LIST.map((item: string, i: number) => {
-              const title: string = `area_chart_title${i + 1}`;
-              const y_key: string = `line_${item}`;
-              const statistic_key: string = `daily_${item}`;
-              return (
+        <SliderProvider>
+          {play => (
+            <>
+              <Section title={t("combine_header")} date={timeseries.data_as_of}>
                 <Timeseries
-                  className="h-[250px]"
-                  title={t(`${title}`)}
-                  enableGridX={false}
-                  precision={0}
+                  title={t("combine_title", {
+                    state: CountryAndStates[currentState],
+                  })}
+                  interval="auto"
+                  enableAnimation={!play}
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
                         type: "line",
-                        data: coordinate[y_key],
+                        data: coordinate.line_stacked,
                         label: t("combine_tooltip1"),
                         borderColor: AKSARA_COLOR.GREEN,
                         borderWidth: 1.5,
@@ -287,21 +251,69 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                       },
                     ],
                   }}
-                  stats={[
-                    {
-                      title: t("daily"),
-                      value: `+${numFormat(statistics.data[statistic_key].latest, "standard")}`,
-                    },
-                    {
-                      title: t("total"),
-                      value: `${numFormat(statistics.data[statistic_key].total, "standard")}`,
-                    },
-                  ]}
                 />
-              );
-            })}
-          </div>
-        </Section>
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data.x}
+                  onChange={e => setData("minmax", e)}
+                />
+              </Section>
+
+              {/*  How are COVID-19 key indicators trending */}
+              <Section
+                title={t("area_chart_header", {
+                  state: CountryAndStates[currentState],
+                })}
+                date={timeseries.data_as_of}
+              >
+                <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
+                  {TIMESERIES_LIST.map((item: string, i: number) => {
+                    const title: string = `area_chart_title${i + 1}`;
+                    const y_key: string = `line_${item}`;
+                    const statistic_key: string = `daily_${item}`;
+                    return (
+                      <Timeseries
+                        className="h-[250px]"
+                        title={t(title)}
+                        enableGridX={false}
+                        precision={0}
+                        enableAnimation={!play}
+                        data={{
+                          labels: coordinate.x,
+                          datasets: [
+                            {
+                              type: "line",
+                              data: coordinate[y_key],
+                              label: t("combine_tooltip1"),
+                              borderColor: AKSARA_COLOR.GREEN,
+                              borderWidth: 1.5,
+                              backgroundColor: AKSARA_COLOR.GREEN_H,
+                              fill: true,
+                            },
+                          ],
+                        }}
+                        stats={[
+                          {
+                            title: t("daily"),
+                            value: `+${numFormat(
+                              statistics.data[statistic_key].latest,
+                              "standard"
+                            )}`,
+                          },
+                          {
+                            title: t("total"),
+                            value: `${numFormat(statistics.data[statistic_key].total, "standard")}`,
+                          },
+                        ]}
+                      />
+                    );
+                  })}
+                </div>
+              </Section>
+            </>
+          )}
+        </SliderProvider>
       </Container>
     </>
   );

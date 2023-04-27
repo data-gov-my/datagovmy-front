@@ -13,6 +13,7 @@ import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { getTopIndices } from "@lib/helpers";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * PekaB40 Dashboard
@@ -75,40 +76,47 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, ch
           description={t("screening_description")}
           date={timeseries.data_as_of}
         >
-          <Timeseries
-            className="h-[350px] w-full"
-            title={t("timeseries_title", {
-              state: CountryAndStates[currentState],
-            })}
-            interval="auto"
-            data={{
-              labels: coordinate.x,
-              datasets: [
-                {
-                  type: "line",
-                  data: coordinate.line,
-                  label: t("tooltip1"),
-                  borderColor: AKSARA_COLOR.PURPLE,
-                  borderWidth: 1.5,
-                  backgroundColor: AKSARA_COLOR.PURPLE_H,
-                  fill: true,
-                },
-                {
-                  label: t("tooltip2"),
-                  data: coordinate.daily,
-                  borderColor: "#00000000",
-                  backgroundColor: "#00000000",
-                },
-              ],
-            }}
-          />
+          <SliderProvider>
+            {play => (
+              <>
+                <Timeseries
+                  className="h-[350px] w-full"
+                  title={t("timeseries_title", {
+                    state: CountryAndStates[currentState],
+                  })}
+                  interval="auto"
+                  enableAnimation={!play}
+                  data={{
+                    labels: coordinate.x,
+                    datasets: [
+                      {
+                        type: "line",
+                        data: coordinate.line,
+                        label: t("tooltip1"),
+                        borderColor: AKSARA_COLOR.PURPLE,
+                        borderWidth: 1.5,
+                        backgroundColor: AKSARA_COLOR.PURPLE_H,
+                        fill: true,
+                      },
+                      {
+                        label: t("tooltip2"),
+                        data: coordinate.daily,
+                        borderColor: "#00000000",
+                        backgroundColor: "#00000000",
+                      },
+                    ],
+                  }}
+                />
 
-          <Slider
-            type="range"
-            value={data.minmax}
-            data={timeseries.data.x}
-            onChange={e => setData("minmax", e)}
-          />
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data.x}
+                  onChange={e => setData("minmax", e)}
+                />
+              </>
+            )}
+          </SliderProvider>
         </Section>
 
         {/* How do screening rates differ across the country? */}

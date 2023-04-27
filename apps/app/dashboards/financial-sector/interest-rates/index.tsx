@@ -13,6 +13,7 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import AgencyBadge from "@components/AgencyBadge";
 import { BNMIcon } from "@components/Icon/agency";
+import { SliderProvider } from "@components/Chart/Slider/context";
 /**
  * Interest Rates Dashboard
  * @overview Status: Live
@@ -186,109 +187,118 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
               />
             </div>
 
-            <Slider
-              type="range"
-              value={data.opr_minmax}
-              data={timeseries_opr.data.x}
-              period="month"
-              onChange={e => {
-                setData("opr_minmax", e);
-                setData("non_opr_minmax", e);
-              }}
-            />
-            <Timeseries
-              title={t("keys.opr")}
-              className="h-[350px] w-full"
-              interval="month"
-              unitY={oprConfigs("opr").unit}
-              displayNumFormat={value => numFormat(value, "standard", [2, 2])}
-              axisY={{
-                y2: {
-                  display: false,
-                  grid: {
-                    drawTicks: false,
-                    drawBorder: false,
-                    lineWidth: 0.5,
-                  },
-                  ticks: {
-                    display: false,
-                  },
-                },
-              }}
-              data={{
-                labels: opr_coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: opr_coordinate.opr,
-                    label: t("keys.opr"),
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    borderWidth: 1.5,
-                    fill: oprConfigs("opr").fill,
-                    stepped: true,
-                  },
-                  oprShader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common:common.latest", {
-                    date: toDate(OPR_LATEST_TIMESTAMP, "d MMM yyyy", i18n.language),
-                  }),
-                  value: oprConfigs("opr").callout,
-                },
-              ]}
-            />
-
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-              {section1ChartData.map(chartData => (
-                <Timeseries
-                  key={chartData.title}
-                  title={chartData.title}
-                  className="h-[350px] w-full"
-                  interval="month"
-                  unitY={chartData.unitY}
-                  displayNumFormat={value => numFormat(value, "standard", [2, 1])}
-                  axisY={{
-                    y2: {
-                      display: false,
-                      grid: {
-                        drawTicks: false,
-                        drawBorder: false,
-                        lineWidth: 0.5,
-                      },
-                      ticks: {
+            <SliderProvider>
+              {play => (
+                <>
+                  <Slider
+                    className=""
+                    type="range"
+                    value={data.opr_minmax}
+                    data={timeseries_opr.data.x}
+                    period="month"
+                    onChange={e => {
+                      setData("opr_minmax", e);
+                      setData("non_opr_minmax", e);
+                    }}
+                  />
+                  <Timeseries
+                    title={t("keys.opr")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY={oprConfigs("opr").unit}
+                    displayNumFormat={value => numFormat(value, "standard", [2, 2])}
+                    axisY={{
+                      y2: {
                         display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
+                          display: false,
+                        },
                       },
-                    },
-                  }}
-                  data={{
-                    labels: non_opr_coordinate.x,
-                    datasets: [
+                    }}
+                    data={{
+                      labels: opr_coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: opr_coordinate.opr,
+                          label: t("keys.opr"),
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          borderWidth: 1.5,
+                          fill: oprConfigs("opr").fill,
+                          stepped: true,
+                        },
+                        oprShader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
                       {
-                        type: "line",
-                        label: chartData.label,
-                        data: chartData.data,
-                        borderColor: AKSARA_COLOR.PRIMARY,
-                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                        fill: chartData.fill,
-                        borderWidth: 1.5,
+                        title: t("common:common.latest", {
+                          date: toDate(OPR_LATEST_TIMESTAMP, "d MMM yyyy", i18n.language),
+                        }),
+                        value: oprConfigs("opr").callout,
                       },
-                      shader(data.shade_type.value),
-                    ],
-                  }}
-                  stats={[
-                    {
-                      title: t("common:common.latest", {
-                        date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                      }),
-                      value: chartData.callout,
-                    },
-                  ]}
-                />
-              ))}
-            </div>
+                    ]}
+                  />
+
+                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+                    {section1ChartData.map(chartData => (
+                      <Timeseries
+                        key={chartData.title}
+                        title={chartData.title}
+                        className="h-[350px] w-full"
+                        interval="month"
+                        enableAnimation={!play}
+                        unitY={chartData.unitY}
+                        displayNumFormat={value => numFormat(value, "standard", [2, 1])}
+                        axisY={{
+                          y2: {
+                            display: false,
+                            grid: {
+                              drawTicks: false,
+                              drawBorder: false,
+                              lineWidth: 0.5,
+                            },
+                            ticks: {
+                              display: false,
+                            },
+                          },
+                        }}
+                        data={{
+                          labels: non_opr_coordinate.x,
+                          datasets: [
+                            {
+                              type: "line",
+                              label: chartData.label,
+                              data: chartData.data,
+                              borderColor: AKSARA_COLOR.PRIMARY,
+                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                              fill: chartData.fill,
+                              borderWidth: 1.5,
+                            },
+                            shader(data.shade_type.value),
+                          ],
+                        }}
+                        stats={[
+                          {
+                            title: t("common:common.latest", {
+                              date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                            }),
+                            value: chartData.callout,
+                          },
+                        ]}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </SliderProvider>
           </div>
         </Section>
       </Container>

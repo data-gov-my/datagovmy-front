@@ -14,6 +14,7 @@ import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/AgencyBadge";
 import { BNMIcon } from "@components/Icon/agency";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * Reserve Money Dashboard
@@ -171,193 +172,203 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
       />
 
       <Container className="min-h-screen">
-        {/* How is reserve money trending? */}
-        <Section
-          title={t("section_1.title")}
-          description={t("section_1.description")}
-          date={timeseries.data_as_of}
-        >
-          <div className="space-y-8">
-            <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
-              <Dropdown
-                anchor="left"
-                selected={data.index_type}
-                options={INDEX_OPTIONS}
-                onChange={e => setData("index_type", e)}
-              />
-              <Dropdown
-                anchor="left"
-                options={SHADE_OPTIONS}
-                selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
-              />
-            </div>
+        <SliderProvider>
+          {play => (
+            <>
+              {/* How is reserve money trending? */}
+              <Section
+                title={t("section_1.title")}
+                description={t("section_1.description")}
+                date={timeseries.data_as_of}
+              >
+                <div className="space-y-8">
+                  <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
+                    <Dropdown
+                      anchor="left"
+                      selected={data.index_type}
+                      options={INDEX_OPTIONS}
+                      onChange={e => setData("index_type", e)}
+                    />
+                    <Dropdown
+                      anchor="left"
+                      options={SHADE_OPTIONS}
+                      selected={data.shade_type}
+                      onChange={e => setData("shade_type", e)}
+                    />
+                  </div>
 
-            <Slider
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.index_type.value].x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
-            <Timeseries
-              title={t("keys.total")}
-              className="h-[350px] w-full"
-              interval="month"
-              displayNumFormat={(value, type, precision) =>
-                smartNumFormat({ value, type, precision, locale: i18n.language })
-              }
-              unitY={configs("total").unit}
-              prefixY={configs("total").prefix}
-              axisY={{
-                y2: {
-                  display: false,
-                  grid: {
-                    drawTicks: false,
-                    drawBorder: false,
-                    lineWidth: 0.5,
-                  },
-                  ticks: {
-                    display: false,
-                  },
-                },
-              }}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.total,
-                    label: t("keys.total"),
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    borderWidth: 1.5,
-                    fill: configs("total").fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common:common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: configs("total").callout,
-                },
-              ]}
-            />
-
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-              {section1ChartData.map(chartData => (
-                <Timeseries
-                  key={chartData.title}
-                  title={chartData.title}
-                  className="h-[350px] w-full"
-                  interval="month"
-                  displayNumFormat={(value, type, precision) =>
-                    smartNumFormat({ value, type, precision, locale: i18n.language })
-                  }
-                  unitY={chartData.unitY}
-                  prefixY={chartData.prefix}
-                  axisY={{
-                    y2: {
-                      display: false,
-                      grid: {
-                        drawTicks: false,
-                        drawBorder: false,
-                        lineWidth: 0.5,
-                      },
-                      ticks: {
+                  <Slider
+                    className=""
+                    type="range"
+                    value={data.minmax}
+                    data={timeseries.data[data.index_type.value].x}
+                    period="month"
+                    onChange={e => setData("minmax", e)}
+                  />
+                  <Timeseries
+                    title={t("keys.total")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("total").unit}
+                    prefixY={configs("total").prefix}
+                    axisY={{
+                      y2: {
                         display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
+                          display: false,
+                        },
                       },
-                    },
-                  }}
-                  data={{
-                    labels: coordinate.x,
-                    datasets: [
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.total,
+                          label: t("keys.total"),
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          borderWidth: 1.5,
+                          fill: configs("total").fill,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
                       {
-                        type: "line",
-                        label: chartData.label,
-                        data: chartData.data,
-                        borderColor: AKSARA_COLOR.PRIMARY,
-                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                        fill: chartData.fill,
-                        borderWidth: 1.5,
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("total").callout,
                       },
-                      shader(data.shade_type.value),
-                    ],
-                  }}
-                  stats={[
-                    {
-                      title: t("common:common.latest", {
-                        date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                      }),
-                      value: chartData.callout,
-                    },
-                  ]}
-                />
-              ))}
-            </div>
-          </div>
-        </Section>
-        {/* Factors affecting Reserve Money */}
-        <Section
-          title={t("section_2.title")}
-          description={t("section_2.description")}
-          date={timeseries.data_as_of}
-        >
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-            {section2ChartData.map(chartData => (
-              <Timeseries
-                key={chartData.title}
-                title={chartData.title}
-                className="h-[350px] w-full"
-                interval="month"
-                displayNumFormat={(value, type, precision) =>
-                  smartNumFormat({ value, type, precision, locale: i18n.language })
-                }
-                unitY={chartData.unitY}
-                prefixY={chartData.prefix}
-                axisY={{
-                  y2: {
-                    display: false,
-                    grid: {
-                      drawTicks: false,
-                      drawBorder: false,
-                      lineWidth: 0.5,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                }}
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: chartData.label,
-                      data: chartData.data,
-                      borderColor: AKSARA_COLOR.PRIMARY,
-                      backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                      fill: chartData.fill,
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common:common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                    }),
-                    value: chartData.callout,
-                  },
-                ]}
-              />
-            ))}
-          </div>
-        </Section>
+                    ]}
+                  />
+
+                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                    {section1ChartData.map(chartData => (
+                      <Timeseries
+                        key={chartData.title}
+                        title={chartData.title}
+                        className="h-[350px] w-full"
+                        interval="month"
+                        enableAnimation={!play}
+                        displayNumFormat={(value, type, precision) =>
+                          smartNumFormat({ value, type, precision, locale: i18n.language })
+                        }
+                        unitY={chartData.unitY}
+                        prefixY={chartData.prefix}
+                        axisY={{
+                          y2: {
+                            display: false,
+                            grid: {
+                              drawTicks: false,
+                              drawBorder: false,
+                              lineWidth: 0.5,
+                            },
+                            ticks: {
+                              display: false,
+                            },
+                          },
+                        }}
+                        data={{
+                          labels: coordinate.x,
+                          datasets: [
+                            {
+                              type: "line",
+                              label: chartData.label,
+                              data: chartData.data,
+                              borderColor: AKSARA_COLOR.PRIMARY,
+                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                              fill: chartData.fill,
+                              borderWidth: 1.5,
+                            },
+                            shader(data.shade_type.value),
+                          ],
+                        }}
+                        stats={[
+                          {
+                            title: t("common:common.latest", {
+                              date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                            }),
+                            value: chartData.callout,
+                          },
+                        ]}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </Section>
+              {/* Factors affecting Reserve Money */}
+              <Section
+                title={t("section_2.title")}
+                description={t("section_2.description")}
+                date={timeseries.data_as_of}
+              >
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                  {section2ChartData.map(chartData => (
+                    <Timeseries
+                      key={chartData.title}
+                      title={chartData.title}
+                      className="h-[350px] w-full"
+                      interval="month"
+                      enableAnimation={!play}
+                      displayNumFormat={(value, type, precision) =>
+                        smartNumFormat({ value, type, precision, locale: i18n.language })
+                      }
+                      unitY={chartData.unitY}
+                      prefixY={chartData.prefix}
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
+                            display: false,
+                          },
+                        },
+                      }}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            label: chartData.label,
+                            data: chartData.data,
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            fill: chartData.fill,
+                            borderWidth: 1.5,
+                          },
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                          }),
+                          value: chartData.callout,
+                        },
+                      ]}
+                    />
+                  ))}
+                </div>
+              </Section>
+            </>
+          )}
+        </SliderProvider>
       </Container>
     </>
   );

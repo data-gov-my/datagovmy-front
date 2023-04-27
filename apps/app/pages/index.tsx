@@ -2,6 +2,7 @@ import AgencyBadge from "@components/AgencyBadge";
 import At from "@components/At";
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
+import { SliderProvider } from "@components/Chart/Slider/context";
 import Container from "@components/Container";
 import Hero from "@components/Hero";
 import Metadata from "@components/Metadata";
@@ -167,73 +168,81 @@ const Home: Page = ({
           </Tabs>
         </Section>
         <Section title={t("common:home.section_3.title")} date={timeseries.data_as_of}>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-            <Timeseries
-              className="h-[200px] w-full"
-              title={t("common:home.keys.views")}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.views,
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    label: t("common:home.keys.views") as string,
-                    borderWidth: 1.5,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    fill: true,
-                  },
-                ],
-              }}
-              stats={yieldCallout("views")}
-            />
-            <Timeseries
-              className="h-[200px] w-full"
-              title={t("common:home.keys.users")}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.users,
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    borderWidth: 1.5,
-                    label: t("common:home.keys.users") as string,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    fill: true,
-                  },
-                ],
-              }}
-              stats={yieldCallout("users")}
-            />
-            <Timeseries
-              className="h-[200px] w-full"
-              title={t("common:home.keys.downloads")}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.downloads,
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    label: t("common:home.keys.downloads") as string,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    fill: true,
-                    borderWidth: 1.5,
-                  },
-                ],
-              }}
-              stats={yieldCallout("downloads")}
-            />
-          </div>
+          <SliderProvider>
+            {play => (
+              <>
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                  <Timeseries
+                    className="h-[200px] w-full"
+                    title={t("common:home.keys.views")}
+                    enableAnimation={!play}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.views,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          label: t("common:home.keys.views") as string,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    stats={yieldCallout("views")}
+                  />
+                  <Timeseries
+                    className="h-[200px] w-full"
+                    title={t("common:home.keys.users")}
+                    enableAnimation={!play}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.users,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          label: t("common:home.keys.users") as string,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    stats={yieldCallout("users")}
+                  />
+                  <Timeseries
+                    className="h-[200px] w-full"
+                    title={t("common:home.keys.downloads")}
+                    enableAnimation={!play}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.downloads,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          label: t("common:home.keys.downloads") as string,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                          borderWidth: 1.5,
+                        },
+                      ],
+                    }}
+                    stats={yieldCallout("downloads")}
+                  />
+                </div>
 
-          <Slider
-            className="pt-12"
-            type="range"
-            value={data.minmax}
-            data={timeseries.data.x}
-            onChange={e => setData("minmax", e)}
-          />
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data.x}
+                  onChange={e => setData("minmax", e)}
+                />
+              </>
+            )}
+          </SliderProvider>
         </Section>
       </Container>
     </>

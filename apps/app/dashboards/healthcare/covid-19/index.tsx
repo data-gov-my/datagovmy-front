@@ -20,6 +20,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { routes } from "@lib/routes";
 import { CountryAndStates } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * COVID19 Dashboard
@@ -30,35 +31,38 @@ const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: fals
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface COVID19Props {
+  params: Record<string, any>;
   last_updated: number;
   snapshot_bar: any;
   snapshot_graphic: any;
-  timeseries_admitted: any;
-  timeseries_cases: any;
-  timeseries_deaths: any;
-  timeseries_icu: any;
-  timeseries_tests: any;
-  timeseries_vents: any;
+  timeseries: any;
+  //   timeseries_admitted: any;
+  //   timeseries_cases: any;
+  //   timeseries: any;
+  //   timeseries_icu: any;
+  //   timeseries_tests: any;
+  //   timeseries_vents: any;
   util_chart: any;
   statistics: any;
 }
 
 const COVID19: FunctionComponent<COVID19Props> = ({
+  params,
   last_updated,
   snapshot_bar,
   snapshot_graphic,
-  timeseries_admitted,
-  timeseries_cases,
-  timeseries_deaths,
-  timeseries_icu,
-  timeseries_tests,
-  timeseries_vents,
+  timeseries,
+  //   timeseries_admitted,
+  //   timeseries_cases,
+  //   timeseries,
+  //   timeseries_icu,
+  //   timeseries_tests,
+  //   timeseries_vents,
   util_chart,
   statistics,
 }) => {
-  const router = useRouter();
-  const currentState = (router.query.state as string) ?? "mys";
-  const { t, i18n } = useTranslation(["dashboard-covid-19", "common"]);
+  const currentState = params.state;
+  const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   const filterCaseDeath = [
     { label: "Cases", value: "cases" },
@@ -73,15 +77,16 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     filter_death: 0,
     filter_state: 0,
     filter_cases: 0,
-    minmax: [timeseries_deaths.data.x.length - 365, timeseries_deaths.data.x.length - 1],
+    minmax: [timeseries.data.x.length - 365, timeseries.data.x.length - 1],
   });
 
-  const { coordinate: admitted_coordinate } = useSlice(timeseries_admitted.data, data.minmax);
-  const { coordinate: cases_coordinate } = useSlice(timeseries_cases.data, data.minmax);
-  const { coordinate: deaths_coordinate } = useSlice(timeseries_deaths.data, data.minmax);
-  const { coordinate: icu_coordinate } = useSlice(timeseries_icu.data, data.minmax);
-  const { coordinate: tests_coordinate } = useSlice(timeseries_tests.data, data.minmax);
-  const { coordinate: vents_coordinate } = useSlice(timeseries_vents.data, data.minmax);
+  // TODO: Can be grouped into 1. Have to do a bit of transforming
+  const { coordinate } = useSlice(timeseries.data, data.minmax);
+  //   const { coordinate: coordinate } = useSlice(timeseries_cases.data, data.minmax);
+  //   const { coordinate: coordinate } = useSlice(timeseries.data, data.minmax);
+  //   const { coordinate: coordinate } = useSlice(timeseries_icu.data, data.minmax);
+  //   const { coordinate: coordinate } = useSlice(timeseries_tests.data, data.minmax);
+  //   const { coordinate: coordinate } = useSlice(timeseries_vents.data, data.minmax);
 
   const BarTabsMenu = [
     {
@@ -255,8 +260,8 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                   col_3: [
                     {
                       name: t("col3_title1"),
-                      value: snapshot_graphic.data.cases_recovered,
-                      delta: snapshot_graphic.data.cases_recovered_annot,
+                      value: snapshot_graphic.data.recovered,
+                      delta: snapshot_graphic.data.recovered_annot,
                       icon: (
                         <Image
                           src="/static/images/stages/recovered.svg"
@@ -320,246 +325,258 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           title={t("area_chart_header", {
             state: CountryAndStates[currentState],
           })}
-          date={timeseries_deaths.data_as_of}
+          date={timeseries.data_as_of}
         >
-          <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
-            <Timeseries
-              className="h-[250px] w-full"
-              title={t("area_chart_title1")}
-              stats={[
-                {
-                  title: t("deaths.annot1"),
-                  value: numFormat(statistics.data.deaths.annot1, "standard"),
-                },
-                {
-                  title: t("deaths.annot2"),
-                  value: numFormat(statistics.data.deaths.annot2, "standard"),
-                },
-              ]}
-              data={{
-                labels: deaths_coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: `${t("area_chart_tooltip1")}`,
-                    pointRadius: 0,
-                    data: deaths_coordinate.line,
-                    borderColor: "#2563EB",
-                    borderWidth: 1.5,
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart_tooltip2")}`,
-                    data: deaths_coordinate.deaths_inpatient,
-                    backgroundColor: "#6BABFA",
-                    stack: "same",
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart_tooltip3")}`,
-                    data: deaths_coordinate.deaths_brought_in,
-                    backgroundColor: "#2563EB4D",
-                    stack: "same",
-                  },
-                ],
-              }}
-              enableGridX={false}
-            />
-            <Timeseries
-              className="h-[250px] w-full"
-              title={t("area_chart_title2")}
-              stats={[
-                {
-                  title: t("vent.annot1"),
-                  value: numFormat(statistics.data.vent.annot1, "standard"),
-                },
-                {
-                  title: t("vent.annot2"),
-                  value: numFormat(statistics.data.vent.annot2, "standard").concat("%"),
-                },
-              ]}
-              data={{
-                labels: vents_coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: `${t("area_chart2_tooltip1")}`,
-                    pointRadius: 0,
-                    data: vents_coordinate.line,
-                    borderColor: "#2563EB",
-                    borderWidth: 1.5,
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart2_tooltip2")}`,
-                    data: vents_coordinate.vent,
-                    backgroundColor: "#2563EB4D",
-                    stack: "same",
-                  },
-                ],
-              }}
-              enableGridX={false}
-            />
-            <Timeseries
-              className="h-[250px] w-full"
-              title={t("area_chart_title3")}
-              stats={[
-                {
-                  title: t("icu.annot1"),
-                  value: numFormat(statistics.data.icu.annot1, "standard"),
-                },
-                {
-                  title: t("icu.annot2"),
-                  value: numFormat(statistics.data.icu.annot2, "standard").concat("%"),
-                },
-              ]}
-              data={{
-                labels: icu_coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: `${t("area_chart3_tooltip1")}`,
-                    pointRadius: 0,
-                    data: icu_coordinate.line,
-                    borderColor: "#2563EB",
-                    borderWidth: 1.5,
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart3_tooltip2")}`,
-                    data: icu_coordinate.icu,
-                    backgroundColor: "#2563EB4D",
-                    stack: "same",
-                  },
-                ],
-              }}
-              enableGridX={false}
-            />
-            <Timeseries
-              className="h-[250px] w-full"
-              title={t("area_chart_title4")}
-              stats={[
-                {
-                  title: t("admitted.annot1"),
-                  value: numFormat(statistics.data.admitted.annot1, "standard"),
-                },
-                {
-                  title: t("admitted.annot2"),
-                  value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
-                },
-              ]}
-              data={{
-                labels: admitted_coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: `${t("area_chart4_tooltip1")}`,
-                    pointRadius: 0,
-                    data: admitted_coordinate.line,
-                    borderColor: "#2563EB",
-                    borderWidth: 1.5,
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart4_tooltip2")}`,
-                    data: admitted_coordinate.admitted,
-                    backgroundColor: "#2563EB4D",
-                    stack: "same",
-                  },
-                ],
-              }}
-              enableGridX={false}
-            />
-            <Timeseries
-              className="h-[250px] w-full"
-              title={t("area_chart_title5")}
-              stats={[
-                {
-                  title: t("cases.annot1"),
-                  value: numFormat(statistics.data.cases.annot1, "standard"),
-                },
-                {
-                  title: t("cases.annot2"),
-                  value: numFormat(statistics.data.cases.annot2, "standard"),
-                },
-              ]}
-              data={{
-                labels: cases_coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: `${t("area_chart5_tooltip1")}`,
-                    pointRadius: 0,
-                    data: cases_coordinate.line,
-                    borderColor: "#2563EB",
-                    borderWidth: 1.5,
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart5_tooltip2")}`,
-                    data: cases_coordinate.cases,
-                    backgroundColor: "#2563EB4D",
-                    stack: "same",
-                  },
-                ],
-              }}
-              enableGridX={false}
-            />
-            <Timeseries
-              className="h-[250px] w-full"
-              title={t("area_chart_title6")}
-              stats={[
-                {
-                  title: t("tests.annot1"),
-                  value: numFormat(statistics.data.tests.annot1, "standard"),
-                },
-                {
-                  title: t("tests.annot2"),
-                  value: numFormat(statistics.data.tests.annot2, "standard").concat("%"),
-                },
-              ]}
-              enableRightScale
-              data={{
-                labels: tests_coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: `${t("area_chart6_tooltip1")}`,
-                    pointRadius: 0,
-                    borderColor: "#2563EB",
-                    data: tests_coordinate.tooltip,
-                    borderWidth: 1.5,
-                    yAxisID: "y1",
-                    spanGaps: true,
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart6_tooltip2")}`,
-                    data: tests_coordinate.tests_rtk,
-                    backgroundColor: "#6BABFA",
-                    stack: "same",
-                  },
-                  {
-                    type: "bar",
-                    label: `${t("area_chart6_tooltip3")}`,
-                    data: tests_coordinate.tests_pcr,
-                    backgroundColor: "#2563EB4D",
-                    stack: "same",
-                  },
-                ],
-              }}
-              enableGridX={false}
-            />
-          </div>
-          <div>
-            <Slider
-              type="range"
-              data={timeseries_deaths.data.x}
-              value={data.minmax}
-              onChange={e => setData("minmax", e)}
-            />
-            <span className="text-dim text-sm">{t("common:common.slider")}</span>
-          </div>
+          <SliderProvider>
+            {play => (
+              <>
+                <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
+                  <Timeseries
+                    className="h-[250px] w-full"
+                    title={t("area_chart_title1")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("deaths.annot1"),
+                        value: numFormat(statistics.data.deaths.annot1, "standard"),
+                      },
+                      {
+                        title: t("deaths.annot2"),
+                        value: numFormat(statistics.data.deaths.annot2, "standard"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: `${t("area_chart_tooltip1")}`,
+                          pointRadius: 0,
+                          data: coordinate.deaths_line,
+                          borderColor: "#2563EB",
+                          borderWidth: 1.5,
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart_tooltip2")}`,
+                          data: coordinate.deaths_inpatient,
+                          backgroundColor: "#6BABFA",
+                          stack: "same",
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart_tooltip3")}`,
+                          data: coordinate.deaths_brought_in,
+                          backgroundColor: "#2563EB4D",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[250px] w-full"
+                    title={t("area_chart_title2")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("vent.annot1"),
+                        value: numFormat(statistics.data.vent.annot1, "standard"),
+                      },
+                      {
+                        title: t("vent.annot2"),
+                        value: numFormat(statistics.data.vent.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: `${t("area_chart2_tooltip1")}`,
+                          pointRadius: 0,
+                          data: coordinate.vents_line,
+                          borderColor: "#2563EB",
+                          borderWidth: 1.5,
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart2_tooltip2")}`,
+                          data: coordinate.vents,
+                          backgroundColor: "#2563EB4D",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[250px] w-full"
+                    title={t("area_chart_title3")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("icu.annot1"),
+                        value: numFormat(statistics.data.icu.annot1, "standard"),
+                      },
+                      {
+                        title: t("icu.annot2"),
+                        value: numFormat(statistics.data.icu.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: `${t("area_chart3_tooltip1")}`,
+                          pointRadius: 0,
+                          data: coordinate.icu_line,
+                          borderColor: "#2563EB",
+                          borderWidth: 1.5,
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart3_tooltip2")}`,
+                          data: coordinate.icu,
+                          backgroundColor: "#2563EB4D",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[250px] w-full"
+                    title={t("area_chart_title4")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("admitted.annot1"),
+                        value: numFormat(statistics.data.admitted.annot1, "standard"),
+                      },
+                      {
+                        title: t("admitted.annot2"),
+                        value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: `${t("area_chart4_tooltip1")}`,
+                          pointRadius: 0,
+                          data: coordinate.admitted_line,
+                          borderColor: "#2563EB",
+                          borderWidth: 1.5,
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart4_tooltip2")}`,
+                          data: coordinate.admitted,
+                          backgroundColor: "#2563EB4D",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[250px] w-full"
+                    title={t("area_chart_title5")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("cases.annot1"),
+                        value: numFormat(statistics.data.cases.annot1, "standard"),
+                      },
+                      {
+                        title: t("cases.annot2"),
+                        value: numFormat(statistics.data.cases.annot2, "standard"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: `${t("area_chart5_tooltip1")}`,
+                          pointRadius: 0,
+                          data: coordinate.cases_line,
+                          borderColor: "#2563EB",
+                          borderWidth: 1.5,
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart5_tooltip2")}`,
+                          data: coordinate.cases,
+                          backgroundColor: "#2563EB4D",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[250px] w-full"
+                    title={t("area_chart_title6")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("tests.annot1"),
+                        value: numFormat(statistics.data.tests.annot1, "standard"),
+                      },
+                      {
+                        title: t("tests.annot2"),
+                        value: numFormat(statistics.data.tests.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    enableRightScale
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: `${t("area_chart6_tooltip1")}`,
+                          pointRadius: 0,
+                          borderColor: "#2563EB",
+                          data: coordinate.tests_tooltip,
+                          borderWidth: 1.5,
+                          yAxisID: "y1",
+                          spanGaps: true,
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart6_tooltip2")}`,
+                          data: coordinate.tests_rtk,
+                          backgroundColor: "#6BABFA",
+                          stack: "same",
+                        },
+                        {
+                          type: "bar",
+                          label: `${t("area_chart6_tooltip3")}`,
+                          data: coordinate.tests_pcr,
+                          backgroundColor: "#2563EB4D",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                </div>
+                <div>
+                  <Slider
+                    type="range"
+                    data={timeseries.data.x}
+                    value={data.minmax}
+                    onChange={e => setData("minmax", e)}
+                  />
+                  <span className="text-dim text-sm">{t("common:common.slider")}</span>
+                </div>
+              </>
+            )}
+          </SliderProvider>
         </Section>
       </Container>
     </>

@@ -1,6 +1,7 @@
 import AgencyBadge from "@components/AgencyBadge";
 import BarMeter from "@components/Chart/BarMeter";
 import Slider from "@components/Chart/Slider";
+import { SliderProvider } from "@components/Chart/Slider/context";
 import { PDNIcon } from "@components/Icon/agency";
 import { Container, Panel, Section, StateDropdown, Tabs, Hero } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
@@ -73,11 +74,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   const { coordinate } = useSlice(timeseries_all.data, data.minmax);
   const { theme } = useTheme();
   const topStateIndices = getTopIndices(choropleth_malaysia_blood_donation.data.y.perc, 3, true);
-
-  const handleClearSelection = () => {
-    setData("zoom_state", undefined);
-    setData("zoom_facility", undefined);
-  };
+  console.log(coordinate);
 
   const KEY_VARIABLES_SCHEMA = [
     {
@@ -176,36 +173,42 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           description={t("combine_description")}
           date={timeseries_all.date_as_of}
         >
-          <Timeseries
-            className="h-[350px] w-full"
-            title={t("combine_title", {
-              state: CountryAndStates[currentState],
-            })}
-            // state={currentState}
-            interval="day"
-            data={{
-              labels: coordinate.x,
-              datasets: [
-                {
-                  type: "line",
-                  data: coordinate.line_daily,
-                  label: t("combine_tooltip1"),
-                  borderColor: AKSARA_COLOR.DANGER,
-                  borderWidth: 1.5,
-                  backgroundColor: AKSARA_COLOR.DANGER_H,
-                  fill: true,
-                },
-              ],
-            }}
-          />
-          <div className="pt-5">
-            <Slider
-              type="range"
-              value={data.minmax}
-              data={timeseries_all.data.x}
-              onChange={e => setData("minmax", e)}
-            />
-          </div>
+          <SliderProvider>
+            {play => (
+              <>
+                <Timeseries
+                  className="h-[350px] w-full"
+                  title={t("combine_title", {
+                    state: CountryAndStates[currentState],
+                  })}
+                  enableAnimation={!play}
+                  interval="day"
+                  data={{
+                    labels: coordinate.x,
+                    datasets: [
+                      {
+                        type: "line",
+                        data: coordinate.line_daily,
+                        label: t("combine_tooltip1"),
+                        borderColor: AKSARA_COLOR.DANGER,
+                        borderWidth: 1.5,
+                        backgroundColor: AKSARA_COLOR.DANGER_H,
+                        fill: true,
+                      },
+                    ],
+                  }}
+                />
+                <div className="pt-5">
+                  <Slider
+                    type="range"
+                    value={data.minmax}
+                    data={timeseries_all.data.x}
+                    onChange={e => setData("minmax", e)}
+                  />
+                </div>
+              </>
+            )}
+          </SliderProvider>
         </Section>
 
         <Section>

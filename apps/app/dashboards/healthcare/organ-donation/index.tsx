@@ -22,6 +22,7 @@ import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { getTopIndices } from "@lib/helpers";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * OrganDonation Dashboard
@@ -95,41 +96,47 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
           description={t("timeseries_description")}
           date={timeseries.data_as_of}
         >
-          <Timeseries
-            className="h-[350px] w-full"
-            title={t("timeseries_title", {
-              state: CountryAndStates[currentState],
-            })}
-            interval="auto"
-            data={{
-              labels: coordinate.x,
-              datasets: [
-                {
-                  type: "line",
-                  data: coordinate.line,
-                  label: t("tooltip1"),
-                  borderColor: "#16A34A",
-                  borderWidth: 1.5,
-                  backgroundColor: "#16A34A1A",
-                  fill: true,
-                },
-                {
-                  label: t("tooltip2"),
-                  data: coordinate.daily,
-                  borderColor: "#00000000",
-                  backgroundColor: "#00000000",
-                },
-              ],
-            }}
-          />
-          <div className="pt-5">
-            <Slider
-              type="range"
-              value={data.minmax}
-              data={timeseries.data.x}
-              onChange={e => setData("minmax", e)}
-            />
-          </div>
+          <SliderProvider>
+            {play => (
+              <>
+                <Timeseries
+                  className="h-[350px] w-full"
+                  title={t("timeseries_title", {
+                    state: CountryAndStates[currentState],
+                  })}
+                  interval="auto"
+                  enableAnimation={!play}
+                  data={{
+                    labels: coordinate.x,
+                    datasets: [
+                      {
+                        type: "line",
+                        data: coordinate.line,
+                        label: t("tooltip1"),
+                        borderColor: "#16A34A",
+                        borderWidth: 1.5,
+                        backgroundColor: "#16A34A1A",
+                        fill: true,
+                      },
+                      {
+                        label: t("tooltip2"),
+                        data: coordinate.daily,
+                        borderColor: "#00000000",
+                        backgroundColor: "#00000000",
+                      },
+                    ],
+                  }}
+                />
+
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data.x}
+                  onChange={e => setData("minmax", e)}
+                />
+              </>
+            )}
+          </SliderProvider>
         </Section>
 
         {/* How do organ pledger rates differ across the country? */}
