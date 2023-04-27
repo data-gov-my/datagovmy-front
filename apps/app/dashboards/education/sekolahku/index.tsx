@@ -40,8 +40,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   const { data, setData } = useData({
     tabs_section3: 0,
     selected_school: {
-      label: "",
-      value: "",
+      label: "PEB1094 | PENANG FREE SCHOOL | 11600 | Pulau Pinang",
+      value: "PEB1094",
     },
   });
 
@@ -133,7 +133,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                     <BookOpenIcon className="text-primary mx-auto h-10 w-10" />
                     <span className="text-lg font-bold">{sekolahku_info.school}</span>
                     <span className="text-dim text-sm font-bold">
-                      {`${sekolahku_info.city} | ${sekolahku_info.postcode} ${
+                      {`${sekolahku_info.ppd} | ${sekolahku_info.postcode} ${
                         CountryAndStates[sekolahku_info.state]
                       }`}
                     </span>
@@ -148,6 +148,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   <span className="text-dim">
                     {t("section_1.school_description", {
                       level: sekolahku_info.level,
+                      funding_status: sekolahku_info.funding_status,
+                      type: sekolahku_info.type,
                       strata: sekolahku_info.strata,
                       city: sekolahku_info.city,
                       school: sekolahku_info.school,
