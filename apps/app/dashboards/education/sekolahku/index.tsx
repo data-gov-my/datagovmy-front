@@ -10,13 +10,15 @@ import { BookOpenIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
 import { CountryAndStates } from "@lib/constants";
 import { useData } from "@hooks/useData";
+import { OptionType } from "@components/types";
+import { useRouter } from "next/router";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
  */
 
 interface SekolahkuProps {
-  dropdown_data: {}[];
+  dropdown_data: Record<string, string>[];
   sekolahku_info: any;
   bellcurve_school: any;
   bellcurve_callout: any;
@@ -33,9 +35,14 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
   const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
+  const router = useRouter();
 
   const { data, setData } = useData({
     tabs_section3: 0,
+    selected_school: {
+      label: "",
+      value: "",
+    },
   });
 
   const formatCallout = (type: string, value: number): string => {
@@ -70,6 +77,15 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   ];
 
+  const SCHOOL_OPTIONS: Array<OptionType> = dropdown_data.map(
+    ({ code, school, postcode, state }) => {
+      return {
+        label: `${code} | ${school} | ${postcode} | ${state}`,
+        value: code,
+      };
+    }
+  );
+
   return (
     <>
       <Hero
@@ -92,18 +108,21 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
       <Container className="min-h-screen">
         <Section>
           <div className="flex flex-col items-center space-y-12">
-            <div className="space-y-6">
-              <h4 className="text-center">{t("section_1.title", {})}</h4>
-              <div className="flex w-full flex-col items-center justify-center space-y-3">
+            <div className="w-full space-y-6">
+              <h4 className="text-center">{t("section_1.title")}</h4>
+              <div className="flex flex-col items-center justify-center space-y-3">
                 <ComboBox
                   placeholder={t("section_1.search_school")}
-                  options={[]}
-                  selected={null}
+                  options={SCHOOL_OPTIONS}
+                  selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
                   onChange={e => {
-                    null;
+                    setData("selected_school", e);
+                    router.push(`/dashboard/sekolahku/${e?.value}`);
                   }}
                 />
-                <span className="text-dim font-body text-sm">{t("section_1.disclaimer")}</span>
+                <span className="text-dim font-body text-center text-sm">
+                  {t("section_1.disclaimer")}
+                </span>
               </div>
             </div>
 
@@ -120,10 +139,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                     </span>
                     <a
                       className="text-primary text-sm"
-                      href="mailto: PBE1094@moe.gov.my"
+                      href={`mailto:${sekolahku_info.code}@moe.gov.my`}
                       target="_blank"
                     >
-                      PBE1094@moe.gov.my
+                      {`${sekolahku_info.code}@moe.gov.my`}
                     </a>
                   </div>
                   <span className="text-dim">
@@ -139,7 +158,16 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                 </div>
               </div>
               <div className="basis-1/2 rounded-b-xl bg-slate-50 dark:bg-zinc-900 lg:rounded-br-xl lg:rounded-tr-xl">
-                <MapPlot className="h-full w-full" />
+                <MapPlot
+                  className="h-full w-full"
+                  position={[sekolahku_info.lat, sekolahku_info.lon]}
+                  markers={[
+                    {
+                      position: [sekolahku_info.lat, sekolahku_info.lon],
+                      school: sekolahku_info.school,
+                    },
+                  ]}
+                />
               </div>
             </div>
           </div>
