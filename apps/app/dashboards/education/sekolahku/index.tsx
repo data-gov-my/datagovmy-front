@@ -8,44 +8,41 @@ import ComboBox from "@components/Combobox";
 import BarMeter from "@components/Chart/BarMeter";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
+import { CountryAndStates } from "@lib/constants";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
  */
 
-interface SekolahkuProps {}
+interface SekolahkuProps {
+  dropdown_data: {}[];
+  sekolahku_info: any;
+  bellcurve_school: any;
+  bellcurve_callout: any;
+  bellcurve_linechart: any;
+}
 
-const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
+const Sekolahku: FunctionComponent<SekolahkuProps> = ({
+  dropdown_data,
+  sekolahku_info,
+  bellcurve_school,
+  bellcurve_callout,
+  bellcurve_linechart,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
   const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
   const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
 
   const KEY_VARIABLES_SCHEMA = [
     {
-      name: t("Compare Nationally"),
+      name: t("section_3.national"),
       data: [],
     },
     {
-      name: t("Within state"),
+      name: t("section_3.state"),
       data: [],
     },
   ];
-
-  const lineDummy = {
-    labels: [0, 10, 20, 30, 40, 50, 60, 70, 80], // x-values
-    datasets: [
-      {
-        type: "line",
-        data: [110, 240, 480, 525, 470, 354, 253, 100, 90],
-        label: t("label"),
-        backgroundColor: "#94A3B81A",
-        borderColor: "#94A3B8",
-        borderWidth: 1.5,
-        lineTension: 0.5,
-        fill: true,
-      },
-    ],
-  };
 
   return (
     <>
@@ -70,17 +67,17 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
         <Section>
           <div className="flex flex-col items-center space-y-12">
             <div className="space-y-6">
-              <h4 className="text-center">{t("section_1")}</h4>
-              <div className="flex flex-col items-center justify-center space-y-3">
+              <h4 className="text-center">{t("section_1.title", {})}</h4>
+              <div className="flex w-full flex-col items-center justify-center space-y-3">
                 <ComboBox
-                  placeholder={t("search_school")}
+                  placeholder={t("section_1.search_school")}
                   options={[]}
                   selected={null}
                   onChange={e => {
                     null;
                   }}
                 />
-                <span className="text-dim font-body text-sm">{t("disclaimer")}</span>
+                <span className="text-dim font-body text-sm">{t("section_1.disclaimer")}</span>
               </div>
             </div>
 
@@ -89,9 +86,11 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
                 <div className="flex flex-col gap-6 p-8 text-center">
                   <div className="flex flex-col gap-2">
                     <BookOpenIcon className="text-primary mx-auto h-10 w-10" />
-                    <span className="text-lg font-bold">{t("SMK Penang Free")}</span>
+                    <span className="text-lg font-bold">{sekolahku_info.school}</span>
                     <span className="text-dim text-sm font-bold">
-                      {t("Timur Laut | 11600 Pulau Pinang")}
+                      {`${sekolahku_info.city} | ${sekolahku_info.postcode} ${
+                        CountryAndStates[sekolahku_info.state]
+                      }`}
                     </span>
                     <a
                       className="text-primary text-sm"
@@ -102,9 +101,14 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
                     </a>
                   </div>
                   <span className="text-dim">
-                    {t(
-                      "A national secondary school in urban Georgetown, SMK Penang Free has been in operation since 1816, with a current force of 85 staff teaching 915 students."
-                    )}
+                    {t("section_1.school_description", {
+                      level: sekolahku_info.level,
+                      strata: sekolahku_info.strata,
+                      city: sekolahku_info.city,
+                      school: sekolahku_info.school,
+                      teachers: sekolahku_info.teachers,
+                      students: sekolahku_info.students,
+                    })}
                   </span>
                 </div>
               </div>
@@ -115,7 +119,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
           </div>
         </Section>
 
-        <Section title={t("What does {{ school }}’s student body look like?")} date={Date.now()}>
+        <Section title={t("section_2.title", { school: sekolahku_info.school })} date={Date.now()}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
             {[0, 1, 2, 3, 4, 5].map(i => (
               <div className="flex flex-col space-y-6">
@@ -135,9 +139,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
         </Section>
 
         <Section
-          title={t(
-            "How does {{ school }} compare to other {{ school level }} schools in Malaysia?"
-          )}
+          title={t("section_3.title", {
+            school: sekolahku_info.school,
+            level: sekolahku_info.level,
+          })}
           menu={
             <Tabs.List
               options={KEY_VARIABLES_SCHEMA.map(item => item.name)}
@@ -156,7 +161,21 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({}) => {
                       className="h-[250px] w-full"
                       title={"Number of Students"}
                       enableGridX={false}
-                      data={lineDummy}
+                      data={{
+                        labels: [0, 10, 20, 30, 40, 50, 60, 70, 80], // x-values
+                        datasets: [
+                          {
+                            type: "line",
+                            data: [110, 240, 480, 525, 470, 354, 253, 100, 90],
+                            label: t("label"),
+                            backgroundColor: "#94A3B81A",
+                            borderColor: "#94A3B8",
+                            borderWidth: 1.5,
+                            lineTension: 0.5,
+                            fill: true,
+                          },
+                        ],
+                      }}
                       stats={[
                         {
                           title: "Your School",
