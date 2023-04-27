@@ -83,7 +83,10 @@ const Card: FunctionComponent<CardProps> = ({
                   </Dialog.Title>
                   <span>{win}</span>
                   <XMarkIcon
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      onClose();
+                      setIsOpen(false);
+                    }}
                     className="text-dim absolute right-4 top-4 h-6 w-6 cursor-pointer items-center"
                   />
                   <div className="space-x-3 pt-3">
