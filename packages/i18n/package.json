@@ -8,5 +8,12 @@
     "en-GB/*",
     "ms-MY/*"
   ],
-  "sideEffects": false
+  "sideEffects": false,
+  "scripts": {
+    "pull": "node index.js pull",
+    "push": "node index.js push"
+  },
+  "devDependencies": {
+    "commander": "^10.0.1"
+  }
 }

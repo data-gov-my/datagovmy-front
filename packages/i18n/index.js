@@ -1,10 +1,8 @@
-// const { Command } = require("commander");
+const { Command } = require("commander");
 const axios = require("axios");
 const path = require("path");
 const fs = require("fs/promises");
 require("dotenv").config();
-
-// TODO: Pls do not use this. Leaving it here for future use case
 
 const base_dir = path.resolve(__dirname, ".");
 const instance = () => {
@@ -112,16 +110,17 @@ const ensureDirectoryExists = filePath => {
 /** ---------------------------------------------------------------------------------------------------------------------------- */
 
 /**
- * @deprecated Production i18ns are now managed in `datagovmy-meta`.
  * CLI commands to manage i18n.
- * @example yarn i18n pull ... | (turborepo) yarn workspace app i18n pull ...
- * @example yarn i18n push ... | (turborepo) yarn workspace app i18n push ...
+ * @example yarn i18n pull ... | (turborepo) yarn workspace i18n pull ...
+ * @example yarn i18n push ... | (turborepo) yarn workspace i18n push ...
  */
 
 const program = new Command("i18n")
   .description("Commands to manage i18n for development and production environment")
   .version("0.0.1");
 
+/**
+ */
 program
   .name("pull")
   .command("pull")
@@ -160,14 +159,17 @@ program
     }
   });
 
+/** TODO: @eujiaxin you might be interested in this "push" command. Right now, it's configured per namespace.
+ * But not really ideal if you want to push changes in a PR to `datagovmy-meta` repo. I leave this in your good hands. :)
+ */
 program
   .name("push")
   .command("push")
-  .description("Pushes local i18n json to production.")
+  .description("Pushes local i18n json to datagovmy-meta (production)")
   .argument("<namespace>")
   .requiredOption("-l --locale <language...>", "Available: en-GB, ms-MY")
   .option("-d --dir <path>", "Parent direcortory for locales", base_dir)
-  .option("-n --new", "New i18n file", false)
+  .option("-n --new", "Set to true, if new i18n", false)
   .addHelpText(
     "after",
     "\nExamples: \n<yarn command> i18n push common --locale en-GB  // Push common.json for en-GB"
