@@ -5,6 +5,7 @@ import { Combobox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
+import Fuse from "fuse.js";
 
 type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];
@@ -24,69 +25,51 @@ const ComboBox = <L extends string | number = string, V = string>({
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
+  const config: Fuse.IFuseOptions<OptionType<L, V>> = {
+    keys: ["label"],
+  };
+  const fuse = new Fuse(options, config);
   const filteredOptions =
-    query === ""
-      ? options.slice(0, 100)
-      : options
-          .filter(option =>
-            option.label
-              .toString()
-              .toLowerCase()
-              .replace(/\s+/g, "")
-              .includes(query.toLowerCase().replace(/\s+/g, ""))
-          )
-          .slice(0, 100);
+    query === "" ? options.slice(0, 100) : fuse.search(query, { limit: 100 }).map(res => res.item);
 
   return (
     <Combobox value={selected} onChange={onChange}>
       <div className="relative w-full rounded-full">
         <div
-          className={clx(
-            `border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none overflow-hidden rounded-full
-              border bg-white text-left text-base shadow-sm
-              focus:outline-none focus-visible:ring-0 dark:bg-black `
-          )}
+          className="border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none 
+        overflow-hidden rounded-full border bg-white text-left text-base shadow-sm focus:outline-none focus-visible:ring-0 dark:bg-black"
         >
-          <Combobox.Button className="w-full">
-            {({ open }) => (
-              <>
-                <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-1.5">
-                  <MagnifyingGlassIcon
-                    className="dark:text-dim h-5 w-5 text-black"
-                    aria-hidden="true"
-                  />
-                </span>
-                <Combobox.Input
-                  placeholder={placeholder}
-                  className={clx(
-                    "w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
-                  )}
-                  displayValue={(option: OptionType<L, V>) => option?.label as string}
-                  onChange={event => setQuery(event.target.value)}
-                  onClick={(e: any) => {
-                    if (open) e.stopPropagation();
-                  }}
-                  spellCheck={false}
+          <Combobox.Input
+            placeholder={placeholder}
+            className="w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
+            displayValue={(option: OptionType<L, V>) => option?.label as string}
+            onChange={event => setQuery(event.target.value)}
+            spellCheck={false}
+          />
+          <Combobox.Button as={"div"} className="w-full">
+            <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-1.5">
+              <MagnifyingGlassIcon
+                className="dark:text-dim h-5 w-5 text-black"
+                aria-hidden="true"
+              />
+            </span>
+            {query.length > 0 && (
+              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
+                <XMarkIcon
+                  className="dark:text-dim h-5 w-5 text-black"
+                  onClick={() => onChange(undefined)}
+                  aria-hidden="true"
                 />
-                {query.length > 0 && (
-                  <span className="absolute inset-y-0 right-2 box-content flex items-center pr-1.5">
-                    <XMarkIcon
-                      className="dark:text-dim h-5 w-5 text-black"
-                      onClick={() => onChange(undefined)}
-                      aria-hidden="true"
-                    />
-                  </span>
-                )}
-                {selected && (
-                  <span className="absolute inset-y-0 right-2 box-content flex items-center pr-1.5">
-                    <XMarkIcon
-                      className="dark:text-dim h-5 w-5 text-black"
-                      onClick={() => onChange(undefined)}
-                      aria-hidden="true"
-                    />
-                  </span>
-                )}
-              </>
+              </span>
+            )}
+            {selected && (
+              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
+                <XMarkIcon
+                  className="dark:text-dim h-5 w-5 text-black"
+                  onClick={() => onChange(undefined)}
+                  aria-hidden="true"
+                />
+              </span>
             )}
           </Combobox.Button>
         </div>

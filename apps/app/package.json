@@ -29,6 +29,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "d3-scale-chromatic": "^3.0.0",
     "dom-to-image": "^2.6.0",
+    "fuse.js": "^6.6.2",
     "highlight.js": "^11.6.0",
     "i18next": "^22.4.14",
     "i18next-http-backend": "^2.2.0",
