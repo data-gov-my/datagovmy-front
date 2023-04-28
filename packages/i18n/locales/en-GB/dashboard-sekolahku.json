@@ -32,8 +32,8 @@
     },
     "orphan": {
       "title": "Orphan Status",
-      "no": "",
-      "yes": ""
+      "no": "Non-Orphan",
+      "yes": "Orphan"
     },
     "religion": {
       "title": "Religion",
