@@ -82,7 +82,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
       util_chart: data.util_chart,
       statistics: data.statistics,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

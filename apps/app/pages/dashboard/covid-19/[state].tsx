@@ -109,7 +109,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
       statistics: data.statistics,
       state: params?.state ?? "mys",
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 
