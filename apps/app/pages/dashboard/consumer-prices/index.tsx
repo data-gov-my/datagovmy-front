@@ -1,7 +1,7 @@
 import Metadata from "@components/Metadata";
 import ConsumerPricesDashboard from "@dashboards/economy/consumer-prices";
 import { get } from "@lib/api";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 
@@ -11,7 +11,7 @@ const ConsumerPrices = ({
   timeseries,
   timeseries_callouts,
   choropleth,
-}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-consumer-prices", "common"]);
 
   return (
@@ -43,7 +43,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-consumer-price
       timeseries_callouts: data.statistics,
       choropleth: data.choropleth_district,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

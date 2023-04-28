@@ -48,7 +48,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", asy
       timeseries: data.timeseries,
       choropleth: data.choropleth_malaysia,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

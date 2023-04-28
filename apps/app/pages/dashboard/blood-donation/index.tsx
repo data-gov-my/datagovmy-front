@@ -1,5 +1,5 @@
 import Metadata from "@components/Metadata";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
@@ -19,7 +19,7 @@ const BloodDonation = ({
   barchart_variables,
   map_facility,
   choropleth_malaysia_blood_donation,
-}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
 
   let vars: Record<string, any> = {};
@@ -93,7 +93,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-blood-donation
       map_facility: data.map_facility,
       choropleth_malaysia_blood_donation: data.choropleth_malaysia,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

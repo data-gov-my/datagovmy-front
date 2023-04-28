@@ -1,11 +1,11 @@
 import Metadata from "@components/Metadata";
 import BirthdayExplorerDashboard from "@dashboards/demography/birthday-explorer";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 
-const BirthdayExplorer = ({ timeseries }: InferGetServerSidePropsType<typeof getStaticProps>) => {
+const BirthdayExplorer = ({ timeseries }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <>

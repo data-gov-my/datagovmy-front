@@ -3,9 +3,9 @@ import NamePopularityDashboard from "@dashboards/demography/name-popularity";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 import { Page } from "@lib/types";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
-const NamePopularity: Page = ({}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+const NamePopularity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-name-popularity", "common"]);
 
   return (

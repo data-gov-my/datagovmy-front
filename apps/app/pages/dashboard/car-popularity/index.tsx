@@ -25,7 +25,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
     props: {
       queryOptions: data.query_values.data.data,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 
