@@ -298,7 +298,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       placeholder={t("common:common.select")}
                       options={ELECTION_OPTIONS}
                       selected={ELECTION_OPTIONS.find(e => e.value === data.election)}
-                      onChange={e => setData("election", e)}
+                      onChange={e => setData("election", e.value)}
                     />
                   </div>
                   <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
@@ -347,8 +347,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               anchor="left"
               width="max-w-fit"
               options={ELECTION_OPTIONS}
-              selected={ELECTION_OPTIONS.find(e => e.value === data.election.value)}
-              onChange={e => setData("election", e)}
+              selected={ELECTION_OPTIONS.find(e => e.value === data.election)}
+              onChange={e => setData("election", e.value)}
             />
           </div>
           <Tabs hidden current={data.tabs} onChange={index => setData("tabs", index)}>
