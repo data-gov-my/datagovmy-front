@@ -39,8 +39,15 @@ export const routes = {
   SOCIAL_SECURITY: "/dashboard/social-security",
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
   NAME_POPULARITY: "/dashboard/name-popularity",
-} as const;
+};
 
-export const static_routes = Object.fromEntries(
-  Object.entries(routes).filter(([key]) => ["DASHBOARD", "DATA_CATALOGUE"].includes(key))
-);
+export const static_routes: string[] = (() => {
+  let s_routes = Object.values(routes).filter(
+    route => !["/dashboard", "/data-catalogue"].includes(route)
+  );
+
+  s_routes.forEach(route => {
+    s_routes.push(`/ms-MY${route}`);
+  });
+  return s_routes;
+})();
