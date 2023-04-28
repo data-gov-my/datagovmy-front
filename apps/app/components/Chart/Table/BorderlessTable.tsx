@@ -152,15 +152,15 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                               .toLocaleString(DateTime.DATE_MED)}
                           </>
                         ) : ["majority", "votes"].includes(cell.column.columnDef.id) ? (
-                          <div className="flex flex-row items-center gap-2">
+                          <div className="flex flex-row items-center gap-1.5">
                             <BarMeter perc={cell.getValue().perc} />
                             <span>
                               {cell.getValue().abs === 0
-                                ? `0`
+                                ? `—`
                                 : numFormat(cell.getValue().abs, "standard")}
                             </span>
                             <span>
-                              {cell.getValue().perc === 0
+                              {cell.getValue().perc === null
                                 ? `(—)`
                                 : `(${Number(cell.getValue().perc).toFixed(1)}%)`}
                             </span>
@@ -203,7 +203,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                           ? "—"
                           : numFormat(rowData.at(headerID.indexOf(key)).getValue().abs, "standard")
                       } ${
-                        rowData.at(headerID.indexOf(key)).getValue().perc === 0
+                        rowData.at(headerID.indexOf(key)).getValue().perc === null
                           ? "(—)"
                           : `(${Number(rowData.at(headerID.indexOf(key)).getValue().perc).toFixed(
                               1
