@@ -67,10 +67,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
           <div className="space-y-1 pb-2" key={item.x.concat(`_${index}`)}>
             <div className="flex justify-between">
               <p>{formatX ? formatX(item.x) : item.x}</p>
-              <p className="text-dim dark:text-white">
+              <div className="text-dim dark:text-white">
                 {formatY ? formatY(item.y, item.x) : numFormat(item.y, "standard", 1)}
                 {unit}
-              </p>
+              </div>
             </div>
 
             <div className="bg-washed dark:bg-washed-dark flex h-2.5 w-full overflow-x-hidden rounded-full">
@@ -141,10 +141,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
             <div className="block space-y-1 pb-2 lg:hidden" key={item.x.concat(`_${index}`)}>
               <div className="flex justify-between">
                 <p>{formatX ? formatX(item.x) : item.x}</p>
-                <p className="text-dim dark:text-white">
+                <div className="text-dim dark:text-white">
                   {formatY ? formatY(item.y, item.x) : numFormat(item.y, "standard", 1)}
                   {unit}
-                </p>
+                </div>
               </div>
 
               <div className="bg-washed dark:bg-washed-dark flex h-2.5 w-full overflow-x-hidden rounded-full">
