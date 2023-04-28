@@ -54,7 +54,7 @@ const List: FunctionComponent<ListProps> = ({ className, options, current, onCli
                   ? "border-primary dark:bg-washed-dark cursor-default border-b-2 font-medium text-black dark:text-white"
                   : "text-dim cursor-pointer bg-transparent hover:text-black dark:hover:text-white"
               )}
-              onClick={() => (url ? router.push(url) : null)}
+              onClick={() => (url ? router.push(url, undefined, { scroll: false }) : null)}
             >
               {icon}
               {name}
