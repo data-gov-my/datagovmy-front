@@ -1,5 +1,4 @@
 const I18NextHttpBackend = require("i18next-http-backend");
-const path = require("path");
 
 const namespace = [
   "common",
@@ -42,48 +41,27 @@ const namespace = [
 ];
 
 const config = {
-  development: {
-    i18n: {
-      defaultLocale: "en-GB",
-      locales: ["en-GB", "ms-MY"],
-    },
-    localePath: path.resolve("../../packages/i18n/locales"),
-    load: "currentOnly",
-    preload: ["en-GB", "ms-MY"],
-    serializeConfig: false,
-    reloadOnPrerender: true,
-    react: {
-      bindI18n: "languageChanged",
-      bindI18nStore: "languageChanged",
-      useSuspense: true,
-    },
-  },
-  production: {
-    i18n: {
-      defaultLocale: "en-GB",
-      locales: ["en-GB", "ms-MY"],
-      backend: {
-        loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n?lang={{lng}}&filename={{ns}}`,
-        customHeaders: {
-          Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
-        },
+  i18n: {
+    defaultLocale: "en-GB",
+    locales: ["en-GB", "ms-MY"],
+    backend: {
+      loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n?lang={{lng}}&filename={{ns}}`,
+      customHeaders: {
+        Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
       },
     },
-    ns: namespace,
-    load: "currentOnly",
-    preload: ["en-GB", "ms-MY"],
-    serializeConfig: false,
-    reloadOnPrerender: true,
-    use: [I18NextHttpBackend],
-    react: {
-      bindI18n: "languageChanged",
-      bindI18nStore: "languageChanged",
-      useSuspense: true,
-    },
+  },
+  ns: namespace,
+  load: "currentOnly",
+  preload: ["en-GB", "ms-MY"],
+  serializeConfig: false,
+  reloadOnPrerender: true,
+  use: [I18NextHttpBackend],
+  react: {
+    bindI18n: "languageChanged",
+    bindI18nStore: "languageChanged",
+    useSuspense: true,
   },
 };
 
-// Debug line: Uncomment to see production i18n on local
-// module.exports = config.production;
-
-module.exports = config[process.env.NEXT_PUBLIC_APP_ENV];
+module.exports = config;
