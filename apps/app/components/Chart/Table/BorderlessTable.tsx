@@ -221,7 +221,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
             );
           }
           return (
-            <div className="border-outline dark:border-washed-dark flex flex-col space-y-2 border-b p-3 text-sm lg:hidden">
+            <div className="border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm lg:hidden">
               {rowID.includes("fullResult") && (
                 <div className="flex flex-row justify-between">
                   <div className="flex flex-row space-x-3">
