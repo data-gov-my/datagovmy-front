@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { BarMeter, Result } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter, FullResult, Result } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
@@ -8,7 +8,7 @@ import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { AgencyBadge, Container, Hero, Section } from "@components/index";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
-import { ArrowsPointingOutIcon, FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
+import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWatch } from "@hooks/useWatch";
@@ -55,13 +55,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     columnHelper.accessor("date", {
       id: "date",
       header: t("date"),
-      cell: (info: any) => (
-        <p>
-          {DateTime.fromISO(info.getValue())
-            .setLocale(i18n.language)
-            .toLocaleString(DateTime.DATE_MED)}
-        </p>
-      ),
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("seat", {
       id: "seat",
@@ -71,55 +65,29 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     columnHelper.accessor((row: any) => row.party, {
       id: "party",
       header: t("winning_party"),
-      cell: (info: any) => {
-        const party = info.getValue() as string;
-        return (
-          <div className="flex items-center gap-2 pr-7">
-            <ImageWithFallback
-              src={`/static/images/parties/${party}.png`}
-              width={28}
-              height={16}
-              alt={t(`${party}`)}
-            />
-            <span>{t(`${party}`)}</span>
-          </div>
-        );
-      },
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("name", {
+      id: "candidate_name",
       header: t("candidate_name"),
       cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("majority", {
+      id: "majority",
       header: t("majority"),
-      cell: (info: any) => {
-        const majority = info.getValue();
-        return (
-          <div className="flex flex-row items-center gap-2">
-            <BarMeter perc={majority.perc} />
-            <p>{`${majority.abs === 0 ? "—" : numFormat(majority.abs, "standard")} ${
-              majority.perc === 0 ? "(—)" : `(${Number(majority.perc).toFixed(1)}%)`
-            }`}</p>
-          </div>
-        );
-      },
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.display({
       id: "fullResult",
       cell: ({ row }) => {
         return (
-          <div className="flex items-center justify-center">
-            <button
-              className="flex flex-row items-center gap-1.5 px-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-              onClick={() => {
-                setData("open", true);
-                setData("index", row.index);
-              }}
-            >
-              <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-              <p>{t("full_result")}</p>
-            </button>
-          </div>
+          <FullResult
+            desc={t("full_result")}
+            onClick={() => {
+              setData("open", true);
+              setData("index", row.index);
+            }}
+          />
         );
       },
     }),
@@ -131,7 +99,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     seats_list: [],
 
     // Query for Table
-    q_seat: "Padang Besar, Perlis",
+    q_seat: query.seat ? query.seat : "Padang Besar, Perlis",
     loading: false,
     data: seat,
 
@@ -143,7 +111,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
   });
 
   const { filter, setFilter } = useFilter({
-    seat: query.seat ? query.seat : "",
+    seat: query.seat,
   });
 
   const SEAT_OPTIONS: Array<OptionType> =
@@ -170,7 +138,10 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
       seat_name: data.q_seat,
     })
       .then(({ data }) => {
-        setData("data", data.reverse());
+        setData(
+          "data",
+          data.sort((a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date)))
+        );
       })
       .then(() => setData("loading", false));
   }, [data.q_seat]);

@@ -5,10 +5,10 @@ import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ImageWithFallback from "@components/ImageWithFallback";
-import { BarMeter, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter, FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
-import { ArrowsPointingOutIcon, FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
+import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWatch } from "@hooks/useWatch";
@@ -66,10 +66,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     columnHelper.accessor((row: any) => row.date, {
       id: "date",
       header: t("date"),
-      cell: (info: any) =>
-        DateTime.fromISO(info.getValue())
-          .setLocale(i18n.language)
-          .toLocaleString(DateTime.DATE_MED),
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("seat", {
       id: "seat",
@@ -79,35 +76,12 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     columnHelper.accessor("party", {
       id: "party",
       header: t("party_name"),
-      cell: (info: any) => {
-        const party = info.getValue() as string;
-        return (
-          <div className="flex flex-row items-center gap-2 pr-7">
-            <ImageWithFallback
-              src={`/static/images/parties/${party}.png`}
-              width={28}
-              height={16}
-              alt={t(`${party}`)}
-            />
-            <span>{t(`${party}`)}</span>
-          </div>
-        );
-      },
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("votes", {
       id: "votes",
       header: t("votes_won"),
-      cell: (info: any) => {
-        const votes = info.getValue();
-        return (
-          <div className="flex flex-row items-center gap-2">
-            <BarMeter perc={votes.perc} />
-            <p>{`${votes.abs === 0 ? "—" : numFormat(votes.abs, "standard")} ${
-              votes.perc === 0 ? "(—)" : `(${Number(votes.perc).toFixed(1)}%)`
-            }`}</p>
-          </div>
-        );
-      },
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("result", {
       id: "result",
@@ -119,18 +93,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       header: "",
       cell: ({ row }) => {
         return (
-          <div className="flex items-center justify-center">
-            <button
-              className="flex flex-row items-center gap-1.5 px-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-              onClick={() => {
-                setData("open", true);
-                setData("index", row.index);
-              }}
-            >
-              <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-              <p>{t("full_result")}</p>
-            </button>
-          </div>
+          <FullResult
+            desc={t("full_result")}
+            onClick={() => {
+              setData("open", true);
+              setData("index", row.index);
+            }}
+          />
         );
       },
     }),
@@ -156,8 +125,8 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   });
 
   const { filter, setFilter } = useFilter({
-    name: query.name ? query.name : "",
-    type: query.type ? query.type : "",
+    name: query.name,
+    type: query.type,
   });
 
   const CANDIDATE_OPTIONS: Array<OptionType> =
@@ -187,7 +156,12 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       type: data.type,
     })
       .then(({ data }) => {
-        setData("data", data.reverse());
+        setData(
+          "data",
+          data.sort(
+            (a: Candidate, b: Candidate) => Number(new Date(b.date)) - Number(new Date(a.date))
+          )
+        );
       })
       .then(() => setData("loading", false));
   }, [data.q_candidate, data.type]);
@@ -283,7 +257,6 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 onChange={index => {
                   setData("tabs", index);
                   setData("type", index === 0 ? "parlimen" : "dun");
-                  setFilter("type", index === 0 ? "parlimen" : "dun");
                 }}
               >
                 <Panel name={t("parliament_elections")}>
