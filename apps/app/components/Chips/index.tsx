@@ -35,7 +35,7 @@ const Chips: FunctionComponent<ChipsProps> = ({
           <XMarkIcon className="h-4 w-4 font-bold text-zinc-500" />
         </li>
       ))}
-      {onClearAll && data.length && (
+      {data.length > 0 && onClearAll && (
         <li
           className="text-dim flex cursor-pointer flex-row items-center gap-0.5 rounded-full px-2.5 py-1 text-sm font-medium outline-none transition-colors"
           onClick={onClearAll}

@@ -1,7 +1,7 @@
 import Metadata from "@components/Metadata";
 import InterestRatesDashboard from "@dashboards/financial-sector/interest-rates";
 import { get } from "@lib/api";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 
@@ -10,7 +10,7 @@ const InterestRates = ({
   timeseries,
   timeseries_opr,
   timeseries_callouts,
-}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-interest-rates", "common"]);
 
   return (

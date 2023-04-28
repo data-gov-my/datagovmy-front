@@ -1,7 +1,7 @@
 import Metadata from "@components/Metadata";
 import GDPDashboard from "@dashboards/economy/gdp";
 import { get } from "@lib/api";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 
@@ -9,7 +9,7 @@ const GDP = ({
   last_updated,
   timeseries,
   timeseries_callouts,
-}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-gdp", "common"]);
 
   return (
@@ -37,7 +37,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-gdp", async ()
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

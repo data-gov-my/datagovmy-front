@@ -1,7 +1,7 @@
 import Metadata from "@components/Metadata";
 import MoneySupplyDashboard from "@dashboards/financial-sector/money-supply";
 import { get } from "@lib/api";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 
@@ -10,7 +10,7 @@ const MoneySupply = ({
   table_summary,
   timeseries,
   timeseries_callouts,
-}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-money-supply", "common"]);
 
   return (
@@ -41,7 +41,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-money-supply",
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

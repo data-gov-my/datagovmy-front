@@ -40,7 +40,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccinat
       barmeter: data.bar_chart,
       waffle: data.waffle,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 
