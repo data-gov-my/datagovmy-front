@@ -1,4 +1,27 @@
 {
-  "header": "",
-  "description": ""
+  "header": "Sekolahku",
+  "description": "Pergi ke sekolah merupakan pencapaian penting bagi setiap kanak-kanak. Mulai dari usia 7 hingga 17 tahun, sekolah adalah tempat di mana mereka akan menghabiskan sekurang-kurangnya setengah hari mereka - belajar, bermain, dan berkembang. Oleh itu, adalah sangat wajar bagi ibu bapa untuk ingin mendapatkan sebanyak mungkin maklumat mengenai persekitaran pembelajaran anak mereka. Papan pemuka ini menggunakan data yang kaya dari Kementerian Pendidikan mengenai pelajar, guru, dan sekolah untuk memberikan anda data terperinci mengenai sekolah anak anda, termasuk demografi sekolah, sumber dan tahap pencapaian sekolah. Kami berharap bahawa ketelusan ini akan membina kepercayaan yang lebih dalam sistem pendidikan negara.",
+  "section_1": {
+    "title": "Terokai data pada 10,232 sekolah kerajaan di Malaysia!",
+    "search_school": "Cari sekolah anak anda",
+    "school_description": "Sebuah sekolah {{level}} {{type}} {{funding_status}} di kawasan {{strata}} {{city}}, {{school}} telah beroperasi sejak {{established}}, kini dengan tenaga pengajar sebanyak {{teachers}} cikgu mendidik {{students}} pelajar.",
+    "disclaimer": "Nota: Sekolah swasta tidak termasuk, kerana mereka tidak dioperasikan oleh KPM (hanya diawasi)"
+  },
+  "section_2": {
+    "title": "Bagaimanakah wajah pelajar di {{ school }}?"
+  },
+  "section_3": {
+    "title": "Bagaimanakah {{ school }} membandingkan dengan sekolah-sekolah {{ level }} lain di Malaysia?",
+    "national": "Peringkat Kebangsaan",
+    "state": "Peringkat Negeri",
+    "gpa": "Purata Nilai Gred SPM",
+    "st_ratio": "Nisbah Pelajar kepada Guru",
+    "students": "Bilangan Pelajar",
+    "max_ethnic": "Konsentrasi Etnik (% Kumpulan Majoriti)",
+    "household_income": "Pendapatan Isi Rumah (purata pelajar)",
+    "closest_school_dist": "Jarak ke Sekolah Terdekat",
+    "stat_school": "Sekolah Anda",
+    "stat_median0": "Median Negara",
+    "stat_median1": "Median Negeri"
+  }
 }

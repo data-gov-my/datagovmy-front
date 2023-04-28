@@ -1,27 +1,27 @@
 {
   "header": "Sekolahku",
-  "description": "Pergi ke sekolah merupakan pencapaian penting bagi setiap kanak-kanak. Mulai dari usia 7 hingga 17 tahun, sekolah adalah tempat di mana mereka akan menghabiskan sekurang-kurangnya setengah hari mereka - belajar, bermain, dan berkembang. Oleh itu, adalah sangat wajar bagi ibu bapa untuk ingin mendapatkan sebanyak mungkin maklumat mengenai persekitaran pembelajaran anak mereka. Papan pemuka ini menggunakan data yang kaya dari Kementerian Pendidikan mengenai pelajar, guru, dan sekolah untuk memberikan anda data terperinci mengenai sekolah anak anda, termasuk demografi sekolah, sumber dan tahap pencapaian sekolah. Kami berharap bahawa ketelusan ini akan membina kepercayaan yang lebih dalam sistem pendidikan negara.",
+  "description": "Going to school is a milestone for every child. From the age of 7 to 17, school is the place where they’ll spend at least half their day - learning, playing, and growing. It is therefore completely natural for parents to want as much information as they can get on their child’s learning environment. This dashboard uses the Ministry of Education’s rich data on students, teachers, and schools to bring you detailed data on your child’s school, including the school’s demographics, resources, and achievement level. It is our hope that this transparency fosters deeper trust in the nation’s education system.",
   "section_1": {
-    "title": "Terokai data pada 10,232 sekolah kerajaan di Malaysia!",
-    "search_school": "Cari sekolah anak anda",
-    "school_description": "Sebuah sekolah {{level}} {{type}} {{funding_status}} di kawasan {{strata}} {{city}}, {{school}} telah beroperasi sejak {{established}}, kini dengan tenaga pengajar sebanyak {{teachers}} cikgu mendidik {{students}} pelajar.",
-    "disclaimer": "Nota: Sekolah swasta tidak termasuk, kerana mereka tidak dioperasikan oleh KPM (hanya diawasi)"
+    "title": "Explored data on the 10,232 government schools in Malaysia!",
+    "search_school": "Search for your child's school",
+    "school_description": "A {{funding_status}} {{type}} {{level}} in {{strata}} {{city}}, {{school}} has been in operation since {{established}}, with a current force of {{teachers}} staff teaching {{students}} students.",
+    "disclaimer": "Note: Private schools are omitted, as they are not operated by MoE (only regulated)"
   },
   "section_2": {
-    "title": "Bagaimanakah wajah pelajar di {{ school }}?"
+    "title": "What does {{ school }}'s student body look like?"
   },
   "section_3": {
-    "title": "Bagaimanakah {{ school }} membandingkan dengan sekolah-sekolah {{ level }} lain di Malaysia?",
-    "national": "Peringkat Kebangsaan",
-    "state": "Peringkat Negeri",
-    "gpa": "Purata Nilai Gred SPM",
-    "st_ratio": "Nisbah Pelajar kepada Guru",
-    "students": "Bilangan Pelajar",
-    "max_ethnic": "Konsentrasi Etnik (% Kumpulan Majoriti)",
-    "household_income": "Pendapatan Isi Rumah (purata pelajar)",
-    "closest_school_dist": "Jarak ke Sekolah Terdekat",
-    "stat_school": "Sekolah Anda",
-    "stat_median0": "Median Negara",
-    "stat_median1": "Median Negeri"
+    "title": "How does {{ school }} compare to other {{ level }} schools in Malaysia?",
+    "national": "National Level",
+    "state": "State Level",
+    "gpa": "SPM Grade Point Average (GPA)",
+    "st_ratio": "Student-to-Teacher Ratio",
+    "students": "Number of Students",
+    "max_ethnic": "Ethnic Concentration (% of Majority Group)",
+    "household_income": "Household Income (median student)",
+    "closest_school_dist": "Distance to Nearest School",
+    "stat_school": "Your School",
+    "stat_median0": "National Median",
+    "stat_median1": "State Median"
   }
 }
