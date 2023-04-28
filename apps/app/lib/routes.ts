@@ -1,5 +1,7 @@
 export const routes = {
   HOME: "/",
+  DATA_CATALOGUE: "/data-catalogue",
+  DASHBOARD: "/dashboard",
   TRACKER_999: "/dashboard/999-tracker",
   BIRTHDAY_EXPLORER: "/dashboard/birthday-explorer",
   BLOOD_DONATION: "/dashboard/blood-donation",
@@ -38,3 +40,7 @@ export const routes = {
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
   NAME_POPULARITY: "/dashboard/name-popularity",
 } as const;
+
+export const static_routes = Object.fromEntries(
+  Object.entries(routes).filter(([key]) => ["DASHBOARD", "DATA_CATALOGUE"].includes(key))
+);

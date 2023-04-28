@@ -94,7 +94,6 @@ export const getStaticProps: GetStaticProps = withi18n(
         barchart_age: data.barchart_age,
         barchart_time: data.barchart_time,
       },
-      revalidate: 60 * 60 * 24,
     };
   }
 );

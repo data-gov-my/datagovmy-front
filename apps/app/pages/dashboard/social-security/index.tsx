@@ -24,7 +24,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-social-securit
   return {
     notFound: false,
     props: {},
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

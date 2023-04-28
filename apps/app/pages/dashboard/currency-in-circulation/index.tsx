@@ -45,7 +45,6 @@ export const getStaticProps: GetStaticProps = withi18n(
         timeseries: data.timeseries,
         timeseries_callouts: data.statistics,
       },
-      revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
   }
 );
