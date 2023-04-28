@@ -43,13 +43,19 @@ export default async function handler(
 const validate = async (res: NextApiResponse, route: string, routes: string[]) =>
   new Promise(async resolve => {
     switch (route) {
-      // For routes with dynamic pages (.../[states])
+      // For routes with dynamic [state] pages
       case "/dashboard/covid-19":
       case "/dashboard/covid-vaccination":
       case "/dashboard/peka-b40":
       case "/dashboard/organ-donation":
       case "/dashboard/blood-donation":
       case "/dashboard/crime":
+      case "/ms-MY/dashboard/covid-19":
+      case "/ms-MY/dashboard/covid-vaccination":
+      case "/ms-MY/dashboard/peka-b40":
+      case "/ms-MY/dashboard/organ-donation":
+      case "/ms-MY/dashboard/blood-donation":
+      case "/ms-MY/dashboard/crime":
         await res.revalidate(route);
         const result = await revalidateWithStates(res, route);
         routes.push.apply(routes, result);

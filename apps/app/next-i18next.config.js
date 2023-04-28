@@ -40,7 +40,8 @@ const namespace = [
   "dashboard-weather-and-climate",
 ];
 
-const config = {
+/** @type {import('next-i18next').UserConfig} */
+module.exports = {
   i18n: {
     defaultLocale: "en-GB",
     locales: ["en-GB", "ms-MY"],
@@ -63,5 +64,3 @@ const config = {
     useSuspense: true,
   },
 };
-
-module.exports = config;
