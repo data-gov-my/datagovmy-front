@@ -30,43 +30,48 @@ export default async function handler(
 
     let routes: string[] = _route === "all" ? Object.values(static_routes) : _route.split(",");
 
-    routes.forEach(async (route: string) => validate(res, route));
+    await Promise.all(routes.map(route => validate(res, route, routes)));
 
     return res.json({ message: "Revalidation successful", revalidated: routes });
   } catch (err: any) {
     return res
-      .status(500)
+      .status(400)
       .json({ error: "Revalidation failed", message: err.message, revalidated: [] });
   }
 }
 
-const validate = async (res: NextApiResponse, route: string) => {
-  switch (route) {
-    // For routes with dynamic pages (.../[states])
-    case "dashboard/covid-19":
-    case "dashboard/covid-vaccination":
-    case "dashboard/peka-b40":
-    case "dashboard/organ-donation":
-    case "dashboard/blood-donation":
-    case "dashboard/crime":
-      await res.revalidate(route);
-      await revalidateWithStates(res, route);
-      break;
+const validate = async (res: NextApiResponse, route: string, routes: string[]) =>
+  new Promise(async resolve => {
+    switch (route) {
+      // For routes with dynamic pages (.../[states])
+      case "/dashboard/covid-19":
+      case "/dashboard/covid-vaccination":
+      case "/dashboard/peka-b40":
+      case "/dashboard/organ-donation":
+      case "/dashboard/blood-donation":
+      case "/dashboard/crime":
+        await res.revalidate(route);
+        const result = await revalidateWithStates(res, route);
+        routes.push.apply(routes, result);
+        resolve(true);
+        break;
 
-    // Simple route
-    default:
-      await res.revalidate(route);
-      break;
-  }
-};
+      // Simple route
+      default:
+        await res.revalidate(route);
+        resolve(true);
+        break;
+    }
+  });
 
 const revalidateWithStates = async (
   res: NextApiResponse,
   route: string,
   except?: string[]
-): Promise<void> => {
+): Promise<string[]> => {
   let states = except ? STATES.filter(item => !except?.includes(item.key)) : STATES;
   states.forEach(async state => {
     await res.revalidate(route.concat("/", state.key));
   });
+  return states.map(({ key }) => route.concat("/", key));
 };
