@@ -28,17 +28,13 @@ export default async function handler(
     const { route: _route }: { route: string } = req.body;
     if (!_route) throw new Error("Route(s) missing");
 
-    let routes: string[] = _route === "all" ? Object.values(static_routes) : _route.split(",");
+    let routes: string[] = _route.split(",");
 
-    if (_route === "all") {
-      routes.forEach(route => rebuild(res, route, routes));
-    } else {
-      await Promise.all(
-        routes.map(async route =>
-          validate(route).then(valid_route => rebuild(res, valid_route, routes))
-        )
-      );
-    }
+    await Promise.all(
+      routes.map(async route =>
+        validate(route).then(valid_route => rebuild(res, valid_route, routes))
+      )
+    );
 
     return res.json({ message: "Revalidation successful", revalidated: routes });
   } catch (err: any) {
@@ -48,7 +44,7 @@ export default async function handler(
   }
 }
 
-// Only validate if _route !== "all"
+// Checks if route exists. Routes only for static pages
 const validate = (route: string): Promise<string> =>
   new Promise(resolve => {
     if (Object.values(static_routes).includes(route)) resolve(route);
@@ -59,7 +55,7 @@ const validate = (route: string): Promise<string> =>
 const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
   new Promise(async resolve => {
     switch (route) {
-      // For routes with dynamic [state] pages
+      // For routes with dynamic /[state] pages
       case "/dashboard/covid-19":
       case "/dashboard/covid-vaccination":
       case "/dashboard/peka-b40":
@@ -72,7 +68,7 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
       case "/ms-MY/dashboard/organ-donation":
       case "/ms-MY/dashboard/blood-donation":
       case "/ms-MY/dashboard/crime":
-        res.revalidate(route);
+        await res.revalidate(route);
         const result = revalidateWithStates(res, route);
         routes.push.apply(routes, result);
         resolve(true);
@@ -88,6 +84,6 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
 
 const revalidateWithStates = (res: NextApiResponse, route: string, except?: string[]): string[] => {
   let states = except ? STATES.filter(item => !except?.includes(item.key)) : STATES;
-  states.forEach(state => res.revalidate(route.concat("/", state.key)));
+  states.forEach(async state => await res.revalidate(route.concat("/", state.key)));
   return states.map(({ key }) => route.concat("/", key));
 };
