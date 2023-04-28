@@ -35,7 +35,7 @@ const Sekolahku: Page = ({
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data: dropdown_data } = await get("/dropdown", { dashboard: "sekolahku" });
   let paths: Array<any> = [];
-  dropdown_data.query_values.data.data.slice(0, 10).forEach((school: Record<string, string>) => {
+  dropdown_data.query_values.data.data.forEach((school: Record<string, string>) => {
     paths = paths.concat([
       {
         params: {
@@ -67,7 +67,7 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       notFound: false,
       props: {
-        dropdown_data: dropdown_data.query_values.data.data.slice(0, 10),
+        dropdown_data: dropdown_data.query_values.data.data,
         sekolahku_info: data.sekolahku_info.data,
         sekolahku_barmeter: data.sekolahku_barmeter.data,
         bellcurve_school: data.bellcurve_school.data,
