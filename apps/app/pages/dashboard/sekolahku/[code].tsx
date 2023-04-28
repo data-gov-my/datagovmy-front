@@ -32,28 +32,22 @@ const Sekolahku: Page = ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data: dropdown_data } = await get("/dropdown", { dashboard: "sekolahku" });
-  let paths: Array<any> = [];
-  dropdown_data.query_values.data.data.forEach((school: Record<string, string>) => {
-    paths = paths.concat([
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [
       {
         params: {
-          code: school.code,
+          code: "PEB1094",
         },
       },
       {
         params: {
-          code: school.code,
+          code: "PEB1094",
         },
         locale: "ms-MY",
       },
-    ]);
-  });
-
-  return {
-    paths: paths,
-    fallback: false, // can also be true or 'blocking'
+    ],
+    fallback: "blocking", // can also be true or 'blocking'
   };
 };
 
