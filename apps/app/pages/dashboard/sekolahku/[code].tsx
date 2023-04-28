@@ -10,6 +10,7 @@ import { withi18n } from "@lib/decorators";
 const Sekolahku: Page = ({
   dropdown_data,
   sekolahku_info,
+  sekolahku_barmeter,
   bellcurve_school,
   bellcurve_callout,
   bellcurve_linechart,
@@ -22,6 +23,7 @@ const Sekolahku: Page = ({
       <SekolahkuDashboard
         dropdown_data={dropdown_data}
         sekolahku_info={sekolahku_info}
+        sekolahku_barmeter={sekolahku_barmeter}
         bellcurve_school={bellcurve_school}
         bellcurve_callout={bellcurve_callout}
         bellcurve_linechart={bellcurve_linechart}
@@ -67,6 +69,7 @@ export const getStaticProps: GetStaticProps = withi18n(
       props: {
         dropdown_data: dropdown_data.query_values.data.data.slice(0, 10),
         sekolahku_info: data.sekolahku_info.data,
+        sekolahku_barmeter: data.sekolahku_barmeter.data,
         bellcurve_school: data.bellcurve_school.data,
         bellcurve_callout: data.bellcurve_callout.data.data,
         bellcurve_linechart: data.bellcurve_linechart.data.data,

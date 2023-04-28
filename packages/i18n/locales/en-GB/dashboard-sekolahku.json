@@ -8,7 +8,47 @@
     "disclaimer": "Note: Private schools are omitted, as they are not operated by MoE (only regulated)"
   },
   "section_2": {
-    "title": "What does {{ school }}'s student body look like?"
+    "title": "What does {{ school }}'s student body look like?",
+    "tooltip_count_one": "{{ count, number }} student",
+    "tooltip_count_other": "{{ count, number }} students",
+    "sex": {
+      "title": "Sex",
+      "female": "Female",
+      "male": "Male"
+    },
+    "ethnic": {
+      "title": "Ethnicity",
+      "malay": "Malay",
+      "chinese": "Chinese",
+      "indian": "Indian",
+      "bumi": "Other Bumiputera",
+      "other": "Other"
+    },
+    "income": {
+      "title": "Household Income",
+      "m40": "RM5,000 - RM10,000 per month",
+      "t20": "More than RM10,000 per month",
+      "b40": "Less than RM5,000 per month"
+    },
+    "orphan": {
+      "title": "Orphan Status",
+      "no": "",
+      "yes": ""
+    },
+    "religion": {
+      "title": "Religion",
+      "buddhist": "Buddhist",
+      "muslim": "Muslim",
+      "christian": "Christian",
+      "other": "Other",
+      "hindu": "Hindu",
+      "none": "None"
+    },
+    "oku": {
+      "title": "OKU Status",
+      "no": "OKU",
+      "yes": "Non-OKU"
+    }
   },
   "section_3": {
     "title": "How does {{ school }} compare to other {{ level }} schools in Malaysia?",

@@ -8,7 +8,9 @@
     "disclaimer": "Nota: Sekolah swasta tidak termasuk, kerana mereka tidak dioperasikan oleh KPM (hanya diawasi)"
   },
   "section_2": {
-    "title": "Bagaimanakah wajah pelajar di {{ school }}?"
+    "title": "Bagaimanakah wajah pelajar di {{ school }}?",
+    "tooltip_count_one": "{{ count }} pelajar",
+    "tooltip_count_other": "{{ count }} pelajar"
   },
   "section_3": {
     "title": "Bagaimanakah {{ school }} membandingkan dengan sekolah-sekolah {{ level }} lain di Malaysia?",
