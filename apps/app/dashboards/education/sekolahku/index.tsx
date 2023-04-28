@@ -121,10 +121,12 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   options={SCHOOL_OPTIONS}
                   selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
                   onChange={e => {
-                    setData("selected_school", e);
-                    router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
-                      scroll: false,
-                    });
+                    if (e?.value) {
+                      setData("selected_school", e);
+                      router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
+                        scroll: false,
+                      });
+                    }
                   }}
                 />
                 <span className="text-dim font-body text-center text-sm">
