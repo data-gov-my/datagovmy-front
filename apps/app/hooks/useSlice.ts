@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 /**
  * Slice the the array based on the minmax indices given. To be used with <Slider />
@@ -7,15 +7,16 @@ import { useCallback } from "react";
  * @returns Sliced state
  */
 export const useSlice = (state: Record<string, number[]>, minmax?: [number, number]) => {
-  const slice = () => {
-    const sliced = Object.entries(state).map(([key, data]) => [
+  const sliced = useMemo(() => {
+    return Object.entries(state).map(([key, data]) => [
       key,
       data.slice(minmax ? minmax[0] : 0, minmax ? minmax[1] + 1 : data.length - 1),
     ]);
-    return Object.fromEntries(sliced);
-  };
+  }, [state, minmax]);
+
+  const slice = () => Object.fromEntries(sliced);
 
   return {
-    coordinate: useCallback<() => typeof state>(slice, [minmax, state])(),
+    coordinate: slice(),
   } as const;
 };

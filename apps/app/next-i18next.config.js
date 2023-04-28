@@ -47,7 +47,7 @@ const config = {
       defaultLocale: "en-GB",
       locales: ["en-GB", "ms-MY"],
     },
-    localePath: path.resolve("./public/locales"),
+    localePath: path.resolve("../../packages/i18n/locales"),
     load: "currentOnly",
     preload: ["en-GB", "ms-MY"],
     serializeConfig: false,
@@ -86,4 +86,4 @@ const config = {
 // Debug line: Uncomment to see production i18n on local
 // module.exports = config.production;
 
-module.exports = config[process.env.NODE_ENV];
+module.exports = config[process.env.NEXT_PUBLIC_APP_ENV];

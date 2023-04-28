@@ -13,6 +13,7 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/AgencyBadge";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
  * GDP Dashboard
@@ -173,156 +174,40 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
         last_updated={last_updated}
         agencyBadge={<AgencyBadge agency="DOSM" link="https://open.dosm.gov.my/" />}
       />
+      <SliderProvider>
+        {play => (
+          <Container className="min-h-screen">
+            {/* How is GDP trending? */}
+            <Section title={t("section_1.title")} date={timeseries.data_as_of}>
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
+                  <Dropdown
+                    anchor="left"
+                    selected={data.index_type}
+                    options={INDEX_OPTIONS}
+                    onChange={e => setData("index_type", e)}
+                  />
+                  <Dropdown
+                    anchor="left"
+                    options={SHADE_OPTIONS}
+                    selected={data.shade_type}
+                    onChange={e => setData("shade_type", e)}
+                  />
+                </div>
 
-      <Container className="min-h-screen">
-        {/* How is GDP trending? */}
-        <Section title={t("section_1.title")} date={timeseries.data_as_of}>
-          <div className="space-y-8">
-            <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
-              <Dropdown
-                anchor="left"
-                selected={data.index_type}
-                options={INDEX_OPTIONS}
-                onChange={e => setData("index_type", e)}
-              />
-              <Dropdown
-                anchor="left"
-                options={SHADE_OPTIONS}
-                selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
-              />
-            </div>
-
-            <Slider
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.index_type.value].x}
-              period="quarter"
-              onChange={e => setData("minmax", e)}
-            />
-            <Timeseries
-              title={t("keys.overall")}
-              className="h-[350px] w-full"
-              interval="quarter"
-              displayNumFormat={value =>
-                smartNumFormat({
-                  value,
-                  type: "compact",
-                  precision: [1, 1],
-                  locale: i18n.language,
-                })
-              }
-              prefixY={configs("overall").prefix}
-              unitY={configs("overall").unit}
-              lang={i18n.language}
-              axisY={{
-                y2: {
-                  display: false,
-                  grid: {
-                    drawTicks: false,
-                    drawBorder: false,
-                    lineWidth: 0.5,
-                  },
-                  ticks: {
-                    display: false,
-                  },
-                },
-              }}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.overall,
-                    label: t("keys.overall"),
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    borderWidth: 1.5,
-                    fill: configs("overall").fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common:common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
-                  }),
-                  value: configs("overall").callout,
-                },
-              ]}
-            />
-          </div>
-        </Section>
-        {/* A deeper look at GDP by economic sector */}
-        <Section title={t("section_2.title")} date={timeseries.data_as_of}>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-            {section2ChartData.map(chartData => (
-              <Timeseries
-                key={chartData.title}
-                title={chartData.title}
-                className="h-[350px] w-full"
-                interval="quarter"
-                displayNumFormat={value =>
-                  smartNumFormat({
-                    value,
-                    type: "compact",
-                    precision: [1, 1],
-                    locale: i18n.language,
-                  })
-                }
-                prefixY={chartData.prefix}
-                unitY={chartData.unitY}
-                axisY={{
-                  y2: {
-                    display: false,
-                    grid: {
-                      drawTicks: false,
-                      drawBorder: false,
-                      lineWidth: 0.5,
-                    },
-                    ticks: {
-                      display: false,
-                    },
-                  },
-                }}
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: chartData.label,
-                      data: chartData.data,
-                      borderColor: AKSARA_COLOR.GREY,
-                      backgroundColor: AKSARA_COLOR.GREY_H,
-                      fill: chartData.fill,
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common:common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
-                    }),
-                    value: chartData.callout,
-                  },
-                ]}
-              />
-            ))}
-          </div>
-        </Section>
-        {/* A deeper look at GDP by expenditure category */}
-        <Section title={t("section_3.title")} date={timeseries.data_as_of}>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-            {section3ChartData.map(chartData => {
-              const chart = (
+                <Slider
+                  className=""
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data[data.index_type.value].x}
+                  period="quarter"
+                  onChange={e => setData("minmax", e)}
+                />
                 <Timeseries
-                  key={chartData.title}
-                  title={chartData.title}
+                  title={t("keys.overall")}
                   className="h-[350px] w-full"
                   interval="quarter"
+                  enableAnimation={!play}
                   displayNumFormat={value =>
                     smartNumFormat({
                       value,
@@ -331,8 +216,9 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                       locale: i18n.language,
                     })
                   }
-                  prefixY={chartData.prefix}
-                  unitY={chartData.unitY}
+                  prefixY={configs("overall").prefix}
+                  unitY={configs("overall").unit}
+                  lang={i18n.language}
                   axisY={{
                     y2: {
                       display: false,
@@ -351,12 +237,12 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                     datasets: [
                       {
                         type: "line",
-                        label: chartData.label,
-                        data: chartData.data,
-                        borderColor: AKSARA_COLOR.DANGER,
-                        backgroundColor: AKSARA_COLOR.DANGER_H,
-                        fill: chartData.fill,
+                        data: coordinate.overall,
+                        label: t("keys.overall"),
+                        borderColor: AKSARA_COLOR.PRIMARY,
+                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
                         borderWidth: 1.5,
+                        fill: configs("overall").fill,
                       },
                       shader(data.shade_type.value),
                     ],
@@ -366,30 +252,152 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                       title: t("common:common.latest", {
                         date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
                       }),
-                      value: chartData.callout,
+                      value: configs("overall").callout,
                     },
                   ]}
                 />
-              );
+              </div>
+            </Section>
+            {/* A deeper look at GDP by economic sector */}
+            <Section title={t("section_2.title")} date={timeseries.data_as_of}>
+              <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                {section2ChartData.map(chartData => (
+                  <Timeseries
+                    key={chartData.title}
+                    title={chartData.title}
+                    className="h-[350px] w-full"
+                    interval="quarter"
+                    enableAnimation={!play}
+                    displayNumFormat={value =>
+                      smartNumFormat({
+                        value,
+                        type: "compact",
+                        precision: [1, 1],
+                        locale: i18n.language,
+                      })
+                    }
+                    prefixY={chartData.prefix}
+                    unitY={chartData.unitY}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
+                          display: false,
+                        },
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: chartData.label,
+                          data: chartData.data,
+                          borderColor: AKSARA_COLOR.GREY,
+                          backgroundColor: AKSARA_COLOR.GREY_H,
+                          fill: chartData.fill,
+                          borderWidth: 1.5,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                        }),
+                        value: chartData.callout,
+                      },
+                    ]}
+                  />
+                ))}
+              </div>
+            </Section>
+            {/* A deeper look at GDP by expenditure category */}
+            <Section title={t("section_3.title")} date={timeseries.data_as_of}>
+              <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                {section3ChartData.map(chartData => {
+                  const chart = (
+                    <Timeseries
+                      key={chartData.title}
+                      title={chartData.title}
+                      className="h-[350px] w-full"
+                      interval="quarter"
+                      enableAnimation={!play}
+                      displayNumFormat={value =>
+                        smartNumFormat({
+                          value,
+                          type: "compact",
+                          precision: [1, 1],
+                          locale: i18n.language,
+                        })
+                      }
+                      prefixY={chartData.prefix}
+                      unitY={chartData.unitY}
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
+                            display: false,
+                          },
+                        },
+                      }}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            label: chartData.label,
+                            data: chartData.data,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
+                            fill: chartData.fill,
+                            borderWidth: 1.5,
+                          },
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                          }),
+                          value: chartData.callout,
+                        },
+                      ]}
+                    />
+                  );
 
-              if (
-                [
-                  "growth_real_yoy",
-                  "growth_real_qoq",
-                  "growth_nominal_yoy",
-                  "growth_nominal_qoq",
-                ].includes(data.index_type.value)
-              ) {
-                if (!["demand_nx", "demand_inventory"].includes(chartData.chartName)) {
-                  return chart;
-                }
-              } else {
-                return chart;
-              }
-            })}
-          </div>
-        </Section>
-      </Container>
+                  if (
+                    [
+                      "growth_real_yoy",
+                      "growth_real_qoq",
+                      "growth_nominal_yoy",
+                      "growth_nominal_qoq",
+                    ].includes(data.index_type.value)
+                  ) {
+                    if (!["demand_nx", "demand_inventory"].includes(chartData.chartName)) {
+                      return chart;
+                    }
+                  } else {
+                    return chart;
+                  }
+                })}
+              </div>
+            </Section>
+          </Container>
+        )}
+      </SliderProvider>
     </>
   );
 };

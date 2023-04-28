@@ -11,15 +11,11 @@ import { withi18n } from "@lib/decorators";
 import Fonts from "@config/font";
 
 const COVID19State: Page = ({
+  params,
   last_updated,
   snapshot_bar,
   snapshot_graphic,
-  timeseries_admitted,
-  timeseries_cases,
-  timeseries_deaths,
-  timeseries_icu,
-  timeseries_tests,
-  timeseries_vents,
+  timeseries,
   util_chart,
   statistics,
   state,
@@ -33,15 +29,11 @@ const COVID19State: Page = ({
         keywords={""}
       />
       <COVID19Dashboard
+        params={params}
         last_updated={last_updated}
         snapshot_bar={snapshot_bar}
         snapshot_graphic={snapshot_graphic}
-        timeseries_admitted={timeseries_admitted}
-        timeseries_cases={timeseries_cases}
-        timeseries_deaths={timeseries_deaths}
-        timeseries_icu={timeseries_icu}
-        timeseries_tests={timeseries_tests}
-        timeseries_vents={timeseries_vents}
+        timeseries={timeseries}
         util_chart={util_chart}
         statistics={statistics}
       />
@@ -88,15 +80,31 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
 
   return {
     props: {
+      params: params,
       last_updated: new Date().valueOf(),
       snapshot_bar: data.snapshot_bar,
       snapshot_graphic: data.snapshot_graphic,
-      timeseries_admitted: data.timeseries_admitted,
-      timeseries_cases: data.timeseries_cases,
-      timeseries_deaths: data.timeseries_deaths,
-      timeseries_icu: data.timeseries_icu,
-      timeseries_tests: data.timeseries_tests,
-      timeseries_vents: data.timeseries_vents,
+      timeseries: {
+        data_as_of: data.timeseries_admitted.data_as_of,
+        data: {
+          x: data.timeseries_admitted.data.x,
+          admitted: data.timeseries_admitted.data.admitted,
+          admitted_line: data.timeseries_admitted.data.line,
+          cases: data.timeseries_cases.data.cases,
+          cases_line: data.timeseries_cases.data.line,
+          deaths_inpatient: data.timeseries_deaths.data.deaths_inpatient,
+          deaths_brought_in: data.timeseries_deaths.data.deaths_brought_in,
+          deaths_tooltip: data.timeseries_deaths.data.tooltip,
+          deaths_line: data.timeseries_deaths.data.line,
+          icu: data.timeseries_icu.data.icu,
+          icu_line: data.timeseries_icu.data.line,
+          tests_pcr: data.timeseries_tests.data.tests_pcr,
+          tests_rtk: data.timeseries_tests.data.tests_rtk,
+          tests_tooltip: data.timeseries_tests.data.tooltip,
+          vents: data.timeseries_vents.data.vent,
+          vents_line: data.timeseries_vents.data.line,
+        },
+      },
       util_chart: data.util_chart,
       statistics: data.statistics,
       state: params?.state ?? "mys",

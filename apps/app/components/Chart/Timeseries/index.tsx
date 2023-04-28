@@ -5,7 +5,6 @@ import {
   useMemo,
   useCallback,
   ForwardedRef,
-  forwardRef,
 } from "react";
 import Tooltip from "@components/Tooltip";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
@@ -72,6 +71,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   minY?: number;
   maxY?: number;
   precision?: number | [min: number, max: number];
+  enableAnimation?: boolean;
   enableRightScale?: boolean;
   enableCallout?: boolean;
   enableCrosshair?: boolean;
@@ -120,6 +120,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableLegend = false,
   enableGridX = false,
   enableGridY = true,
+  enableAnimation = true,
   gridOffsetX = true,
   tooltipCallback,
   tickXCallback,
@@ -160,6 +161,9 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       responsive: true,
       maintainAspectRatio: false,
       normalized: true,
+      animation: {
+        duration: enableAnimation ? 1000 : 0,
+      },
       elements: {
         point: {
           borderWidth: 0,
@@ -177,6 +181,9 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           enabled: true,
           bodyFont: {
             family: "Inter",
+          },
+          animation: {
+            duration: enableAnimation ? 1000 : 0,
           },
           mode: "index",
           intersect: false,

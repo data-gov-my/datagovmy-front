@@ -11,6 +11,7 @@ import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { SliderProvider } from "@components/Chart/Slider/context";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
@@ -135,26 +136,33 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   }, [filter.range, dataset.chart.x, data.ctx]);
 
   return (
-    <>
-      <Timeseries
-        className={className}
-        _ref={ref => setData("ctx", ref)}
-        interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
-        precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-        mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
-        data={{
-          labels: coordinate.x,
-          datasets: _datasets,
-        }}
-      />
-      <Slider
-        type="range"
-        data={dataset.chart.x}
-        value={data.minmax}
-        period={SHORT_PERIOD[filter.range?.value as keyof typeof SHORT_PERIOD] ?? "auto"}
-        onChange={e => setData("minmax", e)}
-      />
-    </>
+    <SliderProvider>
+      {play => (
+        <>
+          <Timeseries
+            className={className}
+            _ref={ref => setData("ctx", ref)}
+            interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
+            precision={
+              config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]
+            }
+            enableAnimation={!play}
+            mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
+            data={{
+              labels: coordinate.x,
+              datasets: _datasets,
+            }}
+          />
+          <Slider
+            type="range"
+            data={dataset.chart.x}
+            value={data.minmax}
+            period={SHORT_PERIOD[filter.range?.value as keyof typeof SHORT_PERIOD] ?? "auto"}
+            onChange={e => setData("minmax", e)}
+          />
+        </>
+      )}
+    </SliderProvider>
   );
 };
 

@@ -19,12 +19,12 @@
   "devDependencies": {
     "autoprefixer": "^10.4.14",
     "eslint-config-custom": "*",
+    "husky": ">=6",
+    "lint-staged": ">=10",
     "postcss": "^8.4.21",
     "prettier": "latest",
     "tailwindcss": "^3.3.1",
-    "turbo": "latest",
-    "husky": ">=6",
-    "lint-staged": ">=10"
+    "turbo": "latest"
   },
   "engines": {
     "node": ">=14.0.0"

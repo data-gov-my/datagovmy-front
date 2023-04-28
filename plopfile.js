@@ -1,7 +1,8 @@
 const path = require("path");
 const inquirerRecursivePrompt = require("inquirer-recursive");
 
-const base_dir = path.resolve(__dirname, "apps/app");
+const app_dir = path.resolve(__dirname, "apps/app");
+const i18n_dir = path.resolve(__dirname, "packages/i18n");
 
 module.exports = function (
   /** @type {import('plop').NodePlopAPI} */
@@ -64,34 +65,28 @@ module.exports = function (
         {
           type: "add",
           path: path.join(
-            base_dir,
+            app_dir,
             "dashboards/{{dashCase dashboard_category}}/{{dashCase dashboard_name}}/index.tsx"
           ),
-          templateFile: path.join(base_dir, "templates/dashboard-component.tsx.hbs"),
+          templateFile: path.join(app_dir, "templates/dashboard-component.tsx.hbs"),
           skipIfExists: true,
         },
         {
           type: "add",
-          path: path.join(base_dir, "pages/dashboard/{{dashCase dashboard_name}}/index.tsx"),
-          templateFile: path.join(base_dir, "templates/dashboard-page.tsx.hbs"),
+          path: path.join(app_dir, "pages/dashboard/{{dashCase dashboard_name}}/index.tsx"),
+          templateFile: path.join(app_dir, "templates/dashboard-page.tsx.hbs"),
           skipIfExists: true,
         },
         {
           type: "add",
-          path: path.join(
-            base_dir,
-            "public/locales/en-GB/dashboard-{{dashCase dashboard_name}}.json"
-          ),
-          templateFile: path.join(base_dir, "templates/dashboard-translation.json.hbs"),
+          path: path.join(i18n_dir, "en-GB/dashboard-{{dashCase dashboard_name}}.json"),
+          templateFile: path.join(app_dir, "templates/dashboard-translation.json.hbs"),
           skipIfExists: true,
         },
         {
           type: "add",
-          path: path.join(
-            base_dir,
-            "public/locales/ms-MY/dashboard-{{dashCase dashboard_name}}.json"
-          ),
-          templateFile: path.join(base_dir, "templates/dashboard-translation.json.hbs"),
+          path: path.join(i18n_dir, "ms-MY/dashboard-{{dashCase dashboard_name}}.json"),
+          templateFile: path.join(app_dir, "templates/dashboard-translation.json.hbs"),
           skipIfExists: true,
         },
       ],
