@@ -177,7 +177,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
             </tbody>
           )}
         </table>
-        {table.getRowModel().rows.map((row: any) => {
+        {table.getRowModel().rows.map((row: any, index: number) => {
           const headers = table.getHeaderGroups()[0].headers;
           const headerID = headers.map(h => h.id);
           const rowID = table.getAllColumns().map(col => col.id);
@@ -221,7 +221,12 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
             );
           }
           return (
-            <div className="border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm lg:hidden">
+            <div
+              className={clx(
+                "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 lg:hidden",
+                index === 0 && "border-t-2"
+              )}
+            >
               {rowID.includes("fullResult") && (
                 <div className="flex flex-row justify-between">
                   <div className="flex flex-row space-x-3">
