@@ -15,11 +15,11 @@ const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywor
     title: title ? title.concat(" | data.gov.my") : "data.gov.my",
     icon: "/favicon.ico",
     description: description ? description : t("common:site.description"),
-    author: "Department of Statistics Malaysia",
+    author: "Government of Malaysia",
     themeColor: "#13293D",
     keywords: keywords ?? "data dosm statistics malaysia",
-    domain: "open.dosm.gov.my",
-    url: "https://open.dosm.gov.my",
+    domain: "data.gov.my",
+    url: "https://data.gov.my",
     image: "https://open.dosm.gov.my/static/images/jata_512.png",
   };
 
