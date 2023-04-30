@@ -226,28 +226,38 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                 "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 lg:hidden",
                 index === 0 && "border-t-2"
               )}
+              key={index}
             >
               {rowID.includes("fullResult") && (
                 <div className="flex flex-row justify-between">
                   <div className="flex flex-row space-x-3">
                     <p className="font-medium">
                       {table.getColumn("election_name") &&
-                        flexRender(rowData.at(0).column.columnDef.cell, rowData.at(0).getContext())}
+                        flexRender(
+                          rowData.at(rowID.indexOf("election_name")).column.columnDef.cell,
+                          rowData.at(rowID.indexOf("election_name")).getContext()
+                        )}
                     </p>
                     <p className="text-dim font-normal">
                       {table.getColumn("date") &&
-                        DateTime.fromISO(rowData.at(1).getValue())
+                        DateTime.fromISO(rowData.at(rowID.indexOf("date")).getValue())
                           .setLocale(i18n.language)
                           .toLocaleString(DateTime.DATE_MED)}
                     </p>
                   </div>
                   {table.getColumn("fullResult") &&
-                    flexRender(rowData.at(-1).column.columnDef.cell, rowData.at(-1).getContext())}
+                    flexRender(
+                      rowData.at(rowID.indexOf("fullResult")).column.columnDef.cell,
+                      rowData.at(rowID.indexOf("fullResult")).getContext()
+                    )}
                 </div>
               )}
               {rowID.includes("seat") && rowID.includes("result") && (
                 <div>
-                  {flexRender(rowData.at(2).column.columnDef.cell, rowData.at(2).getContext())}
+                  {flexRender(
+                    rowData.at(rowID.indexOf("seat")).column.columnDef.cell,
+                    rowData.at(rowID.indexOf("seat")).getContext()
+                  )}
                 </div>
               )}
               {rowID.includes("party") && (
@@ -262,10 +272,10 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                     alt={t(`${rowData.at(rowID.indexOf("party")).getValue()}`)}
                   />
                   {rowID.includes("candidate_name") ? (
-                    <>
+                    <span>
                       {`${rowData.at(rowID.indexOf("candidate_name")).getValue()} 
                       (${rowData.at(rowID.indexOf("party")).getValue()})`}
-                    </>
+                    </span>
                   ) : (
                     <span>{t(`${rowData.at(rowID.indexOf("party")).getValue()}`)}</span>
                   )}
