@@ -19,7 +19,7 @@ import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates } from "@lib/constants";
-import { clx, numFormat } from "@lib/helpers";
+import { clx } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
@@ -194,7 +194,10 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       state: data.state,
     })
       .then(({ data }) => {
-        setData("data", data.reverse());
+        setData(
+          "data",
+          data.sort((a: Party, b: Party) => Number(new Date(b.date)) - Number(new Date(a.date)))
+        );
       })
       .then(() => setData("loading", false));
   }, [data.q_party, data.state, data.type]);

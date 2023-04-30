@@ -1,9 +1,8 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { BarMeter, FullResult, Result } from "@components/Chart/Table/BorderlessTable";
+import { FullResult, Result } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
-import ImageWithFallback from "@components/ImageWithFallback";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { AgencyBadge, Container, Hero, Section } from "@components/index";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
@@ -13,7 +12,6 @@ import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
-import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
@@ -36,15 +34,6 @@ interface ElectionSeatsProps {
 const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, seat }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
-  type Seat = {
-    election_name: string;
-    date: string;
-    seat: string;
-    party: string;
-    name: string;
-    majority: Record<string, number>;
-    result: string;
-  };
   const columnHelper = createColumnHelper<Seat>();
   const columns: ColumnDef<Seat, any>[] = [
     columnHelper.accessor("election_name", {
@@ -274,3 +263,13 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
 };
 
 export default ElectionSeatsDashboard;
+
+export type Seat = {
+  election_name: string;
+  date: string;
+  seat: string;
+  party: string;
+  name: string;
+  majority: Record<string, number>;
+  result: string;
+};

@@ -4,8 +4,7 @@ import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import ImageWithFallback from "@components/ImageWithFallback";
-import { BarMeter, FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
+import { FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
@@ -13,7 +12,6 @@ import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
-import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";

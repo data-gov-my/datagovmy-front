@@ -1,6 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Metadata from "@components/Metadata";
-import ElectionSeatsDashboard from "@dashboards/democracy/election-explorer/seats";
+import ElectionSeatsDashboard, { Seat } from "@dashboards/democracy/election-explorer/seats";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       notFound: false,
       props: {
         query: query ?? {},
-        seat: seat.reverse(),
+        seat: seat.sort((a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date))),
       },
     };
   }
