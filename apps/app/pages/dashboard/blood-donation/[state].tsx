@@ -7,14 +7,13 @@ import { withi18n } from "@lib/decorators";
 import { get } from "@lib/api";
 import { DateTime } from "luxon";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import { ReactNode } from "react";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 
 const BloodDonationState: Page = ({
   last_updated,
+  params,
   timeseries_all,
   timeseries_bloodstock,
   timeseries_facility,
@@ -55,6 +54,7 @@ const BloodDonationState: Page = ({
       />
       <BloodDonationDashboard
         last_updated={last_updated}
+        params={params}
         timeseries_all={timeseries_all}
         timeseries_bloodstock={timeseries_bloodstock}
         timeseries_facility={timeseries_facility}
@@ -133,6 +133,7 @@ export const getStaticProps: GetStaticProps = withi18n(
       notFound: false,
       props: {
         last_updated: new Date().valueOf(),
+        params: params,
         timeseries_all: data.timeseries_all,
         timeseries_bloodstock: data.timeseries_bloodstock,
         timeseries_facility: data.timeseries_facility,

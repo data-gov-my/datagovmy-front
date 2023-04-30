@@ -15,6 +15,7 @@ import { Page } from "@lib/types";
 
 const CovidVaccinationState: Page = ({
   lastUpdated,
+  params,
   waffle,
   barmeter,
   timeseries,
@@ -31,6 +32,7 @@ const CovidVaccinationState: Page = ({
       />
       <CovidVaccinationDashboard
         lastUpdated={lastUpdated}
+        params={params}
         waffle={waffle}
         barmeter={barmeter}
         timeseries={timeseries}
@@ -82,6 +84,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
     return {
       props: {
+        params: params,
         lastUpdated: new Date().valueOf(),
         waffle: data.waffle,
         barmeter: data.bar_chart,
