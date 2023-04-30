@@ -144,7 +144,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     resultsColumnHelper.accessor("seats", {
       id: "seats",
       header: data.data[0]
-        ? t("seats_won").concat(` / ${data.data[0].seats.total}`)
+        ? t("seats_won").concat(` / ${data.data[data.index].seats.total}`)
         : t("seats_won"),
       cell: (info: any) => {
         const seats = info.getValue();
