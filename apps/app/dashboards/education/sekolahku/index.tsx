@@ -12,6 +12,7 @@ import { CountryAndStates } from "@lib/constants";
 import { useData } from "@hooks/useData";
 import { OptionType } from "@components/types";
 import { useRouter } from "next/router";
+import { AKSARA_COLOR } from "@lib/constants";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -75,10 +76,12 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     {
       name: t("section_3.national"),
       data: bellcurve_linechart["mys"],
+      callout: bellcurve_callout["mys"][sekolahku_info.level],
     },
     {
       name: t("section_3.state"),
       data: bellcurve_linechart[sekolahku_info.state],
+      callout: bellcurve_callout[sekolahku_info.state][sekolahku_info.level],
     },
   ];
 
@@ -248,6 +251,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
           title={t("section_3.title", {
             school: sekolahku_info.school,
             level: sekolahku_info.level,
+            state: CountryAndStates[sekolahku_info.state],
           })}
           menu={
             <Tabs.List
@@ -259,7 +263,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
           date={Date.now()}
         >
           <Tabs hidden current={data.tabs_section3}>
-            {KEY_VARIABLES_SCHEMA.map(({ name, data: lineData }) => {
+            {KEY_VARIABLES_SCHEMA.map(({ name, data: lineData, callout: lineCallout }) => {
               return (
                 <Panel key={name} name={name}>
                   <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
@@ -277,11 +281,12 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                                 type: "line",
                                 data: y,
                                 label: t("label"),
-                                backgroundColor: "#94A3B81A",
-                                borderColor: "#94A3B8",
+                                backgroundColor: AKSARA_COLOR.GREY_H,
+                                borderColor: AKSARA_COLOR.GREY,
                                 borderWidth: 1.5,
                                 lineTension: 0.5,
                                 fill: true,
+                                pointRadius: 0,
                               },
                             ],
                           }}
@@ -296,12 +301,29 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                                 k,
 
                                 data.tabs_section3 === 0
-                                  ? bellcurve_callout["mys"][sekolahku_info.level][k].callout
-                                  : bellcurve_callout[sekolahku_info.state][sekolahku_info.level][k]
-                                      .callout
+                                  ? lineCallout[k].callout
+                                  : lineCallout[k].callout
                               ),
                             },
                           ]}
+                          annotation={{
+                            type: "line",
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            borderWidth: 2,
+                            adjustScaleRange: true,
+                            label: {
+                              display: true,
+                              backgroundColor: AKSARA_COLOR.PRIMARY,
+                              content: `${sekolahku_info.school}: ${formatCallout(
+                                k,
+                                bellcurve_school[k]
+                              )}`,
+                              position: "start",
+                              yAdjust: -6,
+                            },
+                            scaleID: "x",
+                            value: bellcurve_school[k],
+                          }}
                         />
                       );
                     })}

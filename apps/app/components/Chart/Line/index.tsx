@@ -11,6 +11,7 @@ import {
   TimeSeriesScale,
   Filler,
 } from "chart.js";
+import AnnotationPlugin from "chartjs-plugin-annotation";
 
 import { Line as LineCanvas } from "react-chartjs-2";
 import { numFormat } from "@lib/helpers";
@@ -29,6 +30,7 @@ interface LineProps extends ChartHeaderProps {
   enableGridX?: boolean;
   enableGridY?: boolean;
   stats?: Array<StatProps> | null;
+  annotation?: any;
 }
 
 const Line: FunctionComponent<LineProps> = ({
@@ -47,6 +49,7 @@ const Line: FunctionComponent<LineProps> = ({
   minY,
   maxY,
   stats,
+  annotation,
 }) => {
   ChartJS.register(
     CategoryScale,
@@ -56,7 +59,8 @@ const Line: FunctionComponent<LineProps> = ({
     TimeScale,
     TimeSeriesScale,
     Filler,
-    ChartTooltip
+    ChartTooltip,
+    AnnotationPlugin
   );
 
   const options: ChartCrosshairOption<"line"> = {
@@ -75,6 +79,9 @@ const Line: FunctionComponent<LineProps> = ({
         sync: {
           enabled: false,
         },
+      },
+      annotation: {
+        annotations: { annotation },
       },
     },
     scales: {
