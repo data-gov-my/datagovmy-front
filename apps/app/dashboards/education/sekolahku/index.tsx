@@ -297,7 +297,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       y.unshift(0);
                       return (
                         <Line
-                          className="h-[400px] w-full"
+                          className="h-[300px] w-full"
                           title={t(`section_3.${k}`)}
                           enableGridX={false}
                           // graceX={"0.1%"}
