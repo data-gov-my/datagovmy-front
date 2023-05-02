@@ -136,10 +136,12 @@ const Line: FunctionComponent<LineProps> = ({
   };
 
   return (
-    <div>
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-      {stats && <Stats data={stats} />}
-      {subheader && <div className="py-4">{subheader}</div>}
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+        {subheader && <div className="text-dim text-sm">{subheader}</div>}
+        {stats && <Stats data={stats} />}
+      </div>
       <div className={className}>
         <LineCanvas options={options} data={data} />
       </div>
