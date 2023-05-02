@@ -367,11 +367,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       onChange={index => setData("tabs_section1", index)}
                     >
                       <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
-                        <Card
-                          className="border-outline dark:border-washed-dark static h-[500px] rounded-xl border"
-                          type="gray"
-                        >
-                          <Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />
+                        <Card className="border-outline dark:border-washed-dark bg-background dark:bg-background-dark static rounded-xl border xl:py-4">
+                          <Choropleth
+                            enableOutline={false}
+                            type={data.tabs === 1 ? "dun" : "parlimen"}
+                          />
                         </Card>
                       </Panel>
                       <Panel
@@ -533,7 +533,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           </div>
                         </div>
                       }
-                      right={<Choropleth type={data.tabs === 1 ? "dun" : "parlimen"} />}
+                      right={
+                        <Choropleth
+                          enableOutline={false}
+                          type={data.tabs === 1 ? "dun" : "parlimen"}
+                        />
+                      }
                     />
                   </div>
                 </Panel>
