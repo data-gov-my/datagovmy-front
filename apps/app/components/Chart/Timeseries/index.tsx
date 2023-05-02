@@ -456,7 +456,7 @@ export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
   return (
     <div className={`grid w-full ${cols[data.length] ?? "grid-cols-3"} ${className}`}>
       {data.map(({ title, value, tooltip }: StatProps, index) => (
-        <div key={index}>
+        <div key={`${title}_${value}`}>
           <p className="text-dim text-sm">{title}</p>
           {tooltip ? (
             <Tooltip tip={tooltip}>

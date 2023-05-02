@@ -11,6 +11,7 @@ import { clx } from "@lib/helpers";
 
 const PekaB40: Page = ({
   last_updated,
+  params,
   timeseries,
   choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -20,6 +21,7 @@ const PekaB40: Page = ({
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PekaB40Dashboard
+        params={params}
         last_updated={last_updated}
         timeseries={timeseries}
         choropleth={choropleth}
@@ -45,6 +47,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", asy
     notFound: false,
     props: {
       last_updated: new Date().valueOf(),
+      params: { state: "mys" },
       timeseries: data.timeseries,
       choropleth: data.choropleth_malaysia,
     },

@@ -1,6 +1,5 @@
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import {
   AgencyBadge,
   Container,
@@ -35,6 +34,7 @@ const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
 interface OrganDonationProps {
   last_updated: number;
+  params: { state: string };
   timeseries: any;
   choropleth: any;
   barchart_age: any;
@@ -43,6 +43,7 @@ interface OrganDonationProps {
 
 const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   last_updated,
+  params,
   timeseries,
   choropleth,
   barchart_age,
@@ -50,10 +51,9 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-organ-donation", "common"]);
 
-  const router = useRouter();
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < BREAKPOINTS.MD;
-  const currentState = (router.query.state as string) ?? "mys";
+  const currentState = params.state;
   const { data, setData } = useData({
     minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
   });
@@ -156,7 +156,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                     <p className="font-bold">{t("choro_ranking")}</p>
                     {topStateIndices.map((pos, i) => {
                       return (
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-3" key={pos}>
                           <div className="text-dim font-medium">#{i + 1}</div>
                           <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
                           <div className="font-bold text-[#16A34A]">

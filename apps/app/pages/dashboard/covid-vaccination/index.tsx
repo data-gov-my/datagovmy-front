@@ -8,6 +8,7 @@ import COVIDVaccinationDashboard from "@dashboards/healthcare/covid-vaccination"
 import { withi18n } from "@lib/decorators";
 
 const CovidVaccination: Page = ({
+  params,
   timeseries,
   statistics,
   barmeter,
@@ -19,6 +20,7 @@ const CovidVaccination: Page = ({
     <>
       <Metadata title={t("page_title")} description={t("description")} keywords={""} />
       <COVIDVaccinationDashboard
+        params={params}
         lastUpdated={Date.now()}
         timeseries={timeseries}
         statistics={statistics}
@@ -35,6 +37,9 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccinat
   return {
     notFound: false,
     props: {
+      params: {
+        state: "mys",
+      },
       timeseries: data.timeseries,
       statistics: data.statistics,
       barmeter: data.bar_chart,

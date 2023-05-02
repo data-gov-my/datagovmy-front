@@ -7,14 +7,13 @@ import { withi18n } from "@lib/decorators";
 import { get } from "@lib/api";
 import { DateTime } from "luxon";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import { ReactNode } from "react";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 
 const BloodDonationState: Page = ({
   last_updated,
+  params,
   timeseries_all,
   timeseries_bloodstock,
   timeseries_facility,
@@ -25,7 +24,6 @@ const BloodDonationState: Page = ({
   barchart_time,
   barchart_variables,
   map_facility,
-  state,
   choropleth_malaysia_blood_donation,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
@@ -37,7 +35,7 @@ const BloodDonationState: Page = ({
         ...previous,
         [current[0]]: current[1].map((item: any) => ({
           ...item,
-          x: t("".concat(item.x)),
+          x: t(item.x),
         })),
       };
     }, {});
@@ -46,7 +44,7 @@ const BloodDonationState: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(
+        title={CountryAndStates[params.state].concat(
           " - ",
           t("common:nav.megamenu.dashboards.blood_donation")
         )}
@@ -55,6 +53,7 @@ const BloodDonationState: Page = ({
       />
       <BloodDonationDashboard
         last_updated={last_updated}
+        params={params}
         timeseries_all={timeseries_all}
         timeseries_bloodstock={timeseries_bloodstock}
         timeseries_facility={timeseries_facility}
@@ -133,6 +132,7 @@ export const getStaticProps: GetStaticProps = withi18n(
       notFound: false,
       props: {
         last_updated: new Date().valueOf(),
+        params: params,
         timeseries_all: data.timeseries_all,
         timeseries_bloodstock: data.timeseries_bloodstock,
         timeseries_facility: data.timeseries_facility,
@@ -143,7 +143,6 @@ export const getStaticProps: GetStaticProps = withi18n(
         barchart_time: data.bar_chart_time,
         barchart_variables: data.barchart_key_variables,
         map_facility: data.map_facility,
-        state: params?.state ?? "mys",
         choropleth_malaysia_blood_donation: data.choropleth_malaysia,
       },
     };
