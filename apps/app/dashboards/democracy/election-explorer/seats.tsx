@@ -10,7 +10,6 @@ import { OptionType } from "@components/types";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
@@ -51,7 +50,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
       header: t("constituency"),
       cell: (info: any) => info.getValue().split(",")[0],
     }),
-    columnHelper.accessor((row: any) => row.party, {
+    columnHelper.accessor("party", {
       id: "party",
       header: t("winning_party"),
       cell: (info: any) => info.getValue(),
@@ -99,7 +98,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     result: [],
   });
 
-  const { filter, setFilter } = useFilter({
+  const { setFilter } = useFilter({
     seat: query.seat,
   });
 
@@ -119,7 +118,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     });
   }, []);
 
-  useWatch(() => {
+  useEffect(() => {
     setData("loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
@@ -135,7 +134,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
       .then(() => setData("loading", false));
   }, [data.q_seat]);
 
-  useWatch(() => {
+  useEffect(() => {
     setData("modalLoading", true);
     setFilter("seat", data.q_seat);
     get("/explorer", {

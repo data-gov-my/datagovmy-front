@@ -10,7 +10,6 @@ import { OptionType } from "@components/types";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
@@ -61,7 +60,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       header: t("election_name"),
       cell: (info: any) => info.getValue(),
     }),
-    columnHelper.accessor((row: any) => row.date, {
+    columnHelper.accessor("date", {
       id: "date",
       header: t("date"),
       cell: (info: any) => info.getValue(),
@@ -122,7 +121,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     index: 0,
   });
 
-  const { filter, setFilter } = useFilter({
+  const { setFilter } = useFilter({
     name: query.name,
     type: query.type,
   });
@@ -143,7 +142,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     });
   }, []);
 
-  useWatch(() => {
+  useEffect(() => {
     setData("loading", true);
     setFilter("name", data.q_candidate);
     setFilter("type", data.type);
@@ -164,7 +163,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       .then(() => setData("loading", false));
   }, [data.q_candidate, data.type]);
 
-  useWatch(() => {
+  useEffect(() => {
     setData("modalLoading", true);
     get("/explorer", {
       explorer: "ELECTIONS",

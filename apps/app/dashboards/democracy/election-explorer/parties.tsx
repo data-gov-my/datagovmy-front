@@ -21,7 +21,6 @@ import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
 import { DateTime } from "luxon";
 import { routes } from "@lib/routes";
@@ -67,7 +66,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     index: 0,
   });
 
-  const { filter, setFilter } = useFilter({
+  const { setFilter } = useFilter({
     party: query.party,
     type: query.type,
     state: query.state,
@@ -87,7 +86,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       header: t("election_name"),
       cell: (info: any) => info.getValue(),
     }),
-    columnHelper.accessor((row: any) => row.date, {
+    columnHelper.accessor("date", {
       id: "date",
       header: t("date"),
       cell: (info: any) => info.getValue(),
@@ -181,7 +180,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     });
   }, []);
 
-  useWatch(() => {
+  useEffect(() => {
     setData("loading", true);
     setFilter("party", data.q_party);
     setFilter("type", data.type);
@@ -202,7 +201,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       .then(() => setData("loading", false));
   }, [data.q_party, data.state, data.type]);
 
-  useWatch(() => {
+  useEffect(() => {
     setData("modalLoading", true);
     get("/explorer", {
       explorer: "ELECTIONS",

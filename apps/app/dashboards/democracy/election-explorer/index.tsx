@@ -21,7 +21,6 @@ import { List, Panel } from "@components/Tabs";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
-import { useWatch } from "@hooks/useWatch";
 import { useWindowScroll } from "@hooks/useWindowWidth";
 import { useTranslation } from "@hooks/useTranslation";
 import {
@@ -35,6 +34,7 @@ import { CountryAndStates, PoliticalParty, PoliticalPartyColours } from "@lib/co
 import { get } from "@lib/api";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
+import { useFilter } from "@hooks/useFilter";
 
 /**
  * Election Explorer Dashboard
@@ -83,26 +83,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     },
   ];
 
-  const ELECTION_OPTIONS: Array<OptionType> = [
-    "GE-15 (2022)",
-    "GE-14 (2018)",
-    "GE-13 (2013)",
-    "GE-12 (2008)",
-    "GE-11 (2004)",
-    "GE-10 (1999)",
-    "GE-09 (1995)",
-    "GE-08 (1990)",
-    "GE-07 (1986)",
-    "GE-06 (1982)",
-    "GE-05 (1978)",
-    "GE-04 (1974)",
-    "GE-03 (1969)",
-    "GE-02 (1964)",
-    "GE-01 (1959)",
-    "GE-00 (1955)",
-  ].map((key: string) => ({
-    label: key,
-    value: key,
+  const ELECTION_OPTIONS: Array<OptionType> = [...Array(16)].map((n, index: number) => ({
+    label: `GE-${String(index).padStart(2, "0")}`,
+    value: `GE-${String(index).padStart(2, "0")}`,
   }));
 
   const FILTER_OPTIONS: Array<OptionType> = [
@@ -150,18 +133,30 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     tabs: 0,
     tabs_section1: 0,
     tabs_section3: 0,
-    filter: FILTER_OPTIONS[0],
-    election: ELECTION_OPTIONS[0].value,
-    data: election,
-    seats_list: [],
+
+    type: query.type ? query.type : "parlimen",
+    state: query.state ? query.state : "",
+    election: query.election ? query.election : ELECTION_OPTIONS[0].value,
+    section1_loading: false,
+
+    // Placeholder for Combobox
     p_seat: "",
-    state: "",
+    seats_list: [],
 
     // query
-    q_seat: "Padang Besar, Perlis",
-    section1_loading: false,
+    q_seat: query.seat ? query.seat : "Padang Besar, Perlis",
     section2_loading: false,
+    data: election,
+
+    filter: FILTER_OPTIONS[0],
     section3_loading: false,
+  });
+
+  const { setFilter } = useFilter({
+    election: query.election,
+    seat: query.seat,
+    state: query.state,
+    type: query.type,
   });
 
   const SEAT_OPTIONS: Array<OptionType> =
@@ -180,7 +175,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     });
   }, []);
 
-  useWatch(() => {
+  useEffect(() => {
     setData("section2_loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
@@ -219,7 +214,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
             {
               name: t("elections"),
               icon: <SPRIconSolid className="-mb-1" />,
-              url: "",
             },
             {
               name: t("candidates"),
