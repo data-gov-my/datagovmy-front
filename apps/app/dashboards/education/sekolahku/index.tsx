@@ -300,7 +300,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                           className="h-[400px] w-full"
                           title={t(`section_3.${k}`)}
                           enableGridX={false}
-                          graceX={"0.1%"}
+                          // graceX={"0.1%"}
                           data={{
                             labels: x, // x-values
                             datasets: [
@@ -341,10 +341,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                                 size: 14,
                                 lineHeight: 1.5,
                               },
-                              content: `${sekolahku_info.school}: ${formatCallout(
-                                k,
-                                bellcurve_school[k]
-                              )}`,
+                              content: `${sekolahku_info.school}`,
                               position: "start",
                               yAdjust: -6,
                             },
