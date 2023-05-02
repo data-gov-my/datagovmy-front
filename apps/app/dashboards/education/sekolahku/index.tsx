@@ -252,7 +252,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
           title={t("section_3.title", {
             school: sekolahku_info.school,
             level: sekolahku_info.level,
-            state: CountryAndStates[sekolahku_info.state],
+            state:
+              data.tabs_section3 === 0
+                ? CountryAndStates["mys"]
+                : CountryAndStates[sekolahku_info.state],
           })}
           menu={
             <Tabs.List
