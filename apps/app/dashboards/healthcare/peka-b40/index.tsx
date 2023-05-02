@@ -1,6 +1,5 @@
 import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { AgencyBadge, Container, Hero, Section, StateDropdown } from "@components/index";
 import { PHCorpIcon } from "@components/Icon/agency";
 import LeftRightCard from "@components/LeftRightCard";
@@ -25,17 +24,22 @@ const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: 
 
 interface PekaB40Props {
   last_updated: number;
+  params: { state: string };
   timeseries: any;
   choropleth: any;
 }
 
-const PekaB40: FunctionComponent<PekaB40Props> = ({ last_updated, timeseries, choropleth }) => {
+const PekaB40: FunctionComponent<PekaB40Props> = ({
+  params,
+  last_updated,
+  timeseries,
+  choropleth,
+}) => {
   const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
-  const router = useRouter();
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < BREAKPOINTS.MD;
-  const currentState = (router.query.state as string) ?? "mys";
+  const currentState = params.state;
   const { data, setData } = useData({
     minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
   });

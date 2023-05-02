@@ -12,6 +12,7 @@ import { clx } from "@lib/helpers";
 
 const PekaB40State: Page = ({
   last_updated,
+  params,
   timeseries,
   state,
   choropleth,
@@ -21,11 +22,12 @@ const PekaB40State: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("header"))}
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
         keywords={""}
       />
       <PekaB40Dashboard
+        params={params}
         last_updated={last_updated}
         timeseries={timeseries}
         choropleth={choropleth}
@@ -37,7 +39,9 @@ const PekaB40State: Page = ({
 PekaB40State.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={<StateDropdown url={routes.PEKA_B40} currentState={props?.state} hideOnScroll />}
+    stateSelector={
+      <StateDropdown url={routes.PEKA_B40} currentState={props?.params.state} hideOnScroll />
+    }
   >
     <StateModal url={routes.PEKA_B40} />
     {page}
@@ -74,7 +78,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", asy
     props: {
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
-      state: params?.state ?? "mys",
+      params: params,
       choropleth: data.choropleth_malaysia,
     },
     revalidate: 300,

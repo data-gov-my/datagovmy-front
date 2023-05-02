@@ -15,17 +15,15 @@ import { getTopIndices } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 
-const Empty = dynamic(() => import("@components/Chart/Empty"), { ssr: false });
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
 
 interface BloodDonationDashboardProps {
   last_updated: number;
+  params: { state: string };
   timeseries_all: any;
   timeseries_bloodstock: any;
   timeseries_facility: any;
@@ -41,6 +39,7 @@ interface BloodDonationDashboardProps {
 
 const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = ({
   last_updated,
+  params,
   timeseries_all,
   timeseries_bloodstock,
   timeseries_facility,
@@ -54,11 +53,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   choropleth_malaysia_blood_donation,
 }) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
-
-  const router = useRouter();
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < BREAKPOINTS.MD;
-  const currentState = (router.query.state as string) ?? "mys";
+  const currentState = params.state;
 
   const { data, setData } = useData({
     absolute_donation_type: false,

@@ -13,8 +13,8 @@ import { withi18n } from "@lib/decorators";
 
 const OrganDonationState: Page = ({
   last_updated,
+  params,
   timeseries,
-  state,
   choropleth,
   barchart_age,
   barchart_time,
@@ -24,12 +24,13 @@ const OrganDonationState: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("header"))}
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
         keywords={""}
       />
       <OrganDonationDashboard
         last_updated={last_updated}
+        params={params}
         timeseries={timeseries}
         choropleth={choropleth}
         barchart_age={barchart_age}
@@ -43,7 +44,7 @@ OrganDonationState.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={
-      <StateDropdown url={routes.ORGAN_DONATION} currentState={props?.state} hideOnScroll />
+      <StateDropdown url={routes.ORGAN_DONATION} currentState={props.params.state} hideOnScroll />
     }
   >
     <StateModal url={routes.ORGAN_DONATION} />
@@ -88,8 +89,8 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       props: {
         last_updated: new Date().valueOf(),
+        params: params,
         timeseries: data.timeseries,
-        state: params?.state ?? "mys",
         choropleth: data.choropleth_malaysia,
         barchart_age: data.barchart_age,
         barchart_time: data.barchart_time,

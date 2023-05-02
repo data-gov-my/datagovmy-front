@@ -5,9 +5,11 @@ import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import { DateTime } from "luxon";
+import { Page } from "@lib/types";
 
-const BloodDonation = ({
+const BloodDonation: Page = ({
   last_updated,
+  params,
   timeseries_all,
   timeseries_bloodstock,
   timeseries_facility,
@@ -45,6 +47,7 @@ const BloodDonation = ({
       />
       <BloodDonationDashboard
         last_updated={last_updated}
+        params={params}
         timeseries_all={timeseries_all}
         timeseries_bloodstock={timeseries_bloodstock}
         timeseries_facility={timeseries_facility}
@@ -81,6 +84,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-blood-donation
     notFound: false,
     props: {
       last_updated: new Date().valueOf(),
+      params: { state: "mys" },
       timeseries_all: data.timeseries_all,
       timeseries_bloodstock: data.timeseries_bloodstock,
       timeseries_facility: data.timeseries_facility,
