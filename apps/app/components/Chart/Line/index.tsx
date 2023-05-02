@@ -33,6 +33,7 @@ interface LineProps extends ChartHeaderProps {
   stats?: Array<StatProps> | null;
   annotation?: any;
   graceX?: number | string;
+  enableTooltip?: boolean;
 }
 
 const Line: FunctionComponent<LineProps> = ({
@@ -53,6 +54,7 @@ const Line: FunctionComponent<LineProps> = ({
   stats,
   annotation,
   graceX = 0,
+  enableTooltip = false,
 }) => {
   ChartJS.register(
     CategoryScale,
@@ -63,7 +65,6 @@ const Line: FunctionComponent<LineProps> = ({
     TimeSeriesScale,
     Filler,
     ChartTooltip,
-    CrosshairPlugin,
     AnnotationPlugin
   );
 
@@ -83,6 +84,9 @@ const Line: FunctionComponent<LineProps> = ({
         sync: {
           enabled: false,
         },
+      },
+      tooltip: {
+        enabled: enableTooltip,
       },
       annotation: {
         annotations: { annotation },
