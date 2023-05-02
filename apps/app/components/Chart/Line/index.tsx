@@ -18,6 +18,7 @@ import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import { Stats, StatProps } from "../Timeseries";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
+import { useTheme } from "next-themes";
 
 interface LineProps extends ChartHeaderProps {
   className?: string;
@@ -34,6 +35,8 @@ interface LineProps extends ChartHeaderProps {
   annotation?: any;
   graceX?: number | string;
   enableTooltip?: boolean;
+  enableCrosshair?: boolean;
+  enableLegend?: boolean;
 }
 
 const Line: FunctionComponent<LineProps> = ({
@@ -52,9 +55,11 @@ const Line: FunctionComponent<LineProps> = ({
   minY,
   maxY,
   stats,
-  annotation,
+  annotation = null,
   graceX = 0,
   enableTooltip = false,
+  enableCrosshair = false,
+  enableLegend = false,
 }) => {
   ChartJS.register(
     CategoryScale,
@@ -65,26 +70,37 @@ const Line: FunctionComponent<LineProps> = ({
     TimeSeriesScale,
     Filler,
     ChartTooltip,
+    CrosshairPlugin,
     AnnotationPlugin
   );
+
+  const { theme } = useTheme();
 
   const options: ChartCrosshairOption<"line"> = {
     maintainAspectRatio: false,
     responsive: true,
+    normalized: true,
     plugins: {
-      crosshair: {
-        line: {
-          width: 0,
-          color: "#000",
-          dashPattern: [6, 4],
-        },
-        zoom: {
-          enabled: false,
-        },
-        sync: {
-          enabled: false,
-        },
+      legend: {
+        display: enableLegend,
+        position: "chartArea" as const,
+        align: "start",
       },
+      crosshair: enableCrosshair
+        ? {
+            line: {
+              width: 0,
+              color: theme === "light" ? "#000" : "#FFF",
+              dashPattern: [6, 4],
+            },
+            zoom: {
+              enabled: false,
+            },
+            sync: {
+              enabled: false,
+            },
+          }
+        : false,
       tooltip: {
         enabled: enableTooltip,
       },
