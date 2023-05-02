@@ -14,6 +14,7 @@ import { OptionType } from "@components/types";
 import { useRouter } from "next/router";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
+import { get } from "@lib/api";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -29,7 +30,7 @@ interface SekolahkuProps {
 }
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
-  dropdown_data,
+  //   dropdown_data,
   sekolahku_info,
   sekolahku_barmeter,
   bellcurve_school,
@@ -50,12 +51,19 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   const { data, setData } = useData({
     loading: false,
+    selection: undefined,
     tabs_section3: 0,
     selected_school: {
       label: `${sekolahku_info.school} (${sekolahku_info.code}) - ${sekolahku_info.postcode} ${sekolahku_info.state}`,
       value: sekolahku_info.code,
     },
   });
+
+  useEffect(() => {
+    get("/dropdown", { dashboard: "sekolahku" }).then((res: any) => {
+      setData("selection", res.data.query_values.data.data);
+    });
+  }, []);
 
   // TODO: remove manual sorting once BE maintains ordering
   const barmeterSortArray = ["sex", "oku", "orphan", "ethnic", "religion", "income"];
@@ -94,14 +102,14 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   ];
 
-  const SCHOOL_OPTIONS: Array<OptionType> = dropdown_data.map(
-    ({ code, school, postcode, state }) => {
-      return {
-        label: `${school} (${code}) - ${postcode} ${state}`,
-        value: code,
-      };
-    }
-  );
+  const SCHOOL_OPTIONS: Array<OptionType> = data.selection
+    ? data.selection.map(({ code, school, postcode, state }: any) => {
+        return {
+          label: `${school} (${code}) - ${postcode} ${state}`,
+          value: code,
+        };
+      })
+    : [];
 
   return (
     <>

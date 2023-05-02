@@ -54,24 +54,24 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-sekolahku",
   async ({ params }) => {
-    const { data: dropdown_data } = await get("/dropdown", { dashboard: "sekolahku" });
+    // const { data: dropdown_data } = await get("/dropdown", { dashboard: "sekolahku" });
 
-    if (
-      !dropdown_data.query_values.data.data.find(
-        (school: Record<string, string>) => school.code === params?.code
-      )
-    ) {
-      return {
-        notFound: true,
-      };
-    }
+    // if (
+    //   !dropdown_data.query_values.data.data.find(
+    //     (school: Record<string, string>) => school.code === params?.code
+    //   )
+    // ) {
+    //   return {
+    //     notFound: true,
+    //   };
+    // }
 
     const { data } = await get("/dashboard", { dashboard: "sekolahku", code: params?.code });
 
     return {
       notFound: false,
       props: {
-        dropdown_data: dropdown_data.query_values.data.data,
+        dropdown_data: "", // dropdown_data.query_values.data.data,
         sekolahku_info: data.sekolahku_info.data,
         sekolahku_barmeter: data.sekolahku_barmeter.data,
         bellcurve_school: data.bellcurve_school.data,
