@@ -14,6 +14,7 @@
   "dependencies": {
     "next": "*",
     "nextra": "^2.4.0",
+    "next-sitemap": "*",
     "nextra-theme-docs": "^2.4.0",
     "react": "*",
     "react-dom": "*"
