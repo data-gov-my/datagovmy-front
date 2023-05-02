@@ -32,6 +32,7 @@ interface LineProps extends ChartHeaderProps {
   enableGridY?: boolean;
   stats?: Array<StatProps> | null;
   annotation?: any;
+  graceX?: number | string;
 }
 
 const Line: FunctionComponent<LineProps> = ({
@@ -51,6 +52,7 @@ const Line: FunctionComponent<LineProps> = ({
   maxY,
   stats,
   annotation,
+  graceX = 0,
 }) => {
   ChartJS.register(
     CategoryScale,
@@ -89,6 +91,7 @@ const Line: FunctionComponent<LineProps> = ({
     scales: {
       x: {
         type: type,
+        grace: graceX,
         grid: {
           display: enableGridX,
           borderWidth: 1,

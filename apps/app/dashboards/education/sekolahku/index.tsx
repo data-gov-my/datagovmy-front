@@ -274,9 +274,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       y.unshift(0);
                       return (
                         <Line
-                          className="h-[250px] w-full"
+                          className="h-[400px] w-full"
                           title={t(`section_3.${k}`)}
                           enableGridX={false}
+                          graceX={"0.1%"}
                           data={{
                             labels: x, // x-values
                             datasets: [
@@ -314,7 +315,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                               font: {
                                 family: "Inter",
                                 weight: 500,
-                                size: 16,
+                                size: 14,
                                 lineHeight: 1.5,
                               },
                               content: `${sekolahku_info.school}: ${formatCallout(
