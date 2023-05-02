@@ -22,7 +22,7 @@ const PekaB40State: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("header"))}
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
         keywords={""}
       />

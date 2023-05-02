@@ -15,7 +15,6 @@ const OrganDonationState: Page = ({
   last_updated,
   params,
   timeseries,
-  state,
   choropleth,
   barchart_age,
   barchart_time,
@@ -25,7 +24,7 @@ const OrganDonationState: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("header"))}
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
         keywords={""}
       />

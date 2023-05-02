@@ -20,13 +20,12 @@ const CovidVaccinationState: Page = ({
   barmeter,
   timeseries,
   statistics,
-  state,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("page_title"))}
+        title={CountryAndStates[params.state].concat(" - ", t("page_title"))}
         description={t("description")}
         keywords=""
       />
@@ -90,7 +89,6 @@ export const getStaticProps: GetStaticProps = withi18n(
         barmeter: data.bar_chart,
         timeseries: data.timeseries,
         statistics: data.statistics,
-        state: params?.state ?? "mys",
       },
     };
   }

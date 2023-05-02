@@ -24,7 +24,6 @@ const BloodDonationState: Page = ({
   barchart_time,
   barchart_variables,
   map_facility,
-  state,
   choropleth_malaysia_blood_donation,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
@@ -36,7 +35,7 @@ const BloodDonationState: Page = ({
         ...previous,
         [current[0]]: current[1].map((item: any) => ({
           ...item,
-          x: t("".concat(item.x)),
+          x: t(item.x),
         })),
       };
     }, {});
@@ -45,7 +44,7 @@ const BloodDonationState: Page = ({
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(
+        title={CountryAndStates[params.state].concat(
           " - ",
           t("common:nav.megamenu.dashboards.blood_donation")
         )}
@@ -144,7 +143,6 @@ export const getStaticProps: GetStaticProps = withi18n(
         barchart_time: data.bar_chart_time,
         barchart_variables: data.barchart_key_variables,
         map_facility: data.map_facility,
-        state: params?.state ?? "mys",
         choropleth_malaysia_blood_donation: data.choropleth_malaysia,
       },
     };

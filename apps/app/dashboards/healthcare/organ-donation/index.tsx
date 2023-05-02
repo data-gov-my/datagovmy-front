@@ -156,7 +156,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                     <p className="font-bold">{t("choro_ranking")}</p>
                     {topStateIndices.map((pos, i) => {
                       return (
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-3" key={pos}>
                           <div className="text-dim font-medium">#{i + 1}</div>
                           <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
                           <div className="font-bold text-[#16A34A]">
