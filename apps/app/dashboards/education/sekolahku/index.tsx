@@ -1,7 +1,7 @@
 import AgencyBadge from "@components/AgencyBadge";
 import { Hero, Panel, Section, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import Container from "@components/Container";
 import { MOEIcon } from "@components/Icon/agency";
 import ComboBox from "@components/Combobox";
@@ -13,6 +13,7 @@ import { useData } from "@hooks/useData";
 import { OptionType } from "@components/types";
 import { useRouter } from "next/router";
 import { AKSARA_COLOR } from "@lib/constants";
+import Spinner from "@components/Spinner";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -40,7 +41,15 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
   const router = useRouter();
 
+  useEffect(() => {
+    router.events.on("routeChangeComplete", () => setData("loading", false));
+    return () => {
+      router.events.off("routeChangeComplete", () => null);
+    };
+  }, [router.events]);
+
   const { data, setData } = useData({
+    loading: false,
     tabs_section3: 0,
     selected_school: {
       label: `${sekolahku_info.school} (${sekolahku_info.code}) - ${sekolahku_info.postcode} ${sekolahku_info.state}`,
@@ -126,6 +135,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   onChange={e => {
                     if (e?.value) {
                       setData("selected_school", e);
+                      setData("loading", true);
                       router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
                         scroll: false,
                       });
@@ -138,37 +148,47 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-col rounded-xl border border-slate-200 dark:border-zinc-800 lg:max-h-[400px] lg:max-w-[800px] lg:flex-row">
+            <div className="flex flex-col rounded-xl border border-slate-200 dark:border-zinc-800 lg:max-h-[400px] lg:w-[800px] lg:flex-row">
               <div className="flex items-center border-slate-200 dark:border-zinc-800 dark:bg-zinc-800/50 lg:basis-1/2 lg:border-r">
-                <div className="flex flex-col gap-6 p-8 text-center">
-                  <div className="flex flex-col gap-2">
-                    <BookOpenIcon className="text-primary mx-auto h-10 w-10" />
-                    <span className="text-lg font-bold">{sekolahku_info.school}</span>
-                    <span className="text-dim text-sm font-bold">
-                      {`${sekolahku_info.ppd} | ${sekolahku_info.postcode} ${
-                        CountryAndStates[sekolahku_info.state]
-                      }`}
-                    </span>
-                    <a
-                      className="text-primary text-sm"
-                      href={`mailto:${sekolahku_info.code}@moe.gov.my`}
-                      target="_blank"
-                    >
-                      {`${sekolahku_info.code}@moe.gov.my`}
-                    </a>
-                  </div>
-                  <span className="text-dim">
-                    {t("section_1.school_description", {
-                      level: sekolahku_info.level,
-                      funding_status: sekolahku_info.funding_status,
-                      type: sekolahku_info.type,
-                      strata: sekolahku_info.strata,
-                      city: sekolahku_info.city,
-                      school: sekolahku_info.school,
-                      teachers: sekolahku_info.teachers,
-                      students: sekolahku_info.students,
-                    })}
-                  </span>
+                <div className="flex flex-col items-center justify-center gap-6 p-8 text-center lg:h-[400px] lg:w-[400px]">
+                  <Spinner loading={data.loading} />
+                  {data.loading || (
+                    <>
+                      <div className="flex flex-col gap-2">
+                        <BookOpenIcon className="text-primary mx-auto h-10 w-10" />
+                        <span className="text-lg font-bold">{sekolahku_info.school}</span>
+                        <span className="text-dim text-sm font-bold">
+                          {`${sekolahku_info.ppd} | ${sekolahku_info.postcode} ${
+                            CountryAndStates[sekolahku_info.state]
+                          }`}
+                        </span>
+                        <a
+                          className="text-primary text-sm"
+                          href={`mailto:${sekolahku_info.code}@moe.gov.my`}
+                          target="_blank"
+                        >
+                          {`${sekolahku_info.code}@moe.gov.my`}
+                        </a>
+                      </div>
+                      <span className="text-dim">
+                        {t(
+                          "section_1.school_description".concat(
+                            sekolahku_info.funding_status === "" ? "_nofund" : ""
+                          ),
+                          {
+                            level: sekolahku_info.level,
+                            funding_status: sekolahku_info.funding_status,
+                            type: sekolahku_info.type,
+                            strata: sekolahku_info.strata,
+                            city: sekolahku_info.city,
+                            school: sekolahku_info.school,
+                            teachers: sekolahku_info.teachers,
+                            students: sekolahku_info.students,
+                          }
+                        )}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="overflow-hidden rounded-b-xl bg-slate-50 dark:bg-zinc-900 lg:basis-1/2 lg:rounded-bl-none lg:rounded-br-xl lg:rounded-tr-xl">
