@@ -12,14 +12,10 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "next": "*",
-    "nextra": "^2.4.0",
-    "next-sitemap": "*",
-    "nextra-theme-docs": "^2.4.0",
-    "react": "*",
-    "react-dom": "*"
-  },
-  "devDependencies": {
-    "webpack": "^5.75.0"
+    "next": "^13.0.6",
+    "nextra": "^2.4.2",
+    "nextra-theme-docs": "^2.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
