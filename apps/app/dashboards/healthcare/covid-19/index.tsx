@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import {
   AgencyBadge,
   Container,
@@ -36,12 +35,6 @@ interface COVID19Props {
   snapshot_bar: any;
   snapshot_graphic: any;
   timeseries: any;
-  //   timeseries_admitted: any;
-  //   timeseries_cases: any;
-  //   timeseries: any;
-  //   timeseries_icu: any;
-  //   timeseries_tests: any;
-  //   timeseries_vents: any;
   util_chart: any;
   statistics: any;
 }
@@ -52,12 +45,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  //   timeseries_admitted,
-  //   timeseries_cases,
-  //   timeseries,
-  //   timeseries_icu,
-  //   timeseries_tests,
-  //   timeseries_vents,
   util_chart,
   statistics,
 }) => {
@@ -80,13 +67,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     minmax: [timeseries.data.x.length - 365, timeseries.data.x.length - 1],
   });
 
-  // TODO: Can be grouped into 1. Have to do a bit of transforming
   const { coordinate } = useSlice(timeseries.data, data.minmax);
-  //   const { coordinate: coordinate } = useSlice(timeseries_cases.data, data.minmax);
-  //   const { coordinate: coordinate } = useSlice(timeseries.data, data.minmax);
-  //   const { coordinate: coordinate } = useSlice(timeseries_icu.data, data.minmax);
-  //   const { coordinate: coordinate } = useSlice(timeseries_tests.data, data.minmax);
-  //   const { coordinate: coordinate } = useSlice(timeseries_vents.data, data.minmax);
 
   const BarTabsMenu = [
     {

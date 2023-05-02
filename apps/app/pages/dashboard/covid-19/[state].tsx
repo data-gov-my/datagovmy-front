@@ -18,13 +18,12 @@ const COVID19State: Page = ({
   timeseries,
   util_chart,
   statistics,
-  state,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("dashboard-covid-19.header"))}
+        title={CountryAndStates[params.state].concat(" - ", t("dashboard-covid-19.header"))}
         description={t("dashboard-covid-19.description")}
         keywords={""}
       />
@@ -107,7 +106,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
       },
       util_chart: data.util_chart,
       statistics: data.statistics,
-      state: params?.state ?? "mys",
     },
   };
 });

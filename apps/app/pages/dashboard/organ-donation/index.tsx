@@ -12,6 +12,7 @@ import { clx } from "@lib/helpers";
 
 const OrganDonation: Page = ({
   last_updated,
+  params,
   timeseries,
   choropleth,
   barchart_age,
@@ -24,6 +25,7 @@ const OrganDonation: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <OrganDonationDashboard
         last_updated={last_updated}
+        params={params}
         timeseries={timeseries}
         choropleth={choropleth}
         barchart_age={barchart_age}
@@ -56,6 +58,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-organ-donation
     notFound: false,
     props: {
       last_updated: new Date().valueOf(),
+      params: { state: "mys" },
       timeseries: data.timeseries,
       choropleth: data.choropleth_malaysia,
       barchart_age: data.barchart_age,
