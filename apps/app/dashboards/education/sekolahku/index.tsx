@@ -175,6 +175,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                 <MapPlot
                   className="h-[400px] lg:h-full lg:w-full"
                   position={[sekolahku_info.lat, sekolahku_info.lon]}
+                  zoom={10}
                   markers={[
                     {
                       position: [sekolahku_info.lat, sekolahku_info.lon],
@@ -269,6 +270,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
                     {Object.entries(lineData[sekolahku_info.level]).map(([k, v]) => {
                       const { x, y } = v as { x: number[]; y: number[] };
+                      x.unshift(0);
+                      y.unshift(0);
                       return (
                         <Line
                           className="h-[250px] w-full"
@@ -297,13 +300,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                             },
                             {
                               title: t(`section_3.stat_median${data.tabs_section3}`),
-                              value: formatCallout(
-                                k,
-
-                                data.tabs_section3 === 0
-                                  ? lineCallout[k].callout
-                                  : lineCallout[k].callout
-                              ),
+                              value: formatCallout(k, lineCallout[k].callout),
                             },
                           ]}
                           annotation={{
@@ -314,6 +311,12 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                             label: {
                               display: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY,
+                              font: {
+                                family: "Inter",
+                                weight: 500,
+                                size: 16,
+                                lineHeight: 1.5,
+                              },
                               content: `${sekolahku_info.school}: ${formatCallout(
                                 k,
                                 bellcurve_school[k]

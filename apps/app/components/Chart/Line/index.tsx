@@ -17,6 +17,7 @@ import { Line as LineCanvas } from "react-chartjs-2";
 import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import { Stats, StatProps } from "../Timeseries";
+import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 
 interface LineProps extends ChartHeaderProps {
   className?: string;
@@ -60,6 +61,7 @@ const Line: FunctionComponent<LineProps> = ({
     TimeSeriesScale,
     Filler,
     ChartTooltip,
+    CrosshairPlugin,
     AnnotationPlugin
   );
 
