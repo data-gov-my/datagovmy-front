@@ -138,6 +138,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       setData("loading", true);
                       router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
                         scroll: false,
+                        locale: i18n.language,
                       });
                     }
                   }}
