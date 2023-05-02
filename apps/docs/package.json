@@ -18,5 +18,8 @@
     "nextra-theme-docs": "^2.4.0",
     "react": "*",
     "react-dom": "*"
+  },
+  "devDependencies": {
+    "webpack": "^5.75.0"
   }
 }
