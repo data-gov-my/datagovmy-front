@@ -32,41 +32,12 @@ const Sekolahku: Page = ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [
-      {
-        params: {
-          code: "PEB1094",
-        },
-      },
-      {
-        params: {
-          code: "PEB1094",
-        },
-        locale: "ms-MY",
-      },
-    ],
-    fallback: "blocking", // can also be true or 'blocking'
-  };
-};
-
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-sekolahku",
   async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "sekolahku", code: "PEB1094" });
+
     const { data: dropdown_data } = await get("/dropdown", { dashboard: "sekolahku" });
-
-    if (
-      !dropdown_data.query_values.data.data.find(
-        (school: Record<string, string>) => school.code === params?.code
-      )
-    ) {
-      return {
-        notFound: true,
-      };
-    }
-
-    const { data } = await get("/dashboard", { dashboard: "sekolahku", code: params?.code });
 
     return {
       notFound: false,
