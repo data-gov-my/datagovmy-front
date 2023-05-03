@@ -47,7 +47,7 @@ export default async function handler(
 // Checks if route exists. Routes only for static pages
 const validate = (route: string): Promise<string> =>
   new Promise(resolve => {
-    if (Object.values(static_routes).includes(route)) resolve(route);
+    if (static_routes.includes(route)) resolve(route);
     else throw new Error(`Route does not exist or is not a static page. Route: ${route}`);
   });
 
