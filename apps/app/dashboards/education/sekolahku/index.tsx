@@ -14,6 +14,7 @@ import { OptionType } from "@components/types";
 import { useRouter } from "next/router";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
+import { get } from "@lib/api";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -28,16 +29,17 @@ interface SekolahkuProps {
   bellcurve_linechart: any;
 }
 
+const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
+const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
+
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
-  dropdown_data,
+  //   dropdown_data,
   sekolahku_info,
   sekolahku_barmeter,
   bellcurve_school,
   bellcurve_callout,
   bellcurve_linechart,
 }) => {
-  const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
-  const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
   const router = useRouter();
 
@@ -50,12 +52,20 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   const { data, setData } = useData({
     loading: false,
+    selection: undefined,
     tabs_section3: 0,
     selected_school: {
       label: `${sekolahku_info.school} (${sekolahku_info.code}) - ${sekolahku_info.postcode} ${sekolahku_info.state}`,
       value: sekolahku_info.code,
     },
   });
+
+  // TODO (@jiaxin): Replace with useWatch, dep on what user types. After each call, replace the selection
+  useEffect(() => {
+    get("/dropdown", { dashboard: "sekolahku" }).then((res: any) => {
+      setData("selection", res.data.query_values.data.data);
+    });
+  }, []);
 
   // TODO: remove manual sorting once BE maintains ordering
   const barmeterSortArray = ["sex", "oku", "orphan", "ethnic", "religion", "income"];
@@ -94,14 +104,14 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   ];
 
-  const SCHOOL_OPTIONS: Array<OptionType> = dropdown_data.map(
-    ({ code, school, postcode, state }) => {
-      return {
-        label: `${school} (${code}) - ${postcode} ${state}`,
-        value: code,
-      };
-    }
-  );
+  const SCHOOL_OPTIONS: Array<OptionType> = data.selection
+    ? data.selection.map(({ code, school, postcode, state }: any) => {
+        return {
+          label: `${school} (${code}) - ${postcode} ${state}`,
+          value: code,
+        };
+      })
+    : [];
 
   return (
     <>
@@ -138,6 +148,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       setData("loading", true);
                       router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
                         scroll: false,
+                        locale: i18n.language,
                       });
                     }
                   }}
@@ -277,6 +288,20 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                 ? CountryAndStates["mys"]
                 : CountryAndStates[sekolahku_info.state],
           })}
+          description={
+            <div className="flex flex-row gap-6">
+              <div className="flex flex-row gap-2">
+                <div className="bg-primary h-1 w-4 place-self-center rounded" />
+                <span className="text-primary text-sm font-medium	">{sekolahku_info.school}</span>
+              </div>
+              <div className="flex flex-row gap-2">
+                <div className="bg-dim h-1 w-4 place-self-center rounded" />
+                <span className="text-dim text-sm font-medium	">
+                  {t(`section_3.legend_${sekolahku_info.level}`)}
+                </span>
+              </div>
+            </div>
+          }
           menu={
             <Tabs.List
               options={KEY_VARIABLES_SCHEMA.map(item => item.name)}
@@ -331,9 +356,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                             type: "line",
                             borderColor: AKSARA_COLOR.PRIMARY,
                             borderWidth: 2,
-                            adjustScaleRange: true,
                             label: {
-                              display: true,
+                              display: false,
                               backgroundColor: AKSARA_COLOR.PRIMARY,
                               font: {
                                 family: "Inter",
