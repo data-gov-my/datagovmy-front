@@ -87,3 +87,25 @@
   transform: translate(-50%, -50%);
   @apply absolute left-1/2 top-1/2 h-[75%] w-[75%] rounded-[50%] bg-white transition-all dark:bg-black;
 }
+
+/* SLIDER STYLES */
+.slick-slider {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.slick-list {
+  position: relative;
+  display: block !important;
+  overflow: hidden;
+  padding: 0 0px !important;
+  width: 100%;
+}
+.slick-track {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+}
