@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Card from "@components/Card";
 import ComboBox from "@components/Combobox";
@@ -21,7 +21,7 @@ import { List, Panel } from "@components/Tabs";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
-import { useWindowScroll } from "@hooks/useWindowWidth";
+import { useWindowScroll, useWindowWidth } from "@hooks/useWindowWidth";
 import { useTranslation } from "@hooks/useTranslation";
 import {
   BuildingLibraryIcon,
@@ -30,11 +30,21 @@ import {
   TableCellsIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
-import { CountryAndStates, PoliticalParty, PoliticalPartyColours } from "@lib/constants";
+import {
+  BREAKPOINTS,
+  CountryAndStates,
+  PoliticalParty,
+  PoliticalPartyColours,
+} from "@lib/constants";
 import { get } from "@lib/api";
-import { clx } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useFilter } from "@hooks/useFilter";
+import Carousel from "@components/Carousel";
+import Slider from "react-slick";
+import { BarMeter, FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
+import { DateTime } from "luxon";
+import ElectionCard from "@components/Card/ElectionCard";
 
 /**
  * Election Explorer Dashboard
@@ -53,10 +63,13 @@ interface ElectionExplorerProps {
 
 const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, query }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
+  const windowWidth = useWindowWidth();
+
+  const sliderRef = useRef<Slider>(null);
   const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
   const scroll = useWindowScroll();
-  const show = useMemo(() => scroll.scrollY > 350, [scroll.scrollY]);
+  const show = useMemo(() => scroll.scrollY > 400, [scroll.scrollY]);
 
   useEffect(() => {
     const div = divRef.current;
@@ -71,6 +84,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       window.removeEventListener("scroll", handleScroll);
     };
   }, [divRef]);
+
+  const results: { [key: string]: ReactNode } = {
+    won: <Won desc={t("candidate.won")} />,
+    won_uncontested: <Won desc={t("candidate.won_uncontested")} />,
+    lost: <Lost desc={t("candidate.lost")} />,
+    lost_deposit: <Lost desc={t("candidate.lost_deposit")} />,
+  };
 
   const PANELS = [
     {
@@ -135,8 +155,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     tabs_section3: 0,
 
     type: query.type ? query.type : "parlimen",
-    state: query.state ? query.state : "",
-    election: query.election ? query.election : ELECTION_OPTIONS[0].value,
+    state: query.state ? query.state : "jhr",
+    election: query.election ? query.election : ELECTION_OPTIONS.at(-1)?.value,
     section1_loading: false,
 
     // Placeholder for Combobox
@@ -144,9 +164,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     seats_list: [],
 
     // query
-    q_seat: query.seat ? query.seat : "Padang Besar, Perlis",
+    q_seat: query.seat ? query.seat : "P.140 Segamat, Johor",
     section2_loading: false,
     data: election,
+    open: false,
+    index: 0,
+    result: [],
 
     filter: FILTER_OPTIONS[0],
     section3_loading: false,
@@ -167,31 +190,61 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     }));
 
   useEffect(() => {
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      dropdown: "seats_list",
-    }).then(({ data }) => {
-      setData("seats_list", data);
-    });
-  }, []);
+    sliderRef.current?.slickGoTo(data.index);
+  }, [data.index]);
+
+  // useEffect(() => {
+  //   get("/explorer", {
+  //     explorer: "ELECTIONS",
+  //     dropdown: "seats_list",
+  //   }).then(({ data }) => {
+  //     setData("seats_list", data);
+  //   });
+  // }, []);
 
   useEffect(() => {
     setData("section2_loading", true);
+    setFilter("election", data.election);
+    setFilter("type", data.type);
+    setFilter("state", data.state);
+    setFilter("seat", data.q_seat);
     get("/explorer", {
       explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "seats",
-      election: data.election.split(" ")[0],
-      seat: data.q_seat,
+      chart: "overall_seat",
+      election: data.election,
+      type: data.type,
+      state: data.state,
     })
       .then(({ data }) => {
         setData("data", data);
+        setData(
+          "seats_list",
+          data.map((d: any) => d.seat)
+        );
       })
       .then(() => setData("section2_loading", false));
   }, [data.q_seat]);
 
+  useEffect(() => {
+    setData("section2_loading", true);
+    setFilter("seat", data.q_seat);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "full_result",
+      type: "seats",
+      election: data.election,
+      seat: data.seats_list[data.index],
+    })
+      .then(({ data }) => {
+        setData(
+          "result",
+          data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+        );
+        console.log(data);
+      })
+      .then(() => setData("section2_loading", false));
+  }, [data.index, data.open]);
   // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
-
   return (
     <>
       <Hero
@@ -285,7 +338,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       exclude={["mys", "kul", "lbn", "pjy"]}
                       width="w-full"
                       anchor="left"
-                      disabled={data.tabs === 0}
+                      // disabled={data.tabs === 0}
                     />
                     <Dropdown
                       width="w-full"
@@ -334,7 +387,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               exclude={["mys", "kul", "lbn", "pjy"]}
               width="min-w-max"
               anchor="left"
-              disabled={data.tabs === 0}
+              // disabled={data.tabs === 0}
             />
             <Dropdown
               shadow={clx(hasShadow ? "shadow-lg dark:shadow-neutral-700" : "shadow-none")}
@@ -450,14 +503,21 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         data.p_seat ? SEAT_OPTIONS.find(e => e.value === data.p_seat.value) : null
                       }
                       onChange={e => {
-                        if (e) setData("q_seat", e.value);
-                        setData("seat", e);
+                        if (e) {
+                          setData("q_seat", e.value);
+                          setData(
+                            "index",
+                            // sliderRef.current?.slickGoTo(
+                            data.seats_list.findIndex((seat: string) => seat === e.value)
+                          );
+                        }
+                        setData("p_seat", e);
                       }}
                     />
                   </div>
                 </div>
               </div>
-              <BorderlessTable
+              {/* <BorderlessTable
                 title={
                   <div className="text-base font-bold">
                     {t("election.full_result", {
@@ -468,7 +528,105 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                 }
                 data={data.data}
                 isLoading={data.section2_loading}
-              />
+              /> */}
+              <div>
+                <Carousel
+                  _ref={sliderRef}
+                  title={
+                    <div className="text-base font-bold">
+                      {t("election.full_result", {
+                        election: data.election,
+                      })}
+                      <span className="text-primary">{data.q_seat}</span>
+                    </div>
+                  }
+                  items={data.data.map((item: any, index: number) => (
+                    <div
+                      key={index}
+                      className={clx(
+                        "mx-2 flex flex-col gap-2 rounded-xl border p-3 text-sm",
+                        item.value === data.q_seat
+                          ? "border-dim"
+                          : "border-outline dark:border-outlineHover-dark"
+                      )}
+                    >
+                      <div className="flex flex-row justify-between">
+                        <div className="justify-normal">
+                          <span className="font-medium">{item.seat.slice(0, 5)}</span>
+                          <span>{item.seat.slice(5)}</span>
+                        </div>
+                        <FullResult
+                          onClick={() => {
+                            setData("open", true);
+                            setData("index", index);
+                          }}
+                        />
+                      </div>
+                      <div className="flex flex-row gap-1.5">
+                        <ImageWithFallback
+                          className="items-center self-center"
+                          src={`/static/images/parties/${item.party}.png`}
+                          width={28}
+                          height={16}
+                          alt={t(`${item.party}`)}
+                        />
+                        <span>{`${item.name} (${item.party})`}</span>
+                      </div>
+                      <div className="flex flex-row items-center gap-1.5">
+                        <p className="text-dim font-medium">{t("majority")}</p>
+                        <BarMeter perc={item.majority.perc} width={30} />
+                        <span>
+                          {item.majority.abs === 0 ? `—` : numFormat(item.majority.abs, "standard")}
+                        </span>
+                        <span>
+                          {item.majority.perc === null
+                            ? `(—)`
+                            : `(${Number(item.majority.perc).toFixed(1)}%)`}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  itemsToScroll={
+                    windowWidth <= BREAKPOINTS.MD ? 2 : windowWidth <= BREAKPOINTS.LG ? 3 : 4
+                  }
+                  itemsToShow={
+                    windowWidth <= BREAKPOINTS.MD ? 2 : windowWidth <= BREAKPOINTS.LG ? 3 : 4
+                  }
+                />
+              </div>
+
+              {data.open && (
+                <ElectionCard
+                  open={data.open}
+                  onChange={(index: number) =>
+                    index < data.data.length && index >= 0 ? setData("index", index) : null
+                  }
+                  onClose={() => setData("open", false)}
+                  onNext={() =>
+                    data.index === data.data.length ? null : setData("index", data.index + 1)
+                  }
+                  onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+                  win={data.data[data.index].result}
+                  election_name={data.data[data.index].election_name}
+                  // date={DateTime.fromISO(data.result[data.index].date)
+                  //   .setLocale(i18n.language)
+                  //   .toLocaleString(DateTime.DATE_MED)}
+                  title={
+                    <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
+                      <h5>{data.data[data.index].seat.split(",")[0]}</h5>
+                      <span className="text-dim font-normal">
+                        {data.data[data.index].seat.split(",")[1]}
+                      </span>
+                      <span>{results[data.data[data.index].result]}</span>
+                    </div>
+                  }
+                  isLoading={data.section2_Loading}
+                  data={data.result}
+                  highlightedRow={data.result.findIndex((r: Result) => r.name === data.data.name)}
+                  page={data.index}
+                  total={data.data.length}
+                />
+              )}
             </div>
           </div>
           <div className="dark:border-t-outlineHover-dark border-t py-12 lg:grid lg:grid-cols-12">
