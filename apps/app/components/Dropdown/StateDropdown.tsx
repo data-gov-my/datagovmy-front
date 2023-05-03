@@ -1,9 +1,9 @@
 import { OptionType } from "@components/types";
-import { useWindowScroll } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import { statesOptions } from "@lib/options";
 import { useTranslation } from "@hooks/useTranslation";
 import { useRouter } from "next/router";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo } from "react";
 import { default as Dropdown } from ".";
 
 interface StateDropdownProps {
@@ -39,7 +39,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const scroll = useWindowScroll();
+  const { scroll } = useContext(WindowContext);
   const redirect = (selected: OptionType) => {
     if (selected.value === "mys") {
       url && router.push(url, undefined, { scroll: false });
@@ -48,7 +48,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
     url && router.push(`${url}/${selected.value}`, undefined, { scroll: false });
   };
 
-  const show = useMemo(() => scroll.scrollY > 300, [scroll.scrollY]);
+  const show = useMemo(() => scroll.y > 300, [scroll.y]);
   const options = include ? statesOptions.concat(include) : statesOptions;
 
   return (

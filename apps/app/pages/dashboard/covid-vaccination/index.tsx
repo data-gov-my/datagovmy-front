@@ -6,6 +6,11 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import COVIDVaccinationDashboard from "@dashboards/healthcare/covid-vaccination";
 import { withi18n } from "@lib/decorators";
+import Layout from "@components/Layout";
+import { StateDropdown, StateModal } from "@components/index";
+import { routes } from "@lib/routes";
+import { clx } from "@lib/helpers";
+import Fonts from "@config/font";
 
 const CovidVaccination: Page = ({
   params,
@@ -30,6 +35,23 @@ const CovidVaccination: Page = ({
     </>
   );
 };
+
+CovidVaccination.layout = (page, props) => (
+  <Layout
+    className={clx(Fonts.body.variable, "font-sans")}
+    stateSelector={
+      <StateDropdown
+        url={routes.COVID_VACCINATION}
+        currentState={props?.params.state}
+        hideOnScroll
+      />
+    }
+  >
+    <StateModal state={props.params.state} url={routes.COVID_VACCINATION} />
+    {page}
+  </Layout>
+);
+
 // Disabled
 export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccination", async () => {
   const { data } = await get("/dashboard", { dashboard: "covid_vax", state: "mys" });
@@ -37,9 +59,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccinat
   return {
     notFound: false,
     props: {
-      params: {
-        state: "mys",
-      },
+      params: { state: "mys" },
       timeseries: data.timeseries,
       statistics: data.statistics,
       barmeter: data.bar_chart,

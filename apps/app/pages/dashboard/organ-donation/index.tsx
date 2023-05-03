@@ -35,12 +35,14 @@ const OrganDonation: Page = ({
   );
 };
 
-OrganDonation.layout = page => (
+OrganDonation.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={<StateDropdown url={routes.ORGAN_DONATION} currentState={"mys"} hideOnScroll />}
+    stateSelector={
+      <StateDropdown url={routes.ORGAN_DONATION} currentState={props.params.state} hideOnScroll />
+    }
   >
-    <StateModal url={routes.ORGAN_DONATION} />
+    <StateModal state={props.params.state} url={routes.ORGAN_DONATION} />
     {page}
   </Layout>
 );

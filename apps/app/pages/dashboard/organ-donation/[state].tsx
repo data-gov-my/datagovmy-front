@@ -47,7 +47,7 @@ OrganDonationState.layout = (page, props) => (
       <StateDropdown url={routes.ORGAN_DONATION} currentState={props.params.state} hideOnScroll />
     }
   >
-    <StateModal url={routes.ORGAN_DONATION} />
+    <StateModal state={props.params.state} url={routes.ORGAN_DONATION} />
     {page}
   </Layout>
 );

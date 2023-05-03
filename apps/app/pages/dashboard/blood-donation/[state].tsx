@@ -79,13 +79,17 @@ BloodDonationState.layout = (page, props) => (
     stateSelector={
       <StateDropdown
         url={routes.BLOOD_DONATION}
-        currentState={props.state}
+        currentState={props.params.state}
         exclude={["pjy", "pls", "lbn"]}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.BLOOD_DONATION} exclude={["pjy", "pls", "lbn"]} />
+    <StateModal
+      state={props.params.state}
+      url={routes.BLOOD_DONATION}
+      exclude={["pjy", "pls", "lbn"]}
+    />
     {page}
   </Layout>
 );

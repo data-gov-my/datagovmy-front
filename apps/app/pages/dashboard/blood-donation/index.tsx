@@ -6,6 +6,12 @@ import { withi18n } from "@lib/decorators";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import { DateTime } from "luxon";
 import { Page } from "@lib/types";
+import Layout from "@components/Layout";
+import StateDropdown from "@components/Dropdown/StateDropdown";
+import StateModal from "@components/Modal/StateModal";
+import Fonts from "@config/font";
+import { clx } from "@lib/helpers";
+import { routes } from "@lib/routes";
 
 const BloodDonation: Page = ({
   last_updated,
@@ -28,13 +34,12 @@ const BloodDonation: Page = ({
 
   Object.entries(barchart_variables.data).forEach(([key, values]: [string, any]) => {
     vars[key] = Object.entries(values).reduce((previous, current: [string, any]) => {
-      return {
-        ...previous,
+      return Object.assign(previous, {
         [current[0]]: current[1].map((item: any) => ({
           ...item,
           x: t(item.x),
         })),
-      };
+      });
     }, {});
   });
 
@@ -66,6 +71,27 @@ const BloodDonation: Page = ({
     </>
   );
 };
+
+BloodDonation.layout = (page, props) => (
+  <Layout
+    className={clx(Fonts.body.variable, "font-sans")}
+    stateSelector={
+      <StateDropdown
+        url={routes.BLOOD_DONATION}
+        currentState={props.params.state}
+        exclude={["pjy", "pls", "lbn"]}
+        hideOnScroll
+      />
+    }
+  >
+    <StateModal
+      state={props.params.state}
+      url={routes.BLOOD_DONATION}
+      exclude={["pjy", "pls", "lbn"]}
+    />
+    {page}
+  </Layout>
+);
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-blood-donation", async () => {
   const { data } = await get("/dashboard", { dashboard: "blood_donation", state: "mys" });
