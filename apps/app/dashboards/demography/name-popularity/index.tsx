@@ -410,7 +410,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
             {!showPlaceholder && !compareData.data ? (
               <></>
             ) : (
-              <div className="col-span-full flex h-[460px] flex-col gap-3 lg:col-span-2">
+              <div className="col-span-full flex min-h-[460px] flex-col gap-3 lg:col-span-2">
                 <div className="flex flex-col gap-2 md:flex-row md:justify-between">
                   <p className="text-lg font-bold">
                     <span>{t("compare_title")}</span>
