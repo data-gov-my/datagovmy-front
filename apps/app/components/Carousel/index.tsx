@@ -35,7 +35,7 @@ const Carousel = ({ items, itemsToShow, itemsToScroll, title, _ref }: CarouselPr
     infinite: true,
     cssEase: "ease-in-out",
     speed: 500,
-    slidesToShow: itemsToShow,
+    slidesToShow: items.length < itemsToShow ? items.length : itemsToShow,
     slidesToScroll: itemsToScroll,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,

@@ -163,7 +163,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     tabs_section3: 0,
 
     type: query.type ? query.type : "parlimen",
-    state: query.state ? query.state : "jhr",
+    state: query.state ? query.state : "pls",
     election: query.election ? query.election : ELECTION_OPTIONS.at(-1)?.value,
     section1_loading: false,
 
@@ -172,7 +172,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     seats_list: [],
 
     // query
-    q_seat: query.seat ? query.seat : "P.140 Segamat, Johor",
+    q_seat: query.seat ? query.seat : "",
     section2_loading: false,
     data: election,
     open: false,
@@ -197,9 +197,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       value: key,
     }));
 
+  // useEffect(() => {
+  //   sliderRef.current?.slickGoTo(data.index);
+  // }, [data.index]);
+
   useEffect(() => {
-    sliderRef.current?.slickGoTo(data.index);
-  }, [data.index]);
+    setData("q_seat", SEAT_OPTIONS[0] ? SEAT_OPTIONS[0].value : "P.001 Padang Besar, Perlis");
+  }, [data.seats_list]);
 
   // useEffect(() => {
   //   get("/explorer", {
@@ -252,6 +256,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       .then(() => setData("section2_loading", false));
   }, [data.index, data.open]);
   // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
+
   return (
     <>
       <Hero
@@ -552,7 +557,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       key={index}
                       className={clx(
                         "mx-2 flex flex-col gap-2 rounded-xl border p-3 text-sm",
-                        item.value === data.q_seat
+                        item.seat === data.q_seat
                           ? "border-dim"
                           : "border-outline dark:border-outlineHover-dark"
                       )}
