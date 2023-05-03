@@ -137,7 +137,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                         {cell.column.columnDef.id === "party" ? (
                           <>
                             <ImageWithFallback
-                              className="items-center"
+                              className="items-center self-center"
                               src={`/static/images/parties/${cell.getValue()}.png`}
                               width={28}
                               height={16}
@@ -328,11 +328,14 @@ export default BorderlessTable;
 
 interface BarMeterProps {
   perc: number;
+  width?: number;
 }
 
-export const BarMeter: FunctionComponent<BarMeterProps> = ({ perc }) => {
+export const BarMeter: FunctionComponent<BarMeterProps> = ({ perc, width = 50 }) => {
   return (
-    <div className="bg-outline dark:bg-outlineHover-dark relative flex h-[5px] w-[30px] self-center rounded-md lg:w-[50px]">
+    <div
+      className={`bg-outline dark:bg-outlineHover-dark relative flex h-[5px] w-[30px] self-center rounded-md lg:w-[${width}px]`}
+    >
       <div
         className="absolute left-0 top-0 z-10 h-full rounded-xl bg-black dark:bg-white"
         style={{
@@ -371,7 +374,7 @@ export const Lost: FunctionComponent<LostProps> = ({ desc }) => {
 };
 
 interface FullResultProps {
-  desc: string;
+  desc?: string;
   onClick: () => void;
 }
 
@@ -379,11 +382,11 @@ export const FullResult: FunctionComponent<FullResultProps> = ({ desc, onClick }
   return (
     <div className="flex items-center justify-center">
       <button
-        className="flex flex-row items-center gap-1.5 px-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+        className="flex flex-row items-center pl-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
         onClick={onClick}
       >
         <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-        <p className="font-normal">{desc}</p>
+        {desc && <p className="pl-1.5 font-normal">{desc}</p>}
       </button>
     </div>
   );

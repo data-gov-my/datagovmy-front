@@ -17,7 +17,7 @@ interface CardProps {
   columns?: any;
   title?: string | ReactElement;
   win?: string;
-  date: string;
+  date?: string;
   election_name: string;
   isLoading: boolean;
   highlightedRow?: false | number;
@@ -91,7 +91,7 @@ const Card: FunctionComponent<CardProps> = ({
                     className="text-dim absolute right-4 top-4 h-6 w-6 cursor-pointer items-center"
                   />
                   <div className="space-x-3 pt-3">
-                    <span className="text-dim">{date}</span>
+                    {date ? <span className="text-dim">{date}</span> : <></>}
                     <span className="uppercase text-black dark:text-white">{election_name}</span>
                   </div>
                   <BorderlessTable
