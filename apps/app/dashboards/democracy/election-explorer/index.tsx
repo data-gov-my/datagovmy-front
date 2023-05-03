@@ -22,6 +22,7 @@ import {
   Section,
   StateDropdown,
   Tabs,
+  Tooltip,
 } from "@components/index";
 import Label from "@components/Label";
 import LeftRightCard from "@components/LeftRightCard";
@@ -230,7 +231,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
         );
       })
       .then(() => setData("section2_loading", false));
-  }, [data.q_seat]);
+  }, [data.q_seat, data.state, data.election, data.type]);
 
   useEffect(() => {
     setData("section2_loading", true);
@@ -247,7 +248,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
           "result",
           data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
-        console.log(data);
       })
       .then(() => setData("section2_loading", false));
   }, [data.index, data.open]);
@@ -562,12 +562,16 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           <span className="font-medium">{item.seat.slice(0, 5)}</span>
                           <span>{item.seat.slice(5)}</span>
                         </div>
-                        <FullResult
-                          onClick={() => {
-                            setData("open", true);
-                            setData("index", index);
-                          }}
-                        />
+                        <Tooltip tip={t("full_result")}>
+                          {open => (
+                            <FullResult
+                              onClick={() => {
+                                setData("open", true);
+                                setData("index", index);
+                              }}
+                            />
+                          )}
+                        </Tooltip>
                       </div>
                       <div className="flex flex-row gap-1.5">
                         <ImageWithFallback
