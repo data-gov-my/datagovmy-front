@@ -29,6 +29,9 @@ interface SekolahkuProps {
   bellcurve_linechart: any;
 }
 
+const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
+const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
+
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   //   dropdown_data,
   sekolahku_info,
@@ -37,8 +40,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   bellcurve_callout,
   bellcurve_linechart,
 }) => {
-  const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
-  const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
   const router = useRouter();
 
