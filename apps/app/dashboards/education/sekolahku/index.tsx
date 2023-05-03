@@ -159,8 +159,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-col rounded-xl border border-slate-200 dark:border-zinc-800 lg:max-h-[400px] lg:w-[800px] lg:flex-row">
-              <div className="flex items-center border-slate-200 dark:border-zinc-800 dark:bg-zinc-800/50 lg:basis-1/2 lg:border-r">
+            <div className="flex w-full flex-col rounded-xl border border-slate-200 dark:border-zinc-800 lg:max-h-[400px] lg:w-[800px] lg:flex-row">
+              <div className="flex items-center justify-center border-slate-200 dark:border-zinc-800 dark:bg-zinc-800/50 lg:basis-1/2 lg:border-r">
                 <div className="flex flex-col items-center justify-center gap-6 p-8 text-center lg:h-[400px] lg:w-[400px]">
                   <Spinner loading={data.loading} />
                   {data.loading || (
