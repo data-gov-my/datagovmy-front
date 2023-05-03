@@ -7,8 +7,7 @@ import Slider from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { getTopIndices } from "@lib/helpers";
@@ -36,9 +35,6 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
   choropleth,
 }) => {
   const { t } = useTranslation(["dashboard-peka-b40", "common"]);
-
-  const windowWidth = useWindowWidth();
-  const isMobile = windowWidth < BREAKPOINTS.MD;
   const currentState = params.state;
   const { data, setData } = useData({
     minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
@@ -157,9 +153,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
             }
             right={
               <Choropleth
-                className={(isMobile ? "h-[400px] w-auto" : "h-[500px] w-full").concat(
-                  " rounded-b"
-                )}
+                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
                 color="purples"
                 data={{
                   labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),

@@ -25,14 +25,16 @@ export const withi18n = <T extends Context>(
   getProps: (ctx: T) => Promise<ResolvedProps>
 ): ((ctx: T) => Promise<ResolvedProps>) => {
   return async (context: T) => {
-    const props = await getProps(context);
     const namespaces =
       namespace === null
         ? ["common"]
         : Array.isArray(namespace)
         ? namespace.concat("common")
         : [namespace].concat("common");
+
     const i18n = await serverSideTranslations(context.locale!, namespaces, null);
+    const props = await getProps(context);
+
     return merge({ props: i18n }, props);
   };
 };

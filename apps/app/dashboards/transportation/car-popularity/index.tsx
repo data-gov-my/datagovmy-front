@@ -1,19 +1,17 @@
 import AgencyBadge from "@components/AgencyBadge";
 import { Button, Dropdown, Hero, Section } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo } from "react";
 import Container from "@components/Container";
 import { JPJIcon } from "@components/Icon/agency";
 import Card from "@components/Card";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import dynamic from "next/dynamic";
 import { useData } from "@hooks/useData";
-import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
 import { OptionType } from "@components/types";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
-import { useTheme } from "next-themes";
 import Spinner from "@components/Spinner";
 
 /**
@@ -27,8 +25,7 @@ interface CarPopularityProps {
 
 const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) => {
   const { t, i18n } = useTranslation(["dashboard-car-popularity", "common"]);
-  const windowWidth = useWindowWidth();
-  const { theme } = useTheme();
+  const { breakpoint } = useContext(WindowContext);
   const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
   const { data, setData } = useData({
@@ -204,9 +201,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                           backgroundColor: AKSARA_COLOR.PRIMARY_H,
                           borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth:
-                            windowWidth <= BREAKPOINTS.MD
+                            breakpoint <= BREAKPOINTS.MD
                               ? 0.75
-                              : windowWidth <= BREAKPOINTS.LG
+                              : breakpoint <= BREAKPOINTS.LG
                               ? 1.0
                               : 1.5,
                           fill: true,
@@ -228,9 +225,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                           backgroundColor: AKSARA_COLOR.PRIMARY_H,
                           borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth:
-                            windowWidth <= BREAKPOINTS.MD
+                            breakpoint <= BREAKPOINTS.MD
                               ? 0.75
-                              : windowWidth <= BREAKPOINTS.LG
+                              : breakpoint <= BREAKPOINTS.LG
                               ? 1.0
                               : 1.5,
                           fill: true,
