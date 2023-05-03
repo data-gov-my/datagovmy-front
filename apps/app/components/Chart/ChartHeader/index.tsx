@@ -24,7 +24,7 @@ const ChartHeader: FunctionComponent<ChartHeaderProps> = ({
         <div className={clx("flex flex-wrap items-start justify-between gap-2", className)}>
           <div>
             {title && typeof title === "string" ? (
-              <span className="text-base font-bold dark:text-white">{title}</span>
+              <span className="text-lg font-bold dark:text-white">{title}</span>
             ) : (
               title
             )}

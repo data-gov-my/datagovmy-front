@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, ReactNode, useMemo } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import { CountryAndStates } from "@lib/constants";
 import { clx, limitMax, maxBy, numFormat } from "@lib/helpers";
@@ -12,7 +12,7 @@ interface BarMeterProps extends ChartHeaderProps {
   relative?: boolean;
   sort?: "asc" | "desc" | ((a: BarMeterData, b: BarMeterData) => number);
   layout?: "horizontal" | "vertical" | "state-horizontal";
-  formatY?: (value: number) => string;
+  formatY?: (value: number, key?: string) => ReactNode;
   formatX?: (key: string) => string;
 }
 
@@ -67,10 +67,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
           <div className="space-y-1 pb-2" key={item.x.concat(`_${index}`)}>
             <div className="flex justify-between">
               <p>{formatX ? formatX(item.x) : item.x}</p>
-              <p className="text-dim dark:text-white">
-                {formatY ? formatY(item.y) : numFormat(item.y, "standard", 1)}
+              <div className="text-dim dark:text-white">
+                {formatY ? formatY(item.y, item.x) : numFormat(item.y, "standard", 1)}
                 {unit}
-              </p>
+              </div>
             </div>
 
             <div className="bg-washed dark:bg-washed-dark flex h-2.5 w-full overflow-x-hidden rounded-full">
@@ -141,10 +141,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
             <div className="block space-y-1 pb-2 lg:hidden" key={item.x.concat(`_${index}`)}>
               <div className="flex justify-between">
                 <p>{formatX ? formatX(item.x) : item.x}</p>
-                <p className="text-dim dark:text-white">
-                  {formatY ? formatY(item.y) : numFormat(item.y, "standard", 1)}
+                <div className="text-dim dark:text-white">
+                  {formatY ? formatY(item.y, item.x) : numFormat(item.y, "standard", 1)}
                   {unit}
-                </p>
+                </div>
               </div>
 
               <div className="bg-washed dark:bg-washed-dark flex h-2.5 w-full overflow-x-hidden rounded-full">
@@ -160,7 +160,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-6">
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
       <div className={clx(layout_style[layout], className)}>
         {_data?.map((item, index) => {
