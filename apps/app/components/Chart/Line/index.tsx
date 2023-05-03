@@ -11,10 +11,14 @@ import {
   TimeSeriesScale,
   Filler,
 } from "chart.js";
+import AnnotationPlugin from "chartjs-plugin-annotation";
 
 import { Line as LineCanvas } from "react-chartjs-2";
 import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
+import { Stats, StatProps } from "../Timeseries";
+import { CrosshairPlugin } from "chartjs-plugin-crosshair";
+import { useTheme } from "next-themes";
 
 interface LineProps extends ChartHeaderProps {
   className?: string;
@@ -27,6 +31,12 @@ interface LineProps extends ChartHeaderProps {
   maxY?: number | "auto";
   enableGridX?: boolean;
   enableGridY?: boolean;
+  stats?: Array<StatProps> | null;
+  annotation?: any;
+  graceX?: number | string;
+  enableTooltip?: boolean;
+  enableCrosshair?: boolean;
+  enableLegend?: boolean;
 }
 
 const Line: FunctionComponent<LineProps> = ({
@@ -44,6 +54,12 @@ const Line: FunctionComponent<LineProps> = ({
   enableGridY = true,
   minY,
   maxY,
+  stats,
+  annotation = null,
+  graceX = 0,
+  enableTooltip = false,
+  enableCrosshair = false,
+  enableLegend = false,
 }) => {
   ChartJS.register(
     CategoryScale,
@@ -53,30 +69,49 @@ const Line: FunctionComponent<LineProps> = ({
     TimeScale,
     TimeSeriesScale,
     Filler,
-    ChartTooltip
+    ChartTooltip,
+    CrosshairPlugin,
+    AnnotationPlugin
   );
+
+  const { theme } = useTheme();
 
   const options: ChartCrosshairOption<"line"> = {
     maintainAspectRatio: false,
     responsive: true,
+    normalized: true,
     plugins: {
-      crosshair: {
-        line: {
-          width: 0,
-          color: "#000",
-          dashPattern: [6, 4],
-        },
-        zoom: {
-          enabled: false,
-        },
-        sync: {
-          enabled: false,
-        },
+      legend: {
+        display: enableLegend,
+        position: "chartArea" as const,
+        align: "start",
+      },
+      crosshair: enableCrosshair
+        ? {
+            line: {
+              width: 0,
+              color: theme === "light" ? "#000" : "#FFF",
+              dashPattern: [6, 4],
+            },
+            zoom: {
+              enabled: false,
+            },
+            sync: {
+              enabled: false,
+            },
+          }
+        : false,
+      tooltip: {
+        enabled: enableTooltip,
+      },
+      annotation: {
+        annotations: { annotation },
       },
     },
     scales: {
       x: {
         type: type,
+        grace: graceX,
         grid: {
           display: enableGridX,
           borderWidth: 1,
@@ -117,9 +152,12 @@ const Line: FunctionComponent<LineProps> = ({
   };
 
   return (
-    <div>
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-      {subheader && <div className="py-4">{subheader}</div>}
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+        {subheader && <div className="text-dim text-sm">{subheader}</div>}
+        {stats && <Stats data={stats} />}
+      </div>
       <div className={className}>
         <LineCanvas options={options} data={data} />
       </div>

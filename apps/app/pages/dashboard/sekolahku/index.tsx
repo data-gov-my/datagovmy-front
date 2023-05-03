@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
@@ -7,24 +7,59 @@ import { useTranslation } from "@hooks/useTranslation";
 import SekolahkuDashboard from "@dashboards/education/sekolahku";
 import { withi18n } from "@lib/decorators";
 
-const Sekolahku: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Sekolahku: Page = ({
+  dropdown_data,
+  sekolahku_info,
+  sekolahku_barmeter,
+  bellcurve_school,
+  bellcurve_callout,
+  bellcurve_linechart,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-sekolahku", "common"]);
 
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <SekolahkuDashboard />
+      <SekolahkuDashboard
+        dropdown_data={dropdown_data}
+        sekolahku_info={sekolahku_info}
+        sekolahku_barmeter={sekolahku_barmeter}
+        bellcurve_school={bellcurve_school}
+        bellcurve_callout={bellcurve_callout}
+        bellcurve_linechart={bellcurve_linechart}
+      />
     </>
   );
 };
-// Disabled
-export const getStaticProps: GetStaticProps = withi18n("dashboard-sekolahku", async () => {
-  //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
-  return {
-    notFound: false,
-    props: {},
-  };
+export const getStaticProps: GetStaticProps = withi18n("dashboard-sekolahku", async () => {
+  try {
+    /**
+     * TODO (@jiaxin): Replace {#1} with {#2}. At initial load, dropdown_data consists of suggested selection of schools (10 max)
+     */
+    // #1
+    const { data } = await get("/dashboard", { dashboard: "sekolahku", code: "PEB1094" });
+
+    // #2
+    // const [dropdown, school] = await Promise.all([get("/dropdown", { dashboard: "sekolahku" }), get("/dashboard", { dashboard: "sekolahku", code: "PEB1094" })])
+
+    return {
+      notFound: false,
+      props: {
+        dropdown_data: "", // dropdown_data.query_values.data.data,
+        sekolahku_info: data.sekolahku_info.data,
+        sekolahku_barmeter: data.sekolahku_barmeter.data,
+        bellcurve_school: data.bellcurve_school.data,
+        bellcurve_callout: data.bellcurve_callout.data.data,
+        bellcurve_linechart: data.bellcurve_linechart.data.data,
+      },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 });
 
 export default Sekolahku;
