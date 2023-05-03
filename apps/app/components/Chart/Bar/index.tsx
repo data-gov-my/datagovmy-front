@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo, useRef } from "react";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "@components/Chart/ChartHeader";
 import {
   Chart as ChartJS,
@@ -14,7 +14,7 @@ import { Bar as BarCanvas, getElementAtEvent } from "react-chartjs-2";
 import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import type { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 
@@ -72,7 +72,7 @@ const Bar: FunctionComponent<BarProps> = ({
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
   const isVertical = useMemo(() => layout === "vertical", [layout]);
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
   const { theme } = useTheme();
 
@@ -85,7 +85,7 @@ const Bar: FunctionComponent<BarProps> = ({
   };
 
   const displayLabel = (value: string) => {
-    if (windowWidth >= BREAKPOINTS.MD) return formatX ? formatX(value) : value;
+    if (breakpoint >= BREAKPOINTS.MD) return formatX ? formatX(value) : value;
 
     if (formatX) {
       return formatX(value).length > 25 ? formatX(value).slice(0, 25).concat("..") : formatX(value);

@@ -1,34 +1,32 @@
 import { statesOptions } from "@lib/options";
-import { routes } from "@lib/routes";
 import Link from "next/link";
 import Image from "next/image";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 import Modal from ".";
-import { useRouter } from "next/router";
-import { useWindowScroll } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import { useTranslation } from "@hooks/useTranslation";
 
 interface StateModalProps {
+  state: string;
   exclude?: string[];
   url: string;
   title?: string;
 }
 
-const StateModal: FunctionComponent<StateModalProps> = ({ exclude, url, title }) => {
-  const router = useRouter();
-  const scroll = useWindowScroll();
-  const currentState = (router.query.state as string) ?? "mys";
+const StateModal: FunctionComponent<StateModalProps> = ({ state, exclude, url, title }) => {
+  const { scroll } = useContext(WindowContext);
+  const currentState = state || "mys";
   const { t } = useTranslation();
 
   const [show, setShow] = useState(false);
-  const [lastPosition, setLastPosition] = useState(scroll.scrollY);
+  const [lastPosition, setLastPosition] = useState(scroll.y);
 
   useEffect(() => {
-    if (lastPosition > scroll.scrollY) setShow(true);
+    if (lastPosition > scroll.y) setShow(true);
     else setShow(false);
 
-    setLastPosition(scroll.scrollY);
-  }, [scroll.scrollY]);
+    setLastPosition(scroll.y);
+  }, [scroll.y]);
 
   return (
     <Modal

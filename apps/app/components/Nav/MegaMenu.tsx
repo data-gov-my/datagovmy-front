@@ -3,7 +3,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 import { BREAKPOINTS } from "@lib/constants";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+// import { useWindowWidth } from "@hooks/useWindowWidth";
 
 /**
  * @deprecated No longer used. To revisit when the need arises
@@ -15,8 +15,8 @@ type MegaMenuProps = {
 };
 
 const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
-  const windowWidth = useWindowWidth();
-  const isTablet = windowWidth >= BREAKPOINTS.MD;
+  //   const windowWidth = useWindowWidth();
+  const isTablet = false; // windowWidth >= BREAKPOINTS.MD;
 
   const [isOpen, setIsOpen] = useState(false);
 

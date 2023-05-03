@@ -1,4 +1,12 @@
-import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FunctionComponent,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import dynamic from "next/dynamic";
 import Card from "@components/Card";
 import ComboBox from "@components/Combobox";
@@ -21,7 +29,6 @@ import { List, Panel } from "@components/Tabs";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
-import { useWindowScroll, useWindowWidth } from "@hooks/useWindowWidth";
 import { useTranslation } from "@hooks/useTranslation";
 import {
   BuildingLibraryIcon,
@@ -45,6 +52,7 @@ import Slider from "react-slick";
 import { BarMeter, FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
 import { DateTime } from "luxon";
 import ElectionCard from "@components/Card/ElectionCard";
+import { WindowContext } from "@hooks/useWindow";
 
 /**
  * Election Explorer Dashboard
@@ -63,13 +71,12 @@ interface ElectionExplorerProps {
 
 const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, query }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-  const windowWidth = useWindowWidth();
 
   const sliderRef = useRef<Slider>(null);
   const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
-  const scroll = useWindowScroll();
-  const show = useMemo(() => scroll.scrollY > 400, [scroll.scrollY]);
+  const { breakpoint, scroll } = useContext(WindowContext);
+  const show = useMemo(() => scroll.y > 400, [scroll.y]);
 
   useEffect(() => {
     const div = divRef.current;
@@ -587,10 +594,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     </div>
                   ))}
                   itemsToScroll={
-                    windowWidth <= BREAKPOINTS.MD ? 2 : windowWidth <= BREAKPOINTS.LG ? 3 : 4
+                    breakpoint <= BREAKPOINTS.MD ? 2 : breakpoint <= BREAKPOINTS.LG ? 3 : 4
                   }
                   itemsToShow={
-                    windowWidth <= BREAKPOINTS.MD ? 2 : windowWidth <= BREAKPOINTS.LG ? 3 : 4
+                    breakpoint <= BREAKPOINTS.MD ? 2 : breakpoint <= BREAKPOINTS.LG ? 3 : 4
                   }
                 />
               </div>

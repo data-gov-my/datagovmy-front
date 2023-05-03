@@ -45,10 +45,14 @@ CovidVaccinationState.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={
-      <StateDropdown url={routes.COVID_VACCINATION} currentState={props?.state} hideOnScroll />
+      <StateDropdown
+        url={routes.COVID_VACCINATION}
+        currentState={props?.params.state}
+        hideOnScroll
+      />
     }
   >
-    <StateModal url={routes.COVID_VACCINATION} />
+    <StateModal state={props.params.state} url={routes.COVID_VACCINATION} />
     {page}
   </Layout>
 );

@@ -1,13 +1,11 @@
 import { ChartHeaderProps, default as ChartHeader } from "@components/Chart/ChartHeader";
 import { Chart as ChartJS } from "chart.js";
 import { ChoroplethController, GeoFeature, ColorScale, ProjectionScale } from "chartjs-chart-geo";
-import { ForwardedRef, FunctionComponent, useEffect, useMemo, useState } from "react";
+import { ForwardedRef, FunctionComponent, useEffect, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
 // import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { BREAKPOINTS } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import type { ChartCrosshairOption, Geotype } from "@lib/types";
 import type { FeatureCollection } from "geojson";
 import type { Color } from "@hooks/useColor";
@@ -54,20 +52,24 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   onReady,
   _ref,
 }) => {
-  const windowWidth = useWindowWidth();
-  const [choromap, setChoromap] = useState<FeatureCollection | undefined>(undefined);
+  const [desktopMap, setDesktopMap] = useState<FeatureCollection | undefined>(undefined);
+  const [mobileMap, setMobileMap] = useState<FeatureCollection | undefined>(undefined);
   ChartJS.register(ChoroplethController, ProjectionScale, ColorScale, GeoFeature);
 
-  const viewport = useMemo<"desktop" | "mobile">(() => {
-    return windowWidth < BREAKPOINTS.MD ? "mobile" : "desktop";
-  }, [windowWidth]);
-
   useEffect(() => {
-    import(`@lib/geojson/${type}/_${viewport}`).then(item => {
-      setChoromap(item.default as unknown as FeatureCollection);
+    const fetchMaps = async () => {
+      const [desktop, mobile] = await Promise.all([
+        import(`@lib/geojson/${type}/_desktop`),
+        import(`@lib/geojson/${type}/_mobile`),
+      ]);
+
+      setDesktopMap(desktop.default as FeatureCollection);
+      setMobileMap(mobile.default as FeatureCollection);
       if (onReady) onReady(true);
-    });
-  }, [type, viewport]);
+    };
+
+    fetchMaps();
+  }, []);
 
   const options: ChartCrosshairOption<"choropleth"> = {
     elements: {
@@ -117,31 +119,60 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   return (
     <div className="relative">
       <ChartHeader title={title} menu={menu} controls={controls} />
-      <div className={["p-4 transition-all", className].join(" ")}>
-        {choromap && (
-          <Chart
-            id={id}
-            ref={_ref}
-            type="choropleth"
-            data={{
-              labels: data.labels,
-              datasets: [
-                {
-                  label: "",
-                  borderWidth: 0.25,
-                  borderColor: "#000",
-                  outline: choromap.features,
-                  data: choromap
-                    ? choromap.features.map((feature: any) => ({
-                        feature: feature,
-                        value: data.values[data.labels.indexOf(feature.properties[type])],
-                      }))
-                    : [],
-                },
-              ],
-            }}
-            options={options}
-          />
+      <div className={clx("p-4 transition-all", className)}>
+        {desktopMap && (
+          <div className="hidden h-full w-full lg:block">
+            <Chart
+              id={id}
+              ref={_ref}
+              type="choropleth"
+              data={{
+                labels: data.labels,
+                datasets: [
+                  {
+                    label: "",
+                    borderWidth: 0.25,
+                    borderColor: "#000",
+                    outline: desktopMap.features,
+                    data: desktopMap
+                      ? desktopMap.features.map((feature: any) => ({
+                          feature: feature,
+                          value: data.values[data.labels.indexOf(feature.properties[type])],
+                        }))
+                      : [],
+                  },
+                ],
+              }}
+              options={options}
+            />
+          </div>
+        )}
+        {mobileMap && (
+          <div className="block h-full w-full lg:hidden">
+            <Chart
+              id={id}
+              ref={_ref}
+              type="choropleth"
+              data={{
+                labels: data.labels,
+                datasets: [
+                  {
+                    label: "",
+                    borderWidth: 0.25,
+                    borderColor: "#000",
+                    outline: mobileMap.features,
+                    data: mobileMap
+                      ? mobileMap.features.map((feature: any) => ({
+                          feature: feature,
+                          value: data.values[data.labels.indexOf(feature.properties[type])],
+                        }))
+                      : [],
+                  },
+                ],
+              }}
+              options={options}
+            />
+          </div>
         )}
       </div>
       {/* {enableZoom && (

@@ -34,6 +34,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+.turbo
 
 # typescript
 *.tsbuildinfo
@@ -47,7 +48,6 @@ index.html
 
 
 # sitemaps
-
 robots.txt
 sitemap-0.xml
 sitemap.xml
@@ -58,3 +58,4 @@ analyze
 
 # app
 apps/app/public/locales
+.turbo

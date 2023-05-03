@@ -1,16 +1,15 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo } from "react";
 import { Container, Hero, Section, StateDropdown, Button, Dropdown } from "@components/index";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import AgencyBadge from "@components/AgencyBadge";
 import { CakeIcon, MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
 import { JPNIcon } from "@components/Icon/agency";
 import Card from "@components/Card";
 import { DateTime } from "luxon";
-import { numFormat } from "@lib/helpers";
 import { get } from "@lib/api";
 import { OptionType } from "@components/types";
 import Daterange from "@components/Dropdown/Daterange";
@@ -33,7 +32,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   timeseries,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common"]);
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
 
   const filterPeriods: Array<OptionType> = [
     { label: t("section_2.by_date"), value: "day" },
@@ -101,6 +100,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
           setData(key, data[key]);
         }
       })
+      .catch(e => console.error(e))
       .then(() => setData("loading", false));
   };
 
@@ -167,7 +167,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         <Section title={t("section_1.title")} description={t("section_1.description")}>
           <div className="flex flex-col gap-8 rounded-xl lg:flex-row">
             <Card
-              className="border-outline dark:border-washed-dark flex basis-1/3 flex-col justify-between rounded-xl border p-6"
+              className="border-outline dark:border-washed-dark flex flex-shrink-0 basis-1/3 flex-col justify-between rounded-xl border p-6"
               type="gray"
             >
               <div>
@@ -185,10 +185,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   onChange={selected => setData("p_birthday", selected.target.value)}
                   required
                   onKeyDown={e => {
-                    if (e.key === "Enter")
-                      validateDate()
-                        .then(({ birthday, state }) => fetchData(yieldParams(birthday, state)))
-                        .catch(e => console.error(e));
+                    if (e.key === "Enter") validateDate();
                   }}
                   min={"1923-01-01"}
                   max={"2017-12-31"}
@@ -205,9 +202,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 <Button
                   className="from-primary-dark to-primary my-6 bg-gradient-to-b text-white"
                   onClick={() => {
-                    validateDate()
-                      .then(({ birthday, state }) => fetchData(yieldParams(birthday, state)))
-                      .catch(e => console.error(e));
+                    validateDate();
                   }}
                   icon={<SearchIcon className="h-4 w-4 text-white" />}
                 >
@@ -438,9 +433,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderColor: AKSARA_COLOR.PRIMARY,
                     borderWidth:
-                      windowWidth <= BREAKPOINTS.MD
+                      breakpoint <= BREAKPOINTS.MD
                         ? 0.75
-                        : windowWidth <= BREAKPOINTS.LG
+                        : breakpoint <= BREAKPOINTS.LG
                         ? 1.0
                         : 1.5,
                     fill: true,
