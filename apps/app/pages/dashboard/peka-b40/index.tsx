@@ -30,12 +30,14 @@ const PekaB40: Page = ({
   );
 };
 
-PekaB40.layout = page => (
+PekaB40.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={<StateDropdown url={routes.PEKA_B40} currentState={"mys"} hideOnScroll />}
+    stateSelector={
+      <StateDropdown url={routes.PEKA_B40} currentState={props.params.state} hideOnScroll />
+    }
   >
-    <StateModal url={routes.PEKA_B40} />
+    <StateModal state={props.params.state} url={routes.PEKA_B40} />
     {page}
   </Layout>
 );

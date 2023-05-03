@@ -1,10 +1,10 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo } from "react";
 import { Container, Hero, Section, StateDropdown, Button, Dropdown } from "@components/index";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import AgencyBadge from "@components/AgencyBadge";
 import { CakeIcon, MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
 import { JPNIcon } from "@components/Icon/agency";
@@ -32,7 +32,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   timeseries,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common"]);
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
 
   const filterPeriods: Array<OptionType> = [
     { label: t("section_2.by_date"), value: "day" },
@@ -433,9 +433,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderColor: AKSARA_COLOR.PRIMARY,
                     borderWidth:
-                      windowWidth <= BREAKPOINTS.MD
+                      breakpoint <= BREAKPOINTS.MD
                         ? 0.75
-                        : windowWidth <= BREAKPOINTS.LG
+                        : breakpoint <= BREAKPOINTS.LG
                         ? 1.0
                         : 1.5,
                     fill: true,

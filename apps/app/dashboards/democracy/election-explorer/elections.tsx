@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Button, Dropdown, Modal, Section, StateDropdown, Tabs } from "@components/index";
@@ -14,7 +14,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates, PoliticalParty, PoliticalPartyColours } from "@lib/constants";
 import { clx, numFormat } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useWindowScroll } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 
 /**
  * Election Explorer Dashboard - Elections Tab
@@ -33,8 +33,8 @@ const Election: FunctionComponent<ElectionProps> = ({}) => {
   const { t, i18n } = useTranslation();
   const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
-  const scroll = useWindowScroll();
-  const show = useMemo(() => scroll.scrollY > 350, [scroll.scrollY]);
+  const { scroll } = useContext(WindowContext);
+  const show = useMemo(() => scroll.y > 350, [scroll.y]);
 
   useEffect(() => {
     const div = divRef.current;

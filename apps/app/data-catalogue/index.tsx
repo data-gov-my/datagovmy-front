@@ -21,6 +21,7 @@ import {
   useImperativeHandle,
   ReactNode,
   ForwardedRef,
+  useContext,
 } from "react";
 import Image from "next/image";
 import Label from "@components/Label";
@@ -28,7 +29,7 @@ import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { OptionType } from "@components/types";
 import Sidebar from "@components/Sidebar";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import Daterange from "@components/Dropdown/Daterange";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
@@ -59,7 +60,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const { t } = useTranslation();
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     let resultCollection: Array<[string, Catalogue[]]> = [];
@@ -105,7 +106,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: windowWidth <= BREAKPOINTS.LG ? "start" : "center",
+              block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }
