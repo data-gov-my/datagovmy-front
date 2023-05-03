@@ -1,6 +1,6 @@
 import { Transition, Dialog } from "@headlessui/react";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { Fragment, FunctionComponent, ReactNode, useState } from "react";
+import { WindowContext } from "@hooks/useWindow";
+import { Fragment, FunctionComponent, ReactNode, useContext, useState } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 import { BREAKPOINTS } from "@lib/constants";
@@ -13,7 +13,7 @@ type TooltipProps = {
 };
 
 const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip }) => {
-  const width = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -35,7 +35,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip }) => {
         </>
       )}
 
-      {width > BREAKPOINTS.MD ? (
+      {breakpoint > BREAKPOINTS.MD ? (
         <div className="tooltip-content">{tip}</div>
       ) : (
         <Transition.Root show={isOpen} as={Fragment}>

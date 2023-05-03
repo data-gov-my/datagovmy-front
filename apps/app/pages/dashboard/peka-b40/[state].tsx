@@ -43,7 +43,7 @@ PekaB40State.layout = (page, props) => (
       <StateDropdown url={routes.PEKA_B40} currentState={props?.params.state} hideOnScroll />
     }
   >
-    <StateModal url={routes.PEKA_B40} />
+    <StateModal state={props.params.state} url={routes.PEKA_B40} />
     {page}
   </Layout>
 );

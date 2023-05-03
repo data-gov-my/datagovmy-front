@@ -1,11 +1,11 @@
 import { ChartHeaderProps, default as ChartHeader } from "@components/Chart/ChartHeader";
 import { Chart as ChartJS } from "chart.js";
 import { ChoroplethController, GeoFeature, ColorScale, ProjectionScale } from "chartjs-chart-geo";
-import { ForwardedRef, FunctionComponent, useEffect, useMemo, useState } from "react";
+import { ForwardedRef, FunctionComponent, useContext, useEffect, useMemo, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
 // import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import type { ChartCrosshairOption, Geotype } from "@lib/types";
@@ -52,20 +52,17 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   onReady,
   _ref,
 }) => {
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
   const [choromap, setChoromap] = useState<FeatureCollection | undefined>(undefined);
   ChartJS.register(ChoroplethController, ProjectionScale, ColorScale, GeoFeature);
 
-  const viewport = useMemo<"desktop" | "mobile">(() => {
-    return windowWidth < BREAKPOINTS.MD ? "mobile" : "desktop";
-  }, [windowWidth]);
-
   useEffect(() => {
+    const viewport = breakpoint > BREAKPOINTS.MD ? "desktop" : "mobile";
     import(`@lib/geojson/${type}/_${viewport}`).then(item => {
       setChoromap(item.default as unknown as FeatureCollection);
       if (onReady) onReady(true);
     });
-  }, [type, viewport]);
+  }, [type, breakpoint]);
 
   const options: ChartCrosshairOption<"choropleth"> = {
     elements: {

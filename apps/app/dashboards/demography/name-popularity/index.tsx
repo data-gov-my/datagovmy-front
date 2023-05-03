@@ -10,12 +10,12 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { useWatch } from "@hooks/useWatch";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "@hooks/useWindow";
 import { get } from "@lib/api";
 import { BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
@@ -27,8 +27,9 @@ interface NamePopularityDashboardProps {}
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
   const { t, i18n } = useTranslation(["dashboard-name-popularity", "common"]);
-  const windowWidth = useWindowWidth();
-  const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
+  const { breakpoint } = useContext(WindowContext);
+
+  const showPlaceholder = breakpoint >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },

@@ -9,13 +9,12 @@ import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWindowWidth } from "@hooks/useWindowWidth";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { getTopIndices } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
@@ -53,8 +52,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   choropleth_malaysia_blood_donation,
 }) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
-  const windowWidth = useWindowWidth();
-  const isMobile = windowWidth < BREAKPOINTS.MD;
+
   const currentState = params.state;
 
   const { data, setData } = useData({
@@ -110,7 +108,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           <p className="font-bold">{t("choro_ranking")}</p>
           {topStateIndices.map((pos, i) => {
             return (
-              <div className="flex space-x-3">
+              <div className="flex space-x-3" key={pos}>
                 <div className="text-dim font-medium">#{i + 1}</div>
                 <div className="grow">
                   {CountryAndStates[choropleth_malaysia_blood_donation.data.x[pos]]}
@@ -130,7 +128,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   const section2right = (
     <div>
       <Choropleth
-        className={(isMobile ? "h-[400px] w-auto" : "h-[500px] w-full").concat(" rounded-b")}
+        className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
         color="reds"
         data={{
           labels: choropleth_malaysia_blood_donation.data.x.map(
