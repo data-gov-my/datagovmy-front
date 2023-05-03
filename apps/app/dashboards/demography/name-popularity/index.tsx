@@ -463,7 +463,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                               >
                                 {i + 1}
                               </td>
-                              <td className="border-b-outline dark:border-washed-dark border-b p-2 capitalize">
+                              <td className="border-b-outline dark:border-washed-dark truncate border-b p-2 capitalize">
                                 {`${item.name} `.concat(
                                   i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
                                 )}
