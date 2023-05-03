@@ -287,6 +287,20 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                 ? CountryAndStates["mys"]
                 : CountryAndStates[sekolahku_info.state],
           })}
+          description={
+            <div className="flex flex-row gap-6">
+              <div className="flex flex-row gap-2">
+                <div className="bg-primary h-1 w-4 place-self-center rounded" />
+                <span className="text-primary text-sm font-medium	">{sekolahku_info.school}</span>
+              </div>
+              <div className="flex flex-row gap-2">
+                <div className="bg-dim h-1 w-4 place-self-center rounded" />
+                <span className="text-dim text-sm font-medium	">
+                  {t(`section_3.legend_${sekolahku_info.level}`)}
+                </span>
+              </div>
+            </div>
+          }
           menu={
             <Tabs.List
               options={KEY_VARIABLES_SCHEMA.map(item => item.name)}
@@ -341,9 +355,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                             type: "line",
                             borderColor: AKSARA_COLOR.PRIMARY,
                             borderWidth: 2,
-                            adjustScaleRange: true,
                             label: {
-                              display: true,
+                              display: false,
                               backgroundColor: AKSARA_COLOR.PRIMARY,
                               font: {
                                 family: "Inter",
