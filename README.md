@@ -76,7 +76,7 @@ yarn prepare
 
 ## Contributing
 
-Thank you for your willingness to contribute to this free and open source project! When contributing, consider first discussing your desired change with the core team via GitHub issues or discussions!
+Thank you for your willingness to contribute to this free and open source project by the Malaysian public sector! When contributing, consider first discussing your desired change with the core team via GitHub issues or discussions!
 
 ## License
 
