@@ -438,7 +438,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         name={t("election.table")}
                         icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                       >
-                        <BorderlessTable isLoading={data.section1_loading} data={[]} />
+                        <BorderlessTable isLoading={data.section1_loading} />
                       </Panel>
                       <Panel name={t("election.summary")}>
                         <div className="space-y-6">
@@ -718,7 +718,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   name={t("election.table")}
                   icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                 >
-                  <BorderlessTable isLoading={data.section3_loading} data={[]} />
+                  <BorderlessTable isLoading={data.section3_loading} />
                 </Panel>
               </Tabs>
             </div>

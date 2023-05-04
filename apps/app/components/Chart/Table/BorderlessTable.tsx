@@ -37,7 +37,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   className = "",
   title,
   empty,
-  data,
+  data = dummyData,
   columns,
   responsive = true,
   highlightedRow = false,
@@ -391,3 +391,71 @@ export const FullResult: FunctionComponent<FullResultProps> = ({ desc, onClick }
     </div>
   );
 };
+
+const dummyData = [
+  {
+    name: "Rushdan Bin Rusmi",
+    type: "parlimen",
+    date: "2022-11-19",
+    election_name: "GE-15",
+    seat: "P.001 Padang Besar, Perlis",
+    party: "PN",
+    votes: {
+      abs: 24267,
+      perc: 53.583730789613135,
+    },
+    result: "won",
+  },
+  {
+    name: "Ko Chu Liang",
+    type: "parlimen",
+    date: "2022-11-19",
+    election_name: "GE-15",
+    seat: "P.001 Padang Besar, Perlis",
+    party: "WARISAN",
+    votes: {
+      abs: 244,
+      perc: 0.5387740681858328,
+    },
+    result: "lost_deposit",
+  },
+  {
+    name: "Zahidi Bin Zainul Abidin",
+    type: "parlimen",
+    date: "2022-11-19",
+    election_name: "GE-15",
+    seat: "P.001 Padang Besar, Perlis",
+    party: "BEBAS",
+    votes: {
+      abs: 1939,
+      perc: 4.281487369722664,
+    },
+    result: "lost_deposit",
+  },
+  {
+    name: "Zahida Binti Zarik Khan",
+    type: "parlimen",
+    date: "2022-11-19",
+    election_name: "GE-15",
+    seat: "P.001 Padang Besar, Perlis",
+    party: "BN",
+    votes: {
+      abs: 11753,
+      perc: 25.95168698109875,
+    },
+    result: "lost",
+  },
+  {
+    name: "Kapt (B) Hj Mohamad Yahaya",
+    type: "parlimen",
+    date: "2022-11-19",
+    election_name: "GE-15",
+    seat: "P.001 Padang Besar, Perlis",
+    party: "PH",
+    votes: {
+      abs: 7085,
+      perc: 15.644320791379615,
+    },
+    result: "lost",
+  },
+];
