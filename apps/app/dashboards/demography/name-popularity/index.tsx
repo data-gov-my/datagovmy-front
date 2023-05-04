@@ -422,15 +422,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   />
                 </div>
 
-                <table className="w-full table-auto border-collapse md:table-fixed">
+                <table className="w-full table-fixed border-collapse">
                   <thead>
                     <tr className="md:text-md border-b-outline dark:border-washed-dark max-w-full border-b-2 text-left text-sm [&>*]:p-2">
-                      <th className="md:w-[50px]">#</th>
-                      <th className="md:w-1/3">
+                      <th className="w-5 md:w-[50px]">#</th>
+                      <th>
                         {compareData.params.type === "last" ? t("last_name") : t("first_name")}
                       </th>
-                      <th className="md:w-1/3">{t("table_total")}</th>
-                      <th className="md:w-1/3">{t("table_most_popular")}</th>
+                      <th>{t("table_total")}</th>
+                      <th>{t("table_most_popular")}</th>
                     </tr>
                   </thead>
                   <tbody>
