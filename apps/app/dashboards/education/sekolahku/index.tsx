@@ -140,21 +140,25 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
             <div className="w-full space-y-6">
               <h4 className="text-center">{t("section_1.title")}</h4>
               <div className="flex flex-col items-center justify-center space-y-3">
-                <ComboBox
-                  placeholder={t("section_1.search_school")}
-                  options={SCHOOL_OPTIONS}
-                  selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
-                  onChange={e => {
-                    if (e?.value) {
-                      setData("selected_school", e);
-                      setData("loading", true);
-                      router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
-                        scroll: false,
-                        locale: i18n.language,
-                      });
-                    }
-                  }}
-                />
+                <div className="grid w-full grid-cols-12 lg:grid-cols-10">
+                  <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+                    <ComboBox
+                      placeholder={t("section_1.search_school")}
+                      options={SCHOOL_OPTIONS}
+                      selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
+                      onChange={e => {
+                        if (e?.value) {
+                          setData("selected_school", e);
+                          setData("loading", true);
+                          router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
+                            scroll: false,
+                            locale: i18n.language,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
                 <span className="text-dim font-body text-center text-sm">
                   {t("section_1.disclaimer")}
                 </span>
