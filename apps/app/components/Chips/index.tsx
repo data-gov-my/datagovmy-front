@@ -27,12 +27,12 @@ const Chips: FunctionComponent<ChipsProps> = ({
         <li
           key={option.value}
           className={
-            "bg-outline dark:bg-washed-dark flex cursor-pointer flex-row items-center gap-0.5 rounded-full px-2.5 py-1 text-sm font-medium text-black outline-none transition-colors dark:text-white"
+            "bg-outline dark:bg-washed-dark flex cursor-pointer flex-row items-center gap-0.5 truncate rounded-full px-2.5 py-1 text-sm font-medium text-black outline-none transition-colors dark:text-white"
           }
           onClick={() => onRemove(option.value)}
         >
-          <span>{option.label}</span>
-          <XMarkIcon className="h-4 w-4 font-bold text-zinc-500" />
+          <span className="truncate">{option.label}</span>
+          <XMarkIcon className="h-4 w-4 shrink-0 font-bold text-zinc-500" />
         </li>
       ))}
       {data.length > 0 && onClearAll && (
