@@ -25,10 +25,10 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   async ({ query }) => {
     const { data: election } = await get("/explorer", {
       explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "seats",
+      chart: "overall_seat",
+      type: "parlimen",
       election: "GE-15",
-      seat: "Padang Besar, Perlis",
+      state: "pls",
     });
 
     return {

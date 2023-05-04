@@ -226,7 +226,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       chart: "full_result",
       type: "seats",
       election: data.election,
-      seat: data.q_seat,
+      seat: data.data[data.index].seat,
     })
       .then(({ data }) => {
         setData(
@@ -610,7 +610,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       <span>{results[data.data[data.index].result]}</span>
                     </div>
                   }
-                  isLoading={data.section2_Loading}
+                  isLoading={data.section2_loading}
                   data={data.result}
                   highlightedRow={data.result.findIndex(
                     (r: Result) => r.name === data.data[data.index].name
