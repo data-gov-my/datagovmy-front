@@ -82,4 +82,4 @@ Thank you for your willingness to contribute to this free and open source projec
 
 data.gov.my is licensed under [MIT](https://github.com/data-gov-my/datagovmy-front/blob/main/LICENSE)
 
-Copyright © 2023 [Department of Statistics Malaysia](https://www.dosm.gov.my/v1_/)
+Copyright © 2023 [Government of Malaysia](#)

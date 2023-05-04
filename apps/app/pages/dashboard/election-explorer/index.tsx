@@ -1,5 +1,4 @@
-import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
@@ -7,24 +6,39 @@ import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
 import { withi18n } from "@lib/decorators";
 
-const ElectionExplorer: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ElectionExplorer: Page = ({
+  election,
+  query,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard />
+      <ElectionExplorerDashboard election={election} query={query} />
     </>
   );
 };
-// Disabled
-export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
-  //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
-  return {
-    notFound: false,
-    props: {},
-  };
-});
+export const getServerSideProps: GetServerSideProps = withi18n(
+  "dashboard-election-explorer",
+  async ({ query }) => {
+    const { data: election } = await get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "overall_seat",
+      type: "parlimen",
+      election: "GE-15",
+      state: "pls",
+    });
+
+    return {
+      notFound: false,
+      props: {
+        query: query ?? {},
+        election: election,
+      },
+    };
+  }
+);
 
 export default ElectionExplorer;

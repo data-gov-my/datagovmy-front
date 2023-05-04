@@ -105,9 +105,9 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[
-          t("common:dashboard.header").concat(
-            filterRef.current?.source ? `: ${filterRef.current?.source}` : ""
-          ),
+          `${filterRef.current?.source ? filterRef.current?.source.concat(":") : ""} ${t(
+            "common:dashboard.header"
+          )}`,
         ]}
         agencyBadge={
           <AgencyBadge

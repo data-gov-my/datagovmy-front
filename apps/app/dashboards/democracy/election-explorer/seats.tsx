@@ -1,17 +1,20 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
-import { BarMeter } from "@components/Chart/Table/BorderlessTable";
+import { FullResult, Result } from "@components/Chart/Table/BorderlessTable";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
-import { Section } from "@components/index";
+import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
+import { AgencyBadge, Container, Hero, Section } from "@components/index";
+import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
-import { MinusIcon } from "@heroicons/react/24/solid";
+import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { numFormat } from "@lib/helpers";
-import { PoliticalParty } from "@lib/constants";
+import { get } from "@lib/api";
+import { routes } from "@lib/routes";
+import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { useFilter } from "@hooks/useFilter";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -22,244 +25,250 @@ const BorderlessTable = dynamic(() => import("@components/Chart/Table/Borderless
   ssr: false,
 });
 
-interface ElectionSeatsProps {}
+interface ElectionSeatsProps {
+  query: any;
+  seat: any;
+}
 
-const ElectionSeats: FunctionComponent<ElectionSeatsProps> = ({}) => {
-  const { t, i18n } = useTranslation();
-
-  const SEAT_OPTIONS: Array<OptionType> = [
-    "P.001 Padang Besar, Perlis",
-    "P.002 Kangar, Perlis",
-    "P.003 Arau, Perlis",
-    "P.004 Langkawi, Kedah",
-    "P.005 Jerlun, Kedah",
-  ].map((key: string) => ({
-    label: key,
-    value: key,
-  }));
-
-  const { data, setData } = useData({
-    popular_searches: [
-      "P.001 Padang Besar, Perlis",
-      "P.004 Langkawi, Kedah",
-      "P.005 Jerlun, Kedah",
-    ],
-    seat: SEAT_OPTIONS[0],
-
-    // query
-    q_seat: "",
-  });
-
-  type Seat = {
-    date: string;
-    party: string;
-    name: string;
-    majority: number;
-    result: string;
-  };
-
-  const dummyData: Seat[] = [
-    {
-      date: "23 Jan 2022",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "comfortable",
-    },
-    {
-      date: "23 Jan 2018",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "close",
-    },
-    {
-      date: "23 Jan 2013",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "comfortable",
-    },
-    {
-      date: "23 Jan 2008",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "uncontested",
-    },
-    {
-      date: "23 Jan 2004",
-      party: "pn",
-      name: "Abdul Ghani Bin Ahmad",
-      majority: 55,
-      result: "comfortable",
-    },
-  ];
+const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, seat }) => {
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const columnHelper = createColumnHelper<Seat>();
-
   const columns: ColumnDef<Seat, any>[] = [
-    columnHelper.accessor("date", {
-      header: t("date"),
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+    columnHelper.accessor("election_name", {
+      id: "election_name",
+      header: t("election_name"),
+      cell: (info: any) => info.getValue(),
     }),
-    columnHelper.accessor((row: any) => row.party, {
+    columnHelper.accessor("date", {
+      id: "date",
+      header: t("date"),
+      cell: (info: any) => info.getValue(),
+    }),
+    columnHelper.accessor("seat", {
+      id: "seat",
+      header: t("constituency"),
+      cell: (info: any) => info.getValue().split(",")[0],
+    }),
+    columnHelper.accessor("party", {
+      id: "party",
       header: t("winning_party"),
-      cell: (info: any) => {
-        const party = info.getValue() as string;
-        return (
-          <div className="flex items-center gap-1.5 pr-7 lg:pr-0">
-            <Image
-              src={`/static/images/parties/${party}.png`}
-              width={28}
-              height={16}
-              alt={PoliticalParty[party] as string}
-            />
-            <span className="whitespace-nowrap">{PoliticalParty[party]}</span>
-          </div>
-        );
-      },
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("name", {
+      id: "candidate_name",
       header: t("candidate_name"),
-      cell: (info: any) => <p className="whitespace-nowrap">{info.getValue()}</p>,
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.accessor("majority", {
+      id: "majority",
       header: t("majority"),
-      cell: (info: any) => (
-        <div className="flex flex-row items-center gap-1.5">
-          <BarMeter perc={info.getValue()} />
-          <p>{`${numFormat(info.getValue(), "standard")}%`}</p>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("result", {
-      header: t("result"),
-      cell: (info: any) =>
-        info.getValue() === "comfortable" ? (
-          <span className="flex flex-row items-center gap-1.5 uppercase">
-            <span className="w-4">💪</span>
-            <p className="whitespace-nowrap text-[#10B981]">{t("seat.comfortable")}</p>
-          </span>
-        ) : info.getValue() === "close" ? (
-          <span className="flex flex-row items-center gap-1.5 uppercase">
-            <span className="w-4">🔥</span>
-            <p className="text-danger whitespace-nowrap">{t("seat.close")}</p>
-          </span>
-        ) : (
-          <span className="text-dim flex flex-row items-center gap-1.5 uppercase">
-            <MinusIcon className="h-4 w-4" />
-            <p className="whitespace-nowrap">{t("seat.uncontested")}</p>
-          </span>
-        ),
+      cell: (info: any) => info.getValue(),
     }),
     columnHelper.display({
       id: "fullResult",
-      cell: () => (
-        <ElectionCard
-          label={t("full_result")}
-          title={
-            <div>
-              <span className="text-lg font-bold uppercase text-black dark:text-white">
-                {data.seat.value.split(",")[0]}
-              </span>
-              <span className="text-dim pl-2 text-lg font-normal uppercase">
-                {data.seat.value.split(",")[1]}
-              </span>
-            </div>
-          }
-        >
-          <BorderlessTable />
-        </ElectionCard>
-      ),
+      cell: ({ row }) => {
+        return (
+          <FullResult
+            desc={t("full_result")}
+            onClick={() => {
+              setData("open", true);
+              setData("index", row.index);
+            }}
+          />
+        );
+      },
     }),
   ];
+
+  const { data, setData } = useData({
+    // Placeholder for Combobox
+    p_seat: "",
+    seats_list: [],
+
+    // Query for Table
+    q_seat: query.seat ? query.seat : "Padang Besar, Perlis",
+    loading: false,
+    data: seat,
+
+    // Election full result
+    modalLoading: false,
+    index: 0,
+    open: false,
+    result: [],
+  });
+
+  const { setFilter } = useFilter({
+    seat: query.seat,
+  });
+
+  const SEAT_OPTIONS: Array<OptionType> =
+    data.seats_list &&
+    data.seats_list.map((key: string) => ({
+      label: key,
+      value: key,
+    }));
+
+  useEffect(() => {
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      dropdown: "seats_list",
+    }).then(({ data }) => {
+      setData("seats_list", data);
+    });
+  }, []);
+
+  useEffect(() => {
+    setData("loading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "seats",
+      seat_name: data.q_seat,
+    })
+      .then(({ data }) => {
+        setData(
+          "data",
+          data.sort((a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date)))
+        );
+      })
+      .then(() => setData("loading", false));
+  }, [data.q_seat]);
+
+  useEffect(() => {
+    setData("modalLoading", true);
+    setFilter("seat", data.q_seat);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "full_result",
+      type: "seats",
+      election: data.data[data.index].election_name,
+      seat: data.data[data.index].seat,
+    })
+      .then(({ data }) => {
+        setData(
+          "result",
+          data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+        );
+      })
+      .then(() => setData("modalLoading", false));
+  }, [data.index, data.open]);
+
   return (
-    <Section>
-      <div className="lg:grid lg:grid-cols-12">
-        <div className="lg:col-span-10 lg:col-start-2">
-          <h4 className="text-center">{t("seat.header")}</h4>
-          <div className="pb-12 pt-6">
-            <div className="flex flex-col items-center justify-center space-y-3">
-              <ComboBox
-                placeholder={t("seat.search_seat")}
-                options={SEAT_OPTIONS}
-                selected={
-                  data.q_seat ? SEAT_OPTIONS.find(e => e.value === data.q_seat.value) : null
-                }
-                onChange={e => {
-                  if (e) setData("seat", e);
-                  setData("q_seat", e);
-                }}
-              />
-              <div className="flex flex-col text-center lg:flex-row">
-                <span className="whitespace-pre">{t("popular_searches")}</span>
-                <span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[0])
-                      );
-                      setData(
-                        "q_seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[0])
-                      );
+    <>
+      <Hero
+        background="red"
+        category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
+        agencyBadge={
+          <AgencyBadge
+            agency={"Election Comission (EC)"}
+            link="https://www.spr.gov.my/"
+            icon={<SPRIcon />}
+          />
+        }
+      />
+
+      <Container className="min-h-fit">
+        <ContainerTabs.List
+          options={[
+            {
+              name: t("elections"),
+              icon: <SPRIconSolid className="-mb-1" />,
+              url: routes.ELECTION_EXPLORER,
+            },
+            {
+              name: t("candidates"),
+              icon: <UserIcon className="m-1 h-5 w-5" />,
+              url: routes.ELECTION_EXPLORER.concat("/candidates"),
+            },
+            {
+              name: t("parties"),
+              icon: <FlagIcon className="m-1 h-5 w-5" />,
+              url: routes.ELECTION_EXPLORER.concat("/parties"),
+            },
+            {
+              name: t("seats"),
+              icon: <MapIcon className="m-1 h-5 w-5" />,
+            },
+          ]}
+          current={3}
+        />
+        <Section>
+          <div className="grid grid-cols-12">
+            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
+              <h4 className="text-center">{t("seat.header")}</h4>
+              <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
+                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+                  <ComboBox
+                    placeholder={t("seat.search_seat")}
+                    options={SEAT_OPTIONS}
+                    selected={
+                      data.p_seat ? SEAT_OPTIONS.find(e => e.value === data.p_seat.value) : null
+                    }
+                    onChange={e => {
+                      if (e) setData("q_seat", e.value);
+                      setData("seat", e);
                     }}
-                  >
-                    {data.popular_searches[0]}
-                  </span>
-                  <span>, </span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[1])
-                      );
-                      setData(
-                        "q_seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[1])
-                      );
-                    }}
-                  >
-                    {data.popular_searches[1]}
-                  </span>
-                  <span>, </span>
-                  <span
-                    className="text-primary dark:text-primary-dark font-semibold"
-                    onClick={() => {
-                      setData(
-                        "seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[2])
-                      );
-                      setData(
-                        "q_seat",
-                        SEAT_OPTIONS.find(e => e.value === data.popular_searches[2])
-                      );
-                    }}
-                  >
-                    {data.popular_searches[2]}
-                  </span>
-                </span>
+                  />
+                </div>
               </div>
+              <BorderlessTable
+                title={
+                  <div className="text-base font-bold">
+                    {t("candidate.title")}
+                    <span className="text-primary">{data.q_seat}</span>
+                  </div>
+                }
+                data={data.data}
+                columns={columns}
+                isLoading={data.loading}
+              />
             </div>
           </div>
-          <BorderlessTable
-            title={
-              <div className="text-base font-bold">
-                {t("candidate.title")}
-                <span className="text-primary">{data.seat.value}</span>
-              </div>
-            }
-            data={dummyData}
-            columns={columns}
-          />
-        </div>
-      </div>
-    </Section>
+          {data.open && (
+            <ElectionCard
+              open={data.open}
+              onChange={(index: number) =>
+                index < data.data.length && index >= 0 ? setData("index", index) : null
+              }
+              onClose={() => setData("open", false)}
+              onNext={() =>
+                data.index === data.data.length ? null : setData("index", data.index + 1)
+              }
+              onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+              election_name={data.data[data.index].election_name}
+              date={DateTime.fromISO(data.data[data.index].date)
+                .setLocale(i18n.language)
+                .toLocaleString(DateTime.DATE_MED)}
+              title={
+                <div className="flex flex-row gap-2 uppercase">
+                  <h5>{data.data[data.index].seat.split(",")[0]}</h5>
+                  <span className="text-dim font-normal">
+                    {data.data[data.index].seat.split(",")[1]}
+                  </span>
+                </div>
+              }
+              isLoading={data.modalLoading}
+              data={data.result}
+              page={data.index}
+              total={data.data.length}
+            />
+          )}
+        </Section>
+      </Container>
+    </>
   );
 };
 
-export default ElectionSeats;
+export default ElectionSeatsDashboard;
+
+export type Seat = {
+  election_name: string;
+  date: string;
+  seat: string;
+  party: string;
+  name: string;
+  majority: Record<string, number>;
+  result: string;
+};

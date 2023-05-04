@@ -27,6 +27,7 @@ interface ChoroplethProps extends ChartHeaderProps {
   prefix?: string;
   unit?: string;
   precision?: number | [number, number];
+  enableOutline?: boolean;
   enableZoom?: boolean;
   type?: Geotype;
   color?: Color;
@@ -46,6 +47,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   precision = 1,
   unit,
   color,
+  enableOutline = true,
   enableZoom = true,
   onReady,
   _ref,
@@ -76,7 +78,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
       },
     },
     maintainAspectRatio: false,
-    showOutline: true,
+    showOutline: enableOutline,
     plugins: {
       legend: {
         display: false,
