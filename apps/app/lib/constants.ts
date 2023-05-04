@@ -193,115 +193,7 @@ export const SHORT_PERIOD_FORMAT = {
 } as const;
 
 /**
- * PARTIES defs.
- */
-export const PARTIES: Array<Record<string, any>> = [
-  {
-    key: "alliance",
-    name: "Parti Perikatan (PP)",
-  },
-  {
-    key: "amanah",
-    name: "Parti Amanah Negara (AMANAH)",
-  },
-  {
-    key: "bebas",
-    name: "Bebas (BEBAS)",
-  },
-  {
-    key: "bersatu",
-    name: "Parti Pribumi Bersatu Malaysia (BERSATU)",
-  },
-  {
-    key: "bn",
-    name: "Barisan Nasional (BN)",
-  },
-  {
-    key: "dap",
-    name: "Parti Tindakan Demokratik (DAP)",
-  },
-  {
-    key: "gerakan",
-    name: "Parti Gerakan Rakyat Malaysia (GERAKAN)",
-  },
-  {
-    key: "gps",
-    name: "Gabungan Parti Sarawak (GPS)",
-  },
-  {
-    key: "grs",
-    name: "Gabungan Rakyat Sabah (GRS)",
-  },
-  {
-    key: "kdm",
-    name: "Parti Kesejahteraan Demokratik Masyarakat (KDM)",
-  },
-  {
-    key: "mca",
-    name: "Malaysian Chinese Association (MCA)",
-  },
-  {
-    key: "muda",
-    name: "Malaysian United Democratic Alliance (MUDA)",
-  },
-  {
-    key: "pas",
-    name: "Parti Islam Se-Malaysia (PAS)",
-  },
-  {
-    key: "pbm",
-    name: "Parti Bangsa Malaysia (PBM)",
-  },
-  {
-    key: "pcs",
-    name: "Parti Cinta Sabah (PCS)",
-  },
-  {
-    key: "pejuang",
-    name: "Parti Pejuang Tanah Air (PEJUANG)",
-  },
-  {
-    key: "ph",
-    name: "Pakatan Harapan (PH)",
-  },
-  {
-    key: "phrs",
-    name: "Parti Harapan Rakyat Sabah (PHRS)",
-  },
-  {
-    key: "pkr",
-    name: "Parti Keadilan Rakyat (PKR)",
-  },
-  {
-    key: "pn",
-    name: "Perikatan Nasional (PN)",
-  },
-  {
-    key: "psb",
-    name: "Parti Sarawak Bersatu (PSB)",
-  },
-  {
-    key: "upko",
-    name: "Pertubuhan Kinabalu Progresif Bersatu (UPKO)",
-  },
-  {
-    key: "warisan",
-    name: "Parti Warisan Sabah (WARISAN)",
-  },
-];
-
-/**
- * Dictionary of code to party name.
- * @example PoliticalParty["bebas"] -> "Bebas"
- */
-export const PoliticalParty: Record<string, string> = (() => {
-  return [...PARTIES].reduce((prev, current) => {
-    return { ...prev, ...{ [current.key]: current.name } };
-  }, {});
-})();
-
-/**
- * PARTIES defs.
+ * PARTY_COLOURS defs.
  */
 export const PARTY_COLOURS: Array<Record<string, any>> = [
   {
@@ -317,7 +209,7 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "#e30007",
   },
   {
-    key: "bn",
+    key: "BN",
     colour: "#000080",
   },
   {
@@ -329,7 +221,7 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "ff0000",
   },
   {
-    key: "gps",
+    key: "GPS",
     colour: "#ff9b0e",
   },
   {
@@ -345,7 +237,7 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "#006a8e",
   },
   {
-    key: "ph",
+    key: "PH",
     colour: "#E2462F",
   },
   {
@@ -353,7 +245,7 @@ export const PARTY_COLOURS: Array<Record<string, any>> = [
     colour: "#00bfff",
   },
   {
-    key: "pn",
+    key: "PN",
     colour: "#003152",
   },
   {

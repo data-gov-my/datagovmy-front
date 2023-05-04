@@ -38,12 +38,7 @@ import {
   TableCellsIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
-import {
-  BREAKPOINTS,
-  CountryAndStates,
-  PoliticalParty,
-  PoliticalPartyColours,
-} from "@lib/constants";
+import { BREAKPOINTS, CountryAndStates, PoliticalPartyColours } from "@lib/constants";
 import { get } from "@lib/api";
 import { clx, numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -129,23 +124,23 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
 
   const waffleDummy = [
     {
-      id: "ph",
-      label: "ph",
+      id: "PH",
+      label: "PH",
       value: 82,
     },
     {
-      id: "bn",
-      label: "bn",
+      id: "BN",
+      label: "BN",
       value: 30,
     },
     {
-      id: "pn",
-      label: "pn",
+      id: "PN",
+      label: "PN",
       value: 74,
     },
     {
-      id: "gps",
-      label: "gps",
+      id: "GPS",
+      label: "GPS",
       value: 23,
     },
     {
@@ -473,7 +468,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                                     src={`/static/images/parties/${label}.png`}
                                     width={28}
                                     height={16}
-                                    alt={PoliticalParty[label]}
+                                    alt={t(`${label}`)}
                                   />
                                 )}
                                 <span
