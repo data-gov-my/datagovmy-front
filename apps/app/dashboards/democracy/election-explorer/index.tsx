@@ -587,6 +587,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           alt={t(`${item.party}`)}
                         />
                         <span>{`${item.name} (${item.party})`}</span>
+                        <Won />
                       </div>
                       <div className="flex flex-row items-center gap-1.5">
                         <p className="text-dim font-medium">{t("majority")}</p>
@@ -622,7 +623,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     data.index === data.data.length ? null : setData("index", data.index + 1)
                   }
                   onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
-                  win={data.data[data.index].result}
+                  win={"won"}
                   election_name={data.data[data.index].election_name}
                   // date={DateTime.fromISO(data.result[data.index].date)
                   //   .setLocale(i18n.language)
@@ -638,7 +639,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   }
                   isLoading={data.section2_Loading}
                   data={data.result}
-                  highlightedRow={data.result.findIndex((r: Result) => r.name === data.data.name)}
+                  highlightedRow={data.result.findIndex(
+                    (r: Result) => r.name === data.data[data.index].name
+                  )}
                   page={data.index}
                   total={data.data.length}
                 />
