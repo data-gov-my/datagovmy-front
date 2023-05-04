@@ -139,11 +139,11 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                             <ImageWithFallback
                               className="items-center self-center"
                               src={`/static/images/parties/${cell.getValue()}.png`}
-                              width={28}
-                              height={16}
+                              width={32}
+                              height={18}
                               alt={t(`${cell.getValue()}`)}
                             />
-                            <span>{t(`${cell.getValue()}`)}</span>
+                            <span className="mr-8">{t(`${cell.getValue()}`)}</span>
                           </>
                         ) : cell.column.columnDef.id === "date" ? (
                           <>
@@ -267,8 +267,8 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                     src={`/static/images/parties/${rowData
                       .at(rowID.indexOf("party"))
                       .getValue()}.png`}
-                    width={28}
-                    height={16}
+                    width={32}
+                    height={18}
                     alt={t(`${rowData.at(rowID.indexOf("party")).getValue()}`)}
                   />
                   {rowID.includes("candidate_name") ? (

@@ -295,8 +295,8 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                       <ImageWithFallback
                         className="mr-2 inline-flex items-center"
                         src={`/static/images/parties/${data.q_party}.png`}
-                        width={28}
-                        height={16}
+                        width={32}
+                        height={18}
                         alt={t(`${data.q_party}`)}
                       />
                       {t("party.title", {

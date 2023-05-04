@@ -5,7 +5,7 @@ import { Combobox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
-import Fuse from "fuse.js";
+import { matchSorter } from "match-sorter";
 
 type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];
@@ -25,12 +25,13 @@ const ComboBox = <L extends string | number = string, V = string>({
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
-  const config: Fuse.IFuseOptions<OptionType<L, V>> = {
-    keys: ["label"],
-  };
-  const fuse = new Fuse(options, config);
   const filteredOptions =
-    query === "" ? options.slice(0, 100) : fuse.search(query, { limit: 100 }).map(res => res.item);
+    query === ""
+      ? options.slice(0, 100)
+      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
+          0,
+          100
+        );
 
   return (
     <Combobox value={selected} onChange={onChange}>
@@ -102,8 +103,8 @@ const ComboBox = <L extends string | number = string, V = string>({
                         <>
                           <ImageWithFallback
                             src={`/static/images/parties/${option.value}.png`}
-                            width={20}
-                            height={12}
+                            width={32}
+                            height={18}
                             alt={option.value as string}
                           />
                           <span

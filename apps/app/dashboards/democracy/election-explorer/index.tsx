@@ -240,7 +240,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       chart: "full_result",
       type: "seats",
       election: data.election,
-      seat: data.seats_list[data.index],
+      seat: data.q_seat,
     })
       .then(({ data }) => {
         setData(
@@ -466,8 +466,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                                 ) : (
                                   <ImageWithFallback
                                     src={`/static/images/parties/${label}.png`}
-                                    width={28}
-                                    height={16}
+                                    width={32}
+                                    height={18}
                                     alt={t(`${label}`)}
                                   />
                                 )}
@@ -577,8 +577,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         <ImageWithFallback
                           className="items-center self-center"
                           src={`/static/images/parties/${item.party}.png`}
-                          width={28}
-                          height={16}
+                          width={32}
+                          height={18}
                           alt={t(`${item.party}`)}
                         />
                         <span>{`${item.name} (${item.party})`}</span>
