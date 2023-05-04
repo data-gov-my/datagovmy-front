@@ -1,12 +1,4 @@
-import {
-  FunctionComponent,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FunctionComponent, ReactNode, useContext, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Card from "@components/Card";
 import ComboBox from "@components/Combobox";
@@ -178,22 +170,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       value: key,
     }));
 
-  // useEffect(() => {
-  //   sliderRef.current?.slickGoTo(data.index);
-  // }, [data.index]);
-
   useEffect(() => {
     setData("q_seat", SEAT_OPTIONS[0] ? SEAT_OPTIONS[0].value : "P.001 Padang Besar, Perlis");
   }, [data.seats_list]);
-
-  // useEffect(() => {
-  //   get("/explorer", {
-  //     explorer: "ELECTIONS",
-  //     dropdown: "seats_list",
-  //   }).then(({ data }) => {
-  //     setData("seats_list", data);
-  //   });
-  // }, []);
 
   useEffect(() => {
     setData("section2_loading", true);
@@ -282,7 +261,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
 
         <Section>
           <h4 className="text-center">{t("election.section_1")}</h4>
-          {/* <div className={clx(show ? "fixed right-0 top-16 z-10 lg:hidden" : "hidden")}> */}
           <div className={clx("fixed right-0 top-16 z-10 lg:hidden")}>
             <Modal
               trigger={open => (
@@ -492,7 +470,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           setData("q_seat", e.value);
                           setData(
                             "index",
-                            // sliderRef.current?.slickGoTo(
                             data.seats_list.findIndex((seat: string) => seat === e.value)
                           );
                         }
@@ -502,18 +479,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   </div>
                 </div>
               </div>
-              {/* <BorderlessTable
-                title={
-                  <div className="text-base font-bold">
-                    {t("election.full_result", {
-                      election: data.election,
-                    })}
-                    <span className="text-primary">{data.q_seat}</span>
-                  </div>
-                }
-                data={data.data}
-                isLoading={data.section2_loading}
-              /> */}
               <div>
                 <Carousel
                   _ref={sliderRef}
