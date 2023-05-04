@@ -1,4 +1,5 @@
-import { FunctionComponent, ReactNode, createContext, useEffect, useState } from "react";
+import debounce from "lodash/debounce";
+import { FunctionComponent, ReactNode, createContext, useEffect, useRef, useState } from "react";
 
 interface WindowContextProps {
   breakpoint: number;
@@ -22,21 +23,19 @@ export const WindowContext = createContext<WindowContextProps>({
 
 export const WindowProvider: FunctionComponent<WindowProviderProps> = ({ children }) => {
   const [breakpoint, setBreakpoint] = useState<WindowContextProps["breakpoint"]>(1536);
+  // TODO: May just remove scroll listener. Bad performance hit if stored in react
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     function handleResize() {
       setBreakpoint(window.innerWidth);
     }
-    function handleScroll() {
+    const handleScroll = debounce(() => {
       setScroll({ x: window.scrollX, y: window.scrollY });
-    }
+    }, 400);
 
-    window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
-
-    handleResize();
-    handleScroll();
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("resize", handleResize);

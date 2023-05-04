@@ -49,6 +49,7 @@ import { BarMeter, FullResult, Lost, Result, Won } from "@components/Chart/Table
 import { DateTime } from "luxon";
 import ElectionCard from "@components/Card/ElectionCard";
 import { WindowContext } from "@hooks/useWindow";
+import { useScrollIntersect } from "@hooks/useScrollIntersect";
 
 /**
  * Election Explorer Dashboard
@@ -69,24 +70,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const sliderRef = useRef<Slider>(null);
-  const [hasShadow, setHasShadow] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
-  const { breakpoint, scroll } = useContext(WindowContext);
-  const show = useMemo(() => scroll.y > 400, [scroll.y]);
-
-  useEffect(() => {
-    const div = divRef.current;
-    if (!div) return;
-
-    const handleScroll = () => {
-      setHasShadow(div.getBoundingClientRect().top === 64);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [divRef]);
+  useScrollIntersect(divRef.current, "drop-shadow-xl");
+  const { breakpoint } = useContext(WindowContext);
 
   const results: { [key: string]: ReactNode } = {
     won: <Won desc={t("candidate.won")} />,
@@ -296,7 +282,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
 
         <Section>
           <h4 className="text-center">{t("election.section_1")}</h4>
-          <div className={clx(show ? "fixed right-0 top-16 z-10 lg:hidden" : "hidden")}>
+          {/* <div className={clx(show ? "fixed right-0 top-16 z-10 lg:hidden" : "hidden")}> */}
+          <div className={clx("fixed right-0 top-16 z-10 lg:hidden")}>
             <Modal
               trigger={open => (
                 <Button
@@ -367,19 +354,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               )}
             </Modal>
           </div>
+
           <div
             ref={divRef}
-            className={clx(
-              "sticky top-16 z-10 mt-6 hidden items-center justify-center gap-2 lg:flex lg:pl-2",
-              hasShadow ? "drop-shadow-xl" : "drop-shadow-none"
-            )}
+            className="sticky top-16 z-10 mt-6 hidden items-center justify-center gap-2 transition-all duration-200 ease-in lg:flex lg:pl-2"
           >
-            <div
-              className={clx(
-                "border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black",
-                hasShadow ? "shadow-lg dark:shadow-neutral-700" : "shadow-none"
-              )}
-            >
+            <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
               <List
                 options={PANELS.map(item => item.name)}
                 icons={PANELS.map(item => item.icon)}
@@ -388,7 +368,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               />
             </div>
             <StateDropdown
-              shadow={clx(hasShadow ? "shadow-lg dark:shadow-neutral-700" : "shadow-none")}
               currentState={data.state}
               onChange={selected => setData("state", selected.value)}
               exclude={["mys", "kul", "lbn", "pjy"]}
@@ -397,7 +376,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               // disabled={data.tabs === 0}
             />
             <Dropdown
-              shadow={clx(hasShadow ? "shadow-lg dark:shadow-neutral-700" : "shadow-none")}
               anchor="left"
               width="max-w-fit"
               options={ELECTION_OPTIONS}
