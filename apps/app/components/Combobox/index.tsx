@@ -1,11 +1,11 @@
-import { default as Image } from "next/image";
 import { Fragment, useState } from "react";
+import ImageWithFallback from "@components/ImageWithFallback";
 import { OptionType } from "@components/types";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { PoliticalParty } from "@lib/constants";
 import { clx } from "@lib/helpers";
+import { matchSorter } from "match-sorter";
 
 type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];
@@ -28,63 +28,49 @@ const ComboBox = <L extends string | number = string, V = string>({
   const filteredOptions =
     query === ""
       ? options.slice(0, 100)
-      : options
-          .filter(option =>
-            option.label
-              .toString()
-              .toLowerCase()
-              .replace(/\s+/g, "")
-              .includes(query.toLowerCase().replace(/\s+/g, ""))
-          )
-          .slice(0, 100);
+      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
+          0,
+          100
+        );
 
   return (
-    <Combobox value={selected} onChange={onChange} nullable>
-      <div className="relative w-5/6 rounded-full sm:w-3/4 md:w-1/2">
+    <Combobox value={selected} onChange={onChange}>
+      <div className="relative w-full rounded-full">
         <div
-          className={clx(
-            `border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none overflow-hidden rounded-full
-              border bg-white text-left text-base shadow-sm
-              focus:outline-none focus-visible:ring-0 dark:bg-black `
-          )}
+          className="border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none 
+        overflow-hidden rounded-full border bg-white text-left text-base shadow-sm focus:outline-none focus-visible:ring-0 dark:bg-black"
         >
-          <Combobox.Button className="w-full">
-            {({ open }) => (
-              <>
-                <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-1.5">
-                  <MagnifyingGlassIcon
-                    className="dark:text-dim h-5 w-5 text-black"
-                    aria-hidden="true"
-                  />
-                </span>
-                <Combobox.Input
-                  placeholder={placeholder}
-                  className={clx(
-                    "w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
-                  )}
-                  displayValue={(option: OptionType<L, V>) =>
-                    enableFlag ? PoliticalParty[option?.label as string] : (option?.label as string)
-                  }
-                  onChange={event => setQuery(event.target.value)}
-                  onClick={(e: any) => {
-                    if (open) e.stopPropagation();
-                  }}
-                  spellCheck={false}
+          <Combobox.Input
+            placeholder={placeholder}
+            className="w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
+            displayValue={(option: OptionType<L, V>) => option?.label as string}
+            onChange={event => setQuery(event.target.value)}
+            spellCheck={false}
+          />
+          <Combobox.Button as={"div"} className="w-full">
+            <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-1.5">
+              <MagnifyingGlassIcon
+                className="dark:text-dim h-5 w-5 text-black"
+                aria-hidden="true"
+              />
+            </span>
+            {query.length > 0 && (
+              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
+                <XMarkIcon
+                  className="dark:text-dim h-5 w-5 text-black"
+                  onClick={() => onChange(undefined)}
+                  aria-hidden="true"
                 />
-                {/* {query.length > 0 && (
-                      <XMarkIcon
-                        className="absolute top-3 right-3 box-content flex h-5 w-5 items-center pr-1.5 text-black dark:text-dim"
-                        aria-hidden="true"
-                      />
-                    )} */}
-                {selected && (
-                  <XMarkIcon
-                    onClick={() => onChange(undefined)}
-                    className="dark:text-dim absolute right-3 top-3 box-content flex h-5 w-5 items-center pr-1.5 text-black"
-                    aria-hidden="true"
-                  />
-                )}
-              </>
+              </span>
+            )}
+            {selected && (
+              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
+                <XMarkIcon
+                  className="dark:text-dim h-5 w-5 text-black"
+                  onClick={() => onChange(undefined)}
+                  aria-hidden="true"
+                />
+              </span>
             )}
           </Combobox.Button>
         </div>
@@ -95,10 +81,7 @@ const ComboBox = <L extends string | number = string, V = string>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options
-            static
-            className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm"
-          >
+          <Combobox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm">
             {filteredOptions.length === 0 && query !== "" ? (
               <div className="text-dim relative cursor-default select-none px-4 py-2">
                 {t("common:placeholder.no_results")}
@@ -118,11 +101,11 @@ const ComboBox = <L extends string | number = string, V = string>({
                     <div className="flex w-full items-center gap-2">
                       {enableFlag ? (
                         <>
-                          <Image
+                          <ImageWithFallback
                             src={`/static/images/parties/${option.value}.png`}
-                            width={20}
-                            height={12}
-                            alt={option.label as string}
+                            width={32}
+                            height={18}
+                            alt={option.value as string}
                           />
                           <span
                             className={clx(
@@ -130,7 +113,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                               selected ? "font-medium" : "font-normal"
                             )}
                           >
-                            {PoliticalParty[option.label as string]}
+                            {option.label}
                           </span>
                         </>
                       ) : (

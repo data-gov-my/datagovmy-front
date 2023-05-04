@@ -1,21 +1,21 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
+import ElectionSeatsDashboard, { Seat } from "@dashboards/democracy/election-explorer/seats";
 import { useTranslation } from "@hooks/useTranslation";
-import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
+import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
+import type { Page } from "@lib/types";
 
-const ElectionExplorer: Page = ({
-  election,
+const ElectionSeats: Page = ({
   query,
+  seat,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard election={election} query={query} />
+      <ElectionSeatsDashboard query={query} seat={seat} />
     </>
   );
 };
@@ -23,22 +23,20 @@ const ElectionExplorer: Page = ({
 export const getServerSideProps: GetServerSideProps = withi18n(
   "dashboard-election-explorer",
   async ({ query }) => {
-    const { data: election } = await get("/explorer", {
+    const { data: seat } = await get("/explorer", {
       explorer: "ELECTIONS",
-      chart: "overall_seat",
-      type: "parlimen",
-      election: "GE-15",
-      state: "pls",
+      chart: "seats",
+      seat_name: "Padang Besar, Perlis",
     });
 
     return {
       notFound: false,
       props: {
         query: query ?? {},
-        election: election,
+        seat: seat.sort((a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date))),
       },
     };
   }
 );
 
-export default ElectionExplorer;
+export default ElectionSeats;

@@ -193,140 +193,68 @@ export const SHORT_PERIOD_FORMAT = {
 } as const;
 
 /**
- * PARTIES defs.
- */
-export const PARTIES: Array<Record<string, any>> = [
-  {
-    key: "bebas",
-    name: "Bebas",
-  },
-  {
-    key: "bn",
-    name: "Barisan Nasional",
-  },
-  {
-    key: "gps",
-    name: "Gabungan Parti Sarawak",
-  },
-  {
-    key: "grs",
-    name: "Gabungan Rakyat Sabah",
-  },
-  {
-    key: "kdm",
-    name: "Parti KDM",
-  },
-  {
-    key: "mca",
-    name: "Malaysian Chinese Association",
-  },
-  {
-    key: "muda",
-    name: "Malaysian United Democratic Alliance",
-  },
-  {
-    key: "pbm",
-    name: "Parti Bangsa Malaysia",
-  },
-  {
-    key: "pcs",
-    name: "Parti Cinta Sabah",
-  },
-  {
-    key: "pejuang",
-    name: "Parti Pejuang Tanah Air",
-  },
-  {
-    key: "ph",
-    name: "Pakatan Harapan",
-  },
-  {
-    key: "phrs",
-    name: "Parti Harapan Rakyat Sabah",
-  },
-  {
-    key: "pn",
-    name: "Perikatan Nasional",
-  },
-  {
-    key: "psb",
-    name: "Parti Sarawak Bersatu",
-  },
-  {
-    key: "warisan",
-    name: "Parti Warisan Sabah",
-  },
-];
-
-/**
- * Dictionary of code to party name.
- * @example PoliticalParty["bebas"] -> "Bebas"
- */
-export const PoliticalParty: Record<string, string> = (() => {
-  return [...PARTIES].reduce((prev, current) => {
-    return { ...prev, ...{ [current.key]: current.name } };
-  }, {});
-})();
-
-/**
- * PARTIES defs.
+ * PARTY_COLOURS defs.
  */
 export const PARTY_COLOURS: Array<Record<string, any>> = [
   {
-    key: "bebas",
-    colour: "#A7A7A7",
+    key: "amanah",
+    colour: "#f7911f",
   },
   {
-    key: "bn",
+    key: "bebas",
+    colour: "#ffffff",
+  },
+  {
+    key: "bersatu",
+    colour: "#e30007",
+  },
+  {
+    key: "BN",
     colour: "#000080",
   },
   {
-    key: "gps",
-    colour: "#FF9B0E",
+    key: "dap",
+    colour: "#cc0000",
   },
   {
-    key: "grs",
-    colour: "#E2E8F0",
+    key: "gerakan",
+    colour: "ff0000",
   },
   {
-    key: "kdm",
-    colour: "#E2E8F0",
+    key: "GPS",
+    colour: "#ff9b0e",
   },
   {
     key: "muda",
     colour: "#000000",
   },
   {
-    key: "pbm",
-    colour: "#E2E8F0",
-  },
-  {
-    key: "pcs",
-    colour: "#E2E8F0",
+    key: "pas",
+    colour: "#008000",
   },
   {
     key: "pejuang",
-    colour: "#E2E8F0",
+    colour: "#006a8e",
   },
   {
-    key: "ph",
+    key: "PH",
     colour: "#E2462F",
   },
   {
-    key: "phrs",
-    colour: "#E2E8F0",
+    key: "pkr",
+    colour: "#00bfff",
   },
   {
-    key: "pn",
+    key: "PN",
     colour: "#003152",
   },
   {
-    key: "psb",
-    colour: "#E2E8F0",
+    key: "umno",
+    colour: "c00000",
   },
   {
-    key: "warisan",
-    colour: "#E2E8F0",
+    key: "upko",
+    colour: "#183980",
   },
 ];
 

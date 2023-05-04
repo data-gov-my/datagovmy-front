@@ -1,13 +1,13 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
+import ElectionCandidatesDashboard from "@dashboards/democracy/election-explorer/candidates";
 import { useTranslation } from "@hooks/useTranslation";
-import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
+import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
+import type { Page } from "@lib/types";
 
-const ElectionExplorer: Page = ({
-  election,
+const ElectionCandidates: Page = ({
+  candidate,
   query,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
@@ -15,7 +15,7 @@ const ElectionExplorer: Page = ({
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard election={election} query={query} />
+      <ElectionCandidatesDashboard candidate={candidate} query={query} />
     </>
   );
 };
@@ -23,22 +23,21 @@ const ElectionExplorer: Page = ({
 export const getServerSideProps: GetServerSideProps = withi18n(
   "dashboard-election-explorer",
   async ({ query }) => {
-    const { data: election } = await get("/explorer", {
+    const { data: candidate } = await get("/explorer", {
       explorer: "ELECTIONS",
-      chart: "overall_seat",
+      chart: "candidates",
+      name: "Tunku Abdul Rahman Putra Al-Haj",
       type: "parlimen",
-      election: "GE-15",
-      state: "pls",
     });
 
     return {
       notFound: false,
       props: {
         query: query ?? {},
-        election: election,
+        candidate: candidate.reverse(),
       },
     };
   }
 );
 
-export default ElectionExplorer;
+export default ElectionCandidates;

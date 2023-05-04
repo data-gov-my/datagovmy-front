@@ -78,7 +78,11 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       <Hero
         background="blue"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
-        header={[`${t("common:catalogue.header")} ${filterRef.current?.source ?? ""}`]}
+        header={[
+          `${filterRef.current?.source ? filterRef.current?.source.concat(":") : ""} ${t(
+            "common:catalogue.header"
+          )}`,
+        ]}
         description={
           <div className="space-y-6 xl:w-2/3">
             <p className="text-dim">{t("common:catalogue.description")}</p>
