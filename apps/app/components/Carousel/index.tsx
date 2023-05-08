@@ -1,5 +1,4 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import { clx } from "@lib/helpers";
 import React, { ForwardedRef, ReactNode } from "react";
 import Slider from "react-slick";
 
@@ -15,7 +14,11 @@ const Carousel = ({ items, itemsToShow, itemsToScroll, title, _ref }: CarouselPr
   const PrevArrow = ({ ...props }) => {
     const { onClick } = props;
     return (
-      <button className="absolute inset-y-0 left-0 z-10 lg:-left-8" onClick={onClick}>
+      <button
+        className={`border-outline dark:border-outlineHover-dark hover:bg-washed dark:hover:bg-washed-dark absolute -left-2 z-10 h-8 w-8
+         rounded-full border bg-white pl-1 dark:bg-black lg:-left-10`}
+        onClick={onClick}
+      >
         <ChevronLeftIcon className="h-5 w-5" />
       </button>
     );
@@ -24,7 +27,11 @@ const Carousel = ({ items, itemsToShow, itemsToScroll, title, _ref }: CarouselPr
   const NextArrow = ({ ...props }) => {
     const { onClick } = props;
     return (
-      <button className="absolute inset-y-0 right-0 z-10 lg:-right-8" onClick={onClick}>
+      <button
+        className={`border-outline dark:border-outlineHover-dark hover:bg-washed dark:hover:bg-washed-dark absolute -right-2 z-10 h-8 w-8
+         rounded-full border bg-white pl-1.5 dark:bg-black lg:-right-10`}
+        onClick={onClick}
+      >
         <ChevronRightIcon className="h-5 w-5" />
       </button>
     );
@@ -41,21 +48,21 @@ const Carousel = ({ items, itemsToShow, itemsToScroll, title, _ref }: CarouselPr
     prevArrow: <PrevArrow />,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1280,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
         },
       },
       {
-        breakpoint: 640,
+        breakpoint: 1024,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 480,
+        breakpoint: 640,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
