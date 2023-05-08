@@ -83,13 +83,15 @@ const Card: FunctionComponent<CardProps> = ({
                   <Dialog.Title as="h5" className="flex flex-row">
                     <div>{title && typeof title === "string" ? <span>{title}</span> : title}</div>
                   </Dialog.Title>
-                  <XMarkIcon
+                  <button
+                    className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-2 top-2 h-12 w-12 rounded-full"
                     onClick={() => {
                       onClose();
                       setIsOpen(false);
                     }}
-                    className="text-dim absolute right-4 top-4 h-6 w-6 cursor-pointer items-center"
-                  />
+                  >
+                    <XMarkIcon className="text-dim absolute right-3 top-3 h-6 w-6" />
+                  </button>
                   <div className="space-x-3 pt-3">
                     {date ? <span className="text-dim">{date}</span> : <></>}
                     <span className="uppercase text-black dark:text-white">{election_name}</span>
@@ -104,22 +106,24 @@ const Card: FunctionComponent<CardProps> = ({
 
                   <div className="mt-6 space-y-3">
                     <div className="flex flex-row items-center justify-center gap-1.5">
-                      {[...Array(total)].map((num, index: number) => (
-                        <button
-                          onClick={() => onChange(index)}
-                          disabled={index === page}
-                          className={clx(
-                            "h-1 w-5 rounded-md",
-                            index === page
-                              ? "bg-black dark:bg-white"
-                              : "bg-outline dark:bg-outlineHover-dark"
-                          )}
-                        ></button>
-                      ))}
+                      {Array(total)
+                        .fill(null)
+                        .map((num, index: number) => (
+                          <button
+                            onClick={() => onChange(index)}
+                            disabled={index === page}
+                            className={clx(
+                              "h-1 w-5 rounded-md",
+                              index === page
+                                ? "bg-black dark:bg-white"
+                                : "bg-outline hover:bg-washed dark:bg-outlineHover-dark dark:hover:bg-washed-dark"
+                            )}
+                          ></button>
+                        ))}
                     </div>
                     <div className={`flex items-center justify-center gap-4 text-sm`}>
                       <Button
-                        className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2"
+                        className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                         onClick={onPrev}
                         disabled={page === 0}
                       >
@@ -127,7 +131,7 @@ const Card: FunctionComponent<CardProps> = ({
                         {t("common:common.previous")}
                       </Button>
                       <Button
-                        className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2"
+                        className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                         onClick={onNext}
                         disabled={page === total - 1}
                       >
