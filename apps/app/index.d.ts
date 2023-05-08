@@ -13,9 +13,11 @@ declare namespace NodeJS {
 
     MIXPANEL_TOKEN: string;
     MIXPANEL_PROJECT_ID: string;
+    MIXPANEL_HOST: string;
     MIXPANEL_SA_USER: string;
     MIXPANEL_SA_SECRET: string;
     NEXT_PUBLIC_MIXPANEL_TOKEN: string;
+    NEXT_PUBLIC_MIXPANEL_HOST: string;
   }
 }
 
