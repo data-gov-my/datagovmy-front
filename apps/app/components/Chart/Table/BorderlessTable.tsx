@@ -220,7 +220,9 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
               </>
             );
           }
-          return (
+          return isLoading ? (
+            <></>
+          ) : (
             <div
               className={clx(
                 "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 lg:hidden",
