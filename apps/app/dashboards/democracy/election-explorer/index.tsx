@@ -14,7 +14,6 @@ import {
   Section,
   StateDropdown,
   Tabs,
-  Tooltip,
 } from "@components/index";
 import Label from "@components/Label";
 import LeftRightCard from "@components/LeftRightCard";
@@ -37,11 +36,12 @@ import { routes } from "@lib/routes";
 import { useFilter } from "@hooks/useFilter";
 import Carousel from "@components/Carousel";
 import Slider from "react-slick";
-import { BarMeter, FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter, FullResult, Lost, Won } from "@components/Chart/Table/BorderlessTable";
 import { DateTime } from "luxon";
 import ElectionCard from "@components/Card/ElectionCard";
 import { WindowContext } from "@hooks/useWindow";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 /**
  * Election Explorer Dashboard
@@ -83,11 +83,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       icon: <FlagIcon className="mr-1 h-5 w-5" />,
     },
   ];
-
-  const ELECTION_OPTIONS: Array<OptionType> = [...Array(16)].map((n, index: number) => ({
-    label: `GE-${String(index).padStart(2, "0")}`,
-    value: `GE-${String(index).padStart(2, "0")}`,
-  }));
 
   const FILTER_OPTIONS: Array<OptionType> = [
     "voter_turnout",
@@ -136,9 +131,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     tabs_section3: 0,
 
     type: query.type ? query.type : "parlimen",
-    state: query.state ? query.state : "pls",
-    election: query.election ? query.election : ELECTION_OPTIONS.at(-1)?.value,
+    state: query.state ? query.state : "mys",
+    election: query.election ? query.election : "GE-15",
     section1_loading: false,
+    section1_table: [],
 
     // Placeholder for Combobox
     p_seat: "",
@@ -163,6 +159,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     type: query.type,
   });
 
+  const ELECTION_OPTIONS: Array<OptionType> = Array(16)
+    .fill(null)
+    .map((n, index: number) => ({
+      label: (data.tabs === 0 ? "G" : "S") + `E-${String(index).padStart(2, "0")}`,
+      value: (data.tabs === 0 ? "G" : "S") + `E-${String(index).padStart(2, "0")}`,
+    }));
+
   const SEAT_OPTIONS: Array<OptionType> =
     data.seats_list &&
     data.seats_list.map((key: string) => ({
@@ -170,9 +173,73 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       value: key,
     }));
 
+  type Result = {
+    name: string;
+    party: string;
+    seats: Record<string, number>;
+    votes: Record<string, number>;
+  };
+  const resultsColumnHelper = createColumnHelper<Result>();
+  const resultsColumns: ColumnDef<Result, any>[] = [
+    resultsColumnHelper.accessor("party", {
+      id: "party",
+      header: t("party_name"),
+      cell: (info: any) => info.getValue(),
+    }),
+    resultsColumnHelper.accessor("seats", {
+      id: "seats",
+      header: data.section1_table[0]
+        ? t("seats_won").concat(` / ${data.section1_table[data.index].seats.total}`)
+        : t("seats_won"),
+      cell: (info: any) => {
+        const seats = info.getValue();
+        return (
+          <div className="flex flex-row items-center gap-2">
+            <BarMeter perc={seats.perc} />
+            <p>{`${seats.won === 0 ? "0" : seats.won} ${
+              seats.perc === 0 ? "(—)" : `(${Number(seats.perc).toFixed(1)}%)`
+            }`}</p>
+          </div>
+        );
+      },
+    }),
+    resultsColumnHelper.accessor("votes", {
+      id: "votes",
+      header: t("votes_won"),
+      cell: (info: any) => info.getValue(),
+    }),
+  ];
+
   useEffect(() => {
     setData("q_seat", SEAT_OPTIONS[0] ? SEAT_OPTIONS[0].value : "P.001 Padang Besar, Perlis");
   }, [data.seats_list]);
+
+  useEffect(() => {
+    setData("section1_loading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "full_result",
+      type: "party",
+      election: data.election,
+      state: data.state,
+    })
+      .then(({ data }) => {
+        setData(
+          "section1_table",
+          data.sort((a: Result, b: Result) => {
+            if (a.seats.won === b.seats.won) {
+              return b.votes.perc - a.votes.perc;
+            } else {
+              return b.seats.won - a.seats.won;
+            }
+          })
+        );
+      })
+      .catch(e => {
+        console.error(e);
+      })
+      .then(() => setData("section1_loading", false));
+  }, [data.election, data.state, data.type]);
 
   useEffect(() => {
     setData("section2_loading", true);
@@ -188,11 +255,15 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       state: data.state,
     })
       .then(({ data }) => {
+        console.log(data);
         setData("data", data);
         setData(
           "seats_list",
           data.map((d: any) => d.seat)
         );
+      })
+      .catch(e => {
+        console.error(e);
       })
       .then(() => setData("section2_loading", false));
   }, [data.q_seat, data.state, data.election, data.type]);
@@ -212,6 +283,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
           "result",
           data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
+      })
+      .catch(e => {
+        console.error(e);
       })
       .then(() => setData("section2_loading", false));
   }, [data.index, data.open]);
@@ -307,10 +381,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     <StateDropdown
                       currentState={data.state}
                       onChange={selected => setData("state", selected.value)}
-                      exclude={["mys", "kul", "lbn", "pjy"]}
+                      exclude={data.tabs === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
                       width="w-full"
                       anchor="left"
-                      // disabled={data.tabs === 0}
                     />
                     <Dropdown
                       width="w-full"
@@ -342,16 +415,18 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                 options={PANELS.map(item => item.name)}
                 icons={PANELS.map(item => item.icon)}
                 current={data.tabs}
-                onChange={index => setData("tabs", index)}
+                onChange={index => {
+                  //   setData("state", "");
+                  setData("tabs", index);
+                }}
               />
             </div>
             <StateDropdown
               currentState={data.state}
               onChange={selected => setData("state", selected.value)}
-              exclude={["mys", "kul", "lbn", "pjy"]}
+              exclude={data.tabs === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
               width="min-w-max"
               anchor="left"
-              // disabled={data.tabs === 0}
             />
             <Dropdown
               anchor="left"
@@ -371,9 +446,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         <div className="text-base font-bold">
                           {t("election.parliament_of")}
                           <span className="text-primary">
-                            {data.tabs === 1 && data.state
-                              ? CountryAndStates[data.state]
-                              : CountryAndStates["mys"]}
+                            {data.state ? CountryAndStates[data.state] : CountryAndStates["mys"]}
                           </span>
                           <span>: </span>
                           <span className="text-primary">{data.election}</span>
@@ -394,7 +467,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         name={t("election.table")}
                         icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                       >
-                        <BorderlessTable isLoading={data.section1_loading} />
+                        <BorderlessTable
+                          isLoading={data.section1_loading}
+                          data={data.section1_table}
+                          columns={resultsColumns}
+                        />
                       </Panel>
                       <Panel name={t("election.summary")}>
                         <div className="space-y-6">
@@ -494,27 +571,28 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     <div
                       key={index}
                       className={clx(
-                        "mx-2 flex flex-col gap-2 rounded-xl border p-3 text-sm",
+                        "mx-2 flex h-full flex-col gap-2 rounded-xl border p-3 text-sm",
                         item.seat === data.q_seat
                           ? "border-dim"
                           : "border-outline dark:border-outlineHover-dark"
                       )}
                     >
                       <div className="flex flex-row justify-between">
-                        <div className="justify-normal">
+                        <div className="justify-normal truncate">
                           <span className="font-medium">{item.seat.slice(0, 5)}</span>
                           <span>{item.seat.slice(5)}</span>
                         </div>
-                        <Tooltip tip={t("full_result")}>
-                          {open => (
-                            <FullResult
-                              onClick={() => {
-                                setData("open", true);
-                                setData("index", index);
-                              }}
-                            />
-                          )}
-                        </Tooltip>
+                        <div className="group relative w-max">
+                          <FullResult
+                            onClick={() => {
+                              setData("open", true);
+                              setData("index", index);
+                            }}
+                          />
+                          <span className="pointer-events-none absolute z-20 inline-block w-max max-w-[200px] -translate-x-full translate-y-8 transform rounded bg-black p-3 text-sm font-normal text-white opacity-0 transition-opacity group-hover:opacity-100 md:-top-2 md:left-[140%]">
+                            {t("full_result")}
+                          </span>
+                        </div>
                       </div>
                       <div className="flex flex-row gap-1.5">
                         <ImageWithFallback
@@ -524,12 +602,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           height={18}
                           alt={t(`${item.party}`)}
                         />
-                        <span>{`${item.name} (${item.party})`}</span>
+                        <span className="truncate">{`${item.name} (${item.party})`}</span>
                         <Won />
                       </div>
                       <div className="flex flex-row items-center gap-1.5">
                         <p className="text-dim font-medium">{t("majority")}</p>
-                        <BarMeter perc={item.majority.perc} width={30} />
+                        <BarMeter perc={item.majority.perc} />
                         <span>
                           {item.majority.abs === 0 ? `—` : numFormat(item.majority.abs, "standard")}
                         </span>
@@ -563,9 +641,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
                   win={"won"}
                   election_name={data.data[data.index].election_name}
-                  // date={DateTime.fromISO(data.result[data.index].date)
-                  //   .setLocale(i18n.language)
-                  //   .toLocaleString(DateTime.DATE_MED)}
+                  date={DateTime.fromISO(data.data[data.index].date)
+                    .setLocale(i18n.language)
+                    .toLocaleString(DateTime.DATE_MED)}
                   title={
                     <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
                       <h5>{data.data[data.index].seat.split(",")[0]}</h5>

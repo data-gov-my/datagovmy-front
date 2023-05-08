@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       chart: "overall_seat",
       type: "parlimen",
       election: "GE-15",
-      state: "pls",
+      state: "mys",
     });
 
     return {
