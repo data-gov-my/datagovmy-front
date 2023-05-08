@@ -34,24 +34,20 @@ const Sekolahku: Page = ({
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-sekolahku", async () => {
   try {
-    /**
-     * TODO (@jiaxin): Replace {#1} with {#2}. At initial load, dropdown_data consists of suggested selection of schools (10 max)
-     */
-    // #1
-    const { data } = await get("/dashboard", { dashboard: "sekolahku", code: "PEB1094" });
-
-    // #2
-    // const [dropdown, school] = await Promise.all([get("/dropdown", { dashboard: "sekolahku" }), get("/dashboard", { dashboard: "sekolahku", code: "PEB1094" })])
+    const [dropdown, school] = await Promise.all([
+      get("/dropdown", { dashboard: "sekolahku", limit: 10 }),
+      get("/dashboard", { dashboard: "sekolahku", code: "PEB1094" }),
+    ]);
 
     return {
       notFound: false,
       props: {
-        dropdown_data: "", // dropdown_data.query_values.data.data,
-        sekolahku_info: data.sekolahku_info.data,
-        sekolahku_barmeter: data.sekolahku_barmeter.data,
-        bellcurve_school: data.bellcurve_school.data,
-        bellcurve_callout: data.bellcurve_callout.data.data,
-        bellcurve_linechart: data.bellcurve_linechart.data.data,
+        dropdown_data: dropdown.data, // dropdown_data.query_values.data.data,
+        sekolahku_info: school.data.sekolahku_info.data,
+        sekolahku_barmeter: school.data.sekolahku_barmeter.data,
+        bellcurve_school: school.data.bellcurve_school.data,
+        bellcurve_callout: school.data.bellcurve_callout.data.data,
+        bellcurve_linechart: school.data.bellcurve_linechart.data.data,
       },
       revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };

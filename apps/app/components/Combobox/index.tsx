@@ -11,6 +11,7 @@ type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];
   selected?: OptionType<L, V> | null;
   onChange: (option?: OptionType<L, V>) => void;
+  onKeyChange: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
 };
@@ -19,6 +20,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   options,
   selected,
   onChange,
+  onKeyChange,
   placeholder,
   enableFlag = false,
 }: ComboBoxProps<L, V>) => {
@@ -44,7 +46,10 @@ const ComboBox = <L extends string | number = string, V = string>({
             placeholder={placeholder}
             className="w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
             displayValue={(option: OptionType<L, V>) => option?.label as string}
-            onChange={event => setQuery(event.target.value)}
+            onChange={event => {
+              setQuery(event.target.value);
+              onKeyChange(event.target.value);
+            }}
             spellCheck={false}
           />
           <Combobox.Button as={"div"} className="w-full">

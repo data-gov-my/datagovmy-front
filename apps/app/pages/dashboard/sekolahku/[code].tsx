@@ -71,7 +71,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
       // #2
       //   const [dropdown, school] = await Promise.all([
-      //     get("/dropdown", { dashboard: "sekolahku" }),
+      //     get("/dropdown", { dashboard: "sekolahku", limit: 10 }),
       //     get("/dashboard", { dashboard: "sekolahku", code: params?.code }),
       //   ]).catch(e => {
       //     console.error(e);

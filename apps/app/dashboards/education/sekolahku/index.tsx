@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
 import { get } from "@lib/api";
+import { debounce } from "lodash";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -50,9 +51,18 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     };
   }, [router.events]);
 
+  // TODO (@jiaxin): Replace with useWatch, dep on what user types. After each call, replace the selection
+  const updateDropdown = debounce(query => {
+    get("/dropdown", { dashboard: "sekolahku", query: query, limit: 10 })
+      .then((res: any) => {
+        setData("selection", res.data);
+      })
+      .catch(e => console.error(e));
+  }, 1000);
+
   const { data, setData } = useData({
     loading: false,
-    selection: undefined,
+    selection: updateDropdown(""),
     tabs_section3: 0,
     selected_school: {
       label: `${sekolahku_info.school} (${sekolahku_info.code}) - ${sekolahku_info.postcode} ${sekolahku_info.state}`,
@@ -60,14 +70,16 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   });
 
-  // TODO (@jiaxin): Replace with useWatch, dep on what user types. After each call, replace the selection
-  useEffect(() => {
-    get("/dropdown", { dashboard: "sekolahku" })
-      .then((res: any) => {
-        setData("selection", res.data.query_values.data.data);
-      })
-      .catch(e => console.error(e));
-  }, []);
+  const searchHandler = (e: any) => {
+    if (e?.value) {
+      setData("selected_school", e);
+      setData("loading", true);
+      router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
+        scroll: false,
+        locale: i18n.language,
+      });
+    }
+  };
 
   // TODO: remove manual sorting once BE maintains ordering
   const barmeterSortArray = ["sex", "oku", "orphan", "ethnic", "religion", "income"];
@@ -146,16 +158,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       placeholder={t("section_1.search_school")}
                       options={SCHOOL_OPTIONS}
                       selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
-                      onChange={e => {
-                        if (e?.value) {
-                          setData("selected_school", e);
-                          setData("loading", true);
-                          router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
-                            scroll: false,
-                            locale: i18n.language,
-                          });
-                        }
-                      }}
+                      onChange={searchHandler}
+                      onKeyChange={updateDropdown}
                     />
                   </div>
                 </div>
