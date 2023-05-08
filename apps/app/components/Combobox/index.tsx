@@ -11,7 +11,7 @@ type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];
   selected?: OptionType<L, V> | null;
   onChange: (option?: OptionType<L, V>) => void;
-  onKeyChange: (query: string) => void;
+  onKeyChange?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
 };
@@ -48,7 +48,7 @@ const ComboBox = <L extends string | number = string, V = string>({
             displayValue={(option: OptionType<L, V>) => option?.label as string}
             onChange={event => {
               setQuery(event.target.value);
-              onKeyChange(event.target.value);
+              if (onKeyChange) onKeyChange(event.target.value);
             }}
             spellCheck={false}
           />
