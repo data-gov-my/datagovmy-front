@@ -330,16 +330,15 @@ export default BorderlessTable;
 
 interface BarMeterProps {
   perc: number;
-  width?: number;
 }
 
-export const BarMeter: FunctionComponent<BarMeterProps> = ({ perc, width = 50 }) => {
+export const BarMeter: FunctionComponent<BarMeterProps> = ({ perc }) => {
   return (
     <div
-      className={`bg-outline dark:bg-outlineHover-dark relative flex h-[5px] w-[30px] self-center rounded-md lg:w-[${width}px]`}
+      className={`bg-outline dark:bg-outlineHover-dark relative flex h-[5px] w-[30px] self-center rounded-md lg:w-[50px]`}
     >
       <div
-        className="absolute left-0 top-0 z-10 h-full rounded-xl bg-black dark:bg-white"
+        className="absolute left-0 top-0  h-full rounded-xl bg-black dark:bg-white"
         style={{
           left: `0%`,
           right: `${100 - perc}%`,
