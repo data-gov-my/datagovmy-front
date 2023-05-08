@@ -137,9 +137,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     get("/explorer", {
       explorer: "ELECTIONS",
       dropdown: "candidate_list",
-    }).then(({ data }) => {
-      setData("candidate_list", data);
-    });
+    })
+      .then(({ data }) => {
+        setData("candidate_list", data);
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }, []);
 
   useEffect(() => {
@@ -160,6 +164,9 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           )
         );
       })
+      .catch(e => {
+        console.error(e);
+      })
       .then(() => setData("loading", false));
   }, [data.q_candidate, data.type]);
 
@@ -177,6 +184,9 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           "result",
           data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
+      })
+      .catch(e => {
+        console.error(e);
       })
       .then(() => setData("modalLoading", false));
   }, [data.index, data.open]);

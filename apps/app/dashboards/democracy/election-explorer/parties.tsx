@@ -175,9 +175,13 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     get("/explorer", {
       explorer: "ELECTIONS",
       dropdown: "party_list",
-    }).then(({ data }) => {
-      setData("party_list", data);
-    });
+    })
+      .then(({ data }) => {
+        setData("party_list", data);
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }, []);
 
   useEffect(() => {
@@ -197,6 +201,9 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           "data",
           data.sort((a: Party, b: Party) => Number(new Date(b.date)) - Number(new Date(a.date)))
         );
+      })
+      .catch(e => {
+        console.error(e);
       })
       .then(() => setData("loading", false));
   }, [data.q_party, data.state, data.type]);
@@ -221,6 +228,9 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
             }
           })
         );
+      })
+      .catch(e => {
+        console.error(e);
       })
       .then(() => setData("modalLoading", false));
   }, [data.index, data.open]);

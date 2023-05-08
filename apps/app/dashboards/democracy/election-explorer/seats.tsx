@@ -113,9 +113,13 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     get("/explorer", {
       explorer: "ELECTIONS",
       dropdown: "seats_list",
-    }).then(({ data }) => {
-      setData("seats_list", data);
-    });
+    })
+      .then(({ data }) => {
+        setData("seats_list", data);
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }, []);
 
   useEffect(() => {
@@ -130,6 +134,9 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
           "data",
           data.sort((a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date)))
         );
+      })
+      .catch(e => {
+        console.error(e);
       })
       .then(() => setData("loading", false));
   }, [data.q_seat]);
@@ -149,6 +156,9 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
           "result",
           data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
+      })
+      .catch(e => {
+        console.error(e);
       })
       .then(() => setData("modalLoading", false));
   }, [data.index, data.open]);
