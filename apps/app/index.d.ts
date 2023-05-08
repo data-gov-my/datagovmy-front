@@ -10,14 +10,13 @@ declare namespace NodeJS {
     NEXT_PUBLIC_AUTHORIZATION_TOKEN: string;
     NEXT_PUBLIC_API_URL: string;
     NEXT_PUBLIC_TILESERVER_URL: string;
+    NEXT_PUBLIC_GA_TAG: string;
 
     MIXPANEL_TOKEN: string;
     MIXPANEL_PROJECT_ID: string;
-    MIXPANEL_HOST: string;
     MIXPANEL_SA_USER: string;
     MIXPANEL_SA_SECRET: string;
     NEXT_PUBLIC_MIXPANEL_TOKEN: string;
-    NEXT_PUBLIC_MIXPANEL_HOST: string;
   }
 }
 
