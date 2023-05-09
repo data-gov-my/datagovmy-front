@@ -92,7 +92,7 @@ const Card: FunctionComponent<CardProps> = ({
                   >
                     <XMarkIcon className="text-dim absolute right-3 top-3 h-6 w-6" />
                   </button>
-                  <div className="space-x-3 pt-3">
+                  <div className="space-x-3 pb-6 pt-3">
                     {date ? <span className="text-dim">{date}</span> : <></>}
                     <span className="uppercase text-black dark:text-white">{election_name}</span>
                   </div>

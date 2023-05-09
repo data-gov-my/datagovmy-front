@@ -16,7 +16,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
   (
     {
       title,
-      className = "border-b dark:border-b-outlineHover-dark py-12",
+      className = "border-b dark:border-b-outlineHover-dark py-8 lg:py-12",
       description,
       children,
       date,
@@ -38,7 +38,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
     }, [date]);
     return (
       <section className={className} ref={ref}>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6 lg:gap-8">
           {title || date || description ? (
             <div className="space-y-2">
               <div className="flex flex-col flex-wrap items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
