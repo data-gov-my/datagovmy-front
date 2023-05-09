@@ -58,7 +58,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     setData("dropdownLoading", true);
     get("/dropdown", { dashboard: "sekolahku", query: query, limit: 10 })
       .then((res: any) => {
-        setData("selection", res.data);
+        setData("selection", res.data.data);
       })
       .then(() => {
         setData("dropdownLoading", false);
