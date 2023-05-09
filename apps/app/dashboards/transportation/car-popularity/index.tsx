@@ -23,20 +23,23 @@ interface CarPopularityProps {
   queryOptions: Record<string, any>;
 }
 
+const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+
 const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) => {
   const { t, i18n } = useTranslation(["dashboard-car-popularity", "common"]);
   const { breakpoint } = useContext(WindowContext);
-  const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
-  const { data, setData } = useData({
-    // query data
+  // query data
+  const { data: query, setData: setQuery } = useData({
     manufacturer: { label: Object.keys(queryOptions)[0], value: Object.keys(queryOptions)[0] },
     model: null,
     colour: null,
     params: {},
     loading: false,
+  });
 
-    // timeseries data
+  // timeseries data
+  const { data, setData } = useData({
     x: [],
     y: [],
     placeholderX: [
@@ -63,34 +66,34 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
 
   const filterModels = useMemo<Array<OptionType>>(() => {
     let _models: Array<OptionType> = [];
-    if (data.manufacturer) {
-      _models = Object.keys(queryOptions[data.manufacturer.value]).map(model => {
+    if (query.manufacturer) {
+      _models = Object.keys(queryOptions[query.manufacturer.value]).map(model => {
         return { label: model, value: model };
       });
-      setData("model", _models[0]);
+      setQuery("model", _models[0]);
     }
 
     return _models;
-  }, [data.manufacturer]);
+  }, [query.manufacturer]);
 
   const filterColours = useMemo<Array<OptionType>>(() => {
     let _colours = [];
-    if (data.manufacturer && data.model) {
-      _colours = queryOptions[data.manufacturer.value][data.model.value].map((colour: string) => {
+    if (query.manufacturer && query.model) {
+      _colours = queryOptions[query.manufacturer.value][query.model.value].map((colour: string) => {
         return { label: colour, value: colour };
       });
-      setData("colour", _colours[0]);
+      setQuery("colour", _colours[0]);
     }
     return _colours;
-  }, [data.model]);
+  }, [query.model]);
 
   const searchHandler = () => {
-    setData("loading", true);
+    setQuery("loading", true);
 
     const params = {
-      manufacturer: data.manufacturer.value,
-      model: data.model.value,
-      colour: data.colour.value,
+      manufacturer: query.manufacturer.value,
+      model: query.model.value,
+      colour: query.colour.value,
     };
 
     get("chart/", {
@@ -104,7 +107,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         setData("data_as_of", data.data_as_of);
         setData("params", params); // for timeseries title
       })
-      .then(() => setData("loading", false));
+      .then(() => setQuery("loading", false));
   };
 
   return (
@@ -131,24 +134,24 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   label={t("label_manufacturer")}
                   width="w-full"
                   options={filterManufacturers}
-                  selected={data.manufacturer}
-                  onChange={selected => setData("manufacturer", selected)}
+                  selected={query.manufacturer}
+                  onChange={selected => setQuery("manufacturer", selected)}
                   enableSearch
                 />
                 <Dropdown
                   label={t("label_model")}
                   width="w-full"
                   options={filterModels}
-                  selected={data.model}
-                  onChange={selected => setData("model", selected)}
+                  selected={query.model}
+                  onChange={selected => setQuery("model", selected)}
                   enableSearch
                 />
                 <Dropdown
                   label={t("label_colour")}
                   width="w-full"
                   options={filterColours}
-                  selected={data.colour}
-                  onChange={selected => setData("colour", selected)}
+                  selected={query.colour}
+                  onChange={selected => setQuery("colour", selected)}
                 />
                 <div>
                   <Button

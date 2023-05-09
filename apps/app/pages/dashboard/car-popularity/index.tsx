@@ -29,7 +29,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
         category: "transportation",
         agency: "JPJ",
       },
-      queryOptions: data,
+      queryOptions: data.data,
     },
   };
 });
