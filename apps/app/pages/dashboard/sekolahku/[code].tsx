@@ -58,11 +58,10 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     try {
       const [dropdown, school] = await Promise.all([
-        get("/dropdown", { dashboard: "sekolahku", limit: 10 }),
+        get("/dropdown", { dashboard: "sekolahku", limit: 15 }),
         get("/dashboard", { dashboard: "sekolahku", code: params?.code }),
       ]).catch(e => {
-        console.error(e);
-        throw new Error("Invalid school code");
+        throw new Error("Invalid school code. Message: " + e);
       });
 
       return {
@@ -85,6 +84,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         revalidate: 60 * 60 * 24, // 1 day (in seconds)
       };
     } catch (error) {
+      console.error(error);
       return {
         notFound: true,
       };

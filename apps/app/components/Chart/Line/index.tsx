@@ -25,6 +25,8 @@ interface LineProps extends ChartHeaderProps {
   subheader?: ReactElement | ReactElement[];
   type?: "category" | "linear" | "logarithmic";
   data?: any;
+  prefixX?: string;
+  prefixY?: string;
   unitX?: string;
   unitY?: string;
   minY?: number | "auto";
@@ -47,6 +49,8 @@ const Line: FunctionComponent<LineProps> = ({
   title,
   state,
   type = "linear",
+  prefixX,
+  prefixY,
   unitX,
   unitY,
   data = dummy,
@@ -75,6 +79,14 @@ const Line: FunctionComponent<LineProps> = ({
   );
 
   const { theme } = useTheme();
+
+  const display = (
+    value: number,
+    type: "compact" | "standard",
+    precision: number | [min: number, max: number]
+  ): string => {
+    return numFormat(value, type, precision);
+  };
 
   const options: ChartCrosshairOption<"line"> = {
     maintainAspectRatio: false,
@@ -123,7 +135,9 @@ const Line: FunctionComponent<LineProps> = ({
           },
           padding: 6,
           callback: function (value: string | number) {
-            return this.getLabelForValue(value as number).concat(unitX ?? "");
+            return `${prefixX ?? ""}${numFormat(+value, "standard", 1).toLocaleLowerCase()}${
+              unitX ?? ""
+            }`;
           },
         },
       },

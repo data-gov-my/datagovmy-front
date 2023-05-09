@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
@@ -37,7 +37,7 @@ const Sekolahku: Page = ({
 export const getStaticProps: GetStaticProps = withi18n("dashboard-sekolahku", async () => {
   try {
     const [dropdown, school] = await Promise.all([
-      get("/dropdown", { dashboard: "sekolahku", limit: 10 }),
+      get("/dropdown", { dashboard: "sekolahku", limit: 15 }),
       get("/dashboard", { dashboard: "sekolahku", code: "PEB1094" }),
     ]);
 

@@ -1,7 +1,7 @@
 import AgencyBadge from "@components/AgencyBadge";
 import { Hero, Panel, Section, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useCallback, useMemo } from "react";
 import Container from "@components/Container";
 import { MOEIcon } from "@components/Icon/agency";
 import ComboBox from "@components/Combobox";
@@ -15,7 +15,8 @@ import { useRouter } from "next/router";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
 import { get } from "@lib/api";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
+import { numFormat } from "@lib/helpers";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -44,26 +45,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   bellcurve_linechart,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
-  const router = useRouter();
-
-  useEffect(() => {
-    router.events.on("routeChangeComplete", () => setData("loading", false));
-    return () => {
-      router.events.off("routeChangeComplete", () => null);
-    };
-  }, [router.events]);
-
-  const updateDropdown = debounce(query => {
-    setData("dropdownLoading", true);
-    get("/dropdown", { dashboard: "sekolahku", query: query, limit: 10 })
-      .then((res: any) => {
-        setData("selection", res.data.data);
-      })
-      .then(() => {
-        setData("dropdownLoading", false);
-      })
-      .catch(e => console.error(e));
-  }, 500);
+  const { push } = useRouter();
 
   const { data, setData } = useData({
     loading: false,
@@ -76,16 +58,30 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   });
 
-  const searchHandler = (e: any) => {
-    if (e?.value) {
-      setData("selected_school", e);
-      setData("loading", true);
-      router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
-        scroll: false,
-        locale: i18n.language,
-      });
-    }
+  const navigateToSchool = (e?: OptionType) => {
+    if (!e) return;
+
+    setData("selected_school", e);
+    setData("loading", true);
+
+    push(`/dashboard/sekolahku/${e.value}`, undefined, {
+      scroll: false,
+      locale: i18n.language,
+    }).then(() => setData("loading", false));
   };
+
+  const fetchSelection = useCallback(
+    debounce(query => {
+      setData("dropdownLoading", true);
+      get("/dropdown", { dashboard: "sekolahku", query: query, limit: 15 })
+        .then((res: any) => {
+          setData("selection", res.data.data);
+          setData("dropdownLoading", false);
+        })
+        .catch(e => console.error(e));
+    }, 300),
+    []
+  );
 
   // TODO: remove manual sorting once BE maintains ordering
   const barmeterSortArray = ["sex", "oku", "orphan", "ethnic", "religion", "income"];
@@ -93,20 +89,17 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   const formatCallout = (type: string, value: number): string => {
     switch (type) {
       case "gpa":
-        return value.toFixed(2);
+        return numFormat(value, "compact", [2, 2]);
       case "st_ratio":
-        return value.toFixed(1);
+        return numFormat(value, "compact", [1, 1]);
       case "students":
-        return value.toLocaleString();
+        return numFormat(value, "standard");
       case "max_ethnic":
-        return value.toFixed(1) + "%";
+        return numFormat(value, "compact", [1, 1]) + "%";
       case "household_income":
-        return (
-          "RM" +
-          value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-        );
+        return `RM ${numFormat(value, "standard", [2, 2])}`;
       case "closest_school_dist":
-        return value.toFixed(1) + "km";
+        return `${numFormat(value, "compact", [1, 1])} km`;
       default:
         return value.toLocaleString();
     }
@@ -124,14 +117,14 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   ];
 
-  const SCHOOL_OPTIONS: Array<OptionType> = data.selection
-    ? data.selection.map(({ code, school, postcode, state }: any) => {
-        return {
-          label: `${school} (${code}) - ${postcode} ${state}`,
-          value: code,
-        };
-      })
-    : [];
+  const SCHOOL_OPTIONS = useMemo<OptionType[]>(() => {
+    return data.selection.map(({ code, school, postcode, state }: any) => {
+      return {
+        label: `${school} (${code}) - ${postcode} ${state}`,
+        value: code,
+      };
+    });
+  }, [data.selection]);
 
   return (
     <>
@@ -164,8 +157,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       placeholder={t("section_1.search_school")}
                       options={SCHOOL_OPTIONS}
                       selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
-                      onChange={searchHandler}
-                      onKeyChange={updateDropdown}
+                      onChange={navigateToSchool}
+                      onSearch={fetchSelection}
                       loading={data.dropdownLoading}
                     />
                   </div>
@@ -342,7 +335,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                           className="h-[300px] w-full"
                           title={t(`section_3.${k}`)}
                           enableGridX={false}
-                          // graceX={"0.1%"}
+                          prefixX={k === "household_income" ? "RM " : ""}
+                          unitX={
+                            k === "closest_school_dist" ? "km " : k === "max_ethnic" ? "%" : ""
+                          }
                           data={{
                             labels: x, // x-values
                             datasets: [
