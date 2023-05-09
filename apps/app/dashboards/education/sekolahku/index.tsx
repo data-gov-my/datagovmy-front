@@ -53,7 +53,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     };
   }, [router.events]);
 
-  // TODO (@jiaxin): Replace with useWatch, dep on what user types. After each call, replace the selection
   const updateDropdown = debounce(query => {
     setData("dropdownLoading", true);
     get("/dropdown", { dashboard: "sekolahku", query: query, limit: 10 })
