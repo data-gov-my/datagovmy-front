@@ -4,19 +4,18 @@ import Slider from "react-slick";
 
 type CarouselProps = {
   items: Array<ReactNode>;
-  itemsToShow: number;
-  itemsToScroll: number;
+  config?: Object;
   title?: string | ReactNode;
   _ref?: ForwardedRef<Slider>;
 };
 
-const Carousel = ({ items, itemsToShow, itemsToScroll, title, _ref }: CarouselProps) => {
+const Carousel = ({ items, config, title, _ref }: CarouselProps) => {
   const PrevArrow = ({ ...props }) => {
     const { onClick } = props;
     return (
       <button
-        className={`border-outline dark:border-outlineHover-dark hover:bg-washed dark:hover:bg-washed-dark absolute -left-2 z-10 h-8 w-8
-         rounded-full border bg-white pl-1 dark:bg-black lg:-left-10`}
+        className={`hover:bg-washed dark:hover:bg-washed-dark absolute -left-2 z-10 hidden h-8
+         w-8 rounded-full bg-white pl-1 dark:bg-black lg:-left-10 lg:block`}
         onClick={onClick}
       >
         <ChevronLeftIcon className="h-5 w-5" />
@@ -28,8 +27,8 @@ const Carousel = ({ items, itemsToShow, itemsToScroll, title, _ref }: CarouselPr
     const { onClick } = props;
     return (
       <button
-        className={`border-outline dark:border-outlineHover-dark hover:bg-washed dark:hover:bg-washed-dark absolute -right-2 z-10 h-8 w-8
-         rounded-full border bg-white pl-1.5 dark:bg-black lg:-right-10`}
+        className={`hover:bg-washed dark:hover:bg-washed-dark absolute -right-2 z-10 hidden h-8
+         w-8 rounded-full bg-white pl-1.5 dark:bg-black lg:-right-10 lg:block`}
         onClick={onClick}
       >
         <ChevronRightIcon className="h-5 w-5" />
@@ -37,46 +36,50 @@ const Carousel = ({ items, itemsToShow, itemsToScroll, title, _ref }: CarouselPr
     );
   };
 
-  const settings = {
-    dots: false,
-    infinite: true,
-    cssEase: "ease-in-out",
-    speed: 500,
-    slidesToShow: items.length < itemsToShow ? items.length : itemsToShow,
-    slidesToScroll: itemsToScroll,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+  const settings = config
+    ? config
+    : {
+        dots: false,
+        infinite: true,
+        cssEase: "ease-in-out",
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+        responsive: [
+          {
+            breakpoint: 1280,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 3,
+            },
+          },
+          {
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 2.25,
+              slidesToScroll: 2,
+            },
+          },
+          {
+            breakpoint: 640,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              centerMode: true,
+              infinite: false,
+            },
+          },
+        ],
+      };
 
   return (
-    <div className="space-y-6">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           {title && typeof title === "string" ? (
-            <span className="text-base font-bold dark:text-white">{title}</span>
+            <span className="pb-6 text-base font-bold dark:text-white">{title}</span>
           ) : (
             title
           )}
