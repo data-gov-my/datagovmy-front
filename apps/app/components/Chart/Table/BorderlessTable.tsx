@@ -80,11 +80,11 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <div className="space-y-6">
+    <div>
       <div className={clx("flex flex-wrap items-start justify-between gap-2", className)}>
         <div>
           {title && typeof title === "string" ? (
-            <span className="text-base font-bold dark:text-white">{title}</span>
+            <span className="pb-6 text-base font-bold dark:text-white">{title}</span>
           ) : (
             title
           )}
@@ -130,7 +130,10 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                         rowIndex === highlightedRow && colIndex === 0
                           ? "font-medium"
                           : "font-normal",
-                        "whitespace-nowrap px-2 py-[10px] "
+                        cell.column.columnDef.id === "candidate_name"
+                          ? "whitespace-normal"
+                          : "whitespace-nowrap",
+                        "px-2 py-[10px]"
                       )}
                     >
                       <span className="flex flex-row gap-1.5">
