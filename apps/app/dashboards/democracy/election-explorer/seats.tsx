@@ -157,7 +157,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     <>
       <Hero
         background="red"
-        category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
+        category={[t("common:categories.democracy"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={

@@ -19,10 +19,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) 
     <>
       <Hero
         background="blue"
-        category={[
-          t("common:nav.megamenu.categories.transportation"),
-          "text-primary dark:text-primary-dark",
-        ]}
+        category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={

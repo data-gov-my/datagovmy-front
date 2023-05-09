@@ -19,7 +19,7 @@ const Crime: FunctionComponent<CrimeProps> = ({}) => {
     <>
       <Hero
         background="gray"
-        category={[t("common:nav.megamenu.categories.public_safety"), "text-black"]}
+        category={[t("common:categories.public_safety"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={

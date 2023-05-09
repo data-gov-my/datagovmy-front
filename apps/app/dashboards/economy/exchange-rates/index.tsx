@@ -69,7 +69,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
     <>
       <Hero
         background="gray"
-        category={[t("common:nav.megamenu.categories.economy"), "text-green-300"]}
+        category={[t("common:categories.economy"), "text-green-300"]}
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}

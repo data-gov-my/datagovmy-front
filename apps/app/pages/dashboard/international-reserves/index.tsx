@@ -16,11 +16,7 @@ const InternationalReserves: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.international_reserves")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternationalReservesDashboard
         last_updated={last_updated}
         timeseries={timeseries}

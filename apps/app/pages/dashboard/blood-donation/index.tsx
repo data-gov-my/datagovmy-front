@@ -32,6 +32,7 @@ const BloodDonation: Page = ({
 
   let vars: Record<string, any> = {};
 
+  // TODO (@irfan): optimise this later.
   Object.entries(barchart_variables.data).forEach(([key, values]: [string, any]) => {
     vars[key] = Object.entries(values).reduce((previous, current: [string, any]) => {
       return Object.assign(previous, {
@@ -45,11 +46,7 @@ const BloodDonation: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.blood_donation")}
-        description=""
-        keywords=""
-      />
+      <Metadata title={t("header")} description={t("description")} keywords="" />
       <BloodDonationDashboard
         last_updated={last_updated}
         params={params}

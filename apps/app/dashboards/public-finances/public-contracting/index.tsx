@@ -19,10 +19,7 @@ const PublicContracting: FunctionComponent<PublicContractingProps> = ({}) => {
     <>
       <Hero
         background="blue"
-        category={[
-          t("common:nav.megamenu.categories.public_finances"),
-          "text-primary dark:text-primary-dark",
-        ]}
+        category={[t("common:categories.public_finances"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={

@@ -156,7 +156,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
     <>
       <Hero
         background="gray"
-        category={[t("common:nav.megamenu.categories.economy"), "text-primary"]}
+        category={[t("common:categories.economy"), "text-primary"]}
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
