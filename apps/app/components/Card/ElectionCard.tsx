@@ -44,6 +44,7 @@ const Card: FunctionComponent<CardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(open);
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
+  const [e, num] = getElection(election_name);
 
   return (
     <>
@@ -94,7 +95,9 @@ const Card: FunctionComponent<CardProps> = ({
                   </button>
                   <div className="space-x-3 pb-6 pt-3">
                     {date ? <span className="text-dim">{date}</span> : <></>}
-                    <span className="uppercase text-black dark:text-white">{election_name}</span>
+                    <span className="uppercase text-black dark:text-white">
+                      {num ? t(e).concat("-" + num) : t(e)}
+                    </span>
                   </div>
                   <BorderlessTable
                     data={data}
@@ -105,22 +108,24 @@ const Card: FunctionComponent<CardProps> = ({
                   />
 
                   <div className="mt-6 space-y-3">
-                    <div className="flex flex-row items-center justify-center gap-1.5">
-                      {Array(total)
-                        .fill(null)
-                        .map((num, index: number) => (
-                          <button
-                            onClick={() => onChange(index)}
-                            disabled={index === page}
-                            className={clx(
-                              "h-1 w-5 rounded-md",
-                              index === page
-                                ? "bg-black dark:bg-white"
-                                : "bg-outline hover:bg-washed dark:bg-outlineHover-dark dark:hover:bg-washed-dark"
-                            )}
-                          ></button>
-                        ))}
-                    </div>
+                    {total > 100 && (
+                      <div className="flex flex-row items-center justify-center gap-1.5">
+                        {Array(total)
+                          .fill(null)
+                          .map((num, index: number) => (
+                            <button
+                              onClick={() => onChange(index)}
+                              disabled={index === page}
+                              className={clx(
+                                "h-1 w-5 rounded-md",
+                                index === page
+                                  ? "bg-black dark:bg-white"
+                                  : "bg-outline hover:bg-washed dark:bg-outlineHover-dark dark:hover:bg-washed-dark"
+                              )}
+                            ></button>
+                          ))}
+                      </div>
+                    )}
                     <div className={`flex items-center justify-center gap-4 text-sm`}>
                       <Button
                         className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
@@ -130,6 +135,14 @@ const Card: FunctionComponent<CardProps> = ({
                         <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
                         {t("common:common.previous")}
                       </Button>
+                      {total > 100 && (
+                        <span className="flex items-center gap-1 text-center text-sm">
+                          {t("common:common.page_of", {
+                            current: page + 1,
+                            total: total,
+                          })}
+                        </span>
+                      )}
                       <Button
                         className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                         onClick={onNext}
@@ -151,3 +164,10 @@ const Card: FunctionComponent<CardProps> = ({
 };
 
 export default Card;
+
+export function getElection(input: string): any[] {
+  if (!input) return [];
+  const e = input.split("-");
+  const num = e[1].match(/\d+/g);
+  return [e[0], num];
+}
