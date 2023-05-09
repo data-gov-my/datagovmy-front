@@ -6,6 +6,7 @@ import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/reac
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
 import { matchSorter } from "match-sorter";
+import Spinner from "@components/Spinner";
 
 type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];
@@ -14,6 +15,7 @@ type ComboBoxProps<L, V> = {
   onKeyChange?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
+  loading?: boolean;
 };
 
 const ComboBox = <L extends string | number = string, V = string>({
@@ -23,6 +25,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   onKeyChange,
   placeholder,
   enableFlag = false,
+  loading = false,
 }: ComboBoxProps<L, V>) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
@@ -87,7 +90,11 @@ const ComboBox = <L extends string | number = string, V = string>({
           afterLeave={() => setQuery("")}
         >
           <Combobox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm">
-            {filteredOptions.length === 0 && query !== "" ? (
+            {loading ? (
+              <div className="text-dim relative flex cursor-default select-none flex-row items-center gap-2 px-4 py-2	">
+                <Spinner loading={loading} /> {t("common:placeholder.loading")}
+              </div>
+            ) : filteredOptions.length === 0 && query !== "" ? (
               <div className="text-dim relative cursor-default select-none px-4 py-2">
                 {t("common:placeholder.no_results")}
               </div>

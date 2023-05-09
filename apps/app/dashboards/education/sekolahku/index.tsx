@@ -53,15 +53,20 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   // TODO (@jiaxin): Replace with useWatch, dep on what user types. After each call, replace the selection
   const updateDropdown = debounce(query => {
+    setData("dropdownLoading", true);
     get("/dropdown", { dashboard: "sekolahku", query: query, limit: 10 })
       .then((res: any) => {
         setData("selection", res.data);
       })
+      .then(() => {
+        setData("dropdownLoading", false);
+      })
       .catch(e => console.error(e));
-  }, 1000);
+  }, 500);
 
   const { data, setData } = useData({
     loading: false,
+    dropdownLoading: false,
     selection: dropdown_data,
     tabs_section3: 0,
     selected_school: {
@@ -160,6 +165,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
                       onChange={searchHandler}
                       onKeyChange={updateDropdown}
+                      loading={data.dropdownLoading}
                     />
                   </div>
                 </div>
