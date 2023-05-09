@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-circle-of-life
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-circle-of-life",
+        type: "dashboard",
+        category: "demography",
+        agency: "JPN",
+      },
+    },
   };
 });
 

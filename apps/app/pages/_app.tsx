@@ -5,7 +5,7 @@ import Layout from "@components/Layout";
 import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import mixpanelConfig from "@config/mixpanel";
-import { ga_track, init_session } from "@lib/mixpanel";
+import { ga_track, init_session, track } from "@lib/mixpanel";
 import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
 import Nexti18NextConfig from "../next-i18next.config";
@@ -23,23 +23,29 @@ function App({ Component, pageProps }: AppPropsLayout) {
 
   // Mixpanel initialisation
   useEffect(() => {
-    // window.mixpanel.init(mixpanelConfig.token, {
-    //   debug: true,
-    //   api_host: "https://api.mixpanel.com",
-    // });
+    const is_development = process.env.NEXT_PUBLIC_APP_ENV === "development";
+    window.mixpanel.init(
+      mixpanelConfig.token,
+      {
+        debug: is_development,
+        verbose: is_development,
+        api_host: mixpanelConfig.host,
+      },
+      mixpanelConfig.name
+    );
   }, []);
 
   useEffect(() => {
     // trigger page view event for client-side navigation
     const handleRouteChange = (url: string) => {
-      //   ga_track(url);
-      //   init_session();
+      ga_track(url);
+      track("page_view", pageProps?.meta);
     };
     router.events.on("routeChangeComplete", handleRouteChange);
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [router.events]);
+  }, [router.events, pageProps?.meta]);
 
   return (
     <div className={clx(Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black")}>

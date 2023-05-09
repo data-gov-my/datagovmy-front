@@ -27,6 +27,12 @@ export const getServerSideProps: GetServerSideProps = withi18n(null, async ({ qu
 
   return {
     props: {
+      meta: {
+        id: "dashboard-index",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
       query: query ?? {},
       data: data,
       sources: data.agencies_all.data,

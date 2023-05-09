@@ -28,6 +28,13 @@ export default Error404;
 
 export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
-    props: {},
+    props: {
+      meta: {
+        id: "error-400",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
+    },
   };
 });

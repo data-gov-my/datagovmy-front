@@ -111,6 +111,14 @@ export const getServerSideProps: GetServerSideProps = withi18n(
 
     return {
       props: {
+        meta: {
+          id: data.chart_details.intro.unique_id,
+          type: "catalogue",
+          category: null,
+          agency: Array.isArray(data.metadata.data_source)
+            ? data.metadata.data_source.join(",")
+            : "",
+        },
         config,
         params,
         dataset: {

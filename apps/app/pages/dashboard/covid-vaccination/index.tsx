@@ -59,6 +59,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccinat
   return {
     notFound: false,
     props: {
+      meta: {
+        id: "dashboard-covid-vaccination",
+        type: "dashboard",
+        category: "healthcare",
+        agency: "KKM",
+      },
       params: { state: "mys" },
       timeseries: data.timeseries,
       statistics: data.statistics,

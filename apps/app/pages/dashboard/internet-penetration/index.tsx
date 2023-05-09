@@ -25,7 +25,14 @@ export const getStaticProps: GetStaticProps = withi18n(
 
     return {
       notFound: false,
-      props: {},
+      props: {
+        meta: {
+          id: "dashboard-internet-penetration",
+          type: "dashboard",
+          category: "digitalisation",
+          agency: "MCMC",
+        },
+      },
     };
   }
 );

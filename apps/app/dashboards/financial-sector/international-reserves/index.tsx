@@ -67,16 +67,6 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
     [data]
   );
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "international_reserves.header",
-      name_en: "International Reserves",
-      name_bm: "Rizab Antarabangsa",
-      route: routes.INTERNATIONAL_RESERVES,
-    });
-  }, []);
-
   return (
     <>
       <Hero

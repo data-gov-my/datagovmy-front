@@ -62,11 +62,11 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   // TODO (@jiaxin): Replace with useWatch, dep on what user types. After each call, replace the selection
   useEffect(() => {
-    get("/dropdown", { dashboard: "sekolahku" })
-      .then((res: any) => {
-        setData("selection", res.data.query_values.data.data);
-      })
-      .catch(e => console.error(e));
+    // get("/dropdown", { dashboard: "sekolahku" })
+    //   .then((res: any) => {
+    //     setData("selection", res.data.query_values.data.data);
+    //   })
+    //   .catch(e => console.error(e));
   }, []);
 
   // TODO: remove manual sorting once BE maintains ordering

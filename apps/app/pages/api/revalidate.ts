@@ -32,7 +32,11 @@ export default async function handler(
 
     await Promise.all(
       routes.map(async route =>
-        validate(route).then(valid_route => rebuild(res, valid_route, routes))
+        validate(route)
+          .then(valid_route => rebuild(res, valid_route, routes))
+          .catch(e => {
+            throw new Error(e);
+          })
       )
     );
 
@@ -44,16 +48,16 @@ export default async function handler(
   }
 }
 
-// Checks if route exists. Routes only for static pages
+// Checks if route exists. Routes only valid for static pages
 const validate = (route: string): Promise<string> =>
-  new Promise(resolve => {
+  new Promise((resolve, reject) => {
     if (static_routes.includes(route)) resolve(route);
-    else throw new Error(`Route does not exist or is not a static page. Route: ${route}`);
+    else reject(`Route does not exist or is not a static page. Route: ${route}`);
   });
 
 // Rebuilds the relevant page(s).
 const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
-  new Promise(async resolve => {
+  new Promise(async (resolve, reject) => {
     switch (route) {
       // For routes with dynamic /[state] pages
       case "/dashboard/covid-19":
@@ -76,7 +80,7 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
 
       // Simple route
       default:
-        await res.revalidate(route);
+        await res.revalidate(route).catch(e => reject(e));
         resolve(true);
         break;
     }
@@ -84,6 +88,11 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
 
 const revalidateWithStates = (res: NextApiResponse, route: string, except?: string[]): string[] => {
   let states = except ? STATES.filter(item => !except?.includes(item.key)) : STATES;
-  states.forEach(async state => await res.revalidate(route.concat("/", state.key)));
+  states.forEach(
+    async state =>
+      await res.revalidate(route.concat("/", state.key)).catch(e => {
+        throw new Error(e);
+      })
+  );
   return states.map(({ key }) => route.concat("/", key));
 };

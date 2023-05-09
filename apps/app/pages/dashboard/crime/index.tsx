@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-crime", async 
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-crime",
+        type: "dashboard",
+        category: "public-safety",
+        agency: "PDRM",
+      },
+    },
   };
 });
 

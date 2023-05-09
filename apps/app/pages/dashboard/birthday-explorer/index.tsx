@@ -23,6 +23,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-birthday-explo
   const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
   return {
     props: {
+      meta: {
+        id: "dashboard-birthday-explorer",
+        type: "dashboard",
+        category: "demography",
+        agency: "JPN",
+      },
       timeseries: {
         data: {
           x: data.x,

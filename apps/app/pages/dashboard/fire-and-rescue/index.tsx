@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-fire-and-rescu
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-fire-and-rescue",
+        type: "dashboard",
+        category: "public-safety",
+        agency: "BOMBA",
+      },
+    },
   };
 });
 

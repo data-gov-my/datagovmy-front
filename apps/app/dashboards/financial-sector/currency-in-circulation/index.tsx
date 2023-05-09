@@ -141,16 +141,6 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
     });
   };
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "currencyincirculation.header",
-      name_en: "Currency in Circulation",
-      name_bm: "Mata Wang Dalam Edaran",
-      route: routes.CURRENCY_IN_CIRCULATION,
-    });
-  }, []);
-
   useWatch(() => {
     setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
   }, [data.index_type]);

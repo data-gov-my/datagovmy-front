@@ -105,6 +105,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-interest-rates
   return {
     notFound: false,
     props: {
+      meta: {
+        id: "dashboard-interest-rates",
+        type: "dashboard",
+        category: "financial-sector",
+        agency: "BNM",
+      },
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

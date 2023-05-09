@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-social-securit
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-social-security",
+        type: "dashboard",
+        category: "economy",
+        agency: "PERKESO",
+      },
+    },
   };
 });
 

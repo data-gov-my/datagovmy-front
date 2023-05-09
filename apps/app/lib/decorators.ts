@@ -6,9 +6,10 @@ import type {
 } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import merge from "lodash/merge";
+import type { MetaPage } from "./types";
 
 type Context = Parameters<GetStaticProps | GetServerSideProps>[0];
-type ResolvedProps = GetStaticPropsResult<{}> & GetServerSidePropsResult<{}>;
+type ResolvedProps<T> = GetStaticPropsResult<T> & GetServerSidePropsResult<T>;
 
 /**
  * Decorator function to merge i18n context together with prop. Auto-loads "common" namespace
@@ -22,8 +23,8 @@ type ResolvedProps = GetStaticPropsResult<{}> & GetServerSidePropsResult<{}>;
  */
 export const withi18n = <T extends Context>(
   namespace: string | string[] | null,
-  getProps: (ctx: T) => Promise<ResolvedProps>
-): ((ctx: T) => Promise<ResolvedProps>) => {
+  getProps: (ctx: T) => Promise<ResolvedProps<MetaPage>>
+): ((ctx: T) => Promise<ResolvedProps<MetaPage>>) => {
   return async (context: T) => {
     const namespaces =
       namespace === null
