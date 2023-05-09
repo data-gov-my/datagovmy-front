@@ -26,6 +26,13 @@ export default Fallback;
 
 export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
-    props: {},
+    props: {
+      meta: {
+        id: "error-offline",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
+    },
   };
 });

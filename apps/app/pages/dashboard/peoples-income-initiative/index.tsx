@@ -3,7 +3,7 @@ import type { InferGetStaticPropsType } from "next";
 import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
-import PeoplesIncomeInitiativeDashboard from "@dashboards/government/peoples-income-initiative";
+import PeoplesIncomeInitiativeDashboard from "@dashboards/government-programs/peoples-income-initiative";
 import { withi18n } from "@lib/decorators";
 
 const PeoplesIncomeInitiative: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -24,7 +24,14 @@ export const getStaticProps: GetStaticProps = withi18n(
 
     return {
       notFound: false,
-      props: {},
+      props: {
+        meta: {
+          id: "dashboard-peoples-income-initiative",
+          type: "dashboard",
+          category: "government-programs",
+          agency: "EPU",
+        },
+      },
     };
   }
 );

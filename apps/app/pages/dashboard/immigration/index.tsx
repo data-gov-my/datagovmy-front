@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-immigration", 
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-immigration",
+        type: "dashboard",
+        category: "demography",
+        agency: "Imigresen",
+      },
+    },
   };
 });
 

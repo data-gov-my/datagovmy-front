@@ -143,16 +143,6 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
     }));
   const section1ChartData = getChartData(["base", "walr", "deposit_saving", "deposit_fixed_12mo"]);
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "interest_rates.header",
-      name_en: "Interest Rates",
-      name_bm: "Kadar Faedah",
-      route: routes.INTEREST_RATES,
-    });
-  }, []);
-
   return (
     <>
       <Hero

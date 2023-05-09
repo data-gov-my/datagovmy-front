@@ -47,6 +47,12 @@ export const getServerSideProps: GetServerSideProps = withi18n(null, async ({ lo
 
   return {
     props: {
+      meta: {
+        id: "catalogue-index",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
       query: query ?? {},
       total: data.total_all,
       sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),

@@ -34,6 +34,12 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     return {
       notFound: false,
       props: {
+        meta: {
+          id: "dashboard-election-explorer",
+          type: "dashboard",
+          category: "democracy",
+          agency: "SPR",
+        },
         query: query ?? {},
         party: party.reverse(),
       },

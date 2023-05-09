@@ -36,6 +36,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-money-supply",
   return {
     notFound: false,
     props: {
+      meta: {
+        id: "dashboard-money-supply",
+        type: "dashboard",
+        category: "financial-sector",
+        agency: "BNM",
+      },
       last_updated: new Date().valueOf(),
       table_summary: data.table_summary,
       timeseries: data.timeseries,

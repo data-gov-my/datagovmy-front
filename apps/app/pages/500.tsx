@@ -27,6 +27,13 @@ export default Error500;
 
 export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
-    props: {},
+    props: {
+      meta: {
+        id: "error-500",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
+    },
   };
 });

@@ -135,6 +135,12 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       notFound: false,
       props: {
+        meta: {
+          id: "dashboard-blood-donation",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "PDN",
+        },
         last_updated: new Date().valueOf(),
         params: params,
         timeseries_all: data.timeseries_all,

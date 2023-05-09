@@ -1,7 +1,9 @@
-import type { OverridedMixpanel } from "mixpanel-browser";
+import type { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
 
 declare global {
   interface Window {
-    mixpanel: OverridedMixpanel;
+    mixpanel: OverridedMixpanel & {
+      instance: Mixpanel;
+    };
   }
 }

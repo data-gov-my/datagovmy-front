@@ -32,6 +32,12 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     return {
       notFound: false,
       props: {
+        meta: {
+          id: "dashboard-election-explorer",
+          type: "dashboard",
+          category: "democracy",
+          agency: "SPR",
+        },
         query: query ?? {},
         seat: seat.sort((a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date))),
       },

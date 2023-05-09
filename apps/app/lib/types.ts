@@ -5,6 +5,7 @@ import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
+import { routes } from "./routes";
 
 export type AppPropsLayout = AppProps & {
   Component: Page;
@@ -117,4 +118,27 @@ export type EventType =
 export type MixpanelBase = {
   project_id: string | number;
   event: EventType;
+};
+
+/**************************MISCELLANEOUS ******************************/
+export type MetaPage = Record<string, any> & {
+  meta: {
+    id: string;
+    type: "misc" | "dashboard" | "catalogue";
+    category:
+      | "democracy"
+      | "demography"
+      | "digitalisation"
+      | "economy"
+      | "education"
+      | "environment"
+      | "financial-sector"
+      | "government-programs"
+      | "healthcare"
+      | "public-finances"
+      | "public-safety"
+      | "transportation"
+      | null;
+    agency: string | null;
+  };
 };

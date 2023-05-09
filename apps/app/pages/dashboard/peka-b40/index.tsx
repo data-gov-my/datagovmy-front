@@ -48,6 +48,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", asy
   return {
     notFound: false,
     props: {
+      meta: {
+        id: "dashboard-peka-b40",
+        type: "dashboard",
+        category: "healthcare",
+        agency: "PHCorp",
+      },
       last_updated: new Date().valueOf(),
       params: { state: "mys" },
       timeseries: data.timeseries,
