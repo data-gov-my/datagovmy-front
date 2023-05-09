@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/index";
-import ElectionCard from "@components/Card/ElectionCard";
+import ElectionCard, { getElection } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
@@ -36,6 +36,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
+  const results: { [key: string]: ReactNode } = {
+    won: <Won desc={t("candidate.won")} />,
+    won_uncontested: <Won desc={t("candidate.won_uncontested")} />,
+    lost: <Lost desc={t("candidate.lost")} />,
+    lost_deposit: <Lost desc={t("candidate.lost_deposit")} />,
+  };
+
   type Candidate = {
     election_name: string;
     date: string;
@@ -44,21 +51,15 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     votes: Record<string, number>;
     result: string;
   };
-
   const columnHelper = createColumnHelper<Candidate>();
-
-  const results: { [key: string]: ReactNode } = {
-    won: <Won desc={t("candidate.won")} />,
-    won_uncontested: <Won desc={t("candidate.won_uncontested")} />,
-    lost: <Lost desc={t("candidate.lost")} />,
-    lost_deposit: <Lost desc={t("candidate.lost_deposit")} />,
-  };
-
   const columns: ColumnDef<Candidate, any>[] = [
     columnHelper.accessor("election_name", {
       id: "election_name",
       header: t("election_name"),
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => {
+        const [e, num] = getElection(info.getValue());
+        return num ? t(e).concat("-" + num) : t(e);
+      },
     }),
     columnHelper.accessor("date", {
       id: "date",
@@ -115,9 +116,9 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     data: candidate,
 
     // Election full result
-    modalLoading: false,
-    open: false,
-    result: [],
+    modal_loading: false,
+    modal_open: false,
+    full_results: [],
     index: 0,
   });
 
@@ -171,7 +172,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   }, [data.q_candidate, data.type]);
 
   useEffect(() => {
-    setData("modalLoading", true);
+    setData("modal_loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
@@ -181,14 +182,14 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     })
       .then(({ data }) => {
         setData(
-          "result",
+          "full_results",
           data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
       })
       .catch(e => {
         console.error(e);
       })
-      .then(() => setData("modalLoading", false));
+      .then(() => setData("modal_loading", false));
   }, [data.index, data.open]);
 
   return (
@@ -265,6 +266,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                   setData("tabs", index);
                   setData("type", index === 0 ? "parlimen" : "dun");
                 }}
+                className="pb-6"
               >
                 <Panel name={t("parliament_elections")}>
                   <BorderlessTable
@@ -299,13 +301,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
               </Tabs>
             </div>
           </div>
-          {data.open && (
+          {data.modal_open && (
             <ElectionCard
-              open={data.open}
+              open={data.modal_open}
               onChange={(index: number) =>
                 index < data.data.length && index >= 0 ? setData("index", index) : null
               }
-              onClose={() => setData("open", false)}
+              onClose={() => setData("modal_open", false)}
               onNext={() =>
                 data.index === data.data.length ? null : setData("index", data.index + 1)
               }
@@ -324,9 +326,11 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                   <span>{results[data.data[data.index].result]}</span>
                 </div>
               }
-              isLoading={data.modalLoading}
-              data={data.result}
-              highlightedRow={data.result.findIndex((r: Result) => r.name === data.q_candidate)}
+              isLoading={data.modal_loading}
+              data={data.full_results}
+              highlightedRow={data.full_results.findIndex(
+                (r: Result) => r.name === data.q_candidate
+              )}
               page={data.index}
               total={data.data.length}
             />

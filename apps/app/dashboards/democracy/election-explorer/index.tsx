@@ -29,7 +29,7 @@ import {
   TableCellsIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
-import { BREAKPOINTS, CountryAndStates, PoliticalPartyColours } from "@lib/constants";
+import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
 import { get } from "@lib/api";
 import { clx, numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -39,7 +39,6 @@ import Slider from "react-slick";
 import { BarMeter, FullResult, Lost, Won } from "@components/Chart/Table/BorderlessTable";
 import { DateTime } from "luxon";
 import ElectionCard from "@components/Card/ElectionCard";
-import { WindowContext } from "@hooks/useWindow";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
@@ -64,7 +63,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
   const sliderRef = useRef<Slider>(null);
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
-  const { breakpoint } = useContext(WindowContext);
 
   const results: { [key: string]: ReactNode } = {
     won: <Won desc={t("candidate.won")} />,
@@ -122,19 +120,17 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       value: 13,
     },
   ];
-
   const waffleColours = ["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"];
 
   const { data, setData } = useData({
-    tabs: 0,
-    tabs_section1: 0,
-    tabs_section3: 0,
-
+    parlimen_toggle: 0,
     type: query.type ? query.type : "parlimen",
     state: query.state ? query.state : "mys",
     election: query.election ? query.election : "GE-15",
-    section1_loading: false,
-    section1_table: [],
+
+    s1_tabs: 0,
+    s1_loading: false,
+    s1_table: [],
 
     // Placeholder for Combobox
     p_seat: "",
@@ -142,14 +138,15 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
 
     // query
     q_seat: query.seat ? query.seat : "",
-    section2_loading: false,
-    data: election,
-    open: false,
-    index: 0,
-    result: [],
+    s2_loading: false,
+    carousel: election,
+    c_index: 0,
+    modal_open: false,
+    full_results: [],
 
-    filter: FILTER_OPTIONS[0],
-    section3_loading: false,
+    s3_tabs: 0,
+    s3_loading: false,
+    s3_filter: FILTER_OPTIONS[0],
   });
 
   const { setFilter } = useFilter({
@@ -162,8 +159,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
   const ELECTION_OPTIONS: Array<OptionType> = Array(16)
     .fill(null)
     .map((n, index: number) => ({
-      label: (data.tabs === 0 ? "G" : "S") + `E-${String(index).padStart(2, "0")}`,
-      value: (data.tabs === 0 ? "G" : "S") + `E-${String(index).padStart(2, "0")}`,
+      label:
+        (data.parlimen_toggle === 0 ? t("GE") : t("SE")) + `-${String(index).padStart(2, "0")}`,
+      value: (data.parlimen_toggle === 0 ? "GE" : "SE") + `-${String(index).padStart(2, "0")}`,
     }));
 
   const SEAT_OPTIONS: Array<OptionType> =
@@ -188,8 +186,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     }),
     resultsColumnHelper.accessor("seats", {
       id: "seats",
-      header: data.section1_table[0]
-        ? t("seats_won").concat(` / ${data.section1_table[data.index].seats.total}`)
+      header: data.s1_table[0]
+        ? t("seats_won").concat(` / ${data.s1_table[0].seats.total}`)
         : t("seats_won"),
       cell: (info: any) => {
         const seats = info.getValue();
@@ -215,7 +213,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
   }, [data.seats_list]);
 
   useEffect(() => {
-    setData("section1_loading", true);
+    setData("s1_loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
@@ -225,7 +223,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     })
       .then(({ data }) => {
         setData(
-          "section1_table",
+          "s1_table",
           data.sort((a: Result, b: Result) => {
             if (a.seats.won === b.seats.won) {
               return b.votes.perc - a.votes.perc;
@@ -238,11 +236,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       .catch(e => {
         console.error(e);
       })
-      .then(() => setData("section1_loading", false));
+      .then(() => setData("s1_loading", false));
   }, [data.election, data.state, data.type]);
 
   useEffect(() => {
-    setData("section2_loading", true);
+    setData("s2_loading", true);
     setFilter("election", data.election);
     setFilter("type", data.type);
     setFilter("state", data.state);
@@ -255,8 +253,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       state: data.state,
     })
       .then(({ data }) => {
-        console.log(data);
-        setData("data", data);
+        setData("carousel", data);
         setData(
           "seats_list",
           data.map((d: any) => d.seat)
@@ -265,30 +262,30 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       .catch(e => {
         console.error(e);
       })
-      .then(() => setData("section2_loading", false));
-  }, [data.q_seat, data.state, data.election, data.type]);
+      .then(() => setData("s2_loading", false));
+  }, [data.state, data.election, data.type]);
 
   useEffect(() => {
-    setData("section2_loading", true);
+    setData("s2_loading", true);
     setFilter("seat", data.q_seat);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
       type: "seats",
       election: data.election,
-      seat: data.data[data.index].seat,
+      seat: data.carousel[data.c_index].seat,
     })
       .then(({ data }) => {
         setData(
-          "result",
+          "full_results",
           data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
       })
       .catch(e => {
         console.error(e);
       })
-      .then(() => setData("section2_loading", false));
-  }, [data.index, data.open]);
+      .then(() => setData("s2_loading", false));
+  }, [data.c_index, data.modal_open]);
   // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
 
   return (
@@ -365,8 +362,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     <List
                       options={PANELS.map(item => item.name)}
                       icons={PANELS.map(item => item.icon)}
-                      current={data.tabs}
-                      onChange={index => setData("tabs", index)}
+                      current={data.parlimen_toggle}
+                      onChange={index => setData("parlimen_toggle", index)}
                     />
                   </div>
                   <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
@@ -381,13 +378,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     <StateDropdown
                       currentState={data.state}
                       onChange={selected => setData("state", selected.value)}
-                      exclude={data.tabs === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
+                      exclude={data.parlimen_toggle === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
                       width="w-full"
                       anchor="left"
                     />
                     <Dropdown
                       width="w-full"
-                      placeholder={t("common:common.select")}
+                      placeholder={t("select_election")}
                       options={ELECTION_OPTIONS}
                       selected={ELECTION_OPTIONS.find(e => e.value === data.election)}
                       onChange={e => setData("election", e.value)}
@@ -414,29 +411,34 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               <List
                 options={PANELS.map(item => item.name)}
                 icons={PANELS.map(item => item.icon)}
-                current={data.tabs}
+                current={data.parlimen_toggle}
                 onChange={index => {
-                  //   setData("state", "");
-                  setData("tabs", index);
+                  setData("state", "");
+                  setData("parlimen_toggle", index);
                 }}
               />
             </div>
             <StateDropdown
               currentState={data.state}
               onChange={selected => setData("state", selected.value)}
-              exclude={data.tabs === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
+              exclude={data.parlimen_toggle === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
               width="min-w-max"
               anchor="left"
             />
             <Dropdown
               anchor="left"
               width="max-w-fit"
+              placeholder={t("select_election")}
               options={ELECTION_OPTIONS}
               selected={ELECTION_OPTIONS.find(e => e.value === data.election)}
               onChange={e => setData("election", e.value)}
             />
           </div>
-          <Tabs hidden current={data.tabs} onChange={index => setData("tabs", index)}>
+          <Tabs
+            hidden
+            current={data.parlimen_toggle}
+            onChange={index => setData("parlimen_toggle", index)}
+          >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
                 <div className="py-12 lg:grid lg:grid-cols-12">
@@ -452,14 +454,14 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           <span className="text-primary">{data.election}</span>
                         </div>
                       }
-                      current={data.tabs_section1}
-                      onChange={index => setData("tabs_section1", index)}
+                      current={data.s1_tabs}
+                      onChange={index => setData("s1_tabs", index)}
                     >
                       <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
                         <Card className="border-outline dark:border-washed-dark bg-background dark:bg-background-dark static rounded-xl border xl:py-4">
                           <Choropleth
                             enableOutline={false}
-                            type={data.tabs === 1 ? "dun" : "parlimen"}
+                            type={data.parlimen_toggle === 1 ? "dun" : "parlimen"}
                           />
                         </Card>
                       </Panel>
@@ -468,8 +470,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                       >
                         <BorderlessTable
-                          isLoading={data.section1_loading}
-                          data={data.section1_table}
+                          isLoading={data.s1_loading}
+                          data={data.s1_table}
                           columns={resultsColumns}
                         />
                       </Panel>
@@ -544,11 +546,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       }
                       onChange={e => {
                         if (e) {
-                          setData("q_seat", e.value);
-                          setData(
-                            "index",
-                            data.seats_list.findIndex((seat: string) => seat === e.value)
+                          const index = data.seats_list.findIndex(
+                            (seat: string) => seat === e.value
                           );
+                          setData("q_seat", e.value);
+                          setData("c_index", index);
+                          sliderRef.current?.slickGoTo(index);
                         }
                         setData("p_seat", e);
                       }}
@@ -560,18 +563,18 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                 <Carousel
                   _ref={sliderRef}
                   title={
-                    <div className="text-base font-bold">
+                    <div className="mb-6 text-base font-bold">
                       {t("election.full_result", {
                         election: data.election,
                       })}
                       <span className="text-primary">{data.q_seat}</span>
                     </div>
                   }
-                  items={data.data.map((item: any, index: number) => (
+                  items={data.carousel.map((item: any, index: number) => (
                     <div
                       key={index}
                       className={clx(
-                        "mx-2 flex h-full flex-col gap-2 rounded-xl border p-3 text-sm",
+                        "mx-3 flex h-full flex-col gap-2 rounded-xl border p-3 text-sm",
                         item.seat === data.q_seat
                           ? "border-dim"
                           : "border-outline dark:border-outlineHover-dark"
@@ -585,8 +588,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         <div className="group relative w-max">
                           <FullResult
                             onClick={() => {
-                              setData("open", true);
-                              setData("index", index);
+                              setData("modal_open", true);
+                              setData("c_index", index);
                             }}
                           />
                           <span className="pointer-events-none absolute z-20 inline-block w-max max-w-[200px] -translate-x-full translate-y-8 transform rounded bg-black p-3 text-sm font-normal text-white opacity-0 transition-opacity group-hover:opacity-100 md:-top-2 md:left-[140%]">
@@ -619,47 +622,43 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       </div>
                     </div>
                   ))}
-                  itemsToScroll={
-                    breakpoint <= BREAKPOINTS.MD ? 2 : breakpoint <= BREAKPOINTS.LG ? 3 : 4
-                  }
-                  itemsToShow={
-                    breakpoint <= BREAKPOINTS.MD ? 2 : breakpoint <= BREAKPOINTS.LG ? 3 : 4
-                  }
                 />
               </div>
 
-              {data.open && (
+              {data.modal_open && (
                 <ElectionCard
-                  open={data.open}
+                  open={data.modal_open}
                   onChange={(index: number) =>
-                    index < data.data.length && index >= 0 ? setData("index", index) : null
+                    index < data.carousel.length && index >= 0 ? setData("c_index", index) : null
                   }
-                  onClose={() => setData("open", false)}
+                  onClose={() => setData("modal_open", false)}
                   onNext={() =>
-                    data.index === data.data.length ? null : setData("index", data.index + 1)
+                    data.c_index === data.carousel.length
+                      ? null
+                      : setData("c_index", data.c_index + 1)
                   }
-                  onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
+                  onPrev={() => (data.c_index === 0 ? null : setData("c_index", data.c_index - 1))}
                   win={"won"}
-                  election_name={data.data[data.index].election_name}
-                  date={DateTime.fromISO(data.data[data.index].date)
+                  election_name={data.carousel[data.c_index].election_name}
+                  date={DateTime.fromISO(data.carousel[data.c_index].date)
                     .setLocale(i18n.language)
                     .toLocaleString(DateTime.DATE_MED)}
                   title={
                     <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
-                      <h5>{data.data[data.index].seat.split(",")[0]}</h5>
+                      <h5>{data.carousel[data.c_index].seat.split(",")[0]}</h5>
                       <span className="text-dim font-normal">
-                        {data.data[data.index].seat.split(",")[1]}
+                        {data.carousel[data.c_index].seat.split(",")[1]}
                       </span>
-                      <span>{results[data.data[data.index].result]}</span>
+                      <span>{results[data.carousel[data.c_index].result]}</span>
                     </div>
                   }
-                  isLoading={data.section2_loading}
-                  data={data.result}
-                  highlightedRow={data.result.findIndex(
-                    (r: Result) => r.name === data.data[data.index].name
+                  isLoading={data.s2_loading}
+                  data={data.full_results}
+                  highlightedRow={data.full_results.findIndex(
+                    (r: Result) => r.name === data.carousel[data.c_index].name
                   )}
-                  page={data.index}
-                  total={data.data.length}
+                  page={data.c_index}
+                  total={data.carousel.length}
                 />
               )}
             </div>
@@ -673,8 +672,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     anchor="left"
                     width="w-fit"
                     options={FILTER_OPTIONS}
-                    selected={FILTER_OPTIONS.find(e => e.value === data.filter.value)}
-                    onChange={e => setData("filter", e)}
+                    selected={FILTER_OPTIONS.find(e => e.value === data.s3_filter.value)}
+                    onChange={e => setData("s3_filter", e)}
                   />
                 </div>
                 <List
@@ -683,15 +682,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     <MapIcon className="mr-1 h-5 w-5" />,
                     <TableCellsIcon className="mr-1 h-5 w-5" />,
                   ]}
-                  current={data.tabs_section3}
-                  onChange={index => setData("tabs_section3", index)}
+                  current={data.s3_tabs}
+                  onChange={index => setData("s3_tabs", index)}
                 />
               </div>
-              <Tabs
-                hidden
-                current={data.tabs_section3}
-                onChange={index => setData("tabs_section3", index)}
-              >
+              <Tabs hidden current={data.s3_tabs} onChange={index => setData("s3_tabs", index)}>
                 <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
                   <div className="pt-6">
                     <LeftRightCard
@@ -700,7 +695,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           <div className="flex flex-col gap-2">
                             <h4>
                               {t("election.choro_header", {
-                                stat: t(`election.${data.filter.value}`),
+                                stat: t(`election.${data.s3_filter.value}`),
                               })}
                             </h4>
                             <span className="text-dim text-sm">
@@ -729,7 +724,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       right={
                         <Choropleth
                           enableOutline={false}
-                          type={data.tabs === 1 ? "dun" : "parlimen"}
+                          type={data.parlimen_toggle === 1 ? "dun" : "parlimen"}
                         />
                       }
                     />
@@ -739,7 +734,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   name={t("election.table")}
                   icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                 >
-                  <BorderlessTable isLoading={data.section3_loading} />
+                  <BorderlessTable isLoading={data.s3_loading} />
                 </Panel>
               </Tabs>
             </div>

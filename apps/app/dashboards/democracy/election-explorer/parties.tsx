@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Trans } from "next-i18next";
 import { BarMeter, FullResult } from "@components/Chart/Table/BorderlessTable";
-import ElectionCard from "@components/Card/ElectionCard";
+import ElectionCard, { getElection } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import {
@@ -19,7 +19,6 @@ import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { CountryAndStates } from "@lib/constants";
-import { clx } from "@lib/helpers";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { get } from "@lib/api";
 import { DateTime } from "luxon";
@@ -60,9 +59,9 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     data: party,
 
     // Election full result
-    modalLoading: false,
-    open: false,
-    result: [],
+    modal_loading: false,
+    modal_open: false,
+    full_results: [],
     index: 0,
   });
 
@@ -84,7 +83,10 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     columnHelper.accessor("election_name", {
       id: "election_name",
       header: t("election_name"),
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => {
+        const [e, num] = getElection(info.getValue());
+        return num ? t(e).concat("-" + num) : t(e);
+      },
     }),
     columnHelper.accessor("date", {
       id: "date",
@@ -118,7 +120,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
           <FullResult
             desc={t("full_result")}
             onClick={() => {
-              setData("open", true);
+              setData("modal_open", true);
               setData("index", row.index);
             }}
           />
@@ -209,7 +211,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
   }, [data.q_party, data.state, data.type]);
 
   useEffect(() => {
-    setData("modalLoading", true);
+    setData("modal_loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
@@ -219,7 +221,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
     })
       .then(({ data }) => {
         setData(
-          "result",
+          "full_results",
           data.sort((a: Result, b: Result) => {
             if (a.seats.won === b.seats.won) {
               return b.votes.perc - a.votes.perc;
@@ -232,11 +234,11 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       .catch(e => {
         console.error(e);
       })
-      .then(() => setData("modalLoading", false));
-  }, [data.index, data.open]);
+      .then(() => setData("modal_loading", false));
+  }, [data.index, data.modal_open]);
 
   return (
-    <div className={clx(data.modalLoading ? "cursor-wait" : "")}>
+    <>
       <Hero
         background="red"
         category={[t("common:nav.megamenu.categories.democracy"), "text-danger"]}
@@ -328,6 +330,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                   setData("tabs", index);
                   setData("type", index === 0 ? "parlimen" : "dun");
                 }}
+                className="pb-6"
               >
                 <Panel name={t("parliament_elections")}>
                   <BorderlessTable
@@ -363,13 +366,13 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
               </Tabs>
             </div>
           </div>
-          {data.open && (
+          {data.modal_open && (
             <ElectionCard
-              open={data.open}
+              open={data.modal_open}
               onChange={(index: number) =>
                 index < data.data.length && index >= 0 ? setData("index", index) : null
               }
-              onClose={() => setData("open", false)}
+              onClose={() => setData("modal_open", false)}
               onNext={() =>
                 data.index === data.data.length ? null : setData("index", data.index + 1)
               }
@@ -384,17 +387,17 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                   <h5>{data.data[data.index].election_name.concat(" Results")}</h5>
                 </div>
               }
-              isLoading={data.modalLoading}
-              data={data.result}
+              isLoading={data.modal_loading}
+              data={data.full_results}
               columns={resultsColumns}
-              highlightedRow={data.result.findIndex((r: Result) => r.party === data.q_party)}
+              highlightedRow={data.full_results.findIndex((r: Result) => r.party === data.q_party)}
               page={data.index}
               total={data.data.length}
             />
           )}
         </Section>
       </Container>
-    </div>
+    </>
   );
 };
 

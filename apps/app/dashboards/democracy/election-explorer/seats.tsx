@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { FullResult, Result } from "@components/Chart/Table/BorderlessTable";
-import ElectionCard from "@components/Card/ElectionCard";
+import ElectionCard, { getElection } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { AgencyBadge, Container, Hero, Section } from "@components/index";
@@ -38,7 +38,10 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     columnHelper.accessor("election_name", {
       id: "election_name",
       header: t("election_name"),
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => {
+        const [e, num] = getElection(info.getValue());
+        return num ? t(e).concat("-" + num) : t(e);
+      },
     }),
     columnHelper.accessor("date", {
       id: "date",
@@ -72,7 +75,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
           <FullResult
             desc={t("full_result")}
             onClick={() => {
-              setData("open", true);
+              setData("modal_open", true);
               setData("index", row.index);
             }}
           />
@@ -92,10 +95,10 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     data: seat,
 
     // Election full result
-    modalLoading: false,
+    modal_loading: false,
+    modal_open: false,
+    full_results: [],
     index: 0,
-    open: false,
-    result: [],
   });
 
   const { setFilter } = useFilter({
@@ -124,6 +127,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
 
   useEffect(() => {
     setData("loading", true);
+    setFilter("seat", data.q_seat);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "seats",
@@ -142,8 +146,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
   }, [data.q_seat]);
 
   useEffect(() => {
-    setData("modalLoading", true);
-    setFilter("seat", data.q_seat);
+    setData("modal_loading", true);
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
@@ -153,15 +156,15 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     })
       .then(({ data }) => {
         setData(
-          "result",
+          "full_results",
           data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
       })
       .catch(e => {
         console.error(e);
       })
-      .then(() => setData("modalLoading", false));
-  }, [data.index, data.open]);
+      .then(() => setData("modal_loading", false));
+  }, [data.index, data.modal_open]);
 
   return (
     <>
@@ -225,7 +228,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
               </div>
               <BorderlessTable
                 title={
-                  <div className="text-base font-bold">
+                  <div className="pb-6 text-base font-bold">
                     {t("candidate.title")}
                     <span className="text-primary">{data.q_seat}</span>
                   </div>
@@ -236,13 +239,13 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
               />
             </div>
           </div>
-          {data.open && (
+          {data.modal_open && (
             <ElectionCard
-              open={data.open}
+              open={data.modal_open}
               onChange={(index: number) =>
                 index < data.data.length && index >= 0 ? setData("index", index) : null
               }
-              onClose={() => setData("open", false)}
+              onClose={() => setData("modal_open", false)}
               onNext={() =>
                 data.index === data.data.length ? null : setData("index", data.index + 1)
               }
@@ -259,8 +262,8 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                   </span>
                 </div>
               }
-              isLoading={data.modalLoading}
-              data={data.result}
+              isLoading={data.modal_loading}
+              data={data.full_results}
               page={data.index}
               total={data.data.length}
             />
