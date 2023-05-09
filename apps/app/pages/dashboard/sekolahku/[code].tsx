@@ -9,6 +9,7 @@ import { withi18n } from "@lib/decorators";
 
 const Sekolahku: Page = ({
   dropdown_data,
+  total_schools,
   sekolahku_info,
   sekolahku_barmeter,
   bellcurve_school,
@@ -22,6 +23,7 @@ const Sekolahku: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SekolahkuDashboard
         dropdown_data={dropdown_data}
+        total_schools={total_schools}
         sekolahku_info={sekolahku_info}
         sekolahku_barmeter={sekolahku_barmeter}
         bellcurve_school={bellcurve_school}
@@ -72,7 +74,8 @@ export const getStaticProps: GetStaticProps = withi18n(
             category: "education",
             agency: "MoE",
           },
-          dropdown_data: dropdown.data,
+          dropdown_data: dropdown.data.data,
+          total_schools: dropdown.data.info.total,
           sekolahku_info: school.data.sekolahku_info.data,
           sekolahku_barmeter: school.data.sekolahku_barmeter.data,
           bellcurve_school: school.data.bellcurve_school.data,

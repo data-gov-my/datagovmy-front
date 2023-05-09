@@ -23,6 +23,7 @@ import { debounce } from "lodash";
 
 interface SekolahkuProps {
   dropdown_data: Record<string, string>[];
+  total_schools: number;
   sekolahku_info: any;
   sekolahku_barmeter: any;
   bellcurve_school: any;
@@ -35,6 +36,7 @@ const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false 
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   dropdown_data,
+  total_schools,
   sekolahku_info,
   sekolahku_barmeter,
   bellcurve_school,
@@ -155,7 +157,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         <Section>
           <div className="flex flex-col items-center space-y-12">
             <div className="w-full space-y-6">
-              <h4 className="text-center">{t("section_1.title")}</h4>
+              <h4 className="text-center">{t("section_1.title", { total: total_schools })}</h4>
               <div className="flex flex-col items-center justify-center space-y-3">
                 <div className="grid w-full grid-cols-12 lg:grid-cols-10">
                   <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
