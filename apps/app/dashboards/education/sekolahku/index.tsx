@@ -59,11 +59,13 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   });
 
   const navigateToSchool = (e?: OptionType) => {
-    if (!e) return;
+    if (!e) {
+      setData("selected_school", undefined);
+      return;
+    }
 
     setData("selected_school", e);
     setData("loading", true);
-
     push(`/dashboard/sekolahku/${e.value}`, undefined, {
       scroll: false,
       locale: i18n.language,
@@ -156,7 +158,11 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                     <ComboBox
                       placeholder={t("section_1.search_school")}
                       options={SCHOOL_OPTIONS}
-                      selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
+                      selected={
+                        data.selected_school
+                          ? SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)
+                          : undefined
+                      }
                       onChange={navigateToSchool}
                       onSearch={fetchSelection}
                       loading={data.dropdownLoading}
