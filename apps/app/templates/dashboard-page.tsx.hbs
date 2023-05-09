@@ -27,7 +27,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-{{dashCase das
 
   return {
     notFound: false,
-    props: {},
+    props: {
+        meta: {
+            id: "dashboard-{{dashCase dashboard_name}}",
+            type: "dashboard",
+            category: "{{dashCase dashboard_category}}",
+            agency: "{{titleCase agency_name}}"
+        }
+    },
   };
 });
 

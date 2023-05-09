@@ -4,7 +4,7 @@ import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
-import Tracker999Dashboard from "@dashboards/healthcare/999-tracker";
+import Tracker999Dashboard from "@dashboards/public-safety/999-tracker";
 import { withi18n } from "@lib/decorators";
 
 const Tracker999: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-999-tracker", 
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-999-tracker",
+        type: "dashboard",
+        category: "public-safety",
+        agency: "MERS",
+      },
+    },
   };
 });
 

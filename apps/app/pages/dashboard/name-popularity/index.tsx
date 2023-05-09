@@ -22,7 +22,14 @@ const NamePopularity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-name-popularity", async () => {
   return {
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-name-popularity",
+        type: "dashboard",
+        category: "demography",
+        agency: "JPN",
+      },
+    },
   };
 });
 

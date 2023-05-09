@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxatio
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-income-taxation",
+        type: "dashboard",
+        category: "economy",
+        agency: "LHDN",
+      },
+    },
   };
 });
 

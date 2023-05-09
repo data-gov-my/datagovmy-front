@@ -33,6 +33,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-gdp", async ()
 
   return {
     props: {
+      meta: {
+        id: "dashboard-gdp",
+        type: "dashboard",
+        category: "economy",
+        agency: "DOSM",
+      },
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

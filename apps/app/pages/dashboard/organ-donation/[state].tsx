@@ -88,6 +88,12 @@ export const getStaticProps: GetStaticProps = withi18n(
 
     return {
       props: {
+        meta: {
+          id: "dashboard-organ-donation",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "NTRC",
+        },
         last_updated: new Date().valueOf(),
         params: params,
         timeseries: data.timeseries,

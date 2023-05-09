@@ -37,6 +37,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-consumer-price
 
   return {
     props: {
+      meta: {
+        id: "dashboard-consumer-prices",
+        type: "dashboard",
+        category: "economy",
+        agency: "DOSM",
+      },
       last_updated: new Date().valueOf(),
       bar: data.bar_chart,
       timeseries: data.timeseries,

@@ -19,11 +19,17 @@ const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof ge
 };
 // Disabled
 export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
-  const { data } = await get("/dropdown", { dashboard: "car_popularity" });
+  const { data: dropdownData } = await get("/dropdown", { dashboard: "car_popularity" });
   return {
     notFound: false,
     props: {
-      queryOptions: data,
+      meta: {
+        id: "dashboard-car-popularity",
+        type: "dashboard",
+        category: "transportation",
+        agency: "JPJ",
+      },
+      queryOptions: dropdownData.data,
     },
   };
 });

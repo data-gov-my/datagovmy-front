@@ -160,16 +160,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     "misc",
   ]);
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "consumer_prices.header",
-      name_en: "Consumer Prices",
-      name_bm: "Harga Pengguna",
-      route: routes.CONSUMER_PRICES,
-    });
-  }, []);
-
   return (
     <>
       <Hero
