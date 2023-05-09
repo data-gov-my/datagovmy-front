@@ -27,66 +27,9 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, event }) => {
       label: "Python",
       value: "python",
     },
-    // Disabled until further notice
-    // {
-    //   label: "Julia",
-    //   value: "julia",
-    // },
-    // {
-    //   label: "R",
-    //   value: "r",
-    // },
   ];
   const [language, setLanguage] = useState<OptionType>(languageOptions[0]);
   const [copyText, setCopyText] = useState<string>(t("common.copy"));
-
-  //   const template = useMemo<Record<string, string>>(
-  //     () => ({
-  //       python: `# ${t("common:catalogue.code_note")}: pip install pandas fastparquet
-
-  // import pandas as pd
-
-  // URL_DATA = '${url}'
-
-  // df = pd.read_parquet(URL_DATA)
-  // if 'date' in df.columns: df['date'] = pd.to_datetime(df['date'])
-
-  // print(df)
-  // `,
-  //       //       julia: `# Note: Don’t forget to activate your venv
-  //       // # If not already installed, do: pip install pandas tabulate
-
-  //       // import pandas as pd
-  //       // import json
-  //       // from tabulate import tabulate
-  //       // import pydosm
-
-  //       // URL_DATA = '${url}'
-  //       // URL_METADATA = '${url.replace(".parquet", "_metadata.json")}'
-
-  //       // df_meta = json.loads(URL_METADATA)
-  //       // df = pd.read_parquet(URL_DATA)
-
-  //       // print(df_meta)
-  //       // `,
-  //       //       r: `# Note: Don’t forget to activate your venv
-  //       // # If not already installed, do: pip install pandas tabulate
-
-  //       // import pandas as pd
-  //       // import json
-  //       // from tabulate import tabulate
-  //       // import pydosm
-
-  //       // URL_DATA = '${url}'
-  //       // URL_METADATA = '${url.replace(".parquet", "_metadata.json")}'
-
-  //       // df_meta = json.loads(URL_METADATA)
-  //       // df = pd.read_parquet(URL_DATA)
-
-  //       // print(df_meta)`,
-  //     }),
-  //     [language]
-  //   );
 
   const handleCopy = () => {
     track("code_copy", { language: language.value, ...event });

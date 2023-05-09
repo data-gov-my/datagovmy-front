@@ -57,7 +57,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   total,
   sources,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { breakpoint } = useContext(WindowContext);

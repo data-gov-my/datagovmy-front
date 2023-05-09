@@ -2,6 +2,7 @@ const I18NextHttpBackend = require("i18next-http-backend");
 
 const namespace = [
   "common",
+  "catalogue",
   "dashboard-999-tracker",
   "dashboard-birthday-explorer",
   "dashboard-blood-donation",
@@ -11,7 +12,7 @@ const namespace = [
   "dashboard-consumer-prices",
   "dashboard-covid-19",
   "dashboard-covid-vaccination",
-  "dashboard-covid-currency-in-circulation",
+  "dashboard-currency-in-circulation",
   "dashboard-election-explorer",
   "dashboard-exchange-rates",
   "dashboard-fire-and-rescue",

@@ -146,8 +146,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     <>
       <Hero
         background="red"
-        category={[t("common:nav.megamenu.categories.healthcare"), "text-danger"]}
-        header={[t("title_header")]}
+        category={[t("common:categories.healthcare"), "text-danger"]}
+        header={[t("header")]}
         description={description}
         last_updated={last_updated}
         agencyBadge={

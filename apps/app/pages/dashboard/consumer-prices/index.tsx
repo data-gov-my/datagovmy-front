@@ -16,11 +16,7 @@ const ConsumerPrices = ({
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.consumer_prices")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ConsumerPricesDashboard
         last_updated={last_updated}
         bar={bar}

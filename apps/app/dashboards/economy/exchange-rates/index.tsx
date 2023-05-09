@@ -1,6 +1,6 @@
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { sortMulti, toDate } from "@lib/helpers";
+import { sortMulti } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { useData } from "@hooks/useData";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
@@ -8,8 +8,6 @@ import { default as Tabs, Panel } from "@components/Tabs";
 import Container from "@components/Container";
 import Hero from "@components/Hero";
 import Section from "@components/Section";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
 import { closestIndex, getColor } from "@lib/schema/exchange-rates";
 import AgencyBadge from "@components/AgencyBadge";
 
@@ -71,13 +69,11 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
     <>
       <Hero
         background="gray"
-        category={[t("common:nav.megamenu.categories.economy"), "text-green-300"]}
+        category={[t("common:categories.economy"), "text-green-300"]}
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge agency={t("common:agency_abbr.mampu")} link="https://www.mampu.gov.my/en/" />
-        }
+        agencyBadge={<AgencyBadge agency="MAMPU" link="https://www.mampu.gov.my/en/" />}
       />
 
       <Container className="start-h-screen">

@@ -104,7 +104,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     <>
       <Hero
         background="red"
-        category={[t("common:nav.megamenu.categories.healthcare"), "text-danger"]}
+        category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={
           <>

@@ -39,7 +39,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { scroll } = useContext(WindowContext);
+  //   const { scroll } = useContext(WindowContext);
   const redirect = (selected: OptionType) => {
     if (selected.value === "mys") {
       url && router.push(url, undefined, { scroll: false });
@@ -48,7 +48,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
     url && router.push(`${url}/${selected.value}`, undefined, { scroll: false });
   };
 
-  const show = useMemo(() => scroll.y > 300, [scroll.y]);
+  const show = true;
   const options = include ? statesOptions.concat(include) : statesOptions;
 
   return (

@@ -13,15 +13,11 @@ const CurrencyInCirculation: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["dashboard-currency-in-circulation", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.currency_in_circulation")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CurrencyInCirculationDashboard
         last_updated={last_updated}
         bar={bar}

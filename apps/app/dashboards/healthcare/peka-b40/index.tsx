@@ -47,7 +47,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
     <>
       <Hero
         background="purple"
-        category={[t("common:nav.megamenu.categories.healthcare"), "text-purple"]}
+        category={[t("common:categories.healthcare"), "text-purple"]}
         header={[t("header")]}
         description={
           <>

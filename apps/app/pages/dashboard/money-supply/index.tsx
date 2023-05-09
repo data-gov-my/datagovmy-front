@@ -15,11 +15,7 @@ const MoneySupply = ({
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.money_supply")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <MoneySupplyDashboard
         last_updated={last_updated}
         table_summary={table_summary}

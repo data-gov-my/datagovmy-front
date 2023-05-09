@@ -14,7 +14,7 @@ jobs:
         shell: bash
         run: echo "branch=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's,/,-,g')" >>$GITHUB_OUTPUT
         id: extract_branch
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information

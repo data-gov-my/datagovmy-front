@@ -19,10 +19,7 @@ const GovernmentSiteTracker: FunctionComponent<GovernmentSiteTrackerProps> = ({}
     <>
       <Hero
         background="blue"
-        category={[
-          t("common:nav.megamenu.categories.digitalisation"),
-          "text-primary dark:text-primary-dark",
-        ]}
+        category={[t("common:categories.digitalisation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={

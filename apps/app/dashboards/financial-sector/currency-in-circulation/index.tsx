@@ -1,5 +1,5 @@
 import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -9,8 +9,6 @@ import type { OptionType } from "@components/types";
 import { AKSARA_COLOR, MYR_COLOR } from "@lib/constants";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import { useTheme } from "next-themes";
 import AgencyBadge from "@components/AgencyBadge";
@@ -149,7 +147,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
     <>
       <Hero
         background="gray"
-        category={[t("common:nav.megamenu.categories.financial_sector")]}
+        category={[t("common:categories.financial_sector")]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}

@@ -30,7 +30,7 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
   urls,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"scatter", any[], unknown> | null>(null);
 
   const availableDownloads = useMemo<DownloadOptions>(

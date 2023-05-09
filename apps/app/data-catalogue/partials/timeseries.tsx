@@ -37,7 +37,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   translations,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const { data, setData } = useData({
     ctx: undefined,
     minmax: [0, dataset.chart.x.length - 1],
@@ -54,13 +54,13 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            // track("file_download", {
-            //   uid: dataset.meta.unique_id.concat("_png"),
-            //   type: "image",
-            //   id: dataset.meta.unique_id,
-            //   name: dataset.meta.title,
-            //   ext: "png",
-            // });
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name: dataset.meta.title,
+              ext: "png",
+            });
           },
         },
         {
@@ -72,15 +72,14 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           href: () => {
             exportAs("svg", data.ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(
-                () => {}
-                // track("file_download", {
-                //   uid: dataset.meta.unique_id.concat("_svg"),
-                //   type: "image",
-                //   id: dataset.meta.unique_id,
-                //   name: dataset.meta.title,
-                //   ext: "svg",
-                // })
+              .then(() =>
+                track("file_download", {
+                  uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
+                  id: dataset.meta.unique_id,
+                  name: dataset.meta.title,
+                  ext: "svg",
+                })
               )
               .catch(e => {
                 console.error(e);
