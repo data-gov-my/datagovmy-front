@@ -37,7 +37,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   translations,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const { data, setData } = useData({
     ctx: undefined,
     minmax: [0, dataset.chart.x.length - 1],

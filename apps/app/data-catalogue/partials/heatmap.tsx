@@ -29,7 +29,7 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
   translations,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"matrix", any[], unknown> | null>(null);
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);

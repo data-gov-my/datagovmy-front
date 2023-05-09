@@ -9,7 +9,7 @@ interface CatalogueCodeProps {
 }
 
 const CatalogueCode: FunctionComponent<CatalogueCodeProps> = ({ type, url }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
 
   const template = useMemo(() => {
     switch (type) {

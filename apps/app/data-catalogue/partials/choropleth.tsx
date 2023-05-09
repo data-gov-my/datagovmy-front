@@ -27,7 +27,8 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   urls,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
+
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"choropleth", any[], unknown> | null>(null);
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);

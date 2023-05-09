@@ -110,7 +110,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   urls,
   translations,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
   const { filter, setFilter } = useFilter(config.context, { id: params.id });

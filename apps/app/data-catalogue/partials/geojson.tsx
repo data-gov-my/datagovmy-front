@@ -26,7 +26,7 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   urls,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const ctx = useRef<GeoChoroplethRef | null>(null);
   const [mounted, setMounted] = useState(false);
   const { png } = useExport(mounted, dataset.meta.unique_id);

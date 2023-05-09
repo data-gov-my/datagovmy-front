@@ -19,7 +19,7 @@ const CatalogueShow: Page = ({
   urls,
   translations,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
 
   const availableOptions = useMemo<OptionType[]>(() => {
     switch (dataset.type) {
@@ -60,7 +60,7 @@ const CatalogueShow: Page = ({
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  null,
+  "catalogue",
   async ({ locale, query, params }) => {
     const { data } = await get("/data-variable/", {
       id: params!.id,

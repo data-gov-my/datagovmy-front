@@ -30,7 +30,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   translations,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
 
   const availableDownloads = useMemo<DownloadOptions>(

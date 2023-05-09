@@ -29,7 +29,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   translations,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
   const { breakpoint } = useContext(WindowContext);
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
