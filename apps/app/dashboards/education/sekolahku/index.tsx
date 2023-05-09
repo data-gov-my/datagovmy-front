@@ -34,7 +34,7 @@ const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
 const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
-  //   dropdown_data,
+  dropdown_data,
   sekolahku_info,
   sekolahku_barmeter,
   bellcurve_school,
@@ -62,7 +62,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   const { data, setData } = useData({
     loading: false,
-    selection: updateDropdown(""),
+    selection: dropdown_data,
     tabs_section3: 0,
     selected_school: {
       label: `${sekolahku_info.school} (${sekolahku_info.code}) - ${sekolahku_info.postcode} ${sekolahku_info.state}`,
