@@ -5,7 +5,7 @@ import Layout from "@components/Layout";
 import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import mixpanelConfig from "@config/mixpanel";
-import { ga_track, init_session } from "@lib/mixpanel";
+import { ga_track, init_session, track } from "@lib/mixpanel";
 import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
 import Nexti18NextConfig from "../next-i18next.config";
@@ -39,13 +39,13 @@ function App({ Component, pageProps }: AppPropsLayout) {
     // trigger page view event for client-side navigation
     const handleRouteChange = (url: string) => {
       ga_track(url);
-      init_session();
+      track("page_view", pageProps?.meta);
     };
     router.events.on("routeChangeComplete", handleRouteChange);
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [router.events]);
+  }, [router.events, pageProps?.meta]);
 
   return (
     <div className={clx(Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black")}>

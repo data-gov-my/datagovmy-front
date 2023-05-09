@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-flood-warning"
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-flood-warning",
+        type: "dashboard",
+        category: "environment",
+        agency: "JPS",
+      },
+    },
   };
 });
 

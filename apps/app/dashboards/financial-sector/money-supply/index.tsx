@@ -211,16 +211,6 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
     "m2_deposit_other",
   ]);
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "moneysupply.header",
-      name_en: "Money Supply",
-      name_bm: "Penawaran Wang",
-      route: routes.MONEY_SUPPLY,
-    });
-  }, []);
-
   useWatch(() => {
     setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
   }, [data.index_type]);

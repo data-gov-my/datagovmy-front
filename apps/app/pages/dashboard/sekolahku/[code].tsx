@@ -81,6 +81,12 @@ export const getStaticProps: GetStaticProps = withi18n(
       return {
         notFound: false,
         props: {
+          meta: {
+            id: "dashboard-sekolahku",
+            type: "dashboard",
+            category: "education",
+            agency: "MoE",
+          },
           dropdown_data: "", // dropdown_data.query_values.data.data,
           sekolahku_info: data.sekolahku_info.data,
           sekolahku_barmeter: data.sekolahku_barmeter.data,

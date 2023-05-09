@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-civil-service"
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-civil-service",
+        type: "dashboard",
+        category: "public-finances",
+        agency: "JPA",
+      },
+    },
   };
 });
 

@@ -16,7 +16,8 @@ import { get } from "@lib/api";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { numFormat } from "@lib/helpers";
-import type { Page } from "@lib/types";
+import { routes } from "@lib/routes";
+import type { MetaPage, Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -70,16 +71,6 @@ const Home: Page = ({
       data: analytics.all_time,
     },
   ];
-
-  useEffect(() => {
-    // track("page_view", {
-    //   type: "dashboard",
-    //   id: "home",
-    //   name_en: "Home",
-    //   name_bm: "Utama",
-    //   route: routes.HOME,
-    // });
-  }, []);
 
   return (
     <>
@@ -297,11 +288,25 @@ const Ranking = ({ ranks }: RankingProps) => {
   );
 };
 
+// track("page_view", {
+//   type: "dashboard",
+//   id: "home",
+//   name_en: "Home",
+//   name_bm: "Utama",
+//   route: routes.HOME,
+// });
+
 export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   const { data } = await get("/dashboard", { dashboard: "homepage" });
 
   return {
     props: {
+      meta: {
+        id: "home",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
       timeseries_callouts: data.statistics,
       timeseries: data.timeseries,
       analytics: {

@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-public-pension
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-public-pension",
+        type: "dashboard",
+        category: "economy",
+        agency: "KWAP",
+      },
+    },
   };
 });
 

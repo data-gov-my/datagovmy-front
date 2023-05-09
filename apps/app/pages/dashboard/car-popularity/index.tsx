@@ -23,6 +23,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
   return {
     notFound: false,
     props: {
+      meta: {
+        id: "dashboard-car-popularity",
+        type: "dashboard",
+        category: "transportation",
+        agency: "JPJ",
+      },
       queryOptions: data.query_values.data.data,
     },
   };

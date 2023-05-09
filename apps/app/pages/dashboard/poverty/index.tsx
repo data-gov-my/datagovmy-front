@@ -23,7 +23,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-poverty", asyn
 
   return {
     notFound: false,
-    props: {},
+    props: {
+      meta: {
+        id: "dashboard-poverty",
+        type: "dashboard",
+        category: "economy",
+        agency: "ICU JPM",
+      },
+    },
   };
 });
 

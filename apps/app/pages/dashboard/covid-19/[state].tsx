@@ -79,6 +79,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
 
   return {
     props: {
+      meta: {
+        id: "dashboard-covid-19",
+        type: "dashboard",
+        category: "healthcare",
+        agency: "KKM",
+      },
       params: params,
       last_updated: new Date().valueOf(),
       snapshot_bar: data.snapshot_bar,

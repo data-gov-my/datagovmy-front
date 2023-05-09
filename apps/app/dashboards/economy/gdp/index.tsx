@@ -150,16 +150,6 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
     "demand_inventory",
   ]);
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "gdp.header",
-      name_en: "Gross Domestic Product (GDP)",
-      name_bm: "Keluaran Dalam Negeri Kasar (KDNK)",
-      route: routes.GDP,
-    });
-  }, []);
-
   useWatch(() => {
     setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
   }, [data.index_type]);
