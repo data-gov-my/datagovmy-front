@@ -1,7 +1,7 @@
 import AgencyBadge from "@components/AgencyBadge";
 import { Hero, Panel, Section, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useCallback, useMemo } from "react";
 import Container from "@components/Container";
 import { MOEIcon } from "@components/Icon/agency";
 import ComboBox from "@components/Combobox";
@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
 import { get } from "@lib/api";
+import debounce from "lodash/debounce";
+import { numFormat } from "@lib/helpers";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -22,6 +24,7 @@ import { get } from "@lib/api";
 
 interface SekolahkuProps {
   dropdown_data: Record<string, string>[];
+  total_schools: number;
   sekolahku_info: any;
   sekolahku_barmeter: any;
   bellcurve_school: any;
@@ -33,7 +36,8 @@ const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
 const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
-  //   dropdown_data,
+  dropdown_data,
+  total_schools,
   sekolahku_info,
   sekolahku_barmeter,
   bellcurve_school,
@@ -41,18 +45,12 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   bellcurve_linechart,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-sekolahku", "common"]);
-  const router = useRouter();
-
-  useEffect(() => {
-    router.events.on("routeChangeComplete", () => setData("loading", false));
-    return () => {
-      router.events.off("routeChangeComplete", () => null);
-    };
-  }, [router.events]);
+  const { push } = useRouter();
 
   const { data, setData } = useData({
     loading: false,
-    selection: undefined,
+    dropdownLoading: false,
+    selection: dropdown_data,
     tabs_section3: 0,
     selected_school: {
       label: `${sekolahku_info.school} (${sekolahku_info.code}) - ${sekolahku_info.postcode} ${sekolahku_info.state}`,
@@ -60,14 +58,32 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   });
 
-  // TODO (@jiaxin): Replace with useWatch, dep on what user types. After each call, replace the selection
-  useEffect(() => {
-    // get("/dropdown", { dashboard: "sekolahku" })
-    //   .then((res: any) => {
-    //     setData("selection", res.data.query_values.data.data);
-    //   })
-    //   .catch(e => console.error(e));
-  }, []);
+  const navigateToSchool = (e?: OptionType) => {
+    if (!e) {
+      setData("selected_school", undefined);
+      return;
+    }
+
+    setData("selected_school", e);
+    setData("loading", true);
+    push(`/dashboard/sekolahku/${e.value}`, undefined, {
+      scroll: false,
+      locale: i18n.language,
+    }).then(() => setData("loading", false));
+  };
+
+  const fetchSelection = useCallback(
+    debounce(query => {
+      setData("dropdownLoading", true);
+      get("/dropdown", { dashboard: "sekolahku", query: query, limit: 15 })
+        .then((res: any) => {
+          setData("selection", res.data.data);
+          setData("dropdownLoading", false);
+        })
+        .catch(e => console.error(e));
+    }, 300),
+    []
+  );
 
   // TODO: remove manual sorting once BE maintains ordering
   const barmeterSortArray = ["sex", "oku", "orphan", "ethnic", "religion", "income"];
@@ -75,20 +91,17 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   const formatCallout = (type: string, value: number): string => {
     switch (type) {
       case "gpa":
-        return value.toFixed(2);
+        return numFormat(value, "compact", [2, 2]);
       case "st_ratio":
-        return value.toFixed(1);
+        return numFormat(value, "compact", [1, 1]);
       case "students":
-        return value.toLocaleString();
+        return numFormat(value, "standard");
       case "max_ethnic":
-        return value.toFixed(1) + "%";
+        return numFormat(value, "compact", [1, 1]) + "%";
       case "household_income":
-        return (
-          "RM" +
-          value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-        );
+        return `RM ${numFormat(value, "standard", [2, 2])}`;
       case "closest_school_dist":
-        return value.toFixed(1) + "km";
+        return `${numFormat(value, "compact", [1, 1])} km`;
       default:
         return value.toLocaleString();
     }
@@ -106,14 +119,14 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     },
   ];
 
-  const SCHOOL_OPTIONS: Array<OptionType> = data.selection
-    ? data.selection.map(({ code, school, postcode, state }: any) => {
-        return {
-          label: `${school} (${code}) - ${postcode} ${state}`,
-          value: code,
-        };
-      })
-    : [];
+  const SCHOOL_OPTIONS = useMemo<OptionType[]>(() => {
+    return data.selection.map(({ code, school, postcode, state }: any) => {
+      return {
+        label: `${school} (${code}) - ${postcode} ${state}`,
+        value: code,
+      };
+    });
+  }, [data.selection]);
 
   return (
     <>
@@ -138,24 +151,21 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         <Section>
           <div className="flex flex-col items-center space-y-12">
             <div className="w-full space-y-6">
-              <h4 className="text-center">{t("section_1.title")}</h4>
+              <h4 className="text-center">{t("section_1.title", { total: total_schools })}</h4>
               <div className="flex flex-col items-center justify-center space-y-3">
                 <div className="grid w-full grid-cols-12 lg:grid-cols-10">
                   <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
                     <ComboBox
                       placeholder={t("section_1.search_school")}
                       options={SCHOOL_OPTIONS}
-                      selected={SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)}
-                      onChange={e => {
-                        if (e?.value) {
-                          setData("selected_school", e);
-                          setData("loading", true);
-                          router.push(`/dashboard/sekolahku/${e?.value}`, undefined, {
-                            scroll: false,
-                            locale: i18n.language,
-                          });
-                        }
-                      }}
+                      selected={
+                        data.selected_school
+                          ? SCHOOL_OPTIONS.find(e => e.value == data.selected_school.value)
+                          : undefined
+                      }
+                      onChange={navigateToSchool}
+                      onSearch={fetchSelection}
+                      loading={data.dropdownLoading}
                     />
                   </div>
                 </div>
@@ -331,7 +341,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                           className="h-[300px] w-full"
                           title={t(`section_3.${k}`)}
                           enableGridX={false}
-                          // graceX={"0.1%"}
+                          prefixX={k === "household_income" ? "RM " : ""}
+                          unitX={
+                            k === "closest_school_dist" ? "km " : k === "max_ethnic" ? "%" : ""
+                          }
                           data={{
                             labels: x, // x-values
                             datasets: [
