@@ -53,8 +53,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
               uid: dataset.meta.unique_id.concat("_png"),
               type: "image",
               id: dataset.meta.unique_id,
-              name_en: dataset.meta.title,
-              name_bm: dataset.meta.title,
+              name: dataset.meta.title,
               ext: "png",
             });
           },
@@ -73,8 +72,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
                   uid: dataset.meta.unique_id.concat("_svg"),
                   type: "image",
                   id: dataset.meta.unique_id,
-                  name_en: dataset.meta.title,
-                  name_bm: dataset.meta.title,
+                  name: dataset.meta.title,
                   ext: "svg",
                 })
               )

@@ -1,6 +1,6 @@
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { sortMulti, toDate } from "@lib/helpers";
+import { sortMulti } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { useData } from "@hooks/useData";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
@@ -8,8 +8,6 @@ import { default as Tabs, Panel } from "@components/Tabs";
 import Container from "@components/Container";
 import Hero from "@components/Hero";
 import Section from "@components/Section";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
 import { closestIndex, getColor } from "@lib/schema/exchange-rates";
 import AgencyBadge from "@components/AgencyBadge";
 

@@ -44,14 +44,13 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            // track("file_download", {
-            //   uid: dataset.meta.unique_id.concat("_png"),
-            //   type: "image",
-            //   id: dataset.meta.unique_id,
-            //   name_en: dataset.meta.en.title,
-            //   name_bm: dataset.meta.bm.title,
-            //   ext: "png",
-            // });
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name: dataset.meta.title,
+              ext: "png",
+            });
           },
         },
         {
@@ -63,16 +62,14 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(
-                () => {}
-                // track("file_download", {
-                //   uid: dataset.meta.unique_id.concat("_svg"),
-                //   type: "image",
-                //   id: dataset.meta.unique_id,
-                //   name_en: dataset.meta.en.title,
-                //   name_bm: dataset.meta.bm.title,
-                //   ext: "svg",
-                // })
+              .then(() =>
+                track("file_download", {
+                  uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
+                  id: dataset.meta.unique_id,
+                  name: dataset.meta.title,
+                  ext: "svg",
+                })
               )
               .catch(e => {
                 console.error(e);

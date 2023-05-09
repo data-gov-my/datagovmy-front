@@ -4,7 +4,7 @@ import { default as dynamic } from "next/dynamic";
 import { useTranslation } from "@hooks/useTranslation";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
-// import { track } from "mixpanel-browser";
+import { track } from "@lib/mixpanel";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import type { HeatmapData, HeatmapDatum } from "@components/Chart/Heatmap";
 
@@ -46,14 +46,13 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            // track("file_download", {
-            //   uid: dataset.meta.unique_id.concat("_png"),
-            //   type: "image",
-            //   id: dataset.meta.unique_id,
-            //   name_en: dataset.meta.en.title,
-            //   name_bm: dataset.meta.bm.title,
-            //   ext: "png",
-            // });
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name: dataset.meta.title,
+              ext: "png",
+            });
           },
         },
         {
@@ -65,16 +64,14 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(
-                () => {}
-                // track("file_download", {
-                //   uid: dataset.meta.unique_id.concat("_svg"),
-                //   type: "image",
-                //   id: dataset.meta.unique_id,
-                //   name_en: dataset.meta.en.title,
-                //   name_bm: dataset.meta.bm.title,
-                //   ext: "svg",
-                // })
+              .then(() =>
+                track("file_download", {
+                  uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
+                  id: dataset.meta.unique_id,
+                  name: dataset.meta.title,
+                  ext: "svg",
+                })
               )
               .catch(e => {
                 console.error(e);

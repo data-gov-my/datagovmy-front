@@ -1,5 +1,5 @@
 import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, toDate } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -10,8 +10,6 @@ import { AKSARA_COLOR } from "@lib/constants";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
 
 import InflationTrends from "./inflation-trends";
 import InflationSnapshot from "./inflation-snapshot";

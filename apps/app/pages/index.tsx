@@ -16,12 +16,10 @@ import { get } from "@lib/api";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { numFormat } from "@lib/helpers";
-import { routes } from "@lib/routes";
-import type { MetaPage, Page } from "@lib/types";
+import type { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useEffect } from "react";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 

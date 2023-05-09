@@ -12,7 +12,7 @@ import type {
   FilterDefault,
 } from "@lib/types";
 import { FunctionComponent, ReactNode, useEffect, useState } from "react";
-// import { track } from "@lib/mixpanel";
+import { track } from "@lib/mixpanel";
 import At from "@components/At";
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
@@ -210,12 +210,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   };
 
   useEffect(() => {
-    // track("page_view", {
-    //   type: "catalogue",
-    //   id: dataset.meta.unique_id,
-    //   name_en: dataset.meta.en.title,
-    //   name_bm: dataset.meta.bm.title,
-    // });
     if (dataset.type === "TABLE") {
       setDownloads({
         chart: [],
@@ -313,14 +307,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
                   if (typeof action?.href === "string") {
                     download(action.href, dataset.meta.unique_id);
-                    // track("file_download", {
-                    //   uid: dataset.meta.unique_id.concat("_", action.key),
-                    //   type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
-                    //   id: dataset.meta.unique_id,
-                    //   name_en: dataset.meta.en.title,
-                    //   name_bm: dataset.meta.bm.title,
-                    //   ext: action.key,
-                    // });
+                    track("file_download", {
+                      uid: dataset.meta.unique_id.concat("_", action.key),
+                      type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
+                      id: dataset.meta.unique_id,
+                      name: dataset.meta.title,
+                      ext: action.key,
+                    });
                     return;
                   }
 
@@ -519,22 +512,20 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <div className="space-y-3">
                 <h5>{t("common:catalogue.meta_url")}</h5>
                 <ul className="text-dim ml-6 list-outside list-disc">
-                  {Object.entries(metadata.url).map(([_, url]: [string, unknown]) =>
+                  {Object.entries(metadata.url).map(([key, url]: [string, unknown]) =>
                     url ? (
                       <li key={url as string}>
                         <a
                           href={url as string}
                           className="text-primary dark:text-primary-dark break-all hover:underline"
-                          onClick={
-                            () => {}
-                            //   track("file_download", {
-                            //     uid: dataset.meta.unique_id.concat("_", key),
-                            //     id: dataset.meta.unique_id,
-                            //     name_en: dataset.meta.en.title,
-                            //     name_bm: dataset.meta.bm.title,
-                            //     type: "file",
-                            //     ext: key,
-                            //   })
+                          onClick={() =>
+                            track("file_download", {
+                              uid: dataset.meta.unique_id.concat("_", key),
+                              id: dataset.meta.unique_id,
+                              name: dataset.meta.title,
+                              type: "file",
+                              ext: key,
+                            })
                           }
                         >
                           {url as string}
@@ -638,11 +629,10 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
   title,
   description,
   icon,
+  meta,
 }) => {
   return typeof href === "string" ? (
-    // .csv & .parquet
-    // //track("file_download", meta)}>
-    <a href={href} download onClick={() => {}}>
+    <a href={href} download onClick={() => track("file_download", meta)}>
       <Card type="gray">
         <div className="gap-4.5 flex items-center">
           {image && (

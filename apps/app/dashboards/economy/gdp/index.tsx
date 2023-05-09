@@ -1,5 +1,5 @@
 import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { smartNumFormat, toDate } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -9,8 +9,6 @@ import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/AgencyBadge";
 import { SliderProvider } from "@components/Chart/Slider/context";

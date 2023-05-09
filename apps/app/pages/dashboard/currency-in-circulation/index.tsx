@@ -13,7 +13,7 @@ const CurrencyInCirculation: Page = ({
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["dashboard-currency-in-circulation", "common"]);
 
   return (
     <>

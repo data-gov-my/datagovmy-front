@@ -11,7 +11,7 @@ const namespace = [
   "dashboard-consumer-prices",
   "dashboard-covid-19",
   "dashboard-covid-vaccination",
-  "dashboard-covid-currency-in-circulation",
+  "dashboard-currency-in-circulation",
   "dashboard-election-explorer",
   "dashboard-exchange-rates",
   "dashboard-fire-and-rescue",

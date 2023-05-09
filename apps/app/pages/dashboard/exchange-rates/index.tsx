@@ -32,7 +32,7 @@ const ExchangeRates: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rate", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rates", async () => {
   const { data } = await get("/dashboard", { dashboard: "exchange_rates" });
 
   return {
