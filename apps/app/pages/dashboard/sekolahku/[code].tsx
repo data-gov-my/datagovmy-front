@@ -9,6 +9,7 @@ import { withi18n } from "@lib/decorators";
 
 const Sekolahku: Page = ({
   dropdown_data,
+  total_schools,
   sekolahku_info,
   sekolahku_barmeter,
   bellcurve_school,
@@ -22,6 +23,7 @@ const Sekolahku: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SekolahkuDashboard
         dropdown_data={dropdown_data}
+        total_schools={total_schools}
         sekolahku_info={sekolahku_info}
         sekolahku_barmeter={sekolahku_barmeter}
         bellcurve_school={bellcurve_school}
@@ -55,28 +57,12 @@ export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-sekolahku",
   async ({ params }) => {
     try {
-      /**
-       * TODO (@jiaxin): Return proper 404 for invalid school code. Current: API returns the entire result for invalid code.
-       * TODO (@jiaxin): Replace {#1} with {#2}. The idea is: At initial load, dropdown_data consists of suggested selection of schools (10)
-       */
-
-      // #1
-      const { data } = await get("/dashboard", {
-        dashboard: "sekolahku",
-        code: params?.code,
-      }).catch(e => {
-        console.error(e);
-        throw new Error("Invalid school code");
+      const [dropdown, school] = await Promise.all([
+        get("/dropdown", { dashboard: "sekolahku", limit: 15 }),
+        get("/dashboard", { dashboard: "sekolahku", code: params?.code }),
+      ]).catch(e => {
+        throw new Error("Invalid school code. Message: " + e);
       });
-
-      // #2
-      //   const [dropdown, school] = await Promise.all([
-      //     get("/dropdown", { dashboard: "sekolahku" }),
-      //     get("/dashboard", { dashboard: "sekolahku", code: params?.code }),
-      //   ]).catch(e => {
-      //     console.error(e);
-      //     throw new Error("Invalid school code");
-      //   });
 
       return {
         notFound: false,
@@ -87,16 +73,18 @@ export const getStaticProps: GetStaticProps = withi18n(
             category: "education",
             agency: "MoE",
           },
-          dropdown_data: "", // dropdown_data.query_values.data.data,
-          sekolahku_info: data.sekolahku_info.data,
-          sekolahku_barmeter: data.sekolahku_barmeter.data,
-          bellcurve_school: data.bellcurve_school.data,
-          bellcurve_callout: data.bellcurve_callout.data.data,
-          bellcurve_linechart: data.bellcurve_linechart.data.data,
+          dropdown_data: dropdown.data.data,
+          total_schools: dropdown.data.info.total,
+          sekolahku_info: school.data.sekolahku_info.data,
+          sekolahku_barmeter: school.data.sekolahku_barmeter.data,
+          bellcurve_school: school.data.bellcurve_school.data,
+          bellcurve_callout: school.data.bellcurve_callout.data.data,
+          bellcurve_linechart: school.data.bellcurve_linechart.data.data,
         },
         revalidate: 60 * 60 * 24, // 1 day (in seconds)
       };
     } catch (error) {
+      console.error(error);
       return {
         notFound: true,
       };

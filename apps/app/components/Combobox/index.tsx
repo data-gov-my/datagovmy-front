@@ -6,21 +6,26 @@ import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/reac
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
 import { matchSorter } from "match-sorter";
+import Spinner from "@components/Spinner";
 
 type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];
   selected?: OptionType<L, V> | null;
   onChange: (option?: OptionType<L, V>) => void;
+  onSearch?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
+  loading?: boolean;
 };
 
 const ComboBox = <L extends string | number = string, V = string>({
   options,
   selected,
   onChange,
+  onSearch,
   placeholder,
   enableFlag = false,
+  loading = false,
 }: ComboBoxProps<L, V>) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
@@ -28,10 +33,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   const filteredOptions =
     query === ""
       ? options.slice(0, 100)
-      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
-          0,
-          100
-        );
+      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] });
 
   return (
     <Combobox value={selected} onChange={onChange}>
@@ -40,14 +42,18 @@ const ComboBox = <L extends string | number = string, V = string>({
           className="border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none 
         overflow-hidden rounded-full border bg-white text-left text-base shadow-sm focus:outline-none focus-visible:ring-0 dark:bg-black"
         >
-          <Combobox.Input
-            placeholder={placeholder}
-            className="w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
-            displayValue={(option: OptionType<L, V>) => option?.label as string}
-            onChange={event => setQuery(event.target.value)}
-            spellCheck={false}
-          />
           <Combobox.Button as={"div"} className="w-full">
+            <Combobox.Input
+              placeholder={placeholder}
+              className="w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
+              displayValue={(option: OptionType) => option?.label}
+              onChange={event => {
+                setQuery(event.target.value);
+                if (onSearch) onSearch(event.target.value);
+              }}
+              spellCheck={false}
+            />
+
             <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-1.5">
               <MagnifyingGlassIcon
                 className="dark:text-dim h-5 w-5 text-black"
@@ -81,8 +87,15 @@ const ComboBox = <L extends string | number = string, V = string>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm">
-            {filteredOptions.length === 0 && query !== "" ? (
+          <Combobox.Options
+            className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm"
+            static
+          >
+            {loading ? (
+              <div className="text-dim cursor-deault relative flex select-none flex-row items-center gap-2 px-4 py-2	">
+                <Spinner loading={loading} /> {t("common:placeholder.loading")}
+              </div>
+            ) : filteredOptions.length === 0 && query !== "" ? (
               <div className="text-dim relative cursor-default select-none px-4 py-2">
                 {t("common:placeholder.no_results")}
               </div>
@@ -91,9 +104,10 @@ const ComboBox = <L extends string | number = string, V = string>({
                 <Combobox.Option
                   key={index}
                   className={({ active }) =>
-                    `relative flex w-full cursor-pointer select-none flex-row gap-2 px-4 py-2 ${
-                      active ? "bg-washed dark:bg-washed-dark" : ""
-                    }`
+                    clx(
+                      "relative flex w-full cursor-pointer select-none flex-row gap-2 px-4 py-2",
+                      active && "bg-washed dark:bg-washed-dark"
+                    )
                   }
                   value={option}
                 >
