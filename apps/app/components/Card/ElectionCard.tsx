@@ -5,7 +5,7 @@ import Font from "@config/font";
 import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
-import { clx } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 
 interface CardProps {
   open: boolean;
@@ -15,6 +15,7 @@ interface CardProps {
   onPrev: () => void;
   data?: any;
   columns?: any;
+  votes?: any;
   title?: string | ReactElement;
   win?: string;
   date?: string;
@@ -33,6 +34,7 @@ const Card: FunctionComponent<CardProps> = ({
   onPrev,
   data,
   columns,
+  votes,
   title,
   win,
   date,
@@ -106,9 +108,26 @@ const Card: FunctionComponent<CardProps> = ({
                     highlightedRow={highlightedRow}
                     win={win}
                   />
-
-                  <div className="mt-6 space-y-3">
-                    {total > 100 && (
+                  {votes && (
+                    <div className="flex flex-col justify-center gap-1 py-6 text-sm lg:flex-row lg:gap-3 ">
+                      <p>
+                        <span>{t("election.voter_turnout")}:</span>
+                        <span className="font-medium">{` ${numFormat(
+                          votes.voter_turnout,
+                          "standard"
+                        )} (${Number(votes.voter_turnout_perc).toFixed(1)}%)`}</span>
+                      </p>
+                      <p>
+                        <span>{t("election.rejected_votes")}:</span>
+                        <span className="font-medium">{` ${numFormat(
+                          votes.votes_rejected,
+                          "standard"
+                        )} (${Number(votes.votes_rejected_perc).toFixed(1)}%)`}</span>
+                      </p>
+                    </div>
+                  )}
+                  <div className="space-y-3">
+                    {total <= 10 && (
                       <div className="flex flex-row items-center justify-center gap-1.5">
                         {Array(total)
                           .fill(null)
@@ -135,7 +154,7 @@ const Card: FunctionComponent<CardProps> = ({
                         <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
                         {t("common:common.previous")}
                       </Button>
-                      {total > 100 && (
+                      {total > 10 && (
                         <span className="flex items-center gap-1 text-center text-sm">
                           {t("common:common.page_of", {
                             current: page + 1,
