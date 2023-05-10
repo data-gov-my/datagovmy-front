@@ -157,7 +157,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
       .then(({ data }) => {
         setData(
           "full_results",
-          data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+          data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
       })
       .catch(e => {
@@ -221,7 +221,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                     }
                     onChange={e => {
                       if (e) setData("q_seat", e.value);
-                      setData("seat", e);
+                      setData("p_seat", e);
                     }}
                   />
                 </div>

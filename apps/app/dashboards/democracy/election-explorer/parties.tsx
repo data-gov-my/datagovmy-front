@@ -294,7 +294,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                       if (e) {
                         setData("q_party", e.value.toUpperCase());
                       }
-                      setData("party", e);
+                      setData("p_party", e);
                     }}
                     enableFlag
                   />

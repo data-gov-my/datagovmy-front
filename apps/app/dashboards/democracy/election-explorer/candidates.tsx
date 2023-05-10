@@ -94,7 +94,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           <FullResult
             desc={t("full_result")}
             onClick={() => {
-              setData("open", true);
+              setData("modal_open", true);
               setData("index", row.index);
             }}
           />
@@ -183,14 +183,14 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       .then(({ data }) => {
         setData(
           "full_results",
-          data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+          data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
       })
       .catch(e => {
         console.error(e);
       })
       .then(() => setData("modal_loading", false));
-  }, [data.index, data.open]);
+  }, [data.index, data.modal_open]);
 
   return (
     <>
