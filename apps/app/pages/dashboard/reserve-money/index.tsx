@@ -16,11 +16,7 @@ const ReserveMoney: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.reserve_money")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ReserveMoneyDashboard
         last_updated={last_updated}
         timeseries={timeseries}

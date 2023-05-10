@@ -15,11 +15,7 @@ const InterestRates = ({
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.interest_rates")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InterestRatesDashboard
         last_updated={last_updated}
         timeseries={timeseries}

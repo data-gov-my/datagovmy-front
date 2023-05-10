@@ -19,10 +19,7 @@ const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
     <>
       <Hero
         background="blue"
-        category={[
-          t("common:nav.megamenu.categories.economy"),
-          "text-primary dark:text-primary-dark",
-        ]}
+        category={[t("common:categories.economy"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={

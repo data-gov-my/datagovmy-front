@@ -9,11 +9,7 @@ const BirthdayExplorer = ({ timeseries }: InferGetStaticPropsType<typeof getStat
   const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.birthday_explorer")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <BirthdayExplorerDashboard timeseries={timeseries} />
     </>
   );

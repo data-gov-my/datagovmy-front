@@ -19,7 +19,7 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
     <>
       <Hero
         background="gray"
-        category={[t("common:nav.megamenu.categories.government_programs"), "text-black"]}
+        category={[t("common:categories.government_programs"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={

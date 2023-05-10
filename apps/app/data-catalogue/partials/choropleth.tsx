@@ -3,7 +3,7 @@ import type { Color } from "@hooks/useColor";
 import { useTranslation } from "@hooks/useTranslation";
 import { download, exportAs } from "@lib/helpers";
 import type { DownloadOptions, Geotype } from "@lib/types";
-// import { track } from "mixpanel-browser";
+import { track } from "@lib/mixpanel";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -27,7 +27,8 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   urls,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
+
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"choropleth", any[], unknown> | null>(null);
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);
@@ -44,14 +45,13 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            // track("file_download", {
-            //   uid: dataset.meta.unique_id.concat("_png"),
-            //   type: "image",
-            //   id: dataset.meta.unique_id,
-            //   name_en: dataset.meta.en.title,
-            //   name_bm: dataset.meta.bm.title,
-            //   ext: "png",
-            // });
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name: dataset.meta.title,
+              ext: "png",
+            });
           },
         },
         {
@@ -63,16 +63,14 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(
-                () => {}
-                // track("file_download", {
-                //   uid: dataset.meta.unique_id.concat("_svg"),
-                //   type: "image",
-                //   id: dataset.meta.unique_id,
-                //   name_en: dataset.meta.en.title,
-                //   name_bm: dataset.meta.bm.title,
-                //   ext: "svg",
-                // })
+              .then(() =>
+                track("file_download", {
+                  uid: dataset.meta.unique_id.concat("_svg"),
+                  type: "image",
+                  id: dataset.meta.unique_id,
+                  name: dataset.meta.title,
+                  ext: "svg",
+                })
               )
               .catch(e => {
                 console.error(e);

@@ -23,7 +23,7 @@ const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
   urls,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const ctx = useRef<GeoChoroplethRef | null>(null);
   const { png } = useExport(Boolean(ctx.current), dataset.meta.unique_id);
 

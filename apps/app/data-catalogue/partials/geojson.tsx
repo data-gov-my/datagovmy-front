@@ -3,7 +3,7 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
 import type { DownloadOptions } from "@lib/types";
-// import { track } from "mixpanel-browser";
+import { track } from "@lib/mixpanel";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 
@@ -26,7 +26,7 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   urls,
   onDownload,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const ctx = useRef<GeoChoroplethRef | null>(null);
   const [mounted, setMounted] = useState(false);
   const { png } = useExport(mounted, dataset.meta.unique_id);
@@ -46,16 +46,14 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             if (ctx) ctx.current?.print(dataset.meta.unique_id);
-            // TODO: Add track by mixpanel
 
-            // track("file_download", {
-            //   uid: dataset.meta.unique_id.concat("_png"),
-            //   type: "image",
-            //   id: dataset.meta.unique_id,
-            //   name_en: dataset.meta.en.title,
-            //   name_bm: dataset.meta.bm.title,
-            //   ext: "png",
-            // });
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name: dataset.meta.title,
+              ext: "png",
+            });
           },
         },
       ],

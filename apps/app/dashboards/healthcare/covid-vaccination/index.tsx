@@ -122,7 +122,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
     <>
       <Hero
         background="green"
-        category={[t("common:nav.megamenu.categories.healthcare"), "text-green-600"]}
+        category={[t("common:categories.healthcare"), "text-green-600"]}
         header={[t("header")]}
         description={
           <>

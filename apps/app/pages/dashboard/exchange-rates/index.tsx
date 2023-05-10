@@ -17,11 +17,7 @@ const ExchangeRates: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("common:nav.megamenu.dashboards.exchange_rate")}
-        description={t("description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ExchangeRatesDashboard
         last_updated={last_updated}
         bar={bar}
@@ -32,7 +28,7 @@ const ExchangeRates: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rate", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rates", async () => {
   const { data } = await get("/dashboard", { dashboard: "exchange_rates" });
 
   return {
