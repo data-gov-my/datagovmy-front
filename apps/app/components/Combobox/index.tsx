@@ -32,8 +32,11 @@ const ComboBox = <L extends string | number = string, V = string>({
 
   const filteredOptions =
     query === ""
-      ? options.slice(0, 100)
-      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] });
+      ? options.slice(0, 15)
+      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
+          0,
+          15
+        );
 
   return (
     <Combobox value={selected} onChange={onChange}>
@@ -61,22 +64,22 @@ const ComboBox = <L extends string | number = string, V = string>({
               />
             </span>
             {query.length > 0 && (
-              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
-                <XMarkIcon
-                  className="dark:text-dim h-5 w-5 text-black"
-                  onClick={() => onChange(undefined)}
-                  aria-hidden="true"
-                />
-              </span>
+              <button
+                className="hover:bg-washed dark:hover:bg-washed-dark group group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
+                onClick={() => onChange(undefined)}
+                aria-hidden="true"
+              >
+                <XMarkIcon className="dark:text-dim absolute right-1.5 h-5 w-5 text-black" />
+              </button>
             )}
             {selected && (
-              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
-                <XMarkIcon
-                  className="dark:text-dim h-5 w-5 text-black"
-                  onClick={() => onChange(undefined)}
-                  aria-hidden="true"
-                />
-              </span>
+              <button
+                className="hover:bg-washed dark:hover:bg-washed-dark group group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
+                onClick={() => onChange(undefined)}
+                aria-hidden="true"
+              >
+                <XMarkIcon className="dark:text-dim absolute right-1.5 h-5 w-5 text-black" />
+              </button>
             )}
           </Combobox.Button>
         </div>
