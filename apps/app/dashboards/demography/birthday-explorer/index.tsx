@@ -16,6 +16,7 @@ import Daterange from "@components/Dropdown/Daterange";
 import { Trans } from "next-i18next";
 import { useWatch } from "@hooks/useWatch";
 import Spinner from "@components/Spinner";
+import { clx } from "@lib/helpers";
 
 /**
  * Birthday Explorer Dashboard
@@ -174,9 +175,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 <p className="mb-3 text-sm font-medium">{t("enter_birthday")}</p>
                 <input
                   type="date"
-                  className={`active:bg-washed relative w-full cursor-pointer gap-[6px] rounded-md bg-white py-[6px] pl-3 text-left
-                   text-sm outline-none focus:outline-none focus:ring-0 dark:bg-black dark:text-white
-                   `.concat(
+                  className={clx(
+                    "active:bg-washed relative w-full cursor-pointer gap-[6px] rounded-md bg-white py-[6px] pl-3 text-left text-sm outline-none focus:outline-none focus:ring-0 dark:bg-black dark:text-white",
                     data.validation
                       ? " border-danger dark:border-danger"
                       : " border-outline hover:border-outlineHover dark:border-washed-dark dark:border-outline/10"
@@ -385,7 +385,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               anchor={"left"}
               width={"w-fit"}
               options={filterPeriods}
-              placeholder={t("common:catalogue.period")}
+              placeholder={t("period")}
               selected={filterPeriods.find(period => period.value === data.groupBy)}
               onChange={({ value }) => setData("groupBy", value)}
             />
