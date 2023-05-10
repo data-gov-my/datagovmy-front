@@ -386,10 +386,10 @@ export const FullResult: FunctionComponent<FullResultProps> = ({ desc, onClick }
   return (
     <div className="flex items-center justify-center">
       <button
-        className="flex flex-row items-center pl-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+        className="text-dim flex flex-row items-center pl-2 text-sm font-medium hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 dark:hover:text-white"
         onClick={onClick}
       >
-        <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
+        <ArrowsPointingOutIcon className="h-4 w-4 " />
         {desc && <p className="pl-1.5 font-normal">{desc}</p>}
       </button>
     </div>
