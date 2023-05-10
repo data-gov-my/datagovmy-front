@@ -37,8 +37,8 @@ const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
         {
           key: "png",
           image: png,
-          title: t("common:catalogue.image.title"),
-          description: t("common:catalogue.image.desc"),
+          title: t("image.title"),
+          description: t("image.desc"),
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             if (ctx) ctx.current?.print(dataset.meta.unique_id.concat(".png"));
@@ -50,16 +50,16 @@ const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
         {
           key: "csv",
           image: "/static/images/icons/csv.png",
-          title: t("common:catalogue.csv.title"),
-          description: t("common:catalogue.csv.desc"),
+          title: t("csv.title"),
+          description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: urls.csv,
         },
         {
           key: "parquet",
           image: "/static/images/icons/parquet.png",
-          title: t("common:catalogue.parquet.title"),
-          description: t("common:catalogue.parquet.desc"),
+          title: t("parquet.title"),
+          description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: urls.parquet,
         },

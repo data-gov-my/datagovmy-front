@@ -42,7 +42,7 @@ export const METADATA_TABLE_SCHEMA = (
   return [
     {
       id: "variable",
-      header: t("common:catalogue.meta_variable_name"),
+      header: t("meta_variable_name"),
       accessorFn({ variable, data_type }) {
         return `${variable}$$${data_type ? `(${data_type})` : ""}`;
       },
@@ -59,7 +59,7 @@ export const METADATA_TABLE_SCHEMA = (
     },
     {
       id: "variable_name",
-      header: t("common:catalogue.meta_variable"),
+      header: t("meta_variable"),
       accessorFn: (item: any) => JSON.stringify({ uid: item.uid, name: item.variable_name }),
       className: "text-left min-w-[140px]",
       enableSorting: false,
@@ -76,7 +76,7 @@ export const METADATA_TABLE_SCHEMA = (
             )}
             {index === 0 && !isTable && (
               <p className="text-dim font-normal">
-                <i>{t("common:catalogue.meta_chart_above")}</i>
+                <i>{t("meta_chart_above")}</i>
               </p>
             )}
           </>
@@ -85,7 +85,7 @@ export const METADATA_TABLE_SCHEMA = (
     },
     {
       id: "definition",
-      header: t("common:catalogue.meta_definition"),
+      header: t("meta_definition"),
       accessorKey: "definition",
       className: "text-left leading-relaxed",
       cell: value => <p>{value.getValue()}</p>,

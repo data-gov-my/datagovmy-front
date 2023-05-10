@@ -38,7 +38,6 @@ import { useFilter } from "@hooks/useFilter";
 import Carousel from "@components/Carousel";
 import Slider from "react-slick";
 import { BarMeter, FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
-import { DateTime } from "luxon";
 import ElectionCard from "@components/Card/ElectionCard";
 import { WindowContext } from "@hooks/useWindow";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
@@ -268,7 +267,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   onClick={open}
                   className="border-outline bg-background dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-lg"
                 >
-                  <span>{t("common:catalogue.filter")}:</span>
+                  <span>{t("filter")}:</span>
                   <span className="bg-primary dark:bg-primary-dark rounded-md px-1 py-0.5 text-xs text-white">
                     {3}
                   </span>
@@ -276,7 +275,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               )}
               title={
                 <Label
-                  label={t("common:catalogue.filter") + ":"}
+                  label={t("filter") + ":"}
                   className="block text-sm font-bold text-black dark:text-white"
                 />
               }

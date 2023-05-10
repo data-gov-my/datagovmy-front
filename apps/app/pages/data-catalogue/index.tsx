@@ -18,7 +18,7 @@ const CatalogueIndex: Page = ({
 
   return (
     <>
-      <Metadata title={t("common:nav.catalogue")} description={""} keywords={""} />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
     </>
   );
