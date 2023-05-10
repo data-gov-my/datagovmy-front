@@ -11,7 +11,7 @@ interface SidebarProps {
 }
 
 const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSelect }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const [selected, setSelected] = useState<string>();
   const [show, setShow] = useState<boolean>(false);
   const styles = {
@@ -28,7 +28,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
         <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/5">
           <ul className="sticky top-14 flex h-[90vh] flex-col gap-2 overflow-auto pt-3">
             <li>
-              <h5 className={styles.base}>{t("common:catalogue.category")}</h5>
+              <h5 className={styles.base}>{t("category")}</h5>
             </li>
             {categories.length > 0 ? (
               categories.map(([category, subcategory]) => (
@@ -83,7 +83,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                 icon={<Bars3BottomLeftIcon className="h-4 w-4" />}
                 onClick={() => setShow(true)}
               >
-                {t("common:catalogue.category")}
+                {t("category")}
               </Button>
             </div>
             <Transition
@@ -99,7 +99,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
             >
               <ul className="flex flex-col gap-1 overflow-auto pt-2">
                 <li className="flex items-baseline justify-between">
-                  <h5 className={styles.base}>{t("common:catalogue.category")}</h5>
+                  <h5 className={styles.base}>{t("category")}</h5>
                   <Button
                     className="btn btn-default mr-3 border text-sm"
                     icon={<XMarkIcon className="h-4 w-4" />}

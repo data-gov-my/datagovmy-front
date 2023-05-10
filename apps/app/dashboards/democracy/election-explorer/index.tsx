@@ -377,7 +377,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   onClick={open}
                   className="border-outline bg-background dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-lg"
                 >
-                  <span>{t("common:catalogue.filter")}:</span>
+                  <span>{t("filter")}:</span>
                   <span className="bg-primary dark:bg-primary-dark rounded-md px-1 py-0.5 text-xs text-white">
                     {3}
                   </span>
@@ -385,7 +385,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               )}
               title={
                 <Label
-                  label={t("common:catalogue.filter") + ":"}
+                  label={t("filter") + ":"}
                   className="block text-sm font-bold text-black dark:text-white"
                 />
               }

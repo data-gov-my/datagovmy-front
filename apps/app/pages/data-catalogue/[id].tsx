@@ -24,16 +24,16 @@ const CatalogueShow: Page = ({
   const availableOptions = useMemo<OptionType[]>(() => {
     switch (dataset.type) {
       case "TABLE":
-        return [{ label: t("common:catalogue.table"), value: "table" }];
+        return [{ label: t("table"), value: "table" }];
 
       case "GEOJSON":
       case "HEATTABLE":
-        return [{ label: t("common:catalogue.chart"), value: "chart" }];
+        return [{ label: t("chart"), value: "chart" }];
 
       default:
         return [
-          { label: t("common:catalogue.chart"), value: "chart" },
-          { label: t("common:catalogue.table"), value: "table" },
+          { label: t("chart"), value: "chart" },
+          { label: t("table"), value: "table" },
         ];
     }
   }, [dataset.type]);

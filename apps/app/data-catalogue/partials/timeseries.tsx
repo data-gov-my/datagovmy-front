@@ -49,8 +49,8 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         {
           key: "png",
           image: Boolean(data?.ctx) && data.ctx.toBase64Image("png", 1),
-          title: t("common:catalogue.image.title"),
-          description: t("common:catalogue.image.desc"),
+          title: t("image.title"),
+          description: t("image.desc"),
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
@@ -66,8 +66,8 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         {
           key: "svg",
           image: Boolean(data?.ctx) && data.ctx.toBase64Image("image/png", 1),
-          title: t("common:catalogue.vector.title"),
-          description: t("common:catalogue.vector.desc"),
+          title: t("vector.title"),
+          description: t("vector.desc"),
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             exportAs("svg", data.ctx!.canvas)
@@ -91,16 +91,16 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
         {
           key: "csv",
           image: "/static/images/icons/csv.png",
-          title: t("common:catalogue.csv.title"),
-          description: t("common:catalogue.csv.desc"),
+          title: t("csv.title"),
+          description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: urls.csv,
         },
         {
           key: "parquet",
           image: "/static/images/icons/parquet.png",
-          title: t("common:catalogue.parquet.title"),
-          description: t("common:catalogue.parquet.desc"),
+          title: t("parquet.title"),
+          description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: urls.parquet,
         },

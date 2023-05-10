@@ -29,7 +29,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
   anchor = "right",
   label,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
   const listRef = useRef<HTMLUListElement>(null);
   const beginRef = useRef<SVGSVGElement>(null);
   const endRef = useRef<SVGSVGElement>(null);
@@ -64,8 +64,8 @@ const Range: FunctionComponent<DaterangeProps> = ({
               >
                 <ClockIcon className="h-4 w-4 text-black dark:text-white" />
                 <p className="text-sm">
-                  {(selected && selected[0] && selected[0].label) ?? t("common:catalogue.begin")} -{" "}
-                  {(selected && selected[1] && selected[1].label) ?? t("common:catalogue.end")}
+                  {(selected && selected[0] && selected[0].label) ?? t("begin")} -{" "}
+                  {(selected && selected[1] && selected[1].label) ?? t("end")}
                 </p>
 
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
@@ -90,13 +90,13 @@ const Range: FunctionComponent<DaterangeProps> = ({
                   <div className="relative">
                     <div className="dark:border-washed-dark sticky top-0 z-20 grid w-[250px] grid-cols-2 border-b bg-white px-4 py-3 dark:bg-black">
                       <p className="text-dim whitespace-nowrap">
-                        {t("common:catalogue.begin")}:{" "}
+                        {t("begin")}:{" "}
                         <span className="text-black dark:text-white">
                           {selected && selected[0] && selected[0].label}
                         </span>
                       </p>
                       <p className="text-dim whitespace-nowrap">
-                        {t("common:catalogue.end")}:{" "}
+                        {t("end")}:{" "}
                         <span className="text-black dark:text-white">
                           {selected && selected[1] && selected[1].label}
                         </span>

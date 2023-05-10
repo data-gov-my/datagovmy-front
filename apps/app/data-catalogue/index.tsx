@@ -80,12 +80,12 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[
           `${filterRef.current?.source ? filterRef.current?.source.concat(":") : ""} ${t(
-            "common:catalogue.header"
+            "header"
           )}`,
         ]}
         description={
           <div className="space-y-6 xl:w-2/3">
-            <p className="text-dim">{t("common:catalogue.description")}</p>
+            <p className="text-dim">{t("description")}</p>
             {filterRef.current?.sourceFilter()}
           </div>
         }
@@ -166,20 +166,20 @@ interface CatalogueFilterRef {
 
 const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forwardRef(
   ({ query, sources }, ref) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(["catalogue", "common"]);
     const filterPeriods: Array<OptionType> = [
-      { label: t("common:catalogue.index_filters.daily"), value: "DAILY" },
-      { label: t("common:catalogue.index_filters.weekly"), value: "WEEKLY" },
-      { label: t("common:catalogue.index_filters.monthly"), value: "MONTHLY" },
-      { label: t("common:catalogue.index_filters.quarterly"), value: "QUARTERLY" },
-      { label: t("common:catalogue.index_filters.yearly"), value: "YEARLY" },
+      { label: t("filter_options.daily"), value: "DAILY" },
+      { label: t("filter_options.weekly"), value: "WEEKLY" },
+      { label: t("filter_options.monthly"), value: "MONTHLY" },
+      { label: t("filter_options.quarterly"), value: "QUARTERLY" },
+      { label: t("filter_options.yearly"), value: "YEARLY" },
     ];
     const filterGeographics: Array<OptionType> = [
-      { label: t("common:catalogue.index_filters.state"), value: "STATE" },
-      { label: t("common:catalogue.index_filters.district"), value: "DISTRICT" },
-      { label: t("common:catalogue.index_filters.parlimen"), value: "PARLIMEN" },
-      { label: t("common:catalogue.index_filters.dun"), value: "DUN" },
-      { label: t("common:catalogue.index_filters.national"), value: "NATIONAL" },
+      { label: t("filter_options.state"), value: "STATE" },
+      { label: t("filter_options.district"), value: "DISTRICT" },
+      { label: t("filter_options.parlimen"), value: "PARLIMEN" },
+      { label: t("filter_options.dun"), value: "DUN" },
+      { label: t("filter_options.national"), value: "NATIONAL" },
     ];
     const filterSources: Array<OptionType> = sources.map(source => ({
       label: source,
@@ -223,7 +223,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
           <Dropdown
             icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
             className="min-w-[250px]"
-            placeholder={t("common:catalogue.source_placeholder")}
+            placeholder={t("source_placeholder")}
             anchor="left"
             options={filterSources}
             selected={filter.source}
@@ -240,7 +240,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         <div className="flex-grow">
           <Search
             className="border-0"
-            placeholder={t("common:catalogue.search_placeholder")}
+            placeholder={t("search_placeholder")}
             query={filter.search}
             onChange={e => setFilter("search", e)}
           />
@@ -253,7 +253,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 onClick={open}
                 className="border-outline dark:border-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-sm"
               >
-                <span>{t("common:catalogue.filter")}</span>
+                <span>{t("filter")}</span>
                 <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-white dark:text-black">
                   {actives.length}
                 </span>
@@ -261,7 +261,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             )}
             title={
               <Label
-                label={t("common:catalogue.filter") + ":"}
+                label={t("filter") + ":"}
                 className="block text-sm font-medium text-black dark:text-white"
               />
             }
@@ -269,7 +269,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             {close => (
               <div className="flex-grow space-y-4 overflow-y-auto pb-28 pt-4">
                 <Radio
-                  label={t("common:catalogue.period")}
+                  label={t("period")}
                   name="period"
                   className="flex flex-wrap gap-4 px-1 pt-2"
                   options={filterPeriods}
@@ -277,7 +277,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   onChange={e => setFilter("period", e)}
                 />
                 <Checkbox
-                  label={t("common:catalogue.geography")}
+                  label={t("geography")}
                   className="flex flex-wrap gap-4 px-1 pt-2"
                   name="geography"
                   options={filterGeographics}
@@ -288,16 +288,16 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 <div className="grid grid-cols-2 gap-4">
                   <Dropdown
                     width="w-full"
-                    label={t("common:catalogue.begin")}
-                    sublabel={t("common:catalogue.begin") + ":"}
+                    label={t("begin")}
+                    sublabel={t("begin") + ":"}
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
                     placeholder={t("common:common.select")}
                     onChange={e => setFilter("begin", e)}
                   />
                   <Dropdown
-                    label={t("common:catalogue.end")}
-                    sublabel={t("common:catalogue.end") + ":"}
+                    label={t("end")}
+                    sublabel={t("end") + ":"}
                     width="w-full"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
@@ -339,14 +339,14 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
           )}
           <Dropdown
             options={filterPeriods}
-            placeholder={t("common:catalogue.period")}
+            placeholder={t("period")}
             selected={filterPeriods.find(item => item.value === filter.period?.value) ?? undefined}
             onChange={e => setFilter("period", e)}
           />
           <Dropdown
             multiple
             enableClear
-            title={t("common:catalogue.geography")}
+            title={t("geography")}
             options={filterGeographics}
             selected={filter.geography}
             onChange={e => setFilter("geography", e)}
