@@ -1,15 +1,17 @@
+import Spinner from "@components/Spinner";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import React, { ForwardedRef, ReactNode } from "react";
 import Slider from "react-slick";
 
 type CarouselProps = {
+  isLoading: boolean;
   items: Array<ReactNode>;
   config?: Object;
   title?: string | ReactNode;
   _ref?: ForwardedRef<Slider>;
 };
 
-const Carousel = ({ items, config, title, _ref }: CarouselProps) => {
+const Carousel = ({ isLoading, items, config, title, _ref }: CarouselProps) => {
   const PrevArrow = ({ ...props }) => {
     const { onClick } = props;
     return (
@@ -85,11 +87,19 @@ const Carousel = ({ items, config, title, _ref }: CarouselProps) => {
           )}
         </div>
       </div>
-      <Slider ref={_ref} {...settings}>
-        {items.map((item, index) => (
-          <div key={index}>{item}</div>
-        ))}
-      </Slider>
+      {isLoading ? (
+        <div className="flex h-24 w-full">
+          <div className="mx-auto self-center">
+            <Spinner loading={true} />
+          </div>
+        </div>
+      ) : (
+        <Slider ref={_ref} {...settings}>
+          {items.map((item, index) => (
+            <div key={index}>{item}</div>
+          ))}
+        </Slider>
+      )}
     </div>
   );
 };
