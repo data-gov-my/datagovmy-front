@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useContext, useEffect, useRef } from "react";
+import { FunctionComponent, ReactNode, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Card from "@components/Card";
 import ComboBox from "@components/Combobox";
@@ -125,24 +125,27 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
   const { data, setData } = useData({
     parlimen_toggle: 0,
     type: query.type ? query.type : "parlimen",
-    state: query.state ? query.state : "mys",
-    election: query.election ? query.election : "GE-15",
+    state: "mys",
+    p_state: query.state ? query.state : "mys",
+    election: { label: t("GE").concat("-15"), value: "GE-15" },
+    p_election: query.election ? query.election : "GE-15",
 
     s1_tabs: 0,
     s1_loading: false,
     s1_table: [],
 
     // Placeholder for Combobox
-    p_seat: "",
-    seats_list: [],
+    p_seat: query.seat ? query.seat : "",
+    seats_list: election.map((e: any) => e.seat),
 
     // query
-    q_seat: query.seat ? query.seat : "",
+    q_seat: "",
     s2_loading: false,
     carousel: election,
     c_index: 0,
     modal_open: false,
     full_results: [],
+    full_results_votes: {},
 
     s3_tabs: 0,
     s3_loading: false,
@@ -162,7 +165,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       label:
         (data.parlimen_toggle === 0 ? t("GE") : t("SE")) + `-${String(index).padStart(2, "0")}`,
       value: (data.parlimen_toggle === 0 ? "GE" : "SE") + `-${String(index).padStart(2, "0")}`,
-    }));
+    }))
+    .reverse();
 
   const SEAT_OPTIONS: Array<OptionType> =
     data.seats_list &&
@@ -208,83 +212,117 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     }),
   ];
 
-  useEffect(() => {
-    setData("q_seat", SEAT_OPTIONS[0] ? SEAT_OPTIONS[0].value : "P.001 Padang Besar, Perlis");
-  }, [data.seats_list]);
+  const validate = async (): Promise<{ election: string; state: string }> =>
+    new Promise((resolve, reject) => {
+      if (!data.p_state) {
+        reject("Choose state");
+      } else if (!ELECTION_OPTIONS.find(e => e.value === data.p_election)) {
+        reject("Choose election");
+      } else {
+        resolve({ state: data.p_state, election: data.p_election });
+      }
+    });
 
+  // Section 1 Table
   useEffect(() => {
-    setData("s1_loading", true);
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "party",
-      election: data.election,
-      state: data.state,
-    })
-      .then(({ data }) => {
-        setData(
-          "s1_table",
-          data.sort((a: Result, b: Result) => {
-            if (a.seats.won === b.seats.won) {
-              return b.votes.perc - a.votes.perc;
-            } else {
-              return b.seats.won - a.seats.won;
-            }
-          })
-        );
+    validate().then(({ state, election }) => {
+      setData("s1_loading", true);
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "full_result",
+        type: "party",
+        election: election,
+        state: state,
       })
-      .catch(e => {
-        console.error(e);
-      })
-      .then(() => setData("s1_loading", false));
+        .then(({ data }) => {
+          setData(
+            "s1_table",
+            data.sort((a: Result, b: Result) => {
+              if (a.seats.won === b.seats.won) {
+                return b.votes.perc - a.votes.perc;
+              } else {
+                return b.seats.won - a.seats.won;
+              }
+            })
+          );
+        })
+        .catch(e => {
+          console.error(e);
+        })
+        .then(() => setData("s1_loading", false));
+    });
   }, [data.election, data.state, data.type]);
 
+  // Section 2 Combobox Dropdown
   useEffect(() => {
-    setData("s2_loading", true);
-    setFilter("election", data.election);
-    setFilter("type", data.type);
-    setFilter("state", data.state);
-    setFilter("seat", data.q_seat);
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "overall_seat",
-      election: data.election,
-      type: data.type,
-      state: data.state,
-    })
-      .then(({ data }) => {
-        setData("carousel", data);
-        setData(
-          "seats_list",
-          data.map((d: any) => d.seat)
-        );
+    setData("q_seat", data.seats_list[0]);
+    if (!data.q_seat) return;
+    setFilter("seat", data.seats_list[0]);
+  }, [data.seats_list]);
+
+  // Section 2 Carousel
+  useEffect(() => {
+    validate().then(({ state, election }) => {
+      setData("s2_loading", true);
+      setData("state", state);
+      setData("election", election);
+      setFilter("election", election);
+      setFilter("type", data.type);
+      setFilter("state", state);
+      setFilter("seat", data.q_seat);
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "overall_seat",
+        election: election,
+        type: data.type,
+        state: state,
       })
-      .catch(e => {
-        console.error(e);
-      })
-      .then(() => setData("s2_loading", false));
-  }, [data.state, data.election, data.type]);
+        .then(({ data }) => {
+          setData("carousel", data);
+          setData(
+            "seats_list",
+            data.map((d: any) => d.seat)
+          );
+        })
+        .catch(e => {
+          console.error(e);
+        })
+        .then(() => setData("s2_loading", false));
+    });
+  }, [data.p_state, data.p_election, data.type]);
 
   useEffect(() => {
-    setData("s2_loading", true);
-    setFilter("seat", data.q_seat);
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "seats",
-      election: data.election,
-      seat: data.carousel[data.c_index].seat,
-    })
-      .then(({ data }) => {
-        setData(
-          "full_results",
-          data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
-        );
+    if (sliderRef.current) sliderRef.current.slickGoTo(data.c_index);
+  }, [data.q_seat]);
+
+  // Section 2 Carousel Full Results
+  useEffect(() => {
+    // if (!data.q_seat) return;
+    validate().then(({ state, election }) => {
+      setData("s2_loading", true);
+      setFilter("election", election);
+      setFilter("type", data.type);
+      setFilter("state", state);
+      setFilter("seat", data.q_seat);
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "full_result",
+        type: "seats",
+        election: election,
+        seat: data.carousel[data.c_index].seat,
       })
-      .catch(e => {
-        console.error(e);
-      })
-      .then(() => setData("s2_loading", false));
+        .then(({ data }) => {
+          setData(
+            "full_results",
+            data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+          );
+          setData("full_results_votes", data.votes);
+        })
+        .catch(e => {
+          console.error(e);
+        })
+        .then(() => setData("s2_loading", false));
+    });
   }, [data.c_index, data.modal_open]);
   // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
 
@@ -363,7 +401,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       options={PANELS.map(item => item.name)}
                       icons={PANELS.map(item => item.icon)}
                       current={data.parlimen_toggle}
-                      onChange={index => setData("parlimen_toggle", index)}
+                      onChange={index => {
+                        setData("parlimen_toggle", index);
+                        setData("type", index === 0 ? "parlimen" : "dun");
+                      }}
                     />
                   </div>
                   <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
@@ -386,8 +427,14 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       width="w-full"
                       placeholder={t("select_election")}
                       options={ELECTION_OPTIONS}
-                      selected={ELECTION_OPTIONS.find(e => e.value === data.election)}
-                      onChange={e => setData("election", e.value)}
+                      selected={
+                        data.p_election
+                          ? ELECTION_OPTIONS.find(e => e.value === data.p_election)
+                          : undefined
+                      }
+                      onChange={e => {
+                        setData("p_election", e.value);
+                      }}
                     />
                   </div>
                   <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
@@ -413,14 +460,16 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                 icons={PANELS.map(item => item.icon)}
                 current={data.parlimen_toggle}
                 onChange={index => {
-                  setData("state", "");
+                  setData("p_state", "");
+                  setData("p_election", "");
                   setData("parlimen_toggle", index);
+                  setData("type", index === 0 ? "parlimen" : "dun");
                 }}
               />
             </div>
             <StateDropdown
-              currentState={data.state}
-              onChange={selected => setData("state", selected.value)}
+              currentState={data.p_state}
+              onChange={selected => setData("p_state", selected.value)}
               exclude={data.parlimen_toggle === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
               width="min-w-max"
               anchor="left"
@@ -430,8 +479,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               width="max-w-fit"
               placeholder={t("select_election")}
               options={ELECTION_OPTIONS}
-              selected={ELECTION_OPTIONS.find(e => e.value === data.election)}
-              onChange={e => setData("election", e.value)}
+              selected={
+                data.p_election
+                  ? ELECTION_OPTIONS.find(e => e.value === data.p_election)
+                  : undefined
+              }
+              onChange={e => setData("p_election", e.value)}
             />
           </div>
           <Tabs
@@ -451,7 +504,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                             {data.state ? CountryAndStates[data.state] : CountryAndStates["mys"]}
                           </span>
                           <span>: </span>
-                          <span className="text-primary">{data.election}</span>
+                          <span className="text-primary">
+                            {ELECTION_OPTIONS.find(e => e.value === data.election)?.label}
+                          </span>
                         </div>
                       }
                       current={data.s1_tabs}
@@ -546,12 +601,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       }
                       onChange={e => {
                         if (e) {
-                          const index = data.seats_list.findIndex(
-                            (seat: string) => seat === e.value
-                          );
                           setData("q_seat", e.value);
-                          setData("c_index", index);
-                          sliderRef.current?.slickGoTo(index);
+                          setData(
+                            "c_index",
+                            data.seats_list.findIndex((seat: string) => seat === e.value)
+                          );
                         }
                         setData("p_seat", e);
                       }}
@@ -565,11 +619,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   title={
                     <div className="mb-6 text-base font-bold">
                       {t("election.full_result", {
-                        election: data.election,
+                        election: ELECTION_OPTIONS.find(e => e.value === data.election)?.label,
                       })}
                       <span className="text-primary">{data.q_seat}</span>
                     </div>
                   }
+                  isLoading={data.s1_loading}
                   items={data.carousel.map((item: any, index: number) => (
                     <div
                       key={index}
@@ -605,7 +660,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           height={18}
                           alt={t(`${item.party}`)}
                         />
-                        <span className="truncate">{`${item.name} (${item.party})`}</span>
+                        <span className="truncate font-medium">{`${item.name} `}</span>
+                        <span>{`(${item.party})`}</span>
                         <Won />
                       </div>
                       <div className="flex flex-row items-center gap-1.5">
@@ -654,6 +710,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   }
                   isLoading={data.s2_loading}
                   data={data.full_results}
+                  votes={data.full_results_votes}
                   highlightedRow={data.full_results.findIndex(
                     (r: Result) => r.name === data.carousel[data.c_index].name
                   )}
