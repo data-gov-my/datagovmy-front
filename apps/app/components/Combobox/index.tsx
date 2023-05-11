@@ -15,6 +15,7 @@ type ComboBoxProps<L, V> = {
   onSearch?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
+  enableType?: boolean;
   loading?: boolean;
 };
 
@@ -25,6 +26,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   onSearch,
   placeholder,
   enableFlag = false,
+  enableType = false,
   loading = false,
 }: ComboBoxProps<L, V>) => {
   const { t } = useTranslation();
@@ -126,17 +128,30 @@ const ComboBox = <L extends string | number = string, V = string>({
                           />
                           <span
                             className={clx(
-                              "block truncate ",
+                              "block truncate",
                               selected ? "font-medium" : "font-normal"
                             )}
                           >
                             {option.label}
                           </span>
                         </>
+                      ) : enableType ? (
+                        <span
+                          className={clx(
+                            "block truncate",
+                            selected ? "font-medium" : "font-normal",
+                            "flex flex-row gap-1"
+                          )}
+                        >
+                          <>{String(option.label).split("|")[0]}</>
+                          <p className="text-dim normal-case">{` (${
+                            String(option.label).split("|")[1]
+                          })`}</p>
+                        </span>
                       ) : (
                         <span
                           className={clx(
-                            "block truncate ",
+                            "block truncate",
                             selected ? "font-medium" : "font-normal"
                           )}
                         >

@@ -108,9 +108,9 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
 
   const SEAT_OPTIONS: Array<OptionType> =
     data.seats_list &&
-    data.seats_list.map((key: string) => ({
-      label: key,
-      value: key,
+    data.seats_list.map((key: { seat_name: string; type: string }) => ({
+      label: key.seat_name.concat("|" + t(key.type)),
+      value: key.seat_name,
     }));
 
   useEffect(() => {
@@ -224,6 +224,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                       if (e) setData("q_seat", e.value);
                       setData("p_seat", e);
                     }}
+                    enableType={true}
                   />
                 </div>
               </div>
