@@ -60,7 +60,7 @@ const Carousel = ({ isLoading, items, config, title, _ref }: CarouselProps) => {
           {
             breakpoint: 1024,
             settings: {
-              slidesToShow: 2.25,
+              slidesToShow: 2,
               slidesToScroll: 2,
             },
           },
