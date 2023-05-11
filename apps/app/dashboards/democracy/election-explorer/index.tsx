@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useEffect, useRef } from "react";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import Card from "@components/Card";
 import ComboBox from "@components/Combobox";
@@ -402,6 +402,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       icons={PANELS.map(item => item.icon)}
                       current={data.parlimen_toggle}
                       onChange={index => {
+                        setData("p_state", "");
+                        setData("p_election", "");
                         setData("parlimen_toggle", index);
                         setData("type", index === 0 ? "parlimen" : "dun");
                       }}
@@ -418,7 +420,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     />
                     <StateDropdown
                       currentState={data.state}
-                      onChange={selected => setData("state", selected.value)}
+                      onChange={selected => setData("p_state", selected.value)}
                       exclude={data.parlimen_toggle === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
                       width="w-full"
                       anchor="left"
@@ -647,9 +649,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                               setData("c_index", index);
                             }}
                           />
-                          <span className="pointer-events-none absolute z-20 inline-block w-max max-w-[200px] -translate-x-full translate-y-8 transform rounded bg-black p-3 text-sm font-normal text-white opacity-0 transition-opacity group-hover:opacity-100 md:-top-2 md:left-[140%]">
-                            {t("full_result")}
-                          </span>
+                          <Tooltip
+                            tip={t("full_result")}
+                            triangle="top"
+                            position="translate-y-4 -translate-x-3/4"
+                            triangle_pos="before:-top-2 before:right-1.5"
+                          />
                         </div>
                       </div>
                       <div className="flex flex-row gap-1.5">
@@ -680,7 +685,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   ))}
                 />
               </div>
-
               {data.modal_open && (
                 <ElectionCard
                   open={data.modal_open}
@@ -720,10 +724,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               )}
             </div>
           </div>
-          <div className="dark:border-t-outlineHover-dark border-t py-12 lg:grid lg:grid-cols-12">
+        </Section>
+        <Section>
+          <div className="pb-8 lg:grid lg:grid-cols-12 lg:pb-12">
             <div className="lg:col-span-10 lg:col-start-2">
               <h4 className="py-4 text-center">{t("election.section_3")}</h4>
-              <div className="flex flex-row justify-between gap-4 sm:flex-row">
+              <div className="flex flex-row justify-between gap-4 pb-6 sm:flex-row">
                 <div className="flex flex-row items-baseline gap-2 lg:gap-4">
                   <Dropdown
                     anchor="left"
@@ -745,24 +751,23 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               </div>
               <Tabs hidden current={data.s3_tabs} onChange={index => setData("s3_tabs", index)}>
                 <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
-                  <div className="pt-6">
-                    <LeftRightCard
-                      left={
-                        <div className="flex h-full w-full flex-col space-y-6 p-8">
-                          <div className="flex flex-col gap-2">
-                            <h4>
-                              {t("election.choro_header", {
-                                stat: t(`election.${data.s3_filter.value}`),
-                              })}
-                            </h4>
-                            <span className="text-dim text-sm">
-                              {/* {t("common.data_of", { date: choropleth.data_as_of })} */}
-                            </span>
-                          </div>
-                          <div className="flex grow flex-col justify-between space-y-6">
-                            <div className="space-y-3 pt-6">
-                              <p className="font-bold">{t("election.choro_rank")}</p>
-                              {/* {topStateIndices.map((pos, i) => {
+                  <LeftRightCard
+                    left={
+                      <div className="flex h-full w-full flex-col space-y-6 p-8">
+                        <div className="flex flex-col gap-2">
+                          <h4>
+                            {t("election.choro_header", {
+                              stat: t(`election.${data.s3_filter.value}`),
+                            })}
+                          </h4>
+                          <span className="text-dim text-sm">
+                            {/* {t("common.data_of", { date: choropleth.data_as_of })} */}
+                          </span>
+                        </div>
+                        <div className="flex grow flex-col justify-between space-y-6">
+                          <div className="space-y-3 pt-6">
+                            <p className="font-bold">{t("election.choro_rank")}</p>
+                            {/* {topStateIndices.map((pos, i) => {
                           return (
                             <div className="flex space-x-3">
                               <div className="text-dim font-medium">#{i + 1}</div>
@@ -774,18 +779,17 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                             </div>
                           );
                         })} */}
-                            </div>
                           </div>
                         </div>
-                      }
-                      right={
-                        <Choropleth
-                          enableOutline={false}
-                          type={data.parlimen_toggle === 1 ? "dun" : "parlimen"}
-                        />
-                      }
-                    />
-                  </div>
+                      </div>
+                    }
+                    right={
+                      <Choropleth
+                        enableOutline={false}
+                        type={data.parlimen_toggle === 1 ? "dun" : "parlimen"}
+                      />
+                    }
+                  />
                 </Panel>
                 <Panel
                   name={t("election.table")}
@@ -803,3 +807,54 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
 };
 
 export default ElectionExplorer;
+
+interface TooltipProps {
+  className?: string;
+  tip: string;
+  position?: string;
+  triangle?: "left" | "top" | "right" | "bottom";
+  triangle_pos?: string;
+  maxWidth?: string;
+}
+
+export const Tooltip: FunctionComponent<TooltipProps> = ({
+  className,
+  tip,
+  maxWidth = "max-w-[150px]",
+  position = "-translate-x-[115px] -translate-y-[72px]",
+  triangle = "bottom",
+  triangle_pos = "before:-bottom-2 before:right-2",
+}) => {
+  const triangle_dir = useMemo<string>(() => {
+    switch (triangle) {
+      case "left":
+        return `before:border-l-8 before:border-b-8 before:border-t-8 
+        before:border-l-black before:border-b-transparent before:border-t-transparent`;
+      case "top":
+        return `before:border-b-8 before:border-l-8 before:border-r-8 
+        before:border-b-black before:border-l-transparent before:border-r-transparent`;
+      case "right":
+        return `before:border-b-8 before:border-l-8 before:border-t-8
+        before:border-b-transparent before:border-l-black before:border-t-transparent`;
+      default: // bottom
+        return `before:border-l-8 before:border-r-8 before:border-t-8 
+        before:border-l-transparent before:border-r-transparent before:border-t-black`;
+    }
+  }, [triangle]);
+
+  return (
+    <span
+      className={clx(
+        `invisible absolute z-20 inline-block w-max max-w-[200px] transform rounded bg-black p-3 text-sm font-normal text-white opacity-0 
+        transition-opacity before:absolute before:block group-hover:visible group-hover:opacity-100`,
+        className,
+        maxWidth,
+        position,
+        triangle_dir,
+        triangle_pos
+      )}
+    >
+      {tip}
+    </span>
+  );
+};

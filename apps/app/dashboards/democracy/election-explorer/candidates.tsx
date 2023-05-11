@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/index";
-import ElectionCard, { getElection } from "@components/Card/ElectionCard";
+import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
@@ -15,6 +15,7 @@ import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useFilter } from "@hooks/useFilter";
+import { Tooltip } from ".";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -53,19 +54,17 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   };
   const columnHelper = createColumnHelper<Candidate>();
   const columns: ColumnDef<Candidate, any>[] = [
-    columnHelper.accessor("election_name", {
-      id: "election_name",
-      header: t("election_name"),
-      cell: (info: any) => {
-        const [e, num] = getElection(info.getValue());
+    columnHelper.accessor(
+      row => {
+        const [e, num] = getElectionTrans(row.election_name);
         return num ? t(e).concat("-" + num) : t(e);
       },
-    }),
-    columnHelper.accessor("date", {
-      id: "date",
-      header: t("date"),
-      cell: (info: any) => info.getValue(),
-    }),
+      {
+        id: "election_name",
+        header: t("election_name"),
+        cell: (info: any) => info.getValue(),
+      }
+    ),
     columnHelper.accessor("seat", {
       id: "seat",
       header: t("constituency"),
@@ -91,13 +90,16 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       header: "",
       cell: ({ row }) => {
         return (
-          <FullResult
-            desc={t("full_result")}
-            onClick={() => {
-              setData("modal_open", true);
-              setData("index", row.index);
-            }}
-          />
+          <div className="group relative w-max">
+            <FullResult
+              desc={t("full_result")}
+              onClick={() => {
+                setData("modal_open", true);
+                setData("index", row.index);
+              }}
+            />
+            <Tooltip tip={t("full_result")} />
+          </div>
         );
       },
     }),

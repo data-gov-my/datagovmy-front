@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { FullResult, Result } from "@components/Chart/Table/BorderlessTable";
-import ElectionCard, { getElection } from "@components/Card/ElectionCard";
+import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { AgencyBadge, Container, Hero, Section } from "@components/index";
@@ -15,6 +15,7 @@ import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useFilter } from "@hooks/useFilter";
+import { Tooltip } from ".";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -35,19 +36,17 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
 
   const columnHelper = createColumnHelper<Seat>();
   const columns: ColumnDef<Seat, any>[] = [
-    columnHelper.accessor("election_name", {
-      id: "election_name",
-      header: t("election_name"),
-      cell: (info: any) => {
-        const [e, num] = getElection(info.getValue());
+    columnHelper.accessor(
+      row => {
+        const [e, num] = getElectionTrans(row.election_name);
         return num ? t(e).concat("-" + num) : t(e);
       },
-    }),
-    columnHelper.accessor("date", {
-      id: "date",
-      header: t("date"),
-      cell: (info: any) => info.getValue(),
-    }),
+      {
+        id: "election_name",
+        header: t("election_name"),
+        cell: (info: any) => info.getValue(),
+      }
+    ),
     columnHelper.accessor("seat", {
       id: "seat",
       header: t("constituency"),
@@ -72,13 +71,15 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
       id: "fullResult",
       cell: ({ row }) => {
         return (
-          <FullResult
-            desc={t("full_result")}
-            onClick={() => {
-              setData("modal_open", true);
-              setData("index", row.index);
-            }}
-          />
+          <div className="group relative w-max">
+            <FullResult
+              onClick={() => {
+                setData("modal_open", true);
+                setData("index", row.index);
+              }}
+            />
+            <Tooltip tip={t("full_result")} />
+          </div>
         );
       },
     }),
@@ -255,7 +256,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                 .setLocale(i18n.language)
                 .toLocaleString(DateTime.DATE_MED)}
               title={
-                <div className="flex flex-row gap-2 uppercase">
+                <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
                   <h5>{data.data[data.index].seat.split(",")[0]}</h5>
                   <span className="text-dim font-normal">
                     {data.data[data.index].seat.split(",")[1]}

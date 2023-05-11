@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Trans } from "next-i18next";
 import { BarMeter, FullResult } from "@components/Chart/Table/BorderlessTable";
-import ElectionCard, { getElection } from "@components/Card/ElectionCard";
+import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import {
@@ -26,6 +26,7 @@ import { routes } from "@lib/routes";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { useFilter } from "@hooks/useFilter";
+import { Tooltip } from ".";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -80,19 +81,17 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
   };
   const columnHelper = createColumnHelper<Party>();
   const columns: ColumnDef<Party, any>[] = [
-    columnHelper.accessor("election_name", {
-      id: "election_name",
-      header: t("election_name"),
-      cell: (info: any) => {
-        const [e, num] = getElection(info.getValue());
+    columnHelper.accessor(
+      row => {
+        const [e, num] = getElectionTrans(row.election_name);
         return num ? t(e).concat("-" + num) : t(e);
       },
-    }),
-    columnHelper.accessor("date", {
-      id: "date",
-      header: t("date"),
-      cell: (info: any) => info.getValue(),
-    }),
+      {
+        id: "election_name",
+        header: t("election_name"),
+        cell: (info: any) => info.getValue(),
+      }
+    ),
     columnHelper.accessor("seats", {
       id: "seats",
       header: t("seats_won"),
@@ -117,13 +116,16 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       id: "fullResult",
       cell: ({ row }) => {
         return (
-          <FullResult
-            desc={t("full_result")}
-            onClick={() => {
-              setData("modal_open", true);
-              setData("index", row.index);
-            }}
-          />
+          <div className="group relative w-max">
+            <FullResult
+              desc={t("full_result")}
+              onClick={() => {
+                setData("modal_open", true);
+                setData("index", row.index);
+              }}
+            />
+            <Tooltip tip={t("full_result")} />
+          </div>
         );
       },
     }),
