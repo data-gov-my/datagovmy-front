@@ -46,7 +46,7 @@ const Card: FunctionComponent<CardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(open);
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
-  const [e, num] = getElection(election_name);
+  const [e, num] = getElectionTrans(election_name);
 
   return (
     <>
@@ -109,7 +109,7 @@ const Card: FunctionComponent<CardProps> = ({
                     win={win}
                   />
                   {votes && (
-                    <div className="flex flex-col justify-center gap-1 py-6 text-sm lg:flex-row lg:gap-3 ">
+                    <div className="flex flex-col justify-center gap-1 pt-6 text-sm lg:flex-row lg:gap-3 ">
                       <p>
                         <span>{t("election.voter_turnout")}:</span>
                         <span className="font-medium">{` ${numFormat(
@@ -126,9 +126,9 @@ const Card: FunctionComponent<CardProps> = ({
                       </p>
                     </div>
                   )}
-                  <div className="space-y-3">
+                  <div>
                     {total <= 10 && (
-                      <div className="flex flex-row items-center justify-center gap-1.5">
+                      <div className="flex flex-row items-center justify-center gap-1.5 pt-6">
                         {Array(total)
                           .fill(null)
                           .map((num, index: number) => (
@@ -145,7 +145,7 @@ const Card: FunctionComponent<CardProps> = ({
                           ))}
                       </div>
                     )}
-                    <div className={`flex items-center justify-center gap-4 text-sm`}>
+                    <div className="flex items-center justify-center gap-4 pt-3 text-sm">
                       <Button
                         className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                         onClick={onPrev}
@@ -184,7 +184,7 @@ const Card: FunctionComponent<CardProps> = ({
 
 export default Card;
 
-export function getElection(input: string): any[] {
+export function getElectionTrans(input: string): any[] {
   if (!input) return [];
   const e = input.split("-");
   const num = e[1].match(/\d+/g);
