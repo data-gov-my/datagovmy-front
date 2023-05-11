@@ -65,20 +65,20 @@ const ComboBox = <L extends string | number = string, V = string>({
             </span>
             {query.length > 0 && (
               <button
-                className="hover:bg-washed dark:hover:bg-washed-dark group group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
+                className="hover:bg-washed dark:hover:bg-washed-dark group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
                 onClick={() => onChange(undefined)}
                 aria-hidden="true"
               >
-                <XMarkIcon className="dark:text-dim absolute right-1.5 h-5 w-5 text-black" />
+                <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
               </button>
             )}
             {selected && (
               <button
-                className="hover:bg-washed dark:hover:bg-washed-dark group group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
+                className="hover:bg-washed dark:hover:bg-washed-dark group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
                 onClick={() => onChange(undefined)}
                 aria-hidden="true"
               >
-                <XMarkIcon className="dark:text-dim absolute right-1.5 h-5 w-5 text-black" />
+                <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
               </button>
             )}
           </Combobox.Button>
