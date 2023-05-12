@@ -4,7 +4,7 @@ import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/
 import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import { FullResult, Lost, Result, Won } from "@components/Chart/Table/BorderlessTable";
+import { FullResult, Lost, Result, Won } from "@components/Chart/Table/ElectionTable";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
@@ -15,14 +15,13 @@ import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useFilter } from "@hooks/useFilter";
-import { Tooltip } from ".";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
  * @overview Status: In-development
  */
 
-const BorderlessTable = dynamic(() => import("@components/Chart/Table/BorderlessTable"), {
+const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {
   ssr: false,
 });
 
@@ -54,17 +53,14 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   };
   const columnHelper = createColumnHelper<Candidate>();
   const columns: ColumnDef<Candidate, any>[] = [
-    columnHelper.accessor(
-      row => {
-        const [e, num] = getElectionTrans(row.election_name);
+    columnHelper.accessor("election_name", {
+      id: "election_name",
+      header: t("election_name"),
+      cell: (info: any) => {
+        const [e, num] = getElectionTrans(info.getValue());
         return num ? t(e).concat("-" + num) : t(e);
       },
-      {
-        id: "election_name",
-        header: t("election_name"),
-        cell: (info: any) => info.getValue(),
-      }
-    ),
+    }),
     columnHelper.accessor("seat", {
       id: "seat",
       header: t("constituency"),
@@ -90,16 +86,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       header: "",
       cell: ({ row }) => {
         return (
-          <div className="group relative w-max">
-            <FullResult
-              desc={t("full_result")}
-              onClick={() => {
-                setData("modal_open", true);
-                setData("index", row.index);
-              }}
-            />
-            <Tooltip tip={t("full_result")} />
-          </div>
+          <FullResult
+            desc={t("full_result")}
+            onClick={() => {
+              setData("modal_open", true);
+              setData("index", row.index);
+            }}
+          />
         );
       },
     }),
@@ -271,7 +264,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 className="pb-6"
               >
                 <Panel name={t("parliament_elections")}>
-                  <BorderlessTable
+                  <ElectionTable
                     data={data.data}
                     columns={columns}
                     isLoading={data.loading}
@@ -286,7 +279,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                   />
                 </Panel>
                 <Panel name={t("state_elections")}>
-                  <BorderlessTable
+                  <ElectionTable
                     data={data.data}
                     columns={columns}
                     isLoading={data.loading}
@@ -320,7 +313,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 .setLocale(i18n.language)
                 .toLocaleString(DateTime.DATE_MED)}
               title={
-                <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
+                <div className="flex flex-col uppercase md:flex-row md:gap-2">
                   <h5>{data.data[data.index].seat.split(",")[0]}</h5>
                   <span className="text-dim font-normal">
                     {data.data[data.index].seat.split(",")[1]}

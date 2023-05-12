@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Trans } from "next-i18next";
-import { BarMeter, FullResult } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter, FullResult } from "@components/Chart/Table/ElectionTable";
 import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
@@ -26,14 +26,14 @@ import { routes } from "@lib/routes";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { useFilter } from "@hooks/useFilter";
-import { Tooltip } from ".";
+import { clx, numFormat } from "@lib/helpers";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
  * @overview Status: In-development
  */
 
-const BorderlessTable = dynamic(() => import("@components/Chart/Table/BorderlessTable"), {
+const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {
   ssr: false,
 });
 
@@ -81,28 +81,32 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
   };
   const columnHelper = createColumnHelper<Party>();
   const columns: ColumnDef<Party, any>[] = [
-    columnHelper.accessor(
-      row => {
-        const [e, num] = getElectionTrans(row.election_name);
+    columnHelper.accessor("election_name", {
+      id: "election_name",
+      header: t("election_name"),
+      cell: (info: any) => {
+        const [e, num] = getElectionTrans(info.getValue());
         return num ? t(e).concat("-" + num) : t(e);
       },
-      {
-        id: "election_name",
-        header: t("election_name"),
-        cell: (info: any) => info.getValue(),
-      }
-    ),
+    }),
     columnHelper.accessor("seats", {
       id: "seats",
       header: t("seats_won"),
       cell: (info: any) => {
         const seats = info.getValue();
         return (
-          <div className="flex flex-row items-center gap-2">
-            <BarMeter perc={seats.perc} />
-            <p>{`${seats.won === 0 ? "0" : seats.won + "/" + seats.total} ${
-              seats.perc === 0 ? "(—)" : `(${Number(seats.perc).toFixed(1)}%)`
-            }`}</p>
+          <div
+            className={clx(
+              "flex gap-2",
+              seats.abs === 0 ? "flex-row items-center" : "md:flex-col lg:flex-row"
+            )}
+          >
+            <div className="lg:self-center">
+              <BarMeter perc={seats.perc} />
+            </div>
+            <p className="whitespace-nowrap">{`${
+              seats.won === 0 ? "0" : seats.won + "/" + seats.total
+            } ${seats.perc === 0 ? "(—)" : `(${numFormat(seats.perc, "compact", [1, 1])}%)`}`}</p>
           </div>
         );
       },
@@ -116,23 +120,19 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       id: "fullResult",
       cell: ({ row }) => {
         return (
-          <div className="group relative w-max">
-            <FullResult
-              desc={t("full_result")}
-              onClick={() => {
-                setData("modal_open", true);
-                setData("index", row.index);
-              }}
-            />
-            <Tooltip tip={t("full_result")} />
-          </div>
+          <FullResult
+            desc={t("full_result")}
+            onClick={() => {
+              setData("modal_open", true);
+              setData("index", row.index);
+            }}
+          />
         );
       },
     }),
   ];
 
   type Result = {
-    name: string;
     party: string;
     seats: Record<string, number>;
     votes: Record<string, number>;
@@ -152,10 +152,12 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       cell: (info: any) => {
         const seats = info.getValue();
         return (
-          <div className="flex flex-row items-center gap-2">
-            <BarMeter perc={seats.perc} />
+          <div className={clx("flex gap-2", "md:flex-col lg:flex-row")}>
+            <div className="lg:self-center">
+              <BarMeter perc={seats.perc} />
+            </div>
             <p>{`${seats.won === 0 ? "0" : seats.won} ${
-              seats.perc === 0 ? "(—)" : `(${Number(seats.perc).toFixed(1)}%)`
+              seats.perc === 0 ? "(—)" : `(${numFormat(seats.perc, "compact", [1, 1])}%)`
             }`}</p>
           </div>
         );
@@ -335,7 +337,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                 className="pb-6"
               >
                 <Panel name={t("parliament_elections")}>
-                  <BorderlessTable
+                  <ElectionTable
                     data={data.data}
                     columns={columns}
                     isLoading={data.loading}
@@ -350,7 +352,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                   />
                 </Panel>
                 <Panel name={t("state_elections")}>
-                  <BorderlessTable
+                  <ElectionTable
                     data={data.data}
                     columns={columns}
                     isLoading={data.loading}

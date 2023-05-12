@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { FullResult, Result } from "@components/Chart/Table/BorderlessTable";
+import { FullResult, Result } from "@components/Chart/Table/ElectionTable";
 import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
@@ -15,14 +15,13 @@ import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useFilter } from "@hooks/useFilter";
-import { Tooltip } from ".";
 
 /**
  * Election Explorer Dashboard - Seats Tab
  * @overview Status: In-development
  */
 
-const BorderlessTable = dynamic(() => import("@components/Chart/Table/BorderlessTable"), {
+const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {
   ssr: false,
 });
 
@@ -36,17 +35,14 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
 
   const columnHelper = createColumnHelper<Seat>();
   const columns: ColumnDef<Seat, any>[] = [
-    columnHelper.accessor(
-      row => {
-        const [e, num] = getElectionTrans(row.election_name);
+    columnHelper.accessor("election_name", {
+      id: "election_name",
+      header: t("election_name"),
+      cell: (info: any) => {
+        const [e, num] = getElectionTrans(info.getValue());
         return num ? t(e).concat("-" + num) : t(e);
       },
-      {
-        id: "election_name",
-        header: t("election_name"),
-        cell: (info: any) => info.getValue(),
-      }
-    ),
+    }),
     columnHelper.accessor("seat", {
       id: "seat",
       header: t("constituency"),
@@ -55,7 +51,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
     columnHelper.accessor("party", {
       id: "party",
       header: t("winning_party"),
-      cell: (info: any) => info.getValue(),
+      cell: (info: any) => <div className="relative pl-10">{info.getValue()}</div>,
     }),
     columnHelper.accessor("name", {
       id: "candidate_name",
@@ -71,15 +67,13 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
       id: "fullResult",
       cell: ({ row }) => {
         return (
-          <div className="group relative w-max">
-            <FullResult
-              onClick={() => {
-                setData("modal_open", true);
-                setData("index", row.index);
-              }}
-            />
-            <Tooltip tip={t("full_result")} />
-          </div>
+          <FullResult
+            desc={t("full_result")}
+            onClick={() => {
+              setData("modal_open", true);
+              setData("index", row.index);
+            }}
+          />
         );
       },
     }),
@@ -109,7 +103,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
   const SEAT_OPTIONS: Array<OptionType> =
     data.seats_list &&
     data.seats_list.map((key: { seat_name: string; type: string }) => ({
-      label: key.seat_name.concat("|" + t(key.type)),
+      label: key.seat_name.concat(` (${t(key.type)})`),
       value: key.seat_name,
     }));
 
@@ -228,7 +222,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                   />
                 </div>
               </div>
-              <BorderlessTable
+              <ElectionTable
                 title={
                   <div className="pb-6 text-base font-bold">
                     {t("candidate.title")}
@@ -257,7 +251,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                 .setLocale(i18n.language)
                 .toLocaleString(DateTime.DATE_MED)}
               title={
-                <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
+                <div className="flex flex-col uppercase md:flex-row md:gap-2">
                   <h5>{data.data[data.index].seat.split(",")[0]}</h5>
                   <span className="text-dim font-normal">
                     {data.data[data.index].seat.split(",")[1]}

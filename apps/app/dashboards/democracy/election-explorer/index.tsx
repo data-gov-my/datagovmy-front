@@ -36,7 +36,7 @@ import { routes } from "@lib/routes";
 import { useFilter } from "@hooks/useFilter";
 import Carousel from "@components/Carousel";
 import Slider from "react-slick";
-import { BarMeter, FullResult, Lost, Won } from "@components/Chart/Table/BorderlessTable";
+import { BarMeter, FullResult, Lost, Won } from "@components/Chart/Table/ElectionTable";
 import { DateTime } from "luxon";
 import ElectionCard from "@components/Card/ElectionCard";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
@@ -47,7 +47,7 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
  * @overview Status: In-development
  */
 
-const BorderlessTable = dynamic(() => import("@components/Chart/Table/BorderlessTable"), {
+const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {
   ssr: false,
 });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
@@ -196,10 +196,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       cell: (info: any) => {
         const seats = info.getValue();
         return (
-          <div className="flex flex-row items-center gap-2">
-            <BarMeter perc={seats.perc} />
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+            <div className="justify-self-start">
+              <BarMeter perc={info.getValue().perc} />
+            </div>
             <p>{`${seats.won === 0 ? "0" : seats.won} ${
-              seats.perc === 0 ? "(—)" : `(${Number(seats.perc).toFixed(1)}%)`
+              seats.perc === 0 ? "(—)" : `(${numFormat(seats.perc, "compact", [1, 1])})`
             }`}</p>
           </div>
         );
@@ -210,6 +212,43 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       header: t("votes_won"),
       cell: (info: any) => info.getValue(),
     }),
+  ];
+
+  type Analysis = {
+    seat: string;
+    data: Record<string, number>;
+  };
+  const analysisColumnHelper = createColumnHelper<Analysis>();
+  const analysisColumns: ColumnDef<Analysis, any>[] = [
+    analysisColumnHelper.accessor("seat", {
+      id: "seat",
+      header: t("constituency"),
+      cell: (info: any) => info.getValue(),
+    }),
+    analysisColumnHelper.accessor("data", {
+      id: "data",
+      header: t(`election.${FILTER_OPTIONS.find(e => e.value === data.s3_filter.value)?.value}`),
+      cell: (info: any) => {
+        return (
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+            <div className="justify-self-start">
+              <BarMeter perc={info.getValue().perc} />
+            </div>
+            <p>{`${
+              info.getValue().perc === 0
+                ? "(—)"
+                : `(${numFormat(info.getValue().perc, "compact", [1, 1])}%)`
+            }`}</p>
+          </div>
+        );
+      },
+    }),
+  ];
+
+  const dummyData = [
+    { seat: "P.001 Padang Besar, Perlis", data: { perc: 78.9 } },
+    { seat: "P.002 Kangar, Perlis", data: { perc: 45.6 } },
+    { seat: "P.003 Arau, Perlis", data: { perc: 12.3 } },
   ];
 
   const validate = async (): Promise<{ election: string; state: string }> =>
@@ -297,32 +336,25 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
 
   // Section 2 Carousel Full Results
   useEffect(() => {
-    // if (!data.q_seat) return;
-    validate().then(({ state, election }) => {
-      setData("s2_loading", true);
-      setFilter("election", election);
-      setFilter("type", data.type);
-      setFilter("state", state);
-      setFilter("seat", data.q_seat);
-      get("/explorer", {
-        explorer: "ELECTIONS",
-        chart: "full_result",
-        type: "seats",
-        election: election,
-        seat: data.carousel[data.c_index].seat,
+    setData("s2_loading", true);
+    get("/explorer", {
+      explorer: "ELECTIONS",
+      chart: "full_result",
+      type: "seats",
+      election: data.election,
+      seat: data.carousel[data.c_index].seat,
+    })
+      .then(({ data }) => {
+        setData(
+          "full_results",
+          data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
+        );
+        setData("full_results_votes", data.votes);
       })
-        .then(({ data }) => {
-          setData(
-            "full_results",
-            data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
-          );
-          setData("full_results_votes", data.votes);
-        })
-        .catch(e => {
-          console.error(e);
-        })
-        .then(() => setData("s2_loading", false));
-    });
+      .catch(e => {
+        console.error(e);
+      })
+      .then(() => setData("s2_loading", false));
   }, [data.c_index, data.modal_open]);
   // const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
 
@@ -391,7 +423,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               }
             >
               {close => (
-                <div className="flex-grow space-y-4 overflow-y-auto pb-24 pt-4">
+                <div className="flex-grow space-y-4 overflow-y-auto pb-36 pt-4">
                   <Label
                     label={t("election.election") + ":"}
                     className="block text-sm font-medium text-black dark:text-white"
@@ -419,7 +451,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       className="block text-sm font-medium text-black dark:text-white"
                     />
                     <StateDropdown
-                      currentState={data.state}
+                      currentState={data.p_state}
                       onChange={selected => setData("p_state", selected.value)}
                       exclude={data.parlimen_toggle === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
                       width="w-full"
@@ -526,7 +558,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         name={t("election.table")}
                         icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                       >
-                        <BorderlessTable
+                        <ElectionTable
                           isLoading={data.s1_loading}
                           data={data.s1_table}
                           columns={resultsColumns}
@@ -649,15 +681,15 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                               setData("c_index", index);
                             }}
                           />
-                          <Tooltip
-                            tip={t("full_result")}
-                            triangle="top"
-                            position="translate-y-4 -translate-x-3/4"
-                            triangle_pos="before:-top-2 before:right-1.5"
-                          />
+                          <span
+                            className={`invisible absolute z-20 inline-block w-max -translate-x-3/4 translate-y-4 transform rounded
+                             bg-black p-3 text-sm font-normal text-white opacity-0 transition-opacity group-hover:visible group-hover:opacity-100`}
+                          >
+                            {t("full_result")}
+                          </span>
                         </div>
                       </div>
-                      <div className="flex flex-row gap-1.5">
+                      <div className="flex flex-row gap-2">
                         <ImageWithFallback
                           className="items-center self-center"
                           src={`/static/images/parties/${item.party}.png`}
@@ -669,7 +701,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         <span>{`(${item.party})`}</span>
                         <Won />
                       </div>
-                      <div className="flex flex-row items-center gap-1.5">
+                      <div className="flex flex-row items-center gap-2">
                         <p className="text-dim font-medium">{t("majority")}</p>
                         <BarMeter perc={item.majority.perc} />
                         <span>
@@ -678,7 +710,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                         <span>
                           {item.majority.perc === null
                             ? `(—)`
-                            : `(${Number(item.majority.perc).toFixed(1)}%)`}
+                            : `(${numFormat(item.majority.perc, "compact", [1, 1])}%)`}
                         </span>
                       </div>
                     </div>
@@ -699,7 +731,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   }
                   onPrev={() => (data.c_index === 0 ? null : setData("c_index", data.c_index - 1))}
                   win={"won"}
-                  election_name={data.carousel[data.c_index].election_name}
+                  election_name={data.election}
                   date={DateTime.fromISO(data.carousel[data.c_index].date)
                     .setLocale(i18n.language)
                     .toLocaleString(DateTime.DATE_MED)}
@@ -795,7 +827,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                   name={t("election.table")}
                   icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                 >
-                  <BorderlessTable isLoading={data.s3_loading} />
+                  <ElectionTable
+                    isLoading={data.s3_loading}
+                    data={dummyData}
+                    columns={analysisColumns}
+                  />
                 </Panel>
               </Tabs>
             </div>
@@ -807,54 +843,3 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
 };
 
 export default ElectionExplorer;
-
-interface TooltipProps {
-  className?: string;
-  tip: string;
-  position?: string;
-  triangle?: "left" | "top" | "right" | "bottom";
-  triangle_pos?: string;
-  maxWidth?: string;
-}
-
-export const Tooltip: FunctionComponent<TooltipProps> = ({
-  className,
-  tip,
-  maxWidth = "max-w-[150px]",
-  position = "-translate-x-[115px] -translate-y-[72px]",
-  triangle = "bottom",
-  triangle_pos = "before:-bottom-2 before:right-2",
-}) => {
-  const triangle_dir = useMemo<string>(() => {
-    switch (triangle) {
-      case "left":
-        return `before:border-l-8 before:border-b-8 before:border-t-8 
-        before:border-l-black before:border-b-transparent before:border-t-transparent`;
-      case "top":
-        return `before:border-b-8 before:border-l-8 before:border-r-8 
-        before:border-b-black before:border-l-transparent before:border-r-transparent`;
-      case "right":
-        return `before:border-b-8 before:border-l-8 before:border-t-8
-        before:border-b-transparent before:border-l-black before:border-t-transparent`;
-      default: // bottom
-        return `before:border-l-8 before:border-r-8 before:border-t-8 
-        before:border-l-transparent before:border-r-transparent before:border-t-black`;
-    }
-  }, [triangle]);
-
-  return (
-    <span
-      className={clx(
-        `invisible absolute z-20 inline-block w-max max-w-[200px] transform rounded bg-black p-3 text-sm font-normal text-white opacity-0 
-        transition-opacity before:absolute before:block group-hover:visible group-hover:opacity-100`,
-        className,
-        maxWidth,
-        position,
-        triangle_dir,
-        triangle_pos
-      )}
-    >
-      {tip}
-    </span>
-  );
-};
