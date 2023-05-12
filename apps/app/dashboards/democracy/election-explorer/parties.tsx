@@ -95,13 +95,8 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       cell: (info: any) => {
         const seats = info.getValue();
         return (
-          <div
-            className={clx(
-              "flex gap-2",
-              seats.abs === 0 ? "flex-row items-center" : "md:flex-col lg:flex-row"
-            )}
-          >
-            <div className="lg:self-center">
+          <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
+            <div>
               <BarMeter perc={seats.perc} />
             </div>
             <p className="whitespace-nowrap">{`${
@@ -152,8 +147,8 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
       cell: (info: any) => {
         const seats = info.getValue();
         return (
-          <div className={clx("flex gap-2", "md:flex-col lg:flex-row")}>
-            <div className="lg:self-center">
+          <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
+            <div>
               <BarMeter perc={seats.perc} />
             </div>
             <p>{`${seats.won === 0 ? "0" : seats.won} ${
@@ -309,7 +304,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({ par
                   <Trans>
                     <span className="text-lg font-normal leading-9">
                       <ImageWithFallback
-                        className="mr-2 inline-flex items-center"
+                        className="border-outline dark:border-washed-dark mr-2 inline-flex items-center rounded border"
                         src={`/static/images/parties/${data.q_party}.png`}
                         width={32}
                         height={18}

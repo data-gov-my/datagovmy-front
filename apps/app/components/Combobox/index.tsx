@@ -121,6 +121,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                       {enableFlag ? (
                         <>
                           <ImageWithFallback
+                            className="border-outline dark:border-washed-dark rounded border"
                             src={`/static/images/parties/${option.value}.png`}
                             width={32}
                             height={18}

@@ -196,8 +196,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       cell: (info: any) => {
         const seats = info.getValue();
         return (
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-            <div className="justify-self-start">
+          <div className="flex gap-2 md:flex-col lg:flex-row">
+            <div className="self-center">
               <BarMeter perc={info.getValue().perc} />
             </div>
             <p>{`${seats.won === 0 ? "0" : seats.won} ${
@@ -367,7 +367,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Election Comission (EC)"}
+            agency={t("common:agency.SPR")}
             link="https://www.spr.gov.my/"
             icon={<SPRIcon />}
           />
@@ -586,9 +586,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                             {waffleDummy.map(({ label, value }) => (
                               <div className="flex flex-row items-center gap-1">
                                 {label === "Others" ? (
-                                  <div className="bg-dim h-4 w-7 rounded-md"></div>
+                                  <div className="bg-dim h-4 w-4 rounded-md"></div>
                                 ) : (
                                   <ImageWithFallback
+                                    className="border-outline dark:border-washed-dark rounded border"
                                     src={`/static/images/parties/${label}.png`}
                                     width={32}
                                     height={18}
@@ -691,7 +692,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                       </div>
                       <div className="flex flex-row gap-2">
                         <ImageWithFallback
-                          className="items-center self-center"
+                          className="border-outline dark:border-washed-dark items-center self-center rounded border"
                           src={`/static/images/parties/${item.party}.png`}
                           width={32}
                           height={18}
