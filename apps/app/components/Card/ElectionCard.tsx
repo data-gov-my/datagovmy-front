@@ -1,6 +1,6 @@
 import { Fragment, FunctionComponent, ReactElement, useState } from "react";
 import { Button } from "..";
-import BorderlessTable from "@components/Chart/Table/BorderlessTable";
+import ElectionTable from "@components/Chart/Table/ElectionTable";
 import Font from "@config/font";
 import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
@@ -80,7 +80,7 @@ const Card: FunctionComponent<CardProps> = ({
                     Font.body.variable,
                     "font-sans",
                     "border-outline dark:border-outlineHover-dark border",
-                    "w-full max-w-4xl transform overflow-hidden rounded-xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-black"
+                    "w-full max-w-4xl transform overflow-hidden rounded-xl bg-white px-3 py-6 text-left align-middle shadow-xl transition-all dark:bg-black md:px-6"
                   )}
                 >
                   <Dialog.Title as="h5" className="flex flex-row">
@@ -93,83 +93,91 @@ const Card: FunctionComponent<CardProps> = ({
                       setIsOpen(false);
                     }}
                   >
-                    <XMarkIcon className="text-dim absolute right-3 top-3 h-6 w-6" />
+                    <XMarkIcon className="text-dim absolute right-2 top-3 h-6 w-6 lg:right-3" />
                   </button>
-                  <div className="space-x-3 pb-6 pt-3">
-                    {date ? <span className="text-dim">{date}</span> : <></>}
-                    <span className="uppercase text-black dark:text-white">
-                      {num ? t(e).concat("-" + num) : t(e)}
-                    </span>
-                  </div>
-                  <BorderlessTable
-                    data={data}
-                    columns={columns}
-                    isLoading={isLoading}
-                    highlightedRow={highlightedRow}
-                    win={win}
-                  />
-                  {votes && (
-                    <div className="flex flex-col justify-center gap-1 pt-6 text-sm lg:flex-row lg:gap-3 ">
-                      <p>
-                        <span>{t("election.voter_turnout")}:</span>
-                        <span className="font-medium">{` ${numFormat(
-                          votes.voter_turnout,
-                          "standard"
-                        )} (${Number(votes.voter_turnout_perc).toFixed(1)}%)`}</span>
-                      </p>
-                      <p>
-                        <span>{t("election.rejected_votes")}:</span>
-                        <span className="font-medium">{` ${numFormat(
-                          votes.votes_rejected,
-                          "standard"
-                        )} (${Number(votes.votes_rejected_perc).toFixed(1)}%)`}</span>
-                      </p>
+                  <div className="space-y-6">
+                    <div className="space-x-3 pt-2">
+                      {date ? <span className="text-dim">{date}</span> : <></>}
+                      <span className="uppercase text-black dark:text-white">
+                        {num ? t(e).concat("-" + num) : t(e)}
+                      </span>
                     </div>
-                  )}
-                  <div>
-                    {total <= 10 && (
-                      <div className="flex flex-row items-center justify-center gap-1.5 pt-6">
-                        {Array(total)
-                          .fill(null)
-                          .map((num, index: number) => (
-                            <button
-                              onClick={() => onChange(index)}
-                              disabled={index === page}
-                              className={clx(
-                                "h-1 w-5 rounded-md",
-                                index === page
-                                  ? "bg-black dark:bg-white"
-                                  : "bg-outline hover:bg-washed dark:bg-outlineHover-dark dark:hover:bg-washed-dark"
-                              )}
-                            ></button>
-                          ))}
-                      </div>
+                    <ElectionTable
+                      data={data}
+                      columns={columns}
+                      isLoading={isLoading}
+                      highlightedRow={highlightedRow}
+                      win={win}
+                    />
+
+                    {isLoading ? (
+                      <></>
+                    ) : (
+                      votes && (
+                        <div className="flex flex-col justify-center gap-1 text-sm md:flex-row md:gap-3 ">
+                          <p>
+                            <span>{t("election.voter_turnout")}:</span>
+                            <span className="font-medium">{` ${numFormat(
+                              votes.voter_turnout,
+                              "standard"
+                            )} (${numFormat(votes.voter_turnout_perc, "compact", [1, 1])}%)`}</span>
+                          </p>
+                          <p>
+                            <span>{t("election.rejected_votes")}:</span>
+                            <span className="font-medium">{` ${numFormat(
+                              votes.votes_rejected,
+                              "standard"
+                            )} (${numFormat(
+                              votes.votes_rejected_perc,
+                              "compact",
+                              [1, 1]
+                            )}%)`}</span>
+                          </p>
+                        </div>
+                      )
                     )}
-                    <div className="flex items-center justify-center gap-4 pt-3 text-sm">
-                      <Button
-                        className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
-                        onClick={onPrev}
-                        disabled={page === 0}
-                      >
-                        <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
-                        {t("common:common.previous")}
-                      </Button>
-                      {total > 10 && (
-                        <span className="flex items-center gap-1 text-center text-sm">
-                          {t("common:common.page_of", {
-                            current: page + 1,
-                            total: total,
-                          })}
-                        </span>
+                    <div className="space-y-3">
+                      {total <= 10 && (
+                        <div className="flex flex-row items-center justify-center gap-1.5">
+                          {Array(total)
+                            .fill(null)
+                            .map((num, index: number) => (
+                              <button
+                                onClick={() => onChange(index)}
+                                disabled={index === page}
+                                className={clx(
+                                  "h-1 w-5 rounded-md",
+                                  index === page
+                                    ? "bg-black dark:bg-white"
+                                    : "bg-outline hover:bg-washed dark:bg-outlineHover-dark dark:hover:bg-washed-dark"
+                                )}
+                              ></button>
+                            ))}
+                        </div>
                       )}
-                      <Button
-                        className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
-                        onClick={onNext}
-                        disabled={page === total - 1}
-                      >
-                        {t("common:common.next")}{" "}
-                        <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
-                      </Button>
+                      <div className="flex items-center justify-center gap-4 text-sm">
+                        <Button
+                          className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                          onClick={onPrev}
+                          disabled={page === 0}
+                        >
+                          <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
+                          {t("common:common.previous")}
+                        </Button>
+                        {total > 10 && (
+                          <span className="flex items-center gap-1 text-center text-sm">
+                            {`${page + 1} / ${total}`}
+                          </span>
+                        )}
+                        <Button
+                          className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                          onClick={onNext}
+                          disabled={page === total - 1}
+                        >
+                          {t("common:common.next")}{" "}
+                          <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </Dialog.Panel>
