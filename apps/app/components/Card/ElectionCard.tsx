@@ -65,7 +65,7 @@ const Card: FunctionComponent<CardProps> = ({
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex min-h-full items-center justify-center p-2 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -93,7 +93,7 @@ const Card: FunctionComponent<CardProps> = ({
                       setIsOpen(false);
                     }}
                   >
-                    <XMarkIcon className="text-dim absolute right-2 top-3 h-6 w-6 lg:right-3" />
+                    <XMarkIcon className="text-dim absolute right-3 top-3 h-6 w-6" />
                   </button>
                   <div className="space-y-6">
                     <div className="space-x-3 pt-2">
