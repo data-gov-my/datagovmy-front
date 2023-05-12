@@ -22,7 +22,6 @@ export interface ElectionTableProps {
   empty?: string | ReactNode;
   data?: any;
   columns?: Array<ColumnDef<any, any>>;
-  responsive?: Boolean;
   highlightedRow?: false | number;
   win?: string;
   isLoading: boolean;
@@ -40,7 +39,6 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   empty,
   data = dummyData,
   columns,
-  responsive = true,
   highlightedRow = false,
   win = "null",
   isLoading = false,
@@ -91,7 +89,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           )}
         </div>
       </div>
-      <div className={responsive ? "table-responsive" : undefined}>
+      <div className="relative max-h-[480px] overflow-y-auto md:max-h-[300px] lg:max-h-60">
         <table className="hidden w-full text-left text-sm md:table">
           <thead>
             {table.getHeaderGroups().map((headerGroup: any) => (
@@ -138,7 +136,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                         {cell.column.columnDef.id === "party" ? (
                           <>
                             <ImageWithFallback
-                              className="absolute items-center self-center"
+                              className="border-outline dark:border-washed-dark absolute items-center self-center  rounded border"
                               src={`/static/images/parties/${cell.getValue()}.png`}
                               width={32}
                               height={18}
@@ -154,16 +152,17 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                             </span>
                           </>
                         ) : cell.column.columnDef.id === "election_name" ? (
-                          <>
-                            <div className="whitespace-nowrap">
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </div>
-                            <Tooltip
-                              tip={DateTime.fromISO(cell.row.original.date)
-                                .setLocale(i18n.language)
-                                .toLocaleString(DateTime.DATE_MED)}
-                            />
-                          </>
+                          <Tooltip
+                            tip={DateTime.fromISO(cell.row.original.date)
+                              .setLocale(i18n.language)
+                              .toLocaleString(DateTime.DATE_MED)}
+                          >
+                            {open => (
+                              <div className="whitespace-nowrap underline decoration-dotted underline-offset-[3px]">
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </div>
+                            )}
+                          </Tooltip>
                         ) : ["majority", "votes"].includes(cell.column.columnDef.id) ? (
                           <div
                             className={clx(
@@ -176,7 +175,6 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                             <div className="lg:self-center">
                               <BarMeter perc={cell.getValue().perc} />
                             </div>
-
                             <span className="whitespace-nowrap">
                               {cell.getValue().abs === 0
                                 ? `—`
@@ -219,15 +217,13 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                   ) ? (
                     <div
                       className={clx(
-                        "flex gap-2",
-                        rowData.at(headerID.indexOf(key)).getValue().abs === 0
-                          ? "flex-row items-center"
-                          : "md:flex-col lg:flex-row"
+                        "flex items-center gap-2",
+                        rowData.at(headerID.indexOf(key)).getValue().abs === 0 && "flex-row"
                       )}
                     >
-                      <div className="lg:self-center">
+                      <>
                         <BarMeter perc={rowData.at(headerID.indexOf(key)).getValue().perc} />
-                      </div>
+                      </>
                       <p>{`${
                         rowData.at(headerID.indexOf(key)).getValue().abs === 0
                           ? "—"
@@ -291,7 +287,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
               {rowID.includes("party") && (
                 <div className="flex flex-row gap-1.5">
                   <ImageWithFallback
-                    className="items-center self-center"
+                    className="border-outline dark:border-washed-dark items-center self-center rounded border"
                     src={`/static/images/parties/${rowData
                       .at(rowID.indexOf("party"))
                       .getValue()}.png`}
