@@ -14,9 +14,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { DateTime } from "luxon";
-import { Tooltip } from "@dashboards/democracy/election-explorer";
+import { Tooltip } from "@components/index";
 
-export interface BorderlessTableProps {
+export interface ElectionTableProps {
   className?: string;
   title?: string | ReactNode;
   empty?: string | ReactNode;
@@ -34,7 +34,7 @@ export type Result = {
   votes: Record<string, number>;
 };
 
-const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
+const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   className = "",
   title,
   empty,
@@ -92,7 +92,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
         </div>
       </div>
       <div className={responsive ? "table-responsive" : undefined}>
-        <table className="hidden w-full text-left text-sm lg:table">
+        <table className="hidden w-full text-left text-sm md:table">
           <thead>
             {table.getHeaderGroups().map((headerGroup: any) => (
               <tr key={headerGroup.id}>
@@ -134,45 +134,58 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                         "px-2 py-[10px]"
                       )}
                     >
-                      <div className="flex flex-row gap-1.5">
+                      <div className="flex flex-row gap-2">
                         {cell.column.columnDef.id === "party" ? (
                           <>
                             <ImageWithFallback
-                              className="items-center self-center"
+                              className="absolute items-center self-center"
                               src={`/static/images/parties/${cell.getValue()}.png`}
                               width={32}
                               height={18}
                               alt={t(`${cell.getValue()}`)}
                             />
-                            <span>{cell.getValue()}</span>
+                            <span className="relative pl-10">
+                              {!table
+                                .getAllColumns()
+                                .map(col => col.id)
+                                .includes("fullResult")
+                                ? t(cell.getValue())
+                                : cell.getValue()}
+                            </span>
                           </>
                         ) : cell.column.columnDef.id === "election_name" ? (
-                          <div className="group relative w-max">
-                            {cell.getValue()}
+                          <>
+                            <div className="whitespace-nowrap">
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </div>
                             <Tooltip
                               tip={DateTime.fromISO(cell.row.original.date)
                                 .setLocale(i18n.language)
                                 .toLocaleString(DateTime.DATE_MED)}
-                              position="-translate-y-[52px] -translate-x-14"
-                              triangle_pos="before:-bottom-2 before:left-6"
                             />
-                          </div>
-                        ) : ["majority", "votes"].includes(cell.column.columnDef.id) ? (
-                          <>
-                            <>
-                              <BarMeter perc={cell.getValue().perc} />
-                            </>
-                            <>
-                              <span className="whitespace-nowrap">
-                                {cell.getValue().abs === 0
-                                  ? `—`
-                                  : numFormat(cell.getValue().abs, "standard")}
-                                {cell.getValue().perc === null
-                                  ? ` (—)`
-                                  : ` (${Number(cell.getValue().perc).toFixed(1)}%)`}
-                              </span>
-                            </>
                           </>
+                        ) : ["majority", "votes"].includes(cell.column.columnDef.id) ? (
+                          <div
+                            className={clx(
+                              "flex gap-2",
+                              cell.getValue().abs === 0
+                                ? "flex-row items-center"
+                                : "md:flex-col lg:flex-row"
+                            )}
+                          >
+                            <div className="lg:self-center">
+                              <BarMeter perc={cell.getValue().perc} />
+                            </div>
+
+                            <span className="whitespace-nowrap">
+                              {cell.getValue().abs === 0
+                                ? `—`
+                                : numFormat(cell.getValue().abs, "standard")}
+                              {cell.getValue().perc === null
+                                ? ` (—)`
+                                : ` (${numFormat(cell.getValue().perc, "compact", [1, 1])}%)`}
+                            </span>
+                          </div>
                         ) : (
                           flexRender(cell.column.columnDef.cell, cell.getContext())
                         )}
@@ -204,8 +217,17 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                   {["majority", "votes"].includes(
                     rowData.at(headerID.indexOf(key)).column.columnDef.id
                   ) ? (
-                    <div className="flex flex-row items-center gap-2">
-                      <BarMeter perc={rowData.at(headerID.indexOf(key)).getValue().perc} />
+                    <div
+                      className={clx(
+                        "flex gap-2",
+                        rowData.at(headerID.indexOf(key)).getValue().abs === 0
+                          ? "flex-row items-center"
+                          : "md:flex-col lg:flex-row"
+                      )}
+                    >
+                      <div className="lg:self-center">
+                        <BarMeter perc={rowData.at(headerID.indexOf(key)).getValue().perc} />
+                      </div>
                       <p>{`${
                         rowData.at(headerID.indexOf(key)).getValue().abs === 0
                           ? "—"
@@ -213,8 +235,10 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                       } ${
                         rowData.at(headerID.indexOf(key)).getValue().perc === null
                           ? "(—)"
-                          : `(${Number(rowData.at(headerID.indexOf(key)).getValue().perc).toFixed(
-                              1
+                          : `(${numFormat(
+                              rowData.at(headerID.indexOf(key)).getValue().perc,
+                              "compact",
+                              [1, 1]
                             )}%)`
                       }`}</p>
                     </div>
@@ -233,7 +257,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
           ) : (
             <div
               className={clx(
-                "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 lg:hidden",
+                "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 md:hidden",
                 index === 0 && "border-t-2"
               )}
               key={index}
@@ -281,9 +305,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                       (${rowData.at(rowID.indexOf("party")).getValue()})`}
                     </span>
                   ) : (
-                    <span>{`${rowData.at(rowID.indexOf("party")).getValue()} - ${rowData
-                      .at(rowID.indexOf("seat"))
-                      .getValue()}`}</span>
+                    <span>{t(`${rowData.at(rowID.indexOf("party")).getValue()}`)}</span>
                   )}
                 </div>
               )}
@@ -302,7 +324,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                   <div className="flex flex-col space-y-1">{render("result")}</div>
                 </div>
               ) : (
-                <div className="flex flex-row space-x-4">
+                <div className="flex flex-row space-x-3">
                   <div className="flex flex-col space-y-1">{render("seats")}</div>
                   <div className="flex flex-col space-y-1">{render("votes")}</div>
                 </div>
@@ -330,7 +352,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   );
 };
 
-export default BorderlessTable;
+export default ElectionTable;
 
 interface BarMeterProps {
   perc: number;
@@ -339,7 +361,7 @@ interface BarMeterProps {
 export const BarMeter: FunctionComponent<BarMeterProps> = ({ perc }) => {
   return (
     <div
-      className={`bg-outline dark:bg-outlineHover-dark relative flex h-[5px] w-[30px] self-center rounded-md lg:w-[50px]`}
+      className={`bg-outline dark:bg-outlineHover-dark relative flex h-[5px] w-[30px] self-center rounded-md md:w-[50px]`}
     >
       <div
         className="absolute left-0 top-0  h-full rounded-xl bg-black dark:bg-white"
@@ -391,7 +413,7 @@ export const FullResult: FunctionComponent<FullResultProps> = ({ desc, onClick }
         onClick={onClick}
       >
         <ArrowsPointingOutIcon className="h-4 w-4 " />
-        {desc && <p className="whitespace-nowrap pl-1.5 font-normal lg:hidden">{desc}</p>}
+        {desc && <p className="whitespace-nowrap pl-1.5 font-normal">{desc}</p>}
       </button>
     </div>
   );
