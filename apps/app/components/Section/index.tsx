@@ -77,4 +77,6 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
   }
 );
 
+Section.displayName = "Section";
+
 export default Section;

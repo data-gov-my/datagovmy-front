@@ -47,7 +47,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     () => ({
       chart: [
         {
-          key: "png",
+          id: "png",
           image: Boolean(data?.ctx) && data.ctx.toBase64Image("png", 1),
           title: t("image.title"),
           description: t("image.desc"),
@@ -64,7 +64,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           },
         },
         {
-          key: "svg",
+          id: "svg",
           image: Boolean(data?.ctx) && data.ctx.toBase64Image("image/png", 1),
           title: t("vector.title"),
           description: t("vector.desc"),
@@ -89,7 +89,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
       ],
       data: [
         {
-          key: "csv",
+          id: "csv",
           image: "/static/images/icons/csv.png",
           title: t("csv.title"),
           description: t("csv.desc"),
@@ -97,7 +97,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           href: urls.csv,
         },
         {
-          key: "parquet",
+          id: "parquet",
           image: "/static/images/icons/parquet.png",
           title: t("parquet.title"),
           description: t("parquet.desc"),

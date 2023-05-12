@@ -165,8 +165,8 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                   >
                     <h5 className="pb-1">{category}</h5>
                     {dashboards.map((item: Dashboard, index: number) => (
-                      <div className="pt-2">
-                        <At href={item.id} key={item.id}>
+                      <div className="pt-2" key={item.id}>
+                        <At href={item.id}>
                           <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
                               <AgencyIcon agency={item.agency} />
@@ -278,6 +278,8 @@ const DashboardFilter: ForwardRefExoticComponent<DashboardFilterProps> = forward
     );
   }
 );
+
+DashboardFilter.displayName = "DashboardFilter";
 
 type RankItem = {
   id: string;

@@ -1208,7 +1208,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
   if (typeof Components[agency] !== "undefined") {
     return createElement(Components[agency], { className: "h-6 w-6" });
   }
-  return createElement("p", { children: "not found" });
+  return createElement("p", undefined, "Not found");
 };
 
 export default AgencyIcon;

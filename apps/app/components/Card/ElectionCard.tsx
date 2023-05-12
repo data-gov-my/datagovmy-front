@@ -98,9 +98,7 @@ const Card: FunctionComponent<CardProps> = ({
                   <div className="space-y-6">
                     <div className="space-x-3 pt-2">
                       {date ? <span className="text-dim">{date}</span> : <></>}
-                      <span className="uppercase text-black dark:text-white">
-                        {num ? t(e).concat("-" + num) : t(e)}
-                      </span>
+                      <span className="uppercase">{num ? t(e).concat("-" + num) : t(e)}</span>
                     </div>
                     <ElectionTable
                       data={data}
@@ -143,6 +141,7 @@ const Card: FunctionComponent<CardProps> = ({
                             .fill(null)
                             .map((num, index: number) => (
                               <button
+                                key={index}
                                 onClick={() => onChange(index)}
                                 disabled={index === page}
                                 className={clx(

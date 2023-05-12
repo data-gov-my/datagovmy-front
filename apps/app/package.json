@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "lint": "next lint",
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start"
@@ -66,7 +67,8 @@
     "@types/react-dom": "18.0.5",
     "@types/react-slick": "^0.23.10",
     "autoprefixer": "^10.4.7",
-    "dotenv": "^16.0.3",
+    "eslint": "^8.40.0",
+    "eslint-config-datagovmy": "*",
     "geojson-bbox": "^0.0.1",
     "postcss": "^8.4.14",
     "postcss-import": "^14.1.0",

@@ -446,6 +446,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                             i: number
                           ) => (
                             <tr
+                              key={item.name}
                               className={(i < Math.min(3, compareData.data.length - 1)
                                 ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
                                 : ""
