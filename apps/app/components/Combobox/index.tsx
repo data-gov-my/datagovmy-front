@@ -143,10 +143,10 @@ const ComboBox = <L extends string | number = string, V = string>({
                             "flex flex-row gap-1"
                           )}
                         >
-                          <>{String(option.label).split("|")[0]}</>
+                          <>{String(option.label).split("(")[0]}</>
                           <p className="text-dim normal-case">{` (${
-                            String(option.label).split("|")[1]
-                          })`}</p>
+                            String(option.label).split("(")[1]
+                          }`}</p>
                         </span>
                       ) : (
                         <span
