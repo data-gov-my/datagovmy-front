@@ -63,7 +63,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const { breakpoint } = useContext(WindowContext);
 
   const _collection = useMemo<Array<[string, any]>>(() => {
-    let resultCollection: Array<[string, Catalogue[]]> = [];
+    const resultCollection: Array<[string, Catalogue[]]> = [];
     Object.entries(collection).forEach(([category, subcategory]) => {
       Object.entries(subcategory).forEach(([subcategory_title, datasets]) => {
         resultCollection.push([`${category}: ${subcategory_title}`, datasets as Catalogue[]]);
@@ -71,7 +71,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
     });
 
     return resultCollection;
-  }, [query]);
+  }, [collection]);
 
   return (
     <div>
@@ -185,7 +185,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       label: source,
       value: source,
     }));
-    const startYear: number = 1982;
+    const startYear = 1982;
     const endYear: number = new Date().getFullYear();
 
     const filterYears = (start: number, end: number): Array<OptionType> =>
@@ -373,5 +373,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
     );
   }
 );
+
+CatalogueFilter.displayName = "CatalogueFilter";
 
 export default CatalogueIndex;

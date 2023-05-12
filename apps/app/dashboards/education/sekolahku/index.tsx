@@ -237,7 +237,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
             {barmeterSortArray.map(k => {
               const v = sekolahku_barmeter.bar[k];
               return (
-                <div className="flex flex-col space-y-6">
+                <div className="flex flex-col space-y-6" key={k}>
                   <BarMeter
                     key={k}
                     title={t(`section_2.${k}.title`)}
@@ -335,6 +335,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       y.unshift(0);
                       return (
                         <Line
+                          key={k}
                           className="h-[300px] w-full"
                           title={t(`section_3.${k}`)}
                           enableGridX={false}

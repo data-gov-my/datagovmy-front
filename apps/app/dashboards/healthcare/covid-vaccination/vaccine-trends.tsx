@@ -84,6 +84,7 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
                 const statistic_key: string = `daily_${item}`;
                 return (
                   <Timeseries
+                    key={title}
                     className="h-[250px]"
                     title={t(title)}
                     enableGridX={false}

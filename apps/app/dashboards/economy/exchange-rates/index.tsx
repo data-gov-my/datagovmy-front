@@ -185,6 +185,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                   <div className="grid grid-cols-1 gap-12 pt-8 lg:grid-cols-3">
                     {CURRENCY.map(index => (
                       <Timeseries
+                        key={timeseries_callouts.data[index][`country_${lang}`]}
                         title={timeseries_callouts.data[index][`country_${lang}`]}
                         className="h-[300px] w-full"
                         interval={data.active_trend < 2 ? "day" : "auto"}

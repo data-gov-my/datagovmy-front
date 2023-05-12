@@ -415,7 +415,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                           </div>
                           <div className="text-dim flex flex-row flex-wrap items-center justify-center gap-6">
                             {waffleDummy.map(({ label, value }) => (
-                              <div className="flex flex-row items-center gap-1">
+                              <div className="flex flex-row items-center gap-1" key={label}>
                                 {label === "Others" ? (
                                   <div className="bg-dim h-4 w-7 rounded-md"></div>
                                 ) : (
@@ -601,8 +601,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                 <List
                   options={[t("election.map"), t("election.table")]}
                   icons={[
-                    <MapIcon className="mr-1 h-5 w-5" />,
-                    <TableCellsIcon className="mr-1 h-5 w-5" />,
+                    <MapIcon key="map_icon" className="mr-1 h-5 w-5" />,
+                    <TableCellsIcon key="table_cell_icon" className="mr-1 h-5 w-5" />,
                   ]}
                   current={data.tabs_section3}
                   onChange={index => setData("tabs_section3", index)}

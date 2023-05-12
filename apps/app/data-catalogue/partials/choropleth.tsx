@@ -38,7 +38,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
     () => ({
       chart: [
         {
-          key: "png",
+          id: "png",
           image: ctx && ctx.toBase64Image("png", 1),
           title: t("image.title"),
           description: t("image.desc"),
@@ -55,7 +55,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           },
         },
         {
-          key: "svg",
+          id: "svg",
           image: ctx && ctx.toBase64Image("png", 1),
           title: t("vector.title"),
           description: t("vector.desc"),
@@ -80,7 +80,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
       ],
       data: [
         {
-          key: "csv",
+          id: "csv",
           image: "/static/images/icons/csv.png",
           title: t("csv.title"),
           description: t("csv.desc"),
@@ -88,7 +88,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           href: urls.csv,
         },
         {
-          key: "parquet",
+          id: "parquet",
           image: "/static/images/icons/parquet.png",
           title: t("parquet.title"),
           description: t("parquet.desc"),

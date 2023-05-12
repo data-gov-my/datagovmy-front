@@ -59,7 +59,7 @@ export const STATES: Array<Record<string, any>> = [
     name: "Perlis",
   },
   {
-    key: "png",
+    id: "png",
     name: "Pulau Pinang",
   },
   {
