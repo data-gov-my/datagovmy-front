@@ -55,7 +55,7 @@
 }
 
 .tooltip .tooltip-content {
-  @apply invisible absolute top-8 z-20 inline-block w-max max-w-[150px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:-top-2 md:left-[140%] md:max-w-sm md:translate-x-0;
+  @apply invisible absolute top-8 z-20 inline-block w-max max-w-[150px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:-top-3 md:left-[140%] md:max-w-sm md:translate-x-0;
 }
 
 @media only screen and (min-width: 768px) {
@@ -70,7 +70,7 @@
     border-bottom: 8px solid transparent;
     border-right: 8px solid #18181b;
     left: -7px;
-    top: 7px;
+    top: 14px;
   }
 }
 
