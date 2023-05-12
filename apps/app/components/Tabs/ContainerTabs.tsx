@@ -49,7 +49,7 @@ const List: FunctionComponent<ListProps> = ({ className, options, current, onCli
             <li
               key={index}
               className={clx(
-                "group flex w-min select-none flex-col items-center justify-center px-4 py-1 text-sm outline-none transition-colors sm:w-auto sm:flex-row",
+                "group flex w-min select-none flex-col items-center justify-center px-4 py-1 text-center text-sm outline-none transition-colors sm:w-auto sm:flex-row",
                 current === index
                   ? "border-primary dark:bg-washed-dark cursor-default border-b-2 font-medium text-black dark:text-white"
                   : "text-dim cursor-pointer bg-transparent hover:text-black dark:hover:text-white"
