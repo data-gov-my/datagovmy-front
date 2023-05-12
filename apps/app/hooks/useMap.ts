@@ -86,3 +86,5 @@ export const MapControl: ForwardRefExoticComponent<MapControlProps> = forwardRef
 
   return null;
 });
+
+MapControl.displayName = "MapControl";

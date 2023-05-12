@@ -215,7 +215,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         chart: [],
         data: [
           {
-            key: "csv",
+            id: "csv",
             image: "/static/images/icons/csv.png",
             title: t("csv.title"),
             description: t("csv.desc"),
@@ -223,7 +223,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             href: urls.csv,
           },
           {
-            key: "parquet",
+            id: "parquet",
             image: "/static/images/icons/parquet.png",
             title: t("parquet.title"),
             description: t("parquet.desc"),
@@ -294,25 +294,25 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   downloads
                     ? downloads.chart.concat(downloads.data).map(item => ({
                         label: item.title as string,
-                        value: item.key,
+                        value: item.id,
                       }))
                     : []
                 }
                 onChange={async e => {
                   const action = downloads.chart
                     .concat(downloads.data)
-                    .find(({ key }) => e.value === key);
+                    .find(({ id }) => e.value === id);
 
                   if (!action) return;
 
                   if (typeof action?.href === "string") {
                     download(action.href, dataset.meta.unique_id);
                     track("file_download", {
-                      uid: dataset.meta.unique_id.concat("_", action.key),
+                      uid: dataset.meta.unique_id.concat("_", action.id),
                       type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
                       id: dataset.meta.unique_id,
                       name: dataset.meta.title,
-                      ext: action.key,
+                      ext: action.id,
                     });
                     return;
                   }
@@ -566,12 +566,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
                   {downloads?.chart.map(props => (
                     <DownloadCard
+                      key={dataset.meta.unique_id}
                       meta={{
-                        uid: dataset.meta.unique_id.concat("_", props.key),
+                        uid: dataset.meta.unique_id.concat("_", props.id),
                         id: dataset.meta.unique_id,
                         name: dataset.meta.title,
-                        ext: props.key,
-                        type: ["csv", "parquet"].includes(props.key) ? "file" : "image",
+                        ext: props.id,
+                        type: ["csv", "parquet"].includes(props.id) ? "file" : "image",
                       }}
                       {...props}
                     />
@@ -585,12 +586,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
                   {downloads?.data.map(props => (
                     <DownloadCard
+                      key={dataset.meta.unique_id}
                       meta={{
-                        uid: dataset.meta.unique_id.concat("_", props.key),
+                        uid: dataset.meta.unique_id.concat("_", props.id),
                         id: dataset.meta.unique_id,
                         name: dataset.meta.title,
-                        ext: props.key,
-                        type: ["csv", "parquet"].includes(props.key) ? "file" : "image",
+                        ext: props.id,
+                        type: ["csv", "parquet"].includes(props.id) ? "file" : "image",
                       }}
                       {...props}
                     />
@@ -654,7 +656,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
     <Card type="gray" onClick={href}>
       <div className="gap-4.5 flex items-center">
         {image && (
-          <img
+          <Image
             src={image}
             className="aspect-video h-14 rounded border bg-white object-cover lg:h-16"
             alt={title as string}

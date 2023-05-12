@@ -106,6 +106,7 @@ const Card: FunctionComponent<CardProps> = ({
                     <div className="flex flex-row items-center justify-center gap-1.5">
                       {[...Array(total)].map((num, index: number) => (
                         <button
+                          key={index}
                           onClick={() => onChange(index)}
                           disabled={index === page}
                           className={clx(

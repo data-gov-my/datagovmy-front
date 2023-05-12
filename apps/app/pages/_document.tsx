@@ -38,6 +38,7 @@ class HTMLDocument extends Document {
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TAG}`}
           />
           <Script
+            id="gtag"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
@@ -55,6 +56,7 @@ class HTMLDocument extends Document {
 
           {/* Mixpanel */}
           <Script
+            id="mixpanel"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `const MIXPANEL_CUSTOM_LIB_URL = "${process.env.NEXT_PUBLIC_APP_URL}/mp/lib.min.js";

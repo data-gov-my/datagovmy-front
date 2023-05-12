@@ -137,7 +137,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
 
                     {topStateIndices.map((pos, i) => {
                       return (
-                        <div className="flex space-x-3">
+                        <div className="flex space-x-3" key={pos}>
                           <div className="text-dim font-medium">#{i + 1}</div>
                           <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
                           <div className="font-bold text-[#7C3AED]">

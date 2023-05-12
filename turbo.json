@@ -4,7 +4,15 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_GA_TAG", "NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_APP_URL"],
+      "env": [
+        "REVALIDATE_TOKEN",
+        "NEXT_PUBLIC_GA_TAG",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "NEXT_PUBLIC_APP_ENV",
+        "NEXT_PUBLIC_AUTHORIZATION_TOKEN",
+        "NEXT_PUBLIC_TILESERVER_URL"
+      ],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {

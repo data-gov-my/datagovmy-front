@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
-    "eslint-config-custom": "*",
+    "eslint-config-datagovmy": "*",
     "husky": ">=6",
     "lint-staged": ">=10",
     "postcss": "^8.4.21",

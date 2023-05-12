@@ -39,7 +39,7 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
     () => ({
       chart: [
         {
-          key: "png",
+          id: "png",
           image: png,
           title: t("image.title"),
           description: t("image.desc"),
@@ -59,7 +59,7 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
       ],
       data: [
         {
-          key: "geojson",
+          id: "geojson",
           image: "/static/images/icons/geojson.png",
           title: t("geojson.title"),
           description: t("geojson.desc"),

@@ -63,11 +63,11 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query, params }) => {
     const { data } = await get("/data-variable/", {
-      id: params!.id,
+      id: params?.id,
       lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
       ...query,
     });
-    let config: DCConfig = {
+    const config: DCConfig = {
       context: {},
       dates: null,
       options: null,

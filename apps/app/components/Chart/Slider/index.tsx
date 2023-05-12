@@ -54,6 +54,17 @@ const Slider: FunctionComponent<SliderProps> = ({
     year: "yyyy",
   };
 
+  useWatch(() => {
+    if (type === "single") return;
+    if (timer.current) cancelTimer();
+    onChange([0, data.length - 1]);
+  }, [data]);
+
+  useWatch(() => {
+    if (type === "single") return;
+    setMinmax(value);
+  }, [value]);
+
   if (type === "single")
     return (
       <Root
@@ -98,14 +109,6 @@ const Slider: FunctionComponent<SliderProps> = ({
     timer.current && clearInterval(timer.current);
     timer.current = null;
   };
-
-  useWatch(() => {
-    if (timer.current) cancelTimer();
-    onChange([0, data.length - 1]);
-  }, [data]);
-  useWatch(() => {
-    setMinmax(value);
-  }, [value]);
 
   const togglePlayPause = () => {
     if (timer.current) cancelTimer();
