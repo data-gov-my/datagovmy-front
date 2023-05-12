@@ -43,9 +43,11 @@ const COVID19State: Page = ({
 COVID19State.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={<StateDropdown url={routes.COVID_19} currentState={props?.state} hideOnScroll />}
+    stateSelector={
+      <StateDropdown url={routes.COVID_19} currentState={props?.params.state} hideOnScroll />
+    }
   >
-    <StateModal state={props.state} url={routes.COVID_19} />
+    <StateModal state={props.params.state} url={routes.COVID_19} />
     {page}
   </Layout>
 );
