@@ -89,7 +89,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           )}
         </div>
       </div>
-      <div className="relative max-h-[480px] overflow-y-auto md:max-h-[300px] lg:max-h-60">
+      <div className="relative">
         <table className="hidden w-full text-left text-sm md:table">
           <thead>
             {table.getHeaderGroups().map((headerGroup: any) => (
@@ -215,15 +215,10 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                   {["majority", "votes"].includes(
                     rowData.at(headerID.indexOf(key)).column.columnDef.id
                   ) ? (
-                    <div
-                      className={clx(
-                        "flex items-center gap-2",
-                        rowData.at(headerID.indexOf(key)).getValue().abs === 0 && "flex-row"
-                      )}
-                    >
-                      <>
+                    <div className={clx("flex items-center gap-2")}>
+                      <div>
                         <BarMeter perc={rowData.at(headerID.indexOf(key)).getValue().perc} />
-                      </>
+                      </div>
                       <p>{`${
                         rowData.at(headerID.indexOf(key)).getValue().abs === 0
                           ? "—"
@@ -320,9 +315,22 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                   <div className="flex flex-col space-y-1">{render("result")}</div>
                 </div>
               ) : (
-                <div className="flex flex-row space-x-3">
-                  <div className="flex flex-col space-y-1">{render("seats")}</div>
-                  <div className="flex flex-col space-y-1">{render("votes")}</div>
+                rowID.includes("seats") && (
+                  <div className="flex flex-row space-x-3">
+                    <div className="flex flex-col space-y-1">{render("seats")}</div>
+                    <div className="flex flex-col space-y-1">{render("votes")}</div>
+                  </div>
+                )
+              )}
+              {rowID.includes("constituency") && (
+                <div className="space-y-1">
+                  <div>
+                    {flexRender(
+                      rowData.at(rowID.indexOf("constituency")).column.columnDef.cell,
+                      rowData.at(rowID.indexOf("constituency")).getContext()
+                    )}
+                  </div>
+                  <div className="flex flex-row gap-2">{render("data")}</div>
                 </div>
               )}
             </div>

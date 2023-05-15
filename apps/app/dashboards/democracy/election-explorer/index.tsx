@@ -221,7 +221,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
   const analysisColumnHelper = createColumnHelper<Analysis>();
   const analysisColumns: ColumnDef<Analysis, any>[] = [
     analysisColumnHelper.accessor("seat", {
-      id: "seat",
+      id: "constituency",
       header: t("constituency"),
       cell: (info: any) => info.getValue(),
     }),
@@ -230,14 +230,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       header: t(`election.${FILTER_OPTIONS.find(e => e.value === data.s3_filter.value)?.value}`),
       cell: (info: any) => {
         return (
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-            <div className="justify-self-start">
-              <BarMeter perc={info.getValue().perc} />
-            </div>
+          <div className="flex flex-row items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
+            <BarMeter perc={info.getValue().perc} />
             <p>{`${
               info.getValue().perc === 0
-                ? "(—)"
-                : `(${numFormat(info.getValue().perc, "compact", [1, 1])}%)`
+                ? "—"
+                : `${numFormat(info.getValue().perc, "compact", [1, 1])}%`
             }`}</p>
           </div>
         );
