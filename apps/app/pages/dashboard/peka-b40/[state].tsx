@@ -87,7 +87,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", asy
       params: params,
       choropleth: data.choropleth_malaysia,
     },
-    revalidate: 300,
   };
 });
 
