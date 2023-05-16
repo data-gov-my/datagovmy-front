@@ -1,16 +1,17 @@
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
 import FireandRescueDashboard from "@dashboards/public-safety/fire-and-rescue";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
+import { STATES } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 
-const FireandRescue: Page = ({
+const FireandRescueState: Page = ({
   choropleth,
   last_updated,
   params,
@@ -32,7 +33,7 @@ const FireandRescue: Page = ({
     </>
   );
 };
-FireandRescue.layout = (page, props) => (
+FireandRescueState.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={
@@ -44,25 +45,51 @@ FireandRescue.layout = (page, props) => (
   </Layout>
 );
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-fire-and-rescue", async () => {
-  const { data } = await get("/dashboard", { dashboard: "bomba", state: "mys" });
-
-  return {
-    notFound: false,
-    props: {
-      meta: {
-        id: "dashboard-fire-and-rescue",
-        type: "dashboard",
-        category: "public-safety",
-        agency: "BOMBA",
+export const getStaticPaths: GetStaticPaths = async () => {
+  let paths: Array<any> = [];
+  STATES.forEach(state => {
+    paths = paths.concat([
+      {
+        params: {
+          state: state.key,
+        },
       },
-      last_updated: new Date().valueOf(),
-      params: { state: "mys" },
-      timeseries: data.timeseries,
-      timeseries_callout: data.timeseries_callout,
-      choropleth: data.choropleth,
-    },
+      {
+        params: {
+          state: state.key,
+        },
+        locale: "ms-MY",
+      },
+    ]);
+  });
+  return {
+    paths: paths,
+    fallback: false, // can also be true or 'blocking'
   };
-});
+};
 
-export default FireandRescue;
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-fire-and-rescue",
+  async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "bomba", state: params?.state });
+
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-fire-and-rescue",
+          type: "dashboard",
+          category: "public-safety",
+          agency: "BOMBA",
+        },
+        last_updated: new Date().valueOf(),
+        params: params,
+        timeseries: data.timeseries,
+        timeseries_callout: data.timeseries_callout,
+        choropleth: data.choropleth,
+      },
+    };
+  }
+);
+
+export default FireandRescueState;
