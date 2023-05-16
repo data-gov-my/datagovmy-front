@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { FullResult, Result } from "@components/Chart/Table/ElectionTable";
 import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
@@ -14,7 +14,8 @@ import { get } from "@lib/api";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useFilter } from "@hooks/useFilter";
+import { useRouter } from "next/router";
+import { ElectionResource, ElectionType, Seat } from "./types";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -25,13 +26,20 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
   ssr: false,
 });
 
-interface ElectionSeatsProps {
-  query: any;
-  seat: any;
+interface ElectionSeatsProps extends ElectionResource<Seat> {
+  selection: {
+    seat_name: string;
+    type: ElectionType;
+  }[];
 }
 
-const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, seat }) => {
+const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
+  params,
+  selection,
+  elections,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
+  const { push } = useRouter();
 
   const columnHelper = createColumnHelper<Seat>();
   const columns: ColumnDef<Seat, any>[] = [
@@ -70,8 +78,8 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
           <FullResult
             desc={t("full_result")}
             onClick={() => {
-              setData("modal_open", true);
-              setData("index", row.index);
+              setData("table_index", row.index);
+              fetchResult(row.index);
             }}
           />
         );
@@ -80,86 +88,84 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
   ];
 
   const { data, setData } = useData({
-    // Placeholder for Combobox
-    p_seat: "",
-    seats_list: [],
-
-    // Query for Table
-    q_seat: query.seat ? query.seat : "Padang Besar, Perlis",
+    seat: params?.seat_name,
     loading: false,
-    data: seat,
 
     // Election full result
     modal_loading: false,
     modal_open: false,
     full_results: [],
-    index: 0,
+
+    table_index: 0,
   });
 
-  const { setFilter } = useFilter({
-    seat: query.seat,
-  });
+  const SEAT_OPTIONS: Array<OptionType> = selection.map(key => ({
+    label: key.seat_name.concat(` (${t(key.type)})`),
+    value: key.seat_name,
+  }));
 
-  const SEAT_OPTIONS: Array<OptionType> =
-    data.seats_list &&
-    data.seats_list.map((key: { seat_name: string; type: string }) => ({
-      label: key.seat_name.concat(` (${t(key.type)})`),
-      value: key.seat_name,
-    }));
-
-  useEffect(() => {
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      dropdown: "seats_list",
-    })
-      .then(({ data }) => {
-        setData("seats_list", data);
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  }, []);
-
-  useEffect(() => {
+  const navigateToSeat = (name?: string) => {
+    if (!name) return;
     setData("loading", true);
-    setFilter("seat", data.q_seat);
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "seats",
-      seat_name: data.q_seat,
-    })
-      .then(({ data }) => {
-        setData(
-          "data",
-          data.sort((a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date)))
-        );
-      })
-      .catch(e => {
-        console.error(e);
-      })
-      .then(() => setData("loading", false));
-  }, [data.q_seat]);
+    setData("seat", name);
 
-  useEffect(() => {
+    push(`${routes.ELECTION_EXPLORER}/seats/${name}`, undefined, {
+      scroll: false,
+      locale: i18n.language,
+    }).then(() => setData("loading", false));
+  };
+
+  const fetchResult = (rowIndex: number) => {
+    setData("modal_open", true);
     setData("modal_loading", true);
+
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
       type: "seats",
-      election: data.data[data.index].election_name,
-      seat: data.data[data.index].seat,
+      election: elections[rowIndex].election_name,
+      seat: elections[rowIndex].seat,
     })
       .then(({ data }) => {
         setData(
           "full_results",
           data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
+        setData("modal_loading", false);
       })
       .catch(e => {
         console.error(e);
-      })
-      .then(() => setData("modal_loading", false));
-  }, [data.index, data.modal_open]);
+      });
+  };
+
+  const election_result = useMemo<{
+    name: string;
+    area: string;
+    state: string;
+    date: string;
+    total: number;
+  }>(() => {
+    if (elections.length <= 0)
+      return {
+        name: "",
+        area: "",
+        state: "",
+        date: "",
+        total: 0,
+      };
+
+    const [area, state] = elections[data.table_index].seat.split(",");
+
+    return {
+      name: elections[data.table_index].election_name,
+      area,
+      state,
+      date: DateTime.fromISO(elections[data.table_index].date)
+        .setLocale(i18n.language)
+        .toLocaleString(DateTime.DATE_MED),
+      total: elections.length,
+    };
+  }, [data.table_index]);
 
   return (
     <>
@@ -212,12 +218,9 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                     placeholder={t("seat.search_seat")}
                     options={SEAT_OPTIONS}
                     selected={
-                      data.p_seat ? SEAT_OPTIONS.find(e => e.value === data.p_seat.value) : null
+                      data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null
                     }
-                    onChange={e => {
-                      if (e) setData("q_seat", e.value);
-                      setData("p_seat", e);
-                    }}
+                    onChange={e => navigateToSeat(e?.value)}
                     enableType={true}
                   />
                 </div>
@@ -226,10 +229,10 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
                 title={
                   <div className="pb-6 text-base font-bold">
                     {t("candidate.title")}
-                    <span className="text-primary">{data.q_seat}</span>
+                    <span className="text-primary">{data.seat}</span>
                   </div>
                 }
-                data={data.data}
+                data={elections}
                 columns={columns}
                 isLoading={data.loading}
               />
@@ -238,30 +241,32 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
           {data.modal_open && (
             <ElectionCard
               open={data.modal_open}
-              onChange={(index: number) =>
-                index < data.data.length && index >= 0 ? setData("index", index) : null
-              }
               onClose={() => setData("modal_open", false)}
-              onNext={() =>
-                data.index === data.data.length ? null : setData("index", data.index + 1)
-              }
-              onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
-              election_name={data.data[data.index].election_name}
-              date={DateTime.fromISO(data.data[data.index].date)
-                .setLocale(i18n.language)
-                .toLocaleString(DateTime.DATE_MED)}
+              onChange={(index: number) => {
+                setData("table_index", index);
+                fetchResult(index);
+              }}
+              onNext={() => {
+                setData("table_index", data.table_index + 1);
+                fetchResult(data.table_index + 1);
+              }}
+              onPrev={() => {
+                setData("table_index", data.table_index - 1);
+                fetchResult(data.table_index - 1);
+              }}
+              win={undefined}
+              election_name={election_result.name}
+              date={election_result.date}
               title={
                 <div className="flex flex-col uppercase md:flex-row md:gap-2">
-                  <h5>{data.data[data.index].seat.split(",")[0]}</h5>
-                  <span className="text-dim font-normal">
-                    {data.data[data.index].seat.split(",")[1]}
-                  </span>
+                  <h5>{election_result.area}</h5>
+                  <span className="text-dim font-normal">{election_result.state}</span>
                 </div>
               }
               isLoading={data.modal_loading}
               data={data.full_results}
-              page={data.index}
-              total={data.data.length}
+              page={data.table_index}
+              total={election_result.total}
             />
           )}
         </Section>
@@ -271,13 +276,3 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({ query, 
 };
 
 export default ElectionSeatsDashboard;
-
-export type Seat = {
-  election_name: string;
-  date: string;
-  seat: string;
-  party: string;
-  name: string;
-  majority: Record<string, number>;
-  result: string;
-};

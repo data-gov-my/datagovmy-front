@@ -30,7 +30,10 @@ export interface ElectionTableProps {
 export type Result = {
   name: string;
   party: string;
-  votes: Record<string, number>;
+  votes: {
+    abs: number;
+    perc: number;
+  };
 };
 
 const ElectionTable: FunctionComponent<ElectionTableProps> = ({
@@ -89,7 +92,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           )}
         </div>
       </div>
-      <div className="relative">
+      <div className={clx("relative", className)}>
         <table className="hidden w-full text-left text-sm md:table">
           <thead>
             {table.getHeaderGroups().map((headerGroup: any) => (

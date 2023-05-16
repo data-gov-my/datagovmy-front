@@ -141,7 +141,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
     // query
     q_seat: "",
     s2_loading: false,
-    carousel: election,
     c_index: 0,
     modal_open: false,
     full_results: [],
@@ -340,7 +339,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
       chart: "full_result",
       type: "seats",
       election: data.election,
-      seat: data.carousel[data.c_index].seat,
+      seat: election[data.c_index].seat,
     })
       .then(({ data }) => {
         setData(
@@ -398,6 +397,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
           current={0}
         />
 
+        {/* Explore any election from Merdeka to the present! */}
+        {/* TODO: Refactor to the new design later */}
         <Section>
           <h4 className="text-center">{t("election.section_1")}</h4>
           <div className={clx("fixed right-0 top-16 z-10 lg:hidden")}>
@@ -620,7 +621,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
               </Tabs.Panel>
             ))}
           </Tabs>
-          <div className="dark:border-t-outlineHover-dark border-t py-12 lg:grid lg:grid-cols-12">
+        </Section>
+
+        {/* View the full ballot for a specific seat */}
+        <Section>
+          <div className="lg:grid lg:grid-cols-12">
             <div className="space-y-12 lg:col-span-10 lg:col-start-2">
               <div className="space-y-6">
                 <h4 className="text-center">{t("election.section_2")}</h4>
@@ -658,7 +663,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                     </div>
                   }
                   isLoading={data.s1_loading}
-                  items={data.carousel.map((item: any, index: number) => (
+                  items={election.map((item: any, index: number) => (
                     <div
                       key={index}
                       className={clx(
@@ -720,42 +725,42 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ election, 
                 <ElectionCard
                   open={data.modal_open}
                   onChange={(index: number) =>
-                    index < data.carousel.length && index >= 0 ? setData("c_index", index) : null
+                    index < election.length && index >= 0 ? setData("c_index", index) : null
                   }
                   onClose={() => setData("modal_open", false)}
                   onNext={() =>
-                    data.c_index === data.carousel.length
-                      ? null
-                      : setData("c_index", data.c_index + 1)
+                    data.c_index === election.length ? null : setData("c_index", data.c_index + 1)
                   }
                   onPrev={() => (data.c_index === 0 ? null : setData("c_index", data.c_index - 1))}
                   win={"won"}
                   election_name={data.election}
-                  date={DateTime.fromISO(data.carousel[data.c_index].date)
+                  date={DateTime.fromISO(election[data.c_index].date)
                     .setLocale(i18n.language)
                     .toLocaleString(DateTime.DATE_MED)}
                   title={
                     <div className="flex flex-col uppercase lg:flex-row lg:gap-2">
-                      <h5>{data.carousel[data.c_index].seat.split(",")[0]}</h5>
+                      <h5>{election[data.c_index].seat.split(",")[0]}</h5>
                       <span className="text-dim font-normal">
-                        {data.carousel[data.c_index].seat.split(",")[1]}
+                        {election[data.c_index].seat.split(",")[1]}
                       </span>
-                      <span>{results[data.carousel[data.c_index].result]}</span>
+                      <span>{results[election[data.c_index].result]}</span>
                     </div>
                   }
                   isLoading={data.s2_loading}
                   data={data.full_results}
                   votes={data.full_results_votes}
                   highlightedRow={data.full_results.findIndex(
-                    (r: Result) => r.name === data.carousel[data.c_index].name
+                    (r: Result) => r.name === election[data.c_index].name
                   )}
                   page={data.c_index}
-                  total={data.carousel.length}
+                  total={election.length}
                 />
               )}
             </div>
           </div>
         </Section>
+
+        {/* Election analysis */}
         <Section>
           <div className="pb-8 lg:grid lg:grid-cols-12 lg:pb-12">
             <div className="lg:col-span-10 lg:col-start-2">

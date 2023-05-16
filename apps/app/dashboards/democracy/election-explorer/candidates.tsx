@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useEffect } from "react";
+import { FunctionComponent, ReactNode, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/index";
 import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
@@ -6,7 +6,6 @@ import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { FullResult, Lost, Result, Won } from "@components/Chart/Table/ElectionTable";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
-import { OptionType } from "@components/types";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
@@ -14,7 +13,8 @@ import { get } from "@lib/api";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useFilter } from "@hooks/useFilter";
+import { useRouter } from "next/router";
+import type { Candidate, ElectionResource } from "./types";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -25,32 +25,25 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
   ssr: false,
 });
 
-interface ElectionCandidatesProps {
-  candidate: any;
-  query: any;
+interface ElectionCandidatesProps extends ElectionResource<Candidate> {
+  selection: string[];
 }
 
 const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = ({
-  candidate,
-  query,
+  elections,
+  selection,
+  params,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
+  const { push } = useRouter();
 
-  const results: { [key: string]: ReactNode } = {
+  const result_badge: { [key: string]: ReactNode } = {
     won: <Won desc={t("candidate.won")} />,
     won_uncontested: <Won desc={t("candidate.won_uncontested")} />,
     lost: <Lost desc={t("candidate.lost")} />,
     lost_deposit: <Lost desc={t("candidate.lost_deposit")} />,
   };
 
-  type Candidate = {
-    election_name: string;
-    date: string;
-    seat: string;
-    party: string;
-    votes: Record<string, number>;
-    result: string;
-  };
   const columnHelper = createColumnHelper<Candidate>();
   const columns: ColumnDef<Candidate, any>[] = [
     columnHelper.accessor("election_name", {
@@ -79,7 +72,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     columnHelper.accessor("result", {
       id: "result",
       header: t("result"),
-      cell: (info: any) => results[info.getValue()],
+      cell: (info: any) => result_badge[info.getValue()],
     }),
     columnHelper.display({
       id: "fullResult",
@@ -89,8 +82,8 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           <FullResult
             desc={t("full_result")}
             onClick={() => {
-              setData("modal_open", true);
-              setData("index", row.index);
+              setData("table_index", row.index);
+              fetchResult(row.index);
             }}
           />
         );
@@ -99,93 +92,86 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   ];
 
   const { data, setData } = useData({
-    tabs: 0,
-    // Placeholder for Combobox
-    p_candidate: "",
-    candidate_list: [],
-
-    // Query for Table
-    q_candidate: query.name ? query.name : "Tunku Abdul Rahman Putra Al-Haj",
-    type: query.type ? query.type : "parlimen",
+    candidate: params.candidate_name,
     loading: false,
-    data: candidate,
 
-    // Election full result
     modal_loading: false,
     modal_open: false,
     full_results: [],
-    index: 0,
+    tab_index: 0, // parlimen = 0; dun = 1
+    table_index: 0,
   });
 
-  const { setFilter } = useFilter({
-    name: query.name,
-    type: query.type,
-  });
-
-  const CANDIDATE_OPTIONS: Array<OptionType> =
-    data.candidate_list &&
-    data.candidate_list.map((key: string) => ({
-      label: key,
-      value: key,
-    }));
-
-  useEffect(() => {
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      dropdown: "candidate_list",
-    })
-      .then(({ data }) => {
-        setData("candidate_list", data);
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  }, []);
-
-  useEffect(() => {
+  const navigateToCandidate = (name?: string) => {
+    if (!name) return;
     setData("loading", true);
-    setFilter("name", data.q_candidate);
-    setFilter("type", data.type);
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "candidates",
-      name: data.q_candidate,
-      type: data.type,
-    })
-      .then(({ data }) => {
-        setData(
-          "data",
-          data.sort(
-            (a: Candidate, b: Candidate) => Number(new Date(b.date)) - Number(new Date(a.date))
-          )
-        );
-      })
-      .catch(e => {
-        console.error(e);
-      })
-      .then(() => setData("loading", false));
-  }, [data.q_candidate, data.type]);
+    setData("candidate", name);
 
-  useEffect(() => {
+    push(`${routes.ELECTION_EXPLORER}/candidates/${encodeURIComponent(name)}`, undefined, {
+      scroll: false,
+      locale: i18n.language,
+    }).then(() => setData("loading", false));
+  };
+
+  const fetchResult = (rowIndex: number) => {
+    setData("modal_open", true);
     setData("modal_loading", true);
+
+    const type = data.tab_index === 0 ? "parlimen" : "dun";
+
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
       type: "candidates",
-      election: data.data[data.index].election_name,
-      seat: data.data[data.index].seat,
+      election: elections[type][rowIndex].election_name,
+      seat: elections[type][rowIndex].seat,
     })
       .then(({ data }) => {
         setData(
           "full_results",
           data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
         );
+        setData("modal_loading", false);
       })
       .catch(e => {
         console.error(e);
-      })
-      .then(() => setData("modal_loading", false));
-  }, [data.index, data.modal_open]);
+      });
+  };
+
+  const CANDIDATE_OPTIONS = selection.map((key: string) => {
+    return { label: key, value: key };
+  });
+
+  const election_result = useMemo<{
+    name: string;
+    result: string;
+    area: string;
+    state: string;
+    date: string;
+    total: number;
+  }>(() => {
+    const election = data.tab_index === 0 ? elections.parlimen : elections.dun;
+    if (election.length <= 0)
+      return {
+        name: "",
+        result: "",
+        area: "",
+        state: "",
+        date: "",
+        total: 0,
+      };
+    const [area, state] = election[data.table_index].seat.split(",");
+    return {
+      name: election[data.table_index].election_name,
+      result: election[data.table_index].result,
+      area: area,
+      state: state,
+      date: DateTime.fromISO(election[data.table_index].date)
+        .setLocale(i18n.language)
+        .toLocaleString(DateTime.DATE_MED),
+      total: election.length,
+    };
+  }, [data.tab_index, data.table_index]);
 
   return (
     <>
@@ -238,14 +224,11 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                     placeholder={t("candidate.search_candidate")}
                     options={CANDIDATE_OPTIONS}
                     selected={
-                      data.p_candidate
-                        ? CANDIDATE_OPTIONS.find(e => e.value === data.p_candidate.value)
+                      data.candidate
+                        ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate)
                         : null
                     }
-                    onChange={e => {
-                      if (e) setData("q_candidate", e.value);
-                      setData("p_candidate", e);
-                    }}
+                    onChange={selected => navigateToCandidate(selected?.value)}
                   />
                 </div>
               </div>
@@ -253,25 +236,24 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 title={
                   <div className="text-base font-bold">
                     {t("candidate.title")}
-                    <span className="text-primary">{data.q_candidate}</span>
+                    <span className="text-primary">{data.candidate}</span>
                   </div>
                 }
-                current={data.tabs}
+                current={data.tab_index}
                 onChange={index => {
-                  setData("tabs", index);
-                  setData("type", index === 0 ? "parlimen" : "dun");
+                  setData("tab_index", index);
                 }}
                 className="pb-6"
               >
                 <Panel name={t("parliament_elections")}>
                   <ElectionTable
-                    data={data.data}
+                    data={elections.parlimen}
                     columns={columns}
                     isLoading={data.loading}
                     empty={
                       <p>
                         {t("candidate.no_data", {
-                          name: data.q_candidate,
+                          name: data.candidate,
                           context: "parliament",
                         })}
                       </p>
@@ -280,13 +262,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 </Panel>
                 <Panel name={t("state_elections")}>
                   <ElectionTable
-                    data={data.data}
+                    data={elections.dun}
                     columns={columns}
                     isLoading={data.loading}
                     empty={
                       <p>
                         {t("candidate.no_data", {
-                          name: data.q_candidate,
+                          name: data.candidate,
                           context: "dun",
                         })}
                       </p>
@@ -299,35 +281,36 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           {data.modal_open && (
             <ElectionCard
               open={data.modal_open}
-              onChange={(index: number) =>
-                index < data.data.length && index >= 0 ? setData("index", index) : null
-              }
               onClose={() => setData("modal_open", false)}
-              onNext={() =>
-                data.index === data.data.length ? null : setData("index", data.index + 1)
-              }
-              onPrev={() => (data.index === 0 ? null : setData("index", data.index - 1))}
-              win={data.data[data.index].result}
-              election_name={data.data[data.index].election_name}
-              date={DateTime.fromISO(data.data[data.index].date)
-                .setLocale(i18n.language)
-                .toLocaleString(DateTime.DATE_MED)}
+              onChange={(index: number) => {
+                setData("table_index", index);
+                fetchResult(index);
+              }}
+              onNext={() => {
+                setData("table_index", data.table_index + 1);
+                fetchResult(data.table_index + 1);
+              }}
+              onPrev={() => {
+                setData("table_index", data.table_index - 1);
+                fetchResult(data.table_index - 1);
+              }}
+              win={election_result.result}
+              election_name={election_result.name}
+              date={election_result.date}
               title={
-                <div className="flex flex-col uppercase md:flex-row md:gap-2">
-                  <h5>{data.data[data.index].seat.split(",")[0]}</h5>
-                  <span className="text-dim font-normal">
-                    {data.data[data.index].seat.split(",")[1]}
-                  </span>
-                  <span>{results[data.data[data.index].result]}</span>
+                <div className="flex w-full justify-between pr-10">
+                  <div className="flex flex-col uppercase md:flex-row md:gap-2">
+                    <h5>{election_result.area}</h5>
+                    <span className="text-dim text-lg font-normal">{election_result.state}</span>
+                  </div>
+                  {result_badge[election_result.result]}
                 </div>
               }
               isLoading={data.modal_loading}
               data={data.full_results}
-              highlightedRow={data.full_results.findIndex(
-                (r: Result) => r.name === data.q_candidate
-              )}
-              page={data.index}
-              total={data.data.length}
+              highlightedRow={data.full_results.findIndex((r: Result) => r.name === data.candidate)}
+              page={data.table_index}
+              total={election_result.total}
             />
           )}
         </Section>

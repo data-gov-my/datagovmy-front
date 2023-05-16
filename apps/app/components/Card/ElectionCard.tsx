@@ -83,24 +83,29 @@ const Card: FunctionComponent<CardProps> = ({
                     "w-full max-w-4xl transform overflow-hidden rounded-xl bg-white px-3 py-6 text-left align-middle shadow-xl transition-all dark:bg-black md:px-6"
                   )}
                 >
-                  <Dialog.Title as="h5" className="flex flex-row">
-                    <div>{title && typeof title === "string" ? <span>{title}</span> : title}</div>
-                  </Dialog.Title>
-                  <button
-                    className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-2 top-2 h-12 w-12 rounded-full"
-                    onClick={() => {
-                      onClose();
-                      setIsOpen(false);
-                    }}
+                  <Dialog.Title
+                    as="div"
+                    className="flex w-full flex-row items-center justify-between"
                   >
-                    <XMarkIcon className="text-dim absolute right-3 top-3 h-6 w-6" />
-                  </button>
+                    {title && typeof title === "string" ? <h5>{title}</h5> : title}
+                    <button
+                      className="hover:bg-washed dark:hover:bg-washed-dark top-6.5 group absolute right-6 h-8 w-8 rounded-full"
+                      onClick={() => {
+                        onClose();
+                        setIsOpen(false);
+                      }}
+                    >
+                      <XMarkIcon className="text-dim mx-auto h-6 w-6" />
+                    </button>
+                  </Dialog.Title>
+
                   <div className="space-y-6">
                     <div className="space-x-3 pt-2">
                       {date ? <span className="text-dim">{date}</span> : <></>}
                       <span className="uppercase">{num ? t(e).concat("-" + num) : t(e)}</span>
                     </div>
                     <ElectionTable
+                      className="max-h-96 w-full overflow-y-auto"
                       data={data}
                       columns={columns}
                       isLoading={isLoading}

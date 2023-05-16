@@ -37,7 +37,7 @@ const ComboBox = <L extends string | number = string, V = string>({
       ? options.slice(0, 15)
       : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
           0,
-          15
+          50
         );
 
   return (
