@@ -32,7 +32,7 @@ import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
 
 import { Chart } from "react-chartjs-2";
-import { numFormat } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import "chartjs-adapter-luxon";
 import { ChartCrosshairOption } from "@lib/types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -454,7 +454,7 @@ export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
     3: "grid-cols-3",
   };
   return (
-    <div className={`grid w-full ${cols[data.length] ?? "grid-cols-3"} ${className}`}>
+    <div className={clx("flex flex-row space-x-8", className)}>
       {data.map(({ title, value, tooltip }: StatProps, index) => (
         <div key={`${title}_${value}`}>
           <p className="text-dim text-sm">{title}</p>
