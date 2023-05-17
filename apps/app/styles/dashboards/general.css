@@ -109,3 +109,135 @@
   left: 0;
   display: flex;
 }
+
+/* FLOATING ICONS STYLES */
+.atom1-rotate {
+  transform: rotate(-45deg);
+}
+
+.atom2-rotate {
+  transform: rotate(-119.89deg);
+}
+
+.bar1-rotate {
+  transform: rotate(-6.1deg);
+}
+
+.bar2-rotate {
+  transform: rotate(16deg);
+}
+
+.bar3-rotate {
+  transform: rotate(7.73deg);
+}
+
+.line1-rotate {
+  transform: rotate(-10.44deg);
+}
+
+.line2-rotate {
+  transform: rotate(17.13deg);
+}
+
+.pie1-rotate {
+  transform: rotate(-167.73deg);
+}
+
+.pie3-rotate {
+  transform: rotate(-138.9deg);
+}
+
+.atom1-float {
+  position: absolute;
+  top: 132px;
+  left: 416px;
+  opacity: 0.8;
+  animation: bounce 3s infinite;
+}
+
+.atom2-float {
+  position: absolute;
+  top: 643px;
+  left: 1155px;
+  opacity: 0.4;
+  animation: bounce 4s infinite;
+}
+
+.bar1-float {
+  position: absolute;
+  top: 588px;
+  left: 830px;
+  opacity: 0.3;
+  filter: blur(3.5px);
+  animation: bounce 4s infinite;
+}
+
+.bar2-float {
+  position: absolute;
+  top: 184px;
+  left: 756px;
+  opacity: 0.8;
+  animation: bounce 5s infinite;
+}
+
+.bar3-float {
+  position: absolute;
+  top: 314px;
+  left: 6px;
+  opacity: 0.3;
+  animation: bounce 4s infinite;
+}
+
+.line1-float {
+  position: absolute;
+  top: 615px;
+  left: 174px;
+  opacity: 0.8;
+  animation: bounce 3s infinite;
+}
+
+.line2-float {
+  position: absolute;
+  top: 69px;
+  left: 1214px;
+  opacity: 0.4;
+  animation: bounce 5s infinite;
+}
+
+.pie1-float {
+  position: absolute;
+  top: 355px;
+  left: 1407px;
+  opacity: 0.5;
+  filter: blur(3.5px);
+  animation: bounce 4s infinite;
+}
+
+.pie2 {
+  position: absolute;
+  top: 100px;
+  left: 114px;
+  opacity: 0.8;
+  filter: blur(2px);
+  animation: bounce 4s infinite;
+}
+
+.pie3-float {
+  position: absolute;
+  top: 599px;
+  left: 489px;
+  opacity: 0.8;
+  animation: bounce 4s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-20%);
+    animation-timing-function: ease-in-out;
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: ease-in-out;
+  }
+}
