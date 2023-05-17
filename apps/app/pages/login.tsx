@@ -18,7 +18,7 @@ const Login: Page = () => {
     e.preventDefault();
     setError("");
 
-    post("/api/authorize", { password }, "local")
+    post("/api/authorize", { password }, `https://${window.location.hostname}`)
       .then(response => {
         if (response.data.authorized) router.reload();
       })
