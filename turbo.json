@@ -5,6 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "env": [
+        "AUTH_TOKEN",
         "REVALIDATE_TOKEN",
         "NEXT_PUBLIC_GA_TAG",
         "NEXT_PUBLIC_API_URL",
