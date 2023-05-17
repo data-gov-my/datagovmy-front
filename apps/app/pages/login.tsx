@@ -3,7 +3,9 @@ import Container from "@components/Container";
 import Input from "@components/Input";
 import Metadata from "@components/Metadata";
 import { post } from "@lib/api";
+import { withi18n } from "@lib/decorators";
 import { Page } from "@lib/types";
+import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
@@ -27,11 +29,11 @@ const Login: Page = () => {
 
   return (
     <div>
-      <Metadata title="Polis checkpoint. Lesen mana lesen" keywords={""} />
+      <Metadata title="Polis checkpoint 👮‍♂️" keywords={""} />
 
       <Container className="min-h-[76vh] pt-7 text-black">
-        <form action="/api/authorize" onSubmit={submit}>
-          <div className="mx-auto max-w-sm">
+        <form onSubmit={submit}>
+          <div className="mx-auto max-w-sm space-y-2">
             <Input
               type="password"
               label="Password"
@@ -41,7 +43,7 @@ const Login: Page = () => {
             />
 
             <Button type="submit" className="btn btn-primary ml-auto">
-              Sign in
+              <span>Sign in</span>
             </Button>
           </div>
         </form>
@@ -49,5 +51,18 @@ const Login: Page = () => {
     </div>
   );
 };
+
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
+  return {
+    props: {
+      meta: {
+        id: "login",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
+    },
+  };
+});
 
 export default Login;
