@@ -1,4 +1,5 @@
 import Label, { LabelProps } from "@components/Label";
+import { clx } from "@lib/helpers";
 import { FunctionComponent, HTMLInputTypeAttribute, ReactElement, useEffect, useRef } from "react";
 
 interface InputProps extends LabelProps {
@@ -13,6 +14,7 @@ interface InputProps extends LabelProps {
   max?: string;
   required?: boolean;
   autoFocus?: boolean;
+  spellCheck?: boolean;
   validation?: string;
   disabled?: boolean;
 }
@@ -29,6 +31,7 @@ const Input: FunctionComponent<InputProps> = ({
   icon,
   required = false,
   autoFocus = false,
+  spellCheck = false,
   validation = "",
   onChange,
   onKeyDown,
@@ -57,14 +60,17 @@ const Input: FunctionComponent<InputProps> = ({
         ref={ref}
         autoFocus={autoFocus}
         disabled={disabled}
+        spellCheck={spellCheck}
         type={type as HTMLInputTypeAttribute}
         min={min}
         max={max}
-        className={[
-          "border-outline placeholder:text-dim focus:border-outlineHover focus:ring-dim dark:border-washed-dark dark:focus:border-outlineHover-dark rounded-md outline-none focus:outline-none focus:ring-0 dark:bg-black",
+        className={clx(
+          "placeholder:text-dim focus:ring-dim rounded-md outline-none focus:outline-none focus:ring-0 dark:bg-black",
+          "focus:border-primary dark:focus:border-primary-dark focus:border-2",
           icon ? "pl-10" : "",
-          className,
-        ].join(" ")}
+          validation ? "border-danger border-2" : "border-outline dark:border-washed-dark",
+          className
+        )}
         placeholder={placeholder}
         value={value}
         required={required}
