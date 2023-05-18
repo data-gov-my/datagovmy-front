@@ -185,7 +185,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
             {
               name: t("elections"),
               icon: <SPRIconSolid className="-mb-1" />,
-              url: routes.ELECTION_EXPLORER,
+              url: routes.ELECTION_EXPLORER.concat("/elections"),
             },
             {
               name: t("candidates"),
