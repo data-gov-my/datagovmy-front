@@ -5,12 +5,18 @@ import axios, { AxiosResponse } from "axios";
  * @param base "api" | "local"
  * @returns Base of URL
  *
- * @example "api" -> "https://[NEXT_PUBLIC_API_URL]/"
- * @example "local" -> "https://[NEXT_PUBLIC_APP_URL]/""
+ * @example "api"   -> "https://[NEXT_PUBLIC_API_URL]/"
+ * @example "local" -> "https://[NEXT_PUBLIC_APP_URL]/"
  */
-const instance = (base: "api" | "local" = "api") => {
+const instance = (base: "api" | "local" | string = "api") => {
+  const baseURL =
+    base === "api"
+      ? process.env.NEXT_PUBLIC_API_URL
+      : base === "local"
+      ? process.env.NEXT_PUBLIC_APP_URL
+      : base;
   return axios.create({
-    baseURL: base === "api" ? process.env.NEXT_PUBLIC_API_URL : process.env.NEXT_PUBLIC_APP_URL,
+    baseURL,
     headers: {
       Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
     },
@@ -27,7 +33,7 @@ const instance = (base: "api" | "local" = "api") => {
 export const get = (
   route: string,
   params?: Record<string, any>,
-  base: "api" | "local" = "api"
+  base: "api" | "local" | string = "api"
 ): Promise<AxiosResponse> => {
   return new Promise((resolve, reject) => {
     instance(base)
@@ -47,7 +53,7 @@ export const get = (
 export const post = (
   route: string,
   payload?: any,
-  base: "api" | "local" = "api"
+  base: "api" | "local" | string = "api"
 ): Promise<AxiosResponse> => {
   return new Promise((resolve, reject) => {
     instance(base)
