@@ -11,7 +11,7 @@ import { generateSchema } from "@lib/schema/election-explorer";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 
 /**
- * Election Explorer Dashboard
+ * Election Explorer - Election Analysis
  * @overview Status: In-development
  */
 

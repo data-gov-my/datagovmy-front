@@ -15,6 +15,12 @@ import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ComboBox from "@components/Combobox";
 import { SPRIconSolid } from "@components/Icon/agency";
 import { generateSchema } from "@lib/schema/election-explorer";
+import Tooltip from "@components/Tooltip";
+
+/**
+ * Election Explorer - Ballot Seat
+ * @overview Status: In-development
+ */
 
 interface BallotSeatProps {
   seats: Seat[];
@@ -52,7 +58,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
               y: data.votes.voter_turnout_perc,
             },
             {
-              x: "voter_rejected",
+              x: "rejected_votes",
               y: data.votes.votes_rejected_perc,
             },
           ],
@@ -223,9 +229,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                             <BarPerc
                               size="h-2.5 w-full"
                               key={item.x}
-                              label={item.x}
+                              label={
+                                <div className="flex items-center gap-1">
+                                  {t(`election.${item.x}`)}
+                                  <Tooltip tip={t(`tooltip.${item.x}`)} />
+                                </div>
+                              }
                               value={item.y}
-                              className="w-full space-y-1 text-sm"
+                              className="w-full space-y-1"
                             />
                           ))}
                         </div>

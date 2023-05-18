@@ -12,7 +12,6 @@ export const useWatch = (fn: Function, deps: DependencyList = [], runOnMount: bo
 
   useEffect(() => {
     if (!runOnMount && firstRender.current) {
-      console.log("uhhh");
       firstRender.current = false;
       return;
     }
