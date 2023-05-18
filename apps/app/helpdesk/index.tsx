@@ -21,7 +21,7 @@ import { FunctionComponent } from "react";
 interface HelpdeskProps {}
 
 const HelpdeskDashboard: FunctionComponent<HelpdeskProps> = () => {
-  const { t } = useTranslation(["community", "common"]);
+  const { t } = useTranslation(["helpdesk", "common"]);
   const { data, setData } = useData({
     name: "",
     email: "",
