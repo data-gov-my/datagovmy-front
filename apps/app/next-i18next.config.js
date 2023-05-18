@@ -39,6 +39,7 @@ const namespace = [
   "dashboard-sekolahku",
   "dashboard-social-security",
   "dashboard-weather-and-climate",
+  "helpdesk",
 ];
 
 /** @type {import('next-i18next').UserConfig} */

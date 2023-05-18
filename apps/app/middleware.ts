@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 
 // Triggers on relevant pages. Middleware to be removed on launch
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/data-catalogue/:path*"],
+  matcher: ["/", "/dashboard/:path*", "/data-catalogue/:path*", "/helpdesk"],
 };
 
 export function middleware(request: NextRequest) {
