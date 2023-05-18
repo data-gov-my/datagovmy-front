@@ -1,4 +1,4 @@
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 import Card from "@components/Card";
 import Chips from "@components/Chips";
 import { JPNIcon } from "@components/Icon/agency";

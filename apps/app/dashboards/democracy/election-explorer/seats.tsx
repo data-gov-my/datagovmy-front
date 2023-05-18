@@ -1,21 +1,22 @@
-import { FunctionComponent, useMemo } from "react";
-import dynamic from "next/dynamic";
+import ElectionCard from "@components/Card/ElectionCard";
 import { FullResult, Result } from "@components/Chart/Table/ElectionTable";
-import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import { AgencyBadge, Container, Hero, Section } from "@components/index";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
+import { AgencyBadge, Container, Hero, Section } from "@components/index";
 import { OptionType } from "@components/types";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { routes } from "@lib/routes";
-import { DateTime } from "luxon";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useMemo } from "react";
+
+import { toDate } from "@lib/helpers";
+import { generateSchema } from "@lib/schema/election-explorer";
 import { useRouter } from "next/router";
-import { ElectionResource, ElectionType, Seat } from "./types";
+import { BaseResult, ElectionResource, ElectionType, Seat } from "./types";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -27,10 +28,10 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
 });
 
 interface ElectionSeatsProps extends ElectionResource<Seat> {
-  selection: {
+  selection: Array<{
     seat_name: string;
     type: ElectionType;
-  }[];
+  }>;
 }
 
 const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
@@ -40,52 +41,6 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { push } = useRouter();
-
-  const columnHelper = createColumnHelper<Seat>();
-  const columns: ColumnDef<Seat, any>[] = [
-    columnHelper.accessor("election_name", {
-      id: "election_name",
-      header: t("election_name"),
-      cell: (info: any) => {
-        const [e, num] = getElectionTrans(info.getValue());
-        return num ? t(e).concat("-" + num) : t(e);
-      },
-    }),
-    columnHelper.accessor("seat", {
-      id: "seat",
-      header: t("constituency"),
-      cell: (info: any) => info.getValue().split(",")[0],
-    }),
-    columnHelper.accessor("party", {
-      id: "party",
-      header: t("winning_party"),
-      cell: (info: any) => <div className="relative pl-10">{info.getValue()}</div>,
-    }),
-    columnHelper.accessor("name", {
-      id: "candidate_name",
-      header: t("candidate_name"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.accessor("majority", {
-      id: "majority",
-      header: t("majority"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.display({
-      id: "fullResult",
-      cell: ({ row }) => {
-        return (
-          <FullResult
-            desc={t("full_result")}
-            onClick={() => {
-              setData("table_index", row.index);
-              fetchResult(row.index);
-            }}
-          />
-        );
-      },
-    }),
-  ];
 
   const { data, setData } = useData({
     seat: params?.seat_name,
@@ -160,9 +115,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
       name: elections[data.table_index].election_name,
       area,
       state,
-      date: DateTime.fromISO(elections[data.table_index].date)
-        .setLocale(i18n.language)
-        .toLocaleString(DateTime.DATE_MED),
+      date: toDate(elections[data.table_index].date, "dd MMM yyyy", i18n.language),
       total: elections.length,
     };
   }, [data.table_index]);
@@ -233,7 +186,37 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                   </div>
                 }
                 data={elections}
-                columns={columns}
+                columns={generateSchema<Seat>([
+                  {
+                    key: "election_name",
+                    id: "election_name",
+                    header: t("election_name"),
+                  },
+                  { key: "seat", id: "seat", header: t("constituency") },
+                  {
+                    key: "party",
+                    id: "party",
+                    header: t("winning_party"),
+                  },
+                  { key: "name", id: "name", header: t("candidate_name") },
+                  { key: "majority", id: "majority", header: t("majority") },
+                  {
+                    key: "fulllResult" as any,
+                    id: "fullResult",
+                    header: "",
+                    cell: ({ row }) => {
+                      return (
+                        <FullResult
+                          desc={t("full_result")}
+                          onClick={() => {
+                            setData("table_index", row.index);
+                            fetchResult(row.index);
+                          }}
+                        />
+                      );
+                    },
+                  },
+                ])}
                 isLoading={data.loading}
               />
             </div>
@@ -256,6 +239,19 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
               }}
               win={undefined}
               election_name={election_result.name}
+              columns={generateSchema<BaseResult>([
+                { key: "name", id: "name", header: t("candidate_name") },
+                {
+                  key: "party",
+                  id: "party",
+                  header: t("party_name"),
+                },
+                {
+                  key: "votes",
+                  id: "votes",
+                  header: t("votes_won"),
+                },
+              ])}
               date={election_result.date}
               title={
                 <div className="flex flex-col uppercase md:flex-row md:gap-2">

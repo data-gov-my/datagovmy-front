@@ -1,4 +1,3 @@
-import At from "@components/At";
 import Card from "@components/Card";
 import ArrowUpRightIcon from "@heroicons/react/24/solid/ArrowUpRightIcon";
 import { useTranslation } from "next-i18next";
@@ -19,7 +18,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <a href={link} target="_blank">
+    <a href={link} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
       <Card className="border-outline hover:border-outlineHover dark:border-washed-dark dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark group -mx-3 flex w-screen items-center border-y bg-white px-3 py-1.5 transition-[padding] duration-200 hover:pr-10 dark:bg-black md:m-0 md:w-fit md:rounded-full md:border md:py-1 md:pl-2 md:pr-6">
         <div className="relative flex w-full items-center gap-2">
           {/* Agency icon */}

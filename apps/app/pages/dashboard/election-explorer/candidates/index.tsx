@@ -47,11 +47,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
           agency: "SPR",
         },
         params: { candidate_name: name },
-        selection:
-          dropdown.data.map((key: string) => ({
-            label: key,
-            value: key,
-          })) ?? [],
+        selection: dropdown.data ?? [],
         elections: {
           parlimen: candidate.data.parlimen.reverse(),
           dun: candidate.data.dun.reverse(),

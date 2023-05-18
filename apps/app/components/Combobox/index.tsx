@@ -42,7 +42,7 @@ const ComboBox = <L extends string | number = string, V = string>({
 
   return (
     <Combobox value={selected} onChange={onChange}>
-      <div className="relative w-full rounded-full">
+      <div className="relative w-full overflow-visible rounded-full">
         <div
           className="border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none 
         overflow-hidden rounded-full border bg-white text-left text-base shadow-sm focus:outline-none focus-visible:ring-0 dark:bg-black"
@@ -92,10 +92,7 @@ const ComboBox = <L extends string | number = string, V = string>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options
-            className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm"
-            static
-          >
+          <Combobox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm">
             {loading ? (
               <div className="text-dim cursor-deault relative flex select-none flex-row items-center gap-2 px-4 py-2	">
                 <Spinner loading={loading} /> {t("common:placeholder.loading")}

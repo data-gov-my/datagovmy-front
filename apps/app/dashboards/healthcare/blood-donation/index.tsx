@@ -1,4 +1,4 @@
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 import BarMeter from "@components/Chart/BarMeter";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";

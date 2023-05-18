@@ -1,38 +1,48 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
-import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer";
+import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer/elections";
 import { withi18n } from "@lib/decorators";
 
 const ElectionExplorer: Page = ({
-  election,
-  query,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  seats,
+  params,
+  table,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard election={election} query={query} />
+      <ElectionExplorerDashboard params={params} seats={seats} table={table} />
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withi18n(
-  "dashboard-election-explorer",
-  async ({ query }) => {
-    const { data: election } = await get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "overall_seat",
-      type: "parlimen",
-      election: "GE-15",
-      state: "mys",
+export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
+  try {
+    const [election, state] = ["GE-15", "mys"];
+    const [seats, table] = await Promise.all([
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "overall_seat",
+        election,
+        state,
+      }),
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "full_result",
+        type: "party",
+        election,
+        state,
+      }),
+    ]).catch(e => {
+      throw new Error("Invalid seat name. Message: " + e);
     });
 
     return {
-      notFound: false,
       props: {
         meta: {
           id: "dashboard-election-explorer",
@@ -40,11 +50,15 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           category: "democracy",
           agency: "SPR",
         },
-        query: query ?? {},
-        election: election,
+        params: { election, state },
+        seats: seats.data,
+        table: table.data,
       },
     };
+  } catch (error: any) {
+    console.error(error.message);
+    return { notFound: true };
   }
-);
+});
 
 export default ElectionExplorer;

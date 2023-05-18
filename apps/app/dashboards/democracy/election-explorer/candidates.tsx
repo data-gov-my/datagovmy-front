@@ -1,10 +1,10 @@
-import { FunctionComponent, ReactNode, useMemo } from "react";
+import { FunctionComponent, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/index";
-import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
+import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import { FullResult, Lost, Result, Won } from "@components/Chart/Table/ElectionTable";
+import { FullResult, Result } from "@components/Chart/Table/ElectionTable";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
@@ -12,9 +12,10 @@ import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { routes } from "@lib/routes";
 import { DateTime } from "luxon";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useRouter } from "next/router";
-import type { Candidate, ElectionResource } from "./types";
+import type { BaseResult, Candidate, ElectionResource, ElectionResult } from "./types";
+import { generateSchema } from "@lib/schema/election-explorer";
+import { ResultBadge } from "@components/Badge/election";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -36,45 +37,14 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { push } = useRouter();
-
-  const result_badge: { [key: string]: ReactNode } = {
-    won: <Won desc={t("candidate.won")} />,
-    won_uncontested: <Won desc={t("candidate.won_uncontested")} />,
-    lost: <Lost desc={t("candidate.lost")} />,
-    lost_deposit: <Lost desc={t("candidate.lost_deposit")} />,
-  };
-
-  const columnHelper = createColumnHelper<Candidate>();
-  const columns: ColumnDef<Candidate, any>[] = [
-    columnHelper.accessor("election_name", {
-      id: "election_name",
-      header: t("election_name"),
-      cell: (info: any) => {
-        const [e, num] = getElectionTrans(info.getValue());
-        return num ? t(e).concat("-" + num) : t(e);
-      },
-    }),
-    columnHelper.accessor("seat", {
-      id: "seat",
-      header: t("constituency"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.accessor("party", {
-      id: "party",
-      header: t("party_name"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.accessor("votes", {
-      id: "votes",
-      header: t("votes_won"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.accessor("result", {
-      id: "result",
-      header: t("result"),
-      cell: (info: any) => result_badge[info.getValue()],
-    }),
-    columnHelper.display({
+  const candidate_schema = generateSchema<Candidate>([
+    { key: "election_name", id: "election_name", header: t("election_name") },
+    { key: "seat", id: "seat", header: t("constituency") },
+    { key: "party", id: "party", header: t("party_name") },
+    { key: "votes", id: "votes", header: t("votes_won") },
+    { key: "result", id: "result", header: t("result") },
+    {
+      key: "fullResult" as any,
       id: "fullResult",
       header: "",
       cell: ({ row }) => {
@@ -88,8 +58,8 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           />
         );
       },
-    }),
-  ];
+    },
+  ]);
 
   const { data, setData } = useData({
     candidate: params.candidate_name,
@@ -144,7 +114,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
 
   const election_result = useMemo<{
     name: string;
-    result: string;
+    result: ElectionResult | undefined;
     area: string;
     state: string;
     date: string;
@@ -154,7 +124,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     if (election.length <= 0)
       return {
         name: "",
-        result: "",
+        result: undefined,
         area: "",
         state: "",
         date: "",
@@ -248,7 +218,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 <Panel name={t("parliament_elections")}>
                   <ElectionTable
                     data={elections.parlimen}
-                    columns={columns}
+                    columns={candidate_schema}
                     isLoading={data.loading}
                     empty={
                       <p>
@@ -263,7 +233,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 <Panel name={t("state_elections")}>
                   <ElectionTable
                     data={elections.dun}
-                    columns={columns}
+                    columns={candidate_schema}
                     isLoading={data.loading}
                     empty={
                       <p>
@@ -296,6 +266,23 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
               }}
               win={election_result.result}
               election_name={election_result.name}
+              columns={generateSchema<BaseResult>([
+                {
+                  key: "name",
+                  id: "name",
+                  header: t("candidate_name"),
+                },
+                {
+                  key: "party",
+                  id: "party",
+                  header: t("party_name"),
+                },
+                {
+                  key: "votes",
+                  id: "votes",
+                  header: t("votes_won"),
+                },
+              ])}
               date={election_result.date}
               title={
                 <div className="flex w-full justify-between pr-10">
@@ -303,7 +290,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                     <h5>{election_result.area}</h5>
                     <span className="text-dim text-lg font-normal">{election_result.state}</span>
                   </div>
-                  {result_badge[election_result.result]}
+                  <ResultBadge value={election_result.result} />
                 </div>
               }
               isLoading={data.modal_loading}

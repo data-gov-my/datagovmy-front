@@ -1,10 +1,9 @@
-import { FunctionComponent, useMemo } from "react";
-import dynamic from "next/dynamic";
-import { Trans } from "next-i18next";
-import { BarMeter, FullResult } from "@components/Chart/Table/ElectionTable";
-import ElectionCard, { getElectionTrans } from "@components/Card/ElectionCard";
+import ElectionCard from "@components/Card/ElectionCard";
+import { FullResult } from "@components/Chart/Table/ElectionTable";
 import ComboBox from "@components/Combobox";
+import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ImageWithFallback from "@components/ImageWithFallback";
+import ContainerTabs from "@components/Tabs/ContainerTabs";
 import {
   AgencyBadge,
   Container,
@@ -14,19 +13,19 @@ import {
   StateDropdown,
   Tabs,
 } from "@components/index";
-import { OptionType } from "@components/types";
+import type { OptionType } from "@components/types";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { CountryAndStates } from "@lib/constants";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { get } from "@lib/api";
-import { DateTime } from "luxon";
+import { CountryAndStates } from "@lib/constants";
+import { toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import ContainerTabs from "@components/Tabs/ContainerTabs";
-import { numFormat } from "@lib/helpers";
+import { generateSchema } from "@lib/schema/election-explorer";
+import { Trans } from "next-i18next";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { FunctionComponent, useMemo } from "react";
 import type { ElectionResource, Party } from "./types";
 
 /**
@@ -66,39 +65,25 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     full_results: [],
   });
 
-  const columnHelper = createColumnHelper<Party>();
-  const columns: ColumnDef<Party, any>[] = [
-    columnHelper.accessor("election_name", {
+  const party_schema = generateSchema<Party>([
+    {
+      key: "election_name",
       id: "election_name",
       header: t("election_name"),
-      cell: (info: any) => {
-        const [e, num] = getElectionTrans(info.getValue());
-        return num ? t(e).concat("-" + num) : t(e);
-      },
-    }),
-    columnHelper.accessor("seats", {
+    },
+    {
+      key: "seats",
       id: "seats",
       header: t("seats_won"),
-      cell: (info: any) => {
-        const seats = info.getValue();
-        return (
-          <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
-            <div>
-              <BarMeter perc={seats.perc} />
-            </div>
-            <p className="whitespace-nowrap">{`${
-              seats.won === 0 ? "0" : seats.won + "/" + seats.total
-            } ${seats.perc === 0 ? "(—)" : `(${numFormat(seats.perc, "compact", [1, 1])}%)`}`}</p>
-          </div>
-        );
-      },
-    }),
-    columnHelper.accessor("votes", {
+    },
+    {
+      key: "votes",
       id: "votes",
       header: t("votes_won"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.display({
+    },
+    {
+      key: "fullResult" as any,
+      header: "",
       id: "fullResult",
       cell: ({ row }) => {
         return (
@@ -111,44 +96,8 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
           />
         );
       },
-    }),
-  ];
-
-  const resultsColumnHelper = createColumnHelper<Party>();
-  const resultsColumns: ColumnDef<Party, any>[] = [
-    resultsColumnHelper.accessor("party", {
-      id: "party",
-      header: t("party_name"),
-      cell: (info: any) => info.getValue(),
-    }),
-    resultsColumnHelper.accessor("seats", {
-      id: "seats",
-      header: () => {
-        const election = elections.parlimen;
-        return data.table_index !== undefined
-          ? t("seats_won").concat(` / ${election[data.table_index].seats.total}`)
-          : t("seats_won");
-      },
-      cell: (info: any) => {
-        const seats = info.getValue();
-        return (
-          <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
-            <div>
-              <BarMeter perc={seats.perc} />
-            </div>
-            <p>{`${seats.won === 0 ? "0" : seats.won} ${
-              seats.perc === 0 ? "(—)" : `(${numFormat(seats.perc, "compact", [1, 1])}%)`
-            }`}</p>
-          </div>
-        );
-      },
-    }),
-    resultsColumnHelper.accessor("votes", {
-      id: "votes",
-      header: t("votes_won"),
-      cell: (info: any) => info.getValue(),
-    }),
-  ];
+    },
+  ]);
 
   const PARTY_OPTIONS: Array<OptionType> = selection.map(option => ({
     label: t(`${option}`),
@@ -204,17 +153,12 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     if (election.length <= 0)
       return {
         name: "",
-        result: "",
-        area: "",
-        state: "",
         date: "",
         total: 0,
       };
     return {
       name: election[data.table_index].election_name,
-      date: DateTime.fromISO(election[data.table_index].date)
-        .setLocale(i18n.language)
-        .toLocaleString(DateTime.DATE_MED),
+      date: toDate(election[data.table_index].date, "dd MMM yyyy", i18n.language),
       total: election.length,
     };
   }, [data.tab_index, data.table_index]);
@@ -309,7 +253,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 <Panel name={t("parliament_elections")}>
                   <ElectionTable
                     data={elections.parlimen}
-                    columns={columns}
+                    columns={party_schema}
                     isLoading={data.loading}
                     empty={
                       <Trans>
@@ -324,7 +268,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 <Panel name={t("state_elections")}>
                   <ElectionTable
                     data={elections.dun} // TODO: Replace with DUN later
-                    columns={columns}
+                    columns={party_schema}
                     isLoading={data.loading}
                     empty={
                       <Trans>
@@ -366,7 +310,23 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
               }
               isLoading={data.modal_loading}
               data={data.full_results}
-              columns={resultsColumns}
+              columns={generateSchema<Party>([
+                {
+                  key: "party",
+                  id: "party",
+                  header: t("party_name"),
+                },
+                {
+                  key: "seats",
+                  id: "seats",
+                  header: t("seats_won"),
+                },
+                {
+                  key: "votes",
+                  id: "votes",
+                  header: t("votes_won"),
+                },
+              ])}
               highlightedRow={data.full_results.findIndex((r: Party) => r.party === data.party)}
               page={data.table_index}
               total={election_result.total}
