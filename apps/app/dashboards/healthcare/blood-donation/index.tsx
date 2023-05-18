@@ -128,7 +128,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   const section2right = (
     <div>
       <Choropleth
-        className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
+        className="aspect-square w-auto rounded-b lg:h-[600px] lg:w-full"
         color="reds"
         data={{
           labels: choropleth_malaysia_blood_donation.data.x.map(
