@@ -22,6 +22,11 @@ const ElectionExplorer: Page = ({
   );
 };
 
+/**
+ * Path: /elections/{election}/{state?}
+ * election - required - eg. GE-15, GE-14
+ * state    - optional - eg. mlk,nsn,jhr
+ */
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],

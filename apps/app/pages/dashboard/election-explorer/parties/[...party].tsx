@@ -28,13 +28,7 @@ const ElectionParties: Page = ({
  */
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [
-      {
-        params: {
-          party: [],
-        },
-      },
-    ],
+    paths: [],
     fallback: "blocking",
   };
 };

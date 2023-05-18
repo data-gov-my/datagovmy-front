@@ -3,7 +3,6 @@ import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import Spinner from "@components/Spinner";
 import { ArrowsPointingOutIcon, FaceFrownIcon } from "@heroicons/react/24/outline";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx, numFormat, toDate } from "@lib/helpers";
 import {

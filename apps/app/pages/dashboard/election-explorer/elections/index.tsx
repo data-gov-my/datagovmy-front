@@ -6,7 +6,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer/elections";
 import { withi18n } from "@lib/decorators";
 
-const ElectionExplorer: Page = ({
+const ElectionExplorerIndex: Page = ({
   seats,
   params,
   table,
@@ -61,4 +61,4 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
   }
 });
 
-export default ElectionExplorer;
+export default ElectionExplorerIndex;
