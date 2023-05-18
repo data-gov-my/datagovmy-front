@@ -45,6 +45,12 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                 <Nav.Item title={"API Docs"} link="#" onClick={close} />
                 <Nav.Item title={"Articles"} link="#" onClick={close} />
                 <Nav.Item title={"Request Data"} link="#" onClick={close} />
+                <Nav.Item
+                  title={t("community")}
+                  key="/community"
+                  link="/community"
+                  onClick={close}
+                />
               </>
             )}
           </Nav>
