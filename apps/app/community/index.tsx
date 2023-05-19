@@ -15,7 +15,6 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
-import Image from "next/image";
 import { FunctionComponent } from "react";
 
 /**
@@ -106,11 +105,16 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
     });
 
   return (
-    <>
-      <div className="bg-gradient-radial to-background md:px-4.5 min-h-screen max-w-screen-2xl from-[#E2E8F0] px-3 pb-16 pt-16 dark:from-[#3F3F46] dark:to-black lg:grid lg:grid-cols-12 lg:px-6">
-        <div className="lg:col-span-10 lg:col-start-2">
-          <div className="flex h-full w-full flex-col items-center gap-6 lg:flex-row">
-            <div className="basis-3/5">
+    <div
+      className={clx(
+        "flex h-full min-h-screen w-full flex-col items-center",
+        "bg-gradient-radial to-background from-[#E2E8F0] dark:from-[#3F3F46] dark:to-black"
+      )}
+    >
+      <div className="md:px-4.5 flex min-h-screen max-w-screen-2xl flex-col px-3 pb-16 pt-16 lg:grid lg:grid-cols-12 lg:px-6">
+        <div className="flex flex-col justify-center lg:col-span-10 lg:col-start-2">
+          <div className="gap-6 lg:grid lg:grid-cols-2 xl:grid-cols-3">
+            <div className="flex h-full w-full flex-col justify-center lg:col-span-1 xl:col-span-2">
               <div className="flex flex-col space-y-6">
                 <p className="text-primary dark:text-primary-dark font-semibold uppercase">{`${t(
                   "cta"
@@ -121,8 +125,8 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                 </div>
               </div>
             </div>
-            <div className="z-10 w-full basis-2/5">
-              <Card className="border-outline dark:border-washed-dark flex h-fit flex-col justify-between space-y-6 rounded-xl border bg-white dark:bg-black">
+            <div className="z-20 col-span-1 flex w-full flex-col">
+              <Card className="border-outline dark:border-washed-dark flex h-fit flex-col space-y-6 rounded-xl border bg-white dark:bg-black">
                 {data.sent ? (
                   <div className="flex h-[300px] p-8">
                     <div className="flex flex-col self-center">
@@ -207,7 +211,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                           setData("valid_exp", false);
                           setData("experience", e.target.value);
                         }}
-                        rows={5}
+                        rows={6}
                       ></textarea>
                       {data.valid_exp && <p className="text-danger text-xs">{data.valid_exp}</p>}
                     </div>
@@ -216,9 +220,10 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                       onClick={() =>
                         validate().then(() => {
                           setData("loading", true);
-                          setTimeout(() => {}, 1000);
-                          setData("loading", false);
-                          setData("sent", true);
+                          setTimeout(() => {
+                            setData("loading", false);
+                            setData("sent", true);
+                          }, 1000);
                         })
                       }
                     >
@@ -239,19 +244,16 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
         <div className="bar1-float">
           <BarChartIcon transform="rotate(-6.1)" />
         </div>
-        <div className="pie1-float">
-          <PieChartIcon transform="rotate(-167.73) scale(1.1)" />
-        </div>
         <div className="line1-float">
           <LineChartIcon transform="rotate(-10.44)" />
         </div>
         <div className="bar2-float">
           <BarChartIcon transform="rotate(16)" />
         </div>
-        <div className="pie2-float">
+        <div className="pie1-float">
           <PieChartIcon transform="scale(0.75)" />
         </div>
-        <div className="pie3-float">
+        <div className="pie2-float">
           <PieChartIcon transform="rotate(-138.9) scale(0.75)" />
         </div>
         <div className="atom2-float">
@@ -264,7 +266,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
           <BarChartIcon transform="rotate(7.73)" />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -113,24 +113,24 @@
 /* FLOATING ICONS STYLES */
 .atom1-float {
   position: absolute;
-  top: 120px;
-  left: 562px;
+  left: calc(50% - 328px);
+  top: calc(50% - 221px);
   opacity: 0.8;
   animation: float 3s infinite;
 }
 
 .atom2-float {
   position: absolute;
-  top: 743px;
-  left: 1155px;
+  bottom: calc(50% - 368px);
+  right: calc(50% - 461px);
   opacity: 0.4;
   animation: float 4s infinite;
 }
 
 .bar1-float {
   position: absolute;
-  top: 587px;
-  left: 830px;
+  bottom: calc(50% - 141px);
+  right: calc(50% - 134px);
   opacity: 0.3;
   filter: blur(3.5px);
   animation: float 4s infinite;
@@ -138,58 +138,49 @@
 
 .bar2-float {
   position: absolute;
-  top: 176px;
-  left: 1367px;
+  top: calc(50% - 313px);
+  right: calc(50% - 74px);
   opacity: 0.8;
   animation: float 5s infinite;
 }
 
 .bar3-float {
   position: absolute;
-  top: 314px;
-  left: 6px;
+  top: calc(50% - 76px);
+  left: calc(50% - 750px);
   opacity: 0.3;
   animation: float 4s infinite;
 }
 
 .line1-float {
   position: absolute;
-  top: 719px;
-  left: 174px;
+  bottom: calc(50% - 380px);
+  left: calc(50% - 582px);
   opacity: 0.8;
   animation: float 3s infinite;
 }
 
 .line2-float {
   position: absolute;
-  top: 67px;
-  left: 1101px;
+  top: calc(50% - 422px);
+  right: calc(50% - 410px);
   opacity: 0.4;
   animation: float 5s infinite;
 }
 
 .pie1-float {
   position: absolute;
-  top: 515px;
-  left: 1449px;
-  opacity: 0.5;
-  filter: blur(3.5px);
-  animation: float 4s infinite;
-}
-
-.pie2-float {
-  position: absolute;
-  top: 100px;
-  left: 164px;
+  top: calc(50% - 289px);
+  left: calc(50% - 592px);
   opacity: 0.8;
   filter: blur(2px);
   animation: float 4s infinite;
 }
 
-.pie3-float {
+.pie2-float {
   position: absolute;
-  top: 649px;
-  left: 489px;
+  top: calc(50% + 270px);
+  left: calc(50% - 267px);
   opacity: 0.8;
   animation: float 4s infinite;
 }
