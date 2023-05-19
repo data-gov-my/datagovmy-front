@@ -23,7 +23,6 @@ type CommonProps<L, V> = {
   label?: string;
   sublabel?: ReactNode;
   darkMode?: boolean;
-  shadow?: string;
   anchor?: "left" | "right" | string;
   enableSearch?: boolean;
   enableFlag?: boolean;
@@ -49,7 +48,7 @@ type ConditionalProps<L, V> =
 type DropdownProps<L, V> = CommonProps<L, V> & ConditionalProps<L, V> & LabelProps;
 
 const Dropdown = <L extends string | number | ReactElement | ReactElement[] = string, V = string>({
-  className = "lg:flex-row ",
+  className = "lg:flex-row",
   disabled = false,
   multiple = false,
   icon,
@@ -64,7 +63,6 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
   width = "w-full lg:w-fit",
   label,
   sublabel,
-  shadow,
   darkMode = false,
   enableFlag = false,
   enableClear = false,
@@ -104,7 +102,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
   }, [options, search]);
 
   return (
-    <div className={["space-y-3", shadow, width].join(" ")}>
+    <div className={clx("space-y-3", width)}>
       {label && <Label label={label}></Label>}
       <Listbox
         value={selected}
@@ -121,11 +119,11 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               className,
               width,
               darkMode
-                ? "border-outline/10  active:bg-washed/10"
-                : "border-outline active:bg-washed",
+                ? "border-outline/10 active:bg-washed/10 bg-black"
+                : "border-outline active:bg-washed bg-white",
               disabled
                 ? "bg-outline text-dim pointer-events-none"
-                : "hover:border-outlineHover bg-white focus:outline-none focus-visible:ring-0"
+                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
             )}
           >
             <>

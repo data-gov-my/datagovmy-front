@@ -11,7 +11,7 @@ import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
 import { useWatch } from "@hooks/useWatch";
 import { useTheme } from "next-themes";
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 import { BNMIcon } from "@components/Icon/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
 

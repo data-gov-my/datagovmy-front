@@ -5,6 +5,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { useRouter } from "next/router";
 import { FunctionComponent, useContext, useMemo } from "react";
 import { default as Dropdown } from ".";
+import { clx } from "@lib/helpers";
 
 interface StateDropdownProps {
   anchor?: string;
@@ -17,7 +18,6 @@ interface StateDropdownProps {
   exclude?: string[];
   hideOnScroll?: boolean;
   width?: string;
-  shadow?: string;
   sublabel?: string;
   darkMode?: boolean;
 }
@@ -32,14 +32,13 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   exclude,
   width = "w-64",
   sublabel,
-  shadow,
   disabled = false,
   hideOnScroll = false,
   darkMode = false,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  //   const { scroll } = useContext(WindowContext);
+  const { scroll } = useContext(WindowContext);
   const redirect = (selected: OptionType) => {
     if (selected.value === "mys") {
       url && router.push(url, undefined, { scroll: false });
@@ -48,14 +47,13 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
     url && router.push(`${url}/${selected.value}`, undefined, { scroll: false });
   };
 
-  const show = true;
+  const show = useMemo(() => scroll.y > 300, [scroll.y]);
   const options = include ? statesOptions.concat(include) : statesOptions;
 
   return (
-    <div className={!hideOnScroll ? `block ${width}` : show ? "hidden lg:block" : "hidden"}>
+    <div className={clx(!hideOnScroll ? `block ${width}` : show ? "hidden lg:block" : "hidden")}>
       <Dropdown
         className="flex-row items-center"
-        shadow={shadow}
         onChange={selected => (onChange ? onChange(selected) : redirect(selected))}
         disabled={disabled}
         selected={options.find(state => state.value === currentState)}

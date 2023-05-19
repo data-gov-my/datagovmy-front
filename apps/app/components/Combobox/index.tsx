@@ -15,6 +15,7 @@ type ComboBoxProps<L, V> = {
   onSearch?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
+  enableType?: boolean;
   loading?: boolean;
 };
 
@@ -25,6 +26,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   onSearch,
   placeholder,
   enableFlag = false,
+  enableType = false,
   loading = false,
 }: ComboBoxProps<L, V>) => {
   const { t } = useTranslation();
@@ -32,12 +34,15 @@ const ComboBox = <L extends string | number = string, V = string>({
 
   const filteredOptions =
     query === ""
-      ? options.slice(0, 100)
-      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] });
+      ? options.slice(0, 15)
+      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
+          0,
+          50
+        );
 
   return (
     <Combobox value={selected} onChange={onChange}>
-      <div className="relative w-full rounded-full">
+      <div className="relative w-full overflow-visible rounded-full">
         <div
           className="border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none 
         overflow-hidden rounded-full border bg-white text-left text-base shadow-sm focus:outline-none focus-visible:ring-0 dark:bg-black"
@@ -61,22 +66,22 @@ const ComboBox = <L extends string | number = string, V = string>({
               />
             </span>
             {query.length > 0 && (
-              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
-                <XMarkIcon
-                  className="dark:text-dim h-5 w-5 text-black"
-                  onClick={() => onChange(undefined)}
-                  aria-hidden="true"
-                />
-              </span>
+              <button
+                className="hover:bg-washed dark:hover:bg-washed-dark group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
+                onClick={() => onChange(undefined)}
+                aria-hidden="true"
+              >
+                <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+              </button>
             )}
             {selected && (
-              <span className="absolute inset-y-0 right-2 box-content flex cursor-pointer items-center pr-1.5">
-                <XMarkIcon
-                  className="dark:text-dim h-5 w-5 text-black"
-                  onClick={() => onChange(undefined)}
-                  aria-hidden="true"
-                />
-              </span>
+              <button
+                className="hover:bg-washed dark:hover:bg-washed-dark group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
+                onClick={() => onChange(undefined)}
+                aria-hidden="true"
+              >
+                <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+              </button>
             )}
           </Combobox.Button>
         </div>
@@ -87,10 +92,7 @@ const ComboBox = <L extends string | number = string, V = string>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options
-            className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm"
-            static
-          >
+          <Combobox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm">
             {loading ? (
               <div className="text-dim cursor-deault relative flex select-none flex-row items-center gap-2 px-4 py-2	">
                 <Spinner loading={loading} /> {t("common:placeholder.loading")}
@@ -116,6 +118,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                       {enableFlag ? (
                         <>
                           <ImageWithFallback
+                            className="border-outline dark:border-washed-dark rounded border"
                             src={`/static/images/parties/${option.value}.png`}
                             width={32}
                             height={18}
@@ -123,17 +126,30 @@ const ComboBox = <L extends string | number = string, V = string>({
                           />
                           <span
                             className={clx(
-                              "block truncate ",
+                              "block truncate",
                               selected ? "font-medium" : "font-normal"
                             )}
                           >
                             {option.label}
                           </span>
                         </>
+                      ) : enableType ? (
+                        <span
+                          className={clx(
+                            "block truncate",
+                            selected ? "font-medium" : "font-normal",
+                            "flex flex-row gap-1"
+                          )}
+                        >
+                          <>{String(option.label).split("(")[0]}</>
+                          <p className="text-dim normal-case">{` (${
+                            String(option.label).split("(")[1]
+                          }`}</p>
+                        </span>
                       ) : (
                         <span
                           className={clx(
-                            "block truncate ",
+                            "block truncate",
                             selected ? "font-medium" : "font-normal"
                           )}
                         >
