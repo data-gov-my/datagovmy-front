@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import {
   AgencyBadge,
@@ -62,7 +62,6 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
   const { coordinate } = useSlice(timeseries.data, data.minmax);
   const INITIATIVE = ["intan", "insan", "ikhsan"];
   const topStateIndices = getTopIndices(choropleth.data[data.filter.value].y.value, 3, true);
-  const choroRef = useRef(null);
 
   return (
     <>
@@ -138,49 +137,50 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
                   data={timeseries.data.x}
                   onChange={e => setData("minmax", e)}
                 />
+                <div className="grid grid-cols-1 gap-12 pt-12 lg:grid-cols-3">
+                  {INITIATIVE.map((key: string) => (
+                    <Timeseries
+                      key={key}
+                      title={t(key)}
+                      className="h-[300px] w-full"
+                      enableAnimation={!play}
+                      interval={"day"}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            data: coordinate[key],
+                            label: t("daily"),
+                            borderColor: AKSARA_COLOR.DIM,
+                            borderWidth: 1.5,
+                            backgroundColor: AKSARA_COLOR.DIM_H,
+                            fill: true,
+                          },
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("daily"),
+                          value: `+${numFormat(
+                            timeseries_callout.data.data[currentState][key].daily.value,
+                            "standard"
+                          )}`,
+                        },
+                        {
+                          title: t("total"),
+                          value: numFormat(
+                            timeseries_callout.data.data[currentState][key].cumul.value,
+                            "standard"
+                          ),
+                        },
+                      ]}
+                    />
+                  ))}
+                </div>
               </>
             )}
           </SliderProvider>
-          <div className="grid grid-cols-1 gap-12 pt-8 lg:grid-cols-3">
-            {INITIATIVE.map((key: string) => (
-              <Timeseries
-                key={""}
-                title={t(key)}
-                className="h-[300px] w-full"
-                interval={"day"}
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      data: coordinate[key],
-                      label: t("daily"),
-                      borderColor: AKSARA_COLOR.DIM,
-                      borderWidth: 1.5,
-                      backgroundColor: AKSARA_COLOR.DIM_H,
-                      fill: true,
-                    },
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("daily"),
-                    value: `+${numFormat(
-                      timeseries_callout.data.data[currentState][key].daily.value,
-                      "standard"
-                    )}`,
-                  },
-                  {
-                    title: t("total"),
-                    value: numFormat(
-                      timeseries_callout.data.data[currentState][key].cumul.value,
-                      "standard"
-                    ),
-                  },
-                ]}
-              />
-            ))}
-          </div>
         </Section>
 
         <Section>
@@ -236,8 +236,7 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
             }
             right={
               <Choropleth
-                _ref={choroRef}
-                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
                 color="greens"
                 data={{
                   labels: choropleth.data[data.filter.value].x.map(

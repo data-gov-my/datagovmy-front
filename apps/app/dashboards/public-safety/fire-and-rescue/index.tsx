@@ -135,49 +135,50 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                   data={timeseries.data.x}
                   onChange={e => setData("minmax", e)}
                 />
+                <div className="grid grid-cols-1 gap-12 pt-12 lg:grid-cols-3">
+                  {OPERATION.map((key: string) => (
+                    <Timeseries
+                      key={key}
+                      title={t(key)}
+                      className="h-[300px] w-full"
+                      enableAnimation={!play}
+                      interval={"day"}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            data: coordinate[key],
+                            label: t("daily"),
+                            borderColor: AKSARA_COLOR.DANGER,
+                            borderWidth: 1.5,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
+                            fill: true,
+                          },
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("daily"),
+                          value: `+${numFormat(
+                            timeseries_callout.data.data[currentState][key].daily.value,
+                            "standard"
+                          )}`,
+                        },
+                        {
+                          title: t("total"),
+                          value: numFormat(
+                            timeseries_callout.data.data[currentState][key].cumul.value,
+                            "standard"
+                          ),
+                        },
+                      ]}
+                    />
+                  ))}
+                </div>
               </>
             )}
           </SliderProvider>
-          <div className="grid grid-cols-1 gap-12 pt-8 lg:grid-cols-3">
-            {OPERATION.map((key: string) => (
-              <Timeseries
-                key={key}
-                title={t(key)}
-                className="h-[300px] w-full"
-                interval={"day"}
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      data: coordinate[key],
-                      label: t("daily"),
-                      borderColor: AKSARA_COLOR.DANGER,
-                      borderWidth: 1.5,
-                      backgroundColor: AKSARA_COLOR.DANGER_H,
-                      fill: true,
-                    },
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("daily"),
-                    value: `+${numFormat(
-                      timeseries_callout.data.data[currentState][key].daily.value,
-                      "standard"
-                    )}`,
-                  },
-                  {
-                    title: t("total"),
-                    value: numFormat(
-                      timeseries_callout.data.data[currentState][key].cumul.value,
-                      "standard"
-                    ),
-                  },
-                ]}
-              />
-            ))}
-          </div>
         </Section>
 
         <Section>
