@@ -137,7 +137,7 @@ export function smartNumFormat({
 }
 
 /**
- * Returns a formatted date string from epoch millis or SQL date
+ * Returns a formatted date string from epoch millis or SQL date (YYYY-MM-DD)
  * @param {number | string} timestamp epoch millis | sql date
  * @param {string} locale en-GB | ms-MY
  * @param {string} format dd MMM yyyy

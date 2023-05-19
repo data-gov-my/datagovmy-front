@@ -1,27 +1,21 @@
+import { clx } from "@lib/helpers";
 import { FunctionComponent, ReactNode } from "react";
 
 interface CardProps {
-  type?: "default" | "gray";
   className?: string;
   children: ReactNode;
   onClick?: () => void;
 }
 
-const Card: FunctionComponent<CardProps> = ({
-  type = "default",
-  children,
-  className = "rounded-xl border border-outline transition",
-  onClick,
-}) => {
+const Card: FunctionComponent<CardProps> = ({ children, className, onClick }) => {
   return (
     <div
-      className={[
-        type === "gray"
-          ? " bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
-          : "",
-        onClick ? "cursor-pointer" : "",
-        className,
-      ].join(" ")}
+      className={clx(
+        "border-outline rounded-xl border transition",
+        onClick && "cursor-pointer transition",
+        className
+      )}
+      tabIndex={onClick ? 0 : -1}
       onClick={onClick}
     >
       {children}

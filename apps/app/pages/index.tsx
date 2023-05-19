@@ -1,4 +1,4 @@
-import AgencyBadge from "@components/AgencyBadge";
+import { AgencyBadge } from "@components/index";
 import At from "@components/At";
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";

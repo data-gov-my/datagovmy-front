@@ -76,6 +76,12 @@
   /* HERO MESH GRADIENTS */
 }
 
+/* HeadlessUI Dialog Bug. */
+html {
+  overflow: unset !important;
+  padding-right: 0 !important;
+}
+
 input[type="range"]::-webkit-slider-thumb {
   pointer-events: all;
 }

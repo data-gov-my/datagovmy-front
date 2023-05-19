@@ -434,7 +434,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           title={"Metadata"}
           className="dark:border-b-outlineHover-dark mx-auto border-b py-12"
         >
-          <Card type="gray">
+          <Card className="bg-background dark:border-outlineHover-dark dark:bg-washed-dark p-6">
             <div className="space-y-6">
               {/* Dataset description */}
               <div className="space-y-3">
@@ -631,12 +631,12 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
 }) => {
   return typeof href === "string" ? (
     <a href={href} download onClick={() => track("file_download", meta)}>
-      <Card type="gray">
+      <Card className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark">
         <div className="gap-4.5 flex items-center">
           {image && (
             <Image
-              height={54}
-              width={54}
+              height={64}
+              width={64}
               src={image}
               className="object-contain"
               alt={title as string}
@@ -653,12 +653,17 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
     </a>
   ) : (
     // .png & svg
-    <Card type="gray" onClick={href}>
+    <Card
+      onClick={href}
+      className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
+    >
       <div className="gap-4.5 flex items-center">
         {image && (
           <Image
             src={image}
             className="aspect-video h-14 rounded border bg-white object-cover lg:h-16"
+            width={128}
+            height={64}
             alt={title as string}
           />
         )}

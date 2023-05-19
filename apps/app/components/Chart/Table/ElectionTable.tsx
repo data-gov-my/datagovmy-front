@@ -3,9 +3,8 @@ import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import Spinner from "@components/Spinner";
 import { ArrowsPointingOutIcon, FaceFrownIcon } from "@heroicons/react/24/outline";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { clx, numFormat } from "@lib/helpers";
+import { clx, numFormat, toDate } from "@lib/helpers";
 import {
   ColumnDef,
   createColumnHelper,
@@ -13,15 +12,16 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { DateTime } from "luxon";
+import { Tooltip } from "@components/index";
+import BarPerc from "@components/Chart/BarMeter/BarPerc";
+import { ResultBadge } from "@components/Badge/election";
 
-export interface BorderlessTableProps {
+export interface ElectionTableProps {
   className?: string;
   title?: string | ReactNode;
   empty?: string | ReactNode;
   data?: any;
   columns?: Array<ColumnDef<any, any>>;
-  responsive?: Boolean;
   highlightedRow?: false | number;
   win?: string;
   isLoading: boolean;
@@ -30,16 +30,27 @@ export interface BorderlessTableProps {
 export type Result = {
   name: string;
   party: string;
-  votes: Record<string, number>;
+  votes: {
+    abs: number;
+    perc: number;
+  };
 };
 
-const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
+type ElectionTableIds =
+  | "party"
+  | "election_name"
+  | "candidate_name"
+  | "votes"
+  | "majority"
+  | "seats"
+  | "result";
+
+const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   className = "",
   title,
   empty,
   data = dummyData,
   columns,
-  responsive = true,
   highlightedRow = false,
   win = "null",
   isLoading = false,
@@ -66,32 +77,104 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
     }),
   ];
 
-  const results: { [key: string]: ReactNode } = {
-    won: <Won />,
-    won_uncontested: <Won />,
-    lost: <Lost />,
-    lost_deposit: <Lost />,
-    null: <></>,
-  };
-
   const table = useReactTable({
     data,
     columns: columns ? columns : dummyColumns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  /**
+   * Special cells
+   * keys: party | election_name | seats | result | votes | majority
+   */
+  const lookupCell = (id: ElectionTableIds, cell: any) => {
+    switch (id) {
+      case "election_name":
+        return (
+          <Tooltip tip={toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)}>
+            {open => (
+              <div className="whitespace-nowrap underline decoration-dotted underline-offset-[3px]">
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </div>
+            )}
+          </Tooltip>
+        );
+      case "party":
+        return (
+          <>
+            <ImageWithFallback
+              className="border-outline dark:border-washed-dark aspect-4/3 absolute items-center self-center rounded border object-contain"
+              src={`/static/images/parties/${cell.getValue()}.png`}
+              width={32}
+              height={32}
+              alt={t(`${cell.getValue()}`)}
+            />
+            <span className="relative pl-10">
+              {!table
+                .getAllColumns()
+                .map(col => col.id)
+                .includes("fullResult")
+                ? t(cell.getValue())
+                : cell.getValue()}
+            </span>
+          </>
+        );
+      case "seats":
+        return (
+          <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
+            <div>
+              <BarPerc hidden value={cell.getValue().perc} />
+            </div>
+            <p className="whitespace-nowrap">{`${
+              cell.getValue().won === 0 ? "0" : cell.getValue().won + "/" + cell.getValue().total
+            } ${
+              cell.getValue().perc === 0
+                ? "(—)"
+                : `(${numFormat(cell.getValue().perc, "compact", [1, 1])}%)`
+            }`}</p>
+          </div>
+        );
+      case "result":
+        return <ResultBadge value={cell.getValue()} />;
+
+      case "votes":
+      case "majority":
+        return (
+          <div
+            className={clx(
+              "z-0 flex gap-2",
+              cell.getValue().abs === 0 ? "flex-row items-center" : "md:flex-col lg:flex-row"
+            )}
+          >
+            <div className="lg:self-center">
+              <BarPerc hidden value={cell.getValue().perc} />
+            </div>
+            <span className="whitespace-nowrap">
+              {cell.getValue().abs === 0 ? `—` : numFormat(cell.getValue().abs, "standard")}
+              {cell.getValue().perc === null
+                ? ` (—)`
+                : ` (${numFormat(cell.getValue().perc, "compact", [1, 1])}%)`}
+            </span>
+          </div>
+        );
+      default:
+        return flexRender(cell.column.columnDef.cell, cell.getContext());
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div>
       <div className={clx("flex flex-wrap items-start justify-between gap-2", className)}>
         <div>
           {title && typeof title === "string" ? (
-            <span className="text-base font-bold dark:text-white">{title}</span>
+            <span className="pb-6 text-base font-bold dark:text-white">{title}</span>
           ) : (
             title
           )}
         </div>
       </div>
-      <div className={responsive ? "table-responsive" : undefined}>
-        <table className="hidden w-full text-left text-sm lg:table">
+      <div className={clx("relative", className)}>
+        <table className="hidden w-full text-left text-sm md:table">
           <thead>
             {table.getHeaderGroups().map((headerGroup: any) => (
               <tr key={headerGroup.id}>
@@ -130,46 +213,12 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                         rowIndex === highlightedRow && colIndex === 0
                           ? "font-medium"
                           : "font-normal",
-                        "whitespace-nowrap px-2 py-[10px] "
+                        "px-2 py-[10px]"
                       )}
                     >
-                      <span className="flex flex-row gap-1.5">
-                        {cell.column.columnDef.id === "party" ? (
-                          <>
-                            <ImageWithFallback
-                              className="items-center self-center"
-                              src={`/static/images/parties/${cell.getValue()}.png`}
-                              width={32}
-                              height={18}
-                              alt={t(`${cell.getValue()}`)}
-                            />
-                            <span className="mr-8">{t(`${cell.getValue()}`)}</span>
-                          </>
-                        ) : cell.column.columnDef.id === "date" ? (
-                          <>
-                            {DateTime.fromISO(cell.getValue())
-                              .setLocale(i18n.language)
-                              .toLocaleString(DateTime.DATE_MED)}
-                          </>
-                        ) : ["majority", "votes"].includes(cell.column.columnDef.id) ? (
-                          <div className="flex flex-row items-center gap-1.5">
-                            <BarMeter perc={cell.getValue().perc} />
-                            <span>
-                              {cell.getValue().abs === 0
-                                ? `—`
-                                : numFormat(cell.getValue().abs, "standard")}
-                            </span>
-                            <span>
-                              {cell.getValue().perc === null
-                                ? `(—)`
-                                : `(${Number(cell.getValue().perc).toFixed(1)}%)`}
-                            </span>
-                          </div>
-                        ) : (
-                          flexRender(cell.column.columnDef.cell, cell.getContext())
-                        )}
-                        {rowIndex === highlightedRow && colIndex === 0 && results[win]}
-                      </span>
+                      <div className="flex flex-row gap-2">
+                        {lookupCell(cell.column.columnDef.id, cell)}
+                      </div>
                     </td>
                   ))}
                 </tr>
@@ -177,7 +226,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
             </tbody>
           )}
         </table>
-        {table.getRowModel().rows.map((row: any, index: number) => {
+        {/* {table.getRowModel().rows.map((row: any, index: number) => {
           const headers = table.getHeaderGroups()[0].headers;
           const headerID = headers.map(h => h.id);
           const rowID = table.getAllColumns().map(col => col.id);
@@ -196,8 +245,10 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                   {["majority", "votes"].includes(
                     rowData.at(headerID.indexOf(key)).column.columnDef.id
                   ) ? (
-                    <div className="flex flex-row items-center gap-2">
-                      <BarMeter perc={rowData.at(headerID.indexOf(key)).getValue().perc} />
+                    <div className={clx("flex items-center gap-2")}>
+                      <div>
+                        <BarPerc hidden value={rowData.at(headerID.indexOf(key)).getValue().perc} />
+                      </div>
                       <p>{`${
                         rowData.at(headerID.indexOf(key)).getValue().abs === 0
                           ? "—"
@@ -205,8 +256,10 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                       } ${
                         rowData.at(headerID.indexOf(key)).getValue().perc === null
                           ? "(—)"
-                          : `(${Number(rowData.at(headerID.indexOf(key)).getValue().perc).toFixed(
-                              1
+                          : `(${numFormat(
+                              rowData.at(headerID.indexOf(key)).getValue().perc,
+                              "compact",
+                              [1, 1]
                             )}%)`
                       }`}</p>
                     </div>
@@ -220,10 +273,12 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
               </>
             );
           }
-          return (
+          return isLoading ? (
+            <></>
+          ) : (
             <div
               className={clx(
-                "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 lg:hidden",
+                "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 md:hidden",
                 index === 0 && "border-t-2"
               )}
               key={index}
@@ -239,31 +294,25 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                         )}
                     </p>
                     <p className="text-dim font-normal">
-                      {table.getColumn("date") &&
-                        DateTime.fromISO(rowData.at(rowID.indexOf("date")).getValue())
+                      {row.original.date &&
+                        DateTime.fromISO(row.original.date)
                           .setLocale(i18n.language)
                           .toLocaleString(DateTime.DATE_MED)}
                     </p>
                   </div>
-                  {table.getColumn("fullResult") &&
-                    flexRender(
-                      rowData.at(rowID.indexOf("fullResult")).column.columnDef.cell,
-                      rowData.at(rowID.indexOf("fullResult")).getContext()
-                    )}
-                </div>
-              )}
-              {rowID.includes("seat") && rowID.includes("result") && (
-                <div>
-                  {flexRender(
-                    rowData.at(rowID.indexOf("seat")).column.columnDef.cell,
-                    rowData.at(rowID.indexOf("seat")).getContext()
-                  )}
+                  <div className="pr-2">
+                    {table.getColumn("fullResult") &&
+                      flexRender(
+                        rowData.at(rowID.indexOf("fullResult")).column.columnDef.cell,
+                        rowData.at(rowID.indexOf("fullResult")).getContext()
+                      )}
+                  </div>
                 </div>
               )}
               {rowID.includes("party") && (
                 <div className="flex flex-row gap-1.5">
                   <ImageWithFallback
-                    className="items-center self-center"
+                    className="border-outline dark:border-washed-dark items-center self-center rounded border"
                     src={`/static/images/parties/${rowData
                       .at(rowID.indexOf("party"))
                       .getValue()}.png`}
@@ -296,14 +345,27 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
                   <div className="flex flex-col space-y-1">{render("result")}</div>
                 </div>
               ) : (
-                <div className="flex flex-row space-x-4">
-                  <div className="flex flex-col space-y-1">{render("seats")}</div>
-                  <div className="flex flex-col space-y-1">{render("votes")}</div>
+                rowID.includes("seats") && (
+                  <div className="flex flex-row space-x-3">
+                    <div className="flex flex-col space-y-1">{render("seats")}</div>
+                    <div className="flex flex-col space-y-1">{render("votes")}</div>
+                  </div>
+                )
+              )}
+              {rowID.includes("constituency") && (
+                <div className="space-y-1">
+                  <div>
+                    {flexRender(
+                      rowData.at(rowID.indexOf("constituency")).column.columnDef.cell,
+                      rowData.at(rowID.indexOf("constituency")).getContext()
+                    )}
+                  </div>
+                  <div className="flex flex-row gap-2">{render("data")}</div>
                 </div>
               )}
             </div>
           );
-        })}
+        })} */}
         {isLoading && (
           <div className="flex h-20 w-full">
             <div className="mx-auto self-center">
@@ -324,55 +386,7 @@ const BorderlessTable: FunctionComponent<BorderlessTableProps> = ({
   );
 };
 
-export default BorderlessTable;
-
-interface BarMeterProps {
-  perc: number;
-  width?: number;
-}
-
-export const BarMeter: FunctionComponent<BarMeterProps> = ({ perc, width = 50 }) => {
-  return (
-    <div
-      className={`bg-outline dark:bg-outlineHover-dark relative flex h-[5px] w-[30px] self-center rounded-md lg:w-[${width}px]`}
-    >
-      <div
-        className="absolute left-0 top-0 z-10 h-full rounded-xl bg-black dark:bg-white"
-        style={{
-          left: `0%`,
-          right: `${100 - perc}%`,
-        }}
-      />
-    </div>
-  );
-};
-
-interface WonProps {
-  desc?: string;
-}
-
-export const Won: FunctionComponent<WonProps> = ({ desc }) => {
-  return (
-    <span className="flex flex-row items-center gap-1.5">
-      <CheckCircleIcon className="h-4 w-4 self-center text-[#10B981]" />
-      {desc && <span className="whitespace-nowrap uppercase text-[#10B981]">{desc}</span>}
-    </span>
-  );
-};
-
-interface LostProps {
-  desc?: string;
-}
-
-export const Lost: FunctionComponent<LostProps> = ({ desc }) => {
-  return (
-    <span className="flex flex-row items-center gap-1.5">
-      <XCircleIcon className="text-danger h-4 w-4 self-center" />
-      {desc && <span className="text-danger whitespace-nowrap uppercase">{desc}</span>}
-    </span>
-  );
-};
-
+export default ElectionTable;
 interface FullResultProps {
   desc?: string;
   onClick: () => void;
@@ -382,11 +396,11 @@ export const FullResult: FunctionComponent<FullResultProps> = ({ desc, onClick }
   return (
     <div className="flex items-center justify-center">
       <button
-        className="flex flex-row items-center pl-2 text-sm font-medium hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+        className="text-dim flex flex-row items-center text-sm font-medium hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 dark:hover:text-white"
         onClick={onClick}
       >
-        <ArrowsPointingOutIcon className="h-4 w-4 text-black dark:text-white" />
-        {desc && <p className="pl-1.5 font-normal">{desc}</p>}
+        <ArrowsPointingOutIcon className="h-4 w-4 " />
+        {desc && <p className="whitespace-nowrap pl-1.5 font-normal">{desc}</p>}
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 import { Hero, Panel, Section, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, useCallback, useMemo } from "react";

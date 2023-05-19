@@ -55,7 +55,7 @@ const Nav: NavFunctionComponent = ({ children, stateSelector }) => {
   return (
     <div className="flex w-full items-center justify-end lg:justify-between">
       {/* Desktop */}
-      <div className="hidden w-fit gap-2 lg:flex">{children(close)}</div>
+      <div className="hidden w-fit gap-1 lg:flex">{children(close)}</div>
       <div className="hidden w-fit gap-4 lg:flex">
         {stateSelector}
         <ThemeToggle />
