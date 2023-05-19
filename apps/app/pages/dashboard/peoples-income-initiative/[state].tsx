@@ -68,8 +68,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     ]);
   });
   return {
-    paths: paths,
-    fallback: false, // can also be true or 'blocking'
+    paths: [],
+    fallback: "blocking", // can also be true or 'blocking'
   };
 };
 
