@@ -39,7 +39,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
     },
   });
 
-  const fetchSeatResult = (index: number) => {
+  const fetchSeatResult = (seat: string) => {
     if (!election) return;
     setData("seat_loading", true);
     get("/explorer", {
@@ -47,7 +47,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
       chart: "full_result",
       type: "seats",
       election: election,
-      seat: seats[index].seat,
+      seat: seat,
     })
       .then(({ data }: { data: SeatResult }) => {
         setData("seat_result", {
@@ -71,7 +71,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
   };
 
   useEffect(() => {
-    fetchSeatResult(0);
+    fetchSeatResult(seats[0].seat);
   }, []);
 
   const seat_info = useMemo<{
@@ -127,7 +127,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                       <Card
                         key={seat.seat}
                         className="dark:border-outlineHover-dark focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black"
-                        onClick={() => fetchSeatResult(index)}
+                        onClick={() => fetchSeatResult(seat.seat)}
                       >
                         <div className="flex flex-row justify-between">
                           <div className="flex gap-2 truncate">
@@ -177,7 +177,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                 </div>
               }
               right={
-                <div className="h-full w-full space-y-8 rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] md:overflow-y-auto md:p-10 lg:rounded-r-xl">
+                <div className="h-full w-full space-y-8 rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] md:p-10 lg:rounded-r-xl">
                   {data.seat_result.data.length > 0 ? (
                     <>
                       <div className="flex items-center gap-4">

@@ -15,19 +15,19 @@ interface StateModalProps {
 }
 
 const StateModal: FunctionComponent<StateModalProps> = ({ state, exclude, url, title }) => {
-  //   const { scroll } = useContext(WindowContext);
+  const { scroll } = useContext(WindowContext);
   const currentState = state || "mys";
   const { t } = useTranslation();
 
   const [show, setShow] = useState(false);
-  //   const [lastPosition, setLastPosition] = useState(scroll.y);
+  const [lastPosition, setLastPosition] = useState(scroll.y);
 
-  //   useEffect(() => {
-  //     if (lastPosition > scroll.y) setShow(true);
-  //     else setShow(false);
+  useEffect(() => {
+    if (lastPosition > scroll.y) setShow(true);
+    else setShow(false);
 
-  //     setLastPosition(scroll.y);
-  //   }, [scroll.y]);
+    setLastPosition(scroll.y);
+  }, [scroll.y]);
 
   return (
     <Modal

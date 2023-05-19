@@ -58,25 +58,25 @@ CovidVaccinationState.layout = (page, props) => (
 );
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
-  let paths: Array<any> = [];
-  STATES.filter(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
+  //   let paths: Array<any> = [];
+  //   STATES.filter(state => {
+  //     paths = paths.concat([
+  //       {
+  //         params: {
+  //           state: state.key,
+  //         },
+  //       },
+  //       {
+  //         params: {
+  //           state: state.key,
+  //         },
+  //         locale: "ms-MY",
+  //       },
+  //     ]);
+  //   });
   return {
-    paths: paths,
-    fallback: false, // can also be true or 'blocking'
+    paths: [],
+    fallback: "blocking",
   };
 };
 
