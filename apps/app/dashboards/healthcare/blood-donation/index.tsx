@@ -9,12 +9,12 @@ import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent } from "react";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });

@@ -10,7 +10,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import { getTopIndices } from "@lib/helpers";
+import { getTopIndices, toDate } from "@lib/helpers";
 import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
@@ -34,7 +34,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
   timeseries,
   choropleth,
 }) => {
-  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-peka-b40", "common"]);
   const currentState = params.state;
   const { data, setData } = useData({
     minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
@@ -127,7 +127,9 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
                 <div className="flex flex-col gap-2">
                   <h4>{t("choro_header")}</h4>
                   <span className="text-dim text-sm">
-                    {t("common:common.data_of", { date: choropleth.data_as_of })}
+                    {t("common:common.data_of", {
+                      date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                    })}
                   </span>
                 </div>
                 <div className="flex grow flex-col justify-between space-y-6">

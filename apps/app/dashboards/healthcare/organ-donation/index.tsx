@@ -16,11 +16,10 @@ import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTheme } from "next-themes";
 import { useTranslation } from "@hooks/useTranslation";
-
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import { getTopIndices } from "@lib/helpers";
+import { getTopIndices, toDate } from "@lib/helpers";
 import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
@@ -145,7 +144,9 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                 <div className="flex flex-col gap-2">
                   <h4>{t("choro_header")}</h4>
                   <span className="text-dim text-sm">
-                    {t("common:common.data_of", { date: choropleth.data_as_of })}
+                    {t("common:common.data_of", {
+                      date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                    })}
                   </span>
                 </div>
                 <div className="flex grow flex-col justify-between space-y-6">
@@ -189,7 +190,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
             state: CountryAndStates[currentState],
           })}
           description={t("bar_description")}
-          date={barchart_time.date_as_of}
+          date={barchart_time.data_as_of}
         >
           <div className="grid w-full grid-cols-1 gap-12 xl:grid-cols-2">
             <div>

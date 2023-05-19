@@ -1,28 +1,29 @@
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
-import PeoplesIncomeInitiativeDashboard from "@dashboards/government-programs/peoples-income-initiative";
+import FireandRescueDashboard from "@dashboards/public-safety/fire-and-rescue";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
+import { STATES } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 
-const PeoplesIncomeInitiative: Page = ({
+const FireandRescueState: Page = ({
   choropleth,
   last_updated,
   params,
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboard-peoples-income-initiative", "common"]);
+  const { t } = useTranslation(["dashboard-fire-and-rescue", "common"]);
 
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <PeoplesIncomeInitiativeDashboard
+      <FireandRescueDashboard
         choropleth={choropleth}
         last_updated={last_updated}
         params={params}
@@ -32,42 +33,57 @@ const PeoplesIncomeInitiative: Page = ({
     </>
   );
 };
-
-PeoplesIncomeInitiative.layout = (page, props) => (
+FireandRescueState.layout = (page, props) => (
   <Layout
     className={clx(Fonts.body.variable, "font-sans")}
     stateSelector={
-      <StateDropdown
-        url={routes.PEOPLES_INCOME_INITIATIVE}
-        currentState={props.params.state}
-        hideOnScroll
-      />
+      <StateDropdown url={routes.FIRE_RESCUE} currentState={props.params.state} hideOnScroll />
     }
   >
-    <StateModal state={props.params.state} url={routes.PEOPLES_INCOME_INITIATIVE} />
+    <StateModal state={props.params.state} url={routes.FIRE_RESCUE} />
     {page}
   </Layout>
 );
 
+export const getStaticPaths: GetStaticPaths = async () => {
+  let paths: Array<any> = [];
+  STATES.forEach(state => {
+    paths = paths.concat([
+      {
+        params: {
+          state: state.key,
+        },
+      },
+      {
+        params: {
+          state: state.key,
+        },
+        locale: "ms-MY",
+      },
+    ]);
+  });
+  return {
+    paths: [],
+    fallback: "blocking", // can also be true or 'blocking'
+  };
+};
+
 export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-peoples-income-initiative",
-  async () => {
-    const { data } = await get("/dashboard", {
-      dashboard: "peoples_income_initiative",
-      state: "mys",
-    });
+  "dashboard-fire-and-rescue",
+  async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "bomba", state: params?.state });
 
     return {
       notFound: false,
       props: {
         meta: {
-          id: "dashboard-peoples-income-initiative",
+          id: "dashboard-fire-and-rescue",
           type: "dashboard",
-          category: "government-programs",
-          agency: "EPU",
+          category: "public-safety",
+          agency: "BOMBA",
         },
         last_updated: new Date().valueOf(),
-        params: { state: "mys" },
+        params: params,
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,
         choropleth: data.choropleth,
@@ -76,4 +92,4 @@ export const getStaticProps: GetStaticProps = withi18n(
   }
 );
 
-export default PeoplesIncomeInitiative;
+export default FireandRescueState;
