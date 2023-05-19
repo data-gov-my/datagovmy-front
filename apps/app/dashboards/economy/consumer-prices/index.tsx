@@ -15,7 +15,7 @@ import InflationTrends from "./inflation-trends";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
 import { useTheme } from "next-themes";
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**

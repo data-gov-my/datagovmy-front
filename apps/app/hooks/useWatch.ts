@@ -10,7 +10,7 @@ import { DependencyList, useEffect, useRef } from "react";
 export const useWatch = (fn: Function, deps: DependencyList = [], runOnMount: boolean = false) => {
   const firstRender = useRef(true);
 
-  return useEffect(() => {
+  useEffect(() => {
     if (!runOnMount && firstRender.current) {
       firstRender.current = false;
       return;

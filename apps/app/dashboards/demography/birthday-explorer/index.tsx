@@ -5,7 +5,7 @@ import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { WindowContext } from "@hooks/useWindow";
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 import { CakeIcon, MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
 import { JPNIcon } from "@components/Icon/agency";
 import Card from "@components/Card";
@@ -167,10 +167,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       <Container className="min-h-screen">
         <Section title={t("section_1.title")} description={t("section_1.description")}>
           <div className="flex flex-col gap-8 rounded-xl lg:flex-row">
-            <Card
-              className="border-outline dark:border-washed-dark flex flex-shrink-0 basis-1/3 flex-col justify-between rounded-xl border p-6"
-              type="gray"
-            >
+            <Card className="border-outline dark:border-washed-dark flex flex-shrink-0 basis-1/3 flex-col justify-between rounded-xl border p-6">
               <div>
                 <p className="mb-3 text-sm font-medium">{t("enter_birthday")}</p>
                 <input

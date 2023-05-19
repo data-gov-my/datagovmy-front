@@ -9,7 +9,7 @@ import Container from "@components/Container";
 import Hero from "@components/Hero";
 import Section from "@components/Section";
 import { closestIndex, getColor } from "@lib/schema/exchange-rates";
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 
 /**
  * Exchange Rates Dashboard

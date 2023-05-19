@@ -12,6 +12,7 @@ import {
 import { IPREPUIcon } from "@components/Icon/agency";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
+import { OptionType } from "@components/types";
 import ArrowRightIcon from "@heroicons/react/20/solid/ArrowRightIcon";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
@@ -19,7 +20,6 @@ import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import { OptionType } from "@components/types";
 
 /**
  * PeoplesIncomeInitiative Dashboard

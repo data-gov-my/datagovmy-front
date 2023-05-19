@@ -1,5 +1,4 @@
 import type { GeoChoroplethRef } from "@components/Chart/Choropleth/geochoropleth";
-import type { MarkerData } from "@components/Chart/MapPlot";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";

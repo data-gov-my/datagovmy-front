@@ -1,4 +1,4 @@
-export { default as AgencyBadge } from "./AgencyBadge";
+export { default as AgencyBadge } from "./Badge/agency";
 export { default as At } from "./At";
 export { default as Container } from "./Container";
 export { default as ComboBox } from "./Combobox";

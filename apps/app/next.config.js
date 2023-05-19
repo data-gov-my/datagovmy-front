@@ -21,6 +21,20 @@ const nextConfig = {
   i18n,
   reactStrictMode: true,
   swcMinify: true,
+  async redirects() {
+    return [
+      {
+        source: "/dashboard/election-explorer",
+        destination: "/dashboard/election-explorer/elections",
+        permanent: true,
+      },
+      {
+        source: "/ms-MY/dashboard/election-explorer",
+        destination: "/ms-MY/dashboard/election-explorer/elections",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

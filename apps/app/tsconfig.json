@@ -12,5 +12,5 @@
       "@config/*": ["config/*"]
     }
   },
-  "exclude": ["node_modules", ".next"]
+  "exclude": ["node_modules", ".next", ".turbo"]
 }
