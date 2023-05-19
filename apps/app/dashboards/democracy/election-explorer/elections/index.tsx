@@ -123,8 +123,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
     setData("election", election);
 
     const route = state
-      ? `${routes.ELECTION_EXPLORER}/${encodeURIComponent(election)}/${state}`
-      : `${routes.ELECTION_EXPLORER}/${encodeURIComponent(election)}`;
+      ? `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}/${state}`
+      : `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}`;
 
     push(route, undefined, {
       scroll: false,
