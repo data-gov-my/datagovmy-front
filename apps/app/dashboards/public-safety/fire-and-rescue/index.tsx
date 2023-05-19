@@ -227,7 +227,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
             }
             right={
               <Choropleth
-                className="aspect-square w-auto rounded-b lg:h-[500px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
                 color="reds"
                 data={{
                   labels: choropleth.data[data.filter.value].x.map(

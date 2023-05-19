@@ -237,7 +237,7 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
             right={
               <Choropleth
                 _ref={choroRef}
-                className="aspect-square w-auto rounded-b lg:h-[500px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
                 color="greens"
                 data={{
                   labels: choropleth.data[data.filter.value].x.map(

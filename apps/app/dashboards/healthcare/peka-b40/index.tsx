@@ -155,7 +155,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
             }
             right={
               <Choropleth
-                className="aspect-square w-auto rounded-b lg:h-[600px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
                 color="purples"
                 data={{
                   labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),

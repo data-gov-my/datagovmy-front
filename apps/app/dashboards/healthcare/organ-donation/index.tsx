@@ -16,7 +16,6 @@ import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTheme } from "next-themes";
 import { useTranslation } from "@hooks/useTranslation";
-
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
@@ -172,7 +171,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
             }
             right={
               <Choropleth
-                className="aspect-square w-auto rounded-b lg:h-[600px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
                 color="greens"
                 data={{
                   labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),

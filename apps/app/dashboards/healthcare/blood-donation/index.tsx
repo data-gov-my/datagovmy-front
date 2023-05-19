@@ -9,12 +9,12 @@ import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent } from "react";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
@@ -85,70 +85,20 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
     },
   ];
 
-  const description = (
-    <>
-      <p className={"text-dim"}>{t("title_description")}</p>
-      <div className="pt-6">
-        <StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />
-      </div>
-    </>
-  );
-
-  const section2left = (
-    <div className="flex h-full w-full flex-col space-y-6 p-8">
-      <div className="flex flex-col gap-2">
-        <h4>{t("choro_header")}</h4>
-        <span className="text-dim text-sm">
-          {t("common:common.data_of", { date: choropleth_malaysia_blood_donation.data_as_of })}
-        </span>
-      </div>
-      <div className="flex grow flex-col justify-between space-y-6">
-        <p className="text-dim">{t("choro_description")}</p>
-        <div className="space-y-3 border-t pt-6">
-          <p className="font-bold">{t("choro_ranking")}</p>
-          {topStateIndices.map((pos, i) => {
-            return (
-              <div className="flex space-x-3" key={pos}>
-                <div className="text-dim font-medium">#{i + 1}</div>
-                <div className="grow">
-                  {CountryAndStates[choropleth_malaysia_blood_donation.data.x[pos]]}
-                </div>
-                <div className="font-bold text-[#DC2626]">
-                  {`${choropleth_malaysia_blood_donation.data.y.perc[pos].toFixed(2)}%`}
-                </div>
-                <ArrowRightIcon className="text-dim h-4 w-4 self-center stroke-[1.5px]" />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-
-  const section2right = (
-    <div>
-      <Choropleth
-        className="aspect-square w-auto rounded-b lg:h-[600px] lg:w-full"
-        color="reds"
-        data={{
-          labels: choropleth_malaysia_blood_donation.data.x.map(
-            (state: string) => CountryAndStates[state]
-          ),
-          values: choropleth_malaysia_blood_donation.data.y.perc,
-        }}
-        unit="%"
-        type="state"
-      />
-    </div>
-  );
-
   return (
     <>
       <Hero
         background="red"
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
-        description={description}
+        description={
+          <>
+            <p className={"text-dim"}>{t("description")}</p>
+            <div className="pt-6">
+              <StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />
+            </div>
+          </>
+        }
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
@@ -206,7 +156,54 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         </Section>
 
         <Section>
-          <LeftRightCard left={section2left} right={section2right}></LeftRightCard>
+          <LeftRightCard
+            left={
+              <div className="flex h-full w-full flex-col space-y-6 p-8">
+                <div className="flex flex-col gap-2">
+                  <h4>{t("choro_header")}</h4>
+                  <span className="text-dim text-sm">
+                    {t("common:common.data_of", {
+                      date: choropleth_malaysia_blood_donation.data_as_of,
+                    })}
+                  </span>
+                </div>
+                <div className="flex grow flex-col justify-between space-y-6">
+                  <p className="text-dim">{t("choro_description")}</p>
+                  <div className="space-y-3 border-t pt-6">
+                    <p className="font-bold">{t("choro_ranking")}</p>
+                    {topStateIndices.map((pos, i) => {
+                      return (
+                        <div className="flex space-x-3" key={pos}>
+                          <div className="text-dim font-medium">#{i + 1}</div>
+                          <div className="grow">
+                            {CountryAndStates[choropleth_malaysia_blood_donation.data.x[pos]]}
+                          </div>
+                          <div className="font-bold text-[#DC2626]">
+                            {`${choropleth_malaysia_blood_donation.data.y.perc[pos].toFixed(2)}%`}
+                          </div>
+                          <ArrowRightIcon className="text-dim h-4 w-4 self-center stroke-[1.5px]" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            }
+            right={
+              <Choropleth
+                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
+                color="reds"
+                data={{
+                  labels: choropleth_malaysia_blood_donation.data.x.map(
+                    (state: string) => CountryAndStates[state]
+                  ),
+                  values: choropleth_malaysia_blood_donation.data.y.perc,
+                }}
+                unit="%"
+                type="state"
+              />
+            }
+          />
         </Section>
 
         {/* A breakdown of donations by key variables */}
@@ -306,7 +303,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       ],
                     }}
                     enableGridX={false}
-                  />{" "}
+                  />
                 </Panel>
                 <Panel name={t("monthly")}>
                   <Bar
@@ -330,7 +327,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
             </div>
             <div>
               <Tabs title={t("bar2_title")}>
-                {/* //menu={<MenuDropdown />} */}
                 <Panel name={t("year")}>
                   <Bar
                     className="h-[250px]"
