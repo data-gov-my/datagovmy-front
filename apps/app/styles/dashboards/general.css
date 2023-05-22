@@ -121,7 +121,7 @@
 
 .atom2-float {
   position: absolute;
-  bottom: calc(50% - 368px);
+  bottom: calc(50% - 318px);
   right: calc(50% - 461px);
   opacity: 0.4;
   animation: float 4s infinite;
@@ -154,7 +154,7 @@
 
 .line1-float {
   position: absolute;
-  bottom: calc(50% - 380px);
+  bottom: calc(50% - 320px);
   left: calc(50% - 582px);
   opacity: 0.8;
   animation: float 3s infinite;
@@ -162,7 +162,7 @@
 
 .line2-float {
   position: absolute;
-  top: calc(50% - 422px);
+  top: calc(50% - 352px);
   right: calc(50% - 410px);
   opacity: 0.4;
   animation: float 5s infinite;
@@ -179,7 +179,7 @@
 
 .pie2-float {
   position: absolute;
-  top: calc(50% + 270px);
+  top: calc(50% + 200px);
   left: calc(50% - 267px);
   opacity: 0.8;
   animation: float 4s infinite;
