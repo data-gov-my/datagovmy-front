@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 export interface IconProps {
   className?: string;
   fillColor?: string;
+  transform?: string;
 }
 
 export const UsersIcon: FunctionComponent<IconProps> = ({ className }) => {
@@ -167,6 +168,278 @@ export const RetailTradeIcon: FunctionComponent<IconProps> = ({ className }) => 
         d="M18.3003 5.23556L17.367 1.35111C17.1714 0.551111 16.4781 0 15.6692 0H3.32255C2.52255 0 1.82033 0.56 1.63366 1.35111L0.700331 5.23556C0.486998 6.14222 0.682554 7.06667 1.25144 7.79556C1.32255 7.89333 1.42033 7.96445 1.50033 8.05334V14.2222C1.50033 15.2 2.30033 16 3.27811 16H15.7226C16.7003 16 17.5003 15.2 17.5003 14.2222V8.05334C17.5803 7.97333 17.6781 7.89333 17.7492 7.80445C18.3181 7.07556 18.5226 6.14222 18.3003 5.23556ZM15.6426 1.76889L16.5759 5.65333C16.6648 6.02667 16.5848 6.4 16.3537 6.69333C16.2292 6.85333 15.9626 7.11111 15.5181 7.11111C14.9759 7.11111 14.5048 6.67556 14.4426 6.09778L13.927 1.77778L15.6426 1.76889ZM10.3892 1.77778H12.1314L12.6114 5.79556C12.6559 6.14222 12.5492 6.48889 12.3181 6.74667C12.1226 6.97778 11.8381 7.11111 11.4737 7.11111C10.8781 7.11111 10.3892 6.58667 10.3892 5.94667V1.77778ZM6.38033 5.79556L6.86922 1.77778H8.61144V5.94667C8.61144 6.58667 8.12255 7.11111 7.46478 7.11111C7.16255 7.11111 6.887 6.97778 6.67366 6.74667C6.45144 6.48889 6.34478 6.14222 6.38033 5.79556ZM2.42478 5.65333L3.32255 1.77778H5.07366L4.55811 6.09778C4.487 6.67556 4.02478 7.11111 3.48255 7.11111C3.047 7.11111 2.77144 6.85333 2.65589 6.69333C2.41589 6.40889 2.33589 6.02667 2.42478 5.65333ZM3.27811 14.2222V8.86222C3.34922 8.87111 3.41144 8.88889 3.48255 8.88889C4.25589 8.88889 4.95811 8.56889 5.47366 8.04445C6.007 8.57778 6.71811 8.88889 7.527 8.88889C8.30033 8.88889 8.99366 8.56889 9.50922 8.06222C10.0337 8.56889 10.7448 8.88889 11.5448 8.88889C12.2914 8.88889 13.0026 8.57778 13.5359 8.04445C14.0514 8.56889 14.7537 8.88889 15.527 8.88889C15.5981 8.88889 15.6603 8.87111 15.7314 8.86222V14.2222H3.27811Z"
         fill="#0F172A"
       />
+    </svg>
+  );
+};
+
+export const CheckMarkIcon: FunctionComponent<IconProps> = ({
+  className,
+  fillColor = "#16A34A",
+}) => {
+  return (
+    <svg
+      width="50"
+      height="60"
+      viewBox="0 0 50 60"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M50 25.457C50 11.6499 38.8071 0.457031 25 0.457031C11.1929 0.457031 0 11.6499 0 25.457C0 37.2979 8.23481 47.209 19.2881 49.7936L25 59.5431L30.7119 49.7936C41.7652 47.209 50 37.2979 50 25.457Z"
+        fill={fillColor}
+      />
+      <path
+        d="M35.427 19.9209L21.5243 33.8235L14.573 26.8722"
+        stroke="white"
+        strokeWidth="4.86592"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const AtomIcon: FunctionComponent<IconProps> = ({ className, transform }) => {
+  return (
+    <svg
+      width="62"
+      height="60"
+      viewBox="0 0 62 60"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      transform={transform}
+    >
+      <path
+        d="M55.6469 15.75C56.0002 16.3616 56.0841 17.3714 55.4425 18.9583C54.8098 20.5234 53.5618 22.3996 51.7191 24.4655C48.045 28.5849 42.2389 33.2012 35.1607 37.2857C28.0825 41.3703 21.1797 44.0878 15.7734 45.2084C13.062 45.7704 10.8123 45.9126 9.13981 45.6778C7.44409 45.4397 6.61109 44.8622 6.25782 44.2506C5.90455 43.639 5.82064 42.6292 6.46221 41.0424C7.095 39.4772 8.343 37.601 10.1857 35.5351C13.8598 31.4157 19.6659 26.7994 26.744 22.7149C33.8222 18.6303 40.7251 15.9128 46.1314 14.7922C48.8428 14.2302 51.0924 14.088 52.7649 14.3228C54.4607 14.5609 55.2937 15.1385 55.6469 15.75Z"
+        stroke="url(#paint0_linear_3006_31715)"
+        strokeWidth="3"
+      />
+      <path
+        d="M30.9524 1.5C31.6597 1.5 32.5768 1.93268 33.6308 3.28125C34.6704 4.61148 35.672 6.62973 36.5407 9.2576C38.2729 14.4974 39.3696 21.831 39.3696 30C39.3696 38.169 38.2729 45.5026 36.5407 50.7424C35.672 53.3703 34.6704 55.3885 33.6308 56.7188C32.5768 58.0673 31.6597 58.5 30.9524 58.5C30.2451 58.5 29.328 58.0673 28.274 56.7188C27.2344 55.3885 26.2328 53.3703 25.364 50.7424C23.6319 45.5026 22.5352 38.169 22.5352 30C22.5352 21.831 23.6319 14.4974 25.364 9.2576C26.2328 6.62973 27.2343 4.61148 28.274 3.28125C29.328 1.93268 30.2451 1.5 30.9524 1.5Z"
+        stroke="url(#paint1_linear_3006_31715)"
+        strokeWidth="3"
+      />
+      <path
+        d="M55.6469 44.2506C55.2937 44.8622 54.4607 45.4397 52.7649 45.6778C51.0924 45.9126 48.8428 45.7704 46.1314 45.2084C40.7251 44.0878 33.8222 41.3703 26.744 37.2857C19.6659 33.2012 13.8598 28.5849 10.1857 24.4655C8.343 22.3996 7.095 20.5234 6.46221 18.9583C5.82063 17.3714 5.90455 16.3616 6.25782 15.75C6.61108 15.1385 7.44409 14.5609 9.13981 14.3228C10.8123 14.088 13.062 14.2302 15.7734 14.7922C21.1797 15.9128 28.0825 18.6303 35.1607 22.7149C42.2389 26.7994 48.045 31.4157 51.7191 35.5351C53.5618 37.601 54.8098 39.4772 55.4425 41.0424C56.0841 42.6292 56.0002 43.639 55.6469 44.2506Z"
+        stroke="url(#paint2_linear_3006_31715)"
+        strokeWidth="3"
+      />
+      <defs>
+        <linearGradient
+          id="paint0_linear_3006_31715"
+          x1="9.91724"
+          y1="53.5846"
+          x2="6.64572"
+          y2="33.0777"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#94A3B8" stopOpacity="0.5" />
+          <stop offset="1" stopColor="#E2E8F0" />
+        </linearGradient>
+        <linearGradient
+          id="paint1_linear_3006_31715"
+          x1="20.9988"
+          y1="-2.92356"
+          x2="48.4096"
+          y2="12.1925"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6A98FE" />
+          <stop offset="1" stopColor="#2563EB" />
+        </linearGradient>
+        <linearGradient
+          id="paint2_linear_3006_31715"
+          x1="-4.51243e-06"
+          y1="23.5846"
+          x2="16.1242"
+          y2="10.4889"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#94A3B8" stopOpacity="0.5" />
+          <stop offset="1" stopColor="#E2E8F0" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+export const BarChartIcon: FunctionComponent<IconProps> = ({ className, transform }) => {
+  return (
+    <svg
+      width="60"
+      height="43"
+      viewBox="0 0 60 43"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      transform={transform}
+    >
+      <rect y="11.6885" width="9.13043" height="31.1688" rx="2" fill="url(#paint0)" />
+      <rect x="25.5737" y="27.9219" width="8.85246" height="14.9351" rx="2" fill="url(#paint1)" />
+      <rect x="38.3607" y="11.6885" width="8.85246" height="31.1688" rx="2" fill="url(#paint2)" />
+      <rect x="50.8695" width="9.13043" height="42.8571" rx="2" fill="url(#paint3)" />
+      <rect x="12.7869" y="19.1562" width="8.85246" height="23.7013" rx="2" fill="url(#paint4)" />
+      <defs>
+        <linearGradient
+          id="paint0"
+          x1="4.56522"
+          y1="8.85495"
+          x2="15.4532"
+          y2="39.0106"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6A98FE" />
+          <stop offset="1" stopColor="#2563EB" />
+        </linearGradient>
+        <linearGradient
+          id="paint1"
+          x1="30"
+          y1="26.5641"
+          x2="32.8245"
+          y2="42.3934"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6A98FE" />
+          <stop offset="1" stopColor="#2563EB" />
+        </linearGradient>
+        <linearGradient
+          id="paint2"
+          x1="42.7869"
+          y1="11.6885"
+          x2="42.7869"
+          y2="42.8573"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#E2E8F0" />
+          <stop offset="1" stopColor="#94A3B8" />
+        </linearGradient>
+        <linearGradient
+          id="paint3"
+          x1="55.4347"
+          y1="-3.8961"
+          x2="74.1023"
+          y2="33.7057"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6A98FE" />
+          <stop offset="1" stopColor="#2563EB" />
+        </linearGradient>
+        <linearGradient
+          id="paint4"
+          x1="17.2131"
+          y1="19.1562"
+          x2="17.2131"
+          y2="42.8575"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#E2E8F0" />
+          <stop offset="1" stopColor="#94A3B8" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+export const LineChartIcon: FunctionComponent<IconProps> = ({ className, transform }) => {
+  return (
+    <svg
+      width="80"
+      height="74"
+      viewBox="0 0 80 74"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      transform={transform}
+    >
+      <path
+        d="M18.8853 53.1658L27.798 39.905L33.6511 48.6136L49.3482 25.2588L56.5316 35.9466L71.4305 13.7793"
+        stroke="url(#paint0_linear_3006_31924)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13.0607 0.93934C12.4749 0.353553 11.5251 0.353553 10.9393 0.93934L1.3934 10.4853C0.807611 11.0711 0.807611 12.0208 1.3934 12.6066C1.97919 13.1924 2.92893 13.1924 3.51472 12.6066L12 4.12132L20.4853 12.6066C21.0711 13.1924 22.0208 13.1924 22.6066 12.6066C23.1924 12.0208 23.1924 11.0711 22.6066 10.4853L13.0607 0.93934ZM12 62H10.5C10.5 62.8284 11.1716 63.5 12 63.5V62ZM79.3764 63.0607C79.9622 62.4749 79.9622 61.5251 79.3764 60.9393L69.8305 51.3934C69.2447 50.8076 68.295 50.8076 67.7092 51.3934C67.1234 51.9792 67.1234 52.9289 67.7092 53.5147L76.1945 62L67.7092 70.4853C67.1234 71.0711 67.1234 72.0208 67.7092 72.6066C68.295 73.1924 69.2447 73.1924 69.8305 72.6066L79.3764 63.0607ZM10.5 2V62H13.5V2H10.5ZM12 63.5H78.3158V60.5H12V63.5Z"
+        fill="url(#paint1_linear_3006_31924)"
+      />
+      <defs>
+        <linearGradient
+          id="paint0_linear_3006_31924"
+          x1="73.9909"
+          y1="13.7071"
+          x2="39.3669"
+          y2="41.3966"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6A98FE" />
+          <stop offset="1" stopColor="#2563EB" />
+        </linearGradient>
+        <linearGradient
+          id="paint1_linear_3006_31924"
+          x1="12"
+          y1="62"
+          x2="45.6089"
+          y2="29.9114"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#94A3B8" stopOpacity="0.5" />
+          <stop offset="1" stopColor="#E2E8F0" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+export const PieChartIcon: FunctionComponent<IconProps> = ({ className, transform }) => {
+  return (
+    <svg
+      width="60"
+      height="55"
+      viewBox="0 0 60 55"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      transform={transform}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M45.6815 7.95862L26.7546 27.3035L50.9012 38.8465C46.593 47.9784 37.3998 54.2857 26.7546 54.2857C11.9784 54.2857 0 42.1334 0 27.1429C0 12.1523 11.9784 0 26.7546 0C34.147 0 40.8392 3.04164 45.6815 7.95862Z"
+        fill="url(#paint0_radial)"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M57.3919 37.633C59.0638 34.0893 60 30.1203 60 25.9294C60 18.4385 57.0089 11.6563 52.1723 6.74512L33.2454 26.09L57.3919 37.633Z"
+        fill="url(#paint1_linear)"
+      />
+      <defs>
+        <radialGradient
+          id="paint0_radial"
+          cx="0"
+          cy="0"
+          r="1"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="translate(18 8.62185) rotate(79.147) scale(46.4955 45.8671)"
+        >
+          <stop stopColor="#E2E8F0" />
+          <stop offset="1" stopColor="#94A3B8" />
+        </radialGradient>
+        <linearGradient
+          id="paint1_linear"
+          x1="46.6227"
+          y1="3.93712"
+          x2="50.6868"
+          y2="37.2205"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6A98FE" />
+          <stop offset="1" stopColor="#2563EB" />
+        </linearGradient>
+      </defs>
     </svg>
   );
 };
