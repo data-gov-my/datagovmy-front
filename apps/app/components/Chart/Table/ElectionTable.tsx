@@ -21,29 +21,22 @@ export interface ElectionTableProps {
   title?: string | ReactNode;
   empty?: string | ReactNode;
   data?: any;
-  columns?: Array<ColumnDef<any, any>>;
+  columns: Array<ColumnDef<any, any>>;
   highlightedRow?: false | number;
   win?: string;
   isLoading: boolean;
 }
 
-export type Result = {
-  name: string;
-  party: string;
-  votes: {
-    abs: number;
-    perc: number;
-  };
-};
-
 type ElectionTableIds =
   | "party"
   | "election_name"
-  | "candidate_name"
+  | "name"
   | "votes"
   | "majority"
   | "seats"
-  | "result";
+  | "seat"
+  | "result"
+  | "full_result";
 
 const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   className = "",
@@ -57,29 +50,9 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
 
-  const columnHelper = createColumnHelper<Result>();
-
-  const dummyColumns: ColumnDef<Result, any>[] = [
-    columnHelper.accessor("name", {
-      id: "candidate_name",
-      header: t("candidate_name"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.accessor("party", {
-      id: "party",
-      header: t("party_name"),
-      cell: (info: any) => info.getValue(),
-    }),
-    columnHelper.accessor("votes", {
-      id: "votes",
-      header: t("votes_won"),
-      cell: (info: any) => info.getValue(),
-    }),
-  ];
-
   const table = useReactTable({
     data,
-    columns: columns ? columns : dummyColumns,
+    columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -87,13 +60,21 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
    * Special cells
    * keys: party | election_name | seats | result | votes | majority
    */
-  const lookupCell = (id: ElectionTableIds, cell: any) => {
+  const lookupDesktop = (id: ElectionTableIds, cell: any) => {
     switch (id) {
       case "election_name":
         return (
-          <Tooltip tip={toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)}>
+          <Tooltip
+            tip={
+              cell.row.original.date && toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
+            }
+          >
             {open => (
-              <div className="whitespace-nowrap underline decoration-dotted underline-offset-[3px]">
+              <div
+                className="whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
+                tabIndex={0}
+                onClick={open}
+              >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </div>
             )}
@@ -113,7 +94,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
               {!table
                 .getAllColumns()
                 .map(col => col.id)
-                .includes("fullResult")
+                .includes("full_result")
                 ? t(cell.getValue())
                 : cell.getValue()}
             </span>
@@ -123,7 +104,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         return (
           <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
             <div>
-              <BarPerc hidden value={cell.getValue().perc} />
+              <BarPerc hidden value={cell.getValue()?.perc} />
             </div>
             <p className="whitespace-nowrap">{`${
               cell.getValue().won === 0 ? "0" : cell.getValue().won + "/" + cell.getValue().total
@@ -147,7 +128,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             )}
           >
             <div className="lg:self-center">
-              <BarPerc hidden value={cell.getValue().perc} />
+              <BarPerc hidden value={cell.getValue()?.perc} />
             </div>
             <span className="whitespace-nowrap">
               {cell.getValue().abs === 0 ? `—` : numFormat(cell.getValue().abs, "standard")}
@@ -157,6 +138,100 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             </span>
           </div>
         );
+      default:
+        return flexRender(cell.column.columnDef.cell, cell.getContext());
+    }
+  };
+
+  const lookupMobile = (id: ElectionTableIds, cell: any) => {
+    if (!cell) return <></>;
+    const value = cell.getValue();
+    switch (id) {
+      case "party":
+        return (
+          <div className="flex flex-row items-center gap-1.5">
+            <ImageWithFallback
+              className="border-outline dark:border-washed-dark aspect-4/3 items-center self-center rounded border"
+              src={`/static/images/parties/${cell.getValue()}.png`}
+              width={32}
+              height={18}
+              alt={t(cell.getValue())}
+            />
+            {cell.row.original.name ? (
+              <span>{`${cell.row.original.name} (${cell.getValue()})`}</span>
+            ) : (
+              <span>{t(cell.getValue())}</span>
+            )}
+          </div>
+        );
+      case "election_name":
+        return (
+          <div className="flex gap-3 text-sm">
+            <p className="font-medium">
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </p>
+            {cell.row.original.date && (
+              <p className="text-dim">
+                {toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)}
+              </p>
+            )}
+          </div>
+        );
+      case "seats":
+        return (
+          <div className="flex flex-col space-y-1">
+            <p className="text-dim font-medium">
+              {flexRender(cell.column.columnDef.header, cell.getContext())}
+            </p>
+            <div className="flex items-center gap-2">
+              <BarPerc hidden value={value?.perc} />
+              <p>
+                {value?.won > 0
+                  ? `${numFormat(value?.won, "standard")}/${numFormat(value?.total, "standard")}`
+                  : "—"}
+                {value?.perc !== null ? ` (${numFormat(value?.perc, "compact", [1, 1])}%)` : " (—)"}
+              </p>
+            </div>
+          </div>
+        );
+      case "votes":
+        return (
+          <div className="flex flex-col space-y-1">
+            <p className="text-dim font-medium">
+              {flexRender(cell.column.columnDef.header, cell.getContext())}
+            </p>
+            <div className="flex items-center gap-2">
+              <BarPerc hidden value={value?.perc} />
+              <p>{`${value?.abs > 0 ? numFormat(value?.abs, "standard") : "—"} (${
+                value?.perc !== null ? `${numFormat(value?.perc, "compact", [1, 1])}%` : "—"
+              })`}</p>
+            </div>
+          </div>
+        );
+      case "majority":
+        return (
+          <div className="flex flex-row gap-2">
+            <p className="text-dim font-medium">
+              {flexRender(cell.column.columnDef.header, cell.getContext())}
+            </p>
+            <div className="flex items-center gap-2">
+              <BarPerc hidden value={value?.perc} />
+              <p>{`${value?.abs > 0 ? numFormat(value?.abs, "standard") : "—"} (${
+                value?.perc !== null ? `${numFormat(value?.perc, "compact", [1, 1])}%` : "—"
+              })`}</p>
+            </div>
+          </div>
+        );
+      case "result":
+        return (
+          <div className="flex flex-col space-y-1">
+            <p className="text-dim font-medium">
+              {flexRender(cell.column.columnDef.header, cell.getContext())}
+            </p>
+            <ResultBadge value={cell.getValue()} />
+          </div>
+        );
+
       default:
         return flexRender(cell.column.columnDef.cell, cell.getContext());
     }
@@ -174,6 +249,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         </div>
       </div>
       <div className={clx("relative", className)}>
+        {/* Desktop */}
         <table className="hidden w-full text-left text-sm md:table">
           <thead>
             {table.getHeaderGroups().map((headerGroup: any) => (
@@ -217,7 +293,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                       )}
                     >
                       <div className="flex flex-row gap-2">
-                        {lookupCell(cell.column.columnDef.id, cell)}
+                        {lookupDesktop(cell.column.columnDef.id, cell)}
                       </div>
                     </td>
                   ))}
@@ -226,146 +302,62 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             </tbody>
           )}
         </table>
-        {/* {table.getRowModel().rows.map((row: any, index: number) => {
-          const headers = table.getHeaderGroups()[0].headers;
-          const headerID = headers.map(h => h.id);
-          const rowID = table.getAllColumns().map(col => col.id);
-          const rowData = row.getVisibleCells();
 
-          function render(key: string) {
-            return (
-              <>
-                <div className="text-dim font-medium">
-                  {flexRender(
-                    headers.at(headerID.indexOf(key))?.column.columnDef.header,
-                    headers.at(headerID.indexOf(key))!.getContext()
-                  )}
-                </div>
-                <>
-                  {["majority", "votes"].includes(
-                    rowData.at(headerID.indexOf(key)).column.columnDef.id
-                  ) ? (
-                    <div className={clx("flex items-center gap-2")}>
-                      <div>
-                        <BarPerc hidden value={rowData.at(headerID.indexOf(key)).getValue().perc} />
-                      </div>
-                      <p>{`${
-                        rowData.at(headerID.indexOf(key)).getValue().abs === 0
-                          ? "—"
-                          : numFormat(rowData.at(headerID.indexOf(key)).getValue().abs, "standard")
-                      } ${
-                        rowData.at(headerID.indexOf(key)).getValue().perc === null
-                          ? "(—)"
-                          : `(${numFormat(
-                              rowData.at(headerID.indexOf(key)).getValue().perc,
-                              "compact",
-                              [1, 1]
-                            )}%)`
-                      }`}</p>
-                    </div>
-                  ) : (
-                    flexRender(
-                      rowData.at(headerID.indexOf(key)).column.columnDef.cell,
-                      rowData.at(headerID.indexOf(key)).getContext()
-                    )
-                  )}
-                </>
-              </>
-            );
-          }
+        {/* Mobile */}
+        {table.getRowModel().rows.map((row: any, index: number) => {
+          const ids = table.getAllColumns().map(col => col.id);
+          let _row: Record<string, ReactNode> = {};
+          row.getVisibleCells().forEach((cell: any) => {
+            _row[cell.column.columnDef.id] = lookupMobile(cell.column.columnDef.id, cell);
+          });
           return isLoading ? (
             <></>
           ) : (
             <div
               className={clx(
-                "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b py-3 text-sm first:border-t-2 md:hidden",
+                "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b p-3 text-sm first:border-t-2 md:hidden",
                 index === 0 && "border-t-2"
               )}
               key={index}
             >
-              {rowID.includes("fullResult") && (
+              {/* Row 1 - Election Name / Date / Full result */}
+              {["election_name", "full_result"].some(id => ids.includes(id)) && (
                 <div className="flex flex-row justify-between">
-                  <div className="flex flex-row space-x-3">
-                    <p className="font-medium">
-                      {table.getColumn("election_name") &&
-                        flexRender(
-                          rowData.at(rowID.indexOf("election_name")).column.columnDef.cell,
-                          rowData.at(rowID.indexOf("election_name")).getContext()
-                        )}
-                    </p>
-                    <p className="text-dim font-normal">
-                      {row.original.date &&
-                        DateTime.fromISO(row.original.date)
-                          .setLocale(i18n.language)
-                          .toLocaleString(DateTime.DATE_MED)}
-                    </p>
-                  </div>
-                  <div className="pr-2">
-                    {table.getColumn("fullResult") &&
-                      flexRender(
-                        rowData.at(rowID.indexOf("fullResult")).column.columnDef.cell,
-                        rowData.at(rowID.indexOf("fullResult")).getContext()
-                      )}
-                  </div>
+                  {_row.election_name}
+                  {_row.full_result}
                 </div>
               )}
-              {rowID.includes("party") && (
-                <div className="flex flex-row gap-1.5">
-                  <ImageWithFallback
-                    className="border-outline dark:border-washed-dark items-center self-center rounded border"
-                    src={`/static/images/parties/${rowData
-                      .at(rowID.indexOf("party"))
-                      .getValue()}.png`}
-                    width={32}
-                    height={18}
-                    alt={t(`${rowData.at(rowID.indexOf("party")).getValue()}`)}
-                  />
-                  {rowID.includes("candidate_name") ? (
-                    <span>
-                      {`${rowData.at(rowID.indexOf("candidate_name")).getValue()} 
-                      (${rowData.at(rowID.indexOf("party")).getValue()})`}
-                    </span>
-                  ) : (
-                    <span>{t(`${rowData.at(rowID.indexOf("party")).getValue()}`)}</span>
-                  )}
+              {/* Row 2 - Seat (if available)*/}
+              {_row.result && (
+                <div>
+                  <p>{_row.seat} </p>
                 </div>
               )}
-              {rowID.includes("candidate_name") ? (
-                <>
-                  {rowID.includes("majority") && (
-                    <div className="flex flex-row gap-2">{render("majority")}</div>
-                  )}
-                  {rowID.includes("votes") && (
-                    <div className="flex flex-row gap-2">{render("votes")}</div>
-                  )}
-                </>
-              ) : rowID.includes("result") ? (
+              {/* Row 3 - Party */}
+              {_row.party && <div>{_row.party}</div>}
+
+              {/* Row 4 - Result *Depends on page shown */}
+              {_row.name && ( // SEATS
+                <div className="flex flex-row gap-2">
+                  {_row.majority}
+                  {_row.votes}
+                </div>
+              )}
+              {_row.result && ( // CANDIDATES
                 <div className="flex flex-row space-x-4">
-                  <div className="flex flex-col space-y-1">{render("votes")}</div>
-                  <div className="flex flex-col space-y-1">{render("result")}</div>
+                  {_row.votes}
+                  {_row.result}
                 </div>
-              ) : (
-                rowID.includes("seats") && (
-                  <div className="flex flex-row space-x-3">
-                    <div className="flex flex-col space-y-1">{render("seats")}</div>
-                    <div className="flex flex-col space-y-1">{render("votes")}</div>
-                  </div>
-                )
               )}
-              {rowID.includes("constituency") && (
-                <div className="space-y-1">
-                  <div>
-                    {flexRender(
-                      rowData.at(rowID.indexOf("constituency")).column.columnDef.cell,
-                      rowData.at(rowID.indexOf("constituency")).getContext()
-                    )}
-                  </div>
-                  <div className="flex flex-row gap-2">{render("data")}</div>
+              {_row.seats && ( // PARTIES
+                <div className="flex flex-row space-x-3">
+                  {_row.seats}
+                  {_row.votes}
                 </div>
               )}
             </div>
           );
-        })} */}
+        })}
         {isLoading && (
           <div className="flex h-20 w-full">
             <div className="mx-auto self-center">
@@ -374,9 +366,9 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           </div>
         )}
         {!data.length && !isLoading && (
-          <Card className="flex h-[200px] items-center justify-center">
+          <Card className="flex h-[200px] items-center justify-center px-3 text-sm lg:text-base">
             <Card className="bg-outline dark:bg-washed-dark mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md px-3 py-1.5">
-              <FaceFrownIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />
+              <FaceFrownIcon className="min-h-4 min-w-4 text-dim mx-auto mt-1 h-8 w-auto dark:text-white" />
               {empty}
             </Card>
           </Card>
@@ -387,24 +379,6 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
 };
 
 export default ElectionTable;
-interface FullResultProps {
-  desc?: string;
-  onClick: () => void;
-}
-
-export const FullResult: FunctionComponent<FullResultProps> = ({ desc, onClick }) => {
-  return (
-    <div className="flex items-center justify-center">
-      <button
-        className="text-dim flex flex-row items-center text-sm font-medium hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 dark:hover:text-white"
-        onClick={onClick}
-      >
-        <ArrowsPointingOutIcon className="h-4 w-4 " />
-        {desc && <p className="whitespace-nowrap pl-1.5 font-normal">{desc}</p>}
-      </button>
-    </div>
-  );
-};
 
 const dummyData = [
   {

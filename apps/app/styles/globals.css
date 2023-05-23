@@ -28,7 +28,7 @@
     @apply font-header text-xl font-bold leading-[28px] dark:text-white;
   }
   h5 {
-    @apply text-lg font-bold tracking-normal dark:text-white;
+    @apply text-base font-bold tracking-normal dark:text-white lg:text-lg;
   }
 
   h6 {
