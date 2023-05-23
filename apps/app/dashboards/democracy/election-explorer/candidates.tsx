@@ -1,21 +1,20 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/index";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import { FullResult, Result } from "@components/Chart/Table/ElectionTable";
 import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { routes } from "@lib/routes";
-import { DateTime } from "luxon";
 import { useRouter } from "next/router";
-import type { BaseResult, Candidate, ElectionResource, ElectionResult } from "./types";
+import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { ResultBadge } from "@components/Badge/election";
+import ElectionLayout from "./layout";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -44,17 +43,46 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     { key: "votes", id: "votes", header: t("votes_won") },
     { key: "result", id: "result", header: t("result") },
     {
-      key: "fullResult" as any,
-      id: "fullResult",
+      key: item => item,
+      id: "full_result",
       header: "",
-      cell: ({ row }) => {
+      cell: ({ row, getValue }) => {
+        const selection = data.tab_index === 0 ? elections.parlimen : elections.dun;
+        const item = getValue() as Candidate;
+        const [area, state] = item.seat.split(",");
+
         return (
-          <FullResult
-            desc={t("full_result")}
-            onClick={() => {
-              setData("table_index", row.index);
-              fetchResult(row.index);
-            }}
+          <ElectionCard
+            defaultParams={item}
+            onChange={(option: Candidate) => fetchResult(option.election_name, option.seat)}
+            columns={generateSchema<BaseResult>([
+              {
+                key: "name",
+                id: "name",
+                header: t("candidate_name"),
+              },
+              {
+                key: "party",
+                id: "party",
+                header: t("party_name"),
+              },
+              {
+                key: "votes",
+                id: "votes",
+                header: t("votes_won"),
+              },
+            ])}
+            title={
+              <div className="flex w-full justify-between pr-10">
+                <div className="flex flex-col uppercase md:flex-row md:gap-2">
+                  <h5>{area}</h5>
+                  <span className="text-dim text-lg font-normal">{state}</span>
+                </div>
+                <ResultBadge value={item.result} />
+              </div>
+            }
+            options={selection}
+            page={row.index}
           />
         );
       },
@@ -62,14 +90,9 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   ]);
 
   const { data, setData } = useData({
+    tab_index: 0, // parlimen = 0; dun = 1
     candidate: params.candidate_name,
     loading: false,
-
-    modal_loading: false,
-    modal_open: false,
-    full_results: [],
-    tab_index: 0, // parlimen = 0; dun = 1
-    table_index: 0,
   });
 
   const navigateToCandidate = (name?: string) => {
@@ -83,25 +106,28 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     }).then(() => setData("loading", false));
   };
 
-  const fetchResult = (rowIndex: number) => {
-    setData("modal_open", true);
-    setData("modal_loading", true);
-
-    const type = data.tab_index === 0 ? "parlimen" : "dun";
-
-    get("/explorer", {
+  const fetchResult = async (election: string, seat: string) => {
+    return get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
       type: "candidates",
-      election: elections[type][rowIndex].election_name,
-      seat: elections[type][rowIndex].seat,
+      election,
+      seat,
     })
-      .then(({ data }) => {
-        setData(
-          "full_results",
-          data.data.sort((a: Result, b: Result) => b.votes.abs - a.votes.abs)
-        );
-        setData("modal_loading", false);
+      .then(({ data }: { data: CandidateResult }) => {
+        return {
+          data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+          votes: [
+            {
+              x: "voter_turnout",
+              y: data.votes.voter_turnout_perc,
+            },
+            {
+              x: "rejected_votes",
+              y: data.votes.votes_rejected_perc,
+            },
+          ],
+        };
       })
       .catch(e => {
         console.error(e);
@@ -112,78 +138,9 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     return { label: key, value: key };
   });
 
-  const election_result = useMemo<{
-    name: string;
-    result: ElectionResult | undefined;
-    area: string;
-    state: string;
-    date: string;
-    total: number;
-  }>(() => {
-    const election = data.tab_index === 0 ? elections.parlimen : elections.dun;
-    if (election.length <= 0)
-      return {
-        name: "",
-        result: undefined,
-        area: "",
-        state: "",
-        date: "",
-        total: 0,
-      };
-    const [area, state] = election[data.table_index].seat.split(",");
-    return {
-      name: election[data.table_index].election_name,
-      result: election[data.table_index].result,
-      area: area,
-      state: state,
-      date: DateTime.fromISO(election[data.table_index].date)
-        .setLocale(i18n.language)
-        .toLocaleString(DateTime.DATE_MED),
-      total: election.length,
-    };
-  }, [data.tab_index, data.table_index]);
-
   return (
-    <>
-      <Hero
-        background="red"
-        category={[t("common:categories.democracy"), "text-danger"]}
-        header={[t("header")]}
-        description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Election Comission (EC)"}
-            link="https://www.spr.gov.my/"
-            icon={<SPRIcon />}
-          />
-        }
-      />
-
+    <ElectionLayout>
       <Container className="min-h-fit">
-        <ContainerTabs.List
-          options={[
-            {
-              name: t("elections"),
-              icon: <SPRIconSolid className="-mb-1" />,
-              url: routes.ELECTION_EXPLORER.concat("/elections"),
-            },
-            {
-              name: t("candidates"),
-              icon: <UserIcon className="m-1 h-5 w-5" />,
-            },
-            {
-              name: t("parties"),
-              icon: <FlagIcon className="m-1 h-5 w-5" />,
-              url: routes.ELECTION_EXPLORER.concat("/parties"),
-            },
-            {
-              name: t("seats"),
-              icon: <MapIcon className="m-1 h-5 w-5" />,
-              url: routes.ELECTION_EXPLORER.concat("/seats"),
-            },
-          ]}
-          current={1}
-        />
         <Section>
           <div className="lg:grid lg:grid-cols-12">
             <div className="lg:col-span-10 lg:col-start-2">
@@ -210,9 +167,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                   </div>
                 }
                 current={data.tab_index}
-                onChange={index => {
-                  setData("tab_index", index);
-                }}
+                onChange={index => setData("tab_index", index)}
                 className="pb-6"
               >
                 <Panel name={t("parliament_elections")}>
@@ -248,61 +203,9 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
               </Tabs>
             </div>
           </div>
-          {data.modal_open && (
-            <ElectionCard
-              open={data.modal_open}
-              onClose={() => setData("modal_open", false)}
-              onChange={(index: number) => {
-                setData("table_index", index);
-                fetchResult(index);
-              }}
-              onNext={() => {
-                setData("table_index", data.table_index + 1);
-                fetchResult(data.table_index + 1);
-              }}
-              onPrev={() => {
-                setData("table_index", data.table_index - 1);
-                fetchResult(data.table_index - 1);
-              }}
-              win={election_result.result}
-              election_name={election_result.name}
-              columns={generateSchema<BaseResult>([
-                {
-                  key: "name",
-                  id: "name",
-                  header: t("candidate_name"),
-                },
-                {
-                  key: "party",
-                  id: "party",
-                  header: t("party_name"),
-                },
-                {
-                  key: "votes",
-                  id: "votes",
-                  header: t("votes_won"),
-                },
-              ])}
-              date={election_result.date}
-              title={
-                <div className="flex w-full justify-between pr-10">
-                  <div className="flex flex-col uppercase md:flex-row md:gap-2">
-                    <h5>{election_result.area}</h5>
-                    <span className="text-dim text-lg font-normal">{election_result.state}</span>
-                  </div>
-                  <ResultBadge value={election_result.result} />
-                </div>
-              }
-              isLoading={data.modal_loading}
-              data={data.full_results}
-              highlightedRow={data.full_results.findIndex((r: Result) => r.name === data.candidate)}
-              page={data.table_index}
-              total={election_result.total}
-            />
-          )}
         </Section>
       </Container>
-    </>
+    </ElectionLayout>
   );
 };
 
