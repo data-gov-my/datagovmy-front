@@ -2,16 +2,10 @@ import { FunctionComponent, ReactNode } from "react";
 import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import Spinner from "@components/Spinner";
-import { ArrowsPointingOutIcon, FaceFrownIcon } from "@heroicons/react/24/outline";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx, numFormat, toDate } from "@lib/helpers";
-import {
-  ColumnDef,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Tooltip } from "@components/index";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import { ResultBadge } from "@components/Badge/election";
@@ -368,7 +362,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         {!data.length && !isLoading && (
           <Card className="flex h-[200px] items-center justify-center px-3 text-sm lg:text-base">
             <Card className="bg-outline dark:bg-washed-dark mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md px-3 py-1.5">
-              <FaceFrownIcon className="min-h-4 min-w-4 text-dim mx-auto mt-1 h-8 w-auto dark:text-white" />
+              <FaceFrownIcon className="min-h-4 min-w-4 text-dim mx-auto mt-1 h-8 w-auto dark:text-white md:h-4 md:w-auto" />
               {empty}
             </Card>
           </Card>

@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { ResultBadge } from "@components/Badge/election";
+import ElectionLayout from "./layout";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -138,46 +139,8 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   });
 
   return (
-    <>
-      <Hero
-        background="red"
-        category={[t("common:categories.democracy"), "text-danger"]}
-        header={[t("header")]}
-        description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Election Comission (EC)"}
-            link="https://www.spr.gov.my/"
-            icon={<SPRIcon />}
-          />
-        }
-      />
-
+    <ElectionLayout>
       <Container className="min-h-fit">
-        <ContainerTabs.List
-          options={[
-            {
-              name: t("elections"),
-              icon: <SPRIconSolid className="-mb-1" />,
-              url: routes.ELECTION_EXPLORER.concat("/elections"),
-            },
-            {
-              name: t("candidates"),
-              icon: <UserIcon className="m-1 h-5 w-5" />,
-            },
-            {
-              name: t("parties"),
-              icon: <FlagIcon className="m-1 h-5 w-5" />,
-              url: routes.ELECTION_EXPLORER.concat("/parties"),
-            },
-            {
-              name: t("seats"),
-              icon: <MapIcon className="m-1 h-5 w-5" />,
-              url: routes.ELECTION_EXPLORER.concat("/seats"),
-            },
-          ]}
-          current={1}
-        />
         <Section>
           <div className="lg:grid lg:grid-cols-12">
             <div className="lg:col-span-10 lg:col-start-2">
@@ -242,7 +205,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           </div>
         </Section>
       </Container>
-    </>
+    </ElectionLayout>
   );
 };
 
