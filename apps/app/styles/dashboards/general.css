@@ -113,15 +113,15 @@
 /* FLOATING ICONS STYLES */
 .atom1-float {
   position: absolute;
+  top: calc(10% + 123px);
   left: calc(50% - 328px);
-  top: calc(50% - 221px);
   opacity: 0.8;
   animation: float 3s infinite;
 }
 
 .atom2-float {
   position: absolute;
-  bottom: calc(50% - 318px);
+  bottom: calc(50% - 268px);
   right: calc(50% - 461px);
   opacity: 0.4;
   animation: float 4s infinite;
@@ -129,7 +129,7 @@
 
 .bar1-float {
   position: absolute;
-  bottom: calc(50% - 141px);
+  top: calc(24% + 365px);
   right: calc(50% - 134px);
   opacity: 0.3;
   filter: blur(3.5px);
@@ -138,7 +138,7 @@
 
 .bar2-float {
   position: absolute;
-  top: calc(50% - 313px);
+  top: calc(9% + 99px);
   right: calc(50% - 74px);
   opacity: 0.8;
   animation: float 5s infinite;
@@ -146,7 +146,7 @@
 
 .bar3-float {
   position: absolute;
-  top: calc(50% - 76px);
+  top: calc(18% + 176px);
   left: calc(50% - 750px);
   opacity: 0.3;
   animation: float 4s infinite;
@@ -154,7 +154,7 @@
 
 .line1-float {
   position: absolute;
-  bottom: calc(50% - 320px);
+  top: calc(20% + 500px);
   left: calc(50% - 582px);
   opacity: 0.8;
   animation: float 3s infinite;
@@ -162,7 +162,7 @@
 
 .line2-float {
   position: absolute;
-  top: calc(50% - 352px);
+  top: calc(2% + 70px);
   right: calc(50% - 410px);
   opacity: 0.4;
   animation: float 5s infinite;
@@ -170,7 +170,7 @@
 
 .pie1-float {
   position: absolute;
-  top: calc(50% - 289px);
+  top: calc(8% + 88px);
   left: calc(50% - 592px);
   opacity: 0.8;
   filter: blur(2px);
@@ -179,7 +179,7 @@
 
 .pie2-float {
   position: absolute;
-  top: calc(50% + 200px);
+  top: calc(22% + 444px);
   left: calc(50% - 267px);
   opacity: 0.8;
   animation: float 4s infinite;
