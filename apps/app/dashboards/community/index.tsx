@@ -96,155 +96,153 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
         background="flex flex-col flex-grow items-center bg-gradient-radial to-background from-[#E2E8F0] dark:from-[#3F3F46] dark:to-black"
       >
         <div className="flex flex-grow flex-col pb-16 pt-16 lg:grid lg:grid-cols-12">
-          <div className="flex flex-col lg:col-span-10 lg:col-start-2">
-            <div>
-              <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
-                <div className="flex-1">
-                  <div className="flex flex-col space-y-6">
-                    <p className="text-primary dark:text-primary-dark font-semibold uppercase">{`${t(
-                      "cta"
-                    )}!`}</p>
-                    <div className="space-y-3">
-                      <h2>{t("header")}</h2>
-                      <p className="text-dim whitespace-pre-line">{t("description")}</p>
-                    </div>
+          <div className="flex flex-col justify-center lg:col-span-10 lg:col-start-2">
+            <div className="z-20 flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
+              <div className="flex-1">
+                <div className="flex flex-col space-y-6">
+                  <p className="text-primary dark:text-primary-dark font-semibold uppercase">{`${t(
+                    "cta"
+                  )}!`}</p>
+                  <div className="space-y-3">
+                    <h2>{t("header")}</h2>
+                    <p className="text-dim whitespace-pre-line">{t("description")}</p>
                   </div>
                 </div>
-                <div className="z-20 lg:w-auto lg:min-w-[450px]">
-                  <Card className="bg-white dark:bg-black">
-                    {data.sent ? (
-                      <div className="flex h-[300px] p-8">
-                        <div className="flex flex-col self-center">
-                          <CheckMarkIcon className="items-center self-center" />
-                          <div className="mt-6 text-center text-lg font-bold text-black dark:text-white">
-                            {t("thank_you")}
-                          </div>
-                          <div className="text-dim mt-3 whitespace-pre-line text-center text-sm">
-                            {t("received")}
-                          </div>
+              </div>
+              <div className="lg:w-auto lg:min-w-[450px]">
+                <Card className="bg-white dark:bg-black">
+                  {data.sent ? (
+                    <div className="flex h-[300px] p-8">
+                      <div className="flex flex-col self-center">
+                        <CheckMarkIcon className="items-center self-center" />
+                        <div className="mt-6 text-center text-lg font-bold text-black dark:text-white">
+                          {t("thank_you")}
+                        </div>
+                        <div className="text-dim mt-3 whitespace-pre-line text-center text-sm">
+                          {t("received")}
                         </div>
                       </div>
-                    ) : data.loading ? (
-                      <div className="flex h-[300px] p-8">
-                        <div className="mx-auto self-center">
-                          <Spinner loading={data.loading} />
-                        </div>
+                    </div>
+                  ) : data.loading ? (
+                    <div className="flex h-[300px] p-8">
+                      <div className="mx-auto self-center">
+                        <Spinner loading={data.loading} />
                       </div>
-                    ) : (
-                      <form className="space-y-6 p-6 lg:p-8">
-                        <p>{t("fill_form")}</p>
-                        <div className="space-y-3">
-                          <Dropdown
-                            className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
-                            anchor={"left"}
-                            width={"w-full"}
-                            options={FILTER_OPTIONS}
-                            placeholder={t("area_expertise")}
-                            selected={FILTER_OPTIONS.find(e => e.value === data.expertise_area)}
-                            onChange={e => {
-                              setData("valid_area", false);
-                              setData("expertise_area", e.value);
-                            }}
-                          />
-                          {data.valid_area && (
-                            <p className="text-danger text-xs">{data.valid_area}</p>
-                          )}
-                          <Input
+                    </div>
+                  ) : (
+                    <form className="space-y-6 p-6 lg:p-8">
+                      <p>{t("fill_form")}</p>
+                      <div className="space-y-3">
+                        <Dropdown
+                          className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
+                          anchor={"left"}
+                          width={"w-full"}
+                          options={FILTER_OPTIONS}
+                          placeholder={t("area_expertise")}
+                          selected={FILTER_OPTIONS.find(e => e.value === data.expertise_area)}
+                          onChange={e => {
+                            setData("valid_area", false);
+                            setData("expertise_area", e.value);
+                          }}
+                        />
+                        {data.valid_area && (
+                          <p className="text-danger text-xs">{data.valid_area}</p>
+                        )}
+                        <Input
+                          required
+                          type="text"
+                          placeholder={t("common:common.name")}
+                          value={data.name}
+                          onChange={e => {
+                            setData("valid_name", false);
+                            setData("name", e);
+                          }}
+                          spellCheck={false}
+                          validation={data.valid_name}
+                        />
+                        <Input
+                          required
+                          type="email"
+                          placeholder={t("email")}
+                          value={data.email}
+                          onChange={e => {
+                            setData("valid_email", false);
+                            setData("email", e);
+                          }}
+                          validation={data.valid_email}
+                        />
+                        <Input
+                          required
+                          type="text"
+                          placeholder={t("institution")}
+                          value={data.institution}
+                          onChange={e => {
+                            setData("valid_inst", false);
+                            setData("institution", e);
+                          }}
+                          validation={data.valid_inst}
+                        />
+                        <div>
+                          <textarea
                             required
-                            type="text"
-                            placeholder={t("common:common.name")}
-                            value={data.name}
-                            onChange={e => {
-                              setData("valid_name", false);
-                              setData("name", e);
-                            }}
-                            spellCheck={false}
-                            validation={data.valid_name}
-                          />
-                          <Input
-                            required
-                            type="email"
-                            placeholder={t("email")}
-                            value={data.email}
-                            onChange={e => {
-                              setData("valid_email", false);
-                              setData("email", e);
-                            }}
-                            validation={data.valid_email}
-                          />
-                          <Input
-                            required
-                            type="text"
-                            placeholder={t("institution")}
-                            value={data.institution}
-                            onChange={e => {
-                              setData("valid_inst", false);
-                              setData("institution", e);
-                            }}
-                            validation={data.valid_inst}
-                          />
-                          <div>
-                            <textarea
-                              required
-                              className={clx(
-                                "w-full resize-none rounded-md px-3 dark:bg-black",
-                                "dark:focus:border-primary-dark focus:border-outlineHover outline-none focus:ring-0",
-                                data.valid_exp
-                                  ? "border-danger border-2"
-                                  : "border-outline dark:border-washed-dark dark:hover:border-outlineHover-dark hover:border-outlineHover border"
-                              )}
-                              placeholder={t("experience")}
-                              value={data.experience}
-                              onChange={e => {
-                                setData("valid_exp", false);
-                                setData("experience", e.target.value);
-                              }}
-                              rows={6}
-                            ></textarea>
-                            {data.valid_exp && (
-                              <p className="text-danger text-xs">{data.valid_exp}</p>
+                            className={clx(
+                              "w-full resize-none rounded-md px-3 dark:bg-black",
+                              "dark:focus:border-primary-dark focus:border-outlineHover outline-none focus:ring-0",
+                              data.valid_exp
+                                ? "border-danger border-2"
+                                : "border-outline dark:border-washed-dark dark:hover:border-outlineHover-dark hover:border-outlineHover border"
                             )}
-                          </div>
+                            placeholder={t("experience")}
+                            value={data.experience}
+                            onChange={e => {
+                              setData("valid_exp", false);
+                              setData("experience", e.target.value);
+                            }}
+                            rows={6}
+                          ></textarea>
+                          {data.valid_exp && (
+                            <p className="text-danger text-xs">{data.valid_exp}</p>
+                          )}
                         </div>
-                        <Button
-                          className="btn btn-primary w-full justify-center"
-                          onClick={() =>
-                            validate()
-                              .then((resp: any) => {
-                                setData("loading", true);
-                                post("/mods", {
-                                  expertise_area: resp.expertise_area,
-                                  name: resp.name,
-                                  email: resp.email,
-                                  institution: resp.institution,
-                                  description: resp.experience,
-                                  lang: i18n.language,
+                      </div>
+                      <Button
+                        className="btn btn-primary w-full justify-center"
+                        onClick={() =>
+                          validate()
+                            .then((resp: any) => {
+                              setData("loading", true);
+                              post("/mods", {
+                                expertise_area: resp.expertise_area,
+                                name: resp.name,
+                                email: resp.email,
+                                institution: resp.institution,
+                                description: resp.experience,
+                                lang: i18n.language,
+                              })
+                                .then(response => {
+                                  console.log(response);
+                                  setData("loading", false);
+                                  setData("sent", true);
                                 })
-                                  .then(response => {
-                                    console.log(response);
-                                    setData("loading", false);
-                                    setData("sent", true);
-                                  })
-                                  .catch(e => {
-                                    console.error(e);
-                                  });
-                              })
-                              .catch(err => {
-                                setData("valid_area", err.expertise_area);
-                                setData("valid_name", err.name);
-                                setData("valid_email", err.email);
-                                setData("valid_inst", err.institution);
-                                setData("valid_exp", err.experience);
-                              })
-                          }
-                        >
-                          {t("cta")}
-                          <ChevronRightIcon className="h-5 w-5 text-white" />
-                        </Button>
-                      </form>
-                    )}
-                  </Card>
-                </div>
+                                .catch(e => {
+                                  console.error(e);
+                                });
+                            })
+                            .catch(err => {
+                              setData("valid_area", err.expertise_area);
+                              setData("valid_name", err.name);
+                              setData("valid_email", err.email);
+                              setData("valid_inst", err.institution);
+                              setData("valid_exp", err.experience);
+                            })
+                        }
+                      >
+                        {t("cta")}
+                        <ChevronRightIcon className="h-5 w-5 text-white" />
+                      </Button>
+                    </form>
+                  )}
+                </Card>
               </div>
             </div>
           </div>
