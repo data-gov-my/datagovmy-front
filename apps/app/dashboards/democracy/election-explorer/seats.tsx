@@ -1,10 +1,7 @@
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import ContainerTabs from "@components/Tabs/ContainerTabs";
-import { AgencyBadge, Container, Hero, Section } from "@components/index";
+import { Container, Section } from "@components/index";
 import { OptionType } from "@components/types";
-import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";

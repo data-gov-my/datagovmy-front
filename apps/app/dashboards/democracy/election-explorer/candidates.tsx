@@ -1,11 +1,8 @@
 import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
-import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "@components/index";
+import { Container, Panel, Section, Tabs } from "@components/index";
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import ContainerTabs from "@components/Tabs/ContainerTabs";
-import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";

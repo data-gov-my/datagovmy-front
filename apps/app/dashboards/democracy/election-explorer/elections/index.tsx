@@ -1,14 +1,11 @@
 import { FunctionComponent, useRef } from "react";
 import dynamic from "next/dynamic";
 import Card from "@components/Card";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ImageWithFallback from "@components/ImageWithFallback";
 import {
-  AgencyBadge,
   Button,
   Container,
   Dropdown,
-  Hero,
   Modal,
   Section,
   StateDropdown,
@@ -16,17 +13,10 @@ import {
 } from "@components/index";
 import Label from "@components/Label";
 import { List, Panel } from "@components/Tabs";
-import ContainerTabs from "@components/Tabs/ContainerTabs";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import {
-  BuildingLibraryIcon,
-  FlagIcon,
-  MapIcon,
-  TableCellsIcon,
-  UserIcon,
-} from "@heroicons/react/24/solid";
+import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
