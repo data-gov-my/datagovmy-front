@@ -269,74 +269,60 @@ export const AtomIcon: FunctionComponent<IconProps> = ({ className, transform })
 export const BarChartIcon: FunctionComponent<IconProps> = ({ className, transform }) => {
   return (
     <svg
-      width="60"
+      width="61"
       height="43"
-      viewBox="0 0 60 43"
+      viewBox="0 0 61 43"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       transform={transform}
     >
-      <rect y="11.6885" width="9.13043" height="31.1688" rx="2" fill="url(#paint0)" />
-      <rect x="25.5737" y="27.9219" width="8.85246" height="14.9351" rx="2" fill="url(#paint1)" />
-      <rect x="38.3607" y="11.6885" width="8.85246" height="31.1688" rx="2" fill="url(#paint2)" />
-      <rect x="50.8695" width="9.13043" height="42.8571" rx="2" fill="url(#paint3)" />
-      <rect x="12.7869" y="19.1562" width="8.85246" height="23.7013" rx="2" fill="url(#paint4)" />
+      <rect y="12" width="8" height="31" rx="4" fill="url(#paint0)" />
+      <rect x="13" y="19" width="8" height="24" rx="4" fill="url(#paint1)" />
+      <rect x="26" y="28" width="9" height="15" rx="4.5" fill="url(#paint2)" />
+      <rect x="40" y="12" width="8" height="31" rx="4" fill="url(#paint3)" />
+      <rect x="53" width="8" height="43" rx="4" fill="url(#paint4)" />
       <defs>
         <linearGradient
           id="paint0"
-          x1="4.56522"
-          y1="8.85495"
-          x2="15.4532"
-          y2="39.0106"
+          x1="4"
+          y1="9.18182"
+          x2="15.8964"
+          y2="38.2083"
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#6A98FE" />
           <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
-        <linearGradient
-          id="paint1"
-          x1="30"
-          y1="26.5641"
-          x2="32.8245"
-          y2="42.3934"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#6A98FE" />
-          <stop offset="1" stopColor="#2563EB" />
+        <linearGradient id="paint1" x1="17" y1="19" x2="17" y2="43" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#E2E8F0" />
+          <stop offset="1" stopColor="#94A3B8" />
         </linearGradient>
         <linearGradient
           id="paint2"
-          x1="42.7869"
-          y1="11.6885"
-          x2="42.7869"
-          y2="42.8573"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#E2E8F0" />
-          <stop offset="1" stopColor="#94A3B8" />
-        </linearGradient>
-        <linearGradient
-          id="paint3"
-          x1="55.4347"
-          y1="-3.8961"
-          x2="74.1023"
-          y2="33.7057"
+          x1="30.5"
+          y1="26.6364"
+          x2="33.3046"
+          y2="42.5463"
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#6A98FE" />
           <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
-        <linearGradient
-          id="paint4"
-          x1="17.2131"
-          y1="19.1562"
-          x2="17.2131"
-          y2="42.8575"
-          gradientUnits="userSpaceOnUse"
-        >
+        <linearGradient id="paint3" x1="44" y1="12" x2="44" y2="43" gradientUnits="userSpaceOnUse">
           <stop stopColor="#E2E8F0" />
           <stop offset="1" stopColor="#94A3B8" />
+        </linearGradient>
+        <linearGradient
+          id="paint4"
+          x1="57"
+          y1="-3.90909"
+          x2="77.2041"
+          y2="31.6306"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6A98FE" />
+          <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
       </defs>
     </svg>
@@ -346,43 +332,46 @@ export const BarChartIcon: FunctionComponent<IconProps> = ({ className, transfor
 export const LineChartIcon: FunctionComponent<IconProps> = ({ className, transform }) => {
   return (
     <svg
-      width="80"
-      height="74"
-      viewBox="0 0 80 74"
+      width="67"
+      height="60"
+      viewBox="0 0 67 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       transform={transform}
     >
       <path
-        d="M18.8853 53.1658L27.798 39.905L33.6511 48.6136L49.3482 25.2588L56.5316 35.9466L71.4305 13.7793"
-        stroke="url(#paint0_linear_3006_31924)"
+        d="M10 48L18.481 36.5528L24.0506 42.05L38.9873 23.9095L45.8228 31.1153L60 14"
+        stroke="url(#paint0)"
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M13.0607 0.93934C12.4749 0.353553 11.5251 0.353553 10.9393 0.93934L1.3934 10.4853C0.807611 11.0711 0.807611 12.0208 1.3934 12.6066C1.97919 13.1924 2.92893 13.1924 3.51472 12.6066L12 4.12132L20.4853 12.6066C21.0711 13.1924 22.0208 13.1924 22.6066 12.6066C23.1924 12.0208 23.1924 11.0711 22.6066 10.4853L13.0607 0.93934ZM12 62H10.5C10.5 62.8284 11.1716 63.5 12 63.5V62ZM79.3764 63.0607C79.9622 62.4749 79.9622 61.5251 79.3764 60.9393L69.8305 51.3934C69.2447 50.8076 68.295 50.8076 67.7092 51.3934C67.1234 51.9792 67.1234 52.9289 67.7092 53.5147L76.1945 62L67.7092 70.4853C67.1234 71.0711 67.1234 72.0208 67.7092 72.6066C68.295 73.1924 69.2447 73.1924 69.8305 72.6066L79.3764 63.0607ZM10.5 2V62H13.5V2H10.5ZM12 63.5H78.3158V60.5H12V63.5Z"
-        fill="url(#paint1_linear_3006_31924)"
+        d="M3 2V57H64"
+        stroke="url(#paint1)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <defs>
         <linearGradient
-          id="paint0_linear_3006_31924"
-          x1="73.9909"
-          y1="13.7071"
-          x2="39.3669"
-          y2="41.3966"
+          id="paint0"
+          x1="62.4363"
+          y1="13.9377"
+          x2="32.0399"
+          y2="40.7335"
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#6A98FE" />
           <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
         <linearGradient
-          id="paint1_linear_3006_31924"
-          x1="12"
-          y1="62"
-          x2="45.6089"
-          y2="29.9114"
+          id="paint1"
+          x1="3"
+          y1="57"
+          x2="33.8129"
+          y2="27.479"
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#94A3B8" stopOpacity="0.5" />
