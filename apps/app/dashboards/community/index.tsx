@@ -109,7 +109,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full lg:w-auto lg:min-w-[450px] lg:max-w-[450px]">
+              <div className="w-full lg:w-[450px]">
                 <Card className="bg-white dark:bg-black">
                   {data.sent ? (
                     <div className="flex h-[300px] justify-center p-8">
