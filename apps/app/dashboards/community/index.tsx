@@ -211,14 +211,19 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                           validate()
                             .then((resp: any) => {
                               setData("loading", true);
-                              post("/mods/", "form", {
-                                expertise_area: resp.expertise_area,
-                                name: resp.name,
-                                email: resp.email,
-                                institution: resp.institution,
-                                description: resp.experience,
-                                language: i18n.language,
-                              })
+                              post(
+                                "/mods/",
+                                {
+                                  expertise_area: resp.expertise_area,
+                                  name: resp.name,
+                                  email: resp.email,
+                                  institution: resp.institution,
+                                  description: resp.experience,
+                                  language: i18n.language,
+                                },
+                                "api",
+                                true
+                              )
                                 .then(({ data }) => {
                                   if (data["Email status"] === "sent") {
                                     setData("loading", false);
