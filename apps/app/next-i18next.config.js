@@ -59,9 +59,10 @@ module.exports = {
   serializeConfig: false,
   reloadOnPrerender: true,
   use: [I18NextHttpBackend],
-  react: {
-    bindI18n: "languageChanged",
-    bindI18nStore: "languageChanged",
-    useSuspense: true,
-  },
+  fallbackLng: false,
+  //   react: {
+  //     bindI18n: "languageChanged",
+  //     bindI18nStore: "languageChanged",
+  //     useSuspense: true,
+  //   },
 };
