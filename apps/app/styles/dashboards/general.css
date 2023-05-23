@@ -115,7 +115,6 @@
   position: absolute;
   top: calc(50% - 286.5px);
   left: calc(50% - 194px);
-  opacity: 0.8;
   animation: float 3s infinite;
 }
 
@@ -123,7 +122,8 @@
   position: absolute;
   top: calc(50% + 290.5px);
   left: calc(50% + 399px);
-  opacity: 0.4;
+  opacity: 0.3;
+  filter: blur(3.5px);
   animation: float 4s infinite;
 }
 
@@ -140,7 +140,6 @@
   position: absolute;
   top: calc(50% - 230.5px);
   left: calc(50% + 611px);
-  opacity: 0.8;
   animation: float 5s infinite;
 }
 
@@ -149,6 +148,7 @@
   top: calc(50% - 93.5px);
   left: calc(50% - 750px);
   opacity: 0.3;
+  filter: blur(3.5px);
   animation: float 4s infinite;
 }
 
@@ -156,7 +156,6 @@
   position: absolute;
   top: calc(50% + 212.5px);
   left: calc(50% - 582px);
-  opacity: 0.8;
   animation: float 3s infinite;
 }
 
@@ -164,7 +163,8 @@
   position: absolute;
   top: calc(50% - 339.5px);
   left: calc(50% + 345px);
-  opacity: 0.4;
+  opacity: 0.3;
+  filter: blur(2px);
   animation: float 5s infinite;
 }
 
@@ -172,7 +172,7 @@
   position: absolute;
   top: calc(50% - 306.5px);
   left: calc(50% - 592px);
-  opacity: 0.8;
+  opacity: 0.3;
   filter: blur(2px);
   animation: float 4s infinite;
 }
@@ -181,7 +181,6 @@
   position: absolute;
   top: calc(50% + 192.5px);
   left: calc(50% - 267px);
-  opacity: 0.8;
   animation: float 4s infinite;
 }
 
