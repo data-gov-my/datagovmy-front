@@ -3,6 +3,7 @@ const I18NextHttpBackend = require("i18next-http-backend");
 const namespace = [
   "common",
   "catalogue",
+  "countries",
   "dashboard-999-tracker",
   "dashboard-birthday-explorer",
   "dashboard-blood-donation",

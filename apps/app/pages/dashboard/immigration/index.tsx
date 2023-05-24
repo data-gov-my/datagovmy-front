@@ -16,7 +16,7 @@ const Immigration: Page = ({
   timeseries_country,
   timeseries_country_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboard-immigration", "common"]);
+  const { t } = useTranslation(["dashboard-immigration", "common", "countries"]);
 
   return (
     <>
@@ -34,28 +34,35 @@ const Immigration: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-immigration", async () => {
-  const { data: dropdown } = await get("/dropdown", { dashboard: "immigration" });
-  const { data } = await get("/dashboard", { dashboard: "immigration", country: "AFG" });
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-immigration", "countries"],
+  async () => {
+    const { data: dropdown } = await get("/dropdown", { dashboard: "immigration" });
+    const { data } = await get("/dashboard", {
+      dashboard: "immigration",
+      country: "overall",
+      period: "daily",
+    });
 
-  return {
-    notFound: false,
-    props: {
-      meta: {
-        id: "dashboard-immigration",
-        type: "dashboard",
-        category: "demography",
-        agency: "Imigresen",
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-immigration",
+          type: "dashboard",
+          category: "demography",
+          agency: "Imigresen",
+        },
+        choropleth: data.choropleth,
+        countries: dropdown.data,
+        last_updated: new Date().valueOf(),
+        timeseries: data.timeseries,
+        timeseries_callout: data.timeseries_callout,
+        timeseries_country: data.timeseries_country,
+        timeseries_country_callout: data.timeseries_country_callout,
       },
-      choropleth: data.choropleth,
-      countries: dropdown.data,
-      last_updated: new Date().valueOf(),
-      timeseries: data.timeseries,
-      timeseries_callout: data.timeseries_callout,
-      timeseries_country: data.timeseries_country,
-      timeseries_country_callout: data.timeseries_country_callout,
-    },
-  };
-});
+    };
+  }
+);
 
 export default Immigration;
