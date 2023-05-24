@@ -15,6 +15,7 @@ type ComboBoxProps<L, V> = {
   onSearch?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
+  imageSource?: string;
   enableType?: boolean;
   loading?: boolean;
 };
@@ -26,6 +27,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   onSearch,
   placeholder,
   enableFlag = false,
+  imageSource = "/static/images/parties/",
   enableType = false,
   loading = false,
 }: ComboBoxProps<L, V>) => {
@@ -119,7 +121,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                         <>
                           <ImageWithFallback
                             className="border-outline dark:border-washed-dark rounded border"
-                            src={`/static/images/parties/${option.value}.png`}
+                            src={`${imageSource}${option.value}.png`}
                             width={32}
                             height={18}
                             alt={option.value as string}
