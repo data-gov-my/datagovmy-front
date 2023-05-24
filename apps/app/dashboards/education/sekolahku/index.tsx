@@ -85,9 +85,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     []
   );
 
-  // TODO: remove manual sorting once BE maintains ordering
-  const barmeterSortArray = ["sex", "oku", "orphan", "ethnic", "religion", "income"];
-
   const formatCallout = (type: string, value: number): string => {
     switch (type) {
       case "gpa":
@@ -234,8 +231,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
         <Section title={t("section_2.title", { school: sekolahku_info.school })} date={Date.now()}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-            {barmeterSortArray.map(k => {
-              const v = sekolahku_barmeter.bar[k];
+            {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any]) => {
               return (
                 <div className="flex flex-col space-y-6" key={k}>
                   <BarMeter
@@ -262,33 +258,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                 </div>
               );
             })}
-            {/* {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any]) => {
-              return (
-                <div className="flex flex-col space-y-6">
-                  <BarMeter
-                    key={k}
-                    title={t(`section_2.${k}.title`)}
-                    layout="horizontal"
-                    unit="%"
-                    data={v}
-                    sort={"desc"}
-                    formatX={key => t(`section_2.${k}.${key}`)}
-                    formatY={(value, key) => (
-                      <>
-                        <Tooltip
-                          tip={`${t("section_2.tooltip_count", {
-                            count: sekolahku_barmeter.tooltip[k].find(
-                              (object: { x: string; y: number }) => object.x === key
-                            ).y,
-                          })}`}
-                        />
-                        <span className="pl-1">{value.toFixed(1)}</span>
-                      </>
-                    )}
-                  />
-                </div>
-              );
-            })} */}
           </div>
         </Section>
 
