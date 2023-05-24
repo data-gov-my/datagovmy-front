@@ -49,7 +49,8 @@
     "react-i18next": "^12.2.0",
     "react-leaflet": "^4.1.0",
     "react-slick": "^0.29.0",
-    "sharp": "^0.31.0"
+    "sharp": "^0.31.0",
+    "sonner": "^0.4.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^13.2.4",

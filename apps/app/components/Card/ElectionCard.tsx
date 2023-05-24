@@ -128,7 +128,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                         {toDate(options[data.index]?.date, "dd MMM yyyy", i18n.language)}
                       </span>
 
-                      <span className="uppercase">{options[data.index].election_name}</span>
+                      <span className="uppercase">{options[data.index]?.election_name}</span>
                     </div>
                     <ElectionTable
                       className="max-h-96 w-full overflow-y-auto"

@@ -61,9 +61,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           },
           params: { seat_name: name },
           selection: dropdown.data,
-          elections: seat.data.sort(
-            (a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date))
-          ),
+          elections: seat.data.sort((a: Seat, b: Seat) => Date.parse(b.date) - Date.parse(a.date)),
         },
       };
     } catch (e: any) {
