@@ -48,10 +48,12 @@ module.exports = {
     defaultLocale: "en-GB",
     locales: ["en-GB", "ms-MY"],
     backend: {
-      loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n?lang={{lng}}&filename={{ns}}`,
+      backendOptions: [{ expirationTime: 60 * 60 * 1000 }, {}], // 1 hour
+      loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n/?lang={{lng}}&filename={{ns}}`,
       customHeaders: {
         Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
       },
+      crossDomain: true,
     },
   },
   ns: namespace,
@@ -60,10 +62,9 @@ module.exports = {
   serializeConfig: false,
   reloadOnPrerender: true,
   use: [I18NextHttpBackend],
-  fallbackLng: false,
   //   react: {
   //     bindI18n: "languageChanged",
   //     bindI18nStore: "languageChanged",
-  //     useSuspense: true,
+  //     useSuspense: false,
   //   },
 };

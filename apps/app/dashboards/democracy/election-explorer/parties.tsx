@@ -1,31 +1,19 @@
 import ElectionCard from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ImageWithFallback from "@components/ImageWithFallback";
-import ContainerTabs from "@components/Tabs/ContainerTabs";
-import {
-  AgencyBadge,
-  Container,
-  Hero,
-  Panel,
-  Section,
-  StateDropdown,
-  Tabs,
-} from "@components/index";
+import { Container, Panel, Section, StateDropdown, Tabs } from "@components/index";
 import type { OptionType } from "@components/types";
-import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
-import { toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useMemo } from "react";
-import type { BaseResult, ElectionResource, Party, PartyResult } from "./types";
+import { FunctionComponent } from "react";
+import type { ElectionResource, Party, PartyResult } from "./types";
 import ElectionLayout from "./layout";
 
 /**

@@ -12,7 +12,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
 import { clx, toDate } from "@lib/helpers";
 import { useData } from "@hooks/useData";
-import {
+import type {
   BaseResult,
   Candidate,
   Party,

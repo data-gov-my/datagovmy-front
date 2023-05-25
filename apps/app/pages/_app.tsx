@@ -15,7 +15,7 @@ import { WindowProvider } from "@hooks/useWindow";
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
   const layout =
-    Component.layout ??
+    Component.layout ||
     ((page: ReactNode) => (
       <Layout className={clx(Fonts.body.variable, "font-sans")}>{page}</Layout>
     ));
