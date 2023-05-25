@@ -7056,6 +7056,11 @@ slice-ansi@^5.0.0:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
 
+sonner@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/sonner/-/sonner-0.4.0.tgz#65c4930a31f5fc3a98fe1ace1971050726bc155d"
+  integrity sha512-zEU/Mzur39xYPpyQOOCmN6YQftl5v+TSmdsmWEbWf6ovnOvnHyRwR7+/6BIBbzwRa8+3v06FJlpF7J3KS4Ll9Q==
+
 sort-keys@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/sort-keys/-/sort-keys-5.0.0.tgz#5d775f8ae93ecc29bc7312bbf3acac4e36e3c446"

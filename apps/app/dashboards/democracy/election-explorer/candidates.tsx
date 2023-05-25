@@ -12,6 +12,7 @@ import type { BaseResult, Candidate, CandidateResult, ElectionResource } from ".
 import { generateSchema } from "@lib/schema/election-explorer";
 import { ResultBadge } from "@components/Badge/election";
 import ElectionLayout from "./layout";
+import { toast } from "@components/Toast";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -127,6 +128,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
         };
       })
       .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
         console.error(e);
       });
   };

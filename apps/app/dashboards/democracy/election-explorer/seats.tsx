@@ -13,6 +13,7 @@ import { generateSchema } from "@lib/schema/election-explorer";
 import { useRouter } from "next/router";
 import type { BaseResult, ElectionResource, ElectionType, Seat, SeatResult } from "./types";
 import ElectionLayout from "./layout";
+import { toast } from "@components/Toast";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -85,6 +86,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
         };
       })
       .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
         console.error(e);
       });
   };

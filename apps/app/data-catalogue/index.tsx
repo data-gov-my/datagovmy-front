@@ -19,7 +19,6 @@ import {
   ForwardRefExoticComponent,
   forwardRef,
   useImperativeHandle,
-  ReactNode,
   ForwardedRef,
   useContext,
 } from "react";
@@ -79,14 +78,24 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         background="blue"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[
-          `${filterRef.current?.source ? filterRef.current?.source.concat(":") : ""} ${t(
-            "header"
-          )}`,
+          `${
+            filterRef.current?.source?.value ? filterRef.current?.source?.value?.concat(":") : ""
+          } ${t("header")}`,
         ]}
         description={
           <div className="space-y-6 xl:w-2/3">
             <p className="text-dim">{t("description")}</p>
-            {filterRef.current?.sourceFilter()}
+            <Dropdown
+              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+              className="min-w-[250px]"
+              placeholder={t("source_placeholder")}
+              anchor="left"
+              options={filterRef.current?.filters ?? []}
+              selected={filterRef.current?.source}
+              onChange={e => filterRef.current?.setFilter("source", e)}
+              enableSearch
+              enableClear
+            />
           </div>
         }
         agencyBadge={
@@ -160,8 +169,9 @@ interface CatalogueFilterProps {
 }
 
 interface CatalogueFilterRef {
-  source?: string;
-  sourceFilter: () => ReactNode;
+  source?: OptionType;
+  filters?: OptionType[];
+  setFilter: (key: string, value: any) => void;
 }
 
 const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forwardRef(
@@ -218,20 +228,9 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
 
     useImperativeHandle(ref, () => {
       return {
-        source: filter.source?.value ?? "",
-        sourceFilter: () => (
-          <Dropdown
-            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-            className="min-w-[250px]"
-            placeholder={t("source_placeholder")}
-            anchor="left"
-            options={filterSources}
-            selected={filter.source}
-            onChange={e => setFilter("source", e)}
-            enableSearch
-            enableClear
-          />
-        ),
+        source: filter.source,
+        filters: filterSources,
+        setFilter,
       };
     });
 

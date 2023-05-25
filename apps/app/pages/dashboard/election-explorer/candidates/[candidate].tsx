@@ -5,6 +5,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
+import type { Candidate } from "@dashboards/democracy/election-explorer/types";
 
 const ElectionCandidates: Page = ({
   elections,
@@ -60,8 +61,12 @@ export const getStaticProps: GetStaticProps = withi18n(
           params: { candidate_name: name },
           selection: dropdown.data ?? [],
           elections: {
-            parlimen: candidate.data.parlimen.reverse(),
-            dun: candidate.data.dun.reverse(),
+            parlimen: candidate.data.parlimen.sort(
+              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+            ),
+            dun: candidate.data.dun.sort(
+              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+            ),
           },
         },
       };

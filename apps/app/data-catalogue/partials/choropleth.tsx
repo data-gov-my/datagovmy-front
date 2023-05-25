@@ -7,6 +7,7 @@ import { track } from "@lib/mixpanel";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { toast } from "@components/Toast";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
   ssr: false,
@@ -73,6 +74,10 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
                 })
               )
               .catch(e => {
+                toast.error(
+                  t("common:error.toast.image_download_failure"),
+                  t("common:error.toast.try_again")
+                );
                 console.error(e);
               });
           },

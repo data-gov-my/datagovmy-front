@@ -32,10 +32,14 @@ const BarPerc: FunctionComponent<BarPercProps> = ({
         <div className="flex justify-between">
           {label && <p>{label}</p>}
           <div className="text-inherit dark:text-white">
-            <p>
-              {numFormat(value, "standard", precision)}
-              {unit}
-            </p>
+            {value !== null ? (
+              <p>
+                {numFormat(value, "standard", precision)}
+                {unit}
+              </p>
+            ) : (
+              <p>N/A</p>
+            )}
           </div>
         </div>
       )}

@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import type { ElectionResource, Party, PartyResult } from "./types";
 import ElectionLayout from "./layout";
+import { toast } from "@components/Toast";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -140,6 +141,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
         };
       })
       .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
         console.error(e);
       });
   };

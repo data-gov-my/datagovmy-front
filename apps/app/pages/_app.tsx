@@ -5,12 +5,13 @@ import Layout from "@components/Layout";
 import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import mixpanelConfig from "@config/mixpanel";
-import { ga_track, init_session, track } from "@lib/mixpanel";
+import { ga_track, track } from "@lib/mixpanel";
 import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
 import Nexti18NextConfig from "../next-i18next.config";
 import { clx } from "@lib/helpers";
 import { WindowProvider } from "@hooks/useWindow";
+import { Toast, toast } from "@components/Toast";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
@@ -52,6 +53,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
       <WindowProvider>
         <ThemeProvider attribute="class" enableSystem={false}>
           {layout(<Component {...pageProps} />, pageProps)}
+          <Toast />
         </ThemeProvider>
       </WindowProvider>
     </div>

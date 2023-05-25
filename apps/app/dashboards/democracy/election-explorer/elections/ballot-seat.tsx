@@ -16,6 +16,7 @@ import ComboBox from "@components/Combobox";
 import { SPRIconSolid } from "@components/Icon/agency";
 import { generateSchema } from "@lib/schema/election-explorer";
 import Tooltip from "@components/Tooltip";
+import { toast } from "@components/Toast";
 
 /**
  * Election Explorer - Ballot Seat
@@ -66,6 +67,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
         setData("seat_loading", false);
       })
       .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
         console.error(e);
       });
   };
