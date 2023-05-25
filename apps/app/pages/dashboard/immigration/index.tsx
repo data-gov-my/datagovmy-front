@@ -37,13 +37,14 @@ const Immigration: Page = ({
 export const getStaticProps: GetStaticProps = withi18n(
   ["dashboard-immigration", "countries"],
   async () => {
-    const { data: dropdown } = await get("/dropdown", { dashboard: "immigration" });
+    const { data: dropdown } = await get("/dropdown", { dashboard: "immigration_country" });
     const { data } = await get("/dashboard", {
       dashboard: "immigration",
-      country: "overall",
-      period: "daily",
     });
-
+    const { data: country } = await get("/dashboard", {
+      dashboard: "immigration_country",
+      country: "overall",
+    });
     return {
       notFound: false,
       props: {
@@ -58,8 +59,8 @@ export const getStaticProps: GetStaticProps = withi18n(
         last_updated: new Date().valueOf(),
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,
-        timeseries_country: data.timeseries_country,
-        timeseries_country_callout: data.timeseries_country_callout,
+        timeseries_country: country.timeseries_country,
+        timeseries_country_callout: country.timeseries_country_callout,
       },
     };
   }
