@@ -17,6 +17,7 @@ import { Trans } from "next-i18next";
 import { useWatch } from "@hooks/useWatch";
 import Spinner from "@components/Spinner";
 import { clx } from "@lib/helpers";
+import { toast } from "@components/Toast";
 
 /**
  * Birthday Explorer Dashboard
@@ -100,9 +101,12 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         for (let key in data) {
           setData(key, data[key]);
         }
+        setData("loading", false);
       })
-      .catch(e => console.error(e))
-      .then(() => setData("loading", false));
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      });
   };
 
   useWatch(() => {

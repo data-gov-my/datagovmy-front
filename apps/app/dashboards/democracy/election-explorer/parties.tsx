@@ -1,32 +1,21 @@
 import ElectionCard from "@components/Card/ElectionCard";
-import { FullResult } from "@components/Chart/Table/ElectionTable";
 import ComboBox from "@components/Combobox";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import ImageWithFallback from "@components/ImageWithFallback";
-import ContainerTabs from "@components/Tabs/ContainerTabs";
-import {
-  AgencyBadge,
-  Container,
-  Hero,
-  Panel,
-  Section,
-  StateDropdown,
-  Tabs,
-} from "@components/index";
+import { Container, Panel, Section, StateDropdown, Tabs } from "@components/index";
 import type { OptionType } from "@components/types";
-import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
-import { toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useMemo } from "react";
-import type { ElectionResource, Party } from "./types";
+import { FunctionComponent } from "react";
+import type { ElectionResource, Party, PartyResult } from "./types";
+import ElectionLayout from "./layout";
+import { toast } from "@components/Toast";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -50,19 +39,11 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
   const { push } = useRouter();
 
   const { data, setData } = useData({
-    tab_index: 0,
-    table_index: 0,
-
-    // params for Table
+    tab_index: 0, // parlimen = 0; dun = 1
     party: params.party_name,
     state: params.state,
 
     loading: false,
-
-    // Election full result
-    modal_loading: false,
-    modal_open: false,
-    full_results: [],
   });
 
   const party_schema = generateSchema<Party>([
@@ -82,17 +63,42 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
       header: t("votes_won"),
     },
     {
-      key: "fullResult" as any,
+      key: item => item,
+      id: "full_result",
       header: "",
-      id: "fullResult",
-      cell: ({ row }) => {
+      cell: ({ row, getValue }) => {
+        const selection = data.tab_index === 0 ? elections.parlimen : elections.dun;
+        const item = getValue() as Party;
+
         return (
-          <FullResult
-            desc={t("full_result")}
-            onClick={() => {
-              setData("table_index", row.index);
-              fetchResult(row.index);
-            }}
+          <ElectionCard
+            defaultParams={item}
+            onChange={(option: Party) => fetchResult(option.election_name, option.state)}
+            columns={generateSchema<PartyResult[number]>([
+              {
+                key: "party",
+                id: "party",
+                header: t("party_name"),
+              },
+              {
+                key: "seats",
+                id: "seats",
+                header: t("seats_won"),
+              },
+              {
+                key: "votes",
+                id: "votes",
+                header: t("votes_won"),
+              },
+            ])}
+            title={
+              <div className="flex flex-row gap-2 uppercase">
+                <h5>{item.election_name}</h5>
+              </div>
+            }
+            options={selection}
+            // highlightedRow={data.full_results.findIndex((r: Result) => r.name === data.candidate)}
+            page={row.index}
           />
         );
       },
@@ -119,91 +125,30 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     }).then(() => setData("loading", false));
   };
 
-  const fetchResult = (rowIndex: number) => {
-    setData("modal_open", true);
-    setData("modal_loading", true);
-
-    const election = data.tab_index === 0 ? elections.parlimen : elections.dun;
-
-    get("/explorer", {
+  const fetchResult = async (election: string, state: string) => {
+    return get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
       type: "party",
-      election: election[rowIndex].election_name,
-      state: data.state,
+      election,
+      state,
     })
-      .then(({ data }) => {
-        setData(
-          "full_results",
-          data.sort((a: Party, b: Party) => b.votes.abs - a.votes.abs)
-        );
-        setData("modal_loading", false);
+      .then(({ data }: { data: PartyResult }) => {
+        return {
+          data: data.sort(
+            (a: PartyResult[number], b: PartyResult[number]) => b.votes.abs - a.votes.abs
+          ),
+        };
       })
       .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
         console.error(e);
       });
   };
 
-  const election_result = useMemo<{
-    name: string;
-    date: string;
-    total: number;
-  }>(() => {
-    const election = data.tab_index === 0 ? elections.parlimen : elections.dun;
-    if (election.length <= 0)
-      return {
-        name: "",
-        date: "",
-        total: 0,
-      };
-    return {
-      name: election[data.table_index].election_name,
-      date: toDate(election[data.table_index].date, "dd MMM yyyy", i18n.language),
-      total: election.length,
-    };
-  }, [data.tab_index, data.table_index]);
-
   return (
-    <>
-      <Hero
-        background="red"
-        category={[t("common:categories.democracy"), "text-danger"]}
-        header={[t("header")]}
-        description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Election Comission (EC)"}
-            link="https://www.spr.gov.my/"
-            icon={<SPRIcon />}
-          />
-        }
-      />
-
+    <ElectionLayout>
       <Container className="min-h-fit">
-        <ContainerTabs.List
-          options={[
-            {
-              name: t("elections"),
-              icon: <SPRIconSolid className="-mb-1" />,
-              url: routes.ELECTION_EXPLORER.concat("/elections"),
-            },
-            {
-              name: t("candidates"),
-              icon: <UserIcon className="m-1 h-5 w-5" />,
-              url: routes.ELECTION_EXPLORER.concat("/candidates"),
-            },
-            {
-              name: t("parties"),
-              icon: <FlagIcon className="m-1 h-5 w-5" />,
-            },
-            {
-              name: t("seats"),
-              icon: <MapIcon className="m-1 h-5 w-5" />,
-              url: routes.ELECTION_EXPLORER.concat("/seats"),
-            },
-          ]}
-          current={2}
-        />
         <Section>
           <div className="lg:grid lg:grid-cols-12">
             <div className="lg:col-span-10 lg:col-start-2">
@@ -284,57 +229,9 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
               </Tabs>
             </div>
           </div>
-          {data.modal_open && (
-            <ElectionCard
-              open={data.modal_open}
-              onClose={() => setData("modal_open", false)}
-              onChange={(index: number) => {
-                setData("table_index", index);
-                fetchResult(index);
-              }}
-              onNext={() => {
-                setData("table_index", data.table_index + 1);
-                fetchResult(data.table_index + 1);
-              }}
-              onPrev={() => {
-                setData("table_index", data.table_index - 1);
-                fetchResult(data.table_index - 1);
-              }}
-              win={undefined}
-              election_name={election_result.name}
-              date={election_result.date}
-              title={
-                <div className="flex flex-row gap-2 uppercase">
-                  <h5>{election_result.name}</h5>
-                </div>
-              }
-              isLoading={data.modal_loading}
-              data={data.full_results}
-              columns={generateSchema<Party>([
-                {
-                  key: "party",
-                  id: "party",
-                  header: t("party_name"),
-                },
-                {
-                  key: "seats",
-                  id: "seats",
-                  header: t("seats_won"),
-                },
-                {
-                  key: "votes",
-                  id: "votes",
-                  header: t("votes_won"),
-                },
-              ])}
-              highlightedRow={data.full_results.findIndex((r: Party) => r.party === data.party)}
-              page={data.table_index}
-              total={election_result.total}
-            />
-          )}
         </Section>
       </Container>
-    </>
+    </ElectionLayout>
   );
 };
 

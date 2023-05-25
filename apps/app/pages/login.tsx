@@ -2,6 +2,7 @@ import Button from "@components/Button";
 import Container from "@components/Container";
 import Input from "@components/Input";
 import Metadata from "@components/Metadata";
+import { toast } from "@components/Toast";
 import { post } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import { Page } from "@lib/types";
@@ -23,6 +24,7 @@ const Login: Page = () => {
         if (response.data.authorized) router.reload();
       })
       .catch(e => {
+        toast.error(e.message);
         setError(e.response.data.error);
       });
   };

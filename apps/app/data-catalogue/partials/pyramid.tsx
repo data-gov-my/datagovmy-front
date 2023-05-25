@@ -9,6 +9,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { toast } from "@components/Toast";
 
 const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
 interface CataloguePyramidProps {
@@ -72,6 +73,10 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
                 })
               )
               .catch(e => {
+                toast.error(
+                  t("common:error.toast.image_download_failure"),
+                  t("common:error.toast.try_again")
+                );
                 console.error(e);
               });
           },

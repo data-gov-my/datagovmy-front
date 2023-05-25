@@ -11,6 +11,7 @@ import type { ChartDataset } from "chart.js";
 import { useTranslation } from "@hooks/useTranslation";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useMemo } from "react";
+import { toast } from "@components/Toast";
 
 /**
  * Consumer Prices (CPI) - Inflation Snapshot Section
@@ -54,28 +55,33 @@ const InflationSnapshot: FunctionComponent = ({}) => {
       if (data.query_done) return;
 
       if (data.granular_type) {
-        const result = await get("/chart", {
+        get("/chart", {
           dashboard: "consumer_price_index",
           chart_name: "snapshot_4d",
           lang,
           level: data.granular_type.value,
-        });
+        })
+          .then(result => {
+            if (data.granular_type.value === "4d") setData("query_done", true);
 
-        if (data.granular_type.value === "4d") setData("query_done", true);
+            const { x: _, ...ys } = result.data.data;
 
-        const { x: _, ...ys } = result.data.data;
-
-        setData("snapshot_x", result.data.data.x);
-        setData("snapshot_index", result.data.data.x.length - 1);
-        setData("snapshot_data", { ...data.snapshot_data, ...ys });
-        setData(
-          `snapshot_options_${data.granular_type.value}`,
-          Object.keys(ys).map(item => ({
-            label: item.split(" > ").pop(),
-            value: item,
-          }))
-        );
-        setData("snapshot_as_of", result.data.data_as_of);
+            setData("snapshot_x", result.data.data.x);
+            setData("snapshot_index", result.data.data.x.length - 1);
+            setData("snapshot_data", { ...data.snapshot_data, ...ys });
+            setData(
+              `snapshot_options_${data.granular_type.value}`,
+              Object.keys(ys).map(item => ({
+                label: item.split(" > ").pop(),
+                value: item,
+              }))
+            );
+            setData("snapshot_as_of", result.data.data_as_of);
+          })
+          .catch(e => {
+            toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+            console.error(e);
+          });
       }
     },
     [data.granular_type],

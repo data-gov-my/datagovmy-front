@@ -1,57 +1,85 @@
-import { Fragment, FunctionComponent, ReactElement, useState } from "react";
+import { Fragment, ReactElement, useState } from "react";
 import { Button } from "..";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
 import Font from "@config/font";
-import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowsPointingOutIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
-import { clx, numFormat } from "@lib/helpers";
+import { clx, toDate } from "@lib/helpers";
+import { useData } from "@hooks/useData";
+import type {
+  BaseResult,
+  Candidate,
+  Party,
+  PartyResult,
+  Seat,
+} from "@dashboards/democracy/election-explorer/types";
+import BarPerc from "@components/Chart/BarMeter/BarPerc";
 
-interface CardProps {
-  open: boolean;
-  onChange: (index: number) => void;
-  onClose: () => void;
-  onNext: () => void;
-  onPrev: () => void;
-  data?: any;
+type Result<T> = {
+  data: T;
+  votes?: Array<{
+    x: string;
+    y: number;
+  }>;
+} | void;
+
+interface ElectionCardProps<T extends Candidate | Party | Seat> {
+  defaultParams: T;
+  onChange: (option: T) => Promise<Result<BaseResult[] | PartyResult>>;
+  options: Array<T>;
   columns?: any;
-  votes?: any;
   title?: string | ReactElement;
-  win?: string;
-  date?: string;
-  election_name: string;
-  isLoading: boolean;
   highlightedRow?: false | number;
   page: number;
-  total: number;
 }
 
-const Card: FunctionComponent<CardProps> = ({
-  open,
+const ElectionCard = <T extends Candidate | Party | Seat>({
+  defaultParams,
   onChange,
-  onClose,
-  onNext,
-  onPrev,
-  data,
+  options,
   columns,
-  votes,
   title,
-  win,
-  date,
-  election_name,
-  isLoading,
   highlightedRow,
   page,
-  total,
-}) => {
-  const [isOpen, setIsOpen] = useState(open);
-  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
-  const [e, num] = getElectionTrans(election_name);
+}: ElectionCardProps<T>) => {
+  const [show, setShow] = useState<boolean>(false);
+  const { data, setData } = useData({
+    index: page,
+    result: [],
+    loading: false,
+  });
+  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
+
+  if (options.length <= 0) return <></>;
 
   return (
     <>
-      <Transition appear show={isOpen} as={"div"}>
-        <Dialog as="div" className="relative z-30" onClose={onClose}>
+      <div className="flex items-center justify-center">
+        <button
+          className="text-dim flex flex-row items-center text-sm font-medium hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 dark:hover:text-white"
+          onClick={() => {
+            setData("loading", true);
+            setShow(true);
+            onChange(defaultParams).then(item => {
+              if (!item) return;
+              setData("result", item);
+              setData("loading", false);
+            });
+          }}
+        >
+          <ArrowsPointingOutIcon className="h-4 w-4 " />
+          <p className="whitespace-nowrap pl-1.5 font-normal">{t("full_result")}</p>
+        </button>
+      </div>
+
+      <Transition show={show} as={Fragment}>
+        <Dialog as="div" className="relative z-30" onClose={() => setShow(false)}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -78,107 +106,109 @@ const Card: FunctionComponent<CardProps> = ({
                 <Dialog.Panel
                   className={clx(
                     Font.body.variable,
-                    "font-sans",
-                    "border-outline dark:border-outlineHover-dark border",
-                    "w-full max-w-4xl transform overflow-hidden rounded-xl bg-white px-3 py-6 text-left align-middle shadow-xl transition-all dark:bg-black md:px-6"
+                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform overflow-hidden rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
                   )}
                 >
                   <Dialog.Title
                     as="div"
-                    className="flex w-full flex-row items-center justify-between"
+                    className="flex w-full flex-row items-center justify-between text-base md:text-lg"
                   >
                     {title && typeof title === "string" ? <h5>{title}</h5> : title}
                     <button
                       className="hover:bg-washed dark:hover:bg-washed-dark top-6.5 group absolute right-6 h-8 w-8 rounded-full"
-                      onClick={() => {
-                        onClose();
-                        setIsOpen(false);
-                      }}
+                      onClick={() => setShow(false)}
                     >
                       <XMarkIcon className="text-dim mx-auto h-6 w-6" />
                     </button>
                   </Dialog.Title>
 
-                  <div className="space-y-6">
+                  <div className="space-y-6 text-base">
                     <div className="space-x-3 pt-2">
-                      {date ? <span className="text-dim">{date}</span> : <></>}
-                      <span className="uppercase">{num ? t(e).concat("-" + num) : t(e)}</span>
+                      <span className="text-dim">
+                        {toDate(options[data.index]?.date, "dd MMM yyyy", i18n.language)}
+                      </span>
+
+                      <span className="uppercase">{options[data.index]?.election_name}</span>
                     </div>
                     <ElectionTable
                       className="max-h-96 w-full overflow-y-auto"
-                      data={data}
+                      data={data.result.data}
                       columns={columns}
-                      isLoading={isLoading}
+                      isLoading={data.loading}
                       highlightedRow={highlightedRow}
-                      win={win}
+                      win={"result" in defaultParams ? defaultParams.result : undefined}
                     />
 
-                    {isLoading ? (
-                      <></>
-                    ) : (
-                      votes && (
-                        <div className="flex flex-col justify-center gap-1 text-sm md:flex-row md:gap-3 ">
-                          <p>
-                            <span>{t("election.voter_turnout")}:</span>
-                            <span className="font-medium">{` ${numFormat(
-                              votes.voter_turnout,
-                              "standard"
-                            )} (${numFormat(votes.voter_turnout_perc, "compact", [1, 1])}%)`}</span>
-                          </p>
-                          <p>
-                            <span>{t("election.rejected_votes")}:</span>
-                            <span className="font-medium">{` ${numFormat(
-                              votes.votes_rejected,
-                              "standard"
-                            )} (${numFormat(
-                              votes.votes_rejected_perc,
-                              "compact",
-                              [1, 1]
-                            )}%)`}</span>
-                          </p>
-                        </div>
-                      )
+                    {data.result.votes && (
+                      <div className="flex flex-row justify-center gap-6 px-0 md:gap-12 md:px-3">
+                        {data.result?.votes?.map((item: { x: string; y: number }) => (
+                          <BarPerc
+                            size="h-2.5 w-full"
+                            key={item.x}
+                            label={t(`election.${item.x}`)}
+                            value={item.y}
+                            className="w-full space-y-1 text-sm"
+                          />
+                        ))}
+                      </div>
                     )}
+
                     <div className="space-y-3">
-                      {total <= 10 && (
+                      {options && options?.length <= 10 && (
                         <div className="flex flex-row items-center justify-center gap-1.5">
-                          {Array(total)
-                            .fill(null)
-                            .map((num, index: number) => (
-                              <button
-                                key={index}
-                                onClick={() => onChange(index)}
-                                disabled={index === page}
-                                className={clx(
-                                  "h-1 w-5 rounded-md",
-                                  index === page
-                                    ? "bg-black dark:bg-white"
-                                    : "bg-outline hover:bg-washed dark:bg-outlineHover-dark dark:hover:bg-washed-dark"
-                                )}
-                              ></button>
-                            ))}
+                          {options?.map((option, index) => (
+                            <button
+                              key={index}
+                              onClick={() =>
+                                onChange(option).then(item => {
+                                  if (!item) return;
+                                  setData("index", index);
+                                  setData("result", item);
+                                })
+                              }
+                              disabled={index === data.index}
+                              className={clx(
+                                "h-1 w-5 rounded-md",
+                                index === data.index
+                                  ? "bg-black dark:bg-white"
+                                  : "bg-outline hover:bg-washed dark:bg-outlineHover-dark dark:hover:bg-washed-dark"
+                              )}
+                            />
+                          ))}
                         </div>
                       )}
                       <div className="flex items-center justify-center gap-4 text-sm">
                         <Button
                           className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
-                          onClick={onPrev}
-                          disabled={page === 0}
+                          onClick={() =>
+                            onChange(options[data.index - 1]).then(item => {
+                              if (!item) return;
+                              setData("index", data.index - 1);
+                              setData("result", item);
+                            })
+                          }
+                          disabled={data.index === 0}
                         >
                           <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
                           {t("common:common.previous")}
                         </Button>
-                        {total > 10 && (
+                        {options && options?.length > 10 && (
                           <span className="flex items-center gap-1 text-center text-sm">
-                            {`${page + 1} / ${total}`}
+                            {`${data.index + 1} / ${options?.length}`}
                           </span>
                         )}
                         <Button
                           className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
-                          onClick={onNext}
-                          disabled={page === total - 1}
+                          onClick={() =>
+                            onChange(options[data.index + 1]).then(item => {
+                              if (!item) return;
+                              setData("index", data.index + 1);
+                              setData("result", item);
+                            })
+                          }
+                          disabled={options && data.index === options?.length - 1}
                         >
-                          {t("common:common.next")}{" "}
+                          {t("common:common.next")}
                           <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
                         </Button>
                       </div>
@@ -194,11 +224,4 @@ const Card: FunctionComponent<CardProps> = ({
   );
 };
 
-export default Card;
-
-export function getElectionTrans(input: string): any[] {
-  if (!input) return [];
-  const e = input.split("-");
-  const num = e[1].match(/\d+/g);
-  return [e[0], num];
-}
+export default ElectionCard;

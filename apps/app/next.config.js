@@ -2,7 +2,7 @@
 const { i18n } = require("./next-i18next.config");
 
 /**
- * Plugins
+ * Plugins / Constants
  */
 const analyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE ?? false,

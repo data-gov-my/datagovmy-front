@@ -10,6 +10,7 @@ import { track } from "@lib/mixpanel";
 import { WindowContext } from "@hooks/useWindow";
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { toast } from "@components/Toast";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 interface CatalogueBarProps {
@@ -77,6 +78,10 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
                 })
               )
               .catch(e => {
+                toast.error(
+                  t("common:error.toast.image_download_failure"),
+                  t("common:error.toast.try_again")
+                );
                 console.error(e);
               });
           },

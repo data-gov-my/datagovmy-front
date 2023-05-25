@@ -23,37 +23,38 @@ const DashboardIndex: Page = ({
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(null, async ({ query }) => {
-  const { data } = await get("/dashboard/", { dashboard: "dashboards" });
-
-  return {
-    props: {
-      meta: {
-        id: "dashboard-index",
-        type: "misc",
-        category: null,
-        agency: null,
-      },
-      query: query ?? {},
-      data: data,
-      sources: data.agencies_all.data,
-      timeseries: [],
-      analytics: {
-        data_as_of: data.dashboards_top.data_as_of,
-        en: {
-          today: data.dashboards_top.data.en.today,
-          last_month: data.dashboards_top.data.en.last_month,
-          all_time: data.dashboards_top.data.en.all_time,
+  try {
+    const { data } = await get("/dashboard/", { dashboard: "dashboards" });
+    return {
+      props: {
+        meta: {
+          id: "dashboard-index",
+          type: "misc",
+          category: null,
+          agency: null,
         },
-        bm: {
-          today: data.dashboards_top.data.bm.today,
-          last_month: data.dashboards_top.data.bm.last_month,
-          all_time: data.dashboards_top.data.bm.all_time,
+        query: query ?? {},
+        sources: data.agencies_all.data,
+        analytics: {
+          data_as_of: data.dashboards_top.data_as_of,
+          en: {
+            today: data.dashboards_top.data.en.today,
+            last_month: data.dashboards_top.data.en.last_month,
+            all_time: data.dashboards_top.data.en.all_time,
+          },
+          bm: {
+            today: data.dashboards_top.data.bm.today,
+            last_month: data.dashboards_top.data.bm.last_month,
+            all_time: data.dashboards_top.data.bm.all_time,
+          },
         },
+        dashboards: data.dashboards_all.data,
       },
-      data_as_of: data.dashboards_all.data_as_of,
-      dashboards: data.dashboards_all.data,
-    },
-  };
+    };
+  } catch (error) {
+    console.log(error);
+    return { notFound: true };
+  }
 });
 
 export default DashboardIndex;

@@ -15,6 +15,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 import { SliderProvider } from "@components/Chart/Slider/context";
+import { toast } from "@components/Toast";
 
 /**
  * Consumer Prices (CPI) - Inflation Trends Section
@@ -52,36 +53,41 @@ const InflationTrends: FunctionComponent = ({}) => {
       if (data.query_done) return;
 
       if (data.granular_type) {
-        const result = await get("/chart", {
+        get("/chart", {
           dashboard: "consumer_price_index",
           chart_name: "timeseries_6d",
           lang,
           level: data.granular_type.value,
-        });
+        })
+          .then(result => {
+            if (data.granular_type.value === "4d") setData("query_done", true);
 
-        if (data.granular_type.value === "4d") setData("query_done", true);
+            const { x: _, ...ys } = result.data.data;
 
-        const { x: _, ...ys } = result.data.data;
-
-        setData("inflation_x", result.data.data.x);
-        setData("inflation_minmax", [0, result.data.data.x.length - 1]);
-        setData("inflation_data", {
-          ...data.inflation_data,
-          ...Object.fromEntries(
-            Object.entries(ys).map(([key, value]: [string, unknown]) => [
-              key,
-              (value as { y: number[] }).y,
-            ])
-          ),
-        });
-        setData(
-          `inflation_options_${data.granular_type.value}`,
-          Object.keys(ys).map(item => ({
-            label: item.split(" > ").pop(),
-            value: item,
-          }))
-        );
-        setData("inflation_as_of", result.data.data_as_of);
+            setData("inflation_x", result.data.data.x);
+            setData("inflation_minmax", [0, result.data.data.x.length - 1]);
+            setData("inflation_data", {
+              ...data.inflation_data,
+              ...Object.fromEntries(
+                Object.entries(ys).map(([key, value]: [string, unknown]) => [
+                  key,
+                  (value as { y: number[] }).y,
+                ])
+              ),
+            });
+            setData(
+              `inflation_options_${data.granular_type.value}`,
+              Object.keys(ys).map(item => ({
+                label: item.split(" > ").pop(),
+                value: item,
+              }))
+            );
+            setData("inflation_as_of", result.data.data_as_of);
+          })
+          .catch(e => {
+            toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+            console.error(e);
+          });
       }
     },
     [data.granular_type],

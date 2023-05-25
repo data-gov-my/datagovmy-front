@@ -5,6 +5,7 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ElectionPartiesDashboard from "@dashboards/democracy/election-explorer/parties";
 import { withi18n } from "@lib/decorators";
+import type { Party } from "@dashboards/democracy/election-explorer/types";
 
 const ElectionParties: Page = ({
   params,
@@ -70,8 +71,12 @@ export const getStaticProps: GetStaticProps = withi18n(
           },
           selection: dropdown.data,
           elections: {
-            parlimen: party.data.parlimen.reverse(),
-            dun: party.data.dun.reverse(),
+            parlimen: party.data.parlimen.sort(
+              (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
+            ),
+            dun: party.data.dun.sort(
+              (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
+            ),
           },
         },
       };

@@ -13,8 +13,10 @@ const Layout: FunctionComponent<LayoutProps> = ({ className, children, stateSele
   return (
     <div className={className}>
       <Header stateSelector={stateSelector} />
-      <div className="pt-14">{children}</div>
-      <Footer />
+      <div className="flex min-h-screen flex-col">
+        <div className="flex flex-grow flex-col pt-14">{children}</div>
+        <Footer />
+      </div>
     </div>
   );
 };

@@ -27,8 +27,9 @@
   h4 {
     @apply font-header text-xl font-bold leading-[28px] dark:text-white;
   }
+
   h5 {
-    @apply text-lg font-bold tracking-normal dark:text-white;
+    @apply text-base font-bold tracking-normal dark:text-white lg:text-lg;
   }
 
   h6 {
@@ -40,6 +41,10 @@
   input[type="search"]::-webkit-search-results-button,
   input[type="search"]::-webkit-search-results-decoration {
     appearance: none;
+  }
+
+  textarea {
+    @apply resize-none;
   }
 }
 
