@@ -29,7 +29,7 @@ const Home: Page = ({
   timeseries_callouts,
   analytics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { data, setData } = useData({
     minmax: [0, timeseries.data.x.length - 1],
@@ -96,7 +96,6 @@ const Home: Page = ({
         }
         agencyBadge={
           <AgencyBadge
-            prefixThe
             agency={t("common:agency.govt")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
