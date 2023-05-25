@@ -45,12 +45,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                 <div className="flex flex-col gap-2">
                   {title && typeof title === "string" ? <h4>{title}</h4> : title}
                   {description && typeof description === "string" ? (
-                    <p
-                      className={[
-                        "text-dim whitespace-pre-line text-base",
-                        menu ? "md:max-w-[70%]" : "",
-                      ].join(" ")}
-                    >
+                    <p className={["text-dim whitespace-pre-line text-base"].join(" ")}>
                       {description}
                     </p>
                   ) : (
@@ -58,7 +53,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                   )}
                 </div>
                 {date && date !== null && (
-                  <span className="text-dim text-right text-sm">
+                  <span className="text-dim self-start text-right text-sm">
                     {t("common:common.data_of", { date: displayDate })}
                   </span>
                 )}
