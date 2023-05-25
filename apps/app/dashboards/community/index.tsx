@@ -21,7 +21,7 @@ import { FunctionComponent } from "react";
 
 /**
  * Community Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 interface CommunityProps {}
@@ -70,7 +70,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
     new Promise((resolve, reject) => {
       if (data.expertise_area && data.name && data.email && data.institution && data.experience) {
         resolve({
-          expertise_area: data.expertise_area,
+          expertise_area: data.expertise_area.label,
           name: data.name,
           email: data.email,
           institution: data.institution,
@@ -92,12 +92,12 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
   return (
     <>
       <Container
-        className="flex flex-grow flex-col"
+        className="relative flex flex-grow flex-col overflow-hidden"
         background="flex flex-col flex-grow items-center bg-gradient-radial to-background from-[#E2E8F0] dark:from-[#3F3F46] dark:to-black"
       >
-        <div className="flex flex-grow flex-col pb-16 pt-16 lg:grid lg:grid-cols-12">
+        <div className="flex min-h-[680px] flex-grow flex-col pb-16 pt-16 lg:grid lg:grid-cols-12">
           <div className="flex flex-col justify-center lg:col-span-10 lg:col-start-2">
-            <div className="z-20 flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
+            <div className="z-20 flex flex-col items-center gap-8 lg:flex-row lg:gap-12">
               <div className="flex-1">
                 <div className="flex flex-col space-y-6">
                   <p className="text-primary dark:text-primary-dark font-semibold uppercase">{`${t(
@@ -109,11 +109,11 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                   </div>
                 </div>
               </div>
-              <div className="lg:w-auto lg:min-w-[450px]">
+              <div className="w-full lg:w-[450px]">
                 <Card className="bg-white dark:bg-black">
                   {data.sent ? (
-                    <div className="flex h-[300px] p-8">
-                      <div className="flex flex-col self-center">
+                    <div className="flex h-[300px] justify-center p-8">
+                      <div className="flex flex-col justify-center">
                         <CheckMarkIcon className="items-center self-center" />
                         <div className="mt-6 text-center text-lg font-bold text-black dark:text-white">
                           {t("thank_you")}
@@ -124,30 +124,34 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                       </div>
                     </div>
                   ) : data.loading ? (
-                    <div className="flex h-[300px] p-8">
+                    <div className="flex h-[300px] justify-center p-8">
                       <div className="mx-auto self-center">
                         <Spinner loading={data.loading} />
                       </div>
                     </div>
                   ) : (
-                    <form className="space-y-6 p-6 lg:p-8">
+                    <form className="space-y-6 p-6 lg:p-8" method="post">
                       <p>{t("fill_form")}</p>
                       <div className="space-y-3">
-                        <Dropdown
-                          className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
-                          anchor={"left"}
-                          width={"w-full"}
-                          options={FILTER_OPTIONS}
-                          placeholder={t("area_expertise")}
-                          selected={FILTER_OPTIONS.find(e => e.value === data.expertise_area)}
-                          onChange={e => {
-                            setData("valid_area", false);
-                            setData("expertise_area", e.value);
-                          }}
-                        />
-                        {data.valid_area && (
-                          <p className="text-danger text-xs">{data.valid_area}</p>
-                        )}
+                        <div className="space-y-2">
+                          <Dropdown
+                            className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
+                            anchor={"left"}
+                            width={"w-full"}
+                            options={FILTER_OPTIONS}
+                            placeholder={t("area_expertise")}
+                            selected={FILTER_OPTIONS.find(
+                              e => e.value === data.expertise_area.value
+                            )}
+                            onChange={e => {
+                              setData("valid_area", false);
+                              setData("expertise_area", e);
+                            }}
+                          />
+                          {data.valid_area && (
+                            <p className="text-danger text-xs">{data.valid_area}</p>
+                          )}
+                        </div>
                         <Input
                           required
                           type="text"
@@ -182,7 +186,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                           }}
                           validation={data.valid_inst}
                         />
-                        <div>
+                        <div className="space-y-2">
                           <textarea
                             required
                             className={clx(
@@ -199,6 +203,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                               setData("experience", e.target.value);
                             }}
                             rows={6}
+                            spellCheck={false}
                           ></textarea>
                           {data.valid_exp && (
                             <p className="text-danger text-xs">{data.valid_exp}</p>
@@ -211,18 +216,24 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                           validate()
                             .then((resp: any) => {
                               setData("loading", true);
-                              post("/mods", {
-                                expertise_area: resp.expertise_area,
-                                name: resp.name,
-                                email: resp.email,
-                                institution: resp.institution,
-                                description: resp.experience,
-                                lang: i18n.language,
-                              })
-                                .then(response => {
-                                  console.log(response);
-                                  setData("loading", false);
-                                  setData("sent", true);
+                              post(
+                                "/mods/",
+                                {
+                                  expertise_area: resp.expertise_area,
+                                  name: resp.name,
+                                  email: resp.email,
+                                  institution: resp.institution,
+                                  description: resp.experience,
+                                  language: i18n.language,
+                                },
+                                "api",
+                                { "Content-Type": "multipart/form-data" }
+                              )
+                                .then(({ data }) => {
+                                  if (data["Email status"] === "sent") {
+                                    setData("loading", false);
+                                    setData("sent", true);
+                                  }
                                 })
                                 .catch(e => {
                                   console.error(e);
@@ -274,6 +285,9 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
           </div>
           <div className="bar3-float">
             <BarChartIcon transform="rotate(7.73)" />
+          </div>
+          <div className="pie3-float">
+            <PieChartIcon transform="rotate(-167.73)" />
           </div>
         </div>
       </Container>
