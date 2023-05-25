@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import ImageWithFallback from "@components/ImageWithFallback";
 import { OptionType } from "@components/types";
 import { Combobox, Transition } from "@headlessui/react";
@@ -16,6 +16,7 @@ type ComboBoxProps<L, V> = {
   placeholder?: string;
   enableFlag?: boolean;
   imageSource?: string;
+  fallback?: ReactNode;
   enableType?: boolean;
   loading?: boolean;
 };
@@ -28,6 +29,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   placeholder,
   enableFlag = false,
   imageSource = "/static/images/parties/",
+  fallback,
   enableType = false,
   loading = false,
 }: ComboBoxProps<L, V>) => {
@@ -122,6 +124,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                           <ImageWithFallback
                             className="border-outline dark:border-washed-dark rounded border"
                             src={`${imageSource}${option.value}.png`}
+                            fallback={fallback}
                             width={32}
                             height={18}
                             alt={option.value as string}
