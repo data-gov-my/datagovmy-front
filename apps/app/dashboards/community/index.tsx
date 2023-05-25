@@ -11,6 +11,7 @@ import {
 } from "@components/Icon";
 import Input from "@components/Input";
 import Spinner from "@components/Spinner";
+import { toast } from "@components/Toast";
 import { OptionType } from "@components/types";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
@@ -225,6 +226,10 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                                   setData("sent", true);
                                 })
                                 .catch(e => {
+                                  toast.error(
+                                    t("common:error.toast.form_submission_failure"),
+                                    t("common:error.toast.reach_support")
+                                  );
                                   console.error(e);
                                 });
                             })

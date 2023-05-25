@@ -17,6 +17,7 @@ import Spinner from "@components/Spinner";
 import { get } from "@lib/api";
 import debounce from "lodash/debounce";
 import { numFormat } from "@lib/helpers";
+import { toast } from "@components/Toast";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -80,7 +81,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
           setData("selection", res.data.data);
           setData("dropdownLoading", false);
         })
-        .catch(e => console.error(e));
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
     }, 300),
     []
   );

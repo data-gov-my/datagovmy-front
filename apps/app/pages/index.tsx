@@ -286,14 +286,6 @@ const Ranking = ({ ranks }: RankingProps) => {
   );
 };
 
-// track("page_view", {
-//   type: "dashboard",
-//   id: "home",
-//   name_en: "Home",
-//   name_bm: "Utama",
-//   route: routes.HOME,
-// });
-
 export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   const { data } = await get("/dashboard", { dashboard: "homepage" });
 
