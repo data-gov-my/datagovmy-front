@@ -21,7 +21,7 @@ import { FunctionComponent } from "react";
 
 /**
  * Community Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 interface CommunityProps {}
