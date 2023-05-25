@@ -70,7 +70,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
     new Promise((resolve, reject) => {
       if (data.expertise_area && data.name && data.email && data.institution && data.experience) {
         resolve({
-          expertise_area: data.expertise_area,
+          expertise_area: data.expertise_area.label,
           name: data.name,
           email: data.email,
           institution: data.institution,
@@ -133,21 +133,25 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                     <form className="space-y-6 p-6 lg:p-8" method="post">
                       <p>{t("fill_form")}</p>
                       <div className="space-y-3">
-                        <Dropdown
-                          className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
-                          anchor={"left"}
-                          width={"w-full"}
-                          options={FILTER_OPTIONS}
-                          placeholder={t("area_expertise")}
-                          selected={FILTER_OPTIONS.find(e => e.value === data.expertise_area)}
-                          onChange={e => {
-                            setData("valid_area", false);
-                            setData("expertise_area", e.value);
-                          }}
-                        />
-                        {data.valid_area && (
-                          <p className="text-danger text-xs">{data.valid_area}</p>
-                        )}
+                        <div className="space-y-2">
+                          <Dropdown
+                            className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
+                            anchor={"left"}
+                            width={"w-full"}
+                            options={FILTER_OPTIONS}
+                            placeholder={t("area_expertise")}
+                            selected={FILTER_OPTIONS.find(
+                              e => e.value === data.expertise_area.value
+                            )}
+                            onChange={e => {
+                              setData("valid_area", false);
+                              setData("expertise_area", e);
+                            }}
+                          />
+                          {data.valid_area && (
+                            <p className="text-danger text-xs">{data.valid_area}</p>
+                          )}
+                        </div>
                         <Input
                           required
                           type="text"
@@ -182,7 +186,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                           }}
                           validation={data.valid_inst}
                         />
-                        <div>
+                        <div className="space-y-2">
                           <textarea
                             required
                             className={clx(
@@ -199,6 +203,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                               setData("experience", e.target.value);
                             }}
                             rows={6}
+                            spellCheck={false}
                           ></textarea>
                           {data.valid_exp && (
                             <p className="text-danger text-xs">{data.valid_exp}</p>
@@ -222,7 +227,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                                   language: i18n.language,
                                 },
                                 "api",
-                                true
+                                { "Content-Type": "multipart/form-data" }
                               )
                                 .then(({ data }) => {
                                   if (data["Email status"] === "sent") {
