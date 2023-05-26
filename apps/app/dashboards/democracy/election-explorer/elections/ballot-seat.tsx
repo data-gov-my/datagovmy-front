@@ -104,7 +104,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
   const _seats = useMemo<Seat[]>(() => {
     if (!data.seat) return seats;
     return seats.filter(seat => seat.seat.includes(data.seat.value));
-  }, [data.seat]);
+  }, [data.seat, seats]);
 
   return (
     <>
