@@ -90,11 +90,15 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   const { data, setData } = useData({
     tab_index: 0, // parlimen = 0; dun = 1
     candidate: params.candidate_name,
+    query: "",
     loading: false,
   });
 
   const navigateToCandidate = (name?: string) => {
-    if (!name) return;
+    if (!name) {
+      setData("candidate", null);
+      return;
+    }
     setData("loading", true);
     setData("candidate", name);
 
@@ -162,7 +166,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 title={
                   <div className="text-base font-bold">
                     {t("candidate.title")}
-                    <span className="text-primary">{data.candidate}</span>
+                    <span className="text-primary">{params.candidate_name}</span>
                   </div>
                 }
                 current={data.tab_index}

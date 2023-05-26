@@ -111,7 +111,10 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
   }));
 
   const navigateToParty = (name?: string, state?: string) => {
-    if (!name) return;
+    if (!name) {
+      setData("party", null);
+      return;
+    }
     setData("loading", true);
     setData("party", name);
 
@@ -171,13 +174,13 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                     <span className="text-lg font-normal leading-9">
                       <ImageWithFallback
                         className="border-outline dark:border-washed-dark mr-2 inline-flex items-center rounded border"
-                        src={`/static/images/parties/${data.party}.png`}
+                        src={`/static/images/parties/${params.party_name}.png`}
                         width={32}
                         height={18}
-                        alt={t(`${data.party}`)}
+                        alt={t(`${params.party_name}`)}
                       />
                       {t("party.title", {
-                        party: `$t(dashboard-election-explorer:${data.party})`,
+                        party: `$t(dashboard-election-explorer:${params.party_name})`,
                       })}
                       <StateDropdown
                         currentState={data.state}
@@ -203,7 +206,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                     empty={
                       <Trans>
                         {t("party.no_data", {
-                          party: `$t(dashboard-election-explorer:${data.party})`,
+                          party: `$t(dashboard-election-explorer:${params.party_name})`,
                           context: "parliament",
                         })}
                       </Trans>
@@ -218,7 +221,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                     empty={
                       <Trans>
                         {t("party.no_data", {
-                          party: `$t(dashboard-election-explorer:${data.party})`,
+                          party: `$t(dashboard-election-explorer:${params.party_name})`,
                           state: CountryAndStates[data.state],
                           context: data.state === "mys" ? "dun_mys" : "dun",
                         })}

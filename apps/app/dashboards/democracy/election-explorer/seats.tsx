@@ -40,7 +40,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   const { push } = useRouter();
 
   const { data, setData } = useData({
-    seat: params?.seat_name,
+    seat: params.seat_name,
     loading: false,
   });
 
@@ -50,7 +50,10 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   }));
 
   const navigateToSeat = (name?: string) => {
-    if (!name) return;
+    if (!name) {
+      setData("seat", null);
+      return;
+    }
     setData("loading", true);
     setData("seat", name);
 
@@ -60,7 +63,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
     }).then(() => setData("loading", false));
   };
 
-  const [area, state] = data.seat.split(",");
+  const [area, state] = params.seat_name.split(",");
 
   const fetchResult = async (election: string, seat: string) => {
     return get("/explorer", {
@@ -156,10 +159,8 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                   <ComboBox
                     placeholder={t("seat.search_seat")}
                     options={SEAT_OPTIONS}
-                    selected={
-                      data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat.value) : null
-                    }
-                    onChange={e => navigateToSeat(e?.value)}
+                    selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat) : null}
+                    onChange={selected => navigateToSeat(selected?.value)}
                     enableType={true}
                   />
                 </div>
