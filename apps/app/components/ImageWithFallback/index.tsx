@@ -12,7 +12,7 @@ const Fallback: FunctionComponent<FallbackProps> = ({ children }) => {
   );
 };
 interface ImageWithFallbackProps extends ImageProps {
-  fallback: ReactNode;
+  fallback?: ReactNode;
 }
 
 const ImageWithFallback = ({ fallback, alt, src, ...props }: ImageWithFallbackProps) => {
