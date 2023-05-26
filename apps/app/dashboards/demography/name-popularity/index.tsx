@@ -16,6 +16,7 @@ import { BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useContext } from "react";
+import { toast } from "@components/Toast";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
@@ -59,8 +60,12 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     get("/explorer", searchData.params)
       .then(({ data }) => {
         setSearchData("data", data);
+        setSearchData("loading", false);
       })
-      .then(() => setSearchData("loading", false));
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      });
   }, [searchData.params]);
 
   useWatch(() => {
@@ -68,8 +73,12 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     get("/explorer", compareData.params)
       .then(({ data }) => {
         setCompareData("data", data);
+        setCompareData("loading", false);
       })
-      .then(() => setCompareData("loading", false));
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      });
   }, [compareData.params]);
 
   const filterTypes: Array<OptionType> = [
@@ -191,7 +200,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         }
       />
       <Container className="min-h-screen">
-        <Section title={t("section1_title")}>
+        {/* <Section title={t("section1_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow">
@@ -498,7 +507,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               </div>
             )}
           </div>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );

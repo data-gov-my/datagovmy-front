@@ -7,6 +7,7 @@ import type {
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import merge from "lodash/merge";
 import type { MetaPage } from "./types";
+import nextI18nextConfig from "../next-i18next.config";
 
 type Context = Parameters<GetStaticProps | GetServerSideProps>[0];
 type ResolvedProps<T> = GetStaticPropsResult<T> & GetServerSidePropsResult<T>;
@@ -33,9 +34,11 @@ export const withi18n = <T extends Context>(
         ? namespace.concat("common")
         : [namespace].concat("common");
 
-    const i18n = await serverSideTranslations(context.locale!, namespaces, null);
-    const props = await getProps(context);
+    const [i18n, props] = await Promise.all([
+      serverSideTranslations(context.locale!, namespaces, nextI18nextConfig),
+      getProps(context),
+    ]);
 
-    return merge({ props: i18n }, props);
+    return merge({}, { props: i18n }, props);
   };
 };

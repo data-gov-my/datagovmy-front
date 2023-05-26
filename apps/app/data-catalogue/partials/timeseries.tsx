@@ -12,6 +12,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { SliderProvider } from "@components/Chart/Slider/context";
+import { toast } from "@components/Toast";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
@@ -82,6 +83,10 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
                 })
               )
               .catch(e => {
+                toast.error(
+                  t("common:error.toast.image_download_failure"),
+                  t("common:error.toast.try_again")
+                );
                 console.error(e);
               });
           },

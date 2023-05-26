@@ -7,6 +7,7 @@ import { download, exportAs } from "@lib/helpers";
 import { track } from "@lib/mixpanel";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import type { HeatmapData, HeatmapDatum } from "@components/Chart/Heatmap";
+import { toast } from "@components/Toast";
 
 const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), {
   ssr: false,
@@ -74,6 +75,10 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
                 })
               )
               .catch(e => {
+                toast.error(
+                  t("common:error.toast.image_download_failure"),
+                  t("common:error.toast.try_again")
+                );
                 console.error(e);
               });
           },

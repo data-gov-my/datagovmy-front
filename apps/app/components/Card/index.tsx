@@ -11,7 +11,7 @@ const Card: FunctionComponent<CardProps> = ({ children, className, onClick }) =>
   return (
     <div
       className={clx(
-        "border-outline rounded-xl border transition",
+        "border-outline dark:border-washed-dark rounded-xl border transition",
         onClick && "cursor-pointer transition",
         className
       )}

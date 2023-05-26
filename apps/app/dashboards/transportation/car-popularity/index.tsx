@@ -13,6 +13,7 @@ import { OptionType } from "@components/types";
 import { WindowContext } from "@hooks/useWindow";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import Spinner from "@components/Spinner";
+import { toast } from "@components/Toast";
 
 /**
  * CarPopularity Dashboard
@@ -106,8 +107,12 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         setData("y", data.data?.cars);
         setData("data_as_of", data.data_as_of);
         setData("params", params); // for timeseries title
+        setQuery("loading", false);
       })
-      .then(() => setQuery("loading", false));
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      });
   };
 
   return (

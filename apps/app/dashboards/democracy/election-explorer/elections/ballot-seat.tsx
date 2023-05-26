@@ -16,6 +16,7 @@ import ComboBox from "@components/Combobox";
 import { SPRIconSolid } from "@components/Icon/agency";
 import { generateSchema } from "@lib/schema/election-explorer";
 import Tooltip from "@components/Tooltip";
+import { toast } from "@components/Toast";
 
 /**
  * Election Explorer - Ballot Seat
@@ -66,6 +67,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
         setData("seat_loading", false);
       })
       .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
         console.error(e);
       });
   };
@@ -113,7 +115,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
             <LeftRightCard
               left={
-                <div className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden rounded-t-xl px-6 pb-6 md:h-[600px] md:overflow-y-auto lg:rounded-l-xl">
+                <div className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden rounded-t-xl px-3 pb-3 md:h-[600px] md:overflow-y-auto lg:rounded-l-xl lg:px-6 lg:pb-6">
                   <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
@@ -177,7 +179,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                 </div>
               }
               right={
-                <div className="h-full w-full space-y-8 rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] md:p-10 lg:rounded-r-xl">
+                <div className="h-full w-full space-y-8 rounded-b-xl bg-white p-3 dark:bg-black md:h-[600px] md:p-10 lg:rounded-r-xl">
                   {data.seat_result.data.length > 0 ? (
                     <>
                       <div className="flex items-center gap-4">
@@ -202,12 +204,12 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                           columns={generateSchema<BaseResult>([
                             {
                               key: "name",
-                              id: "candidate_name",
+                              id: "name",
                               header: t("candidate_name"),
                             },
                             {
                               key: "party",
-                              id: "party_name",
+                              id: "party",
                               header: t("party_name"),
                             },
                             {
@@ -224,7 +226,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
                       <div className="space-y-2">
                         <h5>{t("election.voting_statistics")}</h5>
-                        <div className="flex w-full flex-row gap-8">
+                        <div className="item-center flex w-full flex-row gap-4 lg:gap-8">
                           {data.seat_result.votes.map((item: { x: string; y: number }) => (
                             <BarPerc
                               size="h-2.5 w-full"
@@ -236,7 +238,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                                 </div>
                               }
                               value={item.y}
-                              className="w-full space-y-1"
+                              className="w-full space-y-1 text-sm"
                             />
                           ))}
                         </div>

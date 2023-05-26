@@ -40,27 +40,32 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query }) => {
-    const { data } = await get("/data-catalog/", {
-      lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
-      ...query,
-    });
+    try {
+      const { data } = await get("/data-catalog/", {
+        lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+        ...query,
+      });
 
-    const collection = recurSort(data.dataset);
+      const collection = recurSort(data.dataset);
 
-    return {
-      props: {
-        meta: {
-          id: "catalogue-index",
-          type: "misc",
-          category: null,
-          agency: null,
+      return {
+        props: {
+          meta: {
+            id: "catalogue-index",
+            type: "misc",
+            category: null,
+            agency: null,
+          },
+          query: query ?? {},
+          total: data.total_all,
+          sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
+          collection,
         },
-        query: query ?? {},
-        total: data.total_all,
-        sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
-        collection,
-      },
-    };
+      };
+    } catch (error) {
+      console.error(error);
+      return { notFound: true };
+    }
   }
 );
 
