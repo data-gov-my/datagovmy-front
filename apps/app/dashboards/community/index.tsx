@@ -25,9 +25,7 @@ import { FunctionComponent } from "react";
  * @overview Status: Live
  */
 
-interface CommunityProps {}
-
-const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
+const CommunityDashboard: FunctionComponent = () => {
   const { t, i18n } = useTranslation(["community", "common"]);
   const { data, setData } = useData({
     expertise_area: "",
@@ -69,7 +67,13 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
 
   const validate = async () =>
     new Promise((resolve, reject) => {
-      if (data.expertise_area && data.name && data.email && data.institution && data.experience) {
+      if (
+        data.expertise_area &&
+        data.name &&
+        /\S+@\S+\.\S+/.test(data.email) &&
+        data.institution &&
+        data.experience
+      ) {
         resolve({
           expertise_area: data.expertise_area.label,
           name: data.name,
@@ -113,22 +117,18 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
               <div className="w-full lg:w-[450px]">
                 <Card className="bg-white dark:bg-black">
                   {data.sent ? (
-                    <div className="flex h-[300px] justify-center p-8">
-                      <div className="flex flex-col justify-center">
-                        <CheckMarkIcon className="items-center self-center" />
-                        <div className="mt-6 text-center text-lg font-bold text-black dark:text-white">
-                          {t("thank_you")}
-                        </div>
-                        <div className="text-dim mt-3 whitespace-pre-line text-center text-sm">
+                    <div className="flex h-[300px] flex-col items-center justify-center space-y-6">
+                      <CheckMarkIcon />
+                      <div className="space-y-3">
+                        <p className="text-center text-lg font-bold">{t("thank_you")}</p>
+                        <p className="text-dim whitespace-pre-line text-center text-sm">
                           {t("received")}
-                        </div>
+                        </p>
                       </div>
                     </div>
                   ) : data.loading ? (
-                    <div className="flex h-[300px] justify-center p-8">
-                      <div className="mx-auto self-center">
-                        <Spinner loading={data.loading} />
-                      </div>
+                    <div className="flex h-[300px] items-center justify-center">
+                      <Spinner loading={data.loading} />
                     </div>
                   ) : (
                     <form className="space-y-6 p-6 lg:p-8" method="post">
@@ -218,7 +218,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                             .then((resp: any) => {
                               setData("loading", true);
                               post(
-                                "/mods/",
+                                "/forms/mods",
                                 {
                                   expertise_area: resp.expertise_area,
                                   name: resp.name,
@@ -231,8 +231,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                                 { "Content-Type": "multipart/form-data" }
                               )
                                 .then(({ data }) => {
-                                  if (data["Email status"] === "sent") {
-                                    setData("loading", false);
+                                  if (data["Email Status"] === "sent") {
                                     setData("sent", true);
                                   }
                                 })
@@ -243,6 +242,7 @@ const CommunityDashboard: FunctionComponent<CommunityProps> = () => {
                                   );
                                   console.error(e);
                                 });
+                              setData("loading", false);
                             })
                             .catch(err => {
                               setData("valid_area", err.expertise_area);
