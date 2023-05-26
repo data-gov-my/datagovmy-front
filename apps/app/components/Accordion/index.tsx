@@ -30,8 +30,10 @@ const Accordion = <L extends string | number = string, V = string>({
                 className
               )}
             >
-              {icon}
-              <p className="pl-8">{title}</p>
+              <div className="flex">
+                {icon}
+                <p className="pl-8">{title}</p>
+              </div>
             </div>
           </Disclosure.Button>
 
