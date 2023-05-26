@@ -30,7 +30,6 @@ import {
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
-
 import { Chart } from "react-chartjs-2";
 import { clx, numFormat } from "@lib/helpers";
 import "chartjs-adapter-luxon";
@@ -38,6 +37,7 @@ import { ChartCrosshairOption } from "@lib/types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "@lib/constants";
+import Spinner from "@components/Spinner";
 
 export type Periods =
   | false
@@ -58,6 +58,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   data?: ChartData<keyof ChartTypeRegistry, any[], string | number>;
   mode?: "grouped" | "stacked";
   subheader?: ReactElement;
+  isLoading?: boolean;
   interval?: Periods;
   tooltipFormat?: string;
   round?: Periods;
@@ -101,6 +102,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   title,
   description,
   controls,
+  isLoading = false,
   interval = "auto",
   tooltipFormat,
   prefixY,
@@ -392,11 +394,19 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   return (
     <div className="space-y-2">
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-      {stats && <Stats data={stats} />}
-      {subheader && <div>{subheader}</div>}
-      <div className={className}>
-        <Chart ref={_ref} data={data} options={options()} type={type} />
-      </div>
+      {isLoading ? (
+        <div className={clx("flex items-center justify-center", className)}>
+          <Spinner loading={isLoading} />
+        </div>
+      ) : (
+        <>
+          {stats && <Stats data={stats} />}
+          {subheader && <div>{subheader}</div>}
+          <div className={className}>
+            <Chart ref={_ref} data={data} options={options()} type={type} />
+          </div>
+        </>
+      )}
       {description && <p className="text-dim pt-4 text-sm">{description}</p>}
     </div>
   );
@@ -448,14 +458,9 @@ export type StatProps = {
 };
 
 export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
-  const cols: Record<number, string> = {
-    1: "grid-cols-1",
-    2: "grid-cols-2",
-    3: "grid-cols-3",
-  };
   return (
-    <div className={clx("flex flex-row space-x-8", className)}>
-      {data.map(({ title, value, tooltip }: StatProps, index) => (
+    <div className={clx("flex flex-row space-x-6 lg:space-x-8", className)}>
+      {data.map(({ title, value, tooltip }: StatProps) => (
         <div key={`${title}_${value}`}>
           <p className="text-dim text-sm">{title}</p>
           {tooltip ? (
