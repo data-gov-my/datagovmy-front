@@ -41,25 +41,28 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
         <div className="flex flex-col gap-6 lg:gap-8">
           {title || date || description ? (
             <div className="space-y-2">
-              <div className="flex flex-col flex-wrap items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
-                <div className="flex flex-col gap-2">
-                  {title && typeof title === "string" ? <h4>{title}</h4> : title}
+              <div className="flex flex-col flex-wrap items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
+                {title && typeof title === "string" ? <h4>{title}</h4> : title}
+                {date && date !== null && (
+                  <span className="text-dim text-right text-sm">
+                    {t("common:common.data_of", { date: displayDate })}
+                  </span>
+                )}
+              </div>
+              {(description || menu) && (
+                <div className="text-dim flex flex-wrap gap-x-6 gap-y-3 md:flex-nowrap md:items-end md:justify-between">
                   {description && typeof description === "string" ? (
-                    <p className={["text-dim whitespace-pre-line text-base"].join(" ")}>
+                    <p
+                      className={[
+                        "whitespace-pre-line text-base",
+                        menu ? "md:max-w-[70%]" : "",
+                      ].join(" ")}
+                    >
                       {description}
                     </p>
                   ) : (
                     <div>{description}</div>
                   )}
-                </div>
-                {date && date !== null && (
-                  <span className="text-dim self-start text-right text-sm">
-                    {t("common:common.data_of", { date: displayDate })}
-                  </span>
-                )}
-              </div>
-              {menu && (
-                <div className="text-dim flex flex-wrap gap-x-6 gap-y-3 md:flex-nowrap md:items-end md:justify-between">
                   {menu && <div className="flex w-full justify-end gap-3 md:w-auto">{menu}</div>}
                 </div>
               )}
