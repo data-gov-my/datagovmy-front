@@ -107,7 +107,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
   }, [data.seat]);
 
   return (
-    <Section>
+    <>
       <div className="lg:grid lg:grid-cols-12">
         <div className="space-y-12 lg:col-span-10 lg:col-start-2">
           <div className="space-y-6">
@@ -115,7 +115,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
             <LeftRightCard
               left={
-                <div className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden rounded-t-xl px-3 pb-3 md:h-[600px] md:overflow-y-auto lg:rounded-l-xl lg:px-6 lg:pb-6">
+                <div className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:px-6 lg:pb-6">
                   <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
@@ -128,7 +128,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                     {_seats.map((seat: Seat, index: number) => (
                       <Card
                         key={seat.seat}
-                        className="dark:border-outlineHover-dark focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black"
+                        className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black lg:w-full"
                         onClick={() => fetchSeatResult(seat.seat)}
                       >
                         <div className="flex flex-row justify-between">
@@ -179,7 +179,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                 </div>
               }
               right={
-                <div className="h-full w-full space-y-8 rounded-b-xl bg-white p-3 dark:bg-black md:h-[600px] md:p-10 lg:rounded-r-xl">
+                <div className="h-full w-full space-y-8 overflow-y-auto rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] md:p-10 lg:rounded-r-xl lg:p-8">
                   {data.seat_result.data.length > 0 ? (
                     <>
                       <div className="flex items-center gap-4">
@@ -253,7 +253,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
           </div>
         </div>
       </div>
-    </Section>
+    </>
   );
 };
 
