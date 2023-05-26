@@ -21,11 +21,14 @@ const Login: Page = () => {
 
     post("/api/authorize", { password }, `https://${window.location.hostname}`)
       .then(response => {
-        if (response.data.authorized) router.reload();
+        if (response.data.authorized) {
+          router.reload();
+          toast.success("Welcome in! Give it a moment...");
+        }
       })
       .catch(e => {
-        toast.error(e.message);
-        setError(e.response.data.error);
+        toast.error(e.response?.data?.error ?? e.message);
+        setError(e.response?.data?.error ?? e.message);
       });
   };
 

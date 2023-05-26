@@ -88,7 +88,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             <Dropdown
               icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
               className="min-w-[250px]"
-              placeholder={t("source_placeholder")}
+              placeholder={t("placeholder.source")}
               anchor="left"
               options={filterRef.current?.filters ?? []}
               selected={filterRef.current?.source}
@@ -105,7 +105,6 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
             }
-            prefixThe
           />
         }
       />
@@ -175,38 +174,51 @@ interface CatalogueFilterRef {
 }
 
 const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forwardRef(
-  ({ query, sources }, ref) => {
+  ({ query, sources: _sources }, ref) => {
     const { t } = useTranslation(["catalogue", "common"]);
-    const filterPeriods: Array<OptionType> = [
+    const periods: OptionType[] = [
       { label: t("filter_options.daily"), value: "DAILY" },
       { label: t("filter_options.weekly"), value: "WEEKLY" },
       { label: t("filter_options.monthly"), value: "MONTHLY" },
       { label: t("filter_options.quarterly"), value: "QUARTERLY" },
       { label: t("filter_options.yearly"), value: "YEARLY" },
     ];
-    const filterGeographics: Array<OptionType> = [
+    const geographies: OptionType[] = [
       { label: t("filter_options.state"), value: "STATE" },
       { label: t("filter_options.district"), value: "DISTRICT" },
       { label: t("filter_options.parlimen"), value: "PARLIMEN" },
       { label: t("filter_options.dun"), value: "DUN" },
       { label: t("filter_options.national"), value: "NATIONAL" },
     ];
-    const filterSources: Array<OptionType> = sources.map(source => ({
+    const demographies: OptionType[] = [
+      { label: t("filter_options.sex"), value: "SEX" },
+      { label: t("filter_options.ethnicity"), value: "ETHNICITY" },
+      { label: t("filter_options.age"), value: "AGE" },
+      { label: t("filter_options.religion"), value: "RELIGION" },
+      { label: t("filter_options.nationality"), value: "NATIONALITY" },
+      { label: t("filter_options.disability"), value: "DISABILITY" },
+      { label: t("filter_options.marital"), value: "MARITAL" },
+    ];
+
+    const sources: OptionType[] = _sources.map(source => ({
       label: source,
       value: source,
     }));
     const startYear = 1982;
     const endYear: number = new Date().getFullYear();
 
-    const filterYears = (start: number, end: number): Array<OptionType> =>
+    const filterYears = (start: number, end: number): OptionType[] =>
       Array(end - start + 1)
         .fill(start)
         .map((year, index) => ({ label: `${year + index}`, value: `${year + index}` }));
 
     const { filter, setFilter, actives } = useFilter({
-      period: query.period ? filterPeriods.find(item => item.value === query.period) : undefined,
+      period: query.period ? periods.find(item => item.value === query.period) : undefined,
       geography: query.geography
-        ? filterGeographics.filter(item => query.geography.split(",").includes(item.value))
+        ? geographies.filter(item => query.geography.split(",").includes(item.value))
+        : [],
+      demographic: query.demography
+        ? demographies.filter(item => query.demography.split(",").includes(item.value))
         : [],
       begin: query.begin
         ? filterYears(startYear, endYear).find(item => item.value === query.begin)
@@ -214,7 +226,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       end: query.end
         ? filterYears(startYear, endYear).find(item => item.value === query.end)
         : undefined,
-      source: query.source ? filterSources.find(item => query.source === item.value) : [],
+      source: query.source ? sources.find(item => query.source === item.value) : [],
       search: query.search ?? "",
     });
 
@@ -222,6 +234,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       setFilter("search", "");
       setFilter("period", undefined);
       setFilter("geography", []);
+      setFilter("demographic", []);
       setFilter("begin", undefined);
       setFilter("end", undefined);
     };
@@ -229,7 +242,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
     useImperativeHandle(ref, () => {
       return {
         source: filter.source,
-        filters: filterSources,
+        filters: sources,
         setFilter,
       };
     });
@@ -239,7 +252,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         <div className="flex-grow">
           <Search
             className="border-0"
-            placeholder={t("search_placeholder")}
+            placeholder={t("placeholder.search")}
             query={filter.search}
             onChange={e => setFilter("search", e)}
           />
@@ -271,7 +284,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   label={t("period")}
                   name="period"
                   className="flex flex-wrap gap-4 px-1 pt-2"
-                  options={filterPeriods}
+                  options={periods}
                   value={filter.period}
                   onChange={e => setFilter("period", e)}
                 />
@@ -279,9 +292,17 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   label={t("geography")}
                   className="flex flex-wrap gap-4 px-1 pt-2"
                   name="geography"
-                  options={filterGeographics}
+                  options={geographies}
                   value={filter.geography}
                   onChange={e => setFilter("geography", e)}
+                />
+                <Checkbox
+                  className="flex flex-wrap gap-4 px-1 pt-2"
+                  name="demographic"
+                  label={t("demography")}
+                  options={demographies}
+                  value={filter.demographic}
+                  onChange={e => setFilter("demographic", e)}
                 />
 
                 <div className="grid grid-cols-2 gap-4">
@@ -337,18 +358,27 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             </div>
           )}
           <Dropdown
-            options={filterPeriods}
+            options={periods}
             placeholder={t("period")}
-            selected={filterPeriods.find(item => item.value === filter.period?.value) ?? undefined}
+            selected={periods.find(item => item.value === filter.period?.value) ?? undefined}
             onChange={e => setFilter("period", e)}
           />
           <Dropdown
             multiple
             enableClear
             title={t("geography")}
-            options={filterGeographics}
+            options={geographies}
             selected={filter.geography}
             onChange={e => setFilter("geography", e)}
+          />
+          <Dropdown
+            multiple
+            enableClear
+            title={t("demography")}
+            description={t("placeholder.demography") + ":"}
+            options={demographies}
+            selected={filter.demographic}
+            onChange={e => setFilter("demographic", e)}
           />
 
           <Daterange
