@@ -68,6 +68,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
             )}
             key={nav.url}
             href={nav.url}
+            scrollTop={false}
           >
             {nav.icon}
             {nav.name}
