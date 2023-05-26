@@ -130,7 +130,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
           {/* Explore any election from Merdeka to the present! */}
           <Section>
             <h4 className="text-center">{t("election.section_1")}</h4>
-            <div className={clx("fixed right-0 top-16 z-10 lg:hidden")}>
+            <div className={clx("fixed right-0 top-16 z-20 lg:hidden")}>
               <Modal
                 trigger={open => (
                   <Button
@@ -213,7 +213,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
 
             <div
               ref={divRef}
-              className="sticky top-16 z-10 mt-6 hidden items-center justify-center gap-2 transition-all duration-200 ease-in lg:flex lg:pl-2"
+              className="sticky top-16 z-20 mt-6 hidden items-center justify-center gap-2 transition-all duration-200 ease-in lg:flex lg:pl-2"
             >
               <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
                 <List
@@ -362,10 +362,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                 </Tabs.Panel>
               ))}
             </Tabs>
-          </Section>
 
-          {/* View the full ballot for a specific seat */}
-          <BallotSeat seats={seats} election={data.election} />
+            {/* View the full ballot for a specific seat */}
+            <BallotSeat seats={seats} election={data.election} />
+          </Section>
 
           {/* Election analysis */}
           <ElectionAnalysis />
