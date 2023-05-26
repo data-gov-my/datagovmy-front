@@ -117,7 +117,7 @@ const CommunityDashboard: FunctionComponent = () => {
               <div className="w-full lg:w-[450px]">
                 <Card className="bg-white dark:bg-black">
                   {data.sent ? (
-                    <div className="flex h-[300px] flex-col items-center justify-center space-y-6">
+                    <div className="flex h-[300px] flex-col items-center justify-center space-y-6 p-6 lg:p-8">
                       <CheckMarkIcon />
                       <div className="space-y-3">
                         <p className="text-center text-lg font-bold">{t("thank_you")}</p>
