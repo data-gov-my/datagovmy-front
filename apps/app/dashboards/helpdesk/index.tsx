@@ -3,13 +3,16 @@ import Button from "@components/Button";
 import Card from "@components/Card";
 import Container from "@components/Container";
 import Dropdown from "@components/Dropdown";
+import { CheckMarkIcon } from "@components/Icon";
 import Input from "@components/Input";
 import Section from "@components/Section";
 import Spinner from "@components/Spinner";
+import { toast } from "@components/Toast";
 import { OptionType } from "@components/types";
 import { ChevronRightIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
+import { post } from "@lib/api";
 import { clx } from "@lib/helpers";
 import { FunctionComponent } from "react";
 
@@ -18,21 +21,19 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
-interface HelpdeskProps {}
-
-const HelpdeskDashboard: FunctionComponent<HelpdeskProps> = () => {
-  const { t } = useTranslation(["helpdesk", "common"]);
+const HelpdeskDashboard: FunctionComponent = () => {
+  const { t, i18n } = useTranslation(["helpdesk", "common"]);
   const { data, setData } = useData({
     name: "",
     email: "",
     institution: "",
     category: "",
     feedback: "",
-    req_name: false,
+    valid_name: false,
     valid_email: false,
-    req_inst: false,
-    req_category: false,
-    req_feedback: false,
+    valid_inst: false,
+    valid_category: false,
+    valid_feedback: false,
     loading: false,
     sent: false,
   });
@@ -42,44 +43,33 @@ const HelpdeskDashboard: FunctionComponent<HelpdeskProps> = () => {
     value: key,
   }));
 
-  const validate = async (): Promise<{
-    name: string;
-    email: string;
-    category: string;
-    institution: string;
-    feedback: string;
-  }> =>
+  const validate = async () =>
     new Promise((resolve, reject) => {
-      if (!data.name) {
-        setData("req_name", t("name_required"));
-        reject(t("name_required"));
+      if (
+        data.name &&
+        /\S+@\S+\.\S+/.test(data.email) &&
+        data.institution &&
+        data.category &&
+        data.feedback
+      ) {
+        resolve({
+          name: data.name,
+          email: data.email,
+          institution: data.institution,
+          category: data.category.label,
+          feedback: data.feedback,
+        });
+      } else {
+        reject({
+          name: !data.name && t("name_required"),
+          email: !data.email
+            ? t("email_required")
+            : !/\S+@\S+\.\S+/.test(data.email) && t("email_invalid"),
+          institution: !data.institution && t("inst_required"),
+          category: !data.category && t("category_required"),
+          feedback: !data.feedback && t("feedback_required"),
+        });
       }
-      if (!data.email) {
-        setData("valid_email", t("email_required"));
-        reject(t("email_required"));
-      } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-        setData("valid_email", t("email_invalid"));
-        reject(t("email_invalid"));
-      }
-      if (!data.institution) {
-        setData("req_inst", t("inst_required"));
-        reject(t("inst_required"));
-      }
-      if (!data.category) {
-        setData("req_category", t("category_required"));
-        reject(t("category_required"));
-      }
-      if (!data.feedback) {
-        setData("req_feedback", t("feedback_required"));
-        reject(t("feedback_required"));
-      }
-      resolve({
-        name: data.name,
-        email: data.email,
-        institution: data.institution,
-        category: data.category,
-        feedback: data.feedback,
-      });
     });
 
   return (
@@ -154,40 +144,35 @@ const HelpdeskDashboard: FunctionComponent<HelpdeskProps> = () => {
         </Section>
         <Section title={<h4 className="mx-auto flex text-center">{t("form_title")}</h4>}>
           <div className="grid w-auto grid-cols-1 lg:grid-cols-3 ">
-            <Card className="border-outline dark:border-washed-dark flex h-fit flex-col justify-between space-y-6 rounded-xl border bg-white dark:bg-black lg:col-start-2">
+            <Card className="bg-white dark:bg-black lg:col-start-2">
               {data.sent ? (
-                <div className="flex h-[300px] p-8">
-                  <div className="flex flex-col self-center">
-                    {/* <CheckMarkIcon className="items-center self-center" /> */}
-                    <div className="mt-6 text-center text-lg font-bold text-black dark:text-white">
-                      {t("thank_you")}
-                    </div>
-                    <div className="text-dim mt-3 whitespace-pre-line text-center text-sm">
+                <div className="flex h-[300px] flex-col items-center justify-center space-y-6 p-6 lg:p-8">
+                  <CheckMarkIcon />
+                  <div className="space-y-3">
+                    <p className="text-center text-lg font-bold">{t("thank_you")}</p>
+                    <p className="text-dim whitespace-pre-line text-center text-sm">
                       {t("received")}
-                    </div>
+                    </p>
                   </div>
                 </div>
               ) : data.loading ? (
-                <div className="flex h-[300px] p-8">
-                  <div className="mx-auto self-center">
-                    <Spinner loading={data.loading} />
-                  </div>
+                <div className="flex h-[300px] items-center justify-center">
+                  <Spinner loading={data.loading} />
                 </div>
               ) : (
-                <div className="space-y-6 p-8">
+                <form className="space-y-6 p-6 lg:p-8" method="post">
                   <p className="text-center font-bold">{t("ping")}</p>
-                  <form className="space-y-3">
+                  <div className="space-y-3">
                     <Input
                       required
                       type="text"
                       placeholder={t("common:common.name")}
                       value={data.name}
                       onChange={e => {
-                        setData("req_name", false);
+                        setData("valid_name", false);
                         setData("name", e);
                       }}
-                      // spellCheck={false}
-                      validation={data.req_name}
+                      validation={data.valid_name}
                     />
                     <Input
                       required
@@ -206,65 +191,97 @@ const HelpdeskDashboard: FunctionComponent<HelpdeskProps> = () => {
                       placeholder={t("institution")}
                       value={data.institution}
                       onChange={e => {
-                        setData("req_inst", false);
+                        setData("valid_inst", false);
                         setData("institution", e);
                       }}
-                      validation={data.req_inst}
+                      validation={data.valid_inst}
                     />
-                    <Dropdown
-                      className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
-                      anchor={"left"}
-                      width={"w-full"}
-                      options={FILTER_OPTIONS}
-                      placeholder={t("category")}
-                      selected={FILTER_OPTIONS.find(e => e.value === data.area_expertise)}
-                      onChange={e => {
-                        setData("req_category", false);
-                        setData("category", e.value);
-                      }}
-                    />
-                    {data.req_category && (
-                      <p className="text-danger text-xs">{data.req_category}</p>
-                    )}
-                    <div>
+                    <div className="space-y-2">
+                      <Dropdown
+                        className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
+                        anchor={"left"}
+                        width={"w-full"}
+                        options={FILTER_OPTIONS}
+                        placeholder={t("category")}
+                        selected={FILTER_OPTIONS.find(e => e.value === data.category.value)}
+                        onChange={e => {
+                          setData("valid_category", false);
+                          setData("category", e);
+                        }}
+                      />
+                      {data.valid_category && (
+                        <p className="text-danger text-xs">{data.valid_category}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
                       <textarea
                         required
                         className={clx(
                           "w-full resize-none rounded-md px-3 dark:bg-black",
                           "dark:focus:border-primary-dark focus:border-outlineHover outline-none focus:ring-0",
-                          data.req_feedback
+                          data.valid_feedback
                             ? "border-danger border-2"
                             : "border-outline dark:border-washed-dark dark:hover:border-outlineHover-dark hover:border-outlineHover border"
                         )}
                         placeholder={t("tell_us")}
                         value={data.feedback}
                         onChange={e => {
-                          setData("req_feedback", false);
+                          setData("valid_feedback", false);
                           setData("feedback", e.target.value);
                         }}
                         rows={5}
                       ></textarea>
-                      {data.req_feedback && (
-                        <p className="text-danger text-xs">{data.req_feedback}</p>
+                      {data.valid_feedback && (
+                        <p className="text-danger text-xs">{data.valid_feedback}</p>
                       )}
                     </div>
-                  </form>
+                  </div>
                   <Button
                     className="btn btn-primary w-full justify-center"
                     onClick={() =>
-                      validate().then(() => {
-                        setData("loading", true);
-                        setTimeout(() => {
+                      validate()
+                        .then((resp: any) => {
+                          setData("loading", true);
+                          post(
+                            "forms/helpdesk",
+                            {
+                              name: resp.name,
+                              email: resp.email,
+                              institution: resp.institution,
+                              category: resp.category,
+                              feedback: resp.feedback,
+                              language: i18n.language,
+                            },
+                            "api",
+                            { "Content-Type": "multipart/form-data" }
+                          )
+                            .then(({ data }) => {
+                              if (data["Email Status"] === "sent") {
+                                setData("sent", true);
+                              }
+                            })
+                            .catch(e => {
+                              toast.error(
+                                t("common:error.toast.form_submission_failure"),
+                                t("common:error.toast.reach_support")
+                              );
+                              console.error(e);
+                            });
                           setData("loading", false);
-                          setData("sent", true);
-                        }, 1000);
-                      })
+                        })
+                        .catch(err => {
+                          setData("valid_name", err.name);
+                          setData("valid_email", err.email);
+                          setData("valid_inst", err.institution);
+                          setData("valid_category", err.category);
+                          setData("valid_feedback", err.feedback);
+                        })
                     }
                   >
                     {t("submit")}
                     <ChevronRightIcon className="h-5 w-5 text-white" />
                   </Button>
-                </div>
+                </form>
               )}
             </Card>
           </div>
