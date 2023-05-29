@@ -81,8 +81,8 @@ const HelpdeskDashboard: FunctionComponent = () => {
         </div>
       </Container>
       <Container className="min-h-screen">
-        <Section title={<h4 className="mx-auto flex text-center">{t("faq")}</h4>}>
-          <div className="flex w-full flex-col gap-8 lg:grid lg:grid-cols-10 lg:gap-4">
+        <Section title={<h4 className="mx-auto flex">{t("faq")}</h4>}>
+          <div className="flex w-full flex-col gap-8 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-10">
             <div className="flex w-full flex-col gap-3 lg:col-span-4 lg:col-start-2">
               <h5 className="mx-auto flex text-center font-bold">{t("general")}</h5>
               {[...Array(5)].map((_, i) => {
@@ -115,8 +115,8 @@ const HelpdeskDashboard: FunctionComponent = () => {
           </div>
         </Section>
         <Section title={<h4 className="mx-auto flex text-center">{t("form_title")}</h4>}>
-          <div className="grid w-auto grid-cols-1 lg:grid-cols-3 ">
-            <Card className="bg-white dark:bg-black lg:col-start-2">
+          <div className="mx-auto w-full max-w-[450px]">
+            <Card className="bg-white dark:bg-black">
               {data.sent ? (
                 <div className="flex h-[300px] flex-col items-center justify-center space-y-6 p-6 lg:p-8">
                   <CheckMarkIcon />
