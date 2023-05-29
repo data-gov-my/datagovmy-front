@@ -2,20 +2,17 @@ import Card from "@components/Card";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
 import ImageWithFallback from "@components/ImageWithFallback";
 import LeftRightCard from "@components/LeftRightCard";
-import Section from "@components/Section";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { numFormat, toDate } from "@lib/helpers";
 import { FunctionComponent, useEffect, useMemo } from "react";
 import type { BaseResult, Seat, SeatResult } from "../types";
-
 import { Won } from "@components/Badge/election";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ComboBox from "@components/Combobox";
 import { SPRIconSolid } from "@components/Icon/agency";
 import { generateSchema } from "@lib/schema/election-explorer";
-import Tooltip from "@components/Tooltip";
 import { toast } from "@components/Toast";
 
 /**
@@ -117,20 +114,28 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
             <LeftRightCard
               left={
-                <div className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:px-6 lg:pb-6">
+                <div
+                  className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden 
+                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:px-6 lg:pb-6"
+                >
                   <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
                       options={SEAT_OPTIONS}
                       selected={data.seat ?? null}
-                      onChange={selected => setData("seat", selected)}
+                      onChange={selected => {
+                        setData("seat", selected);
+                        if (selected) fetchSeatResult(selected.value);
+                      }}
                     />
                   </div>
                   <div className="grid w-full grid-flow-col-dense grid-rows-2 flex-row gap-3 overflow-x-scroll md:flex-col md:overflow-x-clip md:pb-0 lg:flex">
                     {_seats.map((seat: Seat, index: number) => (
                       <Card
                         key={seat.seat}
-                        className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black xl:w-full"
+                        className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark
+                         hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm
+                          dark:bg-black xl:w-full"
                         onClick={() => fetchSeatResult(seat.seat)}
                       >
                         <div className="flex flex-row justify-between">
