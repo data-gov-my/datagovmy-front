@@ -85,60 +85,32 @@ const HelpdeskDashboard: FunctionComponent = () => {
           <div className="flex w-full flex-col gap-8 lg:grid lg:grid-cols-10 lg:gap-4">
             <div className="flex w-full flex-col gap-3 lg:col-span-4 lg:col-start-2">
               <h5 className="mx-auto flex text-center font-bold">{t("general")}</h5>
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("general_q1")}
-                children={t("general_a1")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("general_q2")}
-                children={t("general_a2")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("general_q3")}
-                children={t("general_a3")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("general_q4")}
-                children={t("general_a4")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("general_q5")}
-                children={t("general_a5")}
-              />
+              {[...Array(5)].map((_, i) => {
+                i++;
+                return (
+                  <Accordion
+                    key={"general" + i}
+                    icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
+                    title={t("general_q" + i)}
+                    children={t("general_a" + i)}
+                  />
+                );
+              })}
             </div>
 
             <div className="flex w-full flex-col gap-3 lg:col-span-4">
               <h5 className="mx-auto flex text-center font-bold">{t("data-tech")}</h5>
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("data-tech_q1")}
-                children={t("data-tech_a1")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("data-tech_q2")}
-                children={t("data-tech_a2")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("data-tech_q3")}
-                children={t("data-tech_a3")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("data-tech_q4")}
-                children={t("data-tech_a4")}
-              />
-              <Accordion
-                icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                title={t("data-tech_q5")}
-                children={t("data-tech_a5")}
-              />
+              {[...Array(5)].map((_, i) => {
+                i++;
+                return (
+                  <Accordion
+                    key={"data-tech" + i}
+                    icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
+                    title={t("data-tech_q" + i)}
+                    children={t("data-tech_a" + i)}
+                  />
+                );
+              })}
             </div>
           </div>
         </Section>
