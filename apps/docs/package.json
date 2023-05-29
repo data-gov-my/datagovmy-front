@@ -13,8 +13,9 @@
   "sideEffects": false,
   "dependencies": {
     "next": "^13.4.2",
-    "nextra": "^2.5.2",
-    "nextra-theme-docs": "^2.5.2",
+    "nextra": "^2.6.1",
+    "nextra-theme-docs": "^2.6.1",
+    "datagovmy-nextra": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
