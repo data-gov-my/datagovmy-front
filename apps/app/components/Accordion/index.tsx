@@ -11,7 +11,7 @@ type AccordionProps<L, V> = {
 };
 
 const Accordion = <L extends string | number = string, V = string>({
-  className = "py-3 px-4.5 border border-outline dark:border-washed-dark ",
+  className = "py-3 px-4.5 border border-outline dark:border-washed-dark shadow font-medium",
   width = "w-full",
   icon,
   title,
@@ -46,7 +46,7 @@ const Accordion = <L extends string | number = string, V = string>({
             leaveTo="transform scale-95 opacity-0"
           >
             <Disclosure.Panel>
-              <div className={clx("rounded-b-xl border border-t-0", width, className)}>
+              <div className={clx("text-dim rounded-b-xl border border-t-0", width, className)}>
                 {children}
               </div>
             </Disclosure.Panel>
