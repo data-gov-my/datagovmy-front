@@ -56,11 +56,13 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
           votes: [
             {
               x: "voter_turnout",
-              y: data.votes.voter_turnout_perc,
+              abs: data.votes.voter_turnout,
+              perc: data.votes.voter_turnout_perc,
             },
             {
               x: "rejected_votes",
-              y: data.votes.votes_rejected_perc,
+              abs: data.votes.votes_rejected,
+              perc: data.votes.votes_rejected_perc,
             },
           ],
         });
@@ -120,7 +122,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                     <ComboBox
                       placeholder={t("seat.search_seat")}
                       options={SEAT_OPTIONS}
-                      selected={data.seat}
+                      selected={data.seat ?? null}
                       onChange={selected => setData("seat", selected)}
                     />
                   </div>
@@ -128,7 +130,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                     {_seats.map((seat: Seat, index: number) => (
                       <Card
                         key={seat.seat}
-                        className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black lg:w-full"
+                        className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black xl:w-full"
                         onClick={() => fetchSeatResult(seat.seat)}
                       >
                         <div className="flex flex-row justify-between">
@@ -179,7 +181,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                 </div>
               }
               right={
-                <div className="h-full w-full space-y-8 overflow-y-auto rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] md:p-10 lg:rounded-r-xl lg:p-8">
+                <div className="h-full w-full space-y-8 overflow-y-auto rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] lg:rounded-r-xl lg:p-8">
                   {data.seat_result.data.length > 0 ? (
                     <>
                       <div className="flex items-center gap-4">
@@ -226,21 +228,26 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
                       <div className="space-y-2">
                         <h5>{t("election.voting_statistics")}</h5>
-                        <div className="item-center flex w-full flex-row gap-4 lg:gap-8">
-                          {data.seat_result.votes.map((item: { x: string; y: number }) => (
-                            <BarPerc
-                              size="h-2.5 w-full"
-                              key={item.x}
-                              label={
-                                <div className="flex items-center gap-1">
-                                  {t(`election.${item.x}`)}
-                                  <Tooltip tip={t(`tooltip.${item.x}`)} />
+                        <div className="flex flex-col gap-3 text-sm md:flex-row md:flex-wrap md:gap-x-6">
+                          {data.seat_result.votes.map(
+                            (item: { x: string; abs: number; perc: number }) => (
+                              <>
+                                <div className="flex space-x-3 whitespace-nowrap">
+                                  <p className="w-[132px] xl:w-fit">{t(`election.${item.x}`)}:</p>
+                                  <div className="flex items-center space-x-3">
+                                    <BarPerc hidden value={item.perc} />
+                                    <p>{`${
+                                      item.abs === 0 ? "0" : numFormat(item.abs, "standard")
+                                    } ${
+                                      item.perc === 0
+                                        ? "(—)"
+                                        : `(${numFormat(item.perc, "compact", [1, 1])}%)`
+                                    }`}</p>
+                                  </div>
                                 </div>
-                              }
-                              value={item.y}
-                              className="w-full space-y-1 text-sm"
-                            />
-                          ))}
+                              </>
+                            )
+                          )}
                         </div>
                       </div>
                     </>
