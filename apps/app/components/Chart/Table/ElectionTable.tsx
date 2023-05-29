@@ -65,7 +65,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           >
             {open => (
               <div
-                className="whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
+                className="cursor-help whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
                 tabIndex={0}
                 onClick={open}
               >
