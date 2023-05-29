@@ -1,0 +1,45 @@
+/* @import "tailwindcss/base"; */
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* @layer base { */
+h1 {
+  @apply font-header text-4xl font-bold leading-[54px];
+}
+
+h2 {
+  @apply font-header text-3xl font-bold leading-[38px] dark:text-white;
+}
+
+h3 {
+  @apply font-header text-2xl font-bold leading-[32px] dark:text-white;
+}
+
+h4 {
+  @apply font-header text-xl font-bold leading-[28px] dark:text-white;
+}
+
+h5 {
+  @apply font-body text-base font-bold tracking-normal dark:text-white lg:text-lg;
+}
+
+h6 {
+  @apply font-body text-base font-semibold uppercase tracking-wider text-gray-500;
+}
+
+a,
+p {
+  @apply font-body;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  appearance: none;
+}
+
+textarea {
+  @apply resize-none;
+}
+/* } */

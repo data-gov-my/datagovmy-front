@@ -12,10 +12,13 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "next": "^13.0.6",
-    "nextra": "^2.4.2",
-    "nextra-theme-docs": "^2.4.2",
+    "next": "^13.4.2",
+    "nextra": "^2.5.2",
+    "nextra-theme-docs": "^2.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "*"
   }
 }

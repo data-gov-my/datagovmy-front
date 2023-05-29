@@ -1,6 +1,17 @@
+import Image from "next/image";
+
 export default {
-  logo: <span>My Nextra Documentation</span>,
+  logo: (
+    <div className="flex flex-row gap-2">
+      <Image src="/assets/logo.png" width={32} height={32} alt="data.gov.my" />
+      <h4>data.gov.my</h4>
+    </div>
+  ),
   project: {
-    link: "https://github.com/shuding/nextra",
+    link: "https://github.com/data-gov-my/datagovmy-front",
   },
+  i18n: [
+    { locale: "en-GB", text: "English" },
+    { locale: "ms-MY", text: "Malay" },
+  ],
 };
