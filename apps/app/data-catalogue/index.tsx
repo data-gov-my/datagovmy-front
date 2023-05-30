@@ -84,7 +84,12 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         ]}
         description={
           <div className="space-y-6 xl:w-2/3">
-            <p className="text-dim">{t("description")}</p>
+            <p className="text-dim">
+              {t("description", {
+                agency: filterRef.current?.source?.value,
+                context: filterRef.current?.source?.value ? "agency" : "",
+              })}
+            </p>
             <Dropdown
               icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
               className="min-w-[250px]"

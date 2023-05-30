@@ -4,7 +4,7 @@ import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
-import CommunityDashboard from "@dashboards/community";
+import CommunityDashboard from "@misc/community";
 
 const Community: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["community", "common"]);

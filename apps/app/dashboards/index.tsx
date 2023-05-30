@@ -109,6 +109,12 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             "common:dashboard.header"
           )}`,
         ]}
+        description={[
+          t("common:dashboard.description", {
+            agency: filterRef?.current?.source,
+            context: filterRef?.current?.source ? "agency" : "",
+          }),
+        ]}
         agencyBadge={
           <AgencyBadge
             agency={t("common:agency.govt")}

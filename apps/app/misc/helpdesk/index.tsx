@@ -82,7 +82,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
       </Container>
       <Container className="min-h-screen">
         <Section title={<h4 className="mx-auto flex">{t("faq")}</h4>}>
-          <div className="flex w-full flex-col gap-8 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-10">
+          <div className="flex w-full flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-10">
             <div className="flex w-full flex-col gap-3 lg:col-span-4 lg:col-start-2">
               <h5 className="mx-auto flex text-center font-bold">{t("general")}</h5>
               {[...Array(5)].map((_, i) => {
@@ -92,8 +92,9 @@ const HelpdeskDashboard: FunctionComponent = () => {
                     key={"general" + i}
                     icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
                     title={t("general_q" + i)}
-                    children={t("general_a" + i)}
-                  />
+                  >
+                    <p>{t("general_a" + i)}</p>
+                  </Accordion>
                 );
               })}
             </div>
@@ -107,8 +108,9 @@ const HelpdeskDashboard: FunctionComponent = () => {
                     key={"data-tech" + i}
                     icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
                     title={t("data-tech_q" + i)}
-                    children={t("data-tech_a" + i)}
-                  />
+                  >
+                    <p>{t("data-tech_a" + i)}</p>
+                  </Accordion>
                 );
               })}
             </div>
@@ -116,7 +118,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
         </Section>
         <Section title={<h4 className="mx-auto flex text-center">{t("form_title")}</h4>}>
           <div className="mx-auto w-full max-w-[450px]">
-            <Card className="bg-white dark:bg-black">
+            <Card className="shadow-outline bg-white drop-shadow-xl dark:bg-black">
               {data.sent ? (
                 <div className="flex h-[300px] flex-col items-center justify-center space-y-6 p-6 lg:p-8">
                   <CheckMarkIcon />
@@ -190,10 +192,10 @@ const HelpdeskDashboard: FunctionComponent = () => {
                         required
                         className={clx(
                           "w-full resize-none rounded-md px-3 dark:bg-black",
-                          "dark:focus:border-primary-dark focus:border-outlineHover outline-none focus:ring-0",
+                          "dark:focus:ring-primary-dark focus:ring-primary outline-none",
                           data.valid_feedback
-                            ? "border-danger border-2"
-                            : "border-outline dark:border-washed-dark dark:hover:border-outlineHover-dark hover:border-outlineHover border"
+                            ? "ring-danger"
+                            : "border-outline dark:border-washed-dark dark:hover:border-outlineHover-dark"
                         )}
                         placeholder={t("tell_us")}
                         value={data.feedback}
@@ -215,7 +217,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
                         .then((resp: any) => {
                           setData("loading", true);
                           post(
-                            "forms/helpdesk",
+                            "/forms/helpdesk",
                             {
                               name: resp.name,
                               email: resp.email,

@@ -1,22 +1,22 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { clx } from "@lib/helpers";
-import { ReactNode } from "react";
+import { FunctionComponent, ReactNode } from "react";
 
-type AccordionProps<L, V> = {
+type AccordionProps = {
   className?: string;
   width?: string;
   icon?: ReactNode;
   title: string;
-  children: string;
+  children: ReactNode;
 };
 
-const Accordion = <L extends string | number = string, V = string>({
-  className = "py-3 px-4.5 border border-outline dark:border-washed-dark shadow font-medium",
+const Accordion: FunctionComponent<AccordionProps> = ({
+  className = "p-4 border border-outline dark:border-washed-dark shadow",
   width = "w-full",
   icon,
   title,
   children,
-}: AccordionProps<L, V>) => {
+}) => {
   return (
     <Disclosure>
       {({ open }) => (
@@ -46,7 +46,13 @@ const Accordion = <L extends string | number = string, V = string>({
             leaveTo="transform scale-95 opacity-0"
           >
             <Disclosure.Panel>
-              <div className={clx("text-dim rounded-b-xl border border-t-0", width, className)}>
+              <div
+                className={clx(
+                  "text-dim rounded-b-xl border border-t-0 font-normal",
+                  width,
+                  className
+                )}
+              >
                 {children}
               </div>
             </Disclosure.Panel>
