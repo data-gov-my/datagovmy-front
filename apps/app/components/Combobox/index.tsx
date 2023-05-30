@@ -122,7 +122,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                       {enableFlag ? (
                         <>
                           <ImageWithFallback
-                            className="border-outline dark:border-washed-dark rounded border"
+                            className="border-outline dark:border-outlineHover-dark absolute rounded border"
                             src={`${imageSource}${option.value}.png`}
                             fallback={fallback}
                             width={32}
@@ -131,7 +131,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                           />
                           <span
                             className={clx(
-                              "block truncate",
+                              "relative block truncate pl-10",
                               selected ? "font-medium" : "font-normal"
                             )}
                           >

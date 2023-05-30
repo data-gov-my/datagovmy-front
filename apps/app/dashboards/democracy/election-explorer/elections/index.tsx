@@ -103,7 +103,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
   const ELECTION_OPTIONS: Array<OptionType> = Array(16)
     .fill(null)
     .map((n, index: number) => ({
-      label: (data.list_index === 0 ? t("GE") : t("SE")) + `-${String(index).padStart(2, "0")}`,
+      label: t((data.list_index === 0 ? "GE" : "SE") + `-${String(index).padStart(2, "0")}`),
       value: (data.list_index === 0 ? "GE" : "SE") + `-${String(index).padStart(2, "0")}`,
     }))
     .reverse();
@@ -295,10 +295,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                               {
                                 key: "seats",
                                 id: "seats",
-                                header:
-                                  table.length > 0
-                                    ? `${t("seats_won")} / ${table[0].seats.total}`
-                                    : t("seats_won"),
+                                header: t("seats_won"),
                               },
                               { key: "votes", id: "votes", header: t("votes_won") },
                             ])}
@@ -329,7 +326,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                                     <div className="bg-dim h-4 w-4 rounded-md"></div>
                                   ) : (
                                     <ImageWithFallback
-                                      className="border-outline dark:border-washed-dark rounded border"
+                                      className="border-outline dark:border-outlineHover-dark rounded border"
                                       src={`/static/images/parties/${label}.png`}
                                       width={32}
                                       height={18}
