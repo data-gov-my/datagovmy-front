@@ -19,9 +19,8 @@ export function middleware(request: NextRequest) {
 
   const auth_cookie = request.cookies.get("auth");
   if (!auth_cookie || auth_cookie.value !== process.env.AUTH_TOKEN) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.rewrite(url);
+    request.nextUrl.pathname = "/login";
+    return NextResponse.rewrite(request.nextUrl, { headers: reqHeaders });
   }
 
   // Request authenticated
