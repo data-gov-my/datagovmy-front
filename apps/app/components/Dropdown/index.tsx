@@ -258,16 +258,11 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
             leaveTo="opacity-0"
           >
             <Listbox.Options
-              className={
-                virtualise
-                  ? ""
-                  : [
-                      "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
-                      anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                      darkMode ? "border-outline/10 border bg-black" : "bg-white",
-                      virtualise ? "" : "max-h-60 overflow-auto",
-                    ].join(" ")
-              }
+              className={[
+                "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+                anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
+                darkMode ? "border-outline/10 border bg-black" : "bg-white",
+              ].join(" ")}
             >
               {/* Description - optional*/}
               {description && <p className="text-dim px-4 py-1 text-xs">{description}</p>}
@@ -283,34 +278,35 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                 />
               )}
               {/* Options */}
-
-              {virtualise ||
-                availableOptions.map((option, index) => (
-                  <ListboxOption key={index} option={option} index={index} style={null} />
-                ))}
-
-              {virtualise && (
+              {virtualise ? (
                 <AutoSizer>
-                  {({ height, width }: { height: number; width: number }) => (
-                    <FixedSizeList
-                      height={220} // FIXME: fix dropdown size
-                      width={width}
-                      itemCount={availableOptions.length}
-                      itemSize={35}
-                      className={[
-                        "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
-                        anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                        darkMode ? "border-outline/10 border bg-black" : "bg-white",
-                        virtualise ? "" : "max-h-60 overflow-auto",
-                      ].join(" ")}
-                    >
-                      {({ index, style }: { index: number; style: any }) => {
-                        const option = availableOptions[index];
-                        return <ListboxOption option={option} index={index} style={style} />;
-                      }}
-                    </FixedSizeList>
-                  )}
+                  {({ height, width }: { height: number; width: number }) => {
+                    return (
+                      <FixedSizeList
+                        height={height} // FIXME: fix dropdown size
+                        width={width}
+                        itemCount={availableOptions.length}
+                        itemSize={35}
+                        className={[
+                          "dark:ring-washed-dark absolute z-20 min-w-full rounded-b-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+                          anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
+                          darkMode ? "border-outline/10 border bg-black" : "bg-white",
+                        ].join(" ")}
+                      >
+                        {({ index, style }: { index: number; style: any }) => {
+                          const option = availableOptions[index];
+                          return <ListboxOption option={option} index={index} style={style} />;
+                        }}
+                      </FixedSizeList>
+                    );
+                  }}
                 </AutoSizer>
+              ) : (
+                <div className={`flex max-h-${enableSearch ? "56" : "60"} flex-col overflow-auto`}>
+                  {availableOptions.map((option, index) => (
+                    <ListboxOption key={index} option={option} index={index} style={null} />
+                  ))}
+                </div>
               )}
 
               {/* Clear / Reset */}
