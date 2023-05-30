@@ -37,7 +37,7 @@ interface ElectionCardProps<T extends Candidate | Party | Seat> {
   columns?: any;
   title?: string | ReactElement;
   subtitle?: boolean;
-  highlightedRow?: false | number;
+  highlighted?: string;
   page: number;
 }
 
@@ -48,13 +48,14 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
   columns,
   title,
   subtitle = false,
-  highlightedRow,
+  highlighted,
   page,
 }: ElectionCardProps<T>) => {
   const [show, setShow] = useState<boolean>(false);
   const { data, setData } = useData({
     index: page,
     result: [],
+
     loading: false,
   });
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
@@ -144,7 +145,18 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                         data={data.result.data}
                         columns={columns}
                         isLoading={data.loading}
-                        highlightedRow={highlightedRow}
+                        highlightedRow={
+                          data.result.data && highlighted
+                            ? "name" in data.result.data[0]
+                              ? data.result.data.findIndex(
+                                  (e: BaseResult) => e.name === highlighted
+                                )
+                              : "party" in data.result.data[0] &&
+                                data.result.data.findIndex(
+                                  (e: BaseResult) => e.party === highlighted
+                                )
+                            : 0
+                        }
                         win={"result" in defaultParams ? defaultParams.result : undefined}
                       />
                     </div>

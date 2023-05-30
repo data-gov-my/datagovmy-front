@@ -80,6 +80,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
               </div>
             }
             subtitle
+            highlighted={params.candidate_name}
             options={selection}
             page={row.index}
           />
