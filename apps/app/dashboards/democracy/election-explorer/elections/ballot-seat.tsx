@@ -236,7 +236,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                         <div className="flex flex-col gap-3 text-sm md:flex-row md:gap-x-6 lg:flex-col xl:flex-row">
                           {data.seat_result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
-                              <div className="flex space-x-3 whitespace-nowrap">
+                              <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
                                 <p className="w-28 md:w-fit lg:w-28 xl:w-fit">
                                   {t(`election.${item.x}`)}:
                                 </p>

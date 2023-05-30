@@ -167,7 +167,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                         <div className="flex flex-col gap-3 text-sm md:flex-row md:flex-wrap md:gap-x-6">
                           {data.result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
-                              <div className="flex space-x-3 whitespace-nowrap">
+                              <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
                                 <p className="w-28 md:w-fit">{t(`election.${item.x}`)}:</p>
                                 <div className="flex items-center space-x-3">
                                   <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
