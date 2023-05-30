@@ -156,7 +156,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                         </div>
                         <div className="flex flex-row gap-2">
                           <ImageWithFallback
-                            className="border-outline dark:border-washed-dark items-center self-center rounded border"
+                            className="border-outline dark:border-outlineHover-dark items-center self-center rounded border"
                             src={`/static/images/parties/${seat.party}.png`}
                             width={32}
                             height={18}
@@ -197,14 +197,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                             <p className="text-dim uppercase">{seat_info.state}</p>
                           </div>
                           <div className="flex items-center gap-3">
-                            <p>{seat_info.name}</p>
+                            <p>{t(`${seat_info.name}`)}</p>
                             <p className="text-dim">{seat_info.date}</p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <h5>{t("election.election_result")}</h5>
+                      <div className="space-y-3">
+                        <div className="font-bold">{t("election.election_result")}</div>
                         <ElectionTable
                           className="max-h-96 w-full overflow-y-auto"
                           data={data.seat_result.data}
@@ -231,26 +231,26 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <h5>{t("election.voting_statistics")}</h5>
-                        <div className="flex flex-col gap-3 text-sm md:flex-row md:flex-wrap md:gap-x-6">
+                      <div className="space-y-3">
+                        <div className="font-bold">{t("election.voting_statistics")}</div>
+                        <div className="flex flex-col gap-3 text-sm md:flex-row md:gap-x-6 lg:flex-col xl:flex-row">
                           {data.seat_result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
-                              <>
-                                <div className="flex space-x-3 whitespace-nowrap">
-                                  <p className="w-[132px] xl:w-fit">{t(`election.${item.x}`)}:</p>
-                                  <div className="flex items-center space-x-3">
-                                    <BarPerc hidden value={item.perc} />
-                                    <p>{`${
-                                      item.abs === 0 ? "0" : numFormat(item.abs, "standard")
-                                    } ${
-                                      item.perc === 0
-                                        ? "(—)"
-                                        : `(${numFormat(item.perc, "compact", [1, 1])}%)`
-                                    }`}</p>
-                                  </div>
+                              <div className="flex space-x-3 whitespace-nowrap">
+                                <p className="w-28 md:w-fit lg:w-28 xl:w-fit">
+                                  {t(`election.${item.x}`)}:
+                                </p>
+                                <div className="flex items-center space-x-3">
+                                  <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
+                                  <p>{`${
+                                    item.abs !== null ? numFormat(item.abs, "standard") : "—"
+                                  } ${
+                                    item.perc !== null
+                                      ? `(${numFormat(item.perc, "compact", [1, 1])}%)`
+                                      : "(—)"
+                                  }`}</p>
                                 </div>
-                              </>
+                              </div>
                             )
                           )}
                         </div>

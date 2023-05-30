@@ -63,13 +63,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
     }).then(() => setData("loading", false));
   };
 
-  const [area, state] = params.seat_name.split(",");
-
   const fetchResult = async (election: string, seat: string) => {
     return get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
-      type: "seats",
+      type: "candidates",
       election,
       seat,
     })
@@ -79,11 +77,13 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
           votes: [
             {
               x: "voter_turnout",
-              y: data.votes.voter_turnout_perc,
+              abs: data.votes.voter_turnout,
+              perc: data.votes.voter_turnout_perc,
             },
             {
               x: "rejected_votes",
-              y: data.votes.votes_rejected_perc,
+              abs: data.votes.votes_rejected,
+              perc: data.votes.votes_rejected_perc,
             },
           ],
         };
@@ -134,11 +134,12 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
               },
             ])}
             title={
-              <div className="block align-baseline uppercase md:flex md:flex-row md:items-center md:gap-2">
+              <div className="uppercase md:flex md:flex-row md:items-center md:gap-2">
                 <h5 className="text">{area}</h5>
-                <p className="text-dim font-normal">{state}</p>
+                <h5 className="text-dim font-normal">{state}</h5>
               </div>
             }
+            subtitle
             options={elections}
             page={row.index}
           />
@@ -167,9 +168,9 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
               </div>
               <ElectionTable
                 title={
-                  <div className="flex flex-col uppercase md:flex-row md:gap-2">
-                    <h5>{area}</h5>
-                    <span className="text-dim font-normal">{state}</span>
+                  <div className="pb-6 font-bold">
+                    {t("seat.title")}
+                    <span className="text-primary">{params.seat_name}</span>
                   </div>
                 }
                 data={elections}

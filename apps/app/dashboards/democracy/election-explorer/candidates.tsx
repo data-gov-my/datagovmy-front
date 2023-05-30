@@ -71,7 +71,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
               },
             ])}
             title={
-              <div className="flex w-full justify-between pr-10">
+              <div className="flex w-full items-start justify-between pr-12">
                 <div className="flex flex-col uppercase md:flex-row md:gap-2">
                   <h5>{area}</h5>
                   <span className="text-dim text-lg font-normal">{state}</span>
@@ -79,6 +79,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 <ResultBadge value={item.result} />
               </div>
             }
+            subtitle
             options={selection}
             page={row.index}
           />
@@ -90,7 +91,6 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   const { data, setData } = useData({
     tab_index: 0, // parlimen = 0; dun = 1
     candidate: params.candidate_name,
-    query: "",
     loading: false,
   });
 
@@ -122,11 +122,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
           votes: [
             {
               x: "voter_turnout",
-              y: data.votes.voter_turnout_perc,
+              abs: data.votes.voter_turnout,
+              perc: data.votes.voter_turnout_perc,
             },
             {
               x: "rejected_votes",
-              y: data.votes.votes_rejected_perc,
+              abs: data.votes.votes_rejected,
+              perc: data.votes.votes_rejected_perc,
             },
           ],
         };
