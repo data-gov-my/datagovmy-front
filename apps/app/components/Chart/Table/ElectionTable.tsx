@@ -43,7 +43,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   isLoading = false,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-
+  console.log(highlightedRow);
   const table = useReactTable({
     data,
     columns,
@@ -298,7 +298,8 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             <div
               className={clx(
                 "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b p-3 text-sm first:border-t-2 md:hidden",
-                index === 0 && "border-t-2"
+                index === 0 && "border-t-2",
+                index === highlightedRow ? "bg-background dark:bg-background-dark" : "bg-inherit"
               )}
               key={index}
             >
