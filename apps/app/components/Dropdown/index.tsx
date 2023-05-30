@@ -12,6 +12,8 @@ import {
 import { Input } from "..";
 import { useTranslation } from "next-i18next";
 import { clx } from "@lib/helpers";
+import { FixedSizeList } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 type CommonProps<L, V> = {
   className?: string;
@@ -27,6 +29,7 @@ type CommonProps<L, V> = {
   enableSearch?: boolean;
   enableFlag?: boolean;
   enableClear?: boolean;
+  virtualise?: boolean;
 };
 
 type ConditionalProps<L, V> =
@@ -66,6 +69,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
   darkMode = false,
   enableFlag = false,
   enableClear = false,
+  virtualise = false,
 }: DropdownProps<L, V>) => {
   const [search, setSearch] = useState<string>("");
   const { t } = useTranslation();
@@ -100,6 +104,76 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
       option => !option.label.toString().toLowerCase().search(search.toLowerCase())
     );
   }, [options, search]);
+
+  const ListboxOption = ({
+    option,
+    index,
+    style,
+  }: {
+    option: OptionType<L, V>;
+    index: number;
+    style: any;
+  }) => (
+    <Listbox.Option
+      key={index}
+      style={style}
+      className={clx(
+        "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
+        multiple ? "pl-10" : "pl-4",
+        darkMode
+          ? "hover:bg-washed/10 text-white"
+          : "hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
+        multiple &&
+          selected &&
+          Array.isArray(selected) &&
+          selected.some((item: OptionType<L, V>) => item.value == option.value)
+          ? "bg-washed dark:bg-washed-dark"
+          : "bg-inherit"
+      )}
+      onClick={() => (multiple ? handleChange(option) : null)}
+      value={option}
+    >
+      {/* State flag - optional */}
+      <div className="flex w-full items-center justify-between gap-2">
+        {enableFlag && (
+          <Image
+            src={`/static/images/states/${option.value}.jpeg`}
+            width={20}
+            height={12}
+            alt={option.label as string}
+          />
+        )}
+        {/* Option label */}
+        <span
+          className={[
+            "block flex-grow truncate",
+            option === selected ? "font-medium" : "font-normal",
+          ].join(" ")}
+        >
+          {option.label}
+        </span>
+
+        {/* Checkbox (multiple mode) */}
+        {multiple && (
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <input
+              type="checkbox"
+              checked={
+                selected &&
+                (selected as OptionType<L, V>[]).some(item => item.value === option.value)
+              }
+              className="border-outline text-primary dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark h-4 w-4 rounded focus:ring-0"
+            />
+          </span>
+        )}
+
+        {/* Checkmark */}
+        {!multiple && selected && (selected as OptionType).value === option.value && (
+          <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
+        )}
+      </div>
+    </Listbox.Option>
+  );
 
   return (
     <div className={clx("space-y-3", width)}>
@@ -184,11 +258,16 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
             leaveTo="opacity-0"
           >
             <Listbox.Options
-              className={[
-                "dark:ring-washed-dark absolute z-20 mt-1 max-h-60 min-w-full overflow-auto rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
-                anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                darkMode ? "border-outline/10 border bg-black" : "bg-white",
-              ].join(" ")}
+              className={
+                virtualise
+                  ? ""
+                  : [
+                      "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+                      anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
+                      darkMode ? "border-outline/10 border bg-black" : "bg-white",
+                      virtualise ? "" : "max-h-60 overflow-auto",
+                    ].join(" ")
+              }
             >
               {/* Description - optional*/}
               {description && <p className="text-dim px-4 py-1 text-xs">{description}</p>}
@@ -204,68 +283,35 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
                 />
               )}
               {/* Options */}
-              {availableOptions.map((option, index) => (
-                <Listbox.Option
-                  key={index}
-                  className={clx(
-                    "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
-                    multiple ? "pl-10" : "pl-4",
-                    darkMode
-                      ? "hover:bg-washed/10 text-white"
-                      : "hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
-                    multiple &&
-                      selected &&
-                      Array.isArray(selected) &&
-                      selected.some((item: OptionType<L, V>) => item.value == option.value)
-                      ? "bg-washed dark:bg-washed-dark"
-                      : "bg-inherit"
-                  )}
-                  onClick={() => (multiple ? handleChange(option) : null)}
-                  value={option}
-                >
-                  {/* State flag - optional */}
-                  <div className="flex w-full items-center justify-between gap-2">
-                    {enableFlag && (
-                      <Image
-                        src={`/static/images/states/${option.value}.jpeg`}
-                        width={20}
-                        height={12}
-                        alt={option.label as string}
-                      />
-                    )}
-                    {/* Option label */}
-                    <span
+
+              {virtualise ||
+                availableOptions.map((option, index) => (
+                  <ListboxOption option={option} index={index} style={null} />
+                ))}
+
+              {virtualise && (
+                <AutoSizer>
+                  {({ height, width }: { height: number; width: number }) => (
+                    <FixedSizeList
+                      height={220} // FIXME: fix dropdown size
+                      width={width}
+                      itemCount={availableOptions.length}
+                      itemSize={35}
                       className={[
-                        "block flex-grow truncate",
-                        option === selected ? "font-medium" : "font-normal",
+                        "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+                        anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
+                        darkMode ? "border-outline/10 border bg-black" : "bg-white",
+                        virtualise ? "" : "max-h-60 overflow-auto",
                       ].join(" ")}
                     >
-                      {option.label}
-                    </span>
-
-                    {/* Checkbox (multiple mode) */}
-                    {multiple && (
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <input
-                          type="checkbox"
-                          checked={
-                            selected &&
-                            (selected as OptionType<L, V>[]).some(
-                              item => item.value === option.value
-                            )
-                          }
-                          className="border-outline text-primary dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark h-4 w-4 rounded focus:ring-0"
-                        />
-                      </span>
-                    )}
-
-                    {/* Checkmark */}
-                    {!multiple && selected && (selected as OptionType).value === option.value && (
-                      <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
-                    )}
-                  </div>
-                </Listbox.Option>
-              ))}
+                      {({ index, style }: { index: number; style: any }) => {
+                        const option = availableOptions[index];
+                        return <ListboxOption option={option} index={index} style={style} />;
+                      }}
+                    </FixedSizeList>
+                  )}
+                </AutoSizer>
+              )}
 
               {/* Clear / Reset */}
               {enableClear && (

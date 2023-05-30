@@ -150,6 +150,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
                   selected={query.model}
                   onChange={selected => setQuery("model", selected)}
                   enableSearch
+                  virtualise={true}
                 />
                 <Dropdown
                   label={t("label_colour")}
