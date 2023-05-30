@@ -286,7 +286,7 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
 
               {virtualise ||
                 availableOptions.map((option, index) => (
-                  <ListboxOption option={option} index={index} style={null} />
+                  <ListboxOption key={index} option={option} index={index} style={null} />
                 ))}
 
               {virtualise && (
