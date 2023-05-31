@@ -43,7 +43,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
-      type: "seats",
+      type: "candidates",
       election: election,
       seat: seat,
     })
