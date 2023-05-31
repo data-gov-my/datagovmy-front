@@ -26,7 +26,7 @@ module.exports = plop => {
       {
         type: "input",
         name: "docs_path",
-        message: "File path (relative to /pages?",
+        message: "File path? (relative to /pages",
       },
     ],
     actions: [
