@@ -193,7 +193,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
                     formatY={(value, key) => (
                       <>
                         <Tooltip
-                          tip={`${t("tooltip_count", {
+                          tip={`${t("tooltip", {
                             count: barmeter.data.tooltip[k].find(
                               (object: { x: string; y: number }) => object.x === key
                             ).y,
