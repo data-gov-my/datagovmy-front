@@ -24,8 +24,8 @@ interface BodyProps {
 }
 
 const classes = {
-  toc: cn("nextra-toc nx-order-last nx-hidden nx-w-64 nx-shrink-0 xl:nx-block print:nx-hidden"),
-  main: cn("nx-w-full nx-break-words"),
+  toc: cn("nextra-toc order-last hidden w-64 shrink-0 xl:block print:hidden"),
+  main: cn("w-full break-words"),
 };
 
 const Body = ({
@@ -48,11 +48,11 @@ const Body = ({
   const gitTimestampEl =
     // Because a user's time zone may be different from the server page
     mounted && date ? (
-      <div className="nx-mt-12 nx-mb-8 nx-block nx-text-xs nx-text-gray-500 ltr:nx-text-right rtl:nx-text-left dark:nx-text-gray-400">
+      <div className="mb-8 mt-12 block text-xs text-gray-500 ltr:text-right rtl:text-left dark:text-gray-400">
         {renderComponent(config.gitTimestamp, { timestamp: date })}
       </div>
     ) : (
-      <div className="nx-mt-16" />
+      <div className="mt-16" />
     );
 
   const content = (
@@ -70,7 +70,7 @@ const Body = ({
       <article
         className={cn(
           classes.main,
-          "nextra-content nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]"
+          "nextra-content min-h-[calc(100vh-var(--nextra-navbar-height))] pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]"
         )}
       >
         {body}
@@ -82,11 +82,11 @@ const Body = ({
     <article
       className={cn(
         classes.main,
-        "nextra-content nx-flex nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-min-w-0 nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]",
+        "nextra-content flex min-h-[calc(100vh-var(--nextra-navbar-height))] min-w-0 justify-center pb-8 pr-[calc(env(safe-area-inset-right)-1.5rem)]",
         themeContext.typesetting === "article" && "nextra-body-typesetting-article"
       )}
     >
-      <main className="nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4 md:nx-px-12">
+      <main className="w-full min-w-0 max-w-6xl px-6 pt-4 md:px-12">
         {breadcrumb}
         {body}
       </main>
@@ -138,7 +138,7 @@ const InnerLayout = ({
         <nav className={classes.toc} aria-label="table of contents" />
       )
     ) : (
-      <nav className={cn(classes.toc, "nx-px-4")} aria-label="table of contents">
+      <nav className={cn(classes.toc, "px-4")} aria-label="table of contents">
         {renderComponent(config.toc.component, {
           headings: config.toc.float ? headings : [],
           filePath,
@@ -168,9 +168,7 @@ const InnerLayout = ({
           flatDirectories,
           items: topLevelNavbarItems,
         })}
-      <div
-        className={cn("nx-mx-auto nx-flex", themeContext.layout !== "raw" && "nx-max-w-[90rem]")}
-      >
+      <div className={cn("mx-auto flex", themeContext.layout !== "raw" && "max-w-[90rem]")}>
         <ActiveAnchorProvider>
           <Sidebar
             docsDirectories={docsDirectories}

@@ -1,5 +1,6 @@
 {
-  "index": "OpenAPI",
+  "index": "Pengenalan",
+  "overview": "Ikhtisar",
   "static-api": "API Statik",
   "realtime-api": "API 'Realtime'",
   "contact": "Contact us"

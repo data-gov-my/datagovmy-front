@@ -1,96 +1,85 @@
-import cn from 'clsx'
-import type { Heading } from 'nextra'
-import type { ReactElement } from 'react'
-import { useEffect, useMemo, useRef } from 'react'
-import scrollIntoView from 'scroll-into-view-if-needed'
-import { useActiveAnchor, useConfig } from '../contexts'
-import { renderComponent } from '../utils'
-import { Anchor } from './anchor'
+import cn from "clsx";
+import type { Heading } from "nextra";
+import type { ReactElement } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import scrollIntoView from "scroll-into-view-if-needed";
+import { useActiveAnchor, useConfig } from "../contexts";
+import { renderComponent } from "../utils";
+import { Anchor } from "./anchor";
 
 export type TOCProps = {
-  headings: Heading[]
-  filePath: string
-}
+  headings: Heading[];
+  filePath: string;
+};
 
 const linkClassName = cn(
-  'nx-text-xs nx-font-medium nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100',
-  'contrast-more:nx-text-gray-800 contrast-more:dark:nx-text-gray-50'
-)
+  "text-xs font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100",
+  "contrast-more:text-gray-800 contrast-more:dark:text-gray-50"
+);
 
 export function TOC({ headings, filePath }: TOCProps): ReactElement {
-  const activeAnchor = useActiveAnchor()
-  const config = useConfig()
-  const tocRef = useRef<HTMLDivElement>(null)
+  const activeAnchor = useActiveAnchor();
+  const config = useConfig();
+  const tocRef = useRef<HTMLDivElement>(null);
 
-  const items = useMemo(
-    () => headings.filter(heading => heading.depth > 1),
-    [headings]
-  )
+  const items = useMemo(() => headings.filter(heading => heading.depth > 1), [headings]);
 
-  const hasHeadings = items.length > 0
+  const hasHeadings = items.length > 0;
   const hasMetaInfo = Boolean(
-    config.feedback.content ||
-      config.editLink.component ||
-      config.toc.extraContent
-  )
+    config.feedback.content || config.editLink.component || config.toc.extraContent
+  );
 
-  const activeSlug = Object.entries(activeAnchor).find(
-    ([, { isActive }]) => isActive
-  )?.[0]
+  const activeSlug = Object.entries(activeAnchor).find(([, { isActive }]) => isActive)?.[0];
 
   useEffect(() => {
-    if (!activeSlug) return
-    const anchor = tocRef.current?.querySelector(
-      `li > a[href="#${activeSlug}"]`
-    )
+    if (!activeSlug) return;
+    const anchor = tocRef.current?.querySelector(`li > a[href="#${activeSlug}"]`);
 
     if (anchor) {
       scrollIntoView(anchor, {
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'center',
-        scrollMode: 'always',
-        boundary: tocRef.current
-      })
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+        scrollMode: "always",
+        boundary: tocRef.current,
+      });
     }
-  }, [activeSlug])
+  }, [activeSlug]);
 
   return (
     <div
       ref={tocRef}
       className={cn(
-        'nextra-scrollbar nx-sticky nx-top-16 nx-overflow-y-auto nx-pr-4 nx-pt-6 nx-text-sm [hyphens:auto]',
-        'nx-max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))] ltr:-nx-mr-4 rtl:-nx-ml-4'
+        "nextra-scrollbar sticky top-16 overflow-y-auto pr-4 pt-6 text-sm [hyphens:auto]",
+        "max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))] ltr:-mr-4 rtl:-ml-4"
       )}
     >
       {hasHeadings && (
         <>
-          <p className="nx-mb-4 nx-font-semibold nx-tracking-tight">
-            {renderComponent(config.toc.title)}
-          </p>
+          <p className="mb-4 font-semibold tracking-tight">{renderComponent(config.toc.title)}</p>
           <ul>
             {items.map(({ id, value, depth }) => (
-              <li className="nx-my-2 nx-scroll-my-6 nx-scroll-py-6" key={id}>
+              <li className="my-2 scroll-my-6 scroll-py-6" key={id}>
                 <a
                   href={`#${id}`}
                   className={cn(
                     {
-                      2: 'nx-font-semibold',
-                      3: 'ltr:nx-pl-4 rtl:nx-pr-4',
-                      4: 'ltr:nx-pl-8 rtl:nx-pr-8',
-                      5: 'ltr:nx-pl-12 rtl:nx-pr-12',
-                      6: 'ltr:nx-pl-16 rtl:nx-pr-16'
+                      2: "font-semibold",
+                      3: "ltr:pl-4 rtl:pr-4",
+                      4: "ltr:pl-8 rtl:pr-8",
+                      5: "ltr:pl-12 rtl:pr-12",
+                      6: "ltr:pl-16 rtl:pr-16",
                     }[depth as Exclude<typeof depth, 1>],
-                    'nx-inline-block',
+                    "inline-block",
                     activeAnchor[id]?.isActive
-                      ? 'nx-text-primary-600 nx-subpixel-antialiased contrast-more:!nx-text-primary-600'
-                      : 'nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300',
-                    'contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words'
+                      ? "text-primary-600 contrast-more:!text-primary-600 subpixel-antialiased"
+                      : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300",
+                    "w-full break-words contrast-more:text-gray-900 contrast-more:underline contrast-more:dark:text-gray-50"
                   )}
                 >
                   {config.toc.headingComponent?.({
                     id,
-                    children: value
+                    children: value,
                   }) ?? value}
                 </a>
               </li>
@@ -103,17 +92,13 @@ export function TOC({ headings, filePath }: TOCProps): ReactElement {
         <div
           className={cn(
             hasHeadings &&
-              'nx-mt-8 nx-border-t nx-bg-white nx-pt-8 nx-shadow-[0_-12px_16px_white] dark:nx-bg-dark dark:nx-shadow-[0_-12px_16px_#111]',
-            'nx-sticky nx-bottom-0 nx-flex nx-flex-col nx-items-start nx-gap-2 nx-pb-8 dark:nx-border-neutral-800',
-            'contrast-more:nx-border-t contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-border-neutral-400'
+              "dark:bg-dark mt-8 border-t bg-white pt-8 shadow-[0_-12px_16px_white] dark:shadow-[0_-12px_16px_#111]",
+            "sticky bottom-0 flex flex-col items-start gap-2 pb-8 dark:border-neutral-800",
+            "contrast-more:border-t contrast-more:border-neutral-400 contrast-more:shadow-none contrast-more:dark:border-neutral-400"
           )}
         >
           {config.feedback.content ? (
-            <Anchor
-              className={linkClassName}
-              href={config.feedback.useLink()}
-              newWindow
-            >
+            <Anchor className={linkClassName} href={config.feedback.useLink()} newWindow>
               {renderComponent(config.feedback.content)}
             </Anchor>
           ) : null}
@@ -121,12 +106,12 @@ export function TOC({ headings, filePath }: TOCProps): ReactElement {
           {renderComponent(config.editLink.component, {
             filePath,
             className: linkClassName,
-            children: renderComponent(config.editLink.text)
+            children: renderComponent(config.editLink.text),
           })}
 
           {renderComponent(config.toc.extraContent)}
         </div>
       )}
     </div>
-  )
+  );
 }

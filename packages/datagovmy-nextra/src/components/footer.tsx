@@ -1,33 +1,31 @@
-import cn from 'clsx'
-import type { ReactElement } from 'react'
-import { useConfig } from '../contexts'
-import { renderComponent } from '../utils'
-import { LocaleSwitch } from './locale-switch'
+import cn from "clsx";
+import type { ReactElement } from "react";
+import { useConfig } from "../contexts";
+import { renderComponent } from "../utils";
+import { LocaleSwitch } from "./locale-switch";
 
 export function Footer({ menu }: { menu?: boolean }): ReactElement {
-  const config = useConfig()
+  const config = useConfig();
   return (
-    <footer className="nx-bg-gray-100 nx-pb-[env(safe-area-inset-bottom)] dark:nx-bg-neutral-900 print:nx-bg-transparent">
+    <footer className="bg-gray-100 pb-[env(safe-area-inset-bottom)] dark:bg-neutral-900 print:bg-transparent">
       <div
         className={cn(
-          'nx-mx-auto nx-flex nx-max-w-[90rem] nx-gap-2 nx-py-2 nx-px-4',
-          menu && (config.i18n.length > 0 || config.darkMode)
-            ? 'nx-flex'
-            : 'nx-hidden'
+          "mx-auto flex max-w-[90rem] gap-2 px-4 py-2",
+          menu && (config.i18n.length > 0 || config.darkMode) ? "flex" : "hidden"
         )}
       >
         {config.i18n.length > 0 && <LocaleSwitch options={config.i18n} />}
         {config.darkMode && renderComponent(config.themeSwitch.component)}
       </div>
-      <hr className="dark:nx-border-neutral-800" />
+      <hr className="dark:border-neutral-800" />
       <div
         className={cn(
-          'nx-mx-auto nx-flex nx-max-w-[90rem] nx-justify-center nx-py-12 nx-text-gray-600 dark:nx-text-gray-400 md:nx-justify-start',
-          'nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]'
+          "mx-auto flex max-w-[90rem] justify-center py-12 text-gray-600 dark:text-gray-400 md:justify-start",
+          "pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]"
         )}
       >
         {renderComponent(config.footer.text)}
       </div>
     </footer>
-  )
+  );
 }

@@ -1,5 +1,10 @@
 import cn from "clsx";
-import { Code, Pre, Table, Td, Th, Tr } from "nextra/components";
+import { Code } from "./components/code";
+import { Pre } from "./components/pre";
+import { Table } from "./components/table";
+import { Td } from "./components/td";
+import { Tr } from "./components/tr";
+import { Th } from "./components/th";
 import type { Components } from "nextra/mdx";
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 import { Children, cloneElement, useEffect, useRef, useState } from "react";
@@ -46,19 +51,19 @@ function HeadingLink({
   return (
     <Tag
       className={cn(
-        "nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100",
+        "font-semibold tracking-tight text-slate-900 dark:text-slate-100",
         {
-          h2: "nx-mt-10 nx-border-b nx-pb-1 nx-text-3xl nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400",
-          h3: "nx-mt-8 nx-text-2xl",
-          h4: "nx-mt-8 nx-text-xl",
-          h5: "nx-mt-8 nx-text-lg",
-          h6: "nx-mt-8 nx-text-base",
+          h2: "dark:border-primary-100/10 mt-10 border-b border-neutral-200/70 pb-1 text-3xl contrast-more:border-neutral-400 contrast-more:dark:border-neutral-400",
+          h3: "mt-8 text-2xl",
+          h4: "mt-8 text-xl",
+          h5: "mt-8 text-lg",
+          h6: "mt-8 text-base",
         }[Tag]
       )}
       {...props}
     >
       {children}
-      <span className="nx-absolute -nx-mt-20" id={id} ref={obRef} />
+      <span className="absolute -mt-20" id={id} ref={obRef} />
       <a href={`#${id}`} className="subheading-anchor" aria-label="Permalink for this section" />
     </Tag>
   );
@@ -114,7 +119,7 @@ const Details = ({ children, open, ...props }: ComponentProps<"details">): React
 
   return (
     <details
-      className="nx-my-4 nx-rounded nx-border nx-border-gray-200 nx-bg-white nx-p-2 nx-shadow-sm first:nx-mt-0 dark:nx-border-neutral-800 dark:nx-bg-neutral-900"
+      className="my-4 rounded border border-gray-200 bg-white p-2 shadow-sm first:mt-0 dark:border-neutral-800 dark:bg-neutral-900"
       {...props}
       open={delayedOpenState}
       {...(openState && { "data-expanded": true })}
@@ -130,9 +135,9 @@ const Summary = (props: ComponentProps<"summary">): ReactElement => {
   return (
     <summary
       className={cn(
-        "nx-flex nx-items-center nx-cursor-pointer nx-list-none nx-p-1 nx-transition-colors hover:nx-bg-gray-100 dark:hover:nx-bg-neutral-800",
-        "before:nx-mr-1 before:nx-inline-block before:nx-transition-transform before:nx-content-[''] dark:before:nx-invert",
-        "rtl:before:nx-rotate-180 [[data-expanded]>&]:before:nx-rotate-90"
+        "flex cursor-pointer list-none items-center p-1 transition-colors hover:bg-gray-100 dark:hover:bg-neutral-800",
+        "before:mr-1 before:inline-block before:transition-transform before:content-[''] dark:before:invert",
+        "rtl:before:rotate-180 [[data-expanded]>&]:before:rotate-90"
       )}
       {...props}
       onClick={e => {
@@ -150,7 +155,7 @@ export const Link = ({ href = "", className, ...props }: AnchorProps) => (
     href={href}
     newWindow={EXTERNAL_HREF_REGEX.test(href)}
     className={cn(
-      "nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]",
+      "text-primary-600 underline decoration-from-font [text-underline-position:from-font]",
       className
     )}
     {...props}
@@ -176,7 +181,7 @@ export const getComponents = ({
   return {
     h1: props => (
       <h1
-        className="nx-mt-2 nx-text-4xl nx-font-bold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100"
+        className="mt-2 text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100"
         {...props}
       />
     ),
@@ -185,26 +190,22 @@ export const getComponents = ({
     h4: props => <HeadingLink tag="h4" context={context} {...props} />,
     h5: props => <HeadingLink tag="h5" context={context} {...props} />,
     h6: props => <HeadingLink tag="h6" context={context} {...props} />,
-    ul: props => (
-      <ul className="nx-mt-6 nx-list-disc first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6" {...props} />
-    ),
-    ol: props => (
-      <ol className="nx-mt-6 nx-list-decimal first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6" {...props} />
-    ),
-    li: props => <li className="nx-my-2" {...props} />,
+    ul: props => <ul className="mt-6 list-disc first:mt-0 ltr:ml-6 rtl:mr-6" {...props} />,
+    ol: props => <ol className="mt-6 list-decimal first:mt-0 ltr:ml-6 rtl:mr-6" {...props} />,
+    li: props => <li className="my-2" {...props} />,
     blockquote: props => (
       <blockquote
         className={cn(
-          "nx-mt-6 nx-border-gray-300 nx-italic nx-text-gray-700 dark:nx-border-gray-700 dark:nx-text-gray-400",
-          "first:nx-mt-0 ltr:nx-border-l-2 ltr:nx-pl-6 rtl:nx-border-r-2 rtl:nx-pr-6"
+          "mt-6 border-gray-300 italic text-gray-700 dark:border-gray-700 dark:text-gray-400",
+          "first:mt-0 ltr:border-l-2 ltr:pl-6 rtl:border-r-2 rtl:pr-6"
         )}
         {...props}
       />
     ),
-    hr: props => <hr className="nx-my-8 dark:nx-border-gray-900" {...props} />,
+    hr: props => <hr className="my-8 dark:border-gray-900" {...props} />,
     a: Link,
-    table: props => <Table className="nextra-scrollbar nx-mt-6 nx-p-0 first:nx-mt-0" {...props} />,
-    p: props => <p className="nx-mt-6 nx-leading-7 first:nx-mt-0" {...props} />,
+    table: props => <Table className="nextra-scrollbar mt-6 p-0 first:mt-0" {...props} />,
+    p: props => <p className="mt-6 leading-7 first:mt-0" {...props} />,
     tr: Tr,
     th: Th,
     td: Td,

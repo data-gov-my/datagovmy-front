@@ -1,36 +1,30 @@
 // eslint-disable-next-line no-restricted-imports -- only in this file we determine either we include <a /> as child of <NextLink /> based of `newNextLinkBehavior` value
-import NextLink from 'next/link'
-import next from 'next/package.json'
-import type { ComponentProps, ReactElement } from 'react'
-import { forwardRef } from 'react'
-import { useConfig } from '../contexts'
+import NextLink from "next/link";
+import next from "next/package.json";
+import type { ComponentProps, ReactElement } from "react";
+import { forwardRef } from "react";
+import { useConfig } from "../contexts";
 
-export type AnchorProps = Omit<ComponentProps<'a'>, 'ref'> & {
-  newWindow?: boolean
-}
+export type AnchorProps = Omit<ComponentProps<"a">, "ref"> & {
+  newWindow?: boolean;
+};
 
-const nextVersion = Number(next.version.split('.')[0])
+const nextVersion = Number(next.version.split(".")[0]);
 
 export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(function (
-  { href = '', children, newWindow, ...props },
+  { href = "", children, newWindow, ...props },
   // ref is used in <NavbarMenu />
   forwardedRef
 ): ReactElement {
-  const config = useConfig()
+  const config = useConfig();
 
   if (newWindow) {
     return (
-      <a
-        ref={forwardedRef}
-        href={href}
-        target="_blank"
-        rel="noreferrer"
-        {...props}
-      >
+      <a ref={forwardedRef} href={href} target="_blank" rel="noreferrer" {...props}>
         {children}
-        <span className="nx-sr-only"> (opens in a new tab)</span>
+        <span className="sr-only"> (opens in a new tab)</span>
       </a>
-    )
+    );
   }
 
   if (!href) {
@@ -38,7 +32,7 @@ export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(function (
       <a ref={forwardedRef} {...props}>
         {children}
       </a>
-    )
+    );
   }
 
   if (nextVersion > 12 || config.newNextLinkBehavior) {
@@ -46,7 +40,7 @@ export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(function (
       <NextLink ref={forwardedRef} href={href} {...props}>
         {children}
       </NextLink>
-    )
+    );
   }
 
   return (
@@ -55,7 +49,7 @@ export const Anchor = forwardRef<HTMLAnchorElement, AnchorProps>(function (
         {children}
       </a>
     </NextLink>
-  )
-})
+  );
+});
 
-Anchor.displayName = 'Anchor'
+Anchor.displayName = "Anchor";

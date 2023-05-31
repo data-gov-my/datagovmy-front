@@ -53,7 +53,7 @@ var __async = (__this, __arguments, generator) => {
 import { useRouter as useRouter8 } from "next/router";
 import { useMemo as useMemo5 } from "react";
 import "focus-visible";
-import cn20 from "clsx";
+import cn23 from "clsx";
 import { useFSRoute as useFSRoute3, useMounted as useMounted7 } from "nextra/hooks";
 import { MDXProvider } from "nextra/mdx";
 
@@ -282,20 +282,12 @@ var Anchor = forwardRef(function (_a, forwardedRef) {
     return /* @__PURE__ */ jsxs(
       "a",
       __spreadProps(
-        __spreadValues(
-          {
-            ref: forwardedRef,
-            href,
-            target: "_blank",
-            rel: "noreferrer",
-          },
-          props
-        ),
+        __spreadValues({ ref: forwardedRef, href, target: "_blank", rel: "noreferrer" }, props),
         {
           children: [
             children,
             /* @__PURE__ */ jsx3("span", {
-              className: "nx-sr-only",
+              className: "sr-only",
               children: " (opens in a new tab)",
             }),
           ],
@@ -413,28 +405,28 @@ function Banner() {
       /* @__PURE__ */ jsx5("script", { dangerouslySetInnerHTML: { __html: hideBannerScript } }),
       /* @__PURE__ */ jsxs2("div", {
         className: cn(
-          "nextra-banner-container nx-sticky nx-top-0 nx-z-20 nx-flex nx-items-center md:nx-relative",
-          "nx-h-[var(--nextra-banner-height)] [body.nextra-banner-hidden_&]:nx-hidden",
-          "nx-text-slate-50 dark:nx-text-white nx-bg-neutral-900 dark:nx-bg-[linear-gradient(1deg,#383838,#212121)]",
-          "nx-px-2 ltr:nx-pl-10 rtl:nx-pr-10 print:nx-hidden"
+          "nextra-banner-container sticky top-0 z-20 flex items-center md:relative",
+          "h-[var(--nextra-banner-height)] [body.nextra-banner-hidden_&]:hidden",
+          "bg-neutral-900 text-slate-50 dark:bg-[linear-gradient(1deg,#383838,#212121)] dark:text-white",
+          "px-2 ltr:pl-10 rtl:pr-10 print:hidden"
         ),
         children: [
           /* @__PURE__ */ jsx5("div", {
-            className: "nx-w-full nx-truncate nx-px-4 nx-text-center nx-font-medium nx-text-sm",
+            className: "w-full truncate px-4 text-center text-sm font-medium",
             children: renderComponent(banner.text),
           }),
           banner.dismissible &&
             /* @__PURE__ */ jsx5("button", {
               "type": "button",
               "aria-label": "Dismiss banner",
-              "className": "nx-w-8 nx-h-8 nx-opacity-80 hover:nx-opacity-100",
+              "className": "h-8 w-8 opacity-80 hover:opacity-100",
               "onClick": () => {
                 try {
                   localStorage.setItem(banner.key, "0");
                 } catch (e) {}
                 document.body.classList.add("nextra-banner-hidden");
               },
-              "children": /* @__PURE__ */ jsx5(XIcon, { className: "nx-mx-auto nx-h-4 nx-w-4" }),
+              "children": /* @__PURE__ */ jsx5(XIcon, { className: "mx-auto h-4 w-4" }),
             }),
         ],
       }),
@@ -448,11 +440,11 @@ import { jsx as jsx6 } from "react/jsx-runtime";
 function Bleed({ full, children }) {
   return /* @__PURE__ */ jsx6("div", {
     className: cn2(
-      "nextra-bleed nx-relative -nx-mx-6 nx-mt-6 md:-nx-mx-8 2xl:-nx-mx-24",
+      "nextra-bleed relative -mx-6 mt-6 md:-mx-8 2xl:-mx-24",
       full && [
         // 'md:mx:[calc(-50vw+50%+8rem)',
-        "ltr:xl:nx-ml-[calc(50%-50vw+16rem)] ltr:xl:nx-mr-[calc(50%-50vw)]",
-        "rtl:xl:nx-ml-[calc(50%-50vw)] rtl:xl:nx-mr-[calc(50%-50vw+16rem)]",
+        "ltr:xl:ml-[calc(50%-50vw+16rem)] ltr:xl:mr-[calc(50%-50vw)]",
+        "rtl:xl:ml-[calc(50%-50vw)] rtl:xl:mr-[calc(50%-50vw+16rem)]",
       ]
     ),
     children,
@@ -467,7 +459,7 @@ import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
 function Breadcrumb({ activePath }) {
   return /* @__PURE__ */ jsx7("div", {
     className:
-      "nextra-breadcrumb nx-mt-1.5 nx-flex nx-items-center nx-gap-1 nx-overflow-hidden nx-text-sm nx-text-gray-500 dark:nx-text-gray-400 contrast-more:nx-text-current",
+      "nextra-breadcrumb mt-1.5 flex items-center gap-1 overflow-hidden text-sm text-gray-500 contrast-more:text-current dark:text-gray-400",
     children: activePath.map((item, index) => {
       const isLink = !item.children || item.withIndexPage;
       const isActive = index === activePath.length - 1;
@@ -475,16 +467,15 @@ function Breadcrumb({ activePath }) {
         Fragment2,
         {
           children: [
-            index > 0 &&
-              /* @__PURE__ */ jsx7(ArrowRightIcon, { className: "nx-w-3.5 nx-shrink-0" }),
+            index > 0 && /* @__PURE__ */ jsx7(ArrowRightIcon, { className: "w-3.5 shrink-0" }),
             /* @__PURE__ */ jsx7("div", {
               className: cn3(
-                "nx-whitespace-nowrap nx-transition-colors",
+                "whitespace-nowrap transition-colors",
                 isActive
-                  ? "nx-font-medium nx-text-gray-700 contrast-more:nx-font-bold contrast-more:nx-text-current dark:nx-text-gray-100 contrast-more:dark:nx-text-current"
+                  ? "font-medium text-gray-700 contrast-more:font-bold contrast-more:text-current dark:text-gray-100 contrast-more:dark:text-current"
                   : [
-                      "nx-min-w-[24px] nx-overflow-hidden nx-text-ellipsis",
-                      isLink && "hover:nx-text-gray-900 dark:hover:nx-text-gray-100",
+                      "min-w-[24px] overflow-hidden text-ellipsis",
+                      isLink && "hover:text-gray-900 dark:hover:text-gray-100",
                     ]
               ),
               title: item.title,
@@ -505,20 +496,18 @@ function Breadcrumb({ activePath }) {
 import cn4 from "clsx";
 import { jsx as jsx8, jsxs as jsxs4 } from "react/jsx-runtime";
 var classes = {
-  cards: cn4("nextra-cards nx-mt-4 nx-gap-4 nx-grid"),
+  cards: cn4("nextra-cards mt-4 gap-4 grid"),
   card: cn4(
-    "nextra-card nx-group nx-flex nx-flex-col nx-justify-start nx-overflow-hidden nx-rounded-lg nx-border nx-border-gray-200",
-    "nx-text-current nx-no-underline dark:nx-shadow-none",
-    "hover:nx-shadow-gray-100 dark:hover:nx-shadow-none nx-shadow-gray-100",
-    "active:nx-shadow-sm active:nx-shadow-gray-200",
-    "nx-transition-all nx-duration-200 hover:nx-border-gray-300"
+    "nextra-card group flex flex-col justify-start overflow-hidden rounded-lg border border-gray-200",
+    "text-current no-underline dark:shadow-none",
+    "hover:shadow-gray-100 dark:hover:shadow-none shadow-gray-100",
+    "active:shadow-sm active:shadow-gray-200",
+    "transition-all duration-200 hover:border-gray-300"
   ),
-  title: cn4(
-    "nx-flex nx-font-semibold nx-items-start nx-gap-2 nx-p-4 nx-text-gray-700 hover:nx-text-gray-900"
-  ),
+  title: cn4("flex font-semibold items-start gap-2 p-4 text-gray-700 hover:text-gray-900"),
 };
 var arrowEl = /* @__PURE__ */ jsx8("span", {
-  className: "nx-transition-transform nx-duration-75 group-hover:nx-translate-x-[2px]",
+  className: "transition-transform duration-75 group-hover:translate-x-[2px]",
   children: "\u2192",
 });
 function Card(_a) {
@@ -535,7 +524,7 @@ function Card(_a) {
             href,
             className: cn4(
               classes.card,
-              "nx-bg-gray-100 nx-shadow dark:nx-border-neutral-700 dark:nx-bg-neutral-800 dark:nx-text-gray-50 hover:nx-shadow-lg dark:hover:nx-border-neutral-500 dark:hover:nx-bg-neutral-700"
+              "bg-gray-100 shadow hover:shadow-lg dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-50 dark:hover:border-neutral-500 dark:hover:bg-neutral-700"
             ),
           },
           props
@@ -544,11 +533,11 @@ function Card(_a) {
           children: [
             children,
             /* @__PURE__ */ jsxs4("span", {
-              className: cn4(classes.title, "dark:nx-text-gray-300 dark:hover:nx-text-gray-100"),
+              className: cn4(classes.title, "dark:text-gray-300 dark:hover:text-gray-100"),
               children: [
                 icon,
                 /* @__PURE__ */ jsxs4("span", {
-                  className: "nx-flex nx-gap-1",
+                  className: "flex gap-1",
                   children: [title, animatedArrow],
                 }),
               ],
@@ -566,14 +555,14 @@ function Card(_a) {
           href,
           className: cn4(
             classes.card,
-            "nx-bg-transparent nx-shadow-sm dark:nx-border-neutral-800 hover:nx-bg-slate-50 hover:nx-shadow-md dark:hover:nx-border-neutral-700 dark:hover:nx-bg-neutral-900"
+            "bg-transparent shadow-sm hover:bg-slate-50 hover:shadow-md dark:border-neutral-800 dark:hover:border-neutral-700 dark:hover:bg-neutral-900"
           ),
         },
         props
       ),
       {
         children: /* @__PURE__ */ jsxs4("span", {
-          className: cn4(classes.title, "dark:nx-text-neutral-200 dark:hover:nx-text-neutral-50"),
+          className: cn4(classes.title, "dark:text-neutral-200 dark:hover:text-neutral-50"),
           children: [icon, title, animatedArrow],
         }),
       }
@@ -621,8 +610,8 @@ function Collapse({ children, className, isOpen, horizontal = false }) {
       clearTimeout(animation);
     }
     if (initialRender.current || !container || !inner) return;
-    container.classList.toggle("nx-duration-500", !isOpen);
-    container.classList.toggle("nx-duration-300", isOpen);
+    container.classList.toggle("duration-500", !isOpen);
+    container.classList.toggle("duration-300", isOpen);
     if (horizontal) {
       inner.style.width = `${inner.clientWidth}px`;
       container.style.width = `${inner.clientWidth}px`;
@@ -649,13 +638,13 @@ function Collapse({ children, className, isOpen, horizontal = false }) {
   return /* @__PURE__ */ jsx9("div", {
     ref: containerRef,
     className:
-      "nx-transform-gpu nx-overflow-hidden nx-transition-all nx-ease-in-out motion-reduce:nx-transition-none",
+      "transform-gpu overflow-hidden transition-all ease-in-out motion-reduce:transition-none",
     style: initialOpen.current || horizontal ? void 0 : { height: 0 },
     children: /* @__PURE__ */ jsx9("div", {
       ref: innerRef,
       className: cn5(
-        "nx-transition-opacity nx-duration-500 nx-ease-in-out motion-reduce:nx-transition-none",
-        isOpen ? "nx-opacity-100" : "nx-opacity-0",
+        "transition-opacity duration-500 ease-in-out motion-reduce:transition-none",
+        isOpen ? "opacity-100" : "opacity-0",
         className
       ),
       children,
@@ -679,10 +668,9 @@ function useIndent() {
 }
 var Tree = ({ children }) =>
   /* @__PURE__ */ jsx10("div", {
-    className: "nx-mt-6 nx-select-none nx-text-sm nx-text-gray-800 dark:nx-text-gray-300",
+    className: "mt-6 select-none text-sm text-gray-800 dark:text-gray-300",
     children: /* @__PURE__ */ jsx10("div", {
-      className:
-        "nx-inline-flex nx-flex-col nx-rounded-lg nx-border nx-px-4 nx-py-2 dark:nx-border-neutral-800",
+      className: "inline-flex flex-col rounded-lg border px-4 py-2 dark:border-neutral-800",
       children,
     }),
   });
@@ -690,7 +678,7 @@ function Ident() {
   const indent = useIndent();
   return /* @__PURE__ */ jsx10(Fragment3, {
     children: [...Array(indent)].map((_, i) =>
-      /* @__PURE__ */ jsx10("span", { className: "nx-inline-block nx-w-5" }, i)
+      /* @__PURE__ */ jsx10("span", { className: "inline-block w-5" }, i)
     ),
   });
 }
@@ -703,12 +691,12 @@ var Folder = memo(({ label, name, open, children, defaultOpen = false, onToggle 
   }, [isOpen, onToggle]);
   const isFolderOpen = open === void 0 ? isOpen : open;
   return /* @__PURE__ */ jsxs5("li", {
-    className: "nx-flex nx-list-none nx-flex-col",
+    className: "flex list-none flex-col",
     children: [
       /* @__PURE__ */ jsxs5("a", {
         onClick: toggle,
         title: name,
-        className: "nx-inline-flex nx-cursor-pointer nx-items-center nx-py-1 hover:nx-opacity-60",
+        className: "inline-flex cursor-pointer items-center py-1 hover:opacity-60",
         children: [
           /* @__PURE__ */ jsx10(Ident, {}),
           /* @__PURE__ */ jsx10("svg", {
@@ -727,7 +715,7 @@ var Folder = memo(({ label, name, open, children, defaultOpen = false, onToggle 
             }),
           }),
           /* @__PURE__ */ jsx10("span", {
-            className: "nx-ml-1",
+            className: "ml-1",
             children: label != null ? label : name,
           }),
         ],
@@ -742,12 +730,9 @@ var Folder = memo(({ label, name, open, children, defaultOpen = false, onToggle 
 Folder.displayName = "Folder";
 var File = memo(({ label, name, active }) =>
   /* @__PURE__ */ jsx10("li", {
-    className: cn6(
-      "nx-flex nx-list-none",
-      active && "nx-text-primary-600 contrast-more:nx-underline"
-    ),
+    className: cn6("flex list-none", active && "text-primary-600 contrast-more:underline"),
     children: /* @__PURE__ */ jsxs5("a", {
-      className: "nx-inline-flex nx-cursor-default nx-items-center nx-py-1",
+      className: "inline-flex cursor-default items-center py-1",
       children: [
         /* @__PURE__ */ jsx10(Ident, {}),
         /* @__PURE__ */ jsx10("svg", {
@@ -764,7 +749,7 @@ var File = memo(({ label, name, active }) =>
           }),
         }),
         /* @__PURE__ */ jsx10("span", {
-          className: "nx-ml-1",
+          className: "ml-1",
           children: label != null ? label : name,
         }),
       ],
@@ -800,7 +785,7 @@ var HighlightMatches = memo2(function HighlightMatches2({ value, match }) {
             children: [
               splitText.splice(0, result.index - index).join(""),
               /* @__PURE__ */ jsx11("span", {
-                className: "nx-text-primary-600",
+                className: "text-primary-600",
                 children: splitText.splice(0, regexp.lastIndex - result.index).join(""),
               }),
             ],
@@ -838,7 +823,7 @@ var Input = forwardRef2((_a, forwardedRef) => {
     props = __objRest(_b, ["className", "suffix"]);
   return /* @__PURE__ */ jsxs7("div", {
     className:
-      "nx-relative nx-flex nx-items-center nx-text-gray-900 contrast-more:nx-text-gray-800 dark:nx-text-gray-300 contrast-more:dark:nx-text-gray-300",
+      "relative flex items-center text-gray-900 contrast-more:text-gray-800 dark:text-gray-300 contrast-more:dark:text-gray-300",
     children: [
       /* @__PURE__ */ jsx12(
         "input",
@@ -848,12 +833,12 @@ var Input = forwardRef2((_a, forwardedRef) => {
             spellCheck: false,
             className: cn7(
               className,
-              "nx-block nx-w-full nx-appearance-none nx-rounded-lg nx-px-3 nx-py-2 nx-transition-colors",
-              "nx-text-base nx-leading-tight md:nx-text-sm",
-              "nx-bg-black/[.05] dark:nx-bg-gray-50/10",
-              "focus:nx-bg-white dark:focus:nx-bg-dark",
-              "placeholder:nx-text-gray-500 dark:placeholder:nx-text-gray-400",
-              "contrast-more:nx-border contrast-more:nx-border-current"
+              "block w-full appearance-none rounded-lg px-3 py-2 transition-colors",
+              "text-base leading-tight md:text-sm",
+              "bg-black/[.05] dark:bg-gray-50/10",
+              "dark:focus:bg-dark focus:bg-white",
+              "placeholder:text-gray-500 dark:placeholder:text-gray-400",
+              "contrast-more:border contrast-more:border-current"
             ),
           },
           props
@@ -978,22 +963,20 @@ function Search({
   const icon = /* @__PURE__ */ jsx13(Transition, {
     show: mounted && (!show || Boolean(value)),
     as: Fragment6,
-    enter: "nx-transition-opacity",
-    enterFrom: "nx-opacity-0",
-    enterTo: "nx-opacity-100",
-    leave: "nx-transition-opacity",
-    leaveFrom: "nx-opacity-100",
-    leaveTo: "nx-opacity-0",
+    enter: "transition-opacity",
+    enterFrom: "opacity-0",
+    enterTo: "opacity-100",
+    leave: "transition-opacity",
+    leaveFrom: "opacity-100",
+    leaveTo: "opacity-0",
     children: /* @__PURE__ */ jsx13("kbd", {
       className: cn8(
-        "nx-absolute nx-my-1.5 nx-select-none ltr:nx-right-1.5 rtl:nx-left-1.5",
-        "nx-h-5 nx-rounded nx-bg-white nx-px-1.5 nx-font-mono nx-text-[10px] nx-font-medium nx-text-gray-500",
-        "nx-border dark:nx-border-gray-100/20 dark:nx-bg-dark/50",
-        "contrast-more:nx-border-current contrast-more:nx-text-current contrast-more:dark:nx-border-current",
-        "nx-items-center nx-gap-1 nx-transition-opacity",
-        value
-          ? "nx-z-20 nx-flex nx-cursor-pointer hover:nx-opacity-70"
-          : "nx-pointer-events-none nx-hidden sm:nx-flex"
+        "absolute my-1.5 select-none ltr:right-1.5 rtl:left-1.5",
+        "h-5 rounded bg-white px-1.5 font-mono text-[10px] font-medium text-gray-500",
+        "dark:bg-dark/50 border dark:border-gray-100/20",
+        "contrast-more:border-current contrast-more:text-current contrast-more:dark:border-current",
+        "items-center gap-1 transition-opacity",
+        value ? "z-20 flex cursor-pointer hover:opacity-70" : "pointer-events-none hidden sm:flex"
       ),
       title: value ? "Clear" : void 0,
       onClick: () => {
@@ -1006,7 +989,7 @@ function Search({
             (navigator.userAgent.includes("Macintosh")
               ? /* @__PURE__ */ jsxs8(Fragment7, {
                   children: [
-                    /* @__PURE__ */ jsx13("span", { className: "nx-text-xs", children: "\u2318" }),
+                    /* @__PURE__ */ jsx13("span", { className: "text-xs", children: "\u2318" }),
                     "K",
                   ],
                 })
@@ -1014,11 +997,11 @@ function Search({
     }),
   });
   return /* @__PURE__ */ jsxs8("div", {
-    className: cn8("nextra-search nx-relative md:nx-w-64", className),
+    className: cn8("nextra-search relative md:w-64", className),
     children: [
       renderList &&
         /* @__PURE__ */ jsx13("div", {
-          className: "nx-fixed nx-inset-0 nx-z-10",
+          className: "fixed inset-0 z-10",
           onClick: () => setShow(false),
         }),
       /* @__PURE__ */ jsx13(Input, {
@@ -1044,19 +1027,19 @@ function Search({
       /* @__PURE__ */ jsx13(Transition, {
         show: renderList,
         as: Transition.Child,
-        leave: "nx-transition-opacity nx-duration-100",
-        leaveFrom: "nx-opacity-100",
-        leaveTo: "nx-opacity-0",
+        leave: "transition-opacity duration-100",
+        leaveFrom: "opacity-100",
+        leaveTo: "opacity-0",
         children: /* @__PURE__ */ jsx13("ul", {
           className: cn8(
             "nextra-scrollbar",
             // Using bg-white as background-color when the browser didn't support backdrop-filter
-            "nx-border nx-border-gray-200 nx-bg-white nx-text-gray-100 dark:nx-border-neutral-800 dark:nx-bg-neutral-900",
-            "nx-absolute nx-top-full nx-z-20 nx-mt-2 nx-overflow-auto nx-overscroll-contain nx-rounded-xl nx-py-2.5 nx-shadow-xl",
-            "nx-max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)]",
-            "md:nx-max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)]",
-            "nx-inset-x-0 ltr:md:nx-left-auto rtl:md:nx-right-auto",
-            "contrast-more:nx-border contrast-more:nx-border-gray-900 contrast-more:dark:nx-border-gray-50",
+            "border border-gray-200 bg-white text-gray-100 dark:border-neutral-800 dark:bg-neutral-900",
+            "absolute top-full z-20 mt-2 overflow-auto overscroll-contain rounded-xl py-2.5 shadow-xl",
+            "max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)]",
+            "md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)]",
+            "inset-x-0 rtl:md:right-auto",
+            "contrast-more:border contrast-more:border-gray-900 contrast-more:dark:border-gray-50",
             overlayClassName
           ),
           ref: ulRef,
@@ -1067,20 +1050,18 @@ function Search({
           children: error
             ? /* @__PURE__ */ jsxs8("span", {
                 className:
-                  "nx-flex nx-select-none nx-justify-center nx-gap-2 nx-p-8 nx-text-center nx-text-sm nx-text-red-500",
+                  "flex select-none justify-center gap-2 p-8 text-center text-sm text-red-500",
                 children: [
-                  /* @__PURE__ */ jsx13(InformationCircleIcon, { className: "nx-h-5 nx-w-5" }),
+                  /* @__PURE__ */ jsx13(InformationCircleIcon, { className: "h-5 w-5" }),
                   renderString(config.search.error),
                 ],
               })
             : loading
             ? /* @__PURE__ */ jsxs8("span", {
                 className:
-                  "nx-flex nx-select-none nx-justify-center nx-gap-2 nx-p-8 nx-text-center nx-text-sm nx-text-gray-400",
+                  "flex select-none justify-center gap-2 p-8 text-center text-sm text-gray-400",
                 children: [
-                  /* @__PURE__ */ jsx13(SpinnerIcon, {
-                    className: "nx-h-5 nx-w-5 nx-animate-spin",
-                  }),
+                  /* @__PURE__ */ jsx13(SpinnerIcon, { className: "h-5 w-5 animate-spin" }),
                   renderComponent(config.search.loading),
                 ],
               })
@@ -1093,14 +1074,14 @@ function Search({
                       prefix,
                       /* @__PURE__ */ jsx13("li", {
                         className: cn8(
-                          "nx-mx-2.5 nx-break-words nx-rounded-md",
-                          "contrast-more:nx-border",
+                          "mx-2.5 break-words rounded-md",
+                          "contrast-more:border",
                           i === active
-                            ? "nx-bg-primary-500/10 nx-text-primary-600 contrast-more:nx-border-primary-500"
-                            : "nx-text-gray-800 contrast-more:nx-border-transparent dark:nx-text-gray-300"
+                            ? "bg-primary-500/10 text-primary-600 contrast-more:border-primary-500"
+                            : "text-gray-800 contrast-more:border-transparent dark:text-gray-300"
                         ),
                         children: /* @__PURE__ */ jsx13(Anchor, {
-                          "className": "nx-block nx-scroll-m-12 nx-px-2.5 nx-py-2",
+                          "className": "block scroll-m-12 px-2.5 py-2",
                           "href": route,
                           "data-index": i,
                           "onFocus": handleActive,
@@ -1179,6 +1160,7 @@ var loadIndexesImpl = (basePath, locale) =>
         const content = data[route].data[heading] || "";
         const paragraphs = content.split("\n").filter(Boolean);
         sectionIndex.add(
+          url,
           __spreadValues(
             {
               id: url,
@@ -1191,7 +1173,7 @@ var loadIndexesImpl = (basePath, locale) =>
           )
         );
         for (let i = 0; i < paragraphs.length; i++) {
-          sectionIndex.add({
+          sectionIndex.add(`${url}_${i}`, {
             id: `${url}_${i}`,
             url,
             title,
@@ -1201,7 +1183,7 @@ var loadIndexesImpl = (basePath, locale) =>
         }
         pageContent += ` ${title} ${content}`;
       }
-      pageIndex.add({
+      pageIndex.add(pageId, {
         id: pageId,
         title: data[route].title,
         content: pageContent,
@@ -1259,21 +1241,21 @@ function Flexsearch({ className }) {
             isFirstItemOfPage &&
             /* @__PURE__ */ jsx14("div", {
               className: cn9(
-                "nx-mx-2.5 nx-mb-2 nx-mt-6 nx-select-none nx-border-b nx-border-black/10 nx-px-2.5 nx-pb-1.5 nx-text-xs nx-font-semibold nx-uppercase nx-text-gray-500 first:nx-mt-0 dark:nx-border-white/20 dark:nx-text-gray-300",
-                "contrast-more:nx-border-gray-600 contrast-more:nx-text-gray-900 contrast-more:dark:nx-border-gray-50 contrast-more:dark:nx-text-gray-50"
+                "mx-2.5 mb-2 mt-6 select-none border-b border-black/10 px-2.5 pb-1.5 text-xs font-semibold uppercase text-gray-500 first:mt-0 dark:border-white/20 dark:text-gray-300",
+                "contrast-more:border-gray-600 contrast-more:text-gray-900 contrast-more:dark:border-gray-50 contrast-more:dark:text-gray-50"
               ),
               children: result.doc.title,
             }),
           children: /* @__PURE__ */ jsxs9(Fragment8, {
             children: [
               /* @__PURE__ */ jsx14("div", {
-                className: "nx-text-base nx-font-semibold nx-leading-5",
+                className: "text-base font-semibold leading-5",
                 children: /* @__PURE__ */ jsx14(HighlightMatches, { match: search2, value: title }),
               }),
               content &&
                 /* @__PURE__ */ jsx14("div", {
                   className:
-                    "excerpt nx-mt-1 nx-text-sm nx-leading-[1.35rem] nx-text-gray-600 dark:nx-text-gray-400 contrast-more:dark:nx-text-gray-50",
+                    "excerpt mt-1 text-sm leading-[1.35rem] text-gray-600 dark:text-gray-400 contrast-more:dark:text-gray-50",
                   children: /* @__PURE__ */ jsx14(HighlightMatches, {
                     match: search2,
                     value: content,
@@ -1343,8 +1325,7 @@ function Flexsearch({ className }) {
     onChange: handleChange,
     onActive: preload,
     className,
-    overlayClassName:
-      "nx-w-screen nx-min-h-[100px] nx-max-w-[min(calc(100vw-2rem),calc(100%+20rem))]",
+    overlayClassName: "w-screen min-h-[100px] max-w-[min(calc(100vw-2rem),calc(100%+20rem))]",
     results,
   });
 }
@@ -1389,10 +1370,10 @@ function Select({ options, selected, onChange, title, className }) {
         ref: trigger,
         title,
         className: cn10(
-          "nx-h-7 nx-rounded-md nx-px-2 nx-text-left nx-text-xs nx-font-medium nx-text-gray-600 nx-transition-colors dark:nx-text-gray-400",
+          "h-7 rounded-md px-2 text-left text-xs font-medium text-gray-600 transition-colors dark:text-gray-400",
           open
-            ? "nx-bg-gray-200 nx-text-gray-900 dark:nx-bg-primary-100/10 dark:nx-text-gray-50"
-            : "hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50",
+            ? "dark:bg-primary-100/10 bg-gray-200 text-gray-900 dark:text-gray-50"
+            : "dark:hover:bg-primary-100/5 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-50",
           className
         ),
         children: [
@@ -1403,10 +1384,10 @@ function Select({ options, selected, onChange, title, className }) {
               show: open,
               as: Listbox.Options,
               className:
-                "nx-z-20 nx-max-h-64 nx-overflow-auto nx-rounded-md nx-ring-1 nx-ring-black/5 nx-bg-white nx-py-1 nx-text-sm nx-shadow-lg dark:nx-ring-white/20 dark:nx-bg-neutral-800",
-              leave: "nx-transition-opacity",
-              leaveFrom: "nx-opacity-100",
-              leaveTo: "nx-opacity-0",
+                "z-20 max-h-64 overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/20",
+              leave: "transition-opacity",
+              leaveFrom: "opacity-100",
+              leaveTo: "opacity-0",
               children: options.map(option =>
                 /* @__PURE__ */ jsxs10(
                   Listbox.Option,
@@ -1415,17 +1396,16 @@ function Select({ options, selected, onChange, title, className }) {
                     className: ({ active }) =>
                       cn10(
                         active
-                          ? "nx-bg-primary-50 nx-text-primary-600 dark:nx-bg-primary-500/10"
-                          : "nx-text-gray-800 dark:nx-text-gray-100",
-                        "nx-relative nx-cursor-pointer nx-whitespace-nowrap nx-py-1.5",
-                        "nx-transition-colors ltr:nx-pl-3 ltr:nx-pr-9 rtl:nx-pr-3 rtl:nx-pl-9"
+                          ? "bg-primary-50 text-primary-600 dark:bg-primary-500/10"
+                          : "text-gray-800 dark:text-gray-100",
+                        "relative cursor-pointer whitespace-nowrap py-1.5",
+                        "transition-colors ltr:pl-3 ltr:pr-9 rtl:pl-9 rtl:pr-3"
                       ),
                     children: [
                       option.name,
                       option.key === selected.key &&
                         /* @__PURE__ */ jsx15("span", {
-                          className:
-                            "nx-absolute nx-inset-y-0 nx-flex nx-items-center ltr:nx-right-3 rtl:nx-left-3",
+                          className: "absolute inset-y-0 flex items-center ltr:right-3 rtl:left-3",
                           children: /* @__PURE__ */ jsx15(CheckIcon, {}),
                         }),
                     ],
@@ -1461,11 +1441,11 @@ function LocaleSwitch({ options, lite, className }) {
     selected: {
       key: (selected == null ? void 0 : selected.locale) || "",
       name: /* @__PURE__ */ jsxs11("span", {
-        className: "nx-flex nx-items-center nx-gap-2",
+        className: "flex items-center gap-2",
         children: [
           /* @__PURE__ */ jsx16(GlobeIcon, {}),
           /* @__PURE__ */ jsx16("span", {
-            className: lite ? "nx-hidden" : "",
+            className: lite ? "hidden" : "",
             children: selected == null ? void 0 : selected.text,
           }),
         ],
@@ -1484,23 +1464,23 @@ function Footer({ menu }) {
   const config = useConfig();
   return /* @__PURE__ */ jsxs12("footer", {
     className:
-      "nx-bg-gray-100 nx-pb-[env(safe-area-inset-bottom)] dark:nx-bg-neutral-900 print:nx-bg-transparent",
+      "bg-gray-100 pb-[env(safe-area-inset-bottom)] dark:bg-neutral-900 print:bg-transparent",
     children: [
       /* @__PURE__ */ jsxs12("div", {
         className: cn11(
-          "nx-mx-auto nx-flex nx-max-w-[90rem] nx-gap-2 nx-py-2 nx-px-4",
-          menu && (config.i18n.length > 0 || config.darkMode) ? "nx-flex" : "nx-hidden"
+          "mx-auto flex max-w-[90rem] gap-2 px-4 py-2",
+          menu && (config.i18n.length > 0 || config.darkMode) ? "flex" : "hidden"
         ),
         children: [
           config.i18n.length > 0 && /* @__PURE__ */ jsx17(LocaleSwitch, { options: config.i18n }),
           config.darkMode && renderComponent(config.themeSwitch.component),
         ],
       }),
-      /* @__PURE__ */ jsx17("hr", { className: "dark:nx-border-neutral-800" }),
+      /* @__PURE__ */ jsx17("hr", { className: "dark:border-neutral-800" }),
       /* @__PURE__ */ jsx17("div", {
         className: cn11(
-          "nx-mx-auto nx-flex nx-max-w-[90rem] nx-justify-center nx-py-12 nx-text-gray-600 dark:nx-text-gray-400 md:nx-justify-start",
-          "nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]"
+          "mx-auto flex max-w-[90rem] justify-center py-12 text-gray-600 dark:text-gray-400 md:justify-start",
+          "pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]"
         ),
         children: renderComponent(config.footer.text),
       }),
@@ -1591,14 +1571,47 @@ function Head() {
 }
 
 // src/components/nav-links.tsx
-import cn12 from "clsx";
+import cn13 from "clsx";
 import { ArrowRightIcon as ArrowRightIcon2 } from "nextra/icons";
-import { jsx as jsx19, jsxs as jsxs14 } from "react/jsx-runtime";
+
+// src/components/button.tsx
+import cn12 from "clsx";
+import { Fragment as Fragment10, jsx as jsx19 } from "react/jsx-runtime";
+var Button = ({
+  className = "",
+  variant,
+  title,
+  type = "button",
+  onClick,
+  children,
+  disabled = false,
+}) => {
+  const style = {
+    base: "rounded-md px-3 py-1.5 font-medium transition flex items-center gap-2",
+    default:
+      "border border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark bg-white text-black",
+    primary: "from-primary hover:to-primary bg-gradient-to-t to-[#3E7AFF] text-white hover:shadow",
+  };
+  return /* @__PURE__ */ jsx19(Fragment10, {
+    children: /* @__PURE__ */ jsx19("button", {
+      title,
+      onClick,
+      disabled,
+      type,
+      className: cn12(style.base, style[variant], className),
+      children,
+    }),
+  });
+};
+var button_default = Button;
+
+// src/components/nav-links.tsx
+import { jsx as jsx20, jsxs as jsxs14 } from "react/jsx-runtime";
 var classes2 = {
-  link: cn12(
-    "nx-flex nx-max-w-[50%] nx-items-center nx-gap-1 nx-py-4 nx-text-base nx-font-medium nx-text-gray-600 nx-transition-colors [word-break:break-word] hover:nx-text-primary-600 dark:nx-text-gray-300 md:nx-text-lg"
+  link: cn13(
+    "flex max-w-[50%] items-center gap-1 py-4 text-base font-medium text-gray-600 transition-colors [word-break:break-word] hover:text-primary-600 dark:text-gray-300 text-sm"
   ),
-  icon: cn12("nx-inline nx-h-5 nx-shrink-0"),
+  icon: cn13("inline h-4 shrink-0"),
 };
 var NavLinks = ({ flatDirectories, currentIndex }) => {
   const config = useConfig();
@@ -1610,38 +1623,44 @@ var NavLinks = ({ flatDirectories, currentIndex }) => {
   if (next2 && !next2.isUnderCurrentDocsTree) next2 = false;
   if (!prev && !next2) return null;
   return /* @__PURE__ */ jsxs14("div", {
-    className: cn12(
-      "nx-mb-8 nx-flex nx-items-center nx-border-t nx-pt-8 dark:nx-border-neutral-800",
-      "contrast-more:nx-border-neutral-400 dark:contrast-more:nx-border-neutral-400",
-      "print:nx-hidden"
+    className: cn13(
+      "mb-8 flex items-center border-t pt-8 dark:border-neutral-800",
+      "contrast-more:border-neutral-400 dark:contrast-more:border-neutral-400",
+      "print:hidden"
     ),
     children: [
       prev &&
-        /* @__PURE__ */ jsxs14(Anchor, {
+        /* @__PURE__ */ jsx20(Anchor, {
           href: prev.route,
           title: prev.title,
-          className: cn12(classes2.link, "ltr:nx-pr-4 rtl:nx-pl-4"),
-          children: [
-            /* @__PURE__ */ jsx19(ArrowRightIcon2, {
-              className: cn12(classes2.icon, "ltr:nx-rotate-180"),
-            }),
-            prev.title,
-          ],
+          className: cn13(classes2.link, "ltr:pr-4 rtl:pl-4"),
+          children: /* @__PURE__ */ jsxs14(button_default, {
+            variant: "default",
+            children: [
+              /* @__PURE__ */ jsx20(ArrowRightIcon2, {
+                className: cn13(classes2.icon, "ltr:rotate-180"),
+              }),
+              prev.title,
+            ],
+          }),
         }),
       next2 &&
-        /* @__PURE__ */ jsxs14(Anchor, {
+        /* @__PURE__ */ jsx20(Anchor, {
           href: next2.route,
           title: next2.title,
-          className: cn12(
+          className: cn13(
             classes2.link,
-            "ltr:nx-ml-auto ltr:nx-pl-4 ltr:nx-text-right rtl:nx-mr-auto rtl:nx-pr-4 rtl:nx-text-left"
+            "ltr:ml-auto ltr:pl-4 ltr:text-right rtl:mr-auto rtl:pr-4 rtl:text-left"
           ),
-          children: [
-            next2.title,
-            /* @__PURE__ */ jsx19(ArrowRightIcon2, {
-              className: cn12(classes2.icon, "rtl:nx-rotate-180"),
-            }),
-          ],
+          children: /* @__PURE__ */ jsxs14(button_default, {
+            variant: "default",
+            children: [
+              next2.title,
+              /* @__PURE__ */ jsx20(ArrowRightIcon2, {
+                className: cn13(classes2.icon, "rtl:rotate-180"),
+              }),
+            ],
+          }),
         }),
     ],
   });
@@ -1649,52 +1668,50 @@ var NavLinks = ({ flatDirectories, currentIndex }) => {
 
 // src/components/navbar.tsx
 import { Menu, Transition as Transition3 } from "@headlessui/react";
-import cn13 from "clsx";
+import cn14 from "clsx";
 import { useFSRoute } from "nextra/hooks";
 import { ArrowRightIcon as ArrowRightIcon3, MenuIcon } from "nextra/icons";
-import { jsx as jsx20, jsxs as jsxs15 } from "react/jsx-runtime";
+import { jsx as jsx21, jsxs as jsxs15 } from "react/jsx-runtime";
 var classes3 = {
-  link: cn13("nx-text-sm contrast-more:nx-text-gray-700 contrast-more:dark:nx-text-gray-100"),
-  active: cn13("nx-font-medium nx-subpixel-antialiased"),
-  inactive: cn13(
-    "nx-text-gray-600 hover:nx-text-gray-800 dark:nx-text-gray-400 dark:hover:nx-text-gray-200"
-  ),
+  link: cn14("text-sm contrast-more:text-gray-700 contrast-more:dark:text-gray-100"),
+  active: cn14("font-medium subpixel-antialiased"),
+  inactive: cn14("text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"),
 };
 function NavbarMenu({ className, menu, children }) {
   const { items } = menu;
   const routes = Object.fromEntries((menu.children || []).map(route => [route.name, route]));
-  return /* @__PURE__ */ jsx20("div", {
-    className: "nx-relative nx-inline-block",
+  return /* @__PURE__ */ jsx21("div", {
+    className: "relative inline-block",
     children: /* @__PURE__ */ jsxs15(Menu, {
       children: [
-        /* @__PURE__ */ jsx20(Menu.Button, {
-          className: cn13(
+        /* @__PURE__ */ jsx21(Menu.Button, {
+          className: cn14(
             className,
-            "-nx-ml-2 nx-hidden nx-items-center nx-whitespace-nowrap nx-rounded nx-p-2 md:nx-inline-flex",
+            "-ml-2 hidden items-center whitespace-nowrap rounded p-2 md:inline-flex",
             classes3.inactive
           ),
           children,
         }),
-        /* @__PURE__ */ jsx20(Transition3, {
-          leave: "nx-transition-opacity",
-          leaveFrom: "nx-opacity-100",
-          leaveTo: "nx-opacity-0",
-          children: /* @__PURE__ */ jsx20(Menu.Items, {
+        /* @__PURE__ */ jsx21(Transition3, {
+          leave: "transition-opacity",
+          leaveFrom: "opacity-100",
+          leaveTo: "opacity-0",
+          children: /* @__PURE__ */ jsx21(Menu.Items, {
             className:
-              "nx-absolute nx-right-0 nx-z-20 nx-mt-1 nx-max-h-64 nx-min-w-full nx-overflow-auto nx-rounded-md nx-ring-1 nx-ring-black/5 nx-bg-white nx-py-1 nx-text-sm nx-shadow-lg dark:nx-ring-white/20 dark:nx-bg-neutral-800",
+              "absolute right-0 z-20 mt-1 max-h-64 min-w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/20",
             children: Object.entries(items || {}).map(([key, item]) => {
               var _a;
-              return /* @__PURE__ */ jsx20(
+              return /* @__PURE__ */ jsx21(
                 Menu.Item,
                 {
-                  children: /* @__PURE__ */ jsx20(Anchor, {
+                  children: /* @__PURE__ */ jsx21(Anchor, {
                     href:
                       item.href ||
                       ((_a = routes[key]) == null ? void 0 : _a.route) ||
                       menu.route + "/" + key,
-                    className: cn13(
-                      "nx-relative nx-hidden nx-w-full nx-select-none nx-whitespace-nowrap nx-text-gray-600 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100 md:nx-inline-block",
-                      "nx-py-1.5 nx-transition-colors ltr:nx-pl-3 ltr:nx-pr-9 rtl:nx-pr-3 rtl:nx-pl-9"
+                    className: cn14(
+                      "relative hidden w-full select-none whitespace-nowrap text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 md:inline-block",
+                      "py-1.5 transition-colors ltr:pl-3 ltr:pr-9 rtl:pl-9 rtl:pr-3"
                     ),
                     newWindow: item.newWindow,
                     children: item.title || key,
@@ -1714,32 +1731,40 @@ function Navbar({ flatDirectories, items }) {
   const activeRoute = useFSRoute();
   const { menu, setMenu } = useMenu();
   return /* @__PURE__ */ jsxs15("div", {
-    className:
-      "nextra-nav-container nx-sticky nx-top-0 nx-z-20 nx-w-full nx-bg-transparent print:nx-hidden",
+    className: "nextra-nav-container sticky top-0 z-20 w-full bg-transparent print:hidden",
     children: [
-      /* @__PURE__ */ jsx20("div", {
-        className: cn13(
+      /* @__PURE__ */ jsx21("div", {
+        className: cn14(
           "nextra-nav-container-blur",
-          "nx-pointer-events-none nx-absolute nx-z-[-1] nx-h-full nx-w-full nx-bg-white dark:nx-bg-dark",
-          "nx-shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] dark:nx-shadow-[0_-1px_0_rgba(255,255,255,.1)_inset]",
-          "contrast-more:nx-shadow-[0_0_0_1px_#000] contrast-more:dark:nx-shadow-[0_0_0_1px_#fff]"
+          "dark:bg-dark pointer-events-none absolute z-[-1] h-full w-full bg-white",
+          "shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] dark:shadow-[0_-1px_0_rgba(255,255,255,.1)_inset]",
+          "contrast-more:shadow-[0_0_0_1px_#000] contrast-more:dark:shadow-[0_0_0_1px_#fff]"
         ),
       }),
       /* @__PURE__ */ jsxs15("nav", {
         className:
-          "nx-mx-auto nx-flex nx-h-[var(--nextra-navbar-height)] nx-max-w-[90rem] nx-items-center nx-justify-end nx-gap-2 nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]",
+          "mx-auto flex h-[var(--nextra-navbar-height)] max-w-[90rem] items-center justify-end gap-2 pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]",
         children: [
           config.logoLink
-            ? /* @__PURE__ */ jsx20(Anchor, {
+            ? /* @__PURE__ */ jsx21(Anchor, {
                 href: typeof config.logoLink === "string" ? config.logoLink : "/",
-                className:
-                  "nx-flex nx-items-center hover:nx-opacity-75 ltr:nx-mr-auto rtl:nx-ml-auto",
+                className: "flex items-center gap-2 hover:opacity-75",
                 children: renderComponent(config.logo),
               })
-            : /* @__PURE__ */ jsx20("div", {
-                className: "nx-flex nx-items-center ltr:nx-mr-auto rtl:nx-ml-auto",
-                children: renderComponent(config.logo),
+            : /* @__PURE__ */ jsxs15("div", {
+                className: "flex items-center gap-2 ltr:mr-auto rtl:ml-auto",
+                children: [
+                  renderComponent(config.logo),
+                  renderComponent(config.search.component, {
+                    directories: flatDirectories,
+                    className: "hidden md:inline-block mx-min-w-[200px]",
+                  }),
+                ],
               }),
+          renderComponent(config.search.component, {
+            directories: flatDirectories,
+            className: "hidden md:inline-block mx-min-w-[200px] ml-4 ltr:mr-auto",
+          }),
           items.map(pageOrMenu => {
             if (pageOrMenu.display === "hidden") return null;
             if (pageOrMenu.type === "menu") {
@@ -1749,17 +1774,17 @@ function Navbar({ flatDirectories, items }) {
               return /* @__PURE__ */ jsxs15(
                 NavbarMenu,
                 {
-                  className: cn13(
+                  className: cn14(
                     classes3.link,
-                    "nx-flex nx-gap-1",
+                    "flex gap-1",
                     isActive2 ? classes3.active : classes3.inactive
                   ),
                   menu: menu2,
                   children: [
                     menu2.title,
-                    /* @__PURE__ */ jsx20(ArrowRightIcon3, {
-                      className: "nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5",
-                      pathClassName: "nx-origin-center nx-transition-transform nx-rotate-90",
+                    /* @__PURE__ */ jsx21(ArrowRightIcon3, {
+                      className: "h-[18px] min-w-[18px] rounded-sm p-0.5",
+                      pathClassName: "origin-center transition-transform rotate-90",
                     }),
                   ],
                 },
@@ -1776,20 +1801,20 @@ function Navbar({ flatDirectories, items }) {
               Anchor,
               {
                 href,
-                "className": cn13(
+                "className": cn14(
                   classes3.link,
-                  "nx-relative -nx-ml-2 nx-hidden nx-whitespace-nowrap nx-p-2 md:nx-inline-block",
+                  "relative -ml-2 hidden whitespace-nowrap p-2 md:inline-block",
                   !isActive || page.newWindow ? classes3.inactive : classes3.active
                 ),
                 "newWindow": page.newWindow,
                 "aria-current": !page.newWindow && isActive,
                 "children": [
-                  /* @__PURE__ */ jsx20("span", {
-                    className: "nx-absolute nx-inset-x-0 nx-text-center",
+                  /* @__PURE__ */ jsx21("span", {
+                    className: "absolute inset-x-0 text-center",
                     children: page.title,
                   }),
-                  /* @__PURE__ */ jsx20("span", {
-                    className: "nx-invisible nx-font-medium",
+                  /* @__PURE__ */ jsx21("span", {
+                    className: "invisible font-medium",
                     children: page.title,
                   }),
                 ],
@@ -1797,34 +1822,29 @@ function Navbar({ flatDirectories, items }) {
               href
             );
           }),
-          renderComponent(config.search.component, {
-            directories: flatDirectories,
-            className: "nx-hidden md:nx-inline-block mx-min-w-[200px]",
-          }),
           config.project.link
-            ? /* @__PURE__ */ jsx20(Anchor, {
-                className: "nx-p-2 nx-text-current",
+            ? /* @__PURE__ */ jsx21(Anchor, {
+                className: "p-2 text-current",
                 href: config.project.link,
                 newWindow: true,
                 children: renderComponent(config.project.icon),
               })
             : null,
           config.chat.link
-            ? /* @__PURE__ */ jsx20(Anchor, {
-                className: "nx-p-2 nx-text-current",
+            ? /* @__PURE__ */ jsx21(Anchor, {
+                className: "p-2 text-current",
                 href: config.chat.link,
                 newWindow: true,
                 children: renderComponent(config.chat.icon),
               })
             : null,
           renderComponent(config.navbar.extraContent),
-          /* @__PURE__ */ jsx20("button", {
+          /* @__PURE__ */ jsx21("button", {
             "type": "button",
             "aria-label": "Menu",
-            "className":
-              "nextra-hamburger -nx-mr-2 nx-rounded nx-p-2 active:nx-bg-gray-400/20 md:nx-hidden",
+            "className": "nextra-hamburger -mr-2 rounded p-2 active:bg-gray-400/20 md:hidden",
             "onClick": () => setMenu(!menu),
-            "children": /* @__PURE__ */ jsx20(MenuIcon, { className: cn13({ open: menu }) }),
+            "children": /* @__PURE__ */ jsx21(MenuIcon, { className: cn14({ open: menu }) }),
           }),
         ],
       }),
@@ -1835,7 +1855,7 @@ function Navbar({ flatDirectories, items }) {
 // src/components/not-found.tsx
 import { useRouter as useRouter4 } from "next/router";
 import { useMounted as useMounted4 } from "nextra/hooks";
-import { jsx as jsx21 } from "react/jsx-runtime";
+import { jsx as jsx22 } from "react/jsx-runtime";
 function NotFoundPage() {
   const config = useConfig();
   const mounted = useMounted4();
@@ -1844,9 +1864,9 @@ function NotFoundPage() {
   if (!content) {
     return null;
   }
-  return /* @__PURE__ */ jsx21("p", {
-    className: "nx-text-center",
-    children: /* @__PURE__ */ jsx21(Anchor, {
+  return /* @__PURE__ */ jsx22("p", {
+    className: "text-center",
+    children: /* @__PURE__ */ jsx22(Anchor, {
       href: getGitIssueUrl({
         repository: config.docsRepositoryBase,
         title: `Found broken \`${mounted ? asPath : ""}\` link. Please fix!`,
@@ -1854,7 +1874,7 @@ function NotFoundPage() {
       }),
       newWindow: true,
       className:
-        "nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]",
+        "text-primary-600 underline decoration-from-font [text-underline-position:from-font]",
       children: renderComponent(content),
     }),
   });
@@ -1863,7 +1883,7 @@ function NotFoundPage() {
 // src/components/server-side-error.tsx
 import { useRouter as useRouter5 } from "next/router";
 import { useMounted as useMounted5 } from "nextra/hooks";
-import { jsx as jsx22 } from "react/jsx-runtime";
+import { jsx as jsx23 } from "react/jsx-runtime";
 function ServerSideErrorPage() {
   const config = useConfig();
   const mounted = useMounted5();
@@ -1872,9 +1892,9 @@ function ServerSideErrorPage() {
   if (!content) {
     return null;
   }
-  return /* @__PURE__ */ jsx22("p", {
-    className: "nx-text-center",
-    children: /* @__PURE__ */ jsx22(Anchor, {
+  return /* @__PURE__ */ jsx23("p", {
+    className: "text-center",
+    children: /* @__PURE__ */ jsx23(Anchor, {
       href: getGitIssueUrl({
         repository: config.docsRepositoryBase,
         title: `Got server-side error in \`${mounted ? asPath : ""}\` url. Please fix!`,
@@ -1882,14 +1902,14 @@ function ServerSideErrorPage() {
       }),
       newWindow: true,
       className:
-        "nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]",
+        "text-primary-600 underline decoration-from-font [text-underline-position:from-font]",
       children: renderComponent(content),
     }),
   });
 }
 
 // src/components/sidebar.tsx
-import cn14 from "clsx";
+import cn15 from "clsx";
 import { useRouter as useRouter6 } from "next/router";
 import { useFSRoute as useFSRoute2 } from "nextra/hooks";
 import { ArrowRightIcon as ArrowRightIcon4, ExpandIcon } from "nextra/icons";
@@ -1903,38 +1923,38 @@ import {
   useState as useState6,
 } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
-import { Fragment as Fragment10, jsx as jsx23, jsxs as jsxs16 } from "react/jsx-runtime";
+import { Fragment as Fragment11, jsx as jsx24, jsxs as jsxs16 } from "react/jsx-runtime";
 var TreeState = /* @__PURE__ */ Object.create(null);
 var FocusedItemContext = createContext6(null);
 var OnFocuseItemContext = createContext6(null);
 var FolderLevelContext = createContext6(0);
 var Folder2 = memo3(function FolderInner(props) {
   const level = useContext6(FolderLevelContext);
-  return /* @__PURE__ */ jsx23(FolderLevelContext.Provider, {
+  return /* @__PURE__ */ jsx24(FolderLevelContext.Provider, {
     value: level + 1,
-    children: /* @__PURE__ */ jsx23(FolderImpl, __spreadValues({}, props)),
+    children: /* @__PURE__ */ jsx24(FolderImpl, __spreadValues({}, props)),
   });
 });
 var classes4 = {
-  link: cn14(
-    "nx-flex nx-rounded nx-px-2 nx-py-1.5 nx-text-sm nx-transition-colors [word-break:break-word]",
-    "nx-cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:nx-border"
+  link: cn15(
+    "flex rounded px-2 py-1.5 text-sm transition-colors [word-break:break-word]",
+    "cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:border"
   ),
-  inactive: cn14(
-    "nx-text-gray-500 hover:nx-bg-gray-100 hover:nx-text-gray-900",
-    "dark:nx-text-neutral-400 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50",
-    "contrast-more:nx-text-gray-900 contrast-more:dark:nx-text-gray-50",
-    "contrast-more:nx-border-transparent contrast-more:hover:nx-border-gray-900 contrast-more:dark:hover:nx-border-gray-50"
+  inactive: cn15(
+    "text-gray-500 hover:bg-gray-100 hover:text-gray-900",
+    "dark:text-neutral-400 dark:hover:bg-primary-100/5 dark:hover:text-gray-50",
+    "contrast-more:text-gray-900 contrast-more:dark:text-gray-50",
+    "contrast-more:border-transparent contrast-more:hover:border-gray-900 contrast-more:dark:hover:border-gray-50"
   ),
-  active: cn14(
-    "nx-bg-primary-100 nx-font-semibold nx-text-primary-800 dark:nx-bg-primary-400/10 dark:nx-text-primary-600",
-    "contrast-more:nx-border-primary-500 contrast-more:dark:nx-border-primary-500"
+  active: cn15(
+    "bg-primary-100 font-semibold text-primary-800 dark:bg-primary-400/10 dark:text-primary-600",
+    "contrast-more:border-primary-500 contrast-more:dark:border-primary-500"
   ),
-  list: cn14("nx-flex nx-flex-col nx-gap-1"),
-  border: cn14(
-    "nx-relative before:nx-absolute before:nx-inset-y-1",
-    'before:nx-w-px before:nx-bg-gray-200 before:nx-content-[""] dark:before:nx-bg-neutral-800',
-    "ltr:nx-pl-3 ltr:before:nx-left-0 rtl:nx-pr-3 rtl:before:nx-right-0"
+  list: cn15("flex flex-col gap-1"),
+  border: cn15(
+    "relative before:absolute before:inset-y-1",
+    'before:w-px before:bg-gray-200 before:content-[""] dark:before:bg-neutral-800',
+    "ltr:pl-3 ltr:before:left-0 rtl:pr-3 rtl:before:right-0"
   ),
 };
 function FolderImpl({ item, anchors }) {
@@ -1988,13 +2008,13 @@ function FolderImpl({ item, anchors }) {
   const isLink = "withIndexPage" in item && item.withIndexPage;
   const ComponentToUse = isLink ? Anchor : "button";
   return /* @__PURE__ */ jsxs16("li", {
-    className: cn14({ open, active }),
+    className: cn15({ open, active }),
     children: [
       /* @__PURE__ */ jsxs16(ComponentToUse, {
         href: isLink ? item.route : void 0,
-        className: cn14(
-          "nx-items-center nx-justify-between nx-gap-2",
-          !isLink && "nx-text-left nx-w-full",
+        className: cn15(
+          "items-center justify-between gap-2",
+          !isLink && "w-full text-left",
           classes4.link,
           active ? classes4.active : classes4.inactive
         ),
@@ -2023,22 +2043,22 @@ function FolderImpl({ item, anchors }) {
             type: item.type,
             route: item.route,
           }),
-          /* @__PURE__ */ jsx23(ArrowRightIcon4, {
+          /* @__PURE__ */ jsx24(ArrowRightIcon4, {
             className:
-              "nx-h-[18px] nx-min-w-[18px] nx-rounded-sm nx-p-0.5 hover:nx-bg-gray-800/5 dark:hover:nx-bg-gray-100/5",
-            pathClassName: cn14(
-              "nx-origin-center nx-transition-transform rtl:-nx-rotate-180",
-              open && "ltr:nx-rotate-90 rtl:nx-rotate-[-270deg]"
+              "h-[18px] min-w-[18px] rounded-sm p-0.5 hover:bg-gray-800/5 dark:hover:bg-gray-100/5",
+            pathClassName: cn15(
+              "origin-center transition-transform rtl:-rotate-180",
+              open && "ltr:rotate-90 rtl:rotate-[-270deg]"
             ),
           }),
         ],
       }),
-      /* @__PURE__ */ jsx23(Collapse, {
-        className: "ltr:nx-pr-0 rtl:nx-pl-0 nx-pt-1",
+      /* @__PURE__ */ jsx24(Collapse, {
+        className: "pt-1 ltr:pr-0 rtl:pl-0",
         isOpen: open,
         children: Array.isArray(item.children)
-          ? /* @__PURE__ */ jsx23(Menu2, {
-              className: cn14(classes4.border, "ltr:nx-ml-3 rtl:nx-mr-3"),
+          ? /* @__PURE__ */ jsx24(Menu2, {
+              className: cn15(classes4.border, "ltr:ml-3 rtl:mr-3"),
               directories: item.children,
               base: item.route,
               anchors,
@@ -2050,12 +2070,12 @@ function FolderImpl({ item, anchors }) {
 }
 function Separator({ title }) {
   const config = useConfig();
-  return /* @__PURE__ */ jsx23("li", {
-    className: cn14(
+  return /* @__PURE__ */ jsx24("li", {
+    className: cn15(
       "[word-break:break-word]",
       title
-        ? "nx-mt-5 nx-mb-2 nx-px-2 nx-py-1.5 nx-text-sm nx-font-semibold nx-text-gray-900 first:nx-mt-0 dark:nx-text-gray-100"
-        : "nx-my-4"
+        ? "mb-2 mt-5 px-2 py-1.5 text-sm font-semibold text-gray-900 first:mt-0 dark:text-gray-100"
+        : "my-4"
     ),
     children: title
       ? renderComponent(config.sidebar.titleComponent, {
@@ -2063,8 +2083,8 @@ function Separator({ title }) {
           type: "separator",
           route: "",
         })
-      : /* @__PURE__ */ jsx23("hr", {
-          className: "nx-mx-2 nx-border-t nx-border-gray-200 dark:nx-border-primary-100/10",
+      : /* @__PURE__ */ jsx24("hr", {
+          className: "dark:border-primary-100/10 mx-2 border-t border-gray-200",
         }),
   });
 }
@@ -2076,15 +2096,15 @@ function File2({ item, anchors }) {
   const { setMenu } = useMenu();
   const config = useConfig();
   if (item.type === "separator") {
-    return /* @__PURE__ */ jsx23(Separator, { title: item.title });
+    return /* @__PURE__ */ jsx24(Separator, { title: item.title });
   }
   return /* @__PURE__ */ jsxs16("li", {
-    className: cn14(classes4.list, { active }),
+    className: cn15(classes4.list, { active }),
     children: [
-      /* @__PURE__ */ jsx23(Anchor, {
+      /* @__PURE__ */ jsx24(Anchor, {
         href: item.href || item.route,
         newWindow: item.newWindow,
-        className: cn14(classes4.link, active ? classes4.active : classes4.inactive),
+        className: cn15(classes4.link, active ? classes4.active : classes4.inactive),
         onClick: () => {
           setMenu(false);
         },
@@ -2102,18 +2122,18 @@ function File2({ item, anchors }) {
       }),
       active &&
         anchors.length > 0 &&
-        /* @__PURE__ */ jsx23("ul", {
-          className: cn14(classes4.list, classes4.border, "ltr:nx-ml-3 rtl:nx-mr-3"),
+        /* @__PURE__ */ jsx24("ul", {
+          className: cn15(classes4.list, classes4.border, "ltr:ml-3 rtl:mr-3"),
           children: anchors.map(({ id, value }) => {
             var _a;
-            return /* @__PURE__ */ jsx23(
+            return /* @__PURE__ */ jsx24(
               "li",
               {
-                children: /* @__PURE__ */ jsx23("a", {
+                children: /* @__PURE__ */ jsx24("a", {
                   href: `#${id}`,
-                  className: cn14(
+                  className: cn15(
                     classes4.link,
-                    'nx-flex nx-gap-2 before:nx-opacity-25 before:nx-content-["#"]',
+                    'flex gap-2 before:opacity-25 before:content-["#"]',
                     ((_a = activeAnchor[id]) == null ? void 0 : _a.isActive)
                       ? classes4.active
                       : classes4.inactive
@@ -2132,13 +2152,13 @@ function File2({ item, anchors }) {
   });
 }
 function Menu2({ directories, anchors, className, onlyCurrentDocs }) {
-  return /* @__PURE__ */ jsx23("ul", {
-    className: cn14(classes4.list, className),
+  return /* @__PURE__ */ jsx24("ul", {
+    className: cn15(classes4.list, className),
     children: directories.map(item =>
       !onlyCurrentDocs || item.isUnderCurrentDocsTree
         ? item.type === "menu" || (item.children && (item.children.length || !item.withIndexPage))
-          ? /* @__PURE__ */ jsx23(Folder2, { item, anchors }, item.name)
-          : /* @__PURE__ */ jsx23(File2, { item, anchors }, item.name)
+          ? /* @__PURE__ */ jsx24(Folder2, { item, anchors }, item.name)
+          : /* @__PURE__ */ jsx24(File2, { item, anchors }, item.name)
         : null
     ),
   });
@@ -2162,9 +2182,9 @@ function Sidebar({
   const containerRef = useRef5(null);
   useEffect3(() => {
     if (menu) {
-      document.body.classList.add("nx-overflow-hidden", "md:nx-overflow-auto");
+      document.body.classList.add("overflow-hidden", "md:overflow-auto");
     } else {
-      document.body.classList.remove("nx-overflow-hidden", "md:nx-overflow-auto");
+      document.body.classList.remove("overflow-hidden", "md:overflow-auto");
     }
   }, [menu]);
   useEffect3(() => {
@@ -2192,67 +2212,65 @@ function Sidebar({
   }, [router.asPath, setMenu]);
   const hasI18n = config.i18n.length > 0;
   const hasMenu = config.darkMode || hasI18n;
-  return /* @__PURE__ */ jsxs16(Fragment10, {
+  return /* @__PURE__ */ jsxs16(Fragment11, {
     children: [
       includePlaceholder && asPopover
-        ? /* @__PURE__ */ jsx23("div", { className: "max-xl:nx-hidden nx-h-0 nx-w-64 nx-shrink-0" })
+        ? /* @__PURE__ */ jsx24("div", { className: "h-0 w-64 shrink-0 max-xl:hidden" })
         : null,
-      /* @__PURE__ */ jsx23("div", {
-        className: cn14(
-          "motion-reduce:nx-transition-none [transition:background-color_1.5s_ease]",
-          menu
-            ? "nx-fixed nx-inset-0 nx-z-10 nx-bg-black/80 dark:nx-bg-black/60"
-            : "nx-bg-transparent"
+      /* @__PURE__ */ jsx24("div", {
+        className: cn15(
+          "[transition:background-color_1.5s_ease] motion-reduce:transition-none",
+          menu ? "fixed inset-0 z-10 bg-black/80 dark:bg-black/60" : "bg-transparent"
         ),
         onClick: () => setMenu(false),
       }),
       /* @__PURE__ */ jsxs16("aside", {
-        className: cn14(
-          "nextra-sidebar-container nx-flex nx-flex-col",
-          "md:nx-top-16 md:nx-shrink-0 motion-reduce:nx-transform-none",
-          "nx-transform-gpu nx-transition-all nx-ease-in-out",
-          "print:nx-hidden",
-          showSidebar ? "md:nx-w-64" : "md:nx-w-20",
-          asPopover ? "md:nx-hidden" : "md:nx-sticky md:nx-self-start",
+        className: cn15(
+          "nextra-sidebar-container flex flex-col",
+          "motion-reduce:transform-none md:top-16 md:shrink-0",
+          "transform-gpu transition-all ease-in-out",
+          "print:hidden",
+          showSidebar ? "md:w-64" : "md:w-20",
+          asPopover ? "md:hidden" : "md:sticky md:self-start",
           menu
             ? "max-md:[transform:translate3d(0,0,0)]"
             : "max-md:[transform:translate3d(0,-100%,0)]"
         ),
         ref: containerRef,
         children: [
-          /* @__PURE__ */ jsx23("div", {
-            className: "nx-px-4 nx-pt-4 md:nx-hidden",
+          /* @__PURE__ */ jsx24("div", {
+            className: "px-4 pt-4 md:hidden",
             children: renderComponent(config.search.component, {
               directories: flatDirectories,
             }),
           }),
-          /* @__PURE__ */ jsx23(FocusedItemContext.Provider, {
+          /* @__PURE__ */ jsx24(FocusedItemContext.Provider, {
             value: focused,
-            children: /* @__PURE__ */ jsx23(OnFocuseItemContext.Provider, {
+            children: /* @__PURE__ */ jsx24(OnFocuseItemContext.Provider, {
               value: item => {
                 setFocused(item);
               },
               children: /* @__PURE__ */ jsxs16("div", {
-                className: cn14(
-                  "nx-overflow-y-auto nx-overflow-x-hidden",
-                  "nx-p-4 nx-grow md:nx-h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]",
+                className: cn15(
+                  "overflow-y-auto overflow-x-hidden",
+                  "grow p-4 md:h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]",
                   showSidebar ? "nextra-scrollbar" : "no-scrollbar"
                 ),
                 ref: sidebarRef,
                 children: [
                   (!asPopover || !showSidebar) &&
-                    /* @__PURE__ */ jsx23(Collapse, {
+                    /* @__PURE__ */ jsx24(Collapse, {
                       isOpen: showSidebar,
                       horizontal: true,
-                      children: /* @__PURE__ */ jsx23(Menu2, {
-                        className: "max-md:nx-hidden",
+                      children: /* @__PURE__ */ jsx24(Menu2, {
+                        className: "max-md:hidden",
                         directories: docsDirectories,
                         anchors: config.toc.float ? [] : anchors,
                         onlyCurrentDocs: true,
                       }),
                     }),
-                  /* @__PURE__ */ jsx23(Menu2, {
-                    className: "md:nx-hidden",
+                  /* @__PURE__ */ jsx24(Menu2, {
+                    className: "md:hidden",
                     directories: fullDirectories,
                     anchors,
                   }),
@@ -2262,17 +2280,17 @@ function Sidebar({
           }),
           hasMenu &&
             /* @__PURE__ */ jsxs16("div", {
-              "className": cn14(
-                "nx-sticky nx-bottom-0",
-                "nx-bg-white dark:nx-bg-dark",
+              "className": cn15(
+                "sticky bottom-0",
+                "dark:bg-dark bg-white",
                 // when banner is showed, sidebar links can be behind menu, set bg color as body bg color
-                "nx-mx-4 nx-py-4 nx-shadow-[0_-12px_16px_#fff]",
-                "nx-flex nx-items-center nx-gap-2",
-                "dark:nx-border-neutral-800 dark:nx-shadow-[0_-12px_16px_#111]",
-                "contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-shadow-none",
+                "mx-4 py-4 shadow-[0_-12px_16px_#fff]",
+                "flex items-center gap-2",
+                "dark:border-neutral-800 dark:shadow-[0_-12px_16px_#111]",
+                "contrast-more:border-neutral-400 contrast-more:shadow-none contrast-more:dark:shadow-none",
                 showSidebar
-                  ? cn14(hasI18n && "nx-justify-end", "nx-border-t")
-                  : "nx-py-4 nx-flex-wrap nx-justify-center"
+                  ? cn15(hasI18n && "justify-end", "border-t")
+                  : "flex-wrap justify-center py-4"
               ),
               "data-toggle-animation": showToggleAnimation
                 ? showSidebar
@@ -2281,28 +2299,28 @@ function Sidebar({
                 : "off",
               "children": [
                 hasI18n &&
-                  /* @__PURE__ */ jsx23(LocaleSwitch, {
+                  /* @__PURE__ */ jsx24(LocaleSwitch, {
                     options: config.i18n,
                     lite: !showSidebar,
-                    className: cn14(showSidebar ? "nx-grow" : "max-md:nx-grow"),
+                    className: cn15(showSidebar ? "grow" : "max-md:grow"),
                   }),
                 config.darkMode &&
-                  /* @__PURE__ */ jsx23("div", {
-                    className: showSidebar && !hasI18n ? "nx-grow nx-flex nx-flex-col" : "",
+                  /* @__PURE__ */ jsx24("div", {
+                    className: showSidebar && !hasI18n ? "flex grow flex-col" : "",
                     children: renderComponent(config.themeSwitch.component, {
                       lite: !showSidebar || hasI18n,
                     }),
                   }),
                 config.sidebar.toggleButton &&
-                  /* @__PURE__ */ jsx23("button", {
+                  /* @__PURE__ */ jsx24("button", {
                     title: showSidebar ? "Hide sidebar" : "Show sidebar",
                     className:
-                      "max-md:nx-hidden nx-h-7 nx-rounded-md nx-transition-colors nx-text-gray-600 dark:nx-text-gray-400 nx-px-2 hover:nx-bg-gray-100 hover:nx-text-gray-900 dark:hover:nx-bg-primary-100/5 dark:hover:nx-text-gray-50",
+                      "dark:hover:bg-primary-100/5 h-7 rounded-md px-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 max-md:hidden",
                     onClick: () => {
                       setSidebar(!showSidebar);
                       setToggleAnimation(true);
                     },
-                    children: /* @__PURE__ */ jsx23(ExpandIcon, { isOpen: showSidebar }),
+                    children: /* @__PURE__ */ jsx24(ExpandIcon, { isOpen: showSidebar }),
                   }),
               ],
             }),
@@ -2313,9 +2331,9 @@ function Sidebar({
 }
 
 // src/components/skip-nav.tsx
-import cn15 from "clsx";
+import cn16 from "clsx";
 import { forwardRef as forwardRef3 } from "react";
-import { jsx as jsx24 } from "react/jsx-runtime";
+import { jsx as jsx25 } from "react/jsx-runtime";
 var DEFAULT_ID = "reach-skip-nav";
 var DEFAULT_LABEL = "Skip to content";
 var SkipNavLink = forwardRef3(function (_a, forwardedRef) {
@@ -2325,16 +2343,16 @@ var SkipNavLink = forwardRef3(function (_a, forwardedRef) {
   const className =
     providedClassName === void 0
       ? styled
-        ? cn15(
-            "nx-sr-only",
-            "focus:nx-not-sr-only focus:nx-fixed focus:nx-z-50 focus:nx-m-3 focus:nx-ml-4 focus:nx-h-[calc(var(--nextra-navbar-height)-1.5rem)] focus:nx-rounded-lg focus:nx-border focus:nx-px-3 focus:nx-py-2 focus:nx-align-middle focus:nx-text-sm focus:nx-font-bold",
-            "focus:nx-text-gray-900 focus:dark:nx-text-gray-100",
-            "focus:nx-bg-white focus:dark:nx-bg-neutral-900",
-            "focus:nx-border-neutral-400 focus:dark:nx-border-neutral-800"
+        ? cn16(
+            "sr-only",
+            "focus:not-sr-only focus:fixed focus:z-50 focus:m-3 focus:ml-4 focus:h-[calc(var(--nextra-navbar-height)-1.5rem)] focus:rounded-lg focus:border focus:px-3 focus:py-2 focus:align-middle focus:text-sm focus:font-bold",
+            "focus:text-gray-900 focus:dark:text-gray-100",
+            "focus:bg-white focus:dark:bg-neutral-900",
+            "focus:border-neutral-400 focus:dark:border-neutral-800"
           )
         : ""
       : providedClassName;
-  return /* @__PURE__ */ jsx24(
+  return /* @__PURE__ */ jsx25(
     "a",
     __spreadProps(__spreadValues({}, props), {
       "ref": forwardedRef,
@@ -2350,7 +2368,7 @@ var SkipNavContent = forwardRef3(function (_a, forwardedRef) {
   var _b = _a,
     { id } = _b,
     props = __objRest(_b, ["id"]);
-  return /* @__PURE__ */ jsx24(
+  return /* @__PURE__ */ jsx25(
     "div",
     __spreadProps(__spreadValues({}, props), { ref: forwardedRef, id: id || DEFAULT_ID })
   );
@@ -2358,20 +2376,20 @@ var SkipNavContent = forwardRef3(function (_a, forwardedRef) {
 SkipNavContent.displayName = "SkipNavContent";
 
 // src/components/steps.tsx
-import cn16 from "clsx";
-import { jsx as jsx25 } from "react/jsx-runtime";
+import cn17 from "clsx";
+import { jsx as jsx26 } from "react/jsx-runtime";
 function Steps(_a) {
   var _b = _a,
     { children, className } = _b,
     props = __objRest(_b, ["children", "className"]);
-  return /* @__PURE__ */ jsx25(
+  return /* @__PURE__ */ jsx26(
     "div",
     __spreadProps(
       __spreadValues(
         {
-          className: cn16(
-            "nextra-steps nx-ml-4 nx-mb-12 nx-border-l nx-border-gray-200 nx-pl-6",
-            "dark:nx-border-neutral-800 [counter-reset:step]",
+          className: cn17(
+            "nextra-steps mb-12 ml-4 border-l border-gray-200 pl-6",
+            "[counter-reset:step] dark:border-neutral-800",
             className
           ),
         },
@@ -2386,8 +2404,8 @@ function Steps(_a) {
 
 // src/components/tabs.tsx
 import { Tab as HeadlessTab } from "@headlessui/react";
-import cn17 from "clsx";
-import { jsx as jsx26, jsxs as jsxs17 } from "react/jsx-runtime";
+import cn18 from "clsx";
+import { jsx as jsx27, jsxs as jsxs17 } from "react/jsx-runtime";
 function isTabItem(item) {
   if (item && typeof item === "object" && "label" in item) return true;
   return false;
@@ -2404,12 +2422,11 @@ function Tabs({ items, selectedIndex, defaultIndex, onChange, children }) {
     defaultIndex,
     onChange,
     children: [
-      /* @__PURE__ */ jsx26("div", {
-        className:
-          "nextra-scrollbar nx-overflow-x-auto nx-overflow-y-hidden nx-overscroll-x-contain",
-        children: /* @__PURE__ */ jsx26(HeadlessTab.List, {
+      /* @__PURE__ */ jsx27("div", {
+        className: "nextra-scrollbar overflow-x-auto overflow-y-hidden overscroll-x-contain",
+        children: /* @__PURE__ */ jsx27(HeadlessTab.List, {
           className:
-            "nx-mt-4 nx-flex nx-w-max nx-min-w-full nx-border-b nx-border-gray-200 nx-pb-px dark:nx-border-neutral-800",
+            "mt-4 flex w-max min-w-full border-b border-gray-200 pb-px dark:border-neutral-800",
           children: items.map((item, index) => {
             const disabled = !!(
               item &&
@@ -2417,18 +2434,18 @@ function Tabs({ items, selectedIndex, defaultIndex, onChange, children }) {
               "disabled" in item &&
               item.disabled
             );
-            return /* @__PURE__ */ jsx26(
+            return /* @__PURE__ */ jsx27(
               HeadlessTab,
               {
                 disabled,
                 className: ({ selected }) =>
-                  cn17(
-                    "nx-mr-2 nx-rounded-t nx-p-2 nx-font-medium nx-leading-5 nx-transition-colors",
-                    "-nx-mb-0.5 nx-select-none nx-border-b-2",
+                  cn18(
+                    "mr-2 rounded-t p-2 font-medium leading-5 transition-colors",
+                    "-mb-0.5 select-none border-b-2",
                     selected
-                      ? "nx-border-primary-500 nx-text-primary-600"
-                      : "nx-border-transparent nx-text-gray-600 hover:nx-border-gray-200 hover:nx-text-black dark:nx-text-gray-200 dark:hover:nx-border-neutral-800 dark:hover:nx-text-white",
-                    disabled && "nx-pointer-events-none nx-text-gray-400 dark:nx-text-neutral-600"
+                      ? "border-primary-500 text-primary-600"
+                      : "border-transparent text-gray-600 hover:border-gray-200 hover:text-black dark:text-gray-200 dark:hover:border-neutral-800 dark:hover:text-white",
+                    disabled && "pointer-events-none text-gray-400 dark:text-neutral-600"
                   ),
                 children: renderTab(item),
               },
@@ -2437,7 +2454,7 @@ function Tabs({ items, selectedIndex, defaultIndex, onChange, children }) {
           }),
         }),
       }),
-      /* @__PURE__ */ jsx26(HeadlessTab.Panels, { children }),
+      /* @__PURE__ */ jsx27(HeadlessTab.Panels, { children }),
     ],
   });
 }
@@ -2445,9 +2462,9 @@ function Tab(_a) {
   var _b = _a,
     { children } = _b,
     props = __objRest(_b, ["children"]);
-  return /* @__PURE__ */ jsx26(
+  return /* @__PURE__ */ jsx27(
     HeadlessTab.Panel,
-    __spreadProps(__spreadValues({}, props), { className: "nx-rounded nx-pt-6", children })
+    __spreadProps(__spreadValues({}, props), { className: "rounded pt-6", children })
   );
 }
 
@@ -2456,7 +2473,7 @@ import { useTheme as useTheme2 } from "next-themes";
 import { useMounted as useMounted6 } from "nextra/hooks";
 import { MoonIcon, SunIcon } from "nextra/icons";
 import { z } from "zod";
-import { jsx as jsx27, jsxs as jsxs18 } from "react/jsx-runtime";
+import { jsx as jsx28, jsxs as jsxs18 } from "react/jsx-runtime";
 var themeOptionsSchema = z.strictObject({
   light: z.string(),
   dark: z.string(),
@@ -2468,7 +2485,7 @@ function ThemeSwitch({ lite, className }) {
   const config = useConfig().themeSwitch;
   const IconToUse = mounted && resolvedTheme === "dark" ? MoonIcon : SunIcon;
   const options = typeof config.useOptions === "function" ? config.useOptions() : config.useOptions;
-  return /* @__PURE__ */ jsx27(Select, {
+  return /* @__PURE__ */ jsx28(Select, {
     className,
     title: "Change theme",
     options: [
@@ -2482,11 +2499,11 @@ function ThemeSwitch({ lite, className }) {
     selected: {
       key: theme2,
       name: /* @__PURE__ */ jsxs18("div", {
-        className: "nx-flex nx-items-center nx-gap-2 nx-capitalize",
+        className: "flex items-center gap-2 capitalize",
         children: [
-          /* @__PURE__ */ jsx27(IconToUse, {}),
-          /* @__PURE__ */ jsx27("span", {
-            className: lite ? "md:nx-hidden" : "",
+          /* @__PURE__ */ jsx28(IconToUse, {}),
+          /* @__PURE__ */ jsx28("span", {
+            className: lite ? "md:hidden" : "",
             children: mounted ? options[theme2] : options.light,
           }),
         ],
@@ -2496,13 +2513,13 @@ function ThemeSwitch({ lite, className }) {
 }
 
 // src/components/toc.tsx
-import cn18 from "clsx";
+import cn19 from "clsx";
 import { useEffect as useEffect4, useMemo as useMemo3, useRef as useRef6 } from "react";
 import scrollIntoView2 from "scroll-into-view-if-needed";
-import { Fragment as Fragment11, jsx as jsx28, jsxs as jsxs19 } from "react/jsx-runtime";
-var linkClassName = cn18(
-  "nx-text-xs nx-font-medium nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-100",
-  "contrast-more:nx-text-gray-800 contrast-more:dark:nx-text-gray-50"
+import { Fragment as Fragment12, jsx as jsx29, jsxs as jsxs19 } from "react/jsx-runtime";
+var linkClassName = cn19(
+  "text-xs font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100",
+  "contrast-more:text-gray-800 contrast-more:dark:text-gray-50"
 );
 function TOC({ headings, filePath }) {
   var _a;
@@ -2535,40 +2552,40 @@ function TOC({ headings, filePath }) {
   }, [activeSlug]);
   return /* @__PURE__ */ jsxs19("div", {
     ref: tocRef,
-    className: cn18(
-      "nextra-scrollbar nx-sticky nx-top-16 nx-overflow-y-auto nx-pr-4 nx-pt-6 nx-text-sm [hyphens:auto]",
-      "nx-max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))] ltr:-nx-mr-4 rtl:-nx-ml-4"
+    className: cn19(
+      "nextra-scrollbar sticky top-16 overflow-y-auto pr-4 pt-6 text-sm [hyphens:auto]",
+      "max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))] ltr:-mr-4 rtl:-ml-4"
     ),
     children: [
       hasHeadings &&
-        /* @__PURE__ */ jsxs19(Fragment11, {
+        /* @__PURE__ */ jsxs19(Fragment12, {
           children: [
-            /* @__PURE__ */ jsx28("p", {
-              className: "nx-mb-4 nx-font-semibold nx-tracking-tight",
+            /* @__PURE__ */ jsx29("p", {
+              className: "mb-4 font-semibold tracking-tight",
               children: renderComponent(config.toc.title),
             }),
-            /* @__PURE__ */ jsx28("ul", {
+            /* @__PURE__ */ jsx29("ul", {
               children: items.map(({ id, value, depth }) => {
                 var _a2, _b, _c, _d;
-                return /* @__PURE__ */ jsx28(
+                return /* @__PURE__ */ jsx29(
                   "li",
                   {
-                    className: "nx-my-2 nx-scroll-my-6 nx-scroll-py-6",
-                    children: /* @__PURE__ */ jsx28("a", {
+                    className: "my-2 scroll-my-6 scroll-py-6",
+                    children: /* @__PURE__ */ jsx29("a", {
                       href: `#${id}`,
-                      className: cn18(
+                      className: cn19(
                         {
-                          2: "nx-font-semibold",
-                          3: "ltr:nx-pl-4 rtl:nx-pr-4",
-                          4: "ltr:nx-pl-8 rtl:nx-pr-8",
-                          5: "ltr:nx-pl-12 rtl:nx-pr-12",
-                          6: "ltr:nx-pl-16 rtl:nx-pr-16",
+                          2: "font-semibold",
+                          3: "ltr:pl-4 rtl:pr-4",
+                          4: "ltr:pl-8 rtl:pr-8",
+                          5: "ltr:pl-12 rtl:pr-12",
+                          6: "ltr:pl-16 rtl:pr-16",
                         }[depth],
-                        "nx-inline-block",
+                        "inline-block",
                         ((_a2 = activeAnchor[id]) == null ? void 0 : _a2.isActive)
-                          ? "nx-text-primary-600 nx-subpixel-antialiased contrast-more:!nx-text-primary-600"
-                          : "nx-text-gray-500 hover:nx-text-gray-900 dark:nx-text-gray-400 dark:hover:nx-text-gray-300",
-                        "contrast-more:nx-text-gray-900 contrast-more:nx-underline contrast-more:dark:nx-text-gray-50 nx-w-full nx-break-words"
+                          ? "text-primary-600 contrast-more:!text-primary-600 subpixel-antialiased"
+                          : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300",
+                        "w-full break-words contrast-more:text-gray-900 contrast-more:underline contrast-more:dark:text-gray-50"
                       ),
                       children:
                         (_d =
@@ -2590,15 +2607,15 @@ function TOC({ headings, filePath }) {
         }),
       hasMetaInfo &&
         /* @__PURE__ */ jsxs19("div", {
-          className: cn18(
+          className: cn19(
             hasHeadings &&
-              "nx-mt-8 nx-border-t nx-bg-white nx-pt-8 nx-shadow-[0_-12px_16px_white] dark:nx-bg-dark dark:nx-shadow-[0_-12px_16px_#111]",
-            "nx-sticky nx-bottom-0 nx-flex nx-flex-col nx-items-start nx-gap-2 nx-pb-8 dark:nx-border-neutral-800",
-            "contrast-more:nx-border-t contrast-more:nx-border-neutral-400 contrast-more:nx-shadow-none contrast-more:dark:nx-border-neutral-400"
+              "dark:bg-dark mt-8 border-t bg-white pt-8 shadow-[0_-12px_16px_white] dark:shadow-[0_-12px_16px_#111]",
+            "sticky bottom-0 flex flex-col items-start gap-2 pb-8 dark:border-neutral-800",
+            "contrast-more:border-t contrast-more:border-neutral-400 contrast-more:shadow-none contrast-more:dark:border-neutral-400"
           ),
           children: [
             config.feedback.content
-              ? /* @__PURE__ */ jsx28(Anchor, {
+              ? /* @__PURE__ */ jsx29(Anchor, {
                   className: linkClassName,
                   href: config.feedback.useLink(),
                   newWindow: true,
@@ -2620,7 +2637,7 @@ function TOC({ headings, filePath }) {
 // src/components/match-sorter-search.tsx
 import { matchSorter } from "match-sorter";
 import { useMemo as useMemo4, useState as useState7 } from "react";
-import { jsx as jsx29 } from "react/jsx-runtime";
+import { jsx as jsx30 } from "react/jsx-runtime";
 function MatchSorterSearch({ className, directories }) {
   const [search, setSearch] = useState7("");
   const results = useMemo4(
@@ -2632,22 +2649,22 @@ function MatchSorterSearch({ className, directories }) {
         ? matchSorter(directories, search, { keys: ["title"] }).map(({ route, title }) => ({
             id: route + title,
             route,
-            children: /* @__PURE__ */ jsx29(HighlightMatches, { value: title, match: search }),
+            children: /* @__PURE__ */ jsx30(HighlightMatches, { value: title, match: search }),
           }))
         : [],
     [search, directories]
   );
-  return /* @__PURE__ */ jsx29(Search, {
+  return /* @__PURE__ */ jsx30(Search, {
     value: search,
     onChange: setSearch,
     className,
-    overlayClassName: "nx-w-full",
+    overlayClassName: "w-full",
     results,
   });
 }
 
 // src/constants.tsx
-import { Fragment as Fragment12, jsx as jsx30, jsxs as jsxs20 } from "react/jsx-runtime";
+import { Fragment as Fragment13, jsx as jsx31, jsxs as jsxs20 } from "react/jsx-runtime";
 var DEFAULT_LOCALE = "en-US";
 var IS_BROWSER = typeof window !== "undefined";
 function isReactNode(value) {
@@ -2783,10 +2800,10 @@ var DEFAULT_THEME = {
     key: "nextra-banner",
   },
   chat: {
-    icon: /* @__PURE__ */ jsxs20(Fragment12, {
+    icon: /* @__PURE__ */ jsxs20(Fragment13, {
       children: [
-        /* @__PURE__ */ jsx30(DiscordIcon, {}),
-        /* @__PURE__ */ jsx30("span", { className: "nx-sr-only", children: "Discord" }),
+        /* @__PURE__ */ jsx31(DiscordIcon, {}),
+        /* @__PURE__ */ jsx31("span", { className: "sr-only", children: "Discord" }),
       ],
     }),
   },
@@ -2799,7 +2816,7 @@ var DEFAULT_THEME = {
       if (!editUrl) {
         return null;
       }
-      return /* @__PURE__ */ jsx30(Anchor, { className, href: editUrl, children });
+      return /* @__PURE__ */ jsx31(Anchor, { className, href: editUrl, children });
     },
     text: "Edit this page",
   },
@@ -2821,11 +2838,11 @@ var DEFAULT_THEME = {
   },
   gitTimestamp: function GitTimestamp({ timestamp }) {
     const { locale = DEFAULT_LOCALE } = useRouter7();
-    return /* @__PURE__ */ jsxs20(Fragment12, {
+    return /* @__PURE__ */ jsxs20(Fragment13, {
       children: [
         "Last updated on",
         " ",
-        /* @__PURE__ */ jsx30("time", {
+        /* @__PURE__ */ jsx31("time", {
           dateTime: timestamp.toISOString(),
           children: timestamp.toLocaleDateString(locale, {
             day: "numeric",
@@ -2836,33 +2853,33 @@ var DEFAULT_THEME = {
       ],
     });
   },
-  head: /* @__PURE__ */ jsxs20(Fragment12, {
+  head: /* @__PURE__ */ jsxs20(Fragment13, {
     children: [
-      /* @__PURE__ */ jsx30("meta", { name: "msapplication-TileColor", content: "#fff" }),
-      /* @__PURE__ */ jsx30("meta", { httpEquiv: "Content-Language", content: "en" }),
-      /* @__PURE__ */ jsx30("meta", {
+      /* @__PURE__ */ jsx31("meta", { name: "msapplication-TileColor", content: "#fff" }),
+      /* @__PURE__ */ jsx31("meta", { httpEquiv: "Content-Language", content: "en" }),
+      /* @__PURE__ */ jsx31("meta", {
         name: "description",
         content: "Nextra: the next docs builder",
       }),
-      /* @__PURE__ */ jsx30("meta", { name: "twitter:card", content: "summary_large_image" }),
-      /* @__PURE__ */ jsx30("meta", { name: "twitter:site", content: "@shuding_" }),
-      /* @__PURE__ */ jsx30("meta", {
+      /* @__PURE__ */ jsx31("meta", { name: "twitter:card", content: "summary_large_image" }),
+      /* @__PURE__ */ jsx31("meta", { name: "twitter:site", content: "@shuding_" }),
+      /* @__PURE__ */ jsx31("meta", {
         property: "og:title",
         content: "Nextra: the next docs builder",
       }),
-      /* @__PURE__ */ jsx30("meta", {
+      /* @__PURE__ */ jsx31("meta", {
         property: "og:description",
         content: "Nextra: the next docs builder",
       }),
-      /* @__PURE__ */ jsx30("meta", { name: "apple-mobile-web-app-title", content: "Nextra" }),
+      /* @__PURE__ */ jsx31("meta", { name: "apple-mobile-web-app-title", content: "Nextra" }),
     ],
   }),
   i18n: [],
-  logo: /* @__PURE__ */ jsxs20(Fragment12, {
+  logo: /* @__PURE__ */ jsxs20(Fragment13, {
     children: [
-      /* @__PURE__ */ jsx30("span", { className: "nx-font-extrabold", children: "Nextra" }),
-      /* @__PURE__ */ jsx30("span", {
-        className: "nx-ml-2 nx-hidden nx-font-normal nx-text-gray-600 md:nx-inline",
+      /* @__PURE__ */ jsx31("span", { className: "font-extrabold", children: "Nextra" }),
+      /* @__PURE__ */ jsx31("span", {
+        className: "ml-2 hidden font-normal text-gray-600 md:inline",
         children: "The Next Docs Builder",
       }),
     ],
@@ -2885,10 +2902,10 @@ var DEFAULT_THEME = {
     light: 212,
   },
   project: {
-    icon: /* @__PURE__ */ jsxs20(Fragment12, {
+    icon: /* @__PURE__ */ jsxs20(Fragment13, {
       children: [
-        /* @__PURE__ */ jsx30(GitHubIcon, {}),
-        /* @__PURE__ */ jsx30("span", { className: "nx-sr-only", children: "GitHub" }),
+        /* @__PURE__ */ jsx31(GitHubIcon, {}),
+        /* @__PURE__ */ jsx31("span", { className: "sr-only", children: "GitHub" }),
       ],
     }),
   },
@@ -2896,18 +2913,18 @@ var DEFAULT_THEME = {
     component: function Search2({ className, directories }) {
       const config = useConfig();
       return config.flexsearch
-        ? /* @__PURE__ */ jsx30(Flexsearch, { className })
-        : /* @__PURE__ */ jsx30(MatchSorterSearch, { className, directories });
+        ? /* @__PURE__ */ jsx31(Flexsearch, { className })
+        : /* @__PURE__ */ jsx31(MatchSorterSearch, { className, directories });
     },
-    emptyResult: /* @__PURE__ */ jsx30("span", {
-      className: "nx-block nx-select-none nx-p-8 nx-text-center nx-text-sm nx-text-gray-400",
+    emptyResult: /* @__PURE__ */ jsx31("span", {
+      className: "block select-none p-8 text-center text-sm text-gray-400",
       children: "No results found.",
     }),
     error: "Failed to load search index.",
     loading: function useLoading() {
       const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
       const text = (locale && LOADING_LOCALES[locale]) || LOADING_LOCALES[defaultLocale];
-      return /* @__PURE__ */ jsxs20(Fragment12, { children: [text, "\u2026"] });
+      return /* @__PURE__ */ jsxs20(Fragment13, { children: [text, "\u2026"] });
     },
     placeholder: function usePlaceholder() {
       const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
@@ -2921,7 +2938,7 @@ var DEFAULT_THEME = {
   },
   sidebar: {
     defaultMenuCollapseLevel: 2,
-    titleComponent: ({ title }) => /* @__PURE__ */ jsx30(Fragment12, { children: title }),
+    titleComponent: ({ title }) => /* @__PURE__ */ jsx31(Fragment13, { children: title }),
     toggleButton: false,
   },
   themeSwitch: {
@@ -2972,16 +2989,244 @@ if (IS_BROWSER) {
 import { normalizePages } from "nextra/normalize-pages";
 
 // src/mdx-components.tsx
-import cn19 from "clsx";
-import { Code, Pre, Table, Td, Th, Tr } from "nextra/components";
+import cn22 from "clsx";
+
+// src/components/code.tsx
+import cn20 from "clsx";
+import { jsx as jsx32 } from "react/jsx-runtime";
+var Code = _a => {
+  var _b = _a,
+    { children, className } = _b,
+    props = __objRest(_b, ["children", "className"]);
+  const hasLineNumbers = "data-line-numbers" in props;
+  return /* @__PURE__ */ jsx32(
+    "code",
+    __spreadProps(
+      __spreadValues(
+        {
+          className: cn20(
+            "bg-outline break-words rounded-md border border-black border-opacity-[0.04] px-[.25em] py-0.5 text-[.9em]",
+            "dark:border-white/10 dark:bg-white/10",
+            hasLineNumbers && "[counter-reset:line]",
+            className
+          ),
+          dir: "ltr",
+        },
+        props
+      ),
+      {
+        children,
+      }
+    )
+  );
+};
+
+// src/components/pre.tsx
+import cn21 from "clsx";
+import { useCallback as useCallback6, useRef as useRef7 } from "react";
+
+// src/components/copy-to-clipboard.tsx
+import { useCallback as useCallback5, useEffect as useEffect5, useState as useState8 } from "react";
+import { CheckIcon as CheckIcon2, CopyIcon } from "nextra/icons";
+import { jsx as jsx33 } from "react/jsx-runtime";
+var CopyToClipboard = _a => {
+  var _b = _a,
+    { getValue } = _b,
+    props = __objRest(_b, ["getValue"]);
+  const [isCopied, setCopied] = useState8(false);
+  useEffect5(() => {
+    if (!isCopied) return;
+    const timerId = setTimeout(() => {
+      setCopied(false);
+    }, 2e3);
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [isCopied]);
+  const handleClick = useCallback5(
+    () =>
+      __async(void 0, null, function* () {
+        setCopied(true);
+        if (!(navigator == null ? void 0 : navigator.clipboard)) {
+          console.error("Access to clipboard rejected!");
+        }
+        try {
+          yield navigator.clipboard.writeText(getValue());
+        } catch (e) {
+          console.error("Failed to copy!");
+        }
+      }),
+    [getValue]
+  );
+  const IconToUse = isCopied ? CheckIcon2 : CopyIcon;
+  return /* @__PURE__ */ jsx33(
+    button_default,
+    __spreadProps(
+      __spreadValues(
+        { onClick: handleClick, variant: "default", title: "Copy code", tabIndex: 0 },
+        props
+      ),
+      {
+        children: /* @__PURE__ */ jsx33(IconToUse, {
+          className: "nextra-copy-icon text-dim pointer-events-none h-4 w-4",
+        }),
+      }
+    )
+  );
+};
+
+// src/components/pre.tsx
+import { jsx as jsx34, jsxs as jsxs21 } from "react/jsx-runtime";
+var Pre = _a => {
+  var _b = _a,
+    { children, className, hasCopyCode, filename } = _b,
+    props = __objRest(_b, ["children", "className", "hasCopyCode", "filename"]);
+  const preRef = useRef7(null);
+  const toggleWordWrap = useCallback6(() => {
+    const htmlDataset = document.documentElement.dataset;
+    const hasWordWrap = "nextraWordWrap" in htmlDataset;
+    if (hasWordWrap) {
+      delete htmlDataset.nextraWordWrap;
+    } else {
+      htmlDataset.nextraWordWrap = "";
+    }
+  }, []);
+  return /* @__PURE__ */ jsxs21("div", {
+    className: "nextra-code-block relative mt-6 first:mt-0",
+    children: [
+      filename &&
+        /* @__PURE__ */ jsx34("div", {
+          className:
+            "bg-primary-700/5 dark:bg-primary-300/10 absolute top-0 z-[1] w-full truncate rounded-t-xl px-4 py-2 text-xs text-gray-700 dark:text-gray-200",
+          children: filename,
+        }),
+      /* @__PURE__ */ jsx34(
+        "pre",
+        __spreadProps(
+          __spreadValues(
+            {
+              className: cn21(
+                "bg-primary-700/5 dark:bg-primary-300/10 mb-4 overflow-x-auto rounded-xl text-[.9em] font-medium subpixel-antialiased",
+                "contrast-more:border-primary-900/20 contrast-more:dark:border-primary-100/40 contrast-more:border contrast-more:contrast-150",
+                filename ? "pb-4 pt-12" : "py-4",
+                className
+              ),
+              ref: preRef,
+            },
+            props
+          ),
+          {
+            children,
+          }
+        )
+      ),
+      /* @__PURE__ */ jsxs21("div", {
+        className: cn21(
+          "opacity-0 transition focus-within:opacity-100 [div:hover>&]:opacity-100",
+          "absolute right-0 m-[11px] flex gap-1",
+          filename ? "top-8" : "top-0"
+        ),
+        children: [
+          /* @__PURE__ */ jsx34(button_default, {
+            onClick: toggleWordWrap,
+            variant: "default",
+            className: "md:hidden",
+            title: "Toggle word wrap",
+            children: "wrap?",
+          }),
+          hasCopyCode &&
+            /* @__PURE__ */ jsx34(CopyToClipboard, {
+              getValue: () => {
+                var _a2, _b2;
+                return (
+                  ((_b2 = (_a2 = preRef.current) == null ? void 0 : _a2.querySelector("code")) ==
+                  null
+                    ? void 0
+                    : _b2.textContent) || ""
+                );
+              },
+            }),
+        ],
+      }),
+    ],
+  });
+};
+
+// src/components/table.tsx
+import { jsx as jsx35 } from "react/jsx-runtime";
+var Table = _a => {
+  var _b = _a,
+    { className = "" } = _b,
+    props = __objRest(_b, ["className"]);
+  return /* @__PURE__ */ jsx35(
+    "table",
+    __spreadValues({ className: "block overflow-x-scroll " + className }, props)
+  );
+};
+
+// src/components/td.tsx
+import { jsx as jsx36 } from "react/jsx-runtime";
+var Td = _a => {
+  var _b = _a,
+    { className = "" } = _b,
+    props = __objRest(_b, ["className"]);
+  return /* @__PURE__ */ jsx36(
+    "td",
+    __spreadValues(
+      {
+        className: "m-0 border border-gray-300 px-4 py-2 dark:border-gray-600 " + className,
+      },
+      props
+    )
+  );
+};
+
+// src/components/tr.tsx
+import { jsx as jsx37 } from "react/jsx-runtime";
+var Tr = _a => {
+  var _b = _a,
+    { className = "" } = _b,
+    props = __objRest(_b, ["className"]);
+  return /* @__PURE__ */ jsx37(
+    "tr",
+    __spreadValues(
+      {
+        className:
+          "m-0 border-t border-gray-300 p-0 dark:border-gray-600 even:bg-gray-100 even:dark:bg-gray-600/20 " +
+          className,
+      },
+      props
+    )
+  );
+};
+
+// src/components/th.tsx
+import { jsx as jsx38 } from "react/jsx-runtime";
+var Th = _a => {
+  var _b = _a,
+    { className = "" } = _b,
+    props = __objRest(_b, ["className"]);
+  return /* @__PURE__ */ jsx38(
+    "th",
+    __spreadValues(
+      {
+        className:
+          "m-0 border border-gray-300 px-4 py-2 font-semibold dark:border-gray-600 " + className,
+      },
+      props
+    )
+  );
+};
+
+// src/mdx-components.tsx
 import {
   Children,
   cloneElement,
-  useEffect as useEffect5,
-  useRef as useRef7,
-  useState as useState8,
+  useEffect as useEffect6,
+  useRef as useRef8,
+  useState as useState9,
 } from "react";
-import { jsx as jsx31, jsxs as jsxs21 } from "react/jsx-runtime";
+import { jsx as jsx39, jsxs as jsxs22 } from "react/jsx-runtime";
 function HeadingLink(_a) {
   var _b = _a,
     { tag: Tag, context, children, id } = _b,
@@ -2989,8 +3234,8 @@ function HeadingLink(_a) {
   const setActiveAnchor = useSetActiveAnchor();
   const slugs2 = useSlugs();
   const observer = useIntersectionObserver();
-  const obRef = useRef7(null);
-  useEffect5(() => {
+  const obRef = useRef8(null);
+  useEffect6(() => {
     if (!id) return;
     const heading = obRef.current;
     if (!heading) return;
@@ -3006,19 +3251,19 @@ function HeadingLink(_a) {
       });
     };
   }, [id, context, slugs2, observer, setActiveAnchor]);
-  return /* @__PURE__ */ jsxs21(
+  return /* @__PURE__ */ jsxs22(
     Tag,
     __spreadProps(
       __spreadValues(
         {
-          className: cn19(
-            "nx-font-semibold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100",
+          className: cn22(
+            "font-semibold tracking-tight text-slate-900 dark:text-slate-100",
             {
-              h2: "nx-mt-10 nx-border-b nx-pb-1 nx-text-3xl nx-border-neutral-200/70 contrast-more:nx-border-neutral-400 dark:nx-border-primary-100/10 contrast-more:dark:nx-border-neutral-400",
-              h3: "nx-mt-8 nx-text-2xl",
-              h4: "nx-mt-8 nx-text-xl",
-              h5: "nx-mt-8 nx-text-lg",
-              h6: "nx-mt-8 nx-text-base",
+              h2: "dark:border-primary-100/10 mt-10 border-b border-neutral-200/70 pb-1 text-3xl contrast-more:border-neutral-400 contrast-more:dark:border-neutral-400",
+              h3: "mt-8 text-2xl",
+              h4: "mt-8 text-xl",
+              h5: "mt-8 text-lg",
+              h6: "mt-8 text-base",
             }[Tag]
           ),
         },
@@ -3027,8 +3272,8 @@ function HeadingLink(_a) {
       {
         children: [
           children,
-          /* @__PURE__ */ jsx31("span", { className: "nx-absolute -nx-mt-20", id, ref: obRef }),
-          /* @__PURE__ */ jsx31("a", {
+          /* @__PURE__ */ jsx39("span", { className: "absolute -mt-20", id, ref: obRef }),
+          /* @__PURE__ */ jsx39("a", {
             "href": `#${id}`,
             "className": "subheading-anchor",
             "aria-label": "Permalink for this section",
@@ -3074,10 +3319,10 @@ var Details = _a => {
   var _b = _a,
     { children, open } = _b,
     props = __objRest(_b, ["children", "open"]);
-  const [openState, setOpen] = useState8(!!open);
+  const [openState, setOpen] = useState9(!!open);
   const [summary, restChildren] = findSummary(children);
-  const [delayedOpenState, setDelayedOpenState] = useState8(openState);
-  useEffect5(() => {
+  const [delayedOpenState, setDelayedOpenState] = useState9(openState);
+  useEffect6(() => {
     if (openState) {
       setDelayedOpenState(true);
     } else {
@@ -3085,7 +3330,7 @@ var Details = _a => {
       return () => clearTimeout(timeout);
     }
   }, [openState]);
-  return /* @__PURE__ */ jsxs21(
+  return /* @__PURE__ */ jsxs22(
     "details",
     __spreadProps(
       __spreadValues(
@@ -3093,7 +3338,7 @@ var Details = _a => {
           __spreadValues(
             {
               className:
-                "nx-my-4 nx-rounded nx-border nx-border-gray-200 nx-bg-white nx-p-2 nx-shadow-sm first:nx-mt-0 dark:nx-border-neutral-800 dark:nx-bg-neutral-900",
+                "my-4 rounded border border-gray-200 bg-white p-2 shadow-sm first:mt-0 dark:border-neutral-800 dark:bg-neutral-900",
             },
             props
           ),
@@ -3105,8 +3350,8 @@ var Details = _a => {
       ),
       {
         children: [
-          /* @__PURE__ */ jsx31(DetailsProvider, { value: setOpen, children: summary }),
-          /* @__PURE__ */ jsx31(Collapse, { isOpen: openState, children: restChildren }),
+          /* @__PURE__ */ jsx39(DetailsProvider, { value: setOpen, children: summary }),
+          /* @__PURE__ */ jsx39(Collapse, { isOpen: openState, children: restChildren }),
         ],
       }
     )
@@ -3114,15 +3359,15 @@ var Details = _a => {
 };
 var Summary = props => {
   const setOpen = useDetails();
-  return /* @__PURE__ */ jsx31(
+  return /* @__PURE__ */ jsx39(
     "summary",
     __spreadProps(
       __spreadValues(
         {
-          className: cn19(
-            "nx-flex nx-items-center nx-cursor-pointer nx-list-none nx-p-1 nx-transition-colors hover:nx-bg-gray-100 dark:hover:nx-bg-neutral-800",
-            "before:nx-mr-1 before:nx-inline-block before:nx-transition-transform before:nx-content-[''] dark:before:nx-invert",
-            "rtl:before:nx-rotate-180 [[data-expanded]>&]:before:nx-rotate-90"
+          className: cn22(
+            "flex cursor-pointer list-none items-center p-1 transition-colors hover:bg-gray-100 dark:hover:bg-neutral-800",
+            "before:mr-1 before:inline-block before:transition-transform before:content-[''] dark:before:invert",
+            "rtl:before:rotate-180 [[data-expanded]>&]:before:rotate-90"
           ),
         },
         props
@@ -3141,14 +3386,14 @@ var Link = _a => {
   var _b = _a,
     { href = "", className } = _b,
     props = __objRest(_b, ["href", "className"]);
-  return /* @__PURE__ */ jsx31(
+  return /* @__PURE__ */ jsx39(
     Anchor,
     __spreadValues(
       {
         href,
         newWindow: EXTERNAL_HREF_REGEX.test(href),
-        className: cn19(
-          "nx-text-primary-600 nx-underline nx-decoration-from-font [text-underline-position:from-font]",
+        className: cn22(
+          "text-primary-600 underline decoration-from-font [text-underline-position:from-font]",
           className
         ),
       },
@@ -3160,7 +3405,7 @@ var A = _a => {
   var _b = _a,
     { href = "" } = _b,
     props = __objRest(_b, ["href"]);
-  return /* @__PURE__ */ jsx31(
+  return /* @__PURE__ */ jsx39(
     Anchor,
     __spreadValues({ href, newWindow: EXTERNAL_HREF_REGEX.test(href) }, props)
   );
@@ -3173,71 +3418,65 @@ var getComponents = ({ isRawLayout, components }) => {
   return __spreadValues(
     {
       h1: props =>
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx39(
           "h1",
           __spreadValues(
             {
               className:
-                "nx-mt-2 nx-text-4xl nx-font-bold nx-tracking-tight nx-text-slate-900 dark:nx-text-slate-100",
+                "mt-2 text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100",
             },
             props
           )
         ),
       h2: props =>
-        /* @__PURE__ */ jsx31(HeadingLink, __spreadValues({ tag: "h2", context }, props)),
+        /* @__PURE__ */ jsx39(HeadingLink, __spreadValues({ tag: "h2", context }, props)),
       h3: props =>
-        /* @__PURE__ */ jsx31(HeadingLink, __spreadValues({ tag: "h3", context }, props)),
+        /* @__PURE__ */ jsx39(HeadingLink, __spreadValues({ tag: "h3", context }, props)),
       h4: props =>
-        /* @__PURE__ */ jsx31(HeadingLink, __spreadValues({ tag: "h4", context }, props)),
+        /* @__PURE__ */ jsx39(HeadingLink, __spreadValues({ tag: "h4", context }, props)),
       h5: props =>
-        /* @__PURE__ */ jsx31(HeadingLink, __spreadValues({ tag: "h5", context }, props)),
+        /* @__PURE__ */ jsx39(HeadingLink, __spreadValues({ tag: "h5", context }, props)),
       h6: props =>
-        /* @__PURE__ */ jsx31(HeadingLink, __spreadValues({ tag: "h6", context }, props)),
+        /* @__PURE__ */ jsx39(HeadingLink, __spreadValues({ tag: "h6", context }, props)),
       ul: props =>
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx39(
           "ul",
-          __spreadValues(
-            { className: "nx-mt-6 nx-list-disc first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6" },
-            props
-          )
+          __spreadValues({ className: "mt-6 list-disc first:mt-0 ltr:ml-6 rtl:mr-6" }, props)
         ),
       ol: props =>
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx39(
           "ol",
-          __spreadValues(
-            { className: "nx-mt-6 nx-list-decimal first:nx-mt-0 ltr:nx-ml-6 rtl:nx-mr-6" },
-            props
-          )
+          __spreadValues({ className: "mt-6 list-decimal first:mt-0 ltr:ml-6 rtl:mr-6" }, props)
         ),
-      li: props => /* @__PURE__ */ jsx31("li", __spreadValues({ className: "nx-my-2" }, props)),
+      li: props => /* @__PURE__ */ jsx39("li", __spreadValues({ className: "my-2" }, props)),
       blockquote: props =>
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx39(
           "blockquote",
           __spreadValues(
             {
-              className: cn19(
-                "nx-mt-6 nx-border-gray-300 nx-italic nx-text-gray-700 dark:nx-border-gray-700 dark:nx-text-gray-400",
-                "first:nx-mt-0 ltr:nx-border-l-2 ltr:nx-pl-6 rtl:nx-border-r-2 rtl:nx-pr-6"
+              className: cn22(
+                "mt-6 border-gray-300 italic text-gray-700 dark:border-gray-700 dark:text-gray-400",
+                "first:mt-0 ltr:border-l-2 ltr:pl-6 rtl:border-r-2 rtl:pr-6"
               ),
             },
             props
           )
         ),
       hr: props =>
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx39(
           "hr",
-          __spreadValues({ className: "nx-my-8 dark:nx-border-gray-900" }, props)
+          __spreadValues({ className: "my-8 dark:border-gray-900" }, props)
         ),
       a: Link,
       table: props =>
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx39(
           Table,
-          __spreadValues({ className: "nextra-scrollbar nx-mt-6 nx-p-0 first:nx-mt-0" }, props)
+          __spreadValues({ className: "nextra-scrollbar mt-6 p-0 first:mt-0" }, props)
         ),
       p: props =>
-        /* @__PURE__ */ jsx31(
+        /* @__PURE__ */ jsx39(
           "p",
-          __spreadValues({ className: "nx-mt-6 nx-leading-7 first:nx-mt-0" }, props)
+          __spreadValues({ className: "mt-6 leading-7 first:mt-0" }, props)
         ),
       tr: Tr,
       th: Th,
@@ -3255,51 +3494,51 @@ var getComponents = ({ isRawLayout, components }) => {
 import { useMDXComponents } from "nextra/mdx";
 import { Callout } from "nextra/components";
 import { useTheme as useTheme3 } from "next-themes";
-import { Fragment as Fragment13, jsx as jsx32, jsxs as jsxs22 } from "react/jsx-runtime";
+import { Fragment as Fragment14, jsx as jsx40, jsxs as jsxs23 } from "react/jsx-runtime";
 var classes5 = {
-  toc: cn20("nextra-toc nx-order-last nx-hidden nx-w-64 nx-shrink-0 xl:nx-block print:nx-hidden"),
-  main: cn20("nx-w-full nx-break-words"),
+  toc: cn23("nextra-toc order-last hidden w-64 shrink-0 xl:block print:hidden"),
+  main: cn23("w-full break-words"),
 };
 var Body = ({ themeContext, breadcrumb, timestamp, navigation, children }) => {
   var _a;
   const config = useConfig();
   const mounted = useMounted7();
   if (themeContext.layout === "raw") {
-    return /* @__PURE__ */ jsx32("div", { className: classes5.main, children });
+    return /* @__PURE__ */ jsx40("div", { className: classes5.main, children });
   }
   const date =
     themeContext.timestamp && config.gitTimestamp && timestamp ? new Date(timestamp) : null;
   const gitTimestampEl =
     // Because a user's time zone may be different from the server page
     mounted && date
-      ? /* @__PURE__ */ jsx32("div", {
+      ? /* @__PURE__ */ jsx40("div", {
           className:
-            "nx-mt-12 nx-mb-8 nx-block nx-text-xs nx-text-gray-500 ltr:nx-text-right rtl:nx-text-left dark:nx-text-gray-400",
+            "mb-8 mt-12 block text-xs text-gray-500 ltr:text-right rtl:text-left dark:text-gray-400",
           children: renderComponent(config.gitTimestamp, { timestamp: date }),
         })
-      : /* @__PURE__ */ jsx32("div", { className: "nx-mt-16" });
-  const content = /* @__PURE__ */ jsxs22(Fragment13, {
+      : /* @__PURE__ */ jsx40("div", { className: "mt-16" });
+  const content = /* @__PURE__ */ jsxs23(Fragment14, {
     children: [children, gitTimestampEl, navigation],
   });
   const body =
     ((_a = config.main) == null ? void 0 : _a.call(config, { children: content })) || content;
   if (themeContext.layout === "full") {
-    return /* @__PURE__ */ jsx32("article", {
-      className: cn20(
+    return /* @__PURE__ */ jsx40("article", {
+      className: cn23(
         classes5.main,
-        "nextra-content nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-pl-[max(env(safe-area-inset-left),1.5rem)] nx-pr-[max(env(safe-area-inset-right),1.5rem)]"
+        "nextra-content min-h-[calc(100vh-var(--nextra-navbar-height))] pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]"
       ),
       children: body,
     });
   }
-  return /* @__PURE__ */ jsx32("article", {
-    className: cn20(
+  return /* @__PURE__ */ jsx40("article", {
+    className: cn23(
       classes5.main,
-      "nextra-content nx-flex nx-min-h-[calc(100vh-var(--nextra-navbar-height))] nx-min-w-0 nx-justify-center nx-pb-8 nx-pr-[calc(env(safe-area-inset-right)-1.5rem)]",
+      "nextra-content flex min-h-[calc(100vh-var(--nextra-navbar-height))] min-w-0 justify-center pb-8 pr-[calc(env(safe-area-inset-right)-1.5rem)]",
       themeContext.typesetting === "article" && "nextra-body-typesetting-article"
     ),
-    children: /* @__PURE__ */ jsxs22("main", {
-      className: "nx-w-full nx-min-w-0 nx-max-w-6xl nx-px-6 nx-pt-4 md:nx-px-12",
+    children: /* @__PURE__ */ jsxs23("main", {
+      className: "w-full min-w-0 max-w-6xl px-6 pt-4 md:px-12",
       children: [breadcrumb, body],
     }),
   });
@@ -3335,12 +3574,12 @@ var InnerLayout = ({ filePath, pageMap, frontMatter, headings, timestamp, childr
     activeType === "page" || !themeContext.toc || themeContext.layout !== "default"
       ? themeContext.layout !== "full" &&
         themeContext.layout !== "raw" &&
-        /* @__PURE__ */ jsx32("nav", {
+        /* @__PURE__ */ jsx40("nav", {
           "className": classes5.toc,
           "aria-label": "table of contents",
         })
-      : /* @__PURE__ */ jsx32("nav", {
-          "className": cn20(classes5.toc, "nx-px-4"),
+      : /* @__PURE__ */ jsx40("nav", {
+          "className": cn23(classes5.toc, "px-4"),
           "aria-label": "table of contents",
           "children": renderComponent(config.toc.component, {
             headings: config.toc.float ? headings : [],
@@ -3354,29 +3593,26 @@ var InnerLayout = ({ filePath, pageMap, frontMatter, headings, timestamp, childr
     // This makes sure that selectors like `[dir=ltr] .nextra-container` work
     // before hydration as Tailwind expects the `dir` attribute to exist on the
     // `html` element.
-    /* @__PURE__ */ jsxs22("div", {
+    /* @__PURE__ */ jsxs23("div", {
       dir: direction,
       children: [
-        /* @__PURE__ */ jsx32("script", {
+        /* @__PURE__ */ jsx40("script", {
           dangerouslySetInnerHTML: {
             __html: `document.documentElement.setAttribute('dir','${direction}')`,
           },
         }),
-        /* @__PURE__ */ jsx32(Head, {}),
-        /* @__PURE__ */ jsx32(Banner, {}),
+        /* @__PURE__ */ jsx40(Head, {}),
+        /* @__PURE__ */ jsx40(Banner, {}),
         themeContext.navbar &&
           renderComponent(config.navbar.component, {
             flatDirectories,
             items: topLevelNavbarItems,
           }),
-        /* @__PURE__ */ jsx32("div", {
-          className: cn20(
-            "nx-mx-auto nx-flex",
-            themeContext.layout !== "raw" && "nx-max-w-[90rem]"
-          ),
-          children: /* @__PURE__ */ jsxs22(ActiveAnchorProvider, {
+        /* @__PURE__ */ jsx40("div", {
+          className: cn23("mx-auto flex", themeContext.layout !== "raw" && "max-w-[90rem]"),
+          children: /* @__PURE__ */ jsxs23(ActiveAnchorProvider, {
             children: [
-              /* @__PURE__ */ jsx32(Sidebar, {
+              /* @__PURE__ */ jsx40(Sidebar, {
                 docsDirectories,
                 flatDirectories,
                 fullDirectories: directories,
@@ -3385,22 +3621,22 @@ var InnerLayout = ({ filePath, pageMap, frontMatter, headings, timestamp, childr
                 includePlaceholder: themeContext.layout === "default",
               }),
               tocEl,
-              /* @__PURE__ */ jsx32(SkipNavContent, {}),
-              /* @__PURE__ */ jsx32(Body, {
+              /* @__PURE__ */ jsx40(SkipNavContent, {}),
+              /* @__PURE__ */ jsx40(Body, {
                 themeContext,
                 breadcrumb:
                   activeType !== "page" && themeContext.breadcrumb
-                    ? /* @__PURE__ */ jsx32(Breadcrumb, { activePath })
+                    ? /* @__PURE__ */ jsx40(Breadcrumb, { activePath })
                     : null,
                 timestamp,
                 navigation:
                   activeType !== "page" && themeContext.pagination
-                    ? /* @__PURE__ */ jsx32(NavLinks, {
+                    ? /* @__PURE__ */ jsx40(NavLinks, {
                         flatDirectories: flatDocsDirectories,
                         currentIndex: activeIndex,
                       })
                     : null,
-                children: /* @__PURE__ */ jsx32(MDXProvider, {
+                children: /* @__PURE__ */ jsx40(MDXProvider, {
                   components: getComponents({
                     isRawLayout: themeContext.layout === "raw",
                     components: config.components,
@@ -3420,9 +3656,9 @@ function Layout(_a) {
   var _b = _a,
     { children } = _b,
     context = __objRest(_b, ["children"]);
-  return /* @__PURE__ */ jsx32(ConfigProvider, {
+  return /* @__PURE__ */ jsx40(ConfigProvider, {
     value: context,
-    children: /* @__PURE__ */ jsx32(
+    children: /* @__PURE__ */ jsx40(
       InnerLayout,
       __spreadProps(__spreadValues({}, context.pageOpts), { children })
     ),

@@ -1,26 +1,22 @@
-import cn from 'clsx'
-import type { ComponentProps, CSSProperties, ReactNode } from 'react'
-import { Anchor } from './anchor'
+import cn from "clsx";
+import type { ComponentProps, CSSProperties, ReactNode } from "react";
+import { Anchor } from "./anchor";
 
 const classes = {
-  cards: cn('nextra-cards nx-mt-4 nx-gap-4 nx-grid'),
+  cards: cn("nextra-cards mt-4 gap-4 grid"),
   card: cn(
-    'nextra-card nx-group nx-flex nx-flex-col nx-justify-start nx-overflow-hidden nx-rounded-lg nx-border nx-border-gray-200',
-    'nx-text-current nx-no-underline dark:nx-shadow-none',
-    'hover:nx-shadow-gray-100 dark:hover:nx-shadow-none nx-shadow-gray-100',
-    'active:nx-shadow-sm active:nx-shadow-gray-200',
-    'nx-transition-all nx-duration-200 hover:nx-border-gray-300'
+    "nextra-card group flex flex-col justify-start overflow-hidden rounded-lg border border-gray-200",
+    "text-current no-underline dark:shadow-none",
+    "hover:shadow-gray-100 dark:hover:shadow-none shadow-gray-100",
+    "active:shadow-sm active:shadow-gray-200",
+    "transition-all duration-200 hover:border-gray-300"
   ),
-  title: cn(
-    'nx-flex nx-font-semibold nx-items-start nx-gap-2 nx-p-4 nx-text-gray-700 hover:nx-text-gray-900'
-  )
-}
+  title: cn("flex font-semibold items-start gap-2 p-4 text-gray-700 hover:text-gray-900"),
+};
 
 const arrowEl = (
-  <span className="nx-transition-transform nx-duration-75 group-hover:nx-translate-x-[2px]">
-    →
-  </span>
-)
+  <span className="transition-transform duration-75 group-hover:translate-x-[2px]">→</span>
+);
 
 export function Card({
   children,
@@ -31,14 +27,14 @@ export function Card({
   href,
   ...props
 }: {
-  children: ReactNode
-  title: string
-  icon: ReactNode
-  image?: boolean
-  arrow?: boolean
-  href: string
+  children: ReactNode;
+  title: string;
+  icon: ReactNode;
+  image?: boolean;
+  arrow?: boolean;
+  href: string;
 }) {
-  const animatedArrow = arrow ? arrowEl : null
+  const animatedArrow = arrow ? arrowEl : null;
 
   if (image) {
     return (
@@ -46,25 +42,20 @@ export function Card({
         href={href}
         className={cn(
           classes.card,
-          'nx-bg-gray-100 nx-shadow dark:nx-border-neutral-700 dark:nx-bg-neutral-800 dark:nx-text-gray-50 hover:nx-shadow-lg dark:hover:nx-border-neutral-500 dark:hover:nx-bg-neutral-700'
+          "bg-gray-100 shadow hover:shadow-lg dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-50 dark:hover:border-neutral-500 dark:hover:bg-neutral-700"
         )}
         {...props}
       >
         {children}
-        <span
-          className={cn(
-            classes.title,
-            'dark:nx-text-gray-300 dark:hover:nx-text-gray-100'
-          )}
-        >
+        <span className={cn(classes.title, "dark:text-gray-300 dark:hover:text-gray-100")}>
           {icon}
-          <span className="nx-flex nx-gap-1">
+          <span className="flex gap-1">
             {title}
             {animatedArrow}
           </span>
         </span>
       </Anchor>
-    )
+    );
   }
 
   return (
@@ -72,22 +63,17 @@ export function Card({
       href={href}
       className={cn(
         classes.card,
-        'nx-bg-transparent nx-shadow-sm dark:nx-border-neutral-800 hover:nx-bg-slate-50 hover:nx-shadow-md dark:hover:nx-border-neutral-700 dark:hover:nx-bg-neutral-900'
+        "bg-transparent shadow-sm hover:bg-slate-50 hover:shadow-md dark:border-neutral-800 dark:hover:border-neutral-700 dark:hover:bg-neutral-900"
       )}
       {...props}
     >
-      <span
-        className={cn(
-          classes.title,
-          'dark:nx-text-neutral-200 dark:hover:nx-text-neutral-50'
-        )}
-      >
+      <span className={cn(classes.title, "dark:text-neutral-200 dark:hover:text-neutral-50")}>
         {icon}
         {title}
         {animatedArrow}
       </span>
     </Anchor>
-  )
+  );
 }
 
 export function Cards({
@@ -96,7 +82,7 @@ export function Cards({
   className,
   style,
   ...props
-}: { num?: number } & ComponentProps<'div'>) {
+}: { num?: number } & ComponentProps<"div">) {
   return (
     <div
       className={cn(classes.cards, className)}
@@ -104,11 +90,11 @@ export function Cards({
       style={
         {
           ...style,
-          '--rows': num
+          "--rows": num,
         } as CSSProperties
       }
     >
       {children}
     </div>
-  )
+  );
 }

@@ -1,55 +1,55 @@
-import cn from 'clsx'
-import { ArrowRightIcon } from 'nextra/icons'
-import type { Item } from 'nextra/normalize-pages'
-import type { ReactElement } from 'react'
-import { useConfig } from '../contexts'
-import type { DocsThemeConfig } from '../index'
-import { Anchor } from './anchor'
+import cn from "clsx";
+import { ArrowRightIcon } from "nextra/icons";
+import type { Item } from "nextra/normalize-pages";
+import type { ReactElement } from "react";
+import { useConfig } from "../contexts";
+import type { DocsThemeConfig } from "../index";
+import { Anchor } from "./anchor";
+import Button from "./button";
 
 interface NavLinkProps {
-  currentIndex: number
-  flatDirectories: Item[]
+  currentIndex: number;
+  flatDirectories: Item[];
 }
 
 const classes = {
   link: cn(
-    'nx-flex nx-max-w-[50%] nx-items-center nx-gap-1 nx-py-4 nx-text-base nx-font-medium nx-text-gray-600 nx-transition-colors [word-break:break-word] hover:nx-text-primary-600 dark:nx-text-gray-300 md:nx-text-lg'
+    "flex max-w-[50%] items-center gap-1 py-4 text-base font-medium text-gray-600 transition-colors [word-break:break-word] hover:text-primary-600 dark:text-gray-300 text-sm"
   ),
-  icon: cn('nx-inline nx-h-5 nx-shrink-0')
-}
+  icon: cn("inline h-4 shrink-0"),
+};
 
-export const NavLinks = ({
-  flatDirectories,
-  currentIndex
-}: NavLinkProps): ReactElement | null => {
-  const config = useConfig()
-  const nav = config.navigation
-  const navigation: Exclude<DocsThemeConfig['navigation'], boolean> =
-    typeof nav === 'boolean' ? { prev: nav, next: nav } : nav
-  let prev = navigation.prev && flatDirectories[currentIndex - 1]
-  let next = navigation.next && flatDirectories[currentIndex + 1]
+export const NavLinks = ({ flatDirectories, currentIndex }: NavLinkProps): ReactElement | null => {
+  const config = useConfig();
+  const nav = config.navigation;
+  const navigation: Exclude<DocsThemeConfig["navigation"], boolean> =
+    typeof nav === "boolean" ? { prev: nav, next: nav } : nav;
+  let prev = navigation.prev && flatDirectories[currentIndex - 1];
+  let next = navigation.next && flatDirectories[currentIndex + 1];
 
-  if (prev && !prev.isUnderCurrentDocsTree) prev = false
-  if (next && !next.isUnderCurrentDocsTree) next = false
+  if (prev && !prev.isUnderCurrentDocsTree) prev = false;
+  if (next && !next.isUnderCurrentDocsTree) next = false;
 
-  if (!prev && !next) return null
+  if (!prev && !next) return null;
 
   return (
     <div
       className={cn(
-        'nx-mb-8 nx-flex nx-items-center nx-border-t nx-pt-8 dark:nx-border-neutral-800',
-        'contrast-more:nx-border-neutral-400 dark:contrast-more:nx-border-neutral-400',
-        'print:nx-hidden'
+        "mb-8 flex items-center border-t pt-8 dark:border-neutral-800",
+        "contrast-more:border-neutral-400 dark:contrast-more:border-neutral-400",
+        "print:hidden"
       )}
     >
       {prev && (
         <Anchor
           href={prev.route}
           title={prev.title}
-          className={cn(classes.link, 'ltr:nx-pr-4 rtl:nx-pl-4')}
+          className={cn(classes.link, "ltr:pr-4 rtl:pl-4")}
         >
-          <ArrowRightIcon className={cn(classes.icon, 'ltr:nx-rotate-180')} />
-          {prev.title}
+          <Button variant="default">
+            <ArrowRightIcon className={cn(classes.icon, "ltr:rotate-180")} />
+            {prev.title}
+          </Button>
         </Anchor>
       )}
       {next && (
@@ -58,13 +58,15 @@ export const NavLinks = ({
           title={next.title}
           className={cn(
             classes.link,
-            'ltr:nx-ml-auto ltr:nx-pl-4 ltr:nx-text-right rtl:nx-mr-auto rtl:nx-pr-4 rtl:nx-text-left'
+            "ltr:ml-auto ltr:pl-4 ltr:text-right rtl:mr-auto rtl:pr-4 rtl:text-left"
           )}
         >
-          {next.title}
-          <ArrowRightIcon className={cn(classes.icon, 'rtl:nx-rotate-180')} />
+          <Button variant="default">
+            {next.title}
+            <ArrowRightIcon className={cn(classes.icon, "rtl:rotate-180")} />
+          </Button>
         </Anchor>
       )}
     </div>
-  )
-}
+  );
+};

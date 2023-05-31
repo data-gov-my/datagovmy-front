@@ -1,4 +1,3 @@
-// @ts-nocheck
 import cn from "clsx";
 import FlexSearch from "flexsearch";
 import { useRouter } from "next/router";
@@ -110,7 +109,7 @@ const loadIndexesImpl = async (basePath: string, locale: string): Promise<void> 
       const content = data[route].data[heading] || "";
       const paragraphs = content.split("\n").filter(Boolean);
 
-      sectionIndex.add({
+      sectionIndex.add(url, {
         id: url,
         url,
         title,
@@ -120,7 +119,7 @@ const loadIndexesImpl = async (basePath: string, locale: string): Promise<void> 
       });
 
       for (let i = 0; i < paragraphs.length; i++) {
-        sectionIndex.add({
+        sectionIndex.add(`${url}_${i}`, {
           id: `${url}_${i}`,
           url,
           title,
@@ -133,7 +132,7 @@ const loadIndexesImpl = async (basePath: string, locale: string): Promise<void> 
       pageContent += ` ${title} ${content}`;
     }
 
-    pageIndex.add({
+    pageIndex.add(pageId, {
       id: pageId,
       title: data[route].title,
       content: pageContent,
@@ -196,8 +195,8 @@ export function Flexsearch({ className }: { className?: string }): ReactElement 
           prefix: isFirstItemOfPage && (
             <div
               className={cn(
-                "nx-mx-2.5 nx-mb-2 nx-mt-6 nx-select-none nx-border-b nx-border-black/10 nx-px-2.5 nx-pb-1.5 nx-text-xs nx-font-semibold nx-uppercase nx-text-gray-500 first:nx-mt-0 dark:nx-border-white/20 dark:nx-text-gray-300",
-                "contrast-more:nx-border-gray-600 contrast-more:nx-text-gray-900 contrast-more:dark:nx-border-gray-50 contrast-more:dark:nx-text-gray-50"
+                "mx-2.5 mb-2 mt-6 select-none border-b border-black/10 px-2.5 pb-1.5 text-xs font-semibold uppercase text-gray-500 first:mt-0 dark:border-white/20 dark:text-gray-300",
+                "contrast-more:border-gray-600 contrast-more:text-gray-900 contrast-more:dark:border-gray-50 contrast-more:dark:text-gray-50"
               )}
             >
               {result.doc.title}
@@ -205,11 +204,11 @@ export function Flexsearch({ className }: { className?: string }): ReactElement 
           ),
           children: (
             <>
-              <div className="nx-text-base nx-font-semibold nx-leading-5">
+              <div className="text-base font-semibold leading-5">
                 <HighlightMatches match={search} value={title} />
               </div>
               {content && (
-                <div className="excerpt nx-mt-1 nx-text-sm nx-leading-[1.35rem] nx-text-gray-600 dark:nx-text-gray-400 contrast-more:dark:nx-text-gray-50">
+                <div className="excerpt mt-1 text-sm leading-[1.35rem] text-gray-600 dark:text-gray-400 contrast-more:dark:text-gray-50">
                   <HighlightMatches match={search} value={content} />
                 </div>
               )}
@@ -281,7 +280,7 @@ export function Flexsearch({ className }: { className?: string }): ReactElement 
       onChange={handleChange}
       onActive={preload}
       className={className}
-      overlayClassName="nx-w-screen nx-min-h-[100px] nx-max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+      overlayClassName="w-screen min-h-[100px] max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
       results={results}
     />
   );
