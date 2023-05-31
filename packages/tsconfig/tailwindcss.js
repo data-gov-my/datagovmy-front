@@ -11,6 +11,7 @@ module.exports = {
     "./hooks/**/*.{js,ts,jsx,tsx}",
     "./dashboards/**/*.{js,ts,jsx,tsx}",
     "./data-catalogue/**/*.{js,ts,jsx,tsx}",
+    "./misc/**/*.{js,ts,jsx,tsx}",
     "./lib/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {

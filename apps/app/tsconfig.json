@@ -9,6 +9,7 @@
       "@hooks/*": ["hooks/*"],
       "@dashboards/*": ["dashboards/*"],
       "@data-catalogue/*": ["data-catalogue/*"],
+      "@misc/*": ["misc/*"],
       "@config/*": ["config/*"]
     }
   },
