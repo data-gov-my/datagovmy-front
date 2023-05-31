@@ -118,12 +118,9 @@ const Dropdown = <L extends string | number | ReactElement | ReactElement[] = st
               "dark:border-washed-dark relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:bg-black lg:items-center",
               className,
               width,
-              darkMode
-                ? "border-outline/10 active:bg-washed/10 bg-black"
-                : "border-outline active:bg-washed bg-white",
               disabled
-                ? "bg-outline text-dim pointer-events-none"
-                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+                ? "bg-outline text-dim pointer-events-none cursor-not-allowed"
+                : "border-outline hover:border-outlineHover active:bg-washed dark:active:bg-washed-dark/10 focus:outline-none focus-visible:ring-0"
             )}
           >
             <>
