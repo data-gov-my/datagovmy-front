@@ -11,7 +11,7 @@ type AccordionProps = {
 };
 
 const Accordion: FunctionComponent<AccordionProps> = ({
-  className = "p-4 border border-outline dark:border-washed-dark shadow",
+  className,
   width = "w-full",
   icon,
   title,
@@ -25,7 +25,8 @@ const Accordion: FunctionComponent<AccordionProps> = ({
             <div
               className={clx(
                 open ? "rounded-none" : "rounded-b-xl",
-                "hover:border-outlineHover dark:hover:border-outlineHover-dark hover:bg-washed dark:hover:bg-washed-dark cursor-pointer rounded-t-xl",
+                "hover:bg-washed dark:hover:bg-washed-dark cursor-pointer rounded-t-xl p-4 shadow",
+                "border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark border",
                 width,
                 className
               )}
@@ -48,9 +49,8 @@ const Accordion: FunctionComponent<AccordionProps> = ({
             <Disclosure.Panel>
               <div
                 className={clx(
-                  "text-dim rounded-b-xl border border-t-0 font-normal",
-                  width,
-                  className
+                  "text-dim border-outline dark:border-washed-dark rounded-b-xl border border-t-0 p-4 font-normal shadow",
+                  width
                 )}
               >
                 {children}
