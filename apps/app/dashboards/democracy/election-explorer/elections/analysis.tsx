@@ -54,16 +54,14 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = () => {
       <div className="pb-8 lg:grid lg:grid-cols-12 lg:pb-12">
         <div className="lg:col-span-10 lg:col-start-2">
           <h4 className="py-4 text-center">{t("election.section_3")}</h4>
-          <div className="flex flex-row justify-between gap-4 pb-6 sm:flex-row">
-            <div className="flex flex-row items-baseline gap-2 lg:gap-4">
-              <Dropdown
-                anchor="left"
-                width="w-fit"
-                options={FILTER_OPTIONS}
-                selected={FILTER_OPTIONS.find(e => e.value === data.analysis_type.value)}
-                onChange={e => setData("analysis_type", e)}
-              />
-            </div>
+          <div className="flex flex-row flex-wrap justify-between gap-4 pb-6">
+            <Dropdown
+              anchor="left"
+              width="w-fit"
+              options={FILTER_OPTIONS}
+              selected={FILTER_OPTIONS.find(e => e.value === data.analysis_type.value)}
+              onChange={e => setData("analysis_type", e)}
+            />
             <List
               options={[t("election.map"), t("election.table")]}
               icons={[

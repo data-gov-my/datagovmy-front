@@ -20,6 +20,7 @@
     "@radix-ui/react-slider": "^1.1.1",
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.8.5",
+    "@types/react-window": "^1.8.5",
     "axios": "^0.27.2",
     "chart.js": "^3.9.1",
     "chartjs-adapter-luxon": "^1.2.0",
@@ -49,6 +50,7 @@
     "react-i18next": "^12.2.0",
     "react-leaflet": "^4.1.0",
     "react-slick": "^0.29.0",
+    "react-window": "^1.8.9",
     "sharp": "^0.31.0",
     "sonner": "^0.4.0"
   },
@@ -68,6 +70,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@types/react-slick": "^0.23.10",
+    "@types/react-window": "^1.8.5",
     "autoprefixer": "^10.4.7",
     "cookie": "^0.5.0",
     "eslint": "^8.40.0",

@@ -21,15 +21,15 @@
   }
 
   h3 {
-    @apply font-header text-2xl font-bold leading-[32px] dark:text-white;
+    @apply font-header text-2xl font-bold dark:text-white;
   }
 
   h4 {
-    @apply font-header text-xl font-bold leading-[28px] dark:text-white;
+    @apply font-header text-xl font-bold dark:text-white;
   }
 
   h5 {
-    @apply text-base font-bold tracking-normal dark:text-white lg:text-lg;
+    @apply text-lg font-bold dark:text-white;
   }
 
   h6 {

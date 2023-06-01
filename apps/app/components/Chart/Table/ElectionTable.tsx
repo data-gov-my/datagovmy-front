@@ -9,6 +9,7 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack
 import { Tooltip } from "@components/index";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import { ResultBadge } from "@components/Badge/election";
+import { ElectionResult } from "@dashboards/democracy/election-explorer/types";
 
 export interface ElectionTableProps {
   className?: string;
@@ -17,7 +18,7 @@ export interface ElectionTableProps {
   data?: any;
   columns: Array<ColumnDef<any, any>>;
   highlightedRow?: false | number;
-  win?: string;
+  result?: ElectionResult;
   isLoading: boolean;
 }
 
@@ -39,7 +40,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   data = dummyData,
   columns,
   highlightedRow = false,
-  win = "null",
+  result,
   isLoading = false,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
@@ -55,6 +56,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
    * keys: party | election_name | seats | result | votes | majority
    */
   const lookupDesktop = (id: ElectionTableIds, cell: any) => {
+    const value = cell.getValue();
     switch (id) {
       case "election_name":
         return (
@@ -65,11 +67,11 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           >
             {open => (
               <div
-                className="whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
+                className="cursor-help whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
                 tabIndex={0}
                 onClick={open}
               >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                {t(value)}
               </div>
             )}
           </Tooltip>
@@ -78,19 +80,19 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         return (
           <>
             <ImageWithFallback
-              className="border-outline dark:border-washed-dark aspect-4/3 absolute items-center self-center rounded border object-contain"
-              src={`/static/images/parties/${cell.getValue()}.png`}
+              className="border-outline dark:border-outlineHover-dark aspect-4/3 absolute rounded border object-contain"
+              src={`/static/images/parties/${value}.png`}
               width={32}
               height={32}
-              alt={t(`${cell.getValue()}`)}
+              alt={t(value)}
             />
             <span className="relative pl-10">
               {!table
                 .getAllColumns()
                 .map(col => col.id)
                 .includes("full_result")
-                ? t(cell.getValue())
-                : cell.getValue()}
+                ? t(value)
+                : value}
             </span>
           </>
         );
@@ -98,37 +100,26 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         return (
           <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
             <div>
-              <BarPerc hidden value={cell.getValue()?.perc} />
+              <BarPerc hidden value={value.perc} />
             </div>
-            <p className="whitespace-nowrap">{`${
-              cell.getValue().won === 0 ? "0" : cell.getValue().won + "/" + cell.getValue().total
-            } ${
-              cell.getValue().perc === 0
-                ? "(—)"
-                : `(${numFormat(cell.getValue().perc, "compact", [1, 1])}%)`
+            <p className="whitespace-nowrap">{`${value.won} / ${value.total} ${
+              value.perc !== null ? ` (${numFormat(value.perc, "compact", [1, 1])}%)` : " (—)"
             }`}</p>
           </div>
         );
       case "result":
-        return <ResultBadge value={cell.getValue()} />;
+        return <ResultBadge value={value} />;
 
       case "votes":
       case "majority":
         return (
-          <div
-            className={clx(
-              "z-0 flex gap-2",
-              cell.getValue().abs === 0 ? "flex-row items-center" : "md:flex-col lg:flex-row"
-            )}
-          >
+          <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
             <div className="lg:self-center">
-              <BarPerc hidden value={cell.getValue()?.perc} />
+              <BarPerc hidden value={value.perc} />
             </div>
             <span className="whitespace-nowrap">
-              {cell.getValue().abs === 0 ? `—` : numFormat(cell.getValue().abs, "standard")}
-              {cell.getValue().perc === null
-                ? ` (—)`
-                : ` (${numFormat(cell.getValue().perc, "compact", [1, 1])}%)`}
+              {value.abs !== null ? numFormat(value.abs, "standard") : `—`}
+              {value.perc !== null ? ` (${numFormat(value.perc, "compact", [1, 1])}%)` : " (—)"}
             </span>
           </div>
         );
@@ -145,25 +136,23 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         return (
           <div className="flex flex-row items-center gap-1.5">
             <ImageWithFallback
-              className="border-outline dark:border-washed-dark aspect-4/3 items-center self-center rounded border"
-              src={`/static/images/parties/${cell.getValue()}.png`}
+              className="border-outline dark:border-outlineHover-dark aspect-4/3 absolute rounded border object-contain"
+              src={`/static/images/parties/${value}.png`}
               width={32}
               height={18}
-              alt={t(cell.getValue())}
+              alt={t(value)}
             />
             {cell.row.original.name ? (
-              <span>{`${cell.row.original.name} (${cell.getValue()})`}</span>
+              <span className="relative pl-10">{`${cell.row.original.name} (${value})`}</span>
             ) : (
-              <span>{t(cell.getValue())}</span>
+              <span className="relative pl-10">{t(value)}</span>
             )}
           </div>
         );
       case "election_name":
         return (
           <div className="flex gap-3 text-sm">
-            <p className="font-medium">
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </p>
+            <p className="font-medium">{t(value)}</p>
             {cell.row.original.date && (
               <p className="text-dim">
                 {toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)}
@@ -180,10 +169,10 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             <div className="flex items-center gap-2">
               <BarPerc hidden value={value?.perc} />
               <p>
-                {value?.won > 0
-                  ? `${numFormat(value?.won, "standard")}/${numFormat(value?.total, "standard")}`
-                  : "—"}
-                {value?.perc !== null ? ` (${numFormat(value?.perc, "compact", [1, 1])}%)` : " (—)"}
+                {`${value?.won} / ${value?.total}
+                 (${
+                   value?.perc !== null ? `${numFormat(value?.perc, "compact", [1, 1])}%` : "(—)"
+                 })`}
               </p>
             </div>
           </div>
@@ -195,9 +184,9 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
               {flexRender(cell.column.columnDef.header, cell.getContext())}
             </p>
             <div className="flex items-center gap-2">
-              <BarPerc hidden value={value?.perc} />
-              <p>{`${value?.abs > 0 ? numFormat(value?.abs, "standard") : "—"} (${
-                value?.perc !== null ? `${numFormat(value?.perc, "compact", [1, 1])}%` : "—"
+              <BarPerc hidden value={value.perc} />
+              <p>{`${value.abs !== null ? numFormat(value.abs, "standard") : "—"} (${
+                value.perc !== null ? `${numFormat(value.perc, "compact", [1, 1])}%` : "—"
               })`}</p>
             </div>
           </div>
@@ -209,9 +198,9 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
               {flexRender(cell.column.columnDef.header, cell.getContext())}
             </p>
             <div className="flex items-center gap-2">
-              <BarPerc hidden value={value?.perc} />
-              <p>{`${value?.abs > 0 ? numFormat(value?.abs, "standard") : "—"} (${
-                value?.perc !== null ? `${numFormat(value?.perc, "compact", [1, 1])}%` : "—"
+              <BarPerc hidden value={value.perc} />
+              <p>{`${value.abs !== null ? numFormat(value.abs, "standard") : "—"} (${
+                value.perc !== null ? `${numFormat(value.perc, "compact", [1, 1])}%` : "—"
               })`}</p>
             </div>
           </div>
@@ -222,7 +211,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             <p className="text-dim font-medium">
               {flexRender(cell.column.columnDef.header, cell.getContext())}
             </p>
-            <ResultBadge value={cell.getValue()} />
+            <ResultBadge value={value} />
           </div>
         );
 
@@ -288,6 +277,9 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                     >
                       <div className="flex flex-row gap-2">
                         {lookupDesktop(cell.column.columnDef.id, cell)}
+                        {rowIndex === highlightedRow && colIndex === 0 && (
+                          <ResultBadge hidden value={result} />
+                        )}
                       </div>
                     </td>
                   ))}
@@ -310,7 +302,8 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             <div
               className={clx(
                 "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b p-3 text-sm first:border-t-2 md:hidden",
-                index === 0 && "border-t-2"
+                index === 0 && "border-t-2",
+                index === highlightedRow ? "bg-background dark:bg-background-dark" : "bg-inherit"
               )}
               key={index}
             >
@@ -353,10 +346,8 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           );
         })}
         {isLoading && (
-          <div className="flex h-20 w-full">
-            <div className="mx-auto self-center">
-              <Spinner loading={isLoading} />
-            </div>
+          <div className="flex h-20 w-full items-center justify-center">
+            <Spinner loading={isLoading} />
           </div>
         )}
         {!data.length && !isLoading && (

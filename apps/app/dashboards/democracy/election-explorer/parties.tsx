@@ -16,6 +16,7 @@ import { FunctionComponent } from "react";
 import type { ElectionResource, Party, PartyResult } from "./types";
 import ElectionLayout from "./layout";
 import { toast } from "@components/Toast";
+import { toDate } from "@lib/helpers";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -42,7 +43,6 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     tab_index: 0, // parlimen = 0; dun = 1
     party: params.party_name,
     state: params.state,
-
     loading: false,
   });
 
@@ -93,11 +93,14 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
             ])}
             title={
               <div className="flex flex-row gap-2 uppercase">
-                <h5>{item.election_name}</h5>
+                <h5>{t(item.election_name)}</h5>
+                <h5 className="text-dim font-normal">
+                  {toDate(item.date, "dd MMM yyyy", i18n.language)}
+                </h5>
               </div>
             }
             options={selection}
-            // highlightedRow={data.full_results.findIndex((r: Result) => r.name === data.candidate)}
+            highlighted={params.party_name}
             page={row.index}
           />
         );
@@ -111,7 +114,10 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
   }));
 
   const navigateToParty = (name?: string, state?: string) => {
-    if (!name) return;
+    if (!name) {
+      setData("party", null);
+      return;
+    }
     setData("loading", true);
     setData("party", name);
 
@@ -135,9 +141,13 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     })
       .then(({ data }: { data: PartyResult }) => {
         return {
-          data: data.sort(
-            (a: PartyResult[number], b: PartyResult[number]) => b.votes.abs - a.votes.abs
-          ),
+          data: data.sort((a: PartyResult[number], b: PartyResult[number]) => {
+            if (a.seats.won === b.seats.won) {
+              return b.votes.abs - a.votes.abs;
+            } else {
+              return b.seats.won - a.seats.won;
+            }
+          }),
         };
       })
       .catch(e => {
@@ -170,14 +180,15 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                   <Trans>
                     <span className="text-lg font-normal leading-9">
                       <ImageWithFallback
-                        className="border-outline dark:border-washed-dark mr-2 inline-flex items-center rounded border"
-                        src={`/static/images/parties/${data.party}.png`}
+                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block items-center rounded border"
+                        src={`/static/images/parties/${params.party_name}.png`}
                         width={32}
                         height={18}
-                        alt={t(`${data.party}`)}
+                        alt={t(`${params.party_name}`)}
+                        inline
                       />
                       {t("party.title", {
-                        party: `$t(dashboard-election-explorer:${data.party})`,
+                        party: `$t(dashboard-election-explorer:${params.party_name})`,
                       })}
                       <StateDropdown
                         currentState={data.state}
@@ -203,7 +214,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                     empty={
                       <Trans>
                         {t("party.no_data", {
-                          party: `$t(dashboard-election-explorer:${data.party})`,
+                          party: `$t(dashboard-election-explorer:${params.party_name})`,
                           context: "parliament",
                         })}
                       </Trans>
@@ -218,7 +229,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                     empty={
                       <Trans>
                         {t("party.no_data", {
-                          party: `$t(dashboard-election-explorer:${data.party})`,
+                          party: `$t(dashboard-election-explorer:${params.party_name})`,
                           state: CountryAndStates[data.state],
                           context: data.state === "mys" ? "dun_mys" : "dun",
                         })}

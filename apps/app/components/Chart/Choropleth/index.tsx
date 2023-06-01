@@ -91,7 +91,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
         callbacks: {
           label: function (item: any) {
             if (!item.raw.feature.properties[type]) return "";
-            if (!item.raw.value) return `${item.raw.feature.properties[type]}: No data`;
+            if (item.raw.value === null) return `${item.raw.feature.properties[type]}: No data`;
             return `${item.raw.feature.properties[type]}${`: ${prefix ?? ""}${numFormat(
               item.raw.value,
               "standard",
