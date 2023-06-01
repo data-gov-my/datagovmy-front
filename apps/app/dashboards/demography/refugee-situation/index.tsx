@@ -46,19 +46,17 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
   const { t, i18n } = useTranslation(["dashboard-refugee-situation", "common"]);
   const FILTER_OPTIONS: Array<OptionType> = ["absolute", "per_capita", "perc"].map(
     (key: string) => ({
-      label: t(`${key}`),
+      label: t(key),
       value: key,
     })
   );
   const { data, setData } = useData({
     tab_index: 0,
-    timeseries: timeseries,
-    timeseries_callout: timeseries_callout,
     minmax: [0, timeseries.data.x.length],
     filter: FILTER_OPTIONS[0].value,
     loading: false,
   });
-  const { coordinate } = useSlice(data.timeseries.data, data.minmax);
+  const { coordinate } = useSlice(timeseries.data, data.minmax);
   const METRICS = ["arrivals", "registrations", "resettlements"];
   const barmeter_data = Object.entries(barmeter.data.bar);
   [barmeter_data[0], barmeter_data[1]] = [barmeter_data[1], barmeter_data[0]];
@@ -135,7 +133,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
                       title={t(key)}
                       className="h-[300px] w-full"
                       enableAnimation={!play}
-                      interval={"year"}
+                      interval="year"
                       data={{
                         labels: coordinate.x,
                         datasets: [
