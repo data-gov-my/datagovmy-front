@@ -176,13 +176,9 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   disabled={!data.service}
                   onChange={selected => {
                     setData("origin", selected);
-                    validate({
-                      service: data.service.value,
-                      origin: selected.value,
-                      destination: data.destination ? data.destination.value : undefined,
-                    }).then((resp: any) => fetchData(resp.service, resp.origin, resp.destination));
+                    setData("destination", null);
                   }}
-                  enableSearch
+                  enableSearch={filterOrigins.length > 15 ? true : false}
                 />
                 <Dropdown
                   placeholder={t("select_destination")}
@@ -195,11 +191,11 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                     setData("destination", selected);
                     validate({
                       service: data.service.value,
-                      origin: data.origin ? data.origin.value : undefined,
+                      origin: data.origin.value,
                       destination: selected.value,
                     }).then((resp: any) => fetchData(resp.service, resp.origin, resp.destination));
                   }}
-                  enableSearch
+                  enableSearch={filterDestinations.length > 15 ? true : false}
                 />
               </div>
             </div>
