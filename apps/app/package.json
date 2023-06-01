@@ -83,7 +83,6 @@
     "prettier-plugin-tailwindcss": "^0.1.11",
     "tailwindcss": "*",
     "tsconfig": "*",
-    "typescript": "^4.9.3",
-    "webpack": "^5.75.0"
+    "typescript": "^4.9.3"
   }
 }

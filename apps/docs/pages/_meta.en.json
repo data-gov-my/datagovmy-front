@@ -1,0 +1,14 @@
+{
+  "index": "Introduction",
+  "overview": "Overview",
+  "static-api": "Static APIs",
+  "realtime-api": "Real-time APIs",
+  "resources": {
+    "title": "Resources",
+    "type": "page"
+  },
+  "contact": {
+    "title": "Contact us",
+    "type": "page"
+  }
+}

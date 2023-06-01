@@ -1,0 +1,83 @@
+{
+  "name": "datagovmy-nextra",
+  "version": "0.0.1",
+  "description": "A Nextra theme for data.gov.my Docs",
+  "author": "irfanismail",
+  "license": "MIT",
+  "exports": {
+    "./style.css": "./dist/style.css",
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:all": "yarn build && yarn build:tailwind",
+    "build:tailwind": "yarn postcss css/styles.css -o dist/style.css --verbose",
+    "clean": "rimraf ./dist ./style.css",
+    "dev": "concurrently \"yarn dev:layout\" \"yarn dev:tailwind\"",
+    "dev:layout": "tsup --watch",
+    "dev:tailwind": "TAILWIND_MODE=watch yarn postcss css/styles.css -o dist/style.css --watch",
+    "prepublishOnly": "yarn build:all",
+    "test": "vitest --run",
+    "types": "tsup --dts-only",
+    "types:check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "next": ">=13.4.2",
+    "nextra": "workspace:*",
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.10",
+    "@popperjs/core": "^2.11.6",
+    "clsx": "^1.2.1",
+    "flexsearch": "0.7.0",
+    "focus-visible": "^5.2.0",
+    "git-url-parse": "^13.1.0",
+    "intersection-observer": "^0.12.2",
+    "match-sorter": "^6.3.1",
+    "next-seo": "^6.0.0",
+    "next-themes": "^0.2.1",
+    "scroll-into-view-if-needed": "^3.0.0",
+    "zod": "^3.20.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
+    "@testing-library/react": "^14.0.0",
+    "@types/flexsearch": "^0.7.3",
+    "@types/git-url-parse": "^9.0.1",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^3.0.1",
+    "concurrently": "^7.4.0",
+    "jsdom": "^22.0.0",
+    "next": "^13.3.1",
+    "nextra": "workspace:*",
+    "postcss": "^8.4.21",
+    "postcss-cli": "^10.1.0",
+    "postcss-import": "^15.1.0",
+    "postcss-lightningcss": "^0.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.1",
+    "tsup": "^6.7.0",
+    "vitest": "^0.31.0"
+  },
+  "sideEffects": [
+    "./src/polyfill.ts"
+  ]
+}

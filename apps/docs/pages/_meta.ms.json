@@ -1,0 +1,14 @@
+{
+  "index": "Pengenalan",
+  "overview": "Ikhtisar",
+  "static-api": "API Statik",
+  "realtime-api": "API 'Realtime'",
+  "resources": {
+    "title": "Sumber",
+    "type": "page"
+  },
+  "contact": {
+    "title": "Hubungi kami",
+    "type": "page"
+  }
+}
