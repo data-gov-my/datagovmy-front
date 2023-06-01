@@ -70,7 +70,11 @@ export const getStaticProps: GetStaticProps = withi18n(
           params: { election, state: state ?? "mys" },
           seats: seats.data,
           table: table.data.sort((a: Party, b: Party) => {
-            return b.seats.won - a.seats.won;
+            if (a.seats.won === b.seats.won) {
+              return b.votes.perc - a.votes.perc;
+            } else {
+              return b.seats.won - a.seats.won;
+            }
           }),
         },
       };

@@ -57,17 +57,18 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
       />
 
       {/* Navigations */}
-      <div className="flex flex-row overflow-x-auto border-b md:justify-center">
+      <div className="border-outline dark:border-b-washed-dark flex flex-row overflow-x-auto border-b md:justify-center">
         {election_navs.map(nav => (
           <At
             className={clx(
-              "flex flex-row items-center gap-1 px-4 py-4 text-sm font-medium transition hover:cursor-pointer lg:text-base",
+              "flex flex-row items-center gap-1 px-4 py-4 text-sm font-medium transition lg:text-base",
               pathname.startsWith(nav.url)
-                ? "border-primary dark:border-primary-dark border-b-2 text-black"
+                ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
                 : "text-dim"
             )}
             key={nav.url}
             href={nav.url}
+            scrollTop={false}
           >
             {nav.icon}
             {nav.name}

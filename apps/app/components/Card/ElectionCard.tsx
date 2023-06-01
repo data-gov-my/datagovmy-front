@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
-import { clx, toDate } from "@lib/helpers";
+import { clx, numFormat, toDate } from "@lib/helpers";
 import { useData } from "@hooks/useData";
 import type {
   BaseResult,
@@ -25,7 +25,8 @@ type Result<T> = {
   data: T;
   votes?: Array<{
     x: string;
-    y: number;
+    abs: number;
+    perc: number;
   }>;
 } | void;
 
@@ -35,7 +36,8 @@ interface ElectionCardProps<T extends Candidate | Party | Seat> {
   options: Array<T>;
   columns?: any;
   title?: string | ReactElement;
-  highlightedRow?: false | number;
+  subtitle?: boolean;
+  highlighted?: string;
   page: number;
 }
 
@@ -45,13 +47,15 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
   options,
   columns,
   title,
-  highlightedRow,
+  subtitle = false,
+  highlighted,
   page,
 }: ElectionCardProps<T>) => {
   const [show, setShow] = useState<boolean>(false);
   const { data, setData } = useData({
     index: page,
     result: [],
+
     loading: false,
   });
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
@@ -115,7 +119,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                   >
                     {title && typeof title === "string" ? <h5>{title}</h5> : title}
                     <button
-                      className="hover:bg-washed dark:hover:bg-washed-dark top-6.5 group absolute right-6 h-8 w-8 rounded-full"
+                      className="hover:bg-washed dark:hover:bg-washed-dark md:top-6.5 group absolute right-3 top-5 h-8 w-8 rounded-full md:right-6"
                       onClick={() => setShow(false)}
                     >
                       <XMarkIcon className="text-dim mx-auto h-6 w-6" />
@@ -124,32 +128,61 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
 
                   <div className="space-y-6 text-base">
                     <div className="space-x-3 pt-2">
-                      <span className="text-dim">
-                        {toDate(options[data.index]?.date, "dd MMM yyyy", i18n.language)}
-                      </span>
-
-                      <span className="uppercase">{options[data.index]?.election_name}</span>
+                      {subtitle && (
+                        <>
+                          <span className="uppercase">{t(options[data.index]?.election_name)}</span>
+                          <span className="text-dim">
+                            {toDate(options[data.index]?.date, "dd MMM yyyy", i18n.language)}
+                          </span>
+                        </>
+                      )}
                     </div>
-                    <ElectionTable
-                      className="max-h-96 w-full overflow-y-auto"
-                      data={data.result.data}
-                      columns={columns}
-                      isLoading={data.loading}
-                      highlightedRow={highlightedRow}
-                      win={"result" in defaultParams ? defaultParams.result : undefined}
-                    />
+
+                    <div className="space-y-3">
+                      <div className="font-bold">{t("election.election_result")}</div>
+                      <ElectionTable
+                        className="max-h-96 w-full overflow-y-auto"
+                        data={data.result.data}
+                        columns={columns}
+                        isLoading={data.loading}
+                        highlightedRow={
+                          data.result.data && highlighted
+                            ? "name" in data.result.data[0]
+                              ? data.result.data.findIndex(
+                                  (e: BaseResult) => e.name === highlighted
+                                )
+                              : "party" in data.result.data[0] &&
+                                data.result.data.findIndex(
+                                  (e: BaseResult) => e.party === highlighted
+                                )
+                            : 0
+                        }
+                        result={"result" in defaultParams ? defaultParams.result : undefined}
+                      />
+                    </div>
 
                     {data.result.votes && (
-                      <div className="flex flex-row justify-center gap-6 px-0 md:gap-12 md:px-3">
-                        {data.result?.votes?.map((item: { x: string; y: number }) => (
-                          <BarPerc
-                            size="h-2.5 w-full"
-                            key={item.x}
-                            label={t(`election.${item.x}`)}
-                            value={item.y}
-                            className="w-full space-y-1 text-sm"
-                          />
-                        ))}
+                      <div className="space-y-3">
+                        <div className="font-bold">{t("election.voting_statistics")}</div>
+                        <div className="flex flex-col gap-3 text-sm md:flex-row md:flex-wrap md:gap-x-6">
+                          {data.result.votes.map(
+                            (item: { x: string; abs: number; perc: number }) => (
+                              <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
+                                <p className="w-28 md:w-fit">{t(`election.${item.x}`)}:</p>
+                                <div className="flex items-center space-x-3">
+                                  <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
+                                  <p>{`${
+                                    item.abs !== null ? numFormat(item.abs, "standard") : "—"
+                                  } ${
+                                    item.perc !== null
+                                      ? `(${numFormat(item.perc, "compact", [1, 1])}%)`
+                                      : "(—)"
+                                  }`}</p>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
                       </div>
                     )}
 

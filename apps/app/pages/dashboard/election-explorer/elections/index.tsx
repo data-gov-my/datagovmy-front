@@ -5,6 +5,7 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer/elections";
 import { withi18n } from "@lib/decorators";
+import { Party } from "@dashboards/democracy/election-explorer/types";
 
 const ElectionExplorerIndex: Page = ({
   seats,
@@ -52,7 +53,13 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         },
         params: { election, state },
         seats: seats.data,
-        table: table.data,
+        table: table.data.sort((a: Party, b: Party) => {
+          if (a.seats.won === b.seats.won) {
+            return b.votes.perc - a.votes.perc;
+          } else {
+            return b.seats.won - a.seats.won;
+          }
+        }),
       },
     };
   } catch (error: any) {
