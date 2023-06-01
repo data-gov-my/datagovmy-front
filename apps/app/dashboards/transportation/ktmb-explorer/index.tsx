@@ -21,23 +21,23 @@ import { FunctionComponent, useMemo } from "react";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface KTMBExplorerProps {
-  dropdown: any;
-  last_updated: any;
   A_to_B: any;
   A_to_B_callout: any;
-  params: any;
   B_to_A: any;
   B_to_A_callout: any;
+  dropdown: any;
+  last_updated: any;
+  params: any;
 }
 
 const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
-  dropdown,
-  last_updated,
   A_to_B,
   A_to_B_callout,
-  params,
   B_to_A,
   B_to_A_callout,
+  dropdown,
+  last_updated,
+  params,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-ktmb-explorer", "common"]);
   const { push } = useRouter();
@@ -45,9 +45,9 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
     tab_index: 0,
     period: "day",
     minmax: [0, A_to_B.day.x.length - 1],
-    service: null,
-    origin: null,
-    destination: null,
+    service: params.service,
+    origin: params.origin,
+    destination: params.destination,
     loading: false,
   });
   const period: { [key: number]: "day" | "month" | "year" } = {
@@ -58,29 +58,29 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const { coordinate: A_to_B_coords } = useSlice(A_to_B[data.period], data.minmax);
   const { coordinate: B_to_A_coords } = useSlice(B_to_A[data.period], data.minmax);
 
-  const filterServices = useMemo<Array<OptionType>>(() => {
-    const _services = Object.keys(dropdown).map(service => {
-      return { label: service, value: service };
-    });
+  const SERVICE_OPTIONS = useMemo<Array<OptionType>>(() => {
+    const _services = Object.keys(dropdown).map(service => ({ label: service, value: service }));
     return _services;
   }, []);
 
-  const filterOrigins = useMemo<Array<OptionType>>(() => {
+  const ORIGIN_OPTIONS = useMemo<Array<OptionType>>(() => {
     let _origins: Array<OptionType> = [];
     if (data.service) {
-      _origins = Object.keys(dropdown[data.service.value]).map(origin => {
-        return { label: origin, value: origin };
-      });
+      _origins = Object.keys(dropdown[data.service]).map(origin => ({
+        label: origin,
+        value: origin,
+      }));
     }
     return _origins;
   }, [data.service]);
 
-  const filterDestinations = useMemo<Array<OptionType>>(() => {
+  const DESTINATION_OPTIONS = useMemo<Array<OptionType>>(() => {
     let _destinations: Array<OptionType> = [];
     if (data.service && data.origin) {
-      _destinations = dropdown[data.service.value][data.origin.value].map((destination: string) => {
-        return { label: destination, value: destination };
-      });
+      _destinations = dropdown[data.service][data.origin].map((destination: string) => ({
+        label: destination,
+        value: destination,
+      }));
     }
     return _destinations;
   }, [data.origin]);
@@ -120,15 +120,15 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
           title={t("title")}
           date={A_to_B.data_as_of}
           description={
-            <div className="flex flex-col gap-2 lg:flex-row">
+            <div className="flex flex-col gap-2 md:flex-row">
               <Dropdown
                 placeholder={t("service")}
                 anchor="left"
                 width="w-full"
-                options={filterServices}
-                selected={data.service}
+                options={SERVICE_OPTIONS}
+                selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
                 onChange={selected => {
-                  setData("service", selected);
+                  setData("service", selected.value);
                   setData("origin", null);
                   setData("destination", null);
                 }}
@@ -138,27 +138,27 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   placeholder={t("select_origin")}
                   anchor="left"
                   width="w-full"
-                  options={filterOrigins}
-                  selected={data.origin}
+                  options={ORIGIN_OPTIONS}
+                  selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
                   disabled={!data.service}
                   onChange={selected => {
-                    setData("origin", selected);
+                    setData("origin", selected.value);
                     setData("destination", null);
                   }}
-                  enableSearch={filterOrigins.length > 15 ? true : false}
+                  enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
                 />
                 <Dropdown
                   placeholder={t("select_destination")}
                   anchor="left"
                   width="w-full"
-                  options={filterDestinations}
-                  selected={data.destination}
+                  options={DESTINATION_OPTIONS}
+                  selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
                   disabled={!data.service || !data.origin}
                   onChange={selected => {
-                    setData("destination", selected);
-                    navigateToService(data.service.value, data.origin.value, selected.value);
+                    setData("destination", selected.value);
+                    navigateToService(data.service, data.origin, selected.value);
                   }}
-                  enableSearch={filterDestinations.length > 15 ? true : false}
+                  enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
                 />
               </div>
             </div>
@@ -187,8 +187,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                       <Timeseries
                         className="h-[300px] w-full"
                         title={t(`ridership_${data.period}`, {
-                          from: params.origin,
-                          to: params.destination,
+                          from: params.origin ?? "JB SENTRAL",
+                          to: params.destination ?? "WOODLANDS CIQ",
                         })}
                         enableAnimation={!play}
                         interval={data.period}
@@ -225,8 +225,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                       <Timeseries
                         className="h-[300px] w-full"
                         title={t(`ridership_${data.period}`, {
-                          from: params.destination,
-                          to: params.origin,
+                          from: params.destination ?? "WOODLANDS CIQ",
+                          to: params.origin ?? "JB SENTRAL",
                         })}
                         enableAnimation={!play}
                         interval={data.period}

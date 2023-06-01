@@ -8,13 +8,13 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 
 const KTMBExplorer: Page = ({
-  dropdown,
-  last_updated,
   A_to_B,
   A_to_B_callout,
-  params,
   B_to_A,
   B_to_A_callout,
+  dropdown,
+  last_updated,
+  params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-ktmb-explorer", "common"]);
 
@@ -22,13 +22,13 @@ const KTMBExplorer: Page = ({
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <KTMBExplorerDashboard
-        dropdown={dropdown}
-        last_updated={last_updated}
         A_to_B={A_to_B}
         A_to_B_callout={A_to_B_callout}
-        params={params}
         B_to_A={B_to_A}
         B_to_A_callout={B_to_A_callout}
+        dropdown={dropdown}
+        last_updated={last_updated}
+        params={params}
       />
     </>
   );
@@ -65,13 +65,13 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer"
           category: "transportation",
           agency: "MoT",
         },
-        dropdown: dropdown.data.data,
-        last_updated: Date.now(),
         A_to_B: A_to_B.data.timeseries.data,
         A_to_B_callout: A_to_B.data.timeseries_callout.data,
-        params: { service: service, origin: origin, destination: destination },
         B_to_A: B_to_A.data.timeseries.data,
         B_to_A_callout: B_to_A.data.timeseries_callout.data,
+        dropdown: dropdown.data.data,
+        last_updated: Date.now(),
+        params: {},
       },
     };
   } catch (e: any) {
