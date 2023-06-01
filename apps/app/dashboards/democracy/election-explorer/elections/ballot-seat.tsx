@@ -2,20 +2,17 @@ import Card from "@components/Card";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
 import ImageWithFallback from "@components/ImageWithFallback";
 import LeftRightCard from "@components/LeftRightCard";
-import Section from "@components/Section";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { numFormat, toDate } from "@lib/helpers";
 import { FunctionComponent, useEffect, useMemo } from "react";
 import type { BaseResult, Seat, SeatResult } from "../types";
-
 import { Won } from "@components/Badge/election";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ComboBox from "@components/Combobox";
 import { SPRIconSolid } from "@components/Icon/agency";
 import { generateSchema } from "@lib/schema/election-explorer";
-import Tooltip from "@components/Tooltip";
 import { toast } from "@components/Toast";
 
 /**
@@ -46,7 +43,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
     get("/explorer", {
       explorer: "ELECTIONS",
       chart: "full_result",
-      type: "seats",
+      type: "candidates",
       election: election,
       seat: seat,
     })
@@ -56,11 +53,13 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
           votes: [
             {
               x: "voter_turnout",
-              y: data.votes.voter_turnout_perc,
+              abs: data.votes.voter_turnout,
+              perc: data.votes.voter_turnout_perc,
             },
             {
               x: "rejected_votes",
-              y: data.votes.votes_rejected_perc,
+              abs: data.votes.votes_rejected,
+              perc: data.votes.votes_rejected_perc,
             },
           ],
         });
@@ -107,7 +106,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
   }, [data.seat, seats]);
 
   return (
-    <Section>
+    <>
       <div className="lg:grid lg:grid-cols-12">
         <div className="space-y-12 lg:col-span-10 lg:col-start-2">
           <div className="space-y-6">
@@ -115,20 +114,28 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
             <LeftRightCard
               left={
-                <div className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden rounded-t-xl px-3 pb-3 md:h-[600px] md:overflow-y-auto lg:rounded-l-xl lg:px-6 lg:pb-6">
+                <div
+                  className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden 
+                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:px-6 lg:pb-6"
+                >
                   <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
                       options={SEAT_OPTIONS}
-                      selected={data.seat}
-                      onChange={selected => setData("seat", selected)}
+                      selected={data.seat ?? null}
+                      onChange={selected => {
+                        setData("seat", selected);
+                        if (selected) fetchSeatResult(selected.value);
+                      }}
                     />
                   </div>
                   <div className="grid w-full grid-flow-col-dense grid-rows-2 flex-row gap-3 overflow-x-scroll md:flex-col md:overflow-x-clip md:pb-0 lg:flex">
                     {_seats.map((seat: Seat, index: number) => (
                       <Card
                         key={seat.seat}
-                        className="dark:border-outlineHover-dark focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black"
+                        className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark
+                         hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm
+                          dark:bg-black xl:w-full"
                         onClick={() => fetchSeatResult(seat.seat)}
                       >
                         <div className="flex flex-row justify-between">
@@ -149,7 +156,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                         </div>
                         <div className="flex flex-row gap-2">
                           <ImageWithFallback
-                            className="border-outline dark:border-washed-dark items-center self-center rounded border"
+                            className="border-outline dark:border-outlineHover-dark items-center self-center rounded border"
                             src={`/static/images/parties/${seat.party}.png`}
                             width={32}
                             height={18}
@@ -179,7 +186,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                 </div>
               }
               right={
-                <div className="h-full w-full space-y-8 rounded-b-xl bg-white p-3 dark:bg-black md:h-[600px] md:p-10 lg:rounded-r-xl">
+                <div className="h-full w-full space-y-8 overflow-y-auto rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] lg:rounded-r-xl lg:p-8">
                   {data.seat_result.data.length > 0 ? (
                     <>
                       <div className="flex items-center gap-4">
@@ -190,14 +197,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                             <p className="text-dim uppercase">{seat_info.state}</p>
                           </div>
                           <div className="flex items-center gap-3">
-                            <p>{seat_info.name}</p>
+                            <p>{t(`${seat_info.name}`)}</p>
                             <p className="text-dim">{seat_info.date}</p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <h5>{t("election.election_result")}</h5>
+                      <div className="space-y-3">
+                        <div className="font-bold">{t("election.election_result")}</div>
                         <ElectionTable
                           className="max-h-96 w-full overflow-y-auto"
                           data={data.seat_result.data}
@@ -220,27 +227,32 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                           ])}
                           isLoading={data.seat_loading}
                           highlightedRow={0}
-                          win="win"
+                          result="won"
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <h5>{t("election.voting_statistics")}</h5>
-                        <div className="item-center flex w-full flex-row gap-4 lg:gap-8">
-                          {data.seat_result.votes.map((item: { x: string; y: number }) => (
-                            <BarPerc
-                              size="h-2.5 w-full"
-                              key={item.x}
-                              label={
-                                <div className="flex items-center gap-1">
-                                  {t(`election.${item.x}`)}
-                                  <Tooltip tip={t(`tooltip.${item.x}`)} />
+                      <div className="space-y-3">
+                        <div className="font-bold">{t("election.voting_statistics")}</div>
+                        <div className="flex flex-col gap-3 text-sm md:flex-row md:gap-x-6 lg:flex-col xl:flex-row">
+                          {data.seat_result.votes.map(
+                            (item: { x: string; abs: number; perc: number }) => (
+                              <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
+                                <p className="w-28 md:w-fit lg:w-28 xl:w-fit">
+                                  {t(`election.${item.x}`)}:
+                                </p>
+                                <div className="flex items-center space-x-3">
+                                  <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
+                                  <p>{`${
+                                    item.abs !== null ? numFormat(item.abs, "standard") : "—"
+                                  } ${
+                                    item.perc !== null
+                                      ? `(${numFormat(item.perc, "compact", [1, 1])}%)`
+                                      : "(—)"
+                                  }`}</p>
                                 </div>
-                              }
-                              value={item.y}
-                              className="w-full space-y-1 text-sm"
-                            />
-                          ))}
+                              </div>
+                            )
+                          )}
                         </div>
                       </div>
                     </>
@@ -253,7 +265,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
           </div>
         </div>
       </div>
-    </Section>
+    </>
   );
 };
 

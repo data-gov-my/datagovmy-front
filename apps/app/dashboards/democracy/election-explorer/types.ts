@@ -9,10 +9,6 @@ export type Candidate = {
   party: string;
   votes: Record<"abs" | "perc", number>;
   result: ElectionResult;
-  voter_turnout: number;
-  voter_turnout_perc: number;
-  voter_rejected: number;
-  voter_rejected_perc: number;
 };
 
 export type Party = {

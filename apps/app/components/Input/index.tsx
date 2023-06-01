@@ -66,7 +66,7 @@ const Input: FunctionComponent<InputProps> = ({
         max={max}
         className={clx(
           "placeholder:text-dim focus:ring-dim rounded-md outline-none focus:outline-none dark:bg-black",
-          "focus:ring-primary dark:focus:border-ring-dark ",
+          "focus:ring-primary dark:focus:ring-primary-dark",
           icon ? "pl-10" : "",
           validation ? "border-danger border-2" : "border-outline dark:border-washed-dark",
           className
