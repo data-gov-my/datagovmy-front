@@ -10,11 +10,11 @@ import type { InferGetStaticPropsType } from "next";
 const KTMBExplorer: Page = ({
   dropdown,
   last_updated,
-  origin_timeseries,
-  origin_timeseries_callout,
+  A_to_B,
+  A_to_B_callout,
   params,
-  destination_timeseries,
-  destination_timeseries_callout,
+  B_to_A,
+  B_to_A_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-ktmb-explorer", "common"]);
 
@@ -24,31 +24,31 @@ const KTMBExplorer: Page = ({
       <KTMBExplorerDashboard
         dropdown={dropdown}
         last_updated={last_updated}
-        origin_timeseries={origin_timeseries}
-        origin_timeseries_callout={origin_timeseries_callout}
+        A_to_B={A_to_B}
+        A_to_B_callout={A_to_B_callout}
         params={params}
-        destination_timeseries={destination_timeseries}
-        destination_timeseries_callout={destination_timeseries_callout}
+        B_to_A={B_to_A}
+        B_to_A_callout={B_to_A_callout}
       />
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer", async () => {
-  const station_A = "JB SENTRAL";
-  const station_B = "WOODLANDS CIQ";
+  const origin = "JB SENTRAL";
+  const destination = "WOODLANDS CIQ";
   const { data: dropdown } = await get("/dropdown", { dashboard: "ktmb" });
-  const { data: origin } = await get("/dashboard", {
+  const { data: A_to_B } = await get("/dashboard", {
     dashboard: "ktmb",
     service: "tebrau",
-    origin: station_A,
-    destination: station_B,
+    origin,
+    destination,
   });
-  const { data: destination } = await get("/dashboard", {
+  const { data: B_to_A } = await get("/dashboard", {
     dashboard: "ktmb",
     service: "tebrau",
-    origin: station_B,
-    destination: station_A,
+    origin: destination,
+    destination: origin,
   });
 
   return {
@@ -62,11 +62,11 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer"
       },
       dropdown: dropdown.data,
       last_updated: Date.now(),
-      origin_timeseries: origin.timeseries,
-      origin_timeseries_callout: origin.timeseries_callout,
-      params: { station_A: station_A, station_B: station_B },
-      destination_timeseries: destination.timeseries,
-      destination_timeseries_callout: destination.timeseries_callout,
+      A_to_B: A_to_B.timeseries.data,
+      A_to_B_callout: A_to_B.timeseries_callout.data,
+      params: { station_A: origin, station_B: destination },
+      B_to_A: B_to_A.timeseries.data,
+      B_to_A_callout: B_to_A.timeseries_callout.data,
     },
   };
 });
