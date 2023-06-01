@@ -1,16 +1,16 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { MOTIcon } from "@components/Icon/agency";
-import { toast } from "@components/Toast";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Spinner, Tabs } from "@components/index";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
 import { AKSARA_COLOR } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
+import { routes } from "@lib/routes";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
 /**
@@ -39,8 +39,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   B_to_A,
   B_to_A_callout,
 }) => {
-  const { t } = useTranslation(["dashboard-ktmb-explorer", "common"]);
-
+  const { t, i18n } = useTranslation(["dashboard-ktmb-explorer", "common"]);
+  const { push } = useRouter();
   const { data, setData } = useData({
     tab_index: 0,
     period: "day",
@@ -48,12 +48,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
     service: null,
     origin: null,
     destination: null,
-    A_to_B: A_to_B,
-    A_to_B_callout: A_to_B_callout,
-    B_to_A: B_to_A,
-    B_to_A_callout: B_to_A_callout,
-    station_A: params.station_A,
-    station_B: params.station_B,
     loading: false,
   });
   const period: { [key: number]: "day" | "month" | "year" } = {
@@ -61,8 +55,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
     1: "month",
     2: "year",
   };
-  const { coordinate: A_to_B_coords } = useSlice(data.A_to_B[data.period], data.minmax);
-  const { coordinate: B_to_A_coords } = useSlice(data.B_to_A[data.period], data.minmax);
+  const { coordinate: A_to_B_coords } = useSlice(A_to_B[data.period], data.minmax);
+  const { coordinate: B_to_A_coords } = useSlice(B_to_A[data.period], data.minmax);
 
   const filterServices = useMemo<Array<OptionType>>(() => {
     const _services = Object.keys(dropdown).map(service => {
@@ -91,46 +85,19 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
     return _destinations;
   }, [data.origin]);
 
-  const validate = async (props: { service?: string; origin?: string; destination?: string }) =>
-    new Promise(resolve => {
-      if (props.service && props.origin && props.destination) {
-        resolve({
-          service: props.service,
-          origin: props.origin,
-          destination: props.destination,
-        });
-      }
-    });
-
-  const fetchData = async (service: string, origin: string, destination: string) => {
+  const navigateToService = (service?: string, origin?: string, destination?: string) => {
+    if (!service || !origin || !destination) return;
     setData("loading", true);
-    try {
-      const [A_to_B, B_to_A] = await Promise.all([
-        get("/dashboard", {
-          dashboard: "ktmb",
-          service,
-          origin,
-          destination,
-        }),
-        get("/dashboard", {
-          dashboard: "ktmb",
-          service,
-          origin: destination,
-          destination: origin,
-        }),
-      ]);
-      setData("A_to_B", A_to_B.data.timeseries.data);
-      setData("A_to_B_callout", A_to_B.data.timeseries_callout.data);
-      setData("B_to_A", B_to_A.data.timeseries.data);
-      setData("B_to_A_callout", B_to_A.data.timeseries_callout.data);
-      setData("station_A", origin);
-      setData("station_B", destination);
-    } catch (e) {
-      toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-      console.error(e);
-    }
-    setData("loading", false);
+    const route = `${routes.KTMB_EXPLORER}/${encodeURIComponent(service)}/${encodeURIComponent(
+      origin
+    )}/${encodeURIComponent(destination)}`;
+
+    push(route, undefined, {
+      scroll: false,
+      locale: i18n.language,
+    }).then(() => setData("loading", false));
   };
+
   return (
     <>
       <Hero
@@ -189,11 +156,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   disabled={!data.service || !data.origin}
                   onChange={selected => {
                     setData("destination", selected);
-                    validate({
-                      service: data.service.value,
-                      origin: data.origin.value,
-                      destination: selected.value,
-                    }).then((resp: any) => fetchData(resp.service, resp.origin, resp.destination));
+                    navigateToService(data.service.value, data.origin.value, selected.value);
                   }}
                   enableSearch={filterDestinations.length > 15 ? true : false}
                 />
@@ -224,8 +187,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                       <Timeseries
                         className="h-[300px] w-full"
                         title={t(`ridership_${data.period}`, {
-                          from: data.station_A,
-                          to: data.station_B,
+                          from: params.origin,
+                          to: params.destination,
                         })}
                         enableAnimation={!play}
                         interval={data.period}
@@ -247,23 +210,23 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         stats={[
                           {
                             title: t("daily"),
-                            value: `+${numFormat(data.A_to_B_callout.day.passengers, "standard")}`,
+                            value: `+${numFormat(A_to_B_callout.day.passengers, "standard")}`,
                           },
                           {
                             title: t("past_month"),
-                            value: `${numFormat(data.A_to_B_callout.month.passengers, "standard")}`,
+                            value: `${numFormat(A_to_B_callout.month.passengers, "standard")}`,
                           },
                           {
                             title: t("past_year"),
-                            value: `${numFormat(data.A_to_B_callout.year.passengers, "standard")}`,
+                            value: `${numFormat(A_to_B_callout.year.passengers, "standard")}`,
                           },
                         ]}
                       />
                       <Timeseries
                         className="h-[300px] w-full"
                         title={t(`ridership_${data.period}`, {
-                          from: data.station_B,
-                          to: data.station_A,
+                          from: params.destination,
+                          to: params.origin,
                         })}
                         enableAnimation={!play}
                         interval={data.period}
@@ -285,15 +248,15 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         stats={[
                           {
                             title: t("daily"),
-                            value: `+${numFormat(data.B_to_A_callout.day.passengers, "standard")}`,
+                            value: `+${numFormat(B_to_A_callout.day.passengers, "standard")}`,
                           },
                           {
                             title: t("past_month"),
-                            value: `${numFormat(data.B_to_A_callout.month.passengers, "standard")}`,
+                            value: `${numFormat(B_to_A_callout.month.passengers, "standard")}`,
                           },
                           {
                             title: t("past_year"),
-                            value: `${numFormat(data.B_to_A_callout.year.passengers, "standard")}`,
+                            value: `${numFormat(B_to_A_callout.year.passengers, "standard")}`,
                           },
                         ]}
                       />
@@ -302,7 +265,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                       type="range"
                       period={data.period}
                       value={data.minmax}
-                      data={data.A_to_B[data.period].x}
+                      data={A_to_B[data.period].x}
                       onChange={e => setData("minmax", e)}
                     />
                   </>

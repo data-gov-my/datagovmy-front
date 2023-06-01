@@ -25,7 +25,9 @@ export const routes = {
   INTEREST_RATES: "/dashboard/interest-rates",
   INTERNATIONAL_RESERVES: "/dashboard/international-reserves",
   INTERNET_PENETRATION: "/dashboard/internet-penetration",
+  KTMB_EXPLORER: "/dashboard/ktmb-explorer",
   MONEY_SUPPLY: "/dashboard/money-supply",
+  NAME_POPULARITY: "/dashboard/name-popularity",
   ORGAN_DONATION: "/dashboard/organ-donation",
   PEKA_B40: "/dashboard/peka-b40",
   PEOPLES_INCOME_INITIATIVE: "/dashboard/peoples-income-initiative",
@@ -33,12 +35,12 @@ export const routes = {
   PUBLIC_CONTRACTING: "/dashboard/public-contracting",
   PUBLIC_PENSION: "/dashboard/public-pension",
   PUBLIC_TRANSPORTATION: "/dashboard/public-transportation",
+  REFUGEE_SITUATION: "/dashboard/refugee-situation",
   RESERVE_MONEY: "/dashboard/reserve-money",
   RETIREMENT_READINESS: "/dashboard/retirement-readiness",
   SEKOLAHKU: "/dashboard/sekolahku",
   SOCIAL_SECURITY: "/dashboard/social-security",
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
-  NAME_POPULARITY: "/dashboard/name-popularity",
 };
 
 export const static_routes: string[] = (() => {

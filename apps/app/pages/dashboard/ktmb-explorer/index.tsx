@@ -35,40 +35,49 @@ const KTMBExplorer: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer", async () => {
-  const origin = "JB SENTRAL";
-  const destination = "WOODLANDS CIQ";
-  const { data: dropdown } = await get("/dropdown", { dashboard: "ktmb" });
-  const { data: A_to_B } = await get("/dashboard", {
-    dashboard: "ktmb",
-    service: "tebrau",
-    origin,
-    destination,
-  });
-  const { data: B_to_A } = await get("/dashboard", {
-    dashboard: "ktmb",
-    service: "tebrau",
-    origin: destination,
-    destination: origin,
-  });
+  try {
+    const [service, origin, destination] = ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
 
-  return {
-    notFound: false,
-    props: {
-      meta: {
-        id: "dashboard-ktmb-explorer",
-        type: "dashboard",
-        category: "transportation",
-        agency: "MoT",
+    const [dropdown, A_to_B, B_to_A] = await Promise.all([
+      get("/dropdown", { dashboard: "ktmb" }),
+      get("/dashboard", {
+        dashboard: "ktmb",
+        service,
+        origin,
+        destination,
+      }),
+      get("/dashboard", {
+        dashboard: "ktmb",
+        service,
+        origin: destination,
+        destination: origin,
+      }),
+    ]).catch(e => {
+      throw new Error("Invalid service. Message: " + e);
+    });
+
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-ktmb-explorer",
+          type: "dashboard",
+          category: "transportation",
+          agency: "MoT",
+        },
+        dropdown: dropdown.data.data,
+        last_updated: Date.now(),
+        A_to_B: A_to_B.data.timeseries.data,
+        A_to_B_callout: A_to_B.data.timeseries_callout.data,
+        params: { service: service, origin: origin, destination: destination },
+        B_to_A: B_to_A.data.timeseries.data,
+        B_to_A_callout: B_to_A.data.timeseries_callout.data,
       },
-      dropdown: dropdown.data,
-      last_updated: Date.now(),
-      A_to_B: A_to_B.timeseries.data,
-      A_to_B_callout: A_to_B.timeseries_callout.data,
-      params: { station_A: origin, station_B: destination },
-      B_to_A: B_to_A.timeseries.data,
-      B_to_A_callout: B_to_A.timeseries_callout.data,
-    },
-  };
+    };
+  } catch (e: any) {
+    console.error(e.message);
+    return { notFound: true };
+  }
 });
 
 export default KTMBExplorer;
