@@ -57,11 +57,11 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
   }));
   const { data, setData } = useData({
     minmax: [0, timeseries.data.x.length],
-    filter: FILTER_OPTIONS[0],
+    filter: FILTER_OPTIONS[0].value,
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
   const INITIATIVE = ["intan", "insan", "ikhsan"];
-  const topStateIndices = getTopIndices(choropleth.data[data.filter.value].y.value, 3, true);
+  const topStateIndices = getTopIndices(choropleth.data[data.filter].y.value, 3, true);
 
   return (
     <>
@@ -200,8 +200,8 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
                   width="w-fit"
                   placeholder={t("common:common.select")}
                   options={FILTER_OPTIONS}
-                  selected={FILTER_OPTIONS.find(e => e.value === data.filter.value)}
-                  onChange={e => setData("filter", e)}
+                  selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
+                  onChange={e => setData("filter", e.value)}
                 />
                 <div className="flex grow flex-col justify-between space-y-6">
                   <p className="text-dim whitespace-pre-line">{t("choro_description")}</p>
@@ -212,16 +212,16 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
                         <div className="flex space-x-3" key={pos}>
                           <div className="text-dim font-medium">#{i + 1}</div>
                           <div className="grow">
-                            {CountryAndStates[choropleth.data[data.filter.value].x[pos]]}
+                            {CountryAndStates[choropleth.data[data.filter].x[pos]]}
                           </div>
                           <div className="font-bold text-[#16A34A]">
-                            {data.filter.value.startsWith("absolute")
+                            {data.filter.startsWith("absolute")
                               ? `${numFormat(
-                                  choropleth.data[data.filter.value].y.value[pos],
+                                  choropleth.data[data.filter].y.value[pos],
                                   "standard"
                                 )}`
                               : `${numFormat(
-                                  choropleth.data[data.filter.value].y.value[pos],
+                                  choropleth.data[data.filter].y.value[pos],
                                   "compact",
                                   [2, 2]
                                 )}%`}
@@ -239,12 +239,12 @@ const PeoplesIncomeInitiative: FunctionComponent<PeoplesIncomeInitiativeProps> =
                 className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
                 color="greens"
                 data={{
-                  labels: choropleth.data[data.filter.value].x.map(
+                  labels: choropleth.data[data.filter].x.map(
                     (state: string) => CountryAndStates[state]
                   ),
-                  values: choropleth.data[data.filter.value].y.value,
+                  values: choropleth.data[data.filter].y.value,
                 }}
-                unit={data.filter.value.startsWith("absolute") ? "" : "%"}
+                unit={data.filter.startsWith("absolute") ? "" : "%"}
                 type="state"
               />
             }

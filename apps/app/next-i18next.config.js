@@ -36,6 +36,7 @@ const namespace = [
   "dashboard-public-contracting",
   "dashboard-public-pension",
   "dashboard-public-transportation",
+  "dashboard-refugee-situation",
   "dashboard-reserve-money",
   "dashboard-retirement-readiness",
   "dashboard-sekolahku",
