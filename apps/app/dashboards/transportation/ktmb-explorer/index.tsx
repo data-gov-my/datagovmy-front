@@ -219,7 +219,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
             {play => (
               <>
                 {data.loading ? (
-                  <div className="flex h-[300px] items-center justify-center">
+                  <div className="flex h-[452px] items-center justify-center">
                     <Spinner loading={data.loading} />
                   </div>
                 ) : (
