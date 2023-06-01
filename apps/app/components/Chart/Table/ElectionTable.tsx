@@ -9,6 +9,7 @@ import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack
 import { Tooltip } from "@components/index";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import { ResultBadge } from "@components/Badge/election";
+import { ElectionResult } from "@dashboards/democracy/election-explorer/types";
 
 export interface ElectionTableProps {
   className?: string;
@@ -17,7 +18,7 @@ export interface ElectionTableProps {
   data?: any;
   columns: Array<ColumnDef<any, any>>;
   highlightedRow?: false | number;
-  win?: string;
+  result?: ElectionResult;
   isLoading: boolean;
 }
 
@@ -39,11 +40,11 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   data = dummyData,
   columns,
   highlightedRow = false,
-  win = "null",
+  result,
   isLoading = false,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-  console.log(highlightedRow);
+
   const table = useReactTable({
     data,
     columns,
@@ -276,6 +277,9 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                     >
                       <div className="flex flex-row gap-2">
                         {lookupDesktop(cell.column.columnDef.id, cell)}
+                        {rowIndex === highlightedRow && colIndex === 0 && (
+                          <ResultBadge hidden value={result} />
+                        )}
                       </div>
                     </td>
                   ))}

@@ -157,7 +157,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                                 )
                             : 0
                         }
-                        win={"result" in defaultParams ? defaultParams.result : undefined}
+                        result={"result" in defaultParams ? defaultParams.result : undefined}
                       />
                     </div>
 

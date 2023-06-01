@@ -227,7 +227,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                           ])}
                           isLoading={data.seat_loading}
                           highlightedRow={0}
-                          win="win"
+                          result="won"
                         />
                       </div>
 
