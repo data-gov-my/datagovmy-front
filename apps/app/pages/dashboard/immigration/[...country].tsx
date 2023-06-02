@@ -4,7 +4,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 
 const Immigration: Page = ({
@@ -36,11 +36,22 @@ const Immigration: Page = ({
   );
 };
 
+/**
+ * Path: /{country}
+ * @required country e.g: my (2 letter lowercase country code)
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
 export const getStaticProps: GetStaticProps = withi18n(
   ["dashboard-immigration", "countries"],
-  async () => {
+  async ({ params }) => {
     try {
-      const country = "overall";
+      const [country] = params ? (params.country as string[]) : [undefined];
       const [{ data: dropdown }, { data }, { data: country_data }] = await Promise.all([
         get("/dropdown", { dashboard: "immigration_country" }),
         get("/dashboard", {
@@ -68,7 +79,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           country: country_data.timeseries_country,
           country_callout: country_data.timeseries_country_callout.data,
           last_updated: new Date().valueOf(),
-          params: {},
+          params: { country: country },
           timeseries: data.timeseries,
           timeseries_callout: data.timeseries_callout.data.data,
         },
