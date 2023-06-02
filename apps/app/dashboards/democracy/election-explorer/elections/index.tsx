@@ -22,7 +22,7 @@ import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
 import { useRouter } from "next/router";
-import { Party, PartyResult, Seat } from "../types";
+import { Party, PartyResult, Seat, ElectionEnum } from "../types";
 import BallotSeat from "./ballot-seat";
 import ElectionAnalysis from "./analysis";
 import { generateSchema } from "@lib/schema/election-explorer";
@@ -95,11 +95,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
   const waffleColours = ["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"];
 
   const { data, setData } = useData({
-    list_index: params.election.startsWith("G") ? 0 : 1, // 0 - parlimen; 1 - dun
+    list_index: params.election.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
     election: params.election,
     state: params.state,
   });
 
+  const NON_SE_STATE = ["mys", "kul", "lbn", "pjy"];
   const ELECTION_OPTIONS: Array<OptionType> = Array(16)
     .fill(null)
     .map((n, index: number) => ({
@@ -108,7 +109,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
     }))
     .reverse();
 
-  const navigateToElection = (election?: string, state?: string) => {
+  const navigateToElection = (election: string, state?: string) => {
     if (!election) return;
     setData("loading", true);
     setData("election", election);
@@ -123,6 +124,16 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
     }).then(() => setData("loading", false));
   };
 
+  const handleElectionTab = (index: number) => {
+    if (index === ElectionEnum.Dun) {
+      setData("state", !NON_SE_STATE.includes(params.state) ? data.state || params.state : "");
+    } else {
+      setData("state", data.state || params.state);
+    }
+    setData("election", "");
+    setData("list_index", index);
+  };
+
   return (
     <>
       <ElectionLayout>
@@ -130,6 +141,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
           {/* Explore any election from Merdeka to the present! */}
           <Section>
             <h4 className="text-center">{t("election.section_1")}</h4>
+
+            {/* Mobile */}
             <div className={clx("fixed right-0 top-16 z-20 lg:hidden")}>
               <Modal
                 trigger={open => (
@@ -161,9 +174,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                         options={PANELS.map(item => item.name)}
                         icons={PANELS.map(item => item.icon)}
                         current={data.list_index}
-                        onChange={index => {
-                          setData("list_index", index);
-                        }}
+                        onChange={handleElectionTab}
                       />
                     </div>
                     <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
@@ -180,7 +191,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                         onChange={selected => {
                           setData("state", selected.value);
                         }}
-                        exclude={data.list_index === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
+                        exclude={
+                          data.list_index === ElectionEnum.Dun ? ["mys", "kul", "lbn", "pjy"] : []
+                        }
                         width="w-full"
                         anchor="left"
                       />
@@ -211,6 +224,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
               </Modal>
             </div>
 
+            {/* Desktop */}
             <div
               ref={divRef}
               className="sticky top-16 z-20 mt-6 hidden items-center justify-center gap-2 transition-all duration-200 ease-in lg:flex lg:pl-2"
@@ -220,10 +234,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                   options={PANELS.map(item => item.name)}
                   icons={PANELS.map(item => item.icon)}
                   current={data.list_index}
-                  onChange={index => {
-                    setData("election", "");
-                    setData("list_index", index);
-                  }}
+                  onChange={handleElectionTab}
                 />
               </div>
               <StateDropdown
@@ -232,7 +243,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                   navigateToElection(data.election, selected.value);
                   setData("state", selected.value);
                 }}
-                exclude={data.list_index === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
+                exclude={data.list_index === ElectionEnum.Parlimen ? [] : NON_SE_STATE}
                 width="min-w-max"
                 anchor="left"
               />

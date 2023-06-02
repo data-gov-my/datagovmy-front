@@ -109,7 +109,7 @@ const loadIndexesImpl = async (basePath: string, locale: string): Promise<void> 
       const content = data[route].data[heading] || "";
       const paragraphs = content.split("\n").filter(Boolean);
 
-      sectionIndex.add(url, {
+      sectionIndex.add({
         id: url,
         url,
         title,
@@ -119,7 +119,7 @@ const loadIndexesImpl = async (basePath: string, locale: string): Promise<void> 
       });
 
       for (let i = 0; i < paragraphs.length; i++) {
-        sectionIndex.add(`${url}_${i}`, {
+        sectionIndex.add({
           id: `${url}_${i}`,
           url,
           title,
@@ -132,7 +132,7 @@ const loadIndexesImpl = async (basePath: string, locale: string): Promise<void> 
       pageContent += ` ${title} ${content}`;
     }
 
-    pageIndex.add(pageId, {
+    pageIndex.add({
       id: pageId,
       title: data[route].title,
       content: pageContent,

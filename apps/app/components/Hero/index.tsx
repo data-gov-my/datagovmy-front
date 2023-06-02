@@ -86,7 +86,7 @@ const Hero: FunctionComponent<HeroProps> = ({
 
               {(header || description) && (
                 <div className="space-y-3">
-                  {header && <h2 className={clx("text-black", header[1])}>{t(header[0])}</h2>}
+                  {header && <h2 className={clx("text-black", header[1])}>{header[0]}</h2>}
                   {description && Array.isArray(description) ? (
                     <p className={clx("text-dim xl:w-2/3", description[1])}>{description[0]}</p>
                   ) : (
