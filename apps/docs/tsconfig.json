@@ -1,5 +1,8 @@
 {
   "extends": "tsconfig/nextjs.json",
+  "mdx": {
+    "plugins": [["remark-frontmatter", ["toml", "yaml"]], "remark-gfm"]
+  },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules", ".next"]
 }

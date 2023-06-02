@@ -247,16 +247,22 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                     sort={"desc"}
                     formatX={key => t(`section_2.${k}.${key}`)}
                     formatY={(value, key) => (
-                      <>
-                        <Tooltip
-                          tip={`${t("section_2.tooltip_count", {
-                            count: sekolahku_barmeter.tooltip[k].find(
-                              (object: { x: string; y: number }) => object.x === key
-                            ).y,
-                          })}`}
-                        />
-                        <span className="pl-1">{value.toFixed(1)}</span>
-                      </>
+                      <Tooltip
+                        tip={`${t("section_2.tooltip_count", {
+                          count: sekolahku_barmeter.tooltip[k].find(
+                            (object: { x: string; y: number }) => object.x === key
+                          ).y,
+                        })}`}
+                      >
+                        {open => (
+                          <p
+                            className="underline decoration-dashed underline-offset-2"
+                            onClick={open}
+                          >
+                            {numFormat(value, "standard", [1, 1])}
+                          </p>
+                        )}
+                      </Tooltip>
                     )}
                   />
                 </div>

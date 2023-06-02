@@ -1,4 +1,5 @@
 const I18NextHttpBackend = require("i18next-http-backend");
+I18NextHttpBackend.type = "backend"; // Issue: https://github.com/i18next/next-i18next/issues/1319
 
 const namespace = [
   "common",
@@ -36,6 +37,7 @@ const namespace = [
   "dashboard-public-contracting",
   "dashboard-public-pension",
   "dashboard-public-transportation",
+  "dashboard-refugee-situation",
   "dashboard-reserve-money",
   "dashboard-retirement-readiness",
   "dashboard-sekolahku",
@@ -64,9 +66,4 @@ module.exports = {
   serializeConfig: false,
   reloadOnPrerender: true,
   use: [I18NextHttpBackend],
-  //   react: {
-  //     bindI18n: "languageChanged",
-  //     bindI18nStore: "languageChanged",
-  //     useSuspense: false,
-  //   },
 };

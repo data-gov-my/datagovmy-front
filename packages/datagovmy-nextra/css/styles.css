@@ -1,0 +1,247 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "./variables.css";
+@import "./codeblock.css";
+@import "./anchor.css";
+@import "./hamburger.css";
+@import "./scrollbar.css";
+@import "./typesetting-article.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@700&display=swap");
+
+@layer base {
+  h1 {
+    @apply font-header text-4xl font-bold leading-[54px];
+  }
+
+  h2 {
+    @apply font-header text-3xl font-bold leading-[38px] dark:text-white;
+  }
+
+  h3 {
+    @apply font-header text-2xl font-bold leading-[32px] dark:text-white;
+  }
+
+  h4 {
+    @apply font-header text-xl font-bold leading-[28px] dark:text-white;
+  }
+
+  h5 {
+    @apply text-base font-bold tracking-normal dark:text-white lg:text-lg;
+  }
+
+  h6 {
+    @apply text-base font-semibold uppercase tracking-wider text-gray-500;
+  }
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    appearance: none;
+  }
+}
+
+html {
+  @apply text-base antialiased;
+  font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply dark:bg-dark w-full bg-white dark:text-gray-100;
+}
+
+a,
+summary,
+button,
+input,
+[tabindex]:not([tabindex="-1"]) {
+  @apply outline-none;
+  &:focus-visible {
+    @apply ring-primary-200 ring-offset-primary-300 dark:ring-primary-800 dark:ring-offset-primary-700 ring-2 ring-offset-1;
+  }
+}
+
+a,
+summary {
+  @apply rounded;
+}
+
+.nextra-content {
+  @apply text-slate-700 dark:text-slate-200;
+}
+
+@media (max-width: 767px) {
+  .nextra-sidebar-container {
+    @apply dark:bg-dark fixed bottom-0 top-0 z-[15] w-full overscroll-contain bg-white pt-[calc(var(--nextra-navbar-height))];
+    transition: transform 0.8s cubic-bezier(0.52, 0.16, 0.04, 1);
+    will-change: transform, opacity;
+    contain: layout style;
+    backface-visibility: hidden;
+
+    & > .nextra-scrollbar {
+      mask-image: linear-gradient(to bottom, transparent, #000 20px),
+        linear-gradient(to left, #000 10px, transparent 10px);
+    }
+  }
+
+  .nextra-banner-container ~ div {
+    .nextra-sidebar-container {
+      @apply pt-[6.5rem];
+    }
+    &.nextra-nav-container {
+      @apply top-10 md:top-0;
+    }
+  }
+  .nextra-banner-hidden {
+    .nextra-banner-container ~ div .nextra-sidebar-container {
+      @apply pt-16;
+    }
+    .nextra-nav-container {
+      @apply !top-0;
+    }
+  }
+  .nextra-search .excerpt {
+    @apply overflow-hidden text-ellipsis;
+    display: -webkit-box;
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 767px) {
+  article:before,
+  .nextra-sidebar-container,
+  .nextra-sidebar-container.open,
+  body.resizing .nextra-sidebar-container {
+    @apply transition-none;
+  }
+}
+
+/* Content Typography */
+article details > summary {
+  &::-webkit-details-marker {
+    @apply hidden;
+  }
+  &::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z' clip-rule='evenodd' /%3E%3C/svg%3E");
+    height: 1.2em;
+    width: 1.2em;
+    vertical-align: -4px;
+  }
+}
+
+@media (min-width: 768px) {
+  .nextra-toc > .div,
+  .nextra-sidebar-container {
+    mask-image: linear-gradient(to bottom, transparent, #000 20px),
+      linear-gradient(to left, #000 10px, transparent 10px);
+  }
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .nextra-search ul {
+    @apply dark:bg-dark/80 bg-white/70 backdrop-blur-lg;
+  }
+  .nextra-nav-container-blur {
+    @apply dark:!bg-dark/80 bg-white/[.85] backdrop-blur-md;
+  }
+}
+
+input[type="search"] {
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+}
+
+.contains-task-list {
+  @apply ml-0 list-none;
+  input[type="checkbox"] {
+    @apply mr-1;
+  }
+}
+
+.nextra-banner-hidden .nextra-banner-container {
+  @apply hidden;
+}
+
+.nextra-sidebar-container {
+  [data-toggle-animation="show"] button {
+    opacity: 0;
+    animation: nextra-fadein 1s ease 0.2s forwards;
+  }
+  [data-toggle-animation="hide"] button {
+    opacity: 0;
+    animation: nextra-fadein2 1s ease 0.2s forwards;
+  }
+}
+
+@keyframes nextra-fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes nextra-fadein2 {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.nextra-cards {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(250px, calc((100% - 1rem * 2) / var(--rows))), 1fr)
+  );
+}
+
+.nextra-card img {
+  user-select: none;
+}
+
+.nextra-card:hover svg {
+  color: currentColor;
+}
+
+.nextra-card svg {
+  width: 1.5rem;
+  color: #00000033;
+  transition: color 0.3s ease;
+}
+
+.nextra-card p {
+  margin-top: 0.5rem;
+}
+
+.dark .nextra-card svg {
+  color: #ffffff66;
+}
+
+.dark .nextra-card:hover svg {
+  color: currentColor;
+}
+
+.nextra-steps h3 {
+  counter-increment: step;
+
+  &:before {
+    @apply absolute h-[33px] w-[33px];
+    @apply dark:border-dark border-4 border-white bg-gray-100 dark:bg-neutral-800;
+    @apply rounded-full text-center -indent-px text-base font-normal text-neutral-400;
+    @apply ml-[-41px] mt-[3px];
+    content: counter(step);
+  }
+}

@@ -39,10 +39,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   const filteredOptions =
     query === ""
       ? options.slice(0, 15)
-      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
-          0,
-          50
-        );
+      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] });
 
   return (
     <Combobox value={selected} onChange={onChange}>
