@@ -1,6 +1,3 @@
-import BarMeter from "@components/Chart/BarMeter";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
 // import { Icon } from "@components/Icon/agency";
 import {
   AgencyBadge,
@@ -10,6 +7,7 @@ import {
   Hero,
   LeftRightCard,
   Section,
+  StateDropdown,
   Tooltip,
 } from "@components/index";
 import { OptionType } from "@components/types";
@@ -26,7 +24,10 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
+const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
+const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
 
 interface OrangAsliProps {
   barmeter: any;
@@ -41,13 +42,11 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
   last_updated,
   pyramid,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-refugee-situation", "common"]);
-  const FILTER_OPTIONS: Array<OptionType> = ["absolute", "state", "district"].map(
-    (key: string) => ({
-      label: t(key),
-      value: key,
-    })
-  );
+  const { t, i18n } = useTranslation(["dashboard-orang-asli", "common"]);
+  const FILTER_OPTIONS: Array<OptionType> = ["absolute"].map((key: string) => ({
+    label: t(key),
+    value: key,
+  }));
   const { data, setData } = useData({
     filter: FILTER_OPTIONS[0].value,
     loading: false,
@@ -67,8 +66,8 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
   return (
     <>
       <Hero
-        background="blue"
-        category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
+        background="green"
+        category={[t("common:categories.demography"), "text-green-600"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={
@@ -87,56 +86,59 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
           {/* How is the refugee population distributed across states? */}
           <LeftRightCard
             left={
-              <div className="flex h-full w-full flex-col space-y-6 p-6 lg:h-[600px] lg:p-8">
-                <div className="flex flex-col gap-2">
-                  <h4>{t("choro_header")}</h4>
-                  <span className="text-dim text-sm">
-                    {t("common:common.data_of", {
-                      date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
-                    })}
-                  </span>
-                </div>
-                <Dropdown
-                  anchor="left"
-                  className="w-fit"
-                  placeholder={t("common:common.select")}
-                  options={FILTER_OPTIONS}
-                  selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
-                  onChange={e => setData("filter", e.value)}
-                />
-                <div className="flex grow flex-col justify-between space-y-6">
-                  <p className="text-dim">{t("choro_description")}</p>
-                  <div className="space-y-3 border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-                    <div className="h-40 space-y-3 overflow-auto">
-                      {topStateIndices.map((pos: number, i: number) => {
-                        return (
-                          <div className="pr-4.5 flex space-x-3" key={pos}>
-                            <div className="text-dim font-medium">#{i + 1}</div>
-                            <div className="grow">
-                              {CountryAndStates[choropleth.data[data.filter].x[pos]]}
-                            </div>
-                            <div className="font-bold text-[#16A34A]">
-                              {data.filter === "absolute"
-                                ? numFormat(choropleth.data[data.filter].y.value[pos], "standard")
-                                : numFormat(
-                                    choropleth.data[data.filter].y.value[pos],
-                                    "standard",
-                                    [1, 1]
-                                  )}
-                              {data.filter === "perc" ? "%" : ""}
-                            </div>
-                          </div>
-                        );
+              <div className="flex h-[600px] w-full flex-col space-y-3 overflow-hidden p-6 lg:p-8">
+                <div className="space-y-6">
+                  <div className="flex flex-col gap-2">
+                    <h4>{t("choro_header")}</h4>
+                    <span className="text-dim text-sm">
+                      {t("common:common.data_of", {
+                        date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
                       })}
-                    </div>
+                    </span>
                   </div>
+                  <p className="text-dim">{t("choro_description")}</p>
+                  <div className="flex space-x-3">
+                    <StateDropdown width="w-full md:w-fit lg:w-full" anchor="left" />
+                    <Dropdown
+                      anchor="left"
+                      width="w-full md:w-fit lg:w-full"
+                      placeholder={t("common:common.select")}
+                      options={FILTER_OPTIONS}
+                      selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
+                      onChange={e => setData("filter", e.value)}
+                    />
+                  </div>
+                  <p className="border-outline dark:border-dim border-t pt-6 font-bold">
+                    {t("choro_ranking", { count: choropleth.data[data.filter].x.length })}
+                  </p>
+                </div>
+                <div className="space-y-3 overflow-auto">
+                  {topStateIndices.map((pos: number, i: number) => {
+                    return (
+                      <div className="pr-4.5 flex space-x-3" key={pos}>
+                        <div className="text-dim font-medium">#{i + 1}</div>
+                        <div className="grow">
+                          {CountryAndStates[choropleth.data[data.filter].x[pos]]}
+                        </div>
+                        <div className="font-bold text-green-600">
+                          {data.filter === "absolute"
+                            ? numFormat(choropleth.data[data.filter].y.value[pos], "standard")
+                            : numFormat(
+                                choropleth.data[data.filter].y.value[pos],
+                                "standard",
+                                [1, 1]
+                              )}
+                          {data.filter === "perc" ? "%" : ""}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             }
             right={
               <Choropleth
-                className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[600px]"
                 data={{
                   labels: choropleth.data[data.filter].x.map(
                     (state: string) => CountryAndStates[state]
@@ -152,10 +154,10 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
         </Section>
 
         <Section>
-          <div className="space-y-12">
-            <div className="space-y-6">
-              <h4 className="lg:text-center">{t("title")}</h4>
-              <div className="flex flex-col items-center justify-center space-y-3">
+          <div className="space-y-12 lg:grid lg:grid-cols-12">
+            <div className="flex flex-col gap-6 lg:col-span-10 lg:col-start-2 lg:flex-row">
+              <div className="flex flex-col justify-center space-y-6 lg:basis-1/3">
+                <h4 className="text-center lg:text-start">{t("title")}</h4>
                 <div className="mx-auto w-full md:w-96">
                   <ComboBox
                     placeholder={t("search_kampung")}
@@ -180,9 +182,29 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
                   />
                 </div>
               </div>
+              <div className="shadow lg:basis-2/3">
+                <MapPlot
+                  className="h-[400px] rounded-xl lg:w-full"
+                  // position={[info.lat, info.lon]}
+                  zoom={10}
+                  // markers={[
+                  //   {
+                  //     position: [info.lat, info.lon],
+                  //     school: info.school,
+                  //   },
+                  // ]}
+                />
+                <p className="text-dim pt-3 text-center text-sm">{t("map_description")}</p>
+              </div>
             </div>
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-              {barmeter_data.map(([k, v]: [string, any]) => {
+          </div>
+          <h4 className="pb-8 pt-12">{t("pyramid_title")}</h4>
+          <div className="flex flex-col items-stretch gap-6 lg:flex-row">
+            <div className="h-[650px] basis-1/3">
+              <Pyramid title={t("header")} />
+            </div>
+            <div className="grid basis-2/3 grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
+              {[...barmeter_data, ...barmeter_data].map(([k, v]: [string, any]) => {
                 return (
                   <div className="flex flex-col space-y-6" key={k}>
                     <BarMeter
