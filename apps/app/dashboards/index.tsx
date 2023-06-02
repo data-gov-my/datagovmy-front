@@ -15,27 +15,19 @@ import { OptionType } from "@components/types";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 import { ArrowUpRightIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
-import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { SHORT_LANG } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import Image from "next/image";
-import {
-  ForwardedRef,
-  forwardRef,
-  ForwardRefExoticComponent,
-  FunctionComponent,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from "react";
+import { useRouter } from "next/router";
+import { FunctionComponent, useMemo } from "react";
 
 /**
  * Dashboard Index
  * @overview Status: Live
  */
 
-export type Dashboard = {
+type Dashboard = {
   id: string;
   name: string;
   views: number;
@@ -44,24 +36,24 @@ export type Dashboard = {
 };
 
 interface DashboardIndexProps {
-  query: Record<string, string>;
+  agency: string | null;
   analytics: any;
   sources: Record<string, { agency: string }[]>;
   dashboards: Record<string, Record<string, Dashboard[]>>;
 }
 
 const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
-  query,
+  agency,
   analytics,
   sources,
   dashboards,
 }) => {
   const { t, i18n } = useTranslation();
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
-  const filterRef = useRef<DashboardFilterRef>(null);
 
   const { data, setData } = useData({
     tabs_section_1: 0,
+    search: "",
   });
 
   const PANELS = [
@@ -86,8 +78,8 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
       const dashboards = dbs
         .filter((d: Dashboard) => {
           return (
-            (!query["source"] || d.agency === query["source"]) &&
-            (!query["search"] || d.name.toLowerCase().includes(query["search"].toLowerCase()))
+            (!agency || d.agency === agency) &&
+            (!data.search || d.name.toLowerCase().includes(data.search.toLowerCase()))
           );
         })
         .sort((a: Dashboard, b: Dashboard) => {
@@ -97,22 +89,18 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
     });
 
     return resultCollection;
-  }, [query]);
+  }, [agency, data.search]);
 
   return (
     <>
       <Hero
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
-        header={[
-          `${filterRef.current?.source ? filterRef.current?.source.concat(":") : ""} ${t(
-            "common:dashboard.header"
-          )}`,
-        ]}
+        header={[`${agency !== null ? agency.concat(":") : ""} ${t("common:dashboard.header")}`]}
         description={[
           t("common:dashboard.description", {
-            agency: filterRef?.current?.source,
-            context: filterRef?.current?.source ? "agency" : "",
+            agency: agency,
+            context: agency ? "agency" : "",
           }),
         ]}
         agencyBadge={
@@ -126,12 +114,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         }
       />
       <DashboardFilter
-        ref={filterRef}
-        query={query}
+        data={{
+          source: agency,
+          search: data.search,
+        }}
         sources={sources[lang].map(({ agency }) => agency)}
+        onSearch={value => setData("search", value)}
       />
       <Container className="min-h-screen">
-        {!query["search"] && !query["source"] && (
+        {!agency && (
           <Section
             title={
               <>
@@ -200,89 +191,75 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
  * Dashboard Filter Component
  */
 interface DashboardFilterProps {
-  query: Record<string, any>;
+  data: {
+    source: string | null;
+    search: string;
+  };
   sources: string[];
-  ref?: ForwardedRef<DashboardFilterRef>;
+  onSearch: (value: string) => void;
 }
 
-interface DashboardFilterRef {
-  source?: string;
-}
+const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, sources, onSearch }) => {
+  const { t } = useTranslation();
+  const { push } = useRouter();
 
-const DashboardFilter: ForwardRefExoticComponent<DashboardFilterProps> = forwardRef(
-  ({ query, sources }, ref) => {
-    const { t } = useTranslation();
+  const filterSources: OptionType[] = sources.map(source => ({
+    label: source,
+    value: source,
+  }));
 
-    const filterSources: Array<OptionType> = sources.map(source => ({
-      label: source,
-      value: source,
-    }));
+  const reset = () => onSearch("");
 
-    const { filter, setFilter, actives } = useFilter({
-      source: query.source ? filterSources.find(item => query.source === item.value) : [],
-      search: query.search ?? "",
-    });
-
-    const reset = () => {
-      setFilter("search", "");
-      setFilter("source", undefined);
-    };
-
-    useImperativeHandle(ref, () => {
-      return {
-        source: filter.source?.value ?? "",
-      };
-    });
-
-    const renderClear = (className: string) => {
-      return (
-        actives.length > 0 && (
-          <div className={className}>
-            <Button
-              className="text-dim hover:bg-washed dark:hover:bg-washed-dark w-max text-sm"
-              icon={<XMarkIcon className="h-4 w-4" />}
-              disabled={!actives.length}
-              onClick={reset}
-            >
-              {t("common:common.clear_all")}
-            </Button>
-          </div>
-        )
-      );
-    };
-
+  const renderClear = (className: string) => {
     return (
-      <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
-        <Container>
-          <div className="flex flex-row flex-wrap-reverse items-center gap-3 lg:flex-nowrap">
-            {renderClear("block lg:hidden")}
-            <Dropdown
-              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-              className="w-fit min-w-fit"
-              placeholder={t("common:dashboard.source_placeholder")}
-              anchor="left"
-              options={filterSources}
-              selected={filter.source}
-              onChange={e => setFilter("source", e)}
-              enableSearch
-              enableClear
-            />
-            <Input
-              className="border-0 "
-              type="search"
-              placeholder={t("common:dashboard.search_placeholder")}
-              autoFocus
-              value={filter.search}
-              onChange={e => setFilter("search", e)}
-              icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
-            />
-            {renderClear("hidden lg:block")}
-          </div>
-        </Container>
-      </div>
+      data.search && (
+        <div className={className}>
+          <Button
+            className="text-dim hover:bg-washed dark:hover:bg-washed-dark w-max text-sm"
+            icon={<XMarkIcon className="h-4 w-4" />}
+            onClick={reset}
+          >
+            {t("common:common.clear_all")}
+          </Button>
+        </div>
+      )
     );
-  }
-);
+  };
+
+  return (
+    <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
+      <Container>
+        <div className="flex flex-row flex-wrap-reverse items-center gap-3 lg:flex-nowrap">
+          {renderClear("block lg:hidden")}
+          <Dropdown
+            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+            className="w-fit min-w-fit"
+            placeholder={t("common:dashboard.source_placeholder")}
+            anchor="left"
+            options={filterSources}
+            selected={filterSources.find(item => data.source === item.value)}
+            onChange={e => {
+              if (e?.value) push(`/dashboard/agency/${e.value}`, undefined, { scroll: false });
+              else push("/dashboard", undefined, { scroll: false });
+            }}
+            enableSearch
+            enableClear
+          />
+          <Input
+            className="border-0 "
+            type="search"
+            placeholder={t("common:dashboard.search_placeholder")}
+            autoFocus
+            value={data.search}
+            onChange={e => onSearch(e)}
+            icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
+          />
+          {renderClear("hidden lg:block")}
+        </div>
+      </Container>
+    </div>
+  );
+};
 
 DashboardFilter.displayName = "DashboardFilter";
 

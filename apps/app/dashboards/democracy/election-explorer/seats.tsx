@@ -1,19 +1,19 @@
-import ElectionCard from "@components/Card/ElectionCard";
+import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
+import { toast } from "@components/Toast";
 import { Container, Section } from "@components/index";
 import { OptionType } from "@components/types";
+import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { routes } from "@lib/routes";
-import dynamic from "next/dynamic";
-import { FunctionComponent } from "react";
-
 import { generateSchema } from "@lib/schema/election-explorer";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import type { BaseResult, ElectionResource, ElectionType, Seat, SeatResult } from "./types";
+import { FunctionComponent } from "react";
 import ElectionLayout from "./layout";
-import { toast } from "@components/Toast";
+import type { BaseResult, ElectionResource, ElectionType, Seat, SeatResult } from "./types";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -38,6 +38,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { push } = useRouter();
+  const { cache } = useCache();
 
   const { data, setData } = useData({
     seat: params.seat_name,
@@ -60,38 +61,47 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
     push(`${routes.ELECTION_EXPLORER}/seats/${name}`, undefined, {
       scroll: false,
       locale: i18n.language,
-    }).then(() => setData("loading", false));
+    }).then(() => {
+      setData("loading", false);
+      cache.clear();
+    });
   };
 
-  const fetchResult = async (election: string, seat: string) => {
-    return get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "candidates",
-      election,
-      seat,
-    })
-      .then(({ data }: { data: SeatResult }) => {
-        return {
-          data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
-          votes: [
-            {
-              x: "voter_turnout",
-              abs: data.votes.voter_turnout,
-              perc: data.votes.voter_turnout_perc,
-            },
-            {
-              x: "rejected_votes",
-              abs: data.votes.votes_rejected,
-              perc: data.votes.votes_rejected_perc,
-            },
-          ],
-        };
+  const fetchResult = async (election: string, seat: string): Promise<Result<BaseResult[]>> => {
+    const identifier = `${election}_${seat}`;
+    return new Promise(resolve => {
+      if (cache.has(identifier)) return resolve(cache.get(identifier));
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "full_result",
+        type: "candidates",
+        election,
+        seat,
       })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      });
+        .then(({ data }: { data: SeatResult }) => {
+          const result: Result<BaseResult[]> = {
+            data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+            votes: [
+              {
+                x: "voter_turnout",
+                abs: data.votes.voter_turnout,
+                perc: data.votes.voter_turnout_perc,
+              },
+              {
+                x: "rejected_votes",
+                abs: data.votes.votes_rejected,
+                perc: data.votes.votes_rejected_perc,
+              },
+            ],
+          };
+          cache.set(identifier, result);
+          resolve(result);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
+    });
   };
 
   const seat_schema = generateSchema<Seat>([
