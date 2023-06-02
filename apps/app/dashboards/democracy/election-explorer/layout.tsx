@@ -14,7 +14,7 @@ interface ElectionLayoutProps {
 }
 
 const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) => {
-  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { pathname } = useRouter();
 
   const election_navs = [

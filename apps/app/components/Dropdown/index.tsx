@@ -17,10 +17,11 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/20/solid";
-import { Input } from "..";
+import Input from "@components/Input";
 import { useTranslation } from "next-i18next";
 import { clx } from "@lib/helpers";
 import { FixedSizeList } from "react-window";
+import { matchSorter } from "match-sorter";
 
 type CommonProps = {
   className?: string;
@@ -106,9 +107,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const availableOptions = useMemo<OptionType[]>(() => {
     if (!enableSearch) return options;
 
-    return options.filter(
-      option => !option.label.toString().toLowerCase().search(search.toLowerCase())
-    );
+    return matchSorter(options, search.toLowerCase(), { keys: ["label"] });
   }, [options, search]);
 
   const ListboxOption = ({
@@ -274,6 +273,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                 <Input
                   type="search"
                   icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
+                  value={search}
                   className="border-outline dark:border-washed-dark w-full rounded-b-none border-0 border-b text-sm"
                   placeholder={t("common:placeholder.search") + " ..."}
                   onChange={value => setSearch(value)}

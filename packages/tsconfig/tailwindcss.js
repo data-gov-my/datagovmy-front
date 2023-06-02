@@ -1,6 +1,6 @@
-/** @type {import('tailwindcss').Config} */
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
   content: [
@@ -54,6 +54,15 @@ module.exports = {
       },
       aspectRatio: {
         "4/3": "4 / 3",
+      },
+      keyframes: {
+        slide: {
+          from: { width: "var(--from-width)" },
+          to: { width: "var(--to-width)" },
+        },
+      },
+      animation: {
+        slide: "slide 1.5s ease-out",
       },
     },
   },

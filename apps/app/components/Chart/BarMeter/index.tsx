@@ -55,7 +55,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   }, [data, sort]);
 
   const layout_style: Record<typeof layout, string> = {
-    "horizontal": "flex flex-col w-full space-y-2",
+    "horizontal": "flex flex-col w-full space-y-3",
     "state-horizontal": "flex flex-col w-full space-y-2",
     "vertical": "flex flex-col lg:flex-row justify-around lg:h-[400px] ",
   };
@@ -64,19 +64,23 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
     switch (layout) {
       case "horizontal":
         return (
-          <div className="space-y-1 pb-2" key={item.x.concat(`_${index}`)}>
+          <div className="space-y-2" key={item.x.concat(`_${index}`)}>
             <div className="flex justify-between">
-              <p>{formatX ? formatX(item.x) : item.x}</p>
-              <div className="text-dim dark:text-white">
-                {formatY ? formatY(item.y, item.x) : numFormat(item.y, "standard", 1)}
+              <p className="text-sm">{formatX ? formatX(item.x) : item.x}</p>
+              <div className="text-dim text-sm dark:text-white">
+                {formatY ? formatY(item.y, item.x) : <p>{numFormat(item.y, "standard", 1)}</p>}
                 {unit}
               </div>
             </div>
 
-            <div className="bg-washed dark:bg-washed-dark flex h-2.5 w-full overflow-x-hidden rounded-full">
+            <div className="bg-washed dark:bg-washed-dark flex h-3 w-full overflow-x-hidden rounded-full">
               <div
-                className="h-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
-                style={{ width: percentFill(item.y) }}
+                className="animate-slide h-full w-0 items-center overflow-hidden rounded-full bg-black dark:bg-white"
+                style={{
+                  ["--from-width" as string]: 0,
+                  ["--to-width" as string]: percentFill(item.y),
+                  width: percentFill(item.y),
+                }}
               />
             </div>
           </div>
@@ -106,10 +110,14 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
                 {numFormat(item.y, "standard", [1, 1])}
                 {unit}
               </p>
-              <div className="bg-washed dark:bg-washed-dark flex h-2.5 w-full overflow-x-hidden rounded-full">
+              <div className="bg-washed dark:bg-washed-dark flex h-3 w-full overflow-x-hidden rounded-full">
                 <div
-                  className="h-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
-                  style={{ width: percentFill(item.y) }}
+                  className="animate-slide h-full items-center overflow-hidden rounded-full bg-black transition dark:bg-white"
+                  style={{
+                    ["--from-width" as string]: 0,
+                    ["--to-width" as string]: percentFill(item.y),
+                    width: percentFill(item.y),
+                  }}
                 />
               </div>
             </div>
@@ -129,8 +137,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
               </p>
               <div className="bg-washed dark:bg-washed-dark relative flex h-[80%] w-6 overflow-x-hidden rounded-full">
                 <div
-                  className="absolute bottom-0 w-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
+                  className=" animate-slide absolute bottom-0 w-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
                   style={{
+                    ["--from-width" as string]: 0,
+                    ["--to-width" as string]: percentFill(item.y),
                     height: percentFill(item.y),
                   }}
                 />
