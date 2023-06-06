@@ -210,7 +210,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                     empty={
                       <p>
                         {t("candidate.no_data", {
-                          name: data.candidate,
+                          name: params.candidate_name,
                           context: "dun",
                         })}
                       </p>
