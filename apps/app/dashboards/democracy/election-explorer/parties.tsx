@@ -234,7 +234,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 </Panel>
                 <Panel name={t("state_elections")}>
                   <ElectionTable
-                    data={elections.dun} // TODO: Replace with DUN later
+                    data={elections.dun}
                     columns={party_schema}
                     isLoading={data.loading}
                     empty={
