@@ -50,9 +50,10 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         },
         params: { seat_name: name },
         selection: dropdown.data,
-        elections: seat.data.sort(
-          (a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date))
-        ),
+        elections:
+          seat.data?.sort(
+            (a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date))
+          ) ?? [],
       },
     };
   } catch (error: any) {

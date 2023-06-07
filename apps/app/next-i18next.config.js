@@ -1,5 +1,4 @@
-const I18NextHttpBackend = require("i18next-http-backend");
-I18NextHttpBackend.type = "backend"; // Issue: https://github.com/i18next/next-i18next/issues/1319
+const I18NextHttpBackend = require("i18next-http-backend/cjs");
 
 const namespace = [
   "common",
