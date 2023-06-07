@@ -37,7 +37,7 @@ const Panel: FunctionComponent<PanelProps> = ({ children, name }) => {
 
 const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons }) => {
   return (
-    <ul className="flex">
+    <ul className="flex flex-wrap justify-end">
       {options.map((option, index) => (
         <li
           key={option}
