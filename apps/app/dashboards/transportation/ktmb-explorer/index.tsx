@@ -59,7 +59,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const { coordinate: B_to_A_coords } = useSlice(B_to_A[data.period], data.minmax);
 
   const SERVICE_OPTIONS = useMemo<Array<OptionType>>(() => {
-    const _services = Object.keys(dropdown).map(service => ({ label: service, value: service }));
+    const _services = Object.keys(dropdown).map(service => ({ label: t(service), value: service }));
     return _services;
   }, []);
 
@@ -88,7 +88,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const navigateToService = (service?: string, origin?: string, destination?: string) => {
     if (!service || !origin || !destination) return;
     setData("loading", true);
-    const route = `${routes.KTMB_EXPLORER}/${encodeURIComponent(service)}/${encodeURIComponent(
+    const route = `${routes.KTMB_EXPLORER}/${service}/${encodeURIComponent(
       origin
     )}/${encodeURIComponent(destination)}`;
 
@@ -120,11 +120,11 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
           title={t("title")}
           date={A_to_B.data_as_of}
           description={
-            <div className="flex flex-col gap-2 md:flex-row">
+            <div className="flex flex-wrap gap-2 lg:gap-3">
               <Dropdown
                 placeholder={t("service")}
                 anchor="left"
-                width="w-full"
+                width="w-full sm:w-auto"
                 options={SERVICE_OPTIONS}
                 selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
                 onChange={selected => {
@@ -133,34 +133,32 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   setData("destination", null);
                 }}
               />
-              <div className="flex gap-2">
-                <Dropdown
-                  placeholder={t("select_origin")}
-                  anchor="left"
-                  width="w-full"
-                  options={ORIGIN_OPTIONS}
-                  selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-                  disabled={!data.service}
-                  onChange={selected => {
-                    setData("origin", selected.value);
-                    setData("destination", null);
-                  }}
-                  enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
-                />
-                <Dropdown
-                  placeholder={t("select_destination")}
-                  anchor="left"
-                  width="w-full"
-                  options={DESTINATION_OPTIONS}
-                  selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-                  disabled={!data.service || !data.origin}
-                  onChange={selected => {
-                    setData("destination", selected.value);
-                    navigateToService(data.service, data.origin, selected.value);
-                  }}
-                  enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
-                />
-              </div>
+              <Dropdown
+                placeholder={t("select_origin")}
+                anchor="left"
+                width="w-full sm:w-auto"
+                options={ORIGIN_OPTIONS}
+                selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
+                disabled={!data.service}
+                onChange={selected => {
+                  setData("origin", selected.value);
+                  setData("destination", null);
+                }}
+                enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
+              />
+              <Dropdown
+                placeholder={t("select_destination")}
+                anchor="left"
+                width="w-full sm:w-auto"
+                options={DESTINATION_OPTIONS}
+                selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
+                disabled={!data.service || !data.origin}
+                onChange={selected => {
+                  setData("destination", selected.value);
+                  navigateToService(data.service, data.origin, selected.value);
+                }}
+                enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
+              />
             </div>
           }
           menu={
@@ -200,10 +198,10 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               type: "line",
                               data: A_to_B_coords.y,
                               label: t(data.period),
+                              fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,
                               borderWidth: 1.5,
-                              fill: true,
                             },
                           ],
                         }}
@@ -238,10 +236,10 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               type: "line",
                               data: B_to_A_coords.y,
                               label: t(data.period),
+                              fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,
                               borderWidth: 1.5,
-                              fill: true,
                             },
                           ],
                         }}
