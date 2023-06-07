@@ -13,7 +13,6 @@ import { IPREPUIcon } from "@components/Icon/agency";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { OptionType } from "@components/types";
-import ArrowRightIcon from "@heroicons/react/20/solid/ArrowRightIcon";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
@@ -75,7 +74,7 @@ const IPR: FunctionComponent<IPRProps> = ({
           <>
             <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
             <div className="pt-3">
-              <StateDropdown url={routes.PEKA_B40} currentState={params.state} />
+              <StateDropdown url={routes.IPR} currentState={params.state} />
             </div>
           </>
         }
@@ -119,17 +118,11 @@ const IPR: FunctionComponent<IPRProps> = ({
                   stats={[
                     {
                       title: t("daily"),
-                      value: `+${numFormat(
-                        timeseries_callout[params.state].overall.daily.value,
-                        "standard"
-                      )}`,
+                      value: `+${numFormat(timeseries_callout.overall.daily.value, "standard")}`,
                     },
                     {
                       title: t("total"),
-                      value: numFormat(
-                        timeseries_callout[params.state].overall.cumul.value,
-                        "standard"
-                      ),
+                      value: numFormat(timeseries_callout.overall.cumul.value, "standard"),
                     },
                   ]}
                 />
@@ -139,7 +132,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                   data={timeseries.data.x}
                   onChange={e => setData("minmax", e)}
                 />
-                <div className="grid grid-cols-1 gap-12 pt-12 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 pt-12 lg:grid-cols-3 lg:gap-12">
                   {["intan", "insan", "ikhsan"].map((key: string) => (
                     <Timeseries
                       key={key}
@@ -164,17 +157,11 @@ const IPR: FunctionComponent<IPRProps> = ({
                       stats={[
                         {
                           title: t("daily"),
-                          value: `+${numFormat(
-                            timeseries_callout[params.state][key].daily.value,
-                            "standard"
-                          )}`,
+                          value: `+${numFormat(timeseries_callout[key].daily.value, "standard")}`,
                         },
                         {
                           title: t("total"),
-                          value: numFormat(
-                            timeseries_callout[params.state][key].cumul.value,
-                            "standard"
-                          ),
+                          value: numFormat(timeseries_callout[key].cumul.value, "standard"),
                         },
                       ]}
                     />
