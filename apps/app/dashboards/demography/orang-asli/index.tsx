@@ -182,9 +182,9 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
                   />
                 </div>
               </div>
-              <div className="shadow lg:basis-2/3">
+              <div className="lg:basis-2/3">
                 <MapPlot
-                  className="h-[400px] rounded-xl lg:w-full"
+                  className="h-[400px] rounded-xl shadow lg:w-full"
                   // position={[info.lat, info.lon]}
                   zoom={10}
                   // markers={[
