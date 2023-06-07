@@ -61,12 +61,14 @@ export const getStaticProps: GetStaticProps = withi18n(
           params: { candidate_name: name },
           selection: dropdown.data ?? [],
           elections: {
-            parlimen: candidate.data.parlimen.sort(
-              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
-            ),
-            dun: candidate.data.dun.sort(
-              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
-            ),
+            parlimen:
+              candidate.data.parlimen?.sort(
+                (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+              ) ?? [],
+            dun:
+              candidate.data.dun?.sort(
+                (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+              ) ?? [],
           },
         },
       };
