@@ -189,8 +189,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           to: params.destination ?? "WOODLANDS CIQ",
                         })}
                         enableAnimation={!play}
-                        interval={data.period}
-                        round={data.period}
+                        interval={data.period === "year" ? "year" : "month"}
+                        tooltipFormat={data.period === "day" ? "dd MMM yyyy" : undefined}
                         data={{
                           labels: A_to_B_coords.x,
                           datasets: [
@@ -227,8 +227,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           to: params.origin ?? "JB SENTRAL",
                         })}
                         enableAnimation={!play}
-                        interval={data.period}
-                        round={data.period}
+                        interval={data.period === "year" ? "year" : "month"}
+                        tooltipFormat={data.period === "day" ? "dd MMM yyyy" : undefined}
                         data={{
                           labels: B_to_A_coords.x,
                           datasets: [
