@@ -47,7 +47,7 @@ IPR.layout = (page, props) => (
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async () => {
   const { data } = await get("/dashboard", {
-    dashboard: "peoples_income_initiative",
+    dashboard: "ipr",
     state: "mys",
   });
 
@@ -60,11 +60,11 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async ()
         category: "government-programs",
         agency: "EPU",
       },
+      choropleth: data.choropleth,
       last_updated: new Date().valueOf(),
       params: { state: "mys" },
       timeseries: data.timeseries,
-      timeseries_callout: data.timeseries_callout.data.data,
-      choropleth: data.choropleth,
+      timeseries_callout: data.timeseries_callout.data,
     },
   };
 });

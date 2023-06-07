@@ -71,7 +71,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async ({ params }) => {
   const { data } = await get("/dashboard", {
-    dashboard: "peoples_income_initiative",
+    dashboard: "ipr",
     state: params?.state,
   });
 
@@ -87,7 +87,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async ({
       last_updated: new Date().valueOf(),
       params: params,
       timeseries: data.timeseries,
-      timeseries_callout: data.timeseries_callout.data.data,
+      timeseries_callout: data.timeseries_callout.data,
       choropleth: data.choropleth,
     },
   };
