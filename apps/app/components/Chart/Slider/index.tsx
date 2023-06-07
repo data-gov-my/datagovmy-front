@@ -140,6 +140,7 @@ const Slider: FunctionComponent<SliderProps> = ({
         max={data.length - 1}
         onValueChange={e => {
           if (timer.current) cancelTimer();
+          onChange(e);
           setMinmax(e);
         }}
         onValueCommit={e => {
@@ -158,8 +159,8 @@ const Slider: FunctionComponent<SliderProps> = ({
           <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary ml-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
             <SliderTooltip play={play}>
               {parseAsDate
-                ? toDate(data[(value as number[])[0]], dateFormat[period], i18n.language)
-                : data[(value as number[])[0]]}
+                ? toDate(data[value[0]], dateFormat[period], i18n.language)
+                : data[value[0]]}
             </SliderTooltip>
           </Thumb>
           <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary mr-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
