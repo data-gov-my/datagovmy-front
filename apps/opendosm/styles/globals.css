@@ -1,0 +1,92 @@
+/* TAILWIND CSS */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* MODULE CSS */
+@import "./dashboards/general.css";
+@import "./dashboards/table.css";
+@import "./dashboards/banner.css";
+
+@layer base {
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+  h5 {
+    @apply text-lg font-bold tracking-normal;
+  }
+
+  h6 {
+    @apply text-base font-semibold uppercase tracking-wider text-gray-500;
+  }
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    appearance: none;
+  }
+}
+
+@layer components {
+  .text-link {
+    @apply cursor-pointer font-medium text-primary hover:underline;
+  }
+
+  .text-footer-link {
+    @apply cursor-pointer text-sm text-dim hover:text-black hover:underline;
+  }
+
+  .number {
+    @apply font-medium;
+  }
+
+  /* HERO MESH GRADIENTS */
+}
+
+.graphiql-container {
+  @apply min-h-screen;
+}
+
+input[type="range"] {
+  opacity: 0%;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  pointer-events: all;
+}
+
+button[role="tab"][aria-selected="true"] {
+  position: relative;
+}
+
+button[role="tab"][aria-selected="true"]::after {
+  content: "";
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #0f172a;
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.button-dashboard:after {
+  content: "";
+  height: 10px;
+  width: 100%;
+  position: absolute;
+  bottom: -10px;
+}

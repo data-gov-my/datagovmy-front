@@ -31,7 +31,7 @@ const namespace = [
   "dashboard-name-popularity",
   "dashboard-organ-donation",
   "dashboard-peka-b40",
-  "dashboard-peoples-income-initiative",
+  "dashboard-ipr",
   "dashboard-poverty",
   "dashboard-public-contracting",
   "dashboard-public-pension",
