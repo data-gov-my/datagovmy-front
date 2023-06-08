@@ -1,0 +1,89 @@
+/* SNAPSHOT STYLES */
+.snapshot-container {
+  @apply flex flex-col pt-5 md:pt-14;
+}
+
+.snapshot-container-background {
+  @apply bg-gray-100;
+}
+
+.snapshot-container {
+  @apply flex flex-col pt-5 md:pt-14;
+}
+
+.snapshot-layout {
+  @apply mb-10 flex w-full flex-col gap-4 md:mb-14 lg:flex-row;
+}
+
+/* JITTERPLOT STYLES */
+.jitterplot-container-background {
+  @apply bg-white md:bg-gray-100;
+}
+
+.jitterplot-container {
+  @apply md:rounded-lg;
+}
+
+.jitterplot-card-padding {
+  @apply px-0 py-4 sm:p-4;
+}
+
+.jitterplot-card {
+  @apply relative overflow-hidden rounded-lg md:border;
+}
+
+/* TITLE _STYLES */
+.section-title-layout {
+  @apply mb-5 flex w-full flex-col items-start justify-between gap-2 md:mb-7 md:flex-row md:items-center md:gap-0;
+}
+
+.section-title {
+  @apply text-xl font-semibold;
+}
+
+.doughnut-chart-title {
+  @apply text-sm font-bold;
+}
+
+.census-text {
+  @apply text-sm text-gray-400;
+}
+
+/* TOOLTIP STYLES */
+.tooltip {
+  @apply relative inline-block w-fit overflow-visible;
+}
+
+.tooltip .tooltip-content {
+  @apply invisible absolute top-4 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:left-[140%] md:-top-2 md:max-w-sm md:translate-x-0;
+}
+
+@media only screen and (min-width: 768px) {
+  .tooltip-content::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid rgb(19 41 61);
+    left: -7px;
+    top: 7px;
+  }
+}
+
+.tooltip:hover .tooltip-content {
+  @apply visible;
+}
+
+.nivo-tooltip {
+  @apply flex min-w-max origin-center items-center justify-center rounded bg-black py-[5px] px-[9px] text-sm text-white shadow;
+}
+
+.donut-meter::before {
+  content: "";
+  transform: translate(-50%, -50%);
+  @apply absolute top-1/2 left-1/2 h-[75%] w-[75%] rounded-[50%] bg-white transition-all;
+}
