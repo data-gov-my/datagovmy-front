@@ -1,13 +1,10 @@
-import type { FC, ReactNode } from 'react'
+import type { FC, ReactNode } from "react";
 
-export function renderComponent<T>(
-  ComponentOrNode: FC<T> | ReactNode,
-  props?: T
-) {
-  if (!ComponentOrNode) return null
-  if (typeof ComponentOrNode !== 'function') return ComponentOrNode
+export function renderComponent<T>(ComponentOrNode: FC<T> | ReactNode, props?: T) {
+  if (!ComponentOrNode) return null;
+  if (typeof ComponentOrNode !== "function") return ComponentOrNode;
   // @ts-expect-error TS2322: Type '{}' is not assignable to type 'T'
-  return <ComponentOrNode {...props} />
+  return <ComponentOrNode {...props} />;
 }
 
 export function renderString<T>(
@@ -16,8 +13,6 @@ export function renderString<T>(
   props: T = {}
 ): string {
   const result =
-    typeof stringOrFunction === 'function'
-      ? stringOrFunction(props)
-      : stringOrFunction
-  return result || ''
+    typeof stringOrFunction === "function" ? stringOrFunction(props) : stringOrFunction;
+  return result || "";
 }
