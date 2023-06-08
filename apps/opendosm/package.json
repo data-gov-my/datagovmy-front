@@ -1,10 +1,11 @@
 {
-  "name": "aksara-front",
+  "name": "opendosm",
+  "version": "0.0.1",
   "private": true,
   "description": "AKSARA is an open data site by the Department of Statistics Malaysia to institutionalise transparency and make data accessible for all.",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3002",
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "next start",
