@@ -1,0 +1,1044 @@
+{
+  "site": {
+    "name": "OpenDOSM",
+    "description": "Your one-stop interface to browse DOSM's wealth of open data. If data is the new oil, then openness is the pipeline that maximises its value."
+  },
+  "error": {
+    "output": "Output",
+    "disclaimer": "*Not an actual terminal / console.",
+    "500": {
+      "title": "Oops, something went terribly wrong.",
+      "description": "We are sorry for this incident.",
+      "reason": "Error code: 500 -- Server error"
+    },
+    "404": {
+      "title": "Oops, we cannot find the page you're looking for.",
+      "description": "Is your URL incorrect?",
+      "reason": "Error code: 404 -- Page not found"
+    }
+  },
+  "common": {
+    "state": "State",
+    "district": "District",
+    "type": "Type",
+    "name": "Name",
+    "previous": "Previous",
+    "next": "Next",
+    "in": " in ",
+    "yr": "yr",
+    "page_of": "{{ current }} of {{ total }}",
+    "data_for": "Data for {{ state }}",
+    "data_of": "Data as of {{ date }}",
+    "latest": "Latest ({{ date }})",
+    "last_updated": "Last updated {{ date }}",
+    "next_update": "Next update {{ date }}",
+    "slider": "",
+    "zoom": "Zoom into my area",
+    "clear_selection": "Clear selection",
+    "clear_all": "Clear all",
+    "reset": "Reset",
+    "close": "Close",
+    "select": "Select",
+    "here": "Here",
+    "no_entries": "No entries found",
+    "check_out": "Check out",
+    "no_data": "No data",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "maximum": "Maximum",
+    "minimum": "Minimum",
+    "indicator": "Indicator",
+    "charts": {
+      "heatmap": "Heatmap",
+      "table": "Table"
+    }
+  },
+  "placeholder": {
+    "all": "All",
+    "search": "Search",
+    "state": "Select state",
+    "state_first": "Select a state first",
+    "district": "Select district",
+    "facility": "Select facility",
+    "facility_type": "Select facility type"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboards": "Dashboards",
+    "catalogue": "Data Catalogue",
+    "megamenu": {
+      "categories": {
+        "demography": "Demography",
+        "economy": "Economy",
+        "financial_sector": "Financial Sector",
+        "social": "Social",
+        "national_accounts": "National Accounts",
+        "high_frequency": "High-Frequency Data"
+      },
+      "dashboards": {
+        "kawasanku": "Kawasanku",
+        "gdp": "Gross Domestic Product (GDP)",
+        "labour_market": "Labour Markets",
+        "composite_index": "Composite Indices",
+        "currency_in_circulation": "Currency in Circulation",
+        "money_supply": "Money Supply",
+        "reserve_money": "Reserve Money",
+        "international_reserves": "International Reserves",
+        "interest_rates": "Interest Rates",
+        "wholesale_retail": "Wholesale & Retail Trade",
+        "industrial_production": "Industrial Production",
+        "consumer_prices": "Consumer Prices",
+        "producer_prices": "Producer Prices",
+        "rubber": "Rubber Statistics",
+        "crime": "Violent & Property Crime",
+        "drug": "Drug Addiction",
+        "exchange_rate": "Exchange Rates",
+        "daily_price": "Daily Prices"
+      }
+    },
+    "about": "About",
+    "pmo": "Prime Minister's Department",
+    "dosm": "Department of Statistics Malaysia",
+    "gov": "Government of Malaysia",
+    "open_source": "Open Source",
+    "frontend": "Frontend Repo (NextJS)",
+    "backend": "Backend Repo (Django)",
+    "open_data": "Open Data",
+    "github": "DOSM GitHub",
+    "data_catalogue": "DOSM Data Catalogue"
+  },
+  "home": {
+    "title": "Data: The backbone of effective governance",
+    "description": "OpenDOSM is a platform that catalogs, visualises, and analyses DOSM's wealth of data. Everything on this site is open-sourced and freely available for the nation's benefit. If data is the new oil, then openness is the pipeline that maximises its value.",
+    "section_1": {
+      "title": "Malaysia at a Glance",
+      "stats": {
+        "population": "Current Population",
+        "economic_growth": "Economic Growth",
+        "bnm_opr": "BNM OPR",
+        "unemployment": "Unemployment",
+        "inflation": "Inflation",
+        "production_cost": "Production Costs",
+        "industrial_production": "Industrial Production",
+        "wholesale_retail": "Wholesale & Retail Trade"
+      }
+    },
+    "section_2": {
+      "title": "Check out the hottest datasets on OpenDOSM:",
+      "description": "This data is intended to help you get a sense of how other users interact with our site. However, if you know what you're looking for, head on over to our Data Catalog to find the most relevant data for you!",
+      "today": "Today",
+      "past_month": "Past 1 month",
+      "all_time": "All-time",
+      "dashboards": "Dashboards",
+      "datasets_available": "Datasets available",
+      "resource_views": "Resource views",
+      "resource_downloads": "Resource downloads",
+      "top_dashboards": "Most viewed dashboards",
+      "top_catalogues": "Most viewed datasets",
+      "top_files": "Most downloaded (data)",
+      "top_images": "Most downloaded (graphics)"
+    },
+    "section_3": {
+      "title": "Usage of OpenDOSM",
+      "daily": "Daily",
+      "total": "Total"
+    },
+    "keys": {
+      "users": "Daily Users",
+      "views": "Daily Views",
+      "downloads": "Daily Data Downloads"
+    }
+  },
+  "gdp": {
+    "header": "Gross Domestic Product (GDP)",
+    "description": "The state of the economy is a core question for any country or government. Our quarterly Gross Domestic Product (GDP) estimates capture the value being created by the Malaysian economy, with breakdowns available by economic sector and expenditure category. It is a key data release monitored by policymakers, the private sector, and the international community - to get a sense of how the Malaysian economy is performing.",
+    "section_1": {
+      "title": "How is GDP trending?"
+    },
+    "section_2": {
+      "title": "A deeper look at GDP by economic sector"
+    },
+    "section_3": {
+      "title": "A deeper look at GDP by expenditure category"
+    },
+    "keys": {
+      "growth_real_yoy": "YoY Growth (real)",
+      "growth_real_qoq": "QoQ Growth (real, sa)",
+      "growth_nominal_yoy": "YoY Growth (nominal)",
+      "growth_nominal_qoq": "QoQ Growth (nominal)",
+      "real": "Real",
+      "real_sa": "Real (sa)",
+      "nominal": "Nominal",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "overall": "Overall",
+      "supply_services": "Services",
+      "supply_manufacturing": "Manufacturing",
+      "supply_agri": "Agriculture",
+      "supply_mining": "Mining & Quarrying",
+      "supply_construction": "Construction",
+      "supply_import_duties": "Import Duties",
+      "demand_c": "Private Consumption",
+      "demand_i": "Gross Fixed Capital Formation (Investment)",
+      "demand_g": "Government Consumption",
+      "demand_x": "Exports",
+      "demand_m": "Imports",
+      "demand_nx": "Net Exports",
+      "demand_inventory": "Change in Inventories"
+    }
+  },
+  "labour": {
+    "header": "Labour Markets",
+    "description": "This dashboard summarises data from the monthly Labour Force Report, which presents statistics of the labour force, employment and unemployment obtained from the Labour Force Survey (LFS). This data is a vital input for labour market analysis and formulation of policy related to human resource development, and serves as an essential reference for research related to employment and the labour market. ",
+    "section_1": {
+      "title": "How is unemployment trending?",
+      "description": "An unemployed person is anyone who did not work during the period of the survey, but was willing to work and looking for a job."
+    },
+    "section_2": {
+      "title": "How are other key labour market indicators trending?"
+    },
+    "section_3": {
+      "title": "A deeper look at the latest labour market snapshot",
+      "bar1_header": "Employed Persons by Status",
+      "bar2_header": "Unemployed Persons by Status",
+      "bar3_header": "Outside Labour Force by Reason"
+    },
+    "section_4": {
+      "title": "How do key labour market indicators vary across states?"
+    },
+    "keys": {
+      "labour_force_participation": "Labour Force Participation Rate",
+      "unemployment_rate": "Unemployment Rate",
+      "unemployed_persons": "Unemployed Persons",
+      "own_account_workers": "Own-Account Workers",
+      "outside_labour_force": "Outside Labour Force",
+      "under_employment_rate": "Underemployment Rate",
+      "employment_population_ratio": "Employment-to-Population Ratio",
+      "employee": "Employees",
+      "employer": "Employers",
+      "own_account": "Own-account workers",
+      "unpaid": "Unpaid family workers",
+      "active": "Actively unemployed",
+      "inactive": "Inactively unemployed",
+      "reason1": "[reason 1]",
+      "reason2": "[reason 2]",
+      "reason3": "[reason 3]",
+      "reason4": "[reason 4]",
+      "p_rate": "[p_rate]",
+      "u_rate": "[u_rate]",
+      "outside": "[outside]",
+      "ep_ratio": "[ep_ratio]",
+      "under_rate": "[under_rate]",
+      "unemployed": "Unemployed",
+      "income_mean": "Mean Income (RM)",
+      "labour_prate": "Participation Rate",
+      "labour_urate": "Unemployment Rate",
+      "agegroup_working": "Working-Age Population Percentage (%)"
+    }
+  },
+  "compositeindex": {
+    "header": "Composite Indices",
+    "description": "This dashboard presents the Malaysian Economic Indicators (MEI), a set of composite indices published monthly by DOSM, which provide Leading, Coincident and Lagging signals on economic movement in Malaysia. The indices are compiled based on the guidelines of the 2017 Handbook on Cycle Composite Indicators, recommended by Eurostat.",
+    "section_1": {
+      "title": "How are the Malaysian Economic Indicators trending?",
+      "description": "The Leading Index broadly tells us where the economy is going. \n The Coincident Index broadly tells us where the economy is now. \n The Lagging Index validates the signal of the Leading and Coincident Indices."
+    },
+    "section_2": {
+      "title": "Diffusion indices: A different perspective on the Malaysian Economic Indicators",
+      "description": "The leading index is comprised of 7 indicators. The coincident index is comprised of 6 indicators. A diffusion index tells us what proportion of these indicators increased. A value of 100% indicates that all indicators forming the index increased; a value of 50% indicates that only half the indicators increased; a value of 0% indicates that none of the component indicators increased. For this reason, a diffusion index is helpful in determining whether the overall trend is broad-based, or being driven by a minority of the components."
+    },
+    "mom_growth": "MoM Growth",
+    "yoy_growth": "YoY Growth",
+    "keys": {
+      "index": "Index",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession_growth": "Downswing (growth cycle)",
+      "recession_business": "Recession (business cycle)",
+      "leading": "Leading Index",
+      "coincident": "Coincident Index",
+      "lagging": "Lagging Index",
+      "leading_diffusion": "Leading Index (Diffusion)",
+      "coincident_diffusion": "Coincident Index (Diffusion)"
+    }
+  },
+  "currencyincirculation": {
+    "header": "Currency in Circulation",
+    "description": "There are over RM150 billion in coins and notes circulating in the Malaysian economy. This dashboard, which builds on Bank Negara Malaysia's Monthly Highlight and Statistics, provides an overview allowing users to track the composition and growth of currency in circulation. It should be noted that currency in circulation only captures currency which is still valid legal tender, which is a subset of all notes and coins that have ever existed. For instance, the RM1 coin has been discontinued.",
+    "section_1": {
+      "title": "A snapshot of currency currently in circulation",
+      "bar1_header": "Notes by Denomination",
+      "bar2_header": "Volume of Notes in Circulation",
+      "bar3_header": "Coins by Denomination",
+      "bar4_header": "Volume of Coins in Circulation"
+    },
+    "section_2": {
+      "title": "How is currency in circulation trending?"
+    },
+    "mom_growth": "MoM Growth",
+    "yoy_growth": "YoY Growth",
+    "keys": {
+      "value": "Value (RM)",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "cny": "Chinese New Year",
+      "eid": "Aidilfitri Holiday",
+      "note_1": "RM1",
+      "note_5": "RM5",
+      "note_10": "RM10",
+      "note_20": "RM20",
+      "note_50": "RM50",
+      "note_100": "RM100",
+      "coin_1": "1 sen",
+      "coin_5": "5 sen",
+      "coin_10": "10 sen",
+      "coin_20": "20 sen",
+      "coin_50": "50 sen",
+      "others": "Others",
+      "overall": "Overall",
+      "rm1_notes": "RM1 notes",
+      "rm5_notes": "RM5 notes",
+      "rm10_notes": "RM10 notes",
+      "rm20_notes": "RM20 notes",
+      "rm50_notes": "RM50 notes",
+      "rm100_notes": "RM100 notes",
+      "10_sen_coins": "10 sen coins",
+      "20_sen_coins": "20 sen coins",
+      "50_sen_coins": "50 sen coins"
+    }
+  },
+  "moneysupply": {
+    "header": "Money Supply",
+    "description": "There are over RM150 billion in coins and notes circulating in the Malaysian economy. This dashboard, which builds on Bank Negara Malaysia's Monthly Highlights and Statistics, provides an overview allowing users to track the composition and growth of currency in circulation. It should be noted that currency in circulation only captures currency which is still valid legal tender, which is a subset of all notes and coins that have ever existed. For instance, the RM1 coin has been discontinued.",
+    "section_1": {
+      "title": "What are the various ways to measure the supply of money in Malaysia?",
+      "description": "Rather than one single 'correct' method of measurement, there are multiple ways of tracking the money supply. This dashboard tracks 3 measures - M1, M2, and M3.\n\nM1 is comprised of 'narrow money', covering only the most liquid assets.\nM2 is comprised of M1 and narrow quasi-money.\nM3 is comprised of M2 and broad money.\n\nThe table below summarises the definitions:",
+      "component_col_name": "Component",
+      "m1_col_name": "% of M1 Money",
+      "m2_col_name": "% of M2 Money",
+      "m3_col_name": "% of M3 Money"
+    },
+    "section_2": {
+      "title": "How is the money supply trending?"
+    },
+    "section_3": {
+      "title": "A deeper look at M1 (narrow money)"
+    },
+    "section_4": {
+      "title": "A deeper look at M2 (quasi money)"
+    },
+    "keys": {
+      "value_rm": "Value (RM)",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "m1_total": "M1 Supply (Narrow Money)",
+      "m2_total": "M2 Supply (M1 + Quasi-Money)",
+      "m3_total": "M3 Supply (M2 + Broad Money)",
+      "m1_currency": "Currency in Circulation",
+      "m1_deposit_demand": "Demand deposits",
+      "m2_deposit_saving": "Savings deposits",
+      "m2_deposit_fixed": "Fixed deposits",
+      "m2_nid": "Negotiable instruments of deposit (NID)",
+      "m2_repo": "Repos",
+      "m2_deposit_fx": "Foreign currency deposits",
+      "m2_deposit_other": "Other deposits",
+      "m3_deposit_other": "Deposits with other banking institutions"
+    }
+  },
+  "reservemoney": {
+    "header": "Reserve Money",
+    "description": "This dashboard uses data from Bank Negara Malaysia (BNM)'s Monthly Highlights and Statistics to track several key measures of reserve money. This includes Statutory Reserves, which are balances that banking institutions are required to maintain in their Statutory Reserve Accounts (SRA) equivalent to a certain proportion of their eligible liabilities, this proportion being the Statutory Reserve Requirement (SRR) set by BNM.",
+    "section_1": {
+      "title": "How is reserve money trending?",
+      "description": ""
+    },
+    "section_2": {
+      "title": "Factors affecting reserve money",
+      "description": ""
+    },
+    "keys": {
+      "value_rm": "Value (RM)",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "total": "Total Reserve Money",
+      "currency": "Currency in Circulation",
+      "reserves_required": "Statutory Reserves",
+      "reserves_excess": "Excess Reserves",
+      "net_claims_gov": "Net Claims on the Government",
+      "claims_gov": "Gross Claims on the Government",
+      "deposits_gov": "Deposits of the Government",
+      "claims_private": "Claims on the Private Sector",
+      "external": "External Operations",
+      "others": "Other Influences"
+    }
+  },
+  "international_reserves": {
+    "header": "International Reserves",
+    "description": "Under the Central Bank of Malaysia Act 2009 (CBA 2009), BNM is entrusted to hold and manage international reserves for the purpose of ensuring financial and monetary stability, as well as maintaining public confidence. The management of international reserves by BNM is subject to a strict governance and risk management framework established pursuant to the CBA 2009. This dashboards tracks the 3 primary measures of international reserve adequacy announced by BNM twice per month.",
+    "section_1": {
+      "title": "Key measures of BNM's international reserves",
+      "months": " months",
+      "months_of_import": "months of imports",
+      "short_term_external_debt": "short-term external debt"
+    },
+    "section_2": {
+      "title": "I want to understand more about BNM’s international reserves",
+      "description_part_1": "BNM has published an in-depth explainer on its international reserves, available ",
+      "ir_explainer": "here",
+      "ir_explainer_url": "https://www.bnm.gov.my/documents/20124/3026128/ar2020_en_box1_reserves.pdf",
+      "description_part_2": ". You may also access the latest granular data on BNM’s international reserves via ",
+      "official_bnm_site": "the official BNM site"
+    },
+    "keys": {
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "reserves_usd": "International Reserves (USD bil)",
+      "import_months": "Months of Imports Financeable",
+      "ed_scale": "Size relative to External Debt"
+    }
+  },
+  "interest_rates": {
+    "header": "Interest Rates",
+    "description": "There are many different interest rates in the economy - the rate you get when you open a savings account, the rate you get when you open a fixed deposit account, and the rate you get when you take a loan, to name a few. All these rates (and more) matter for economic activity, and are influenced by the Overnight Policy Rate (OPR), which is the primary policy tool of Bank Negara Malaysia (BNM). This dashboard uses data from BNM's Monthly Highlights and Statistics to track several key interest rates at a glance.",
+    "section_1": {
+      "title": "How are key interest rates trending?",
+      "description": ""
+    },
+    "keys": {
+      "value_rm": "Value (RM)",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "opr": "Overnight Policy Rate (OPR)",
+      "base": "Base Rate (weighted average)",
+      "walr": "Lending Rate (average on outstanding loans)",
+      "deposit_saving": "Savings Deposit Rate",
+      "deposit_fixed_12mo": "Fixed Deposit Rate (12 months)"
+    }
+  },
+  "wholesaleretail": {
+    "header": "Wholesale and Retail Trade",
+    "description": "This dashboard highlights the performance of wholesale and retail trade (including trade of motor vehicles) in Malaysia. The data is published by DOSM on a monthly basis and uses the detailed classification of industries per the Malaysia Standard Industrial Classification (MSIC) 2008, Version 1.0. This classification is in line with the International Standard Industrial Classification of All Economic Activities Revision 4, published by the United Nations Statistics Division.",
+    "section_1": {
+      "title": "How is wholesale and retail trade trending?"
+    },
+    "mom_growth": "MoM Growth {{ date }}",
+    "yoy_growth": "YoY Growth {{ date }}",
+    "keys": {
+      "index": "Index",
+      "sales": "Sales (RM)",
+      "index_sa": "Index (sa)",
+      "no_shade": "No shading",
+      "growth_index_yoy": "YoY Growth (volume)",
+      "growth_sales_yoy": "YoY Growth (sales)",
+      "growth_momsa": "MoM Growth (volume)",
+      "recession": "Recession",
+      "total": "Overall",
+      "wholesale": "Wholesale Trade",
+      "retail": "Retail Trade",
+      "motor": "Motor Vehicles"
+    }
+  },
+  "industry": {
+    "header": "Industrial Production",
+    "description": "This dashboard highlights the performance of industrial production in Malaysia, comprising the mining, manufacturing, and electricity production sectors. The data is published by DOSM on a monthly basis and uses the detailed classification of industries per the Malaysia Standard Industrial Classification (MSIC) 2008, Version 1.0. This classification is in line with the International Standard Industrial Classification of All Economic Activities Revision 4, published by the United Nations Statistics Division.",
+    "section_1": {
+      "title": "How is industrial production trending?"
+    },
+    "section_2": {
+      "title": "A deeper look at key manufacturing sub-sectors"
+    },
+    "keys": {
+      "recession": "Recession",
+      "index": "Index",
+      "index_sa": "Index (sa)",
+      "no_shade": "No shading",
+      "growth_yoy": "YoY Growth",
+      "growth_momsa": "MoM Growth (sa)",
+      "overall": "Overall",
+      "mining": "Mining",
+      "mfg": "Manufacturing",
+      "electric": "Electricity",
+      "mfg_food": "Food, Beverages and Tobacco",
+      "mfg_wood": "Wood, Furniture, Paper and Printing",
+      "mfg_electric": "Electrics and Electronics",
+      "mfg_textiles": "Textiles, Apparel, Leather and Footwear",
+      "mfg_petroleum": "Petroleum, Chemical, Rubber and Plastic",
+      "mfg_transport": "Transport Equipment and Others"
+    }
+  },
+  "consumer_prices": {
+    "header": "Consumer Prices",
+    "description": "The Consumer Price Index (CPI) is a monthly publication by DOSM which presents statistics on the cost of purchasing 12 main groups of goods and services. This is consistent with the classification according to the United Nations \"Classification of Individual Consumption According to Purpose\" (COICOP). Malaysia’s CPI is compiled based on prices that are collected on either on a monthly basis (for all items) or weekly basis (for perishable food items). Rents are collected once in a quarter.",
+    "section_1": {
+      "title": "A snapshot of inflation in Malaysia",
+      "description": "The time series charts below this section show trends; these bar charts summarise the latest inflation data at a glance. \nClick the bar for any state to get more granular inflation data for that state!",
+      "inflation_by_state": "Inflation by State",
+      "inflation_by_category": "{{ state }}: Inflation by Category",
+      "yoy": "Year-on-year",
+      "mom": "Month-on-month",
+      "short_categories": {
+        "overall": "Headline",
+        "food_beverage": "Food & Beverages",
+        "alcohol_tobacco": "Alcoholic Beverages & Tobacco",
+        "clothing_footwear": "Clothing & Footwear",
+        "housing_utilities": "Housing, Utilities, Gas & Other Fuels",
+        "furnishings": "Furnishing & Household Maintenance",
+        "health": "Health",
+        "transport": "Transport",
+        "communication": "Communication",
+        "recreation_culture": "Recreation & Culture",
+        "education": "Education",
+        "hospitality": "Restaurants & Hotels",
+        "misc": "Miscellaneous"
+      }
+    },
+    "section_2": {
+      "title": "How is the CPI trending?",
+      "description": "The CPI measures the cost of purchasing a constant 'basket' of goods and services by households in a specified time period, with reference to a base time period (currently 2010). The core CPI excludes the volatile prices of fresh food, and prices which are administered by the government. The charts below show the trend of the overall CPI, as well as the 12 main groups of goods and services tracked by DOSM.",
+      "null_alcohol_tobacco": "Core inflation is not derived because all items in this category are either price-volatile or price-administered. "
+    },
+    "section_3": {
+      "title": "Chart-builder: Inflation trends for specific items",
+      "description": "The timeseries data presented at the top of the page summarises the overall state of inflation in Malaysia. However, it can be helpful to zoom into specific items of interest to you. To facilitate this, we have built a tool that allows you to explore our inflation data at the granularity of your choice.",
+      "select_granularity": "Granularity",
+      "select_items": "Items",
+      "select_upto6": "Select up to 6 items"
+    },
+    "section_4": {
+      "title": "A granular snapshot of inflation in the Malaysian economy",
+      "description": "The timeseries data presented at the top of the page summarises the overall state of inflation in Malaysia. However, it can be helpful to zoom into specific items of interest to you. To facilitate this, we have built a tool that allows you to explore our inflation data at the granularity of your choice.",
+      "select_axis": "{{ axis }}-Axis",
+      "select_granularity": "Granularity",
+      "select_highlight": "Highlight(s)",
+      "select_upto3": "Select up to 3 items"
+    },
+    "section_5": {
+      "title": "A geographic visualisation of selected prices (by district)",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "select_item": "Item"
+    },
+    "keys": {
+      "core": "Core",
+      "headline": "Headline",
+      "broad_categories": "Broad categories (2 digit)",
+      "narrow_categories": "Narrow categories (4 digit)",
+      "y1": "Weightage",
+      "y2": "YoY Growth (latest)",
+      "y3": "YoY Growth (5y average)",
+      "y4": "MoM Growth (Latest)",
+      "y5": "MoM Growth (5y average)",
+      "value": "Index",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "overall": "Overall",
+      "food_beverage": "Food & Non-Alcoholic Beverages",
+      "alcohol_tobacco": "Alcoholic Beverages & Tobacco",
+      "clothing_footwear": "Clothing & Footwear",
+      "housing_utilities": "Housing, Water, Electricity, Gas & Other Fuels",
+      "furnishings": "Furnishings, Household Equipment & Routine Household Maintenance",
+      "health": "Health",
+      "transport": "Transport",
+      "communication": "Communication",
+      "recreation_culture": "Recreation Services & Culture",
+      "education": "Education",
+      "hospitality": "Restaurants & Hotels",
+      "misc": "Miscellaneous Goods & Services",
+      "coicop_017101": "Spinach (1kg)",
+      "coicop_017120": "Ladyfinger (1kg)",
+      "coicop_017118": "Angle Gourd (1kg)",
+      "coicop_0171302": "Onions (Big, India, 1kg)",
+      "coicop_0171221": "Fresh Chilli (Red, Kulai, 1kg)",
+      "coicop_0171222": "Fresh Chilli (Red, Minyak, 1kg)",
+      "coicop_017139": "Long Beans (1kg)",
+      "coicop_017126": "French Beans (1kg)",
+      "coicop_0171091": "Local Cauliflower (1kg)",
+      "coicop_0171342": "Carrots (China, 1kg)",
+      "coicop_0171041": "Choy Sum (1kg)",
+      "coicop_017125": "Tomatoes (1kg)",
+      "coicop_017119": "Local Brinjals (1kg)",
+      "coicop_017123": "Cucumber (1kg)",
+      "coicop_0161263": "Fuji Apples (1kg)",
+      "coicop_016118": "Papaya (1kg)",
+      "coicop_016119": "Pineapple (1kg)",
+      "coicop_0161013": "Berangan Bananas (1kg)",
+      "coicop_016301": "Grated Coconut (1kg)",
+      "coicop_016304": "Fresh Coconut Milk (1kg)",
+      "coicop_0144013": "10 Hen's Eggs (Grade C)",
+      "coicop_013103": "Fresh Cencaru (1kg)",
+      "coicop_013101": "Fresh Kembong (1kg)",
+      "coicop_0121041": "Processed Chicken (Std, 1kg)",
+      "coicop_012101": "Local Beef (1kg)",
+      "coicop_0132032": "Seawater Prawns (8-12cm, 1kg)",
+      "coicop_013205": "Fresh Cuttlefish (10-12cm, 1kg)",
+      "coicop_013202": "Fresh Sea Crab (1kg)",
+      "coicop_0011222": "1 plate of White Rice, Chicken & Veg",
+      "coicop_001128": "1 Roti Canai",
+      "coicop_1111021": "1 Teh Tarik"
+    }
+  },
+  "producer_prices": {
+    "header": "Producer Prices",
+    "description": "The CPI tracks the prices charged to consumers, i.e. the prices you pay when you buy groceries, household supplies, and other goods and services. However, these prices may be distorted by taxes (e.g. SST), excise duties, subsidies, and transport costs. Therefore, to get a different view on the cost of goods in the Malaysian economy, DOSM tracks the prices received by producers for 1,063 items, at the first stage of commercialization. This data is published as the Producer Price Index.",
+    "section_1": {
+      "title": "How is the PPI trending?",
+      "description": "The charts below show the trend of the overall PPI, as well as the 5 main production sectors."
+    },
+    "keys": {
+      "value": "Index",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "overall": "Overall",
+      "agriculture": "Agriculture, Forestry & Fishing",
+      "mining": "Mining",
+      "manufacturing": "Manufacturing",
+      "electricity": "Electricity & Gas Supply",
+      "water": "Water Supply"
+    }
+  },
+  "rubber": {
+    "header": "Rubber Statistics",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "section_1": {
+      "title": "[section_1]",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    "keys": {
+      "value_rm": "Value (RM)",
+      "growth_mom": "MoM Growth",
+      "growth_yoy": "YoY Growth",
+      "no_shade": "No shading",
+      "recession": "Recession",
+      "demand": "[demand]",
+      "export": "[export]",
+      "import": "[import]",
+      "supply": "[supply]",
+      "stock_end": "[stock_end]",
+      "production": "[production]",
+      "consumption": "[consumption]",
+      "stock_start": "[stock_start]"
+    }
+  },
+  "crime": {
+    "header": "Violent and Property Crime",
+    "description": "The Royal Malaysian Police (PDRM), maintains a transactional database of all reported crimes in Malaysia, and works with DOSM to publish crime statistics annually. Although DOSM's complete crime dataset contains detail on other areas of crime (e.g. environmental and white-collar crime), this dashboard focuses on violent and property crimes, which are perceived more viscerally.\n\n For administrative regions, data for Sabah includes crimes committed in W.P. Labuan, while data for W.P. Kuala Lumpur includes crimes committed in W.P. Putrajaya.",
+    "section_1": {
+      "title": "How are violent and property crimes trending?",
+      "description": "Violent crimes are any crime where the victim is harmed by or threatened with violence, such as murder, rape, robbery, and assault. Property crimes are instances where the victim's property is stolen or destroyed, without the use or threat of force against the victim. The two charts below present headline statistics on these two categories of crime, while the sections below provide further detail."
+    },
+    "section_2": {
+      "title": "How does the incidence of crimes (per capita) vary across states?"
+    },
+    "section_3": {
+      "title": "A deeper look at violent crimes"
+    },
+    "section_4": {
+      "title": "A deeper look at property crimes",
+      "description": "It is important to note that data below does not include instances where threat or force is used against the victim, even if the circumstances are similar, as these would be classified as violent crimes. For example, the data on snatch theft does not include instances where the victim is injured, as this would then be classified as a robbery."
+    },
+    "crime": "Crime",
+    "keys": {
+      "violent": "Violent Crimes",
+      "property": "Property Crimes",
+      "violent_murder": "Murders",
+      "violent_rape": "Rapes",
+      "violent_injury": "Cases of Causing Injury",
+      "violent_robbery": "Robberies",
+      "property_break_in": "Breaking-in",
+      "property_snatch": "Snatch Theft",
+      "property_vehicle_lorry": "Vehicular Theft - Lorries",
+      "property_vehicle_motorcar": "Vehicular Theft - Cars",
+      "property_vehicle_motorcycle": "Vehicular Theft - Motorcycles and Scooters",
+      "property_other": "Other Property Crimes"
+    }
+  },
+  "drug": {
+    "header": "Drug Addiction",
+    "description": "Every year, DOSM works with the National Anti-Drugs Agency (NADA) to release statistics on drug addiction as part of the annual crime statistics release. This dashboard, which presents data on drug addiction at national and state level, provides critical insights on drug addiction trends, as well as demographic breakdowns to facilitate a deeper understanding of drug addiction in Malaysia.",
+    "section_1": {
+      "title": "How has drug addiction in {{ state }} changed over time?",
+      "description": "The National Anti-Drugs Agency (NADA) is the lead agency under the purview of the Ministry of Home Affairs in combating drugs and substance abuse in Malaysia. The data below is collected via the various treatment and rehabilitation centres run by NADA."
+    },
+    "section_2": {
+      "title": "A deeper look at drug addiction in {{ state }}"
+    },
+    "keys": {
+      "age": "Drug Addicts by Age",
+      "job": "Drug Addicts by Employment Status",
+      "sex": "Drug Addicts by Sex",
+      "drug": "Drug Addicts by Type of Drug Addiction",
+      "ethnicity": "Drug Addicts by Ethnicity",
+      "schooling": "Drug Addicts by Highest Education Level",
+      "male": "Male",
+      "female": "Female",
+      "total": "Total",
+      "parttime": "Part-time worker",
+      "student": "Student",
+      "fulltime": "Full-time worker",
+      "unemployed": "Unemployed",
+      "opiate": "Heroin and morphine",
+      "methpill": "Methamphetamine (pills)",
+      "methcrystal": "Methamphetamine (crystalline)",
+      "ganja": "Cannabis (ganja)",
+      "ats": "Amphetamine-type stimulants (ATS)",
+      "opium": "Opium",
+      "psychotropic": "Psychotropic pills",
+      "chinese": "Chinese",
+      "bumiputera": "Bumiputera",
+      "other": "Others",
+      "indian": "Indian",
+      "primary": "Primary school",
+      "secondary": "Secondary school",
+      "tertiary": "Tertiary education",
+      "diploma": "Diploma",
+      "none": "No education"
+    }
+  },
+  "exchangerate": {
+    "header": "Exchange Rates",
+    "description": "Malaysia is a small open economy. Trade is very important for our country. Consequently, this dashboard gives you an easy way to conduct exchange rate surveillance. Crucially, it moves beyond the often-quoted USD/MYR rate, and provides you with a comprehensive view of all currency pairs that are important for Malaysia.",
+    "section_1": {
+      "title": "A snapshot of the Ringgit's performance against Malaysia's major trade partners",
+      "description": "",
+      "bar_header": "% change over {{ period }}"
+    },
+    "section_2": {
+      "title": "How is the Ringgit trending?",
+      "description": "To ease visual exploration, the charts below are coloured based on performance of the Ringgit over the time period selected. Green indicates an overall appreciation, red indicates depreciation, and grey is used to indicate no or minimal change."
+    },
+    "latest": "Latest",
+    "keys": {
+      "1w": "1 week",
+      "1m": "1 month",
+      "1y": "1 year",
+      "5y": "5 years",
+      "alltime": "All-time",
+      "currency0": "Trade-weighted Exchange Rate (1 Jan 2020 = 100)"
+    }
+  },
+  "catalogue": {
+    "header": "Data Catalogue",
+    "description": "Your one-stop interface to browse our wealth of open data. This page is primarily meant to catalogue data published by DOSM, and aims to grow in depth and breadth every single day, providing richer and more varied data from the various divisions of DOSM.",
+    "dataset_count": "{{ count }} data series, and counting",
+    "download": "Download",
+    "category": "Category",
+    "chart": "Chart",
+    "table": "Table",
+    "filter": "Filter",
+    "index_filters": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly",
+      "state": "State",
+      "dun": "DUN",
+      "national": "National",
+      "parlimen": "Parliament",
+      "district": "District"
+    },
+    "show_filters": {
+      "mean": "Mean",
+      "median": "Median",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "variable": "Variable",
+      "percentile": "Percentile",
+      "state": "State",
+      "real": "Real",
+      "real_sa": "Real (sa)",
+      "nominal": "Nominal",
+      "level": "Level",
+      "growth": "Growth",
+      "contribution": "Contribution",
+      "male": "Male",
+      "female": "Female",
+      "change_weekly": "Weekly Change",
+      "overall": "Overall",
+      "food_beverage": "Food & Non-Alcoholic Beverages",
+      "alcohol_tobacco": "Alcoholic Beverages & Tobacco",
+      "clothing_footwear": "Clothing & Footwear",
+      "housing_utilities": "Housing, Water, Electricity, Gas & Other Fuels",
+      "furnishings": "Furnishings, Household Equipment & Routine Household Maintenance",
+      "health": "Health",
+      "transport": "Transport",
+      "communication": "Communication",
+      "recreation_culture": "Recreation Services & Culture",
+      "education": "Education",
+      "hospitality": "Restaurants & Hotels",
+      "misc": "Miscellaneous Goods & Services",
+      "DAILY": "Daily",
+      "WEEKLY": "Weekly",
+      "MONTHLY": "Monthly",
+      "QUARTERLY": "Quarterly",
+      "YEARLY": "Yearly",
+      "malaysia": "Malaysia",
+      "johor": "Johor",
+      "kedah": "Kedah",
+      "kelantan": "Kelantan",
+      "melaka": "Melaka",
+      "negeri-sembilan": "Negeri Sembilan",
+      "pahang": "Pahang",
+      "perak": "Perak",
+      "perlis": "Perlis",
+      "pulau-pinang": "Pulau Pinang",
+      "sabah": "Sabah",
+      "sarawak": "Sarawak",
+      "selangor": "Selangor",
+      "terengganu": "Terengganu",
+      "wp-kuala-lumpur": "W.P. Kuala Lumpur",
+      "wp-labuan": "W.P. Labuan",
+      "wp-putrajaya": "W.P. Putrajaya",
+      "w": {
+        "p": {
+          "-kuala-lumpur": "W.P. Kuala Lumpur",
+          "-labuan": "W.P. Labuan",
+          "-putrajaya": "W.P. Putrajaya"
+        }
+      },
+      "supra": "Supra",
+      "educ_0": "No formal education",
+      "educ_1": "Primary",
+      "educ_2": "Secondary",
+      "educ_3": "Tertiary",
+      "cert_0": "No certificate/Not applicable",
+      "cert_1": "SPM and below",
+      "cert_2": "STPM/Certificate ",
+      "cert_3": "Diploma",
+      "cert_4": "Degree",
+      "masco_1": "Managers",
+      "masco_2": "Professionals",
+      "masco_3": "Technicians and associate professionals",
+      "masco_4": "Clerical support workers",
+      "masco_5": "Service and sales workers ",
+      "masco_6": "Skilled agricultural, forestry, livestock and fishery workers",
+      "masco_7": "Craft and related trades workers",
+      "masco_8": "Plant and machine-operators, and assemblers",
+      "masco_9": "Elementary occupations",
+      "sector_1": "Agriculture",
+      "sector_2": "Mining and quarrying",
+      "sector_3": "Manufacturing",
+      "sector_4": "Construction",
+      "sector_5": "Services",
+      "skill_1": "Low-skilled",
+      "skill_2": "Semi-skilled",
+      "skill_3": "Skilled",
+      "msic_a": "Agriculture",
+      "msic_b": "Mining and quarrying ",
+      "msic_c": "Manufacturing",
+      "msic_d": "Electricity, gas, steam and air conditioning supply ",
+      "msic_e": "Water supply; sewerage, waste management and remediation activities ",
+      "msic_f": "Construction ",
+      "msic_g": "Wholesale and retail trade; repair of motor vehicles and motorcycles ",
+      "msic_h": "Transportation and storage",
+      "msic_i": "Accommodation and food and beverage service activities",
+      "msic_j": "Information and communication",
+      "msic_k": "Financial and insurance/takaful activities ",
+      "msic_l": "Real estate activities ",
+      "msic_m": "Professional, scientific and technical activities",
+      "msic_n": "Administrative and support service activities ",
+      "msic_o": "Public administration and defence; compulsory social security",
+      "msic_p": "Education ",
+      "msic_q": "Human health and social work activities ",
+      "msic_r": "Arts, entertainment and recreation",
+      "msic_s": "Other service activities",
+      "citizen": "Citizen",
+      "bumiputera": "Bumiputera",
+      "chinese": "Chinese",
+      "indian": "Indian ",
+      "other_citizen": "Other (Citizen)",
+      "other_noncitizen": "Non-Citizen"
+    },
+    "period": "Period",
+    "geographic": "Geographic",
+    "begin": "Begin",
+    "end": "End",
+    "source": "Data Source",
+    "search_placeholder": "Search for dataset",
+    "image": {
+      "title": "Image (PNG)",
+      "desc": "Suitable for general digital use."
+    },
+    "vector": {
+      "title": "Vector Graphic (SVG)",
+      "desc": "Suitable for high quality prints or further image editing."
+    },
+    "csv": {
+      "title": "Full Dataset (CSV)",
+      "desc": "Recommended for individuals seeking an Excel-friendly format."
+    },
+    "parquet": {
+      "title": "Full Dataset (Parquet)",
+      "desc": "Recommended for data scientists seeking to work with data via code."
+    },
+    "geojson": {
+      "title": "GeoJSON (JSON)",
+      "desc": "Open standard format for plotting geographical features on maps."
+    },
+    "header_1": "How is this data produced?",
+    "header_2": "What caveats I should bear in mind when using this data?",
+    "header_3": "Publication(s) using this data",
+    "meta_desc": "Dataset description",
+    "meta_def": "Variable definitions",
+    "meta_chart_above": "(Chart above)",
+    "meta_all_dataset": "In the entire dataset:",
+    "meta_variable": "Variable",
+    "meta_variable_name": "Name in Dataset",
+    "meta_data_type": "Data type",
+    "meta_definition": "Definition",
+    "meta_source": "Data source(s)",
+    "meta_url": "URLs to dataset",
+    "meta_license": "License",
+    "code": "Code",
+    "code_desc": "Connect directly to the data with Python.",
+    "code_note": "If not already installed, do",
+    "code_comments": {
+      "geojson_1": "# the first URL gives you 15dp accuracy (highest possible) \n# the _LIGHT URL gives you 5dp accuracy, sufficient for visuals but not analysis \n# the _LIGHT URL is over 90% smaller in size, hence the tradeoff",
+      "geojson_2": "# Uncomment below to maintain a rectangular map, but remove the whitespace caused by the South China Sea",
+      "geojson_3": "# Uncomment below to change from rectangular --> square, for a more compact visual"
+    },
+    "license_text": "This data is made open under the Creative Commons Attribution 4.0 International License (CC BY 4.0). A human-readable copy of the license is available "
+  },
+  "kawasanku": {
+    "header": "Learn more about your area today!",
+    "description": "How does my area shape up against other areas? What are its demographics? What are labour conditions like? Does it have adequate public services? \n\n It is DOSM's mission to bring the answers to these questions to the rakyat's fingertips. Following the completion of Population and Housing Census of Malaysia 2020 (MyCensus 2020), DOSM released population data at Parliament Constituency and State Legislative Assembly level for the first time in history. The Kawasanku dashboard is intended to give citizens, policymakers, and the international community an accessible way to explore the dataset.",
+    "action": "Find my area",
+    "section_1": {
+      "title": "{{ area }} has a population of {{ size }} people. What does this population look like?",
+      "number_people": "{{ size }} people"
+    },
+    "section_2": {
+      "title": "A comparison of key variables across {{ type }}.",
+      "note": "Note: Dispersions across variables are not intended to be perfectly comparable"
+    },
+    "geofilter": "Geofilter",
+    "area_types": {
+      "district": "District",
+      "districts": "Districts",
+      "dun": "State Legislative Assembly (DUN)",
+      "duns": "State Legislative Assemblies (DUNs)",
+      "parlimen": "Parliament Constituency",
+      "parlimens": "Parliament Constituencies",
+      "state": "State",
+      "states": "States"
+    },
+    "median": "Median among {{ type }}",
+    "below_median": "Below median",
+    "above_median": "Above median",
+    "sex": "Sex",
+    "agegroup": "Age group",
+    "nationality": "Nationality",
+    "ethnicity": "Ethnicity",
+    "religion": "Religion",
+    "marital": "Marital Status",
+    "geography": "Geography",
+    "population": "Population",
+    "economy": "Economy",
+    "gender_distribution": "Gender and Age Distribution",
+    "public_services": "Public Services",
+    "housing": "Occupied dwellings",
+    "labour": "Employment status",
+    "keys": {
+      "male": "Male",
+      "female": "Female",
+      "working": "Working",
+      "child": "Children",
+      "elderly": "Elderly",
+      "local": "Citizen",
+      "foreign": "Non-citizen",
+      "bumi": "Bumiputera",
+      "chinese": "Chinese",
+      "indian": "Indian",
+      "other": "Others",
+      "muslim": "Muslim",
+      "buddhist": "Buddhist",
+      "hindu": "Hindu",
+      "christian": "Christian",
+      "atheist": "Atheist",
+      "married": "Married",
+      "never_married": "Never married",
+      "widowed": "Widowed",
+      "divorced": "Divorced",
+      "total_area": "Land area",
+      "max_elevation": "Max elevation",
+      "ruggedness": "Terrain Ruggedness Index",
+      "watercover": "Surface covered in water",
+      "treecover": "Surface covered in forest",
+      "treeloss": "Forest loss between 2000 to 2021",
+      "nightlights": "Maximum intensity of lights at night",
+      "population_density": "Population density",
+      "female_male": "Sex ratio (males per 100 females)",
+      "household_size": "Average household size",
+      "birth_rate": "Live births per 1000 people",
+      "death_rate": "Death rate per 1000 people",
+      "dep_young": "Young-age dependency ratio",
+      "dep_old": "Old-age dependency ratio",
+      "income_mean": "Household income",
+      "expenditure_mean": "Household expenditure",
+      "gini": "Inequality (Gini coefficient)",
+      "poverty": "Incidence of poverty",
+      "labour_urate": "Unemployment rate",
+      "labour_prate": "Labour force participation rate",
+      "agegroup_working": "Working age population %",
+      "electricity": "Access to electricity",
+      "water": "Access to piped water at home",
+      "hospital": "Hospitals per 1000 people",
+      "clinic": "Health clinics per 1000 people",
+      "school": "Schools per 1000 children",
+      "police_fire": "Police and fire stations per 1000 people",
+      "grocery": "Grocery stores per 1000 people",
+      "unemployed": "Unemployed",
+      "out": "Out of labour force",
+      "owned": "Owned",
+      "rented": "Rented",
+      "quarters": "Quarters"
+    },
+    "tips": {
+      "total_area": "",
+      "max_elevation": "Topobathy data was derived from the freely available Global Multi-resolution Terrain Elevation Data 2010 (GMTED2010) dataset, at 7.5 arc-second resolution. Geospatial analysis was conducted by DOSM.",
+      "ruggedness": "Terrain ruggedness indicates how jagged or flat an area is, on average. TRI was computed following Riley et al. (1999), using the freely available GMTED2010 dataset at 30 arc-second resolution. Geospatial analysis was conducted by DOSM.",
+      "watercover": "Water cover data was derived from EC JRC and Google's freely available Global Surface Water dataset under the Copernicus Programme (Pekel et al., 2016). Geospatial analysis was conducted by DOSM.",
+      "treecover": "Tree cover data was derived from UMD, Google, USGS and NASA's freely available Global Forest Change dataset (Hansen et al., 2013). Geospatial analysis was conducted by DOSM.",
+      "treeloss": "Tree loss data was derived from UMD, Google, USGS and NASA's freely available Global Forest Change dataset (Hansen et al., 2013). Geospatial analysis was conducted by DOSM.",
+      "nightlights": "Night lights intensity data was derived from the freely available global VIIRS Nighttime Light dataset (Elvidge et al., 2020). Geospatial analysis was conducted by DOSM.",
+      "population_density": "",
+      "female_male": "",
+      "household_size": "",
+      "birth_rate": "",
+      "death_rate": "",
+      "dep_young": "Ratio of young-age (0-14) to working age (15-64) population",
+      "dep_old": "Ratio of old-age (65+) to working age (15-64) population",
+      "income_mean": "Estimated based on the 2020 Household Income, Expenditure and Basic Amenities (HIES/BA) Survey data. There may be relatively high standard errors for certain electoral areas.",
+      "expenditure_mean": "",
+      "gini": "",
+      "poverty": "A person or household was classified as poor if their income fell below the 2019 Poverty Line Income.",
+      "labour_urate": "Labour force indicators by electoral area were estimated based on 2020 Labour Force Survey data and the estimated population factors for 2020. This data should be used with caution due to relatively high standard errors for certain electoral areas.",
+      "labour_prate": "",
+      "agegroup_working": "",
+      "electricity": "Includes both 24-hour supply and intermittent supply",
+      "water": "",
+      "hospital": "Includes all public and private hospitals in operation as of 1 May 2022. Data on hospitals was sourced from the Ministry of Health Malaysia. Geospatial analysis was conducted by DOSM.",
+      "clinic": "Includes all public and private clinics in operation as of 1 May 2022. Data on clinics was sourced from the Ministry of Health Malaysia. Geospatial analysis was conducted by DOSM.",
+      "school": "Includes all public schools in operation as of 1 May 2022. Data on schools was sourced from the Ministry of Education. Geospatial analysis was conducted by DOSM.",
+      "police_fire": "Includes police and fire stations in operation as of 1 May 2022. Data on police and fire stations were sourced from the Royal Malaysian Police and the Fire and Rescue Department of Malaysia respectively. Geospatial analysis was conducted by DOSM.",
+      "grocery": "Includes both publicly and privately owned grocery stores. Equivalent to Provision Stores based on the Malaysia Standard Industrial Classification (MSIC) 2008 Ver 1.0."
+    }
+  },
+  "dailyprice": {
+    "header": "Daily Prices",
+    "description": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos quasi eum inventore vero quo, molestias reiciendis reprehenderit numquam, optio ipsum repellendus? Ipsum ab quisquam nisi sed libero aliquid assumenda quidem?"
+  }
+}
