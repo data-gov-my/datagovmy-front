@@ -31,7 +31,7 @@ interface CatalogueTimeseriesProps {
 
 const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   config,
-  className = "h-[350px] w-full",
+  className = "h-[350px] w-full lg:h-[450px]",
   dataset,
   urls,
   filter,
@@ -121,7 +121,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
       AKSARA_COLOR.WARNING,
       AKSARA_COLOR.DANGER,
       AKSARA_COLOR.GREY,
-    ]; // [blue, red]
+    ]; // [blue, yellow, red, grey]
 
     return sets.map(([key, y], index) => ({
       type: "line",
@@ -151,6 +151,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]
             }
             enableAnimation={!play}
+            enableLegend={_datasets.length > 1}
             mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
             data={{
               labels: coordinate.x,

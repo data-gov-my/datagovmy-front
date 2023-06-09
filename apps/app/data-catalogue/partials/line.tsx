@@ -123,6 +123,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
       borderColor: colors[index],
       borderWidth: 1,
       pointRadius: 0,
+      pointHitRadius: 2,
       stepped: config.line_variables && config.line_variables[key].stepped,
       tension: config.line_variables && config.line_variables[key].tension,
     }));
@@ -134,7 +135,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
 
   return (
     <Line
-      className="h-[350px] w-full"
+      className="h-[350px] w-full lg:h-[450px]"
       _ref={ref => setCtx(ref)}
       precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
       data={{
@@ -143,6 +144,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
       }}
       enableTooltip
       enableCrosshair
+      enableLegend={_datasets.length > 1}
     />
   );
 };

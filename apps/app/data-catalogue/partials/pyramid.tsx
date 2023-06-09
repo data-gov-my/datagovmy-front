@@ -106,7 +106,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
 
   const _datasets = useMemo<ChartDataset<"bar", any[]>[]>(() => {
     const sets = Object.entries(dataset.chart);
-    const colors = ["#2563EB", "#F30607"]; // [blue, red]
+    const colors = [AKSARA_COLOR.PRIMARY, AKSARA_COLOR.DANGER]; // [blue, red]
 
     return sets
       .filter(([key, _]) => key !== "x")
@@ -124,17 +124,15 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   }, [dataset.chart.x, ctx]);
 
   return (
-    <>
-      <Pyramid
-        _ref={ref => setCtx(ref)}
-        className={className}
-        precision={config?.precision !== undefined ? [config.precision, 0] : [1, 0]}
-        data={{
-          labels: dataset.chart.x,
-          datasets: _datasets,
-        }}
-      />
-    </>
+    <Pyramid
+      _ref={ref => setCtx(ref)}
+      className={className}
+      precision={config?.precision !== undefined ? [config.precision, 0] : [1, 0]}
+      data={{
+        labels: dataset.chart.x,
+        datasets: _datasets,
+      }}
+    />
   );
 };
 
