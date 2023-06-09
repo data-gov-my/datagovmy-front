@@ -10,6 +10,7 @@ import {
   TimeScale,
   TimeSeriesScale,
   Filler,
+  Legend,
 } from "chart.js";
 import AnnotationPlugin from "chartjs-plugin-annotation";
 import { Line as LineCanvas } from "react-chartjs-2";
@@ -79,7 +80,8 @@ const Line: FunctionComponent<LineProps> = ({
     Filler,
     ChartTooltip,
     CrosshairPlugin,
-    AnnotationPlugin
+    AnnotationPlugin,
+    Legend
   );
 
   const { theme } = useTheme();
@@ -91,7 +93,11 @@ const Line: FunctionComponent<LineProps> = ({
     plugins: {
       legend: {
         display: enableLegend,
-        position: "chartArea" as const,
+        labels: {
+          usePointStyle: true,
+          pointStyle: "rect",
+        },
+        position: "top",
         align: "start",
       },
       crosshair: enableCrosshair
@@ -166,14 +172,30 @@ const Line: FunctionComponent<LineProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-3">
+    <div className="flex flex-col gap-y-6">
+      <div className="flex flex-col gap-y-3">
         <ChartHeader title={title} menu={menu} controls={controls} state={state} />
         {subheader && <div className="text-dim text-sm">{subheader}</div>}
         {stats && <Stats data={stats} />}
       </div>
       <div className={className}>
-        <LineCanvas ref={_ref} options={options} data={data} />
+        <LineCanvas
+          ref={_ref}
+          options={options}
+          data={data}
+          plugins={[
+            {
+              id: "increase-legend-spacing",
+              beforeInit(chart) {
+                const originalFit = (chart.legend as any).fit;
+                (chart.legend as any).fit = function fit() {
+                  originalFit.bind(chart.legend)();
+                  this.height += 20;
+                };
+              },
+            },
+          ]}
+        />
       </div>
     </div>
   );
