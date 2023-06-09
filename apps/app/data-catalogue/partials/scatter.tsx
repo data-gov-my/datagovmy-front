@@ -15,7 +15,6 @@ const Scatter = dynamic(() => import("@components/Chart/Scatter"), { ssr: false 
 
 interface CatalogueScatterProps {
   className?: string;
-  config: any;
   dataset: any;
   translations: any;
   urls: {
@@ -26,7 +25,6 @@ interface CatalogueScatterProps {
 
 const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
   className = "h-[450px] lg:h-[400px] max-w-lg mx-auto",
-  config,
   translations,
   dataset,
   urls,
@@ -111,7 +109,7 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
       AKSARA_COLOR.GREY,
       AKSARA_COLOR.DANGER,
       AKSARA_COLOR.WARNING,
-    ]; // [blue, red]
+    ]; // [blue, yellow, red, grey]
 
     return dataset.chart.map((item: any, index: number) => ({
       type: "line",
@@ -128,15 +126,13 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
   }, [dataset.chart, ctx]);
 
   return (
-    <>
-      <Scatter
-        _ref={ref => setCtx(ref)}
-        className={className}
-        data={_datasets}
-        enableRegression
-        enableLegend
-      />
-    </>
+    <Scatter
+      _ref={ref => setCtx(ref)}
+      className={className}
+      data={_datasets}
+      enableRegression
+      enableLegend
+    />
   );
 };
 

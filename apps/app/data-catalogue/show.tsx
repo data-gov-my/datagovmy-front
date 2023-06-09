@@ -199,7 +199,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         return (
           <CatalogueScatter
             className="mx-auto aspect-square w-full lg:h-[512px] lg:w-1/2"
-            config={config}
             dataset={dataset}
             urls={urls}
             translations={translations}
