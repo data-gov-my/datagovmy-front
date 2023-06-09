@@ -47,18 +47,20 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
 
   const SEAT_OPTIONS: Array<OptionType> = selection.map(key => ({
     label: key.seat_name.concat(` (${t(key.type)})`),
-    value: key.seat_name,
+    value: key.type + "-" + key.seat_name,
   }));
 
-  const navigateToSeat = (name?: string) => {
-    if (!name) {
+  const navigateToSeat = (seat?: string) => {
+    if (!seat) {
       setData("seat", null);
       return;
     }
     setData("loading", true);
-    setData("seat", name);
-
-    push(`${routes.ELECTION_EXPLORER}/seats/${name}`, undefined, {
+    setData("seat", seat);
+    const match = seat.split("-");
+    const name = match[1];
+    const type = match[0];
+    push(`${routes.ELECTION_EXPLORER}/seats/${encodeURIComponent(name)}/${type}`, undefined, {
       scroll: false,
       locale: i18n.language,
     }).then(() => {
@@ -180,7 +182,9 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                 title={
                   <div className="pb-6 font-bold">
                     {t("seat.title")}
-                    <span className="text-primary">{params.seat_name}</span>
+                    <span className="text-primary">{`${params.seat_name} (${t(
+                      params.type
+                    )})`}</span>
                   </div>
                 }
                 data={elections}

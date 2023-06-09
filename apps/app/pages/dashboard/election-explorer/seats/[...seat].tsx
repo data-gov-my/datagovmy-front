@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-election-explorer",
   async ({ params }) => {
     try {
-      const name = params?.seat;
+      const [name, type] = params ? (params.seat as string[]) : [undefined, undefined];
       if (!name) throw new Error("Undefined seat name");
 
       const [dropdown, seat] = await Promise.all([
@@ -45,13 +45,13 @@ export const getStaticProps: GetStaticProps = withi18n(
           explorer: "ELECTIONS",
           chart: "seats",
           seat_name: name,
+          type,
         }),
       ]).catch(e => {
         throw new Error("Invalid seat name. Message: " + e);
       });
 
       return {
-        // notFound: true,
         props: {
           meta: {
             id: "dashboard-election-explorer",
@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps = withi18n(
             category: "democracy",
             agency: "SPR",
           },
-          params: { seat_name: name },
+          params: { seat_name: name, type: type },
           selection: dropdown.data,
           elections:
             seat.data?.sort((a: Seat, b: Seat) => Date.parse(b.date) - Date.parse(a.date)) ?? [],
