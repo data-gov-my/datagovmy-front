@@ -8,8 +8,7 @@
     "dev": "next dev -p 3002",
     "build": "next build",
     "postbuild": "next-sitemap",
-    "start": "next start",
-    "prepare": "husky install"
+    "start": "next start"
   },
   "lint-staged": {
     "*.{js,ts,tsx,css,md}": "prettier --write"
@@ -43,9 +42,9 @@
     "next-pwa": "^5.6.0",
     "next-sitemap": "^3.1.23",
     "prop-types": "^15.8.1",
-    "react": "18.1.0",
+    "react": "^18.2.0",
     "react-chartjs-2": "^4.3.1",
-    "react-dom": "18.1.0",
+    "react-dom": "^18.2.0",
     "react-leaflet": "^4.1.0",
     "react-medium-image-zoom": "^5.0.3",
     "sharp": "^0.31.0"
@@ -67,8 +66,6 @@
     "@types/react-html-parser": "^2.0.2",
     "autoprefixer": "^10.4.7",
     "geojson-bbox": "^0.0.1",
-    "husky": ">=6",
-    "lint-staged": ">=10",
     "postcss": "^8.4.14",
     "postcss-import": "^14.1.0",
     "postcss-nesting": "^10.1.10",
