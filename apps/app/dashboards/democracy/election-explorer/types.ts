@@ -1,4 +1,8 @@
 export type ElectionType = "parlimen" | "dun";
+export enum ElectionEnum {
+  Parlimen = 0,
+  Dun = 1,
+}
 export type ElectionResult = "won" | "won_uncontested" | "lost" | "lost_deposit";
 
 export type Candidate = {

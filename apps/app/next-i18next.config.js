@@ -1,4 +1,4 @@
-const I18NextHttpBackend = require("i18next-http-backend");
+const I18NextHttpBackend = require("i18next-http-backend/cjs");
 
 const namespace = [
   "common",
@@ -32,11 +32,12 @@ const namespace = [
   "dashboard-name-popularity",
   "dashboard-organ-donation",
   "dashboard-peka-b40",
-  "dashboard-peoples-income-initiative",
+  "dashboard-ipr",
   "dashboard-poverty",
   "dashboard-public-contracting",
   "dashboard-public-pension",
   "dashboard-public-transportation",
+  "dashboard-refugee-situation",
   "dashboard-reserve-money",
   "dashboard-retirement-readiness",
   "dashboard-sekolahku",
@@ -65,9 +66,4 @@ module.exports = {
   serializeConfig: false,
   reloadOnPrerender: true,
   use: [I18NextHttpBackend],
-  //   react: {
-  //     bindI18n: "languageChanged",
-  //     bindI18nStore: "languageChanged",
-  //     useSuspense: false,
-  //   },
 };

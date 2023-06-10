@@ -21,7 +21,7 @@ import type {
 } from "@dashboards/democracy/election-explorer/types";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 
-type Result<T> = {
+export type Result<T> = {
   data: T;
   votes?: Array<{
     x: string;

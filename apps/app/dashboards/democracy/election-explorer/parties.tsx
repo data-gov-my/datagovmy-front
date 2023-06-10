@@ -1,4 +1,4 @@
-import ElectionCard from "@components/Card/ElectionCard";
+import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import { Container, Panel, Section, StateDropdown, Tabs } from "@components/index";
@@ -17,6 +17,7 @@ import type { ElectionResource, Party, PartyResult } from "./types";
 import ElectionLayout from "./layout";
 import { toast } from "@components/Toast";
 import { toDate } from "@lib/helpers";
+import { useCache } from "@hooks/useCache";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -38,6 +39,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { push } = useRouter();
+  const { cache } = useCache();
 
   const { data, setData } = useData({
     tab_index: 0, // parlimen = 0; dun = 1
@@ -128,32 +130,41 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     push(route, undefined, {
       scroll: false,
       locale: i18n.language,
-    }).then(() => setData("loading", false));
+    }).then(() => {
+      setData("loading", false);
+      cache.clear();
+    });
   };
 
-  const fetchResult = async (election: string, state: string) => {
-    return get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "party",
-      election,
-      state,
-    })
-      .then(({ data }: { data: PartyResult }) => {
-        return {
-          data: data.sort((a: PartyResult[number], b: PartyResult[number]) => {
-            if (a.seats.won === b.seats.won) {
-              return b.votes.abs - a.votes.abs;
-            } else {
-              return b.seats.won - a.seats.won;
-            }
-          }),
-        };
+  const fetchResult = async (election: string, state: string): Promise<Result<PartyResult>> => {
+    const identifier = `${election}_${state}`;
+    return new Promise(resolve => {
+      if (cache.has(identifier)) return resolve(cache.get(identifier));
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "full_result",
+        type: "party",
+        election,
+        state,
       })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      });
+        .then(({ data }: { data: PartyResult }) => {
+          const result: Result<PartyResult> = {
+            data: data.sort((a: PartyResult[number], b: PartyResult[number]) => {
+              if (a.seats.won === b.seats.won) {
+                return b.votes.abs - a.votes.abs;
+              } else {
+                return b.seats.won - a.seats.won;
+              }
+            }),
+          };
+          cache.set(identifier, result);
+          resolve(result);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
+    });
   };
 
   return (
@@ -223,7 +234,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 </Panel>
                 <Panel name={t("state_elections")}>
                   <ElectionTable
-                    data={elections.dun} // TODO: Replace with DUN later
+                    data={elections.dun}
                     columns={party_schema}
                     isLoading={data.loading}
                     empty={

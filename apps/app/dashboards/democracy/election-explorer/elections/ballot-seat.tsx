@@ -14,6 +14,7 @@ import ComboBox from "@components/Combobox";
 import { SPRIconSolid } from "@components/Icon/agency";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { toast } from "@components/Toast";
+import { useCache } from "@hooks/useCache";
 
 /**
  * Election Explorer - Ballot Seat
@@ -27,6 +28,7 @@ interface BallotSeatProps {
 
 const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
+  const { cache } = useCache();
 
   const { data, setData } = useData({
     seat: undefined,
@@ -39,41 +41,47 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
   const fetchSeatResult = (seat: string) => {
     if (!election) return;
-    setData("seat_loading", true);
-    get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "candidates",
-      election: election,
-      seat: seat,
-    })
-      .then(({ data }: { data: SeatResult }) => {
-        setData("seat_result", {
-          data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
-          votes: [
-            {
-              x: "voter_turnout",
-              abs: data.votes.voter_turnout,
-              perc: data.votes.voter_turnout_perc,
-            },
-            {
-              x: "rejected_votes",
-              abs: data.votes.votes_rejected,
-              perc: data.votes.votes_rejected_perc,
-            },
-          ],
-        });
-        setData("seat_loading", false);
+    const identifier = seat;
+    if (cache.has(identifier)) return setData("seat_result", cache.get(identifier));
+    else {
+      setData("seat_loading", true);
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "full_result",
+        type: "candidates",
+        election,
+        seat,
       })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      });
+        .then(({ data }: { data: SeatResult }) => {
+          const result = {
+            data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+            votes: [
+              {
+                x: "voter_turnout",
+                abs: data.votes.voter_turnout,
+                perc: data.votes.voter_turnout_perc,
+              },
+              {
+                x: "rejected_votes",
+                abs: data.votes.votes_rejected,
+                perc: data.votes.votes_rejected_perc,
+              },
+            ],
+          };
+          cache.set(identifier, result);
+          setData("seat_result", result);
+          setData("seat_loading", false);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
+    }
   };
 
   useEffect(() => {
-    fetchSeatResult(seats[0].seat);
-  }, []);
+    if (seats.length > 0) fetchSeatResult(seats[0].seat);
+  }, [seats]);
 
   const seat_info = useMemo<{
     name: string;
@@ -97,7 +105,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
       state,
       date: toDate(data.seat_result.data[0].date, "dd MMM yyyy", i18n.language),
     };
-  }, [data.seat_result]);
+  }, [data.seat_result, seats]);
 
   const SEAT_OPTIONS = seats.map(seat => ({ label: seat.seat, value: seat.seat }));
   const _seats = useMemo<Seat[]>(() => {
@@ -130,64 +138,65 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                     />
                   </div>
                   <div className="grid w-full grid-flow-col-dense grid-rows-2 flex-row gap-3 overflow-x-scroll md:flex-col md:overflow-x-clip md:pb-0 lg:flex">
-                    {_seats.map((seat: Seat, index: number) => (
-                      <Card
-                        key={seat.seat}
-                        className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark
+                    {election &&
+                      _seats.map((seat: Seat) => (
+                        <Card
+                          key={seat.seat}
+                          className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark
                          hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm
                           dark:bg-black xl:w-full"
-                        onClick={() => fetchSeatResult(seat.seat)}
-                      >
-                        <div className="flex flex-row justify-between">
-                          <div className="flex gap-2 truncate">
-                            <span className="text-dim text-sm font-medium">
-                              {seat.seat.slice(0, 5)}
-                            </span>
-                            <span>{seat.seat.slice(5)}</span>
-                          </div>
-                          <div className="group relative w-max">
-                            <span
-                              className="invisible absolute inline-block w-max -translate-x-3/4 translate-y-4 transform rounded
+                          onClick={() => fetchSeatResult(seat.seat)}
+                        >
+                          <div className="flex flex-row justify-between">
+                            <div className="flex gap-2 truncate">
+                              <span className="text-dim text-sm font-medium">
+                                {seat.seat.slice(0, 5)}
+                              </span>
+                              <span>{seat.seat.slice(5)}</span>
+                            </div>
+                            <div className="group relative w-max">
+                              <span
+                                className="invisible absolute inline-block w-max -translate-x-3/4 translate-y-4 transform rounded
                            bg-black p-3 text-sm font-normal text-white opacity-0 transition-opacity group-hover:visible group-hover:opacity-100"
-                            >
-                              {t("full_result")}
+                              >
+                                {t("full_result")}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-row gap-2">
+                            <ImageWithFallback
+                              className="border-outline dark:border-outlineHover-dark items-center self-center rounded border"
+                              src={`/static/images/parties/${seat.party}.png`}
+                              width={32}
+                              height={18}
+                              alt={t(`${seat.party}`)}
+                            />
+                            <span className="truncate font-medium">{`${seat.name} `}</span>
+                            <span>{`(${seat.party})`}</span>
+                            <Won />
+                          </div>
+                          <div className="flex flex-row items-center gap-2">
+                            <p className="text-dim text-sm">{t("majority")}</p>
+                            <BarPerc hidden value={seat.majority.perc} />
+                            <span>
+                              {seat.majority.abs === 0
+                                ? `—`
+                                : numFormat(seat.majority.abs, "standard")}
+                            </span>
+                            <span>
+                              {seat.majority.perc === null
+                                ? `(—)`
+                                : `(${numFormat(seat.majority.perc, "compact", [1, 1])}%)`}
                             </span>
                           </div>
-                        </div>
-                        <div className="flex flex-row gap-2">
-                          <ImageWithFallback
-                            className="border-outline dark:border-outlineHover-dark items-center self-center rounded border"
-                            src={`/static/images/parties/${seat.party}.png`}
-                            width={32}
-                            height={18}
-                            alt={t(`${seat.party}`)}
-                          />
-                          <span className="truncate font-medium">{`${seat.name} `}</span>
-                          <span>{`(${seat.party})`}</span>
-                          <Won />
-                        </div>
-                        <div className="flex flex-row items-center gap-2">
-                          <p className="text-dim text-sm">{t("majority")}</p>
-                          <BarPerc hidden value={seat.majority.perc} />
-                          <span>
-                            {seat.majority.abs === 0
-                              ? `—`
-                              : numFormat(seat.majority.abs, "standard")}
-                          </span>
-                          <span>
-                            {seat.majority.perc === null
-                              ? `(—)`
-                              : `(${numFormat(seat.majority.perc, "compact", [1, 1])}%)`}
-                          </span>
-                        </div>
-                      </Card>
-                    ))}
+                        </Card>
+                      ))}
                   </div>
                 </div>
               }
               right={
                 <div className="h-full w-full space-y-8 overflow-y-auto rounded-b-xl bg-white p-6 dark:bg-black md:h-[600px] lg:rounded-r-xl lg:p-8">
-                  {data.seat_result.data.length > 0 ? (
+                  {data.seat_result.data.length > 0 && election ? (
                     <>
                       <div className="flex items-center gap-4">
                         <SPRIconSolid className="text-dim h-10 w-10" />

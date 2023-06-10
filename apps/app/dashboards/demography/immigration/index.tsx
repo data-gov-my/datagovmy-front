@@ -119,7 +119,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
               <div className="flex h-full w-full flex-col space-y-6 p-6 lg:p-8">
                 <div className="flex flex-col gap-2">
                   <h4>{t("choro_header")}</h4>
-                  <span className="font-dim text-sm">
+                  <span className="text-dim text-sm">
                     {t("common:common.data_of", {
                       date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
                     })}

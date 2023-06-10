@@ -1,0 +1,23 @@
+.subheading-anchor {
+  @apply opacity-0 transition-opacity ltr:ml-1 rtl:mr-1;
+
+  span:target + &,
+  :hover > &,
+  &:focus {
+    @apply opacity-100;
+  }
+
+  span + &,
+  :hover > & {
+    @apply !no-underline;
+  }
+
+  &:after {
+    @apply px-1 content-['#'];
+    @apply text-gray-300 dark:text-neutral-700;
+    span:target + & {
+      @apply text-gray-400;
+      @apply dark:text-neutral-500;
+    }
+  }
+}
