@@ -32,7 +32,6 @@ type CommonProps = {
   width?: string;
   label?: string;
   sublabel?: ReactNode;
-  darkMode?: boolean;
   anchor?: "left" | "right" | string;
   enableSearch?: boolean;
   enableFlag?: boolean;
@@ -74,7 +73,6 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   width = "w-full lg:w-fit",
   label,
   sublabel,
-  darkMode = false,
   enableFlag = false,
   enableClear = false,
   virtualise = false,
@@ -125,9 +123,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       className={clx(
         "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
         multiple ? "pl-10" : "pl-4",
-        darkMode
-          ? "hover:bg-washed/10 text-white"
-          : "hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
+        "dark:hover:bg-washed/10 hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
         multiple &&
           selected &&
           Array.isArray(selected) &&
@@ -160,7 +156,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
         {/* Checkbox (multiple mode) */}
         {multiple && (
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+          <span className="absolute inset-y-0 left-3 flex items-center">
             <input
               type="checkbox"
               checked={
@@ -188,17 +184,8 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         multiple={multiple}
         disabled={disabled}
       >
-        <div className={`relative text-sm ${disabled ? "cursor-not-allowed" : ""}`}>
-          <Listbox.Button
-            className={clx(
-              "dark:border-washed-dark relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:bg-black lg:items-center",
-              className,
-              width,
-              disabled
-                ? "bg-outline text-dim pointer-events-none cursor-not-allowed"
-                : "border-outline hover:border-outlineHover active:bg-washed dark:active:bg-washed-dark/10 focus:outline-none focus-visible:ring-0"
-            )}
-          >
+        <div className="relative text-sm">
+          <Listbox.Button className={clx("btn btn-dropdown", className, width)}>
             <>
               {/* Icon */}
               {icon}
@@ -221,12 +208,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* Label */}
-              <span
-                className={clx(
-                  disabled ? "dark:text-dim" : "dark:text-white",
-                  "block w-full truncate lg:w-auto"
-                )}
-              >
+              <span className="block w-full truncate lg:w-auto">
                 {multiple ? title : (selected as OptionType)?.label || placeholder || "Select"}
               </span>
               {/* Label (multiple) */}
@@ -237,12 +219,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* ChevronDown Icon */}
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
+              <span className="absolute inset-y-0 right-3 flex items-center">
                 <ChevronDownIcon
-                  className={clx(
-                    disabled ? "dark:text-dim" : "dark:text-white",
-                    "h-5 w-5 text-black"
-                  )}
+                  className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark -mx-[5px] h-5 w-5"
                   aria-hidden="true"
                 />
               </span>
@@ -259,7 +238,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               className={clx(
                 "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                darkMode ? "border-outline/10 border bg-black" : "bg-white"
+                "dark:border-outline/10 bg-white dark:border dark:bg-black"
               )}
             >
               {/* Description - optional*/}
