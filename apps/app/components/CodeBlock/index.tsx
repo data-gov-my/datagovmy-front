@@ -43,6 +43,7 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, event }) => {
     <div className="dark:border-outlineHover-dark dark:bg-background-dark rounded-xl border bg-black">
       <div className="border-outline flex justify-between border-b border-opacity-20 p-2.5 text-white">
         <Dropdown
+          darkMode
           className="flex-row items-center"
           sublabel={<GlobeAltIcon className="mr-2 h-4 w-4" />}
           options={languageOptions}

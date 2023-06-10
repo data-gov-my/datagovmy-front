@@ -32,6 +32,7 @@ type CommonProps = {
   width?: string;
   label?: string;
   sublabel?: ReactNode;
+  darkMode?: boolean;
   anchor?: "left" | "right" | string;
   enableSearch?: boolean;
   enableFlag?: boolean;
@@ -73,6 +74,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   width = "w-full lg:w-fit",
   label,
   sublabel,
+  darkMode = false,
   enableFlag = false,
   enableClear = false,
   virtualise = false,
@@ -123,7 +125,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       className={clx(
         "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
         multiple ? "pl-10" : "pl-4",
-        "dark:hover:bg-washed/10 hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
+        darkMode
+          ? "hover:bg-washed-dark/50 text-white"
+          : "hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
         multiple &&
           selected &&
           Array.isArray(selected) &&
@@ -185,7 +189,15 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         disabled={disabled}
       >
         <div className="relative text-sm">
-          <Listbox.Button className={clx("btn btn-dropdown", className, width)}>
+          <Listbox.Button
+            className={clx(
+              "btn btn-dropdown",
+              className,
+              width,
+              darkMode &&
+                "border-washed-dark active:bg-washed-dark hover:border-outlineHover-dark bg-black text-white"
+            )}
+          >
             <>
               {/* Icon */}
               {icon}
@@ -238,7 +250,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               className={clx(
                 "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                "dark:border-outline/10 bg-white dark:border dark:bg-black"
+                darkMode ? "border-washed-dark border bg-black" : "bg-white"
               )}
             >
               {/* Description - optional*/}
