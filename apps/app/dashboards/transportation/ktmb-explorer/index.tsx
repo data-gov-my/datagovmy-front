@@ -1,17 +1,30 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { MOTIcon } from "@components/Icon/agency";
-import { AgencyBadge, Container, Dropdown, Hero, Section, Spinner, Tabs } from "@components/index";
+import Label from "@components/Label";
+import {
+  AgencyBadge,
+  Button,
+  Container,
+  Dropdown,
+  Hero,
+  Modal,
+  Section,
+  Spinner,
+  Tabs,
+} from "@components/index";
 import { OptionType } from "@components/types";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR } from "@lib/constants";
+import { WindowContext } from "@hooks/useWindow";
+import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo } from "react";
 
 /**
  * KTMB Explorer
@@ -40,6 +53,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   params,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-ktmb-explorer", "common"]);
+  const { breakpoint } = useContext(WindowContext);
   const { push } = useRouter();
   const { data, setData } = useData({
     tab_index: 0,
@@ -119,57 +133,140 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         <Section
           title={t("title")}
           date={A_to_B.data_as_of}
-          description={
-            <div className="flex flex-wrap gap-2 lg:gap-3">
-              <Dropdown
-                placeholder={t("service")}
-                anchor="left"
-                width="w-full sm:w-auto"
-                options={SERVICE_OPTIONS}
-                selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
-                onChange={selected => {
-                  setData("service", selected.value);
-                  setData("origin", null);
-                  setData("destination", null);
-                }}
-              />
-              <Dropdown
-                placeholder={t("select_origin")}
-                anchor="left"
-                width="w-full sm:w-auto"
-                options={ORIGIN_OPTIONS}
-                selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-                disabled={!data.service}
-                onChange={selected => {
-                  setData("origin", selected.value);
-                  setData("destination", null);
-                }}
-                enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
-              />
-              <Dropdown
-                placeholder={t("select_destination")}
-                anchor="left"
-                width="w-full sm:w-auto"
-                options={DESTINATION_OPTIONS}
-                selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-                disabled={!data.service || !data.origin}
-                onChange={selected => {
-                  setData("destination", selected.value);
-                  navigateToService(data.service, data.origin, selected.value);
-                }}
-                enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
-              />
-            </div>
-          }
           menu={
-            <Tabs.List
-              options={[t("day"), t("month"), t("year")]}
-              current={data.tab_index}
-              onChange={index => {
-                setData("tab_index", index);
-                setData("period", period[index]);
-              }}
-            />
+            <>
+              <div className="w-full">
+                <div className="flex sm:hidden">
+                  <Modal
+                    trigger={open => (
+                      <button
+                        onClick={open}
+                        className="btn btn-dropdown shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
+                      >
+                        <span>{t("filters")}</span>
+                        <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
+                          <p className="text-center text-white">3</p>
+                        </div>
+                        <ChevronDownIcon
+                          className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    )}
+                    title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
+                  >
+                    {close => (
+                      <div className="flex flex-col px-3 pb-[100px]">
+                        <div className="flex flex-col gap-2 py-3">
+                          <Label label={t("service")} className="text-sm" />
+                          <Dropdown
+                            anchor="left"
+                            width="w-full"
+                            options={SERVICE_OPTIONS}
+                            selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
+                            onChange={selected => {
+                              setData("service", selected.value);
+                              setData("origin", null);
+                              setData("destination", null);
+                            }}
+                          />
+                        </div>
+                        <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-x-3 gap-y-2 border-t pb-6 pt-3">
+                          <Label label={t("origin")} className="text-sm" />
+                          <Label label={t("destination")} className="text-sm" />
+                          <Dropdown
+                            anchor="left-0 bottom-10"
+                            width="w-full"
+                            options={ORIGIN_OPTIONS}
+                            selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
+                            disabled={!data.service}
+                            onChange={selected => {
+                              setData("origin", selected.value);
+                              setData("destination", null);
+                            }}
+                            enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
+                          />
+                          <Dropdown
+                            anchor="right-0 bottom-10"
+                            width="w-full"
+                            options={DESTINATION_OPTIONS}
+                            selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
+                            disabled={!data.service || !data.origin}
+                            onChange={selected => {
+                              setData("destination", selected.value);
+                            }}
+                            enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
+                          />
+                        </div>
+                        <div className="dark:border-outlineHover-dark fixed bottom-0 left-0 flex w-full flex-col gap-2 border-t p-3">
+                          <Button
+                            className="btn btn-primary w-full justify-center"
+                            onClick={() =>
+                              navigateToService(data.service, data.origin, data.destination)
+                            }
+                          >
+                            {t("apply_filter")}
+                          </Button>
+                          <Button className="btn w-full justify-center" onClick={close}>
+                            <XMarkIcon className="h-5 w-5" />
+                            {t("common:common.close")}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </Modal>
+                </div>
+                <div className="hidden gap-2 sm:flex lg:gap-3">
+                  <Dropdown
+                    placeholder={t("service")}
+                    anchor="left"
+                    width="w-auto"
+                    options={SERVICE_OPTIONS}
+                    selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
+                    onChange={selected => {
+                      setData("service", selected.value);
+                      setData("origin", null);
+                      setData("destination", null);
+                    }}
+                  />
+                  <Dropdown
+                    placeholder={t("select_origin")}
+                    anchor="left"
+                    width="w-auto"
+                    options={ORIGIN_OPTIONS}
+                    selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
+                    disabled={!data.service}
+                    onChange={selected => {
+                      setData("origin", selected.value);
+                      setData("destination", null);
+                    }}
+                    enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
+                  />
+                  <Dropdown
+                    placeholder={t("select_destination")}
+                    anchor="left"
+                    width="w-auto"
+                    options={DESTINATION_OPTIONS}
+                    selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
+                    disabled={!data.service || !data.origin}
+                    onChange={selected => {
+                      setData("destination", selected.value);
+                      navigateToService(data.service, data.origin, selected.value);
+                    }}
+                    enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
+                  />
+                </div>
+              </div>
+              <Tabs.List
+                className="grow"
+                options={[t("day"), t("month"), t("year")]}
+                current={data.tab_index}
+                onChange={index => {
+                  setData("tab_index", index);
+                  setData("period", period[index]);
+                }}
+              />
+            </>
           }
         >
           <SliderProvider>
@@ -201,7 +298,12 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,
-                              borderWidth: 1.5,
+                              borderWidth:
+                                breakpoint <= BREAKPOINTS.SM
+                                  ? 0.75
+                                  : breakpoint <= BREAKPOINTS.LG
+                                  ? 1.0
+                                  : 1.5,
                             },
                           ],
                         }}
@@ -239,7 +341,12 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,
-                              borderWidth: 1.5,
+                              borderWidth:
+                                breakpoint <= BREAKPOINTS.MD
+                                  ? 0.75
+                                  : breakpoint <= BREAKPOINTS.LG
+                                  ? 1.0
+                                  : 1.5,
                             },
                           ],
                         }}
