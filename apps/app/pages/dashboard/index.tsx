@@ -12,7 +12,7 @@ const DashboardIndex: Page = ({
   dashboards,
   agency,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboards"]);
+  const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
     <>

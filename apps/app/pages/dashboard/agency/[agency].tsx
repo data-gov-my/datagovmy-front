@@ -12,7 +12,7 @@ const DashboardAgency: Page = ({
   dashboards,
   agency,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboards"]);
+  const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
     <>
@@ -29,38 +29,41 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboards", async ({ params }) => {
-  try {
-    const [agencyDropdown, data] = await Promise.all([
-      get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
-      get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),
-    ]).catch(e => {
-      throw new Error("Error retrieving dashboards data. Message: " + e);
-    });
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboards", "agencies"],
+  async ({ params }) => {
+    try {
+      const [agencyDropdown, data] = await Promise.all([
+        get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
+        get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),
+      ]).catch(e => {
+        throw new Error("Error retrieving dashboards data. Message: " + e);
+      });
 
-    return {
-      props: {
-        meta: {
-          id: "dashboard-agency",
-          type: "misc",
-          category: null,
-          agency: (params?.agency as string) || null,
+      return {
+        props: {
+          meta: {
+            id: "dashboard-agency",
+            type: "misc",
+            category: null,
+            agency: (params?.agency as string) || null,
+          },
+          agency: params?.agency || null,
+          sources: agencyDropdown.data,
+          analytics: {
+            data_as_of: data.dashboards_top.data_as_of,
+            today: data.dashboards_top.data.today,
+            last_month: data.dashboards_top.data.last_month,
+            all_time: data.dashboards_top.data.all_time,
+          },
+          dashboards: data.dashboards_all.data,
         },
-        agency: params?.agency || null,
-        sources: agencyDropdown.data,
-        analytics: {
-          data_as_of: data.dashboards_top.data_as_of,
-          today: data.dashboards_top.data.today,
-          last_month: data.dashboards_top.data.last_month,
-          all_time: data.dashboards_top.data.all_time,
-        },
-        dashboards: data.dashboards_all.data,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return { notFound: true };
+      };
+    } catch (error) {
+      console.log(error);
+      return { notFound: true };
+    }
   }
-});
+);
 
 export default DashboardAgency;
