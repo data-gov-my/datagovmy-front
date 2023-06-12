@@ -1,20 +1,21 @@
+import type { BaseResult, Seat, SeatResult } from "../types";
+import { Won } from "@components/Badge/election";
 import Card from "@components/Card";
+import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
+import ComboBox from "@components/Combobox";
+import { SPRIconSolid } from "@components/Icon/agency";
 import ImageWithFallback from "@components/ImageWithFallback";
 import LeftRightCard from "@components/LeftRightCard";
+import Section from "@components/Section";
+import { toast } from "@components/Toast";
+import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { numFormat, toDate } from "@lib/helpers";
-import { FunctionComponent, useEffect, useMemo } from "react";
-import type { BaseResult, Seat, SeatResult } from "../types";
-import { Won } from "@components/Badge/election";
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
-import ComboBox from "@components/Combobox";
-import { SPRIconSolid } from "@components/Icon/agency";
 import { generateSchema } from "@lib/schema/election-explorer";
-import { toast } from "@components/Toast";
-import { useCache } from "@hooks/useCache";
+import { FunctionComponent, useEffect, useMemo } from "react";
 
 /**
  * Election Explorer - Ballot Seat
@@ -114,7 +115,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
   }, [data.seat, seats]);
 
   return (
-    <>
+    <Section>
       <div className="lg:grid lg:grid-cols-12">
         <div className="space-y-12 lg:col-span-10 lg:col-start-2">
           <div className="space-y-6">
@@ -215,7 +216,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                       <div className="space-y-3">
                         <div className="font-bold">{t("election.election_result")}</div>
                         <ElectionTable
-                          className="max-h-96 w-full overflow-y-auto"
+                          className="max-h-[400px] w-full overflow-y-auto"
                           data={data.seat_result.data}
                           columns={generateSchema<BaseResult>([
                             {
@@ -274,7 +275,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
           </div>
         </div>
       </div>
-    </>
+    </Section>
   );
 };
 
