@@ -274,7 +274,7 @@ const Ranking = ({ ranks }: RankingProps) => {
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item, i) => (
-          <At href={`/dashboard/${item.name}`} locale={i18n.language}>
+          <At href={`/dashboard/${item.name}`} locale={i18n.language} key={i}>
             <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-6 transition-colors">
               <div className="relative flex items-center gap-3">
                 <span className="text-primary text-sm font-bold">#{i + 1}</span>
