@@ -96,7 +96,10 @@ type ElectionParams<T> = T extends Candidate
       state: string;
     }
   : T extends Seat
-  ? { seat_name: string }
+  ? {
+      seat_name: string;
+      type: ElectionType;
+    }
   : never;
 
 export type ElectionResource<T extends Candidate | Party | Seat> = {

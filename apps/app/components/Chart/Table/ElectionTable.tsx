@@ -351,12 +351,12 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           </div>
         )}
         {!data.length && !isLoading && (
-          <Card className="flex h-[200px] items-center justify-center px-3 text-sm lg:text-base">
+          <div className="flex h-[200px] items-center justify-center px-3 text-sm lg:text-base">
             <Card className="bg-outline dark:bg-washed-dark mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md px-3 py-1.5">
               <FaceFrownIcon className="min-h-4 min-w-4 text-dim mx-auto mt-1 h-8 w-auto dark:text-white md:h-4 md:w-auto" />
               {empty}
             </Card>
-          </Card>
+          </div>
         )}
       </div>
     </div>

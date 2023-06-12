@@ -207,6 +207,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                           setData("state", selected.value);
                           navigateToParty(data.party, selected.value);
                         }}
+                        exclude={["kul", "lbn", "pjy"]}
                         width="inline-block pl-1 min-w-max"
                         anchor="left"
                       />
