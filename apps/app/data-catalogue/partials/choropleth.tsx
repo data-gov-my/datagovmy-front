@@ -108,7 +108,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   return (
     <Choropleth
       _ref={_ref => setCtx(_ref)}
-      className="h-[350px] w-full lg:h-[400px]"
+      className="h-[350px] w-full lg:h-[450px]"
       data={{
         labels: dataset.chart.x,
         values: dataset.chart.y,

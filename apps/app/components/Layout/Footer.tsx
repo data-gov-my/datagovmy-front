@@ -8,7 +8,7 @@ const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <Container background="bg-washed dark:bg-black border-t border-outline dark:border-washed-dark pt-12 pb-16 z-30">
+    <Container background="bg-washed dark:bg-black border-t border-outline dark:border-washed-dark pt-12 pb-16 z-10">
       <div className="flex w-full flex-col gap-6 text-sm md:flex-row md:justify-between md:gap-0">
         <div className="flex flex-row gap-4">
           {/* LOGO */}
