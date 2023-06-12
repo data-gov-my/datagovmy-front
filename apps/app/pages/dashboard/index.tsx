@@ -22,7 +22,7 @@ const DashboardIndex: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboards", async () => {
+export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"], async () => {
   const [agencyDropdown, data] = await Promise.all([
     get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
     get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),

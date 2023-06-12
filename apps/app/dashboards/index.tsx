@@ -45,7 +45,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   sources,
   dashboards,
 }) => {
-  const { t, i18n } = useTranslation("dashboards");
+  const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
 
   const { data, setData } = useData({
     tabs_section_1: 0,
@@ -91,11 +91,11 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[
-          `${agency !== null ? t(`common:agency.${agency}`).concat(":") : ""} ${t("header")}`,
+          `${agency !== null ? t(`agencies:${agency}.abbr`).concat(":") : ""} ${t("header")}`,
         ]}
         description={[
           t("description", {
-            agency: t(`common:agency.${agency}`),
+            agency: t(`agencies:${agency}.abbr`),
             context: agency ? "agency" : "",
           }),
         ]}
@@ -161,9 +161,9 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                         <At href={`/dashboard/${item.name}`} locale={i18n.language}>
                           <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
-                              <AgencyIcon agency={item.agency.toUpperCase()} />
+                              <AgencyIcon agency={`agencies:${item.agency}.abbr`} />
                               <p className="text-dim text-sm">
-                                {t(`common:agency.${item.agency}`)}
+                                {t(`agencies:${item.agency}.abbr`)}
                               </p>
                               <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
                             </div>
@@ -200,11 +200,11 @@ interface DashboardFilterProps {
 }
 
 const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, sources, onSearch }) => {
-  const { t } = useTranslation("dashboards");
+  const { t } = useTranslation(["dashboards", "agencies", "common"]);
   const { push } = useRouter();
 
   const filterSources: OptionType[] = sources.map(source => ({
-    label: t(`common:agency.${source}`),
+    label: t(`agencies:${source}.abbr`),
     value: source,
   }));
 
@@ -268,7 +268,7 @@ interface RankingProps {
 }
 
 const Ranking = ({ ranks }: RankingProps) => {
-  const { t, i18n } = useTranslation("dashboards");
+  const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
 
   return (
     <>
@@ -278,7 +278,7 @@ const Ranking = ({ ranks }: RankingProps) => {
             <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-6 transition-colors">
               <div className="relative flex items-center gap-3">
                 <span className="text-primary text-sm font-bold">#{i + 1}</span>
-                <p className="text-dim text-sm">{t(`common:agency.${item.agency}`)}</p>
+                <p className="text-dim text-sm">{t(`agencies:${item.agency}.abbr`)}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative flex flex-col items-start gap-3 overflow-hidden">
