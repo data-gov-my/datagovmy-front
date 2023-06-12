@@ -5,6 +5,7 @@ const namespace = [
   "catalogue",
   "community",
   "countries",
+  "dashboards",
   "dashboard-999-tracker",
   "dashboard-birthday-explorer",
   "dashboard-blood-donation",
