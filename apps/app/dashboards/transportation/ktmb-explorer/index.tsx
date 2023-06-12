@@ -1,3 +1,4 @@
+import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { MOTIcon } from "@components/Icon/agency";
@@ -15,6 +16,7 @@ import {
 } from "@components/index";
 import { OptionType } from "@components/types";
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
@@ -36,8 +38,8 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 interface KTMBExplorerProps {
   A_to_B: any;
   A_to_B_callout: any;
-  B_to_A: any;
-  B_to_A_callout: any;
+  B_to_A?: any;
+  B_to_A_callout?: any;
   dropdown: any;
   last_updated: any;
   params: any;
@@ -58,7 +60,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const { data, setData } = useData({
     tab_index: 0,
     period: "day",
-    minmax: [0, A_to_B.day.x.length - 1],
+    minmax: [0, A_to_B.day.x.length],
     service: params.service,
     origin: params.origin,
     destination: params.destination,
@@ -70,7 +72,10 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
     2: "year",
   };
   const { coordinate: A_to_B_coords } = useSlice(A_to_B[data.period], data.minmax);
-  const { coordinate: B_to_A_coords } = useSlice(B_to_A[data.period], data.minmax);
+  const { coordinate: B_to_A_coords } = useSlice(
+    B_to_A ? B_to_A[data.period] : A_to_B[data.period],
+    data.minmax
+  );
 
   const SERVICE_OPTIONS = useMemo<Array<OptionType>>(() => {
     const _services = Object.keys(dropdown).map(service => ({ label: t(service), value: service }));
@@ -286,8 +291,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           to: params.destination ?? "WOODLANDS CIQ",
                         })}
                         enableAnimation={!play}
-                        interval={data.period === "year" ? "year" : "month"}
-                        tooltipFormat={data.period === "day" ? "dd MMM yyyy" : undefined}
+                        interval={data.period === "year" ? "year" : "auto"}
                         data={{
                           labels: A_to_B_coords.x,
                           datasets: [
@@ -322,49 +326,84 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           },
                         ]}
                       />
-                      <Timeseries
-                        className="h-[300px] w-full"
-                        title={t(`ridership_${data.period}`, {
-                          from: params.destination ?? "WOODLANDS CIQ",
-                          to: params.origin ?? "JB SENTRAL",
-                        })}
-                        enableAnimation={!play}
-                        interval={data.period === "year" ? "year" : "month"}
-                        tooltipFormat={data.period === "day" ? "dd MMM yyyy" : undefined}
-                        data={{
-                          labels: B_to_A_coords.x,
-                          datasets: [
+                      {B_to_A ? (
+                        <Timeseries
+                          className="h-[300px] w-full"
+                          title={t(`ridership_${data.period}`, {
+                            from: params.destination ?? "WOODLANDS CIQ",
+                            to: params.origin ?? "JB SENTRAL",
+                          })}
+                          enableAnimation={!play}
+                          interval={data.period === "year" ? "year" : "auto"}
+                          data={{
+                            labels: B_to_A_coords.x,
+                            datasets: [
+                              {
+                                type: "line",
+                                data: B_to_A_coords.y,
+                                label: t(data.period),
+                                fill: true,
+                                backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                                borderColor: AKSARA_COLOR.PRIMARY,
+                                borderWidth:
+                                  breakpoint <= BREAKPOINTS.MD
+                                    ? 0.75
+                                    : breakpoint <= BREAKPOINTS.LG
+                                    ? 1.0
+                                    : 1.5,
+                              },
+                            ],
+                          }}
+                          stats={[
                             {
-                              type: "line",
-                              data: B_to_A_coords.y,
-                              label: t(data.period),
-                              fill: true,
-                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                              borderColor: AKSARA_COLOR.PRIMARY,
-                              borderWidth:
-                                breakpoint <= BREAKPOINTS.MD
-                                  ? 0.75
-                                  : breakpoint <= BREAKPOINTS.LG
-                                  ? 1.0
-                                  : 1.5,
+                              title: t("daily"),
+                              value: `+${numFormat(B_to_A_callout.day.passengers, "standard")}`,
                             },
-                          ],
-                        }}
-                        stats={[
-                          {
-                            title: t("daily"),
-                            value: `+${numFormat(B_to_A_callout.day.passengers, "standard")}`,
-                          },
-                          {
-                            title: t("past_month"),
-                            value: `${numFormat(B_to_A_callout.month.passengers, "standard")}`,
-                          },
-                          {
-                            title: t("past_year"),
-                            value: `${numFormat(B_to_A_callout.year.passengers, "standard")}`,
-                          },
-                        ]}
-                      />
+                            {
+                              title: t("past_month"),
+                              value: `${numFormat(B_to_A_callout.month.passengers, "standard")}`,
+                            },
+                            {
+                              title: t("past_year"),
+                              value: `${numFormat(B_to_A_callout.year.passengers, "standard")}`,
+                            },
+                          ]}
+                        />
+                      ) : (
+                        <div className="relative flex h-[392px] w-full flex-col">
+                          <h5>
+                            {t(`ridership_${data.period}`, {
+                              from: params.destination,
+                              to: params.origin,
+                            })}
+                          </h5>
+                          <Timeseries
+                            className="absolute bottom-0 h-[300px] w-full opacity-30"
+                            enableCrosshair={false}
+                            enableTooltip={false}
+                            gridOffsetX={true}
+                            data={{
+                              labels: B_to_A_coords.x,
+                              datasets: [
+                                {
+                                  type: "line",
+                                  data: B_to_A_coords.y,
+                                  fill: true,
+                                  backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                                  borderColor: AKSARA_COLOR.PRIMARY_H,
+                                  borderWidth: 1,
+                                },
+                              ],
+                            }}
+                          />
+                          <div className="z-10 flex h-full w-full flex-col items-center justify-center">
+                            <Card className="bg-outline dark:bg-washed-dark flex flex-row items-center gap-2 rounded-md px-3 py-1.5">
+                              <FaceFrownIcon className="h-6 w-6" />
+                              {t("no_trips")}
+                            </Card>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <Slider
                       type="range"

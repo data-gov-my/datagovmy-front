@@ -49,51 +49,42 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-ktmb-explorer",
   async ({ params }) => {
-    try {
-      const [service, origin, destination] = params
-        ? (params.service as string[])
-        : [undefined, undefined, undefined];
+    const [service, origin, destination] = params
+      ? (params.service as string[])
+      : [undefined, undefined, undefined];
 
-      const [dropdown, A_to_B, B_to_A] = await Promise.all([
-        get("/dropdown", { dashboard: "ktmb" }),
-        get("/dashboard", {
-          dashboard: "ktmb",
-          service,
-          origin,
-          destination,
-        }),
-        get("/dashboard", {
-          dashboard: "ktmb",
-          service,
-          origin: destination,
-          destination: origin,
-        }),
-      ]).catch(e => {
-        throw new Error("Invalid service. Message: " + e);
-      });
+    const { data: dropdown } = await get("/dropdown", { dashboard: "ktmb" });
+    const { data: A_to_B } = await get("/dashboard", {
+      dashboard: "ktmb",
+      service,
+      origin,
+      destination,
+    });
+    const B_to_A = await get("/dashboard", {
+      dashboard: "ktmb",
+      service,
+      origin: destination,
+      destination: origin,
+    }).catch(e => console.error(e.message));
 
-      return {
-        notFound: false,
-        props: {
-          meta: {
-            id: "dashboard-ktmb-explorer",
-            type: "dashboard",
-            category: "transportation",
-            agency: "MoT",
-          },
-          A_to_B: A_to_B.data.timeseries.data,
-          A_to_B_callout: A_to_B.data.timeseries_callout.data,
-          B_to_A: B_to_A.data.timeseries.data,
-          B_to_A_callout: B_to_A.data.timeseries_callout.data,
-          dropdown: dropdown.data.data,
-          last_updated: Date.now(),
-          params: { service: service, origin: origin, destination: destination },
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-ktmb-explorer",
+          type: "dashboard",
+          category: "transportation",
+          agency: "MoT",
         },
-      };
-    } catch (e: any) {
-      console.error(e.message);
-      return { notFound: true };
-    }
+        A_to_B: A_to_B.timeseries.data,
+        A_to_B_callout: A_to_B.timeseries_callout.data,
+        B_to_A: B_to_A ? B_to_A.data.timeseries.data : null,
+        B_to_A_callout: B_to_A ? B_to_A.data.timeseries_callout.data : null,
+        dropdown: dropdown.data,
+        last_updated: Date.now(),
+        params: { service: service, origin: origin, destination: destination },
+      },
+    };
   }
 );
 
