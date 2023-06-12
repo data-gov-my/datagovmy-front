@@ -75,6 +75,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       freeze: data.API.freeze ?? null,
       color: data.API.colour ?? "blues",
       geojson: data.API.file_json ?? null,
+      line_variables: data.API.line_variables ?? null,
     };
 
     const hasTranslations = data.translations && Object.keys(data.translations).length;
@@ -149,4 +150,3 @@ export const getServerSideProps: GetServerSideProps = withi18n(
 );
 
 export default CatalogueShow;
-/** ------------------------------------------------------------------------------------------------------------- */

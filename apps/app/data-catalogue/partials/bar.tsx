@@ -132,31 +132,29 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   }, [dataset.chart.x, ctx]);
 
   return (
-    <>
-      <Bar
-        _ref={ref => setCtx(ref)}
-        className={
-          bar_layout === "vertical"
-            ? "h-[450px] w-full lg:h-[350px]"
-            : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
-        }
-        type="category"
-        enableStack={dataset.type === "STACKED_BAR"}
-        layout={bar_layout}
-        enableGridX={bar_layout !== "vertical"}
-        enableGridY={bar_layout === "vertical"}
-        enableLegend={_datasets.length > 1}
-        precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-        // formatX={value => {
-        //   if (t(`catalogue.show_filters.${value}`).includes(".show_filters")) return value;
-        //   return t(`catalogue.show_filters.${value}`);
-        // }}
-        data={{
-          labels: dataset.chart.x,
-          datasets: _datasets,
-        }}
-      />
-    </>
+    <Bar
+      _ref={ref => setCtx(ref)}
+      className={
+        bar_layout === "vertical"
+          ? "h-[350px] w-full lg:h-[450px]"
+          : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
+      }
+      type="category"
+      enableStack={dataset.type === "STACKED_BAR"}
+      layout={bar_layout}
+      enableGridX={bar_layout !== "vertical"}
+      enableGridY={bar_layout === "vertical"}
+      enableLegend={_datasets.length > 1}
+      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+      // formatX={value => {
+      //   if (t(`catalogue.show_filters.${value}`).includes(".show_filters")) return value;
+      //   return t(`catalogue.show_filters.${value}`);
+      // }}
+      data={{
+        labels: dataset.chart.x,
+        datasets: _datasets,
+      }}
+    />
   );
 };
 

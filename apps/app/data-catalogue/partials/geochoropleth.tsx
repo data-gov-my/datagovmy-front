@@ -71,20 +71,18 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
     [png, ctx]
   );
   return (
-    <>
-      <GeoChoropleth
-        _ref={ctx}
-        id={dataset.meta.unique_id}
-        className="h-[350px] w-full lg:h-[450px]"
-        data={{
-          labels: dataset.chart.x,
-          values: dataset.chart.y,
-        }}
-        color={config.color}
-        type={config.geojson}
-        onReady={mounted => setMounted(mounted)}
-      />
-    </>
+    <GeoChoropleth
+      _ref={ctx}
+      id={dataset.meta.unique_id}
+      className="h-[350px] w-full lg:h-[450px]"
+      data={{
+        labels: dataset.chart.x,
+        values: dataset.chart.y,
+      }}
+      color={config.color}
+      type={config.geojson}
+      onReady={mounted => setMounted(mounted)}
+    />
   );
 };
 

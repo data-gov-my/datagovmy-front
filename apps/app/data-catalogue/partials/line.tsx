@@ -8,31 +8,32 @@ import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
 import type { ChartDataset } from "chart.js";
-import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { toast } from "@components/Toast";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
-const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
-interface CataloguePyramidProps {
-  className?: string;
-  config: any;
+const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
+interface CatalogueLineProps {
+  config: {
+    line_variables?: Record<string, any>;
+    precision: number;
+  };
   dataset: any;
   urls: {
     [key: string]: string;
   };
-  translations: Record<string, string>;
   onDownload?: (prop: DownloadOptions) => void;
+  translations: Record<string, string>;
 }
 
-const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
-  className = "h-[450px] lg:h-[400px] max-w-lg mx-auto",
+const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
   config,
   dataset,
   urls,
-  translations,
   onDownload,
+  translations,
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
-  const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
+  const [ctx, setCtx] = useState<ChartJSOrUndefined<"line", any[], unknown> | null>(null);
 
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
@@ -104,19 +105,28 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
     [ctx]
   );
 
-  const _datasets = useMemo<ChartDataset<"bar", any[]>[]>(() => {
-    const sets = Object.entries(dataset.chart);
-    const colors = [AKSARA_COLOR.PRIMARY, AKSARA_COLOR.DANGER]; // [blue, red]
+  const _datasets = useMemo<ChartDataset<"line", any[]>[]>(() => {
+    const sets = Object.entries(dataset.chart).filter(([key, _]) => key !== "x");
+    const colors = [
+      AKSARA_COLOR.PRIMARY,
+      AKSARA_COLOR.WARNING,
+      AKSARA_COLOR.DANGER,
+      AKSARA_COLOR.GREY,
+    ]; // [blue, yellow, red, grey]
 
-    return sets
-      .filter(([key, _]) => key !== "x")
-      .map(([key, y], index) => ({
-        data: y as number[],
-        label: translations[key] ?? key,
-        backgroundColor: colors[index].concat("1A") ?? AKSARA_COLOR.PRIMARY_H,
-        borderColor: colors[index] ?? AKSARA_COLOR.PRIMARY,
-        borderWidth: 1,
-      }));
+    return sets.map(([key, y], index) => ({
+      type: "line",
+      data: y as number[],
+      label: translations[key] ?? key,
+      fill: sets.length === 1,
+      backgroundColor: colors[index].concat("1A"),
+      borderColor: colors[index],
+      borderWidth: 1,
+      pointRadius: 0,
+      pointHitRadius: 2,
+      stepped: config.line_variables && config.line_variables[key].stepped,
+      tension: config.line_variables && config.line_variables[key].tension,
+    }));
   }, [dataset.chart]);
 
   useWatch(() => {
@@ -124,16 +134,19 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
   }, [dataset.chart.x, ctx]);
 
   return (
-    <Pyramid
+    <Line
+      className="h-[350px] w-full lg:h-[450px]"
       _ref={ref => setCtx(ref)}
-      className={className}
-      precision={config?.precision !== undefined ? [config.precision, 0] : [1, 0]}
+      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
       data={{
         labels: dataset.chart.x,
         datasets: _datasets,
       }}
+      enableTooltip
+      enableCrosshair
+      enableLegend={_datasets.length > 1}
     />
   );
 };
 
-export default CataloguePyramid;
+export default CatalogueLine;
