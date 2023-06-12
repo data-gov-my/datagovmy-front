@@ -95,7 +95,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         ]}
         description={[
           t("description", {
-            agency: agency,
+            agency: t(`common:agency.${agency}`),
             context: agency ? "agency" : "",
           }),
         ]}

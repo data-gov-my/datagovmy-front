@@ -29,7 +29,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = withi18n(null, async ({ params }) => {
+export const getStaticProps: GetStaticProps = withi18n("dashboards", async ({ params }) => {
   try {
     const [agencyDropdown, data] = await Promise.all([
       get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
