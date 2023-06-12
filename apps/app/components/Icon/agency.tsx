@@ -1220,6 +1220,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
     "JPA": JPAIcon,
     "JPJ": JPJIcon,
     "JPN": JPNIcon,
+    "KTMB": MOTIcon,
     "KWAP": KWAPIcon,
     "LHDN": LHDNIcon,
     "MAMPU": MAMPUIcon,
@@ -1237,12 +1238,13 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
     "PHCorp": PHCorpIcon,
     "PERKESO": SOCSOIcon,
     "SPR": SPRIcon,
+    "UNHCR": UNHCRIcon,
   };
 
   if (typeof Components[agency] !== "undefined") {
     return createElement(Components[agency], { className: "h-6 w-6" });
   }
-  return createElement("p", undefined, "Not found");
+  return createElement("div", { className: "h-8 w-8 rounded-full" });
 };
 
 export default AgencyIcon;
