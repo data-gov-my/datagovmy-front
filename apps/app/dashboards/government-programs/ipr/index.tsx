@@ -80,7 +80,7 @@ const IPR: FunctionComponent<IPRProps> = ({
         }
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.EPU")}
+            agency={t("agencies:epu.full")}
             link="https://www.epu.gov.my/en"
             icon={<IPREPUIcon />}
           />
