@@ -76,7 +76,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
           return (
             (!agency || d.agency === agency) &&
             (!data.search ||
-              t(`dashboards.${d.name}.name`).toLowerCase().includes(data.search.toLowerCase())) // FIXME: filter search properly
+              t(`dashboards.${d.name}.name`).toLowerCase().includes(data.search.toLowerCase()))
           );
         })
         .sort((a, b) => b.views - a.views);
