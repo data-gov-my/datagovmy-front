@@ -161,7 +161,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                         <At href={`/dashboard/${item.name}`} locale={i18n.language}>
                           <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
-                              <AgencyIcon agency={t(`agencies:${item.agency}.abbr`)} />
+                              <AgencyIcon agency={item.agency} />
                               <p className="text-dim text-sm">
                                 {t(`agencies:${item.agency}.abbr`)}
                               </p>
