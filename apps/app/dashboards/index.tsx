@@ -234,7 +234,7 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
           <Dropdown
             icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
             className="w-fit min-w-fit"
-            placeholder={t("common:dashboard.source_placeholder")}
+            placeholder={t("source_placeholder")}
             anchor="left"
             options={filterSources}
             selected={filterSources.find(item => data.source === item.value)}
@@ -248,7 +248,7 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
           <Input
             className="border-0 "
             type="search"
-            placeholder={t("common:dashboard.search_placeholder")}
+            placeholder={t("search_placeholder")}
             autoFocus
             value={data.search}
             onChange={e => onSearch(e)}
