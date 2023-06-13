@@ -34,7 +34,12 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     try {
       const [agencyDropdown, data] = await Promise.all([
-        get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
+        get("/dropdown", { dashboard: "dashboards" }).then(res => {
+          if (!res.data?.data.find((agency: string) => agency == params?.agency)) {
+            throw `Invalid agency parameter: ${params?.agency}`;
+          }
+          return res.data;
+        }),
         get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),
       ]).catch(e => {
         throw new Error("Error retrieving dashboards data. Message: " + e);
