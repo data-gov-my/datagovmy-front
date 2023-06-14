@@ -61,6 +61,8 @@ export type BaseResult = {
 
 export type SeatResult = {
   votes: {
+    majority: number;
+    majority_perc: number;
     voter_turnout: number;
     voter_turnout_perc: number;
     votes_rejected: number;
