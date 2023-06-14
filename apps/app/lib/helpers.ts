@@ -24,7 +24,7 @@ export const maxBy = (array: Array<any>, key: string) => {
   });
 };
 /**
- * Returns the object of max value by a given key in the array.
+ * Returns the object of min value by a given key in the array.
  * @param array Object array
  * @param key Comparing key
  * @returns Object
@@ -227,6 +227,19 @@ export const getTopIndices = (arr: number[], n: number, reverse = false): number
 
   // extract the indices from the top pairs and return them
   return topPairs.map(pair => pair[1]);
+};
+
+/**
+ * Slugify a given string
+ * @param value String to slugify
+ */
+export const slugify = (value: string): string => {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "") // remove all chars not letters, numbers and spaces (to be replaced)
+    .replace(/\s+/g, "-") // separator
+    .replace(/-+/g, "-"); // collapse dashes
 };
 
 /**
