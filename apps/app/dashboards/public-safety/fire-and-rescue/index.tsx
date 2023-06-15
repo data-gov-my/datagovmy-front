@@ -77,7 +77,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         }
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.BOMBA")}
+            agency={t("agencies:bomba.full")}
             link="https://www.bomba.gov.my/"
             icon={<BOMBAIcon />}
           />

@@ -11,7 +11,7 @@ export interface AgencyBadgeProps {
 
 const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }) => {
   const { t } = useTranslation();
-  const isGovt = agency === t("common:agency.govt");
+  const isGovt = agency === t("agencies:govt.full");
   return (
     <a href={link} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
       <Card className="border-outline hover:border-outlineHover dark:border-washed-dark dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark group -mx-3 flex w-screen items-center border-y bg-white px-3 py-1.5 transition-[padding] duration-200 hover:pr-10 dark:bg-black md:m-0 md:w-fit md:rounded-full md:border md:py-1 md:pl-2 md:pr-6">
