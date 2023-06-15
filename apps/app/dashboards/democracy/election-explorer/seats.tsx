@@ -1,19 +1,20 @@
+import ElectionLayout from "./layout";
+import type { BaseResult, ElectionResource, ElectionType, Seat, SeatResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
-import { toast } from "@components/Toast";
 import { Container, Section } from "@components/index";
+import { toast } from "@components/Toast";
 import { OptionType } from "@components/types";
 import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
+import { slugify } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
-import ElectionLayout from "./layout";
-import type { BaseResult, ElectionResource, ElectionType, Seat, SeatResult } from "./types";
 
 /**
  * Election Explorer Dashboard - Seats Tab
@@ -47,7 +48,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
 
   const SEAT_OPTIONS: Array<OptionType> = selection.map(key => ({
     label: key.seat_name.concat(` (${t(key.type)})`),
-    value: key.type + "-" + key.seat_name,
+    value: key.type + "_" + slugify(key.seat_name),
   }));
 
   const navigateToSeat = (seat?: string) => {
@@ -56,11 +57,13 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
       return;
     }
     setData("loading", true);
-    setData("seat", seat);
-    const match = seat.split("-");
+
+    const match = seat.split("_");
     const name = match[1];
     const type = match[0];
-    push(`${routes.ELECTION_EXPLORER}/seats/${encodeURIComponent(name)}/${type}`, undefined, {
+    setData("seat", name);
+
+    push(`${routes.ELECTION_EXPLORER}/seats/${name}/${type}`, undefined, {
       scroll: false,
       locale: i18n.language,
     }).then(() => {
@@ -84,6 +87,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
           const result: Result<BaseResult[]> = {
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
+              {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
+              },
               {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
@@ -148,7 +156,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
             title={
               <div className="uppercase md:flex md:flex-row md:items-center md:gap-2">
                 <h5 className="text">{area}</h5>
-                <h5 className="text-dim font-normal">{state}</h5>
+                <p className="text-dim font-normal">{state}</p>
               </div>
             }
             subtitle
@@ -172,7 +180,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                   <ComboBox
                     placeholder={t("seat.search_seat")}
                     options={SEAT_OPTIONS}
-                    selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat) : null}
+                    selected={
+                      data.seat
+                        ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
+                        : null
+                    }
                     onChange={selected => navigateToSeat(selected?.value)}
                     enableType={true}
                   />
@@ -180,12 +192,13 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
               </div>
               <ElectionTable
                 title={
-                  <div className="pb-6 font-bold">
+                  <h5 className="pb-6">
                     {t("seat.title")}
-                    <span className="text-primary">{`${params.seat_name} (${t(
-                      params.type
-                    )})`}</span>
-                  </div>
+                    <span className="text-primary">{`${
+                      SEAT_OPTIONS.find(e => e.value === `${params.type}_${params.seat_name}`)
+                        ?.label
+                    }`}</span>
+                  </h5>
                 }
                 data={elections}
                 columns={seat_schema}
