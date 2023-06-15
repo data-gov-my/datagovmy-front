@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
-import { Dropdown, Section, Tabs } from "@components/index";
+import { Dropdown, Tabs } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
 import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
@@ -41,7 +41,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
     "%_PH",
     "num_voters",
   ].map((key: string) => ({
-    label: t(`election.${key}`),
+    label: t(key),
     value: key,
   }));
 
@@ -52,9 +52,9 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
   });
 
   return (
-    <div className="py-8 lg:grid lg:grid-cols-12 lg:py-12">
-      <div className="lg:col-span-10 lg:col-start-2">
-        <h4 className="py-4 text-center">{t("election.section_3")}</h4>
+    <div className="grid grid-cols-12 py-8 lg:py-12">
+      <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
+        <h4 className="py-4 text-center">{t("election.header_3")}</h4>
         <div className="flex flex-row flex-wrap justify-between gap-4 pb-6">
           <Dropdown
             anchor="left"
@@ -81,7 +81,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
                   <div className="flex flex-col gap-2">
                     <h4>
                       {t("election.choro_header", {
-                        stat: t(`election.${data.analysis_type.value}`),
+                        stat: t(data.analysis_type.value),
                       })}
                     </h4>
                     <span className="text-dim text-sm">
@@ -95,7 +95,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
                   </div>
                 </div>
               }
-              right={<Choropleth enableOutline={false} type={index === 1 ? "dun" : "parlimen"} />}
+              right={<Choropleth type={index === 1 ? "dun" : "parlimen"} />}
             />
           </Panel>
           <Panel name={t("election.table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
@@ -111,7 +111,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
                 {
                   key: "data",
                   id: "data",
-                  header: t(`election.${data.analysis_type.value}`),
+                  header: t(data.analysis_type.value),
                   cell: ({ getValue }) => {
                     return (
                       <BarPerc
