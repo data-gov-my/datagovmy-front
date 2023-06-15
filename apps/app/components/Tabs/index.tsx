@@ -124,7 +124,7 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
 
         <Tab.Panels className="w-full">
           {_children.map(({ props: { children } }, index) => (
-            <Tab.Panel className="overflow-auto" key={index}>
+            <Tab.Panel className="overflow-visible" key={index}>
               {children}
             </Tab.Panel>
           ))}
