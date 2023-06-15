@@ -1,5 +1,7 @@
-import { FunctionComponent, useRef } from "react";
-import dynamic from "next/dynamic";
+import ElectionAnalysis from "./analysis";
+import BallotSeat from "./ballot-seat";
+import { Party, PartyResult, Seat, ElectionEnum } from "../types";
+import ElectionLayout from "../layout";
 import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import {
@@ -14,19 +16,23 @@ import {
 import Label from "@components/Label";
 import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
+import {
+  BuildingLibraryIcon,
+  ChevronDownIcon,
+  FlagIcon,
+  MapIcon,
+  TableCellsIcon,
+} from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
+import { useScrollIntersect } from "@hooks/useScrollIntersect";
 import { useTranslation } from "@hooks/useTranslation";
-import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import { useScrollIntersect } from "@hooks/useScrollIntersect";
-import { useRouter } from "next/router";
-import { Party, PartyResult, Seat, ElectionEnum } from "../types";
-import BallotSeat from "./ballot-seat";
-import ElectionAnalysis from "./analysis";
 import { generateSchema } from "@lib/schema/election-explorer";
-import ElectionLayout from "../layout";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { FunctionComponent, useMemo, useRef } from "react";
 
 /**
  * Election Explorer Dashboard
@@ -38,16 +44,23 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
 });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
+
 interface ElectionExplorerProps {
-  seats: Seat[];
-  table: PartyResult;
   params: {
     state: string;
     election: string;
   };
+  seats: Seat[];
+  selection: Record<string, any>;
+  table: PartyResult;
 }
 
-const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, params, table }) => {
+const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
+  params,
+  seats,
+  selection,
+  table,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { push } = useRouter();
 
@@ -101,20 +114,24 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
   });
 
   const NON_SE_STATE = ["mys", "kul", "lbn", "pjy"];
-  const GE_OPTIONS: Array<OptionType> = Array(16)
-    .fill("GE")
-    .map((n, index: number) => ({
-      label: t(n + `-${String(index).padStart(2, "0")}`),
-      value: n + `-${String(index).padStart(2, "0")}`,
+  const GE_OPTIONS: Array<OptionType> = selection["mys"]
+    .map((election: Record<string, any>) => ({
+      label: t(election.name) + ` (${election.year})`,
+      value: election.name,
     }))
     .reverse();
-  const SE_OPTIONS: Array<OptionType> = Array(16)
-    .fill("SE")
-    .map((n, index: number) => ({
-      label: t(n + `-${String(index).padStart(2, "0")}`),
-      value: n + `-${String(index).padStart(2, "0")}`,
-    }))
-    .reverse();
+
+  const SE_OPTIONS = useMemo<Array<OptionType>>(() => {
+    let _options: Array<OptionType> = [];
+    if (data.state !== null && NON_SE_STATE.includes(data.state) === false)
+      _options = selection[data.state]
+        .map((election: Record<string, any>) => ({
+          label: t(election.name) + ` (${election.year})`,
+          value: election.name,
+        }))
+        .reverse();
+    return _options;
+  }, [data.state]);
 
   const navigateToElection = (election: string, state?: string) => {
     if (!election) return;
@@ -133,7 +150,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
 
   const handleElectionTab = (index: number) => {
     if (index === ElectionEnum.Dun) {
-      setData("state", !NON_SE_STATE.includes(params.state) ? data.state || params.state : "");
+      setData("state", !NON_SE_STATE.includes(params.state) ? data.state || params.state : null);
     } else {
       setData("state", data.state || params.state);
     }
@@ -146,7 +163,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
         <Container className="min-h-fit">
           {/* Explore any election from Merdeka to the present! */}
           <Section>
-            <h4 className="text-center">{t("election.section_1")}</h4>
+            <h4 className="text-center">{t("election.header_1")}</h4>
 
             {/* Mobile */}
             <div className={clx("fixed right-0 top-16 z-20 lg:hidden")}>
@@ -157,24 +174,20 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                     className="border-outline bg-background dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-lg"
                   >
                     <span>{t("filter")}:</span>
-                    <span className="bg-primary dark:bg-primary-dark rounded-md px-1 py-0.5 text-xs text-white">
-                      {3}
-                    </span>
+                    <div className="bg-primary dark:bg-primary-dark w-4.5 flex h-5 justify-center rounded-md">
+                      <p className="self-center text-white">3</p>
+                    </div>
+                    {/* <ChevronDownIcon
+                      className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5"
+                      aria-hidden="true"
+                    /> */}
                   </Button>
                 )}
-                title={
-                  <Label
-                    label={t("filter") + ":"}
-                    className="block text-sm font-bold text-black dark:text-white"
-                  />
-                }
+                title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
               >
                 {close => (
                   <div className="flex-grow space-y-4 overflow-y-auto pb-36 pt-4">
-                    <Label
-                      label={t("election.election") + ":"}
-                      className="block text-sm font-medium text-black dark:text-white"
-                    />
+                    <Label label={t("election.election") + ":"} className="text-sm" />
                     <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
                       <List
                         options={PANELS.map(item => item.name)}
@@ -184,18 +197,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                       />
                     </div>
                     <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
-                      <Label
-                        label={t("election.state") + ":"}
-                        className="block text-sm font-medium text-black dark:text-white"
-                      />
-                      <Label
-                        label={t("election.election_year") + ":"}
-                        className="block text-sm font-medium text-black dark:text-white"
-                      />
+                      <Label label={t("election.state") + ":"} className="text-sm" />
+                      <Label label={t("election.election_year") + ":"} className="text-sm" />
                       <StateDropdown
                         currentState={data.state}
                         onChange={selected => {
                           setData("state", selected.value);
+                          setData("election", null);
                         }}
                         exclude={
                           data.list_index === ElectionEnum.Dun ? ["mys", "kul", "lbn", "pjy"] : []
@@ -206,12 +214,15 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                       <Dropdown
                         width="w-full"
                         placeholder={t("select_election")}
-                        options={data.list_index === 0 ? GE_OPTIONS : SE_OPTIONS}
-                        selected={
-                          data.list_index === 0
-                            ? GE_OPTIONS.find(e => e.value === params.election)
-                            : SE_OPTIONS.find(e => e.value === params.election)
+                        options={
+                          data.list_index === ElectionEnum.Parlimen ? GE_OPTIONS : SE_OPTIONS
                         }
+                        selected={
+                          data.list_index === ElectionEnum.Parlimen
+                            ? GE_OPTIONS.find(e => e.value === params.election)
+                            : SE_OPTIONS.find(e => e.value === params.election.slice(-5))
+                        }
+                        disabled={!data.state}
                         onChange={e => {
                           setData("election", e.value);
                         }}
@@ -221,7 +232,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                       <Button className="btn btn-primary w-full justify-center" onClick={close}>
                         {t("election.apply_filters")}
                       </Button>
-                      <Button className="btn btn-default w-full justify-center" onClick={close}>
+                      <Button className="btn w-full justify-center" onClick={close}>
                         {t("common:common.close")}
                       </Button>
                     </div>
@@ -248,6 +259,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                 onChange={selected => {
                   navigateToElection(data.election, selected.value);
                   setData("state", selected.value);
+                  setData("election", null);
                 }}
                 exclude={data.list_index === ElectionEnum.Parlimen ? [] : NON_SE_STATE}
                 width="min-w-max"
@@ -257,16 +269,17 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                 anchor="left"
                 width="max-w-fit"
                 placeholder={t("select_election")}
-                options={data.list_index === 0 ? GE_OPTIONS : SE_OPTIONS}
+                options={data.list_index === ElectionEnum.Parlimen ? GE_OPTIONS : SE_OPTIONS}
                 selected={
-                  data.list_index === 0
+                  data.list_index === ElectionEnum.Parlimen
                     ? GE_OPTIONS.find(e => e.value === params.election)
-                    : SE_OPTIONS.find(e => e.value === params.election)
+                    : SE_OPTIONS.find(e => e.value === params.election.slice(-5))
                 }
                 onChange={selected => {
-                  navigateToElection(selected.value, data.state);
-                  setData("election", selected.value);
+                  navigateToElection(selected.value.slice(-5), data.state);
+                  setData("election", selected.value.slice(-5));
                 }}
+                disabled={!data.state}
               />
             </div>
             <Section>
@@ -277,15 +290,15 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
               >
                 {PANELS.map((panel, index) => (
                   <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
-                    <div className="lg:grid lg:grid-cols-12">
-                      <div className="space-y-6 lg:col-span-10 lg:col-start-2">
+                    <div className="grid grid-cols-12">
+                      <div className="col-span-full col-start-1 space-y-6 lg:col-span-10 lg:col-start-2">
                         <Tabs
                           title={
                             <div className="text-base font-bold">
                               {t("election.parliament_of")}
                               <span className="text-primary">{CountryAndStates[params.state]}</span>
                               <span>: </span>
-                              <span className="text-primary">{t(params.election)}</span>
+                              <span className="text-primary">{t(params.election.slice(-5))}</span>
                             </div>
                           }
                         >
@@ -293,10 +306,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                             name={t("election.map")}
                             icon={<MapIcon className="mr-1 h-5 w-5" />}
                           >
-                            <Card className="border-outline dark:border-washed-dark bg-background dark:bg-background-dark static rounded-xl border xl:py-4">
+                            <Card className="bg-background dark:bg-background-dark static xl:py-4">
                               <Choropleth
-                                enableOutline={false}
-                                type={data.list_index === 1 ? "dun" : "parlimen"}
+                                type={data.list_index === ElectionEnum.Dun ? "dun" : "parlimen"}
                               />
                             </Card>
                           </Panel>
@@ -325,7 +337,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                           <Panel name={t("election.summary")}>
                             <div className="space-y-6">
                               <p className="text-center text-sm font-medium">
-                                {t("election.majority")}
+                                {t("election.simple_majority")}
                               </p>
                               <div className="relative h-12 w-full">
                                 <Waffle
@@ -382,7 +394,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
               </Tabs>
             </Section>
             {/* View the full ballot for a specific seat */}
-            <BallotSeat seats={seats} election={data.election} />
+            <BallotSeat seats={seats} state={params.state} election={params.election} />
 
             {/* Election analysis */}
             <ElectionAnalysis index={data.list_index} />
