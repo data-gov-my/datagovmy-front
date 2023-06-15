@@ -2,7 +2,7 @@ import At from "@components/At";
 import AgencyBadge from "@components/Badge/agency";
 import Hero from "@components/Hero";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
+import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -37,6 +37,11 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
       name: t("seats"),
       icon: <MapIcon className="m-1 h-5 w-5" />,
       url: routes.ELECTION_EXPLORER.concat("/seats"),
+    },
+    {
+      name: "Trivia",
+      icon: <LightBulbIcon className="m-1 h-5 w-5" />,
+      url: routes.ELECTION_EXPLORER.concat("/trivia"),
     },
   ];
 

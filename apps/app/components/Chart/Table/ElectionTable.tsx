@@ -17,12 +17,13 @@ export interface ElectionTableProps {
   empty?: string | ReactNode;
   data?: any;
   columns: Array<ColumnDef<any, any>>;
-  highlightedRow?: false | number;
+  highlightedRows?: Array<number>;
   result?: ElectionResult;
   isLoading: boolean;
 }
 
 type ElectionTableIds =
+  | "index"
   | "party"
   | "election_name"
   | "name"
@@ -39,7 +40,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   empty,
   data = dummyData,
   columns,
-  highlightedRow = false,
+  highlightedRows = [-1],
   result,
   isLoading = false,
 }) => {
@@ -58,9 +59,16 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
   const lookupDesktop = (id: ElectionTableIds, cell: any) => {
     const value = cell.getValue();
     switch (id) {
+      case "index":
+        return highlightedRows.includes(value - 1) ? (
+          <p className="text-primary dark:text-primary-dark">{value}</p>
+        ) : (
+          value
+        );
       case "election_name":
         return (
           <Tooltip
+            className="tooltip-center"
             tip={
               cell.row.original.date && toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
             }
@@ -71,7 +79,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                 tabIndex={0}
                 onClick={open}
               >
-                {t(value)}
+                {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
               </div>
             )}
           </Tooltip>
@@ -113,25 +121,36 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
       case "votes":
       case "majority":
         return (
-          <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
-            <div className="lg:self-center">
-              <BarPerc hidden value={value.perc} />
-            </div>
-            <span className="whitespace-nowrap">
-              {value.abs !== null ? numFormat(value.abs, "standard") : `—`}
-              {value.perc !== null ? ` (${numFormat(value.perc, "compact", [1, 1])}%)` : " (—)"}
-            </span>
-          </div>
+          <>
+            {typeof value === "number" ? (
+              value
+            ) : (
+              <div className="flex items-center gap-2 md:flex-col md:items-start lg:flex-row lg:items-center">
+                <div className="lg:self-center">
+                  <BarPerc hidden value={value.perc} />
+                </div>
+                <span className="whitespace-nowrap">
+                  {value.abs !== null ? numFormat(value.abs, "standard") : `—`}
+                  {value.perc !== null ? ` (${numFormat(value.perc, "compact", [1, 1])}%)` : " (—)"}
+                </span>
+              </div>
+            )}
+          </>
         );
       default:
         return flexRender(cell.column.columnDef.cell, cell.getContext());
     }
   };
-
   const lookupMobile = (id: ElectionTableIds, cell: any) => {
     if (!cell) return <></>;
     const value = cell.getValue();
     switch (id) {
+      case "index":
+        return highlightedRows.includes(value - 1) ? (
+          <p className="text-primary dark:text-primary-dark font-bold">#{value}</p>
+        ) : (
+          <>#{value}</>
+        );
       case "party":
         return (
           <div className="flex flex-row items-center gap-1.5">
@@ -143,16 +162,21 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
               alt={t(value)}
             />
             {cell.row.original.name ? (
-              <span className="relative pl-10">{`${cell.row.original.name} (${value})`}</span>
+              <p className="relative pl-10">
+                <span className="font-medium">{cell.row.original.name}</span>
+                <span>{` (${value})`}</span>
+              </p>
             ) : (
-              <span className="relative pl-10">{t(value)}</span>
+              <span className="relative pl-10 font-medium">{t(value)}</span>
             )}
           </div>
         );
       case "election_name":
         return (
           <div className="flex gap-3 text-sm">
-            <p className="font-medium">{t(value)}</p>
+            <p className="font-medium">
+              {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
+            </p>
             {cell.row.original.date && (
               <p className="text-dim">
                 {toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)}
@@ -197,12 +221,16 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             <p className="text-dim font-medium">
               {flexRender(cell.column.columnDef.header, cell.getContext())}
             </p>
-            <div className="flex items-center gap-2">
-              <BarPerc hidden value={value.perc} />
-              <p>{`${value.abs !== null ? numFormat(value.abs, "standard") : "—"} (${
-                value.perc !== null ? `${numFormat(value.perc, "compact", [1, 1])}%` : "—"
-              })`}</p>
-            </div>
+            {typeof value === "number" ? (
+              <p className="font-bold">{value}</p>
+            ) : (
+              <div className="flex items-center gap-2">
+                <BarPerc hidden value={value.perc} />
+                <p>{`${value.abs !== null ? numFormat(value.abs, "standard") : "—"} (${
+                  value.perc !== null ? `${numFormat(value.perc, "compact", [1, 1])}%` : "—"
+                })`}</p>
+              </div>
+            )}
           </div>
         );
       case "result":
@@ -214,22 +242,19 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             <ResultBadge value={value} />
           </div>
         );
-
       default:
         return flexRender(cell.column.columnDef.cell, cell.getContext());
     }
   };
 
   return (
-    <div>
-      <div className={clx("flex flex-wrap items-start justify-between gap-2", className)}>
-        <div>
-          {title && typeof title === "string" ? (
-            <span className="pb-6 text-base font-bold dark:text-white">{title}</span>
-          ) : (
-            title
-          )}
-        </div>
+    <>
+      <div>
+        {title && typeof title === "string" ? (
+          <span className="pb-6 text-base font-bold dark:text-white">{title}</span>
+        ) : (
+          title
+        )}
       </div>
       <div className={clx("relative", className)}>
         {/* Desktop */}
@@ -259,7 +284,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                 <tr
                   key={row.id}
                   className={clx(
-                    rowIndex === highlightedRow
+                    highlightedRows.includes(rowIndex)
                       ? "bg-background dark:bg-background-dark"
                       : "bg-inherit",
                     "border-outline dark:border-washed-dark border-b"
@@ -269,7 +294,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                     <td
                       key={cell.id}
                       className={clx(
-                        rowIndex === highlightedRow && colIndex === 0
+                        highlightedRows.includes(rowIndex) && colIndex === 0
                           ? "font-medium"
                           : "font-normal",
                         "px-2 py-[10px]"
@@ -277,7 +302,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                     >
                       <div className="flex flex-row gap-2">
                         {lookupDesktop(cell.column.columnDef.id, cell)}
-                        {rowIndex === highlightedRow && colIndex === 0 && (
+                        {highlightedRows.includes(rowIndex) && colIndex === 0 && (
                           <ResultBadge hidden value={result} />
                         )}
                       </div>
@@ -303,14 +328,19 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
               className={clx(
                 "border-outline dark:border-washed-dark flex flex-col space-y-2 border-b p-3 text-sm first:border-t-2 md:hidden",
                 index === 0 && "border-t-2",
-                index === highlightedRow ? "bg-background dark:bg-background-dark" : "bg-inherit"
+                highlightedRows.includes(index)
+                  ? "bg-background dark:bg-background-dark"
+                  : "bg-inherit"
               )}
               key={index}
             >
               {/* Row 1 - Election Name / Date / Full result */}
               {["election_name", "full_result"].some(id => ids.includes(id)) && (
-                <div className="flex flex-row justify-between">
-                  {_row.election_name}
+                <div className="flex justify-between gap-x-2">
+                  <div className="flex gap-x-2">
+                    {_row.index}
+                    {_row.election_name}
+                  </div>
                   {_row.full_result}
                 </div>
               )}
@@ -359,7 +389,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
