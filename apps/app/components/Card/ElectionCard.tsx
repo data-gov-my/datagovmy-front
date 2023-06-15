@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
-import { clx, numFormat, toDate } from "@lib/helpers";
+import { clx, numFormat, slugify, toDate } from "@lib/helpers";
 import { useData } from "@hooks/useData";
 import type {
   BaseResult,
@@ -110,7 +110,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                 <Dialog.Panel
                   className={clx(
                     Font.body.variable,
-                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform overflow-hidden rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
+                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform overflow-visible rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
                   )}
                 >
                   <Dialog.Title
@@ -130,7 +130,9 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                     <div className="space-x-3 pt-2">
                       {subtitle && (
                         <>
-                          <span className="uppercase">{t(options[data.index]?.election_name)}</span>
+                          <span className="uppercase">
+                            {t(options[data.index]?.election_name.slice(-5))}
+                          </span>
                           <span className="text-dim">
                             {toDate(options[data.index]?.date, "dd MMM yyyy", i18n.language)}
                           </span>
@@ -138,24 +140,29 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                       )}
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="font-bold">{t("election.election_result")}</div>
+                    <div className="space-y-3 overflow-visible">
+                      <div className="font-bold">{t("election_result")}</div>
                       <ElectionTable
-                        className="max-h-96 w-full overflow-y-auto"
+                        className="max-h-96 w-full overflow-visible"
                         data={data.result.data}
                         columns={columns}
                         isLoading={data.loading}
-                        highlightedRow={
+                        highlightedRows={
                           data.result.data && highlighted
                             ? "name" in data.result.data[0]
-                              ? data.result.data.findIndex(
-                                  (e: BaseResult) => e.name === highlighted
-                                )
-                              : "party" in data.result.data[0] &&
-                                data.result.data.findIndex(
-                                  (e: BaseResult) => e.party === highlighted
-                                )
-                            : 0
+                              ? [
+                                  data.result.data.findIndex(
+                                    (e: BaseResult) => slugify(e.name) === highlighted
+                                  ),
+                                ]
+                              : "party" in data.result.data[0]
+                              ? [
+                                  data.result.data.findIndex(
+                                    (e: BaseResult) => e.party === highlighted
+                                  ),
+                                ]
+                              : [-1]
+                            : [0]
                         }
                         result={"result" in defaultParams ? defaultParams.result : undefined}
                       />
@@ -163,12 +170,12 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
 
                     {data.result.votes && (
                       <div className="space-y-3">
-                        <div className="font-bold">{t("election.voting_statistics")}</div>
+                        <div className="font-bold">{t("voting_statistics")}</div>
                         <div className="flex flex-col gap-3 text-sm md:flex-row md:flex-wrap md:gap-x-6">
                           {data.result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
                               <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
-                                <p className="w-28 md:w-fit">{t(`election.${item.x}`)}:</p>
+                                <p className="w-28 md:w-fit">{t(item.x)}:</p>
                                 <div className="flex items-center space-x-3">
                                   <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
                                   <p>{`${

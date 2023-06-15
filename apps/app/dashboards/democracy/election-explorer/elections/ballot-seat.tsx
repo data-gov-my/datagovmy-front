@@ -24,10 +24,11 @@ import { FunctionComponent, useEffect, useMemo } from "react";
 
 interface BallotSeatProps {
   seats: Seat[];
+  state: string;
   election: string | undefined;
 }
 
-const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => {
+const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { cache } = useCache();
 
@@ -42,7 +43,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
   const fetchSeatResult = (seat: string) => {
     if (!election) return;
-    const identifier = seat;
+    const identifier = `${election}-${state}-${seat}`;
     if (cache.has(identifier)) return setData("seat_result", cache.get(identifier));
     else {
       setData("seat_loading", true);
@@ -54,9 +55,15 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
         seat,
       })
         .then(({ data }: { data: SeatResult }) => {
+          console.log(data);
           const result = {
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
+              {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
+              },
               {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
@@ -116,10 +123,10 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
 
   return (
     <Section>
-      <div className="lg:grid lg:grid-cols-12">
-        <div className="space-y-12 lg:col-span-10 lg:col-start-2">
+      <div className="grid grid-cols-12">
+        <div className="col-span-full col-start-1 space-y-12 lg:col-span-10 lg:col-start-2">
           <div className="space-y-6">
-            <h4 className="text-center">{t("election.section_2")}</h4>
+            <h4 className="text-center">{t("election.header_2")}</h4>
 
             <LeftRightCard
               left={
@@ -144,8 +151,8 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                         <Card
                           key={seat.seat}
                           className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark
-                         hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm
-                          dark:bg-black xl:w-full"
+                         hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black
+                          lg:w-auto xl:w-full"
                           onClick={() => fetchSeatResult(seat.seat)}
                         >
                           <div className="flex flex-row justify-between">
@@ -164,23 +171,29 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                               </span>
                             </div>
                           </div>
-                          <div className="flex flex-row gap-2">
+                          <div className="relative flex flex-row gap-1.5">
                             <ImageWithFallback
-                              className="border-outline dark:border-outlineHover-dark items-center self-center rounded border"
+                              className="border-outline dark:border-outlineHover-dark absolute rounded border"
                               src={`/static/images/parties/${seat.party}.png`}
                               width={32}
                               height={18}
                               alt={t(`${seat.party}`)}
                             />
-                            <span className="truncate font-medium">{`${seat.name} `}</span>
+                            <span className="truncate pl-10 font-medium">{`${seat.name} `}</span>
                             <span>{`(${seat.party})`}</span>
-                            <Won />
+                            <div className="self-center pl-1.5">
+                              <Won />
+                            </div>
                           </div>
                           <div className="flex flex-row items-center gap-2">
                             <p className="text-dim text-sm">{t("majority")}</p>
-                            <BarPerc hidden value={seat.majority.perc} />
+                            <BarPerc
+                              hidden
+                              value={seat.majority.perc}
+                              size="h-[5px] w-[30px] xl:w-[50px]"
+                            />
                             <span>
-                              {seat.majority.abs === 0
+                              {seat.majority.abs === null
                                 ? `—`
                                 : numFormat(seat.majority.abs, "standard")}
                             </span>
@@ -207,14 +220,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                             <p className="text-dim uppercase">{seat_info.state}</p>
                           </div>
                           <div className="flex items-center gap-3">
-                            <p>{t(`${seat_info.name}`)}</p>
+                            <p>{t(`${seat_info.name.slice(-5)}`)}</p>
                             <p className="text-dim">{seat_info.date}</p>
                           </div>
                         </div>
                       </div>
 
                       <div className="space-y-3">
-                        <div className="font-bold">{t("election.election_result")}</div>
+                        <div className="font-bold">{t("election_result")}</div>
                         <ElectionTable
                           className="max-h-[400px] w-full overflow-y-auto"
                           data={data.seat_result.data}
@@ -236,20 +249,18 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, election }) => 
                             },
                           ])}
                           isLoading={data.seat_loading}
-                          highlightedRow={0}
+                          highlightedRows={[0]}
                           result="won"
                         />
                       </div>
 
                       <div className="space-y-3">
-                        <div className="font-bold">{t("election.voting_statistics")}</div>
-                        <div className="flex flex-col gap-3 text-sm md:flex-row md:gap-x-6 lg:flex-col xl:flex-row">
+                        <div className="font-bold">{t("voting_statistics")}</div>
+                        <div className="flex flex-col gap-3 text-sm">
                           {data.seat_result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
                               <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
-                                <p className="w-28 md:w-fit lg:w-28 xl:w-fit">
-                                  {t(`election.${item.x}`)}:
-                                </p>
+                                <p className="w-28 md:w-fit lg:w-28 xl:w-fit">{t(item.x)}:</p>
                                 <div className="flex items-center space-x-3">
                                   <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
                                   <p>{`${
