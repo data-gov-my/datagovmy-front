@@ -105,7 +105,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         }
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.govt")}
+            agency={t("agencies:govt.full")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />

@@ -153,7 +153,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.bnm")}
+            agency={t("agencies:bnm.full")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BNMIcon />}
           />
