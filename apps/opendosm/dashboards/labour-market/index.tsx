@@ -1,26 +1,31 @@
-import { Hero, Container, Tabs, Panel, Section, Dropdown } from "@components/index";
-import Slider from "@components/Chart/Slider";
-import { FunctionComponent, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { default as Image } from "next/image";
-import { useTranslation } from "@hooks/useTranslation";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
+import Hero from "@components/Hero";
+import { Container, Section } from "datagovmy-ui/components";
+import { Slider } from "datagovmy-ui/charts";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { ComponentType, FunctionComponent, useEffect } from "react";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import type { OptionType } from "@components/types";
 import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
+import dynamic from "next/dynamic";
+import { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
+import { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
 
 /**
  * Labour Market Dashboard
  * @overview Status: Live (Partially on-hold)
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-// const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-// const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
-// const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 
 interface LabourMarketProps {
   last_updated: number;

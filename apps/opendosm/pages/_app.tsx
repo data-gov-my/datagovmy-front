@@ -1,21 +1,26 @@
+import "datagovmy-ui/dist/style.css";
 import "../styles/globals.css";
 import { appWithTranslation } from "next-i18next";
-import { AppPropsLayout } from "@lib/types";
-import { Layout } from "@components/index";
+import Layout from "@components/Layout";
 import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import mixpanel from "mixpanel-browser";
 import mixpanelConfig from "@config/mixpanel";
 import { ga_track, init_session } from "@lib/mixpanel";
-import "@formatjs/intl-numberformat/polyfill";
-import "@formatjs/intl-numberformat/locale-data/en";
+import { clx } from "datagovmy-ui/helpers";
+import { body, header } from "@config/font";
+import Nexti18NextConfig from "../next-i18next.config";
+// import "@formatjs/intl-numberformat/polyfill";
+// import "@formatjs/intl-numberformat/locale-data/en";
 
 // Global settings
 mixpanel.init(mixpanelConfig.token, { debug: process.env.NODE_ENV === "development" });
 
 // App instance
-function App({ Component, pageProps }: AppPropsLayout) {
-  const layout = Component.layout ?? ((page: ReactNode) => <Layout>{page}</Layout>);
+function App({ Component, pageProps }: any) {
+  const layout =
+    Component.layout ||
+    ((page: ReactNode) => <Layout className={clx(body.variable, "font-sans")}>{page}</Layout>);
   const router = useRouter();
 
   useEffect(() => {
@@ -36,11 +41,15 @@ function App({ Component, pageProps }: AppPropsLayout) {
     };
   }, [router.events]);
 
-  return layout(
+  return (
     <>
-      <Component {...pageProps} />
+      {layout(
+        <div className={clx(body.variable, header.variable, "font-sans")}>
+          <Component {...pageProps} />
+        </div>
+      )}
     </>
   );
 }
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, Nexti18NextConfig);

@@ -3,23 +3,17 @@ import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 import { get } from "@lib/api";
-import { useTranslation } from "@hooks/useTranslation";
-
-import Metadata from "@components/Metadata";
+import { Container, Section, Tabs, Panel, Metadata, Card, At } from "datagovmy-ui/components";
 import Hero from "@components/Hero";
-import Container from "@components/Container";
-import Section from "@components/Section";
-import { default as Tabs, Panel } from "@components/Tabs";
-import Slider from "@components/Chart/Slider";
+import { Slider } from "datagovmy-ui/charts";
+import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
+// import { useTranslation } from "datagovmy-ui/hooks";
+// import Section from "@components/Section";
 import { AKSARA_COLOR, BREAKPOINTS, SHORT_LANG } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
-import Card from "@components/Card";
 import { EyeIcon, DocumentArrowDownIcon } from "@heroicons/react/24/solid";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
-import At from "@components/At";
-import { ReactNode, useEffect, useMemo } from "react";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
+import { ComponentType, ReactNode, useEffect, useMemo } from "react";
 import { useWindowWidth } from "@hooks/useWindowWidth";
 import { routes } from "@lib/routes";
 import {
@@ -33,8 +27,18 @@ import {
   InflationIcon,
 } from "@components/Icon";
 import { track } from "@lib/mixpanel";
+import { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
+import { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 
 const Home: Page = ({
   highlights,
@@ -171,7 +175,7 @@ const Home: Page = ({
 
   return (
     <>
-      <Metadata keywords={"opendosm data negara inflasi"} />
+      <Metadata title="OpenDOSM" keywords={"opendosm data negara inflasi"} />
 
       <Hero
         background="home-banner"
@@ -212,11 +216,11 @@ const Home: Page = ({
             {PANELS.map((panel, index) => (
               <Panel name={panel.name as string} key={index}>
                 <div className="grid grid-cols-2 gap-6 py-6 lg:grid-cols-4">
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">{t("home.section_2.dashboards")}</h4>
                     <h3 className="font-medium">16</h3>
                   </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">
                       {t("home.section_2.datasets_available")}
                     </h4>
@@ -224,7 +228,7 @@ const Home: Page = ({
                       {numFormat(analytics.total.catalogue, "standard")}
                     </h3>
                   </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">{t("home.section_2.resource_views")}</h4>
                     <h3 className="font-medium">
                       {numFormat(
@@ -234,7 +238,7 @@ const Home: Page = ({
                       )}
                     </h3>
                   </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">
                       {t("home.section_2.resource_downloads")}
                     </h4>
@@ -249,7 +253,7 @@ const Home: Page = ({
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type="dashboard"
                       ranks={panel.data.dashboard_views}
@@ -257,7 +261,7 @@ const Home: Page = ({
                       icon={<EyeIcon className="h-4 w-4" />}
                     />
                   </Card>
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type={"catalogue"}
                       ranks={panel.data.dataset_views}
@@ -265,7 +269,7 @@ const Home: Page = ({
                       icon={<EyeIcon className="h-4 w-4" />}
                     />
                   </Card>
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type={"catalogue"}
                       ranks={panel.data.dataset_downloads}
@@ -273,7 +277,7 @@ const Home: Page = ({
                       icon={<DocumentArrowDownIcon className="h-4 w-4" />}
                     />
                   </Card>
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type={"catalogue"}
                       ranks={panel.data.graphic_downloads}
@@ -289,7 +293,7 @@ const Home: Page = ({
         <Section title={t("home.section_3.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <Timeseries
-              className="h-[350px] w-full"
+              className="h-[250px] w-full"
               title={t("home.keys.views")}
               data={{
                 labels: coordinate.x,
@@ -308,7 +312,7 @@ const Home: Page = ({
               stats={yieldCallout("views")}
             />
             <Timeseries
-              className="h-[350px] w-full"
+              className="h-[250px] w-full"
               title={t("home.keys.users")}
               data={{
                 labels: coordinate.x,
@@ -327,7 +331,7 @@ const Home: Page = ({
               stats={yieldCallout("users")}
             />
             <Timeseries
-              className="h-[350px] w-full"
+              className="h-[250px] w-full"
               title={t("home.keys.downloads")}
               data={{
                 labels: coordinate.x,
@@ -352,7 +356,7 @@ const Home: Page = ({
             type="range"
             value={data.minmax}
             data={timeseries.data.x}
-            onChange={e => setData("minmax", e)}
+            onChange={(e: any) => setData("minmax", e)}
           />
         </Section>
       </Container>

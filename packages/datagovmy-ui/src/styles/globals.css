@@ -1,0 +1,12 @@
+/* TAILWIND CSS */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* MODULE CSS */
+@import "./dashboards/general.css";
+@import "./dashboards/table.css";
+@import "./dashboards/banner.css";
+@import "leaflet.markercluster";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";

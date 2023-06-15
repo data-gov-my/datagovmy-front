@@ -9,7 +9,7 @@ import {
   Modal,
   Radio,
   Section,
-} from "@components/index";
+} from "datagovmy-ui/components";
 import { ArrowTrendingUpIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { FunctionComponent, useMemo, useRef } from "react";
 import Label from "@components/Label";
@@ -95,7 +95,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
                   title={title}
                   key={title}
                   ref={ref => (scrollRef.current[title] = ref)}
-                  className="p-2 pt-14 pb-8 lg:p-8"
+                  className="p-2 pb-8 pt-14 lg:p-8"
                 >
                   <ul className="columns-1 space-y-3 lg:columns-2 xl:columns-3">
                     {datasets.map((item: Catalogue, index: number) => (
@@ -268,7 +268,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
                 onChange={e => setFilter("source", e)}
               />
 
-              <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white py-3 px-2">
+              <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white px-2 py-3">
                 <Button
                   className="w-full justify-center bg-black text-white"
                   disabled={!actives.length}

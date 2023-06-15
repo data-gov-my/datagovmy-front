@@ -10,26 +10,26 @@
 
 @layer base {
   h1 {
-    @apply text-4xl font-bold;
+    @apply font-header text-4xl font-bold;
   }
 
   h2 {
-    @apply text-3xl font-bold;
+    @apply font-header text-3xl font-bold;
   }
 
   h3 {
-    @apply text-2xl font-bold;
+    @apply font-header text-2xl font-bold;
   }
 
   h4 {
-    @apply text-xl font-bold;
+    @apply font-header text-xl font-bold;
   }
   h5 {
-    @apply text-lg font-bold tracking-normal;
+    @apply font-body text-lg font-bold tracking-normal;
   }
 
   h6 {
-    @apply text-base font-semibold uppercase tracking-wider text-gray-500;
+    @apply font-body text-base font-semibold uppercase tracking-wider text-gray-500;
   }
 
   input[type="search"]::-webkit-search-decoration,
@@ -68,7 +68,7 @@ input[type="range"]::-webkit-slider-thumb {
   pointer-events: all;
 }
 
-button[role="tab"][aria-selected="true"] {
+/* button[role="tab"][aria-selected="true"] {
   position: relative;
 }
 
@@ -81,7 +81,7 @@ button[role="tab"][aria-selected="true"]::after {
   bottom: -6px;
   left: 50%;
   transform: translateX(-50%);
-}
+} */
 
 .button-dashboard:after {
   content: "";

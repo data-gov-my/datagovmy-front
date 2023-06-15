@@ -43,6 +43,7 @@ const StateModal: FunctionComponent<StateModalProps> = ({ exclude, url, title })
             src={"/static/images/states/".concat(currentState, ".jpeg")}
             height={16}
             width={28}
+            alt=""
           />
         </button>
       )}
@@ -59,16 +60,17 @@ const StateModal: FunctionComponent<StateModalProps> = ({ exclude, url, title })
               >
                 <Link
                   href={url.concat("/", state.value !== "mys" ? state.value : "")}
+                  className="flex items-center space-x-4"
+                  onClick={() => close()}
                   scroll={false}
                 >
-                  <a className="flex items-center space-x-4" onClick={() => close()}>
-                    <Image
-                      src={"/static/images/states/".concat(state.value, ".jpeg")}
-                      height={16}
-                      width={28}
-                    />
-                    <span>{state.label}</span>
-                  </a>
+                  <Image
+                    src={"/static/images/states/".concat(state.value, ".jpeg")}
+                    height={16}
+                    width={28}
+                    alt=""
+                  />
+                  <span>{state.label}</span>
                 </Link>
               </li>
             ))}

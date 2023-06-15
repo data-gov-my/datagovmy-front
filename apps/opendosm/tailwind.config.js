@@ -1,5 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -18,7 +19,9 @@ module.exports = {
         4.5: "18px",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["var(--font-body)", ...fontFamily.sans],
+        body: ["var(--font-body)", ...fontFamily.sans],
+        header: ["var(--font-header)"],
       },
       colors: {
         "black": "#0F172A", // Slate 900
@@ -39,5 +42,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/line-clamp")],
+  plugins: [require("@tailwindcss/forms")],
 };

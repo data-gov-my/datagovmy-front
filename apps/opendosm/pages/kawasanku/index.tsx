@@ -4,10 +4,10 @@ import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { Page } from "@lib/types";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import KawasankuDashboard from "@dashboards/kawasanku";
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import MalaysiaGeojson from "@lib/geojson/malaysia.json";
 
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
 import { STATES } from "@lib/schema/kawasanku";
 

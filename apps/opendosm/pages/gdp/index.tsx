@@ -1,8 +1,8 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import GDPDashboard from "@dashboards/gdp";
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const GDP = ({

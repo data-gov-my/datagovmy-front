@@ -10,8 +10,8 @@ interface AtProps extends LinkProps {
 
 const At: FunctionComponent<AtProps> = ({ href, children, className, scrollTop = true }) => {
   return (
-    <Link href={href} scroll={scrollTop}>
-      <a className={className}>{children}</a>
+    <Link href={href} scroll={scrollTop} className={className}>
+      {children}
     </Link>
   );
 };

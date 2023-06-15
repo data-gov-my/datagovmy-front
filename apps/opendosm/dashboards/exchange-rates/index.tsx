@@ -1,24 +1,40 @@
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { sortMulti, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useData } from "@hooks/useData";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
-import { default as Tabs, Panel } from "@components/Tabs";
-import Container from "@components/Container";
+import { Tabs, Panel, Container, Section } from "datagovmy-ui/components";
 import Hero from "@components/Hero";
-import Section from "@components/Section";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { closestIndex, getColor } from "@lib/schema/exchange-rates";
+import type { BarProps } from "datagovmy-ui/src/components/Chart/Bar";
+import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
+import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Exchange Rates Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
+const Bar = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Bar as ComponentType<BarProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 
 interface ExchangeRatesDashboardProps {
   last_updated: number;

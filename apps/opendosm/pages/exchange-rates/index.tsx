@@ -3,8 +3,8 @@ import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import ExchangeRatesDashboard from "@dashboards/exchange-rates";
 
 const ExchangeRates: Page = ({

@@ -1,17 +1,20 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect } from "react";
-import dynamic from "next/dynamic";
+import Hero from "@components/Hero";
 import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
+import { Container, Dropdown, Section } from "datagovmy-ui/components";
+import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
+import dynamic from "next/dynamic";
+import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
+
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR, MYR_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
-import { useWatch } from "@hooks/useWatch";
+import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
+import { Slider } from "datagovmy-ui/charts";
+
+import type { BarMeterProps } from "datagovmy-ui/src/components/Chart/BarMeter";
+import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
+import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Currency in Circulation Dashboard
@@ -23,8 +26,24 @@ export interface DenoData {
   y: number;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
+const BarMeter = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.BarMeter as ComponentType<BarMeterProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 
 interface CurrencyInCirculationDashboardProps {
   last_updated: number;
@@ -224,17 +243,18 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 anchor="left"
                 selected={data.index_type}
                 options={INDEX_OPTIONS}
-                onChange={e => setData("index_type", e)}
+                onChange={(e: any) => setData("index_type", e)}
               />
               <Dropdown
                 anchor="left"
                 options={SHADE_OPTIONS}
                 selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
+                onChange={(e: any) => setData("shade_type", e)}
               />
             </div>
 
             <Slider
+              className=""
               type="range"
               value={data.minmax}
               data={timeseries.data[data.index_type.value].x}

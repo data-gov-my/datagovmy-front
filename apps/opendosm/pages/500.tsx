@@ -1,6 +1,6 @@
 import Container from "@components/Container";
 import ErrorCode from "@components/Error";
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";

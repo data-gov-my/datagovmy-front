@@ -1,22 +1,23 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
+import Hero from "@components/Hero";
 import { numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
+import { Container, Dropdown, Section } from "datagovmy-ui/components";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { Slider } from "datagovmy-ui/charts";
+import dynamic from "next/dynamic";
+import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
 import type { OptionType } from "@components/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import Slider, { SliderRef } from "@components/Chart/Slider";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { AKSARA_COLOR } from "@lib/constants";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
+import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
 
-import InflationTrends from "./inflation-trends";
-import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
-import { useWatch } from "@hooks/useWatch";
+import InflationSnapshot from "./inflation-snapshot";
+import InflationTrends from "./inflation-trends";
+
+import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
+import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -33,7 +34,15 @@ interface TimeseriesChartData {
   prefix?: string;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 
 interface ConsumerPricesDashboardProps {
@@ -71,7 +80,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     { label: t("consumer_prices.keys.recession"), value: "recession" },
   ];
 
-  const sliderRef = useRef<SliderRef>(null);
   const { data, setData } = useData({
     cpi_type: CPI_OPTIONS[0],
     index_type: INDEX_OPTIONS[0],
@@ -169,10 +177,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     });
   }, []);
 
-  useWatch(() => {
-    sliderRef.current && sliderRef.current.reset();
-  }, [data.cpi_type, data.index_type]);
-
   return (
     <>
       <Hero background="consumer-prices-banner">
@@ -214,25 +218,25 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                   anchor="left"
                   selected={data.cpi_type}
                   options={CPI_OPTIONS}
-                  onChange={e => setData("cpi_type", e)}
+                  onChange={(e: any) => setData("cpi_type", e)}
                 />
               </div>
               <Dropdown
                 anchor="left"
                 selected={data.index_type}
                 options={INDEX_OPTIONS}
-                onChange={e => setData("index_type", e)}
+                onChange={(e: any) => setData("index_type", e)}
               />
               <Dropdown
                 anchor="left"
                 options={SHADE_OPTIONS}
                 selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
+                onChange={(e: any) => setData("shade_type", e)}
               />
             </div>
 
             <Slider
-              ref={sliderRef}
+              className=""
               type="range"
               value={data.minmax}
               data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
@@ -372,7 +376,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               sublabel={t("consumer_prices.section_5.select_item") + ":"}
               selected={data.coicop_type}
               options={COICOP_OPTIONS}
-              onChange={e => setData("coicop_type", e)}
+              onChange={(e: any) => setData("coicop_type", e)}
             />
             <Choropleth
               data={choropleth.data[data.coicop_type.value].map((item: any) => ({

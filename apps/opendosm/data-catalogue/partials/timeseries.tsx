@@ -13,7 +13,15 @@ import { useTranslation } from "@hooks/useTranslation";
 import canvasToSvg from "canvas2svg";
 import { track } from "@lib/mixpanel";
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 interface CatalogueTimeseriesProps {
   config: {
     precision: number;

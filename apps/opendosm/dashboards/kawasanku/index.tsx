@@ -1,30 +1,34 @@
-import type { GeoJsonObject } from "geojson";
-import type { OptionType } from "@components/types";
 import type { BarMeterData } from "@components/Chart/BarMeter";
 import type { JitterData } from "@components/Chart/Jitterplot";
-import Container from "@components/Container";
-import Hero from "@components/Hero";
-import Section from "@components/Section";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, useEffect, useMemo } from "react";
+import type { OptionType } from "@components/types";
+import type { GeoJsonObject } from "geojson";
+import { ComponentType, FunctionComponent, useEffect, useMemo } from "react";
+import {
+  Button,
+  Chips,
+  Container,
+  Dropdown,
+  Panel,
+  Section,
+  Spinner,
+  Tabs,
+  Tooltip,
+} from "datagovmy-ui/components";
 import JitterplotOverlay from "@components/Chart/Jitterplot/overlay";
-import Dropdown from "@components/Dropdown";
-import Button from "@components/Button";
-import Spinner from "@components/Spinner";
+import Hero from "@components/Hero";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
-
-import { useData } from "@hooks/useData";
-import { useRouter } from "next/router";
-import { STATES, DISTRICTS, PARLIMENS, DUNS, jitterTooltipFormats } from "@lib/schema/kawasanku";
-import { routes } from "@lib/routes";
-import { track } from "@lib/mixpanel";
-import Tooltip from "@components/Tooltip";
-import Chips from "@components/Chips";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, CHOROPLETH_YELLOW_GREEN_BLUE_SCALE } from "@lib/constants";
-import Tabs, { Panel } from "@components/Tabs";
-import type { ChoroplethColors } from "@lib/types";
 import { numFormat } from "@lib/helpers";
+import { track } from "@lib/mixpanel";
+import { routes } from "@lib/routes";
+import { DISTRICTS, DUNS, PARLIMENS, STATES, jitterTooltipFormats } from "@lib/schema/kawasanku";
+import type { ChoroplethColors } from "@lib/types";
+import { BarMeterProps } from "datagovmy-ui/src/components/Chart/BarMeter";
+import { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
+import { PyramidProps } from "datagovmy-ui/src/components/Chart/Pyramid";
+import { useRouter } from "next/router";
 
 /**
  * Kawasanku Dashboard
@@ -33,9 +37,26 @@ import { numFormat } from "@lib/helpers";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 const Jitterplot = dynamic(() => import("@components/Chart/Jitterplot"), { ssr: false });
-const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
+
+const Pyramid = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Pyramid as ComponentType<PyramidProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 const OSMapWrapper = dynamic(() => import("@components/OSMapWrapper"), { ssr: false });
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const BarMeter = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.BarMeter as ComponentType<BarMeterProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 
 interface KawasankuDashboardProps {
   area_type?: AreaType | undefined;
@@ -216,7 +237,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
               }
               disabled={!data.area_type || data.state.value === "malaysia"}
               selected={data.area}
-              onChange={e => {
+              onChange={(e: { value: string }) => {
                 setData("area", e);
                 setData("loading", true);
                 router.push(
@@ -249,7 +270,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
 
         <OSMapWrapper
           geojson={geojson}
-          className="absolute top-0 -right-0 -z-10 h-full overflow-hidden lg:h-full lg:w-[40vw]"
+          className="absolute -right-0 top-0 -z-10 h-full overflow-hidden lg:h-full lg:w-[40vw]"
           enableZoom={false}
         />
       </Hero>
@@ -347,7 +368,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
             />
 
             {active?.label && (
-              <p className="flex items-center gap-2 py-1 px-2 text-sm font-medium leading-6">
+              <p className="flex items-center gap-2 px-2 py-1 text-sm font-medium leading-6">
                 {active.label}
                 <span className="block h-2 w-2 rounded-full bg-black" />
               </p>
@@ -400,7 +421,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                 selected={data.indicator_type}
                 sublabel={t("common.indicator") + ":"}
                 options={INDICATOR_OPTIONS}
-                onChange={e => setData("indicator_type", e)}
+                onChange={(e: any) => setData("indicator_type", e)}
               />
             }
             onChange={index => setData("indicator_index", index)}

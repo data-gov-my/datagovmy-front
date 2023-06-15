@@ -1,17 +1,19 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect, useRef } from "react";
+import Hero from "@components/Hero";
+import { Container, Dropdown, Section } from "datagovmy-ui/components";
+import { Slider } from "datagovmy-ui/charts";
+import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
+import { smartNumFormat, toDate } from "@lib/helpers";
+import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
+
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import Slider, { SliderRef } from "@components/Chart/Slider";
+
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
-import { useWatch } from "@hooks/useWatch";
+import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
+import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * GDP Dashboard
@@ -29,8 +31,15 @@ interface TimeseriesChartData {
   chartName: string;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 interface GDPDashboardProps {
   last_updated: number;
   timeseries: any;
@@ -191,17 +200,18 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                 anchor="left"
                 selected={data.index_type}
                 options={INDEX_OPTIONS}
-                onChange={e => setData("index_type", e)}
+                onChange={(e: any) => setData("index_type", e)}
               />
               <Dropdown
                 anchor="left"
                 options={SHADE_OPTIONS}
                 selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
+                onChange={(e: any) => setData("shade_type", e)}
               />
             </div>
 
             <Slider
+              className=""
               type="range"
               value={data.minmax}
               data={timeseries.data[data.index_type.value].x}

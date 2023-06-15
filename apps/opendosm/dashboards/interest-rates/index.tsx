@@ -1,16 +1,18 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect } from "react";
+import Hero from "@components/Hero";
+import { Container, Dropdown, Section } from "datagovmy-ui/components";
+import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
+import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
+
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
+import { Slider } from "datagovmy-ui/charts";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
+import { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
+import { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Interest Rates Dashboard
@@ -26,8 +28,15 @@ interface TimeseriesChartData {
   callout: string;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-
+const Timeseries = dynamic(
+  () =>
+    import("datagovmy-ui/charts").then(
+      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
+    ),
+  {
+    ssr: false,
+  }
+);
 interface InterestRatesDashboardProps {
   last_updated: number;
   timeseries: any;
@@ -186,11 +195,12 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
                 anchor="left"
                 options={SHADE_OPTIONS}
                 selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
+                onChange={(e: any) => setData("shade_type", e)}
               />
             </div>
 
             <Slider
+              className=""
               type="range"
               value={data.opr_minmax}
               data={timeseries_opr.data.x}

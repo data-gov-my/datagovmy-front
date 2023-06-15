@@ -3,9 +3,10 @@ import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+
 import LabourMarketDashboard from "@dashboards/labour-market";
-import { useTranslation } from "@hooks/useTranslation";
 
 const Labour: Page = ({
   last_updated,

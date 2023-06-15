@@ -1,6 +1,13 @@
 import { DateTime } from "luxon";
 import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
+import { numFormat } from "datagovmy-ui/helpers";
+import dynamic from "next/dynamic";
+
+/**
+ * Shared helpers.
+ */
+export * from "datagovmy-ui/helpers";
 
 /**
  * Returns the object of max value by a given key in the array.
@@ -22,58 +29,6 @@ export const maxBy = (array: Array<any>, key: string) => {
 export const minMax = (e: number, max: number = 100) => {
   if (!e) return 0;
   return Math.min(Math.max(e, 0), max);
-};
-
-/**
- * Format a number to the given type.
- * @param value number
- * @param type Intl format type
- * @returns string
- */
-export const numFormat = (
-  value: number,
-  type: "compact" | "standard" | "scientific" | "engineering" | undefined = "compact",
-  precision: number | [min: number, max: number] = 1,
-  compactDisplay: "short" | "long" = "short",
-  locale: string = "en",
-  smart: boolean = false
-): string => {
-  const [max, min] = Array.isArray(precision) ? precision : [precision, 0];
-
-  if (smart === true) {
-    let formatter: Intl.NumberFormat;
-
-    if (value < 1_000_000 && value > -1_000_000) {
-      formatter = Intl.NumberFormat(locale, {
-        notation: type,
-        maximumFractionDigits: max,
-        minimumFractionDigits: min,
-        compactDisplay: "short",
-      });
-    } else {
-      formatter = Intl.NumberFormat(locale, {
-        notation: type,
-        maximumFractionDigits: max,
-        minimumFractionDigits: min,
-        compactDisplay,
-      });
-    }
-
-    return formatter
-      .format(value)
-      .replace("trillion", "tril")
-      .replace("trilion", "tril")
-      .replace("billion", "bil")
-      .replace("bilion", "bil")
-      .replace("million", "mil");
-  } else {
-    return Intl.NumberFormat(locale, {
-      notation: type,
-      maximumFractionDigits: max,
-      minimumFractionDigits: min,
-      compactDisplay,
-    }).format(value);
-  }
 };
 
 /**

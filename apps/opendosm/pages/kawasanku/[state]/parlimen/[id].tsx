@@ -3,9 +3,9 @@ import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Page } from "@lib/types";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import KawasankuDashboard from "@dashboards/kawasanku";
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { STATE_MAP, PARLIMENS } from "@lib/schema/kawasanku";
 import { get } from "@lib/api";
 import { useState } from "react";
