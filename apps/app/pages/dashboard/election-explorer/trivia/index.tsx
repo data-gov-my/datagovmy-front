@@ -67,7 +67,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         category: "democracy",
         agency: "SPR",
       },
-      dun_bar: data.dun_bar.data,
+      dun_bar: data.dun_bar,
       params: { state: "mys" },
       parlimen_bar: data.parlimen_bar.data,
       table_top: data.table_top.data,

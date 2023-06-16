@@ -230,7 +230,7 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                       columns={seat_schema}
                       isLoading={data.loading}
                       highlightedRows={[0, 1, 2]}
-                      empty={t("party.no_data_dun_wp")}
+                      empty={t("party.no_data_dun_wp", { state: CountryAndStates[params.state] })}
                     />
                   </Panel>
                 </Tabs>
@@ -269,7 +269,7 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                           <span className="inline-flex pr-1">
                             <FaceFrownIcon className="h-5 w-5 translate-y-1" />
                           </span>
-                          {t("party.no_data_dun_wp")}
+                          {t("party.no_data_dun_wp", { state: CountryAndStates[params.state] })}
                         </p>
                       </div>
                     </div>
