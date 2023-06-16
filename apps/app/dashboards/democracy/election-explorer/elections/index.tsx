@@ -109,7 +109,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
 
   const { data, setData } = useData({
     list_index: params.election.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
-    election: params.election,
+    election: params.election.slice(-5),
     state: params.state,
   });
 
@@ -151,6 +151,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   const handleElectionTab = (index: number) => {
     if (index === ElectionEnum.Dun) {
       setData("state", !NON_SE_STATE.includes(params.state) ? data.state || params.state : null);
+      setData("election", null);
     } else {
       setData("state", data.state || params.state);
     }
@@ -202,12 +203,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                       <StateDropdown
                         currentState={data.state}
                         onChange={selected => {
+                          navigateToElection(data.election, selected.value);
                           setData("state", selected.value);
-                          setData("election", null);
+                          data.list_index === ElectionEnum.Dun && setData("election", null);
                         }}
-                        exclude={
-                          data.list_index === ElectionEnum.Dun ? ["mys", "kul", "lbn", "pjy"] : []
-                        }
+                        exclude={data.list_index === ElectionEnum.Parlimen ? [] : NON_SE_STATE}
                         width="w-full"
                         anchor="left"
                       />
@@ -223,8 +223,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                             : SE_OPTIONS.find(e => e.value === params.election.slice(-5))
                         }
                         disabled={!data.state}
-                        onChange={e => {
-                          setData("election", e.value);
+                        onChange={selected => {
+                          setData("election", selected.value);
+                          navigateToElection(selected.value, data.state);
                         }}
                       />
                     </div>
@@ -257,9 +258,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
               <StateDropdown
                 currentState={data.state}
                 onChange={selected => {
-                  navigateToElection(data.election, selected.value);
+                  data.list_index === ElectionEnum.Dun
+                    ? setData("election", null)
+                    : navigateToElection(data.election, selected.value);
                   setData("state", selected.value);
-                  setData("election", null);
                 }}
                 exclude={data.list_index === ElectionEnum.Parlimen ? [] : NON_SE_STATE}
                 width="min-w-max"
@@ -272,12 +274,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                 options={data.list_index === ElectionEnum.Parlimen ? GE_OPTIONS : SE_OPTIONS}
                 selected={
                   data.list_index === ElectionEnum.Parlimen
-                    ? GE_OPTIONS.find(e => e.value === params.election)
-                    : SE_OPTIONS.find(e => e.value === params.election.slice(-5))
+                    ? GE_OPTIONS.find(e => e.value === data.election ?? params.election)
+                    : SE_OPTIONS.find(e => e.value === data.election ?? params.election.slice(-5))
                 }
                 onChange={selected => {
-                  navigateToElection(selected.value.slice(-5), data.state);
-                  setData("election", selected.value.slice(-5));
+                  setData("election", selected.value);
+                  navigateToElection(selected.value, data.state);
                 }}
                 disabled={!data.state}
               />
@@ -308,6 +310,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                           >
                             <Card className="bg-background dark:bg-background-dark static xl:py-4">
                               <Choropleth
+                                className="h-[400px] w-auto lg:h-[500px]"
                                 type={data.list_index === ElectionEnum.Dun ? "dun" : "parlimen"}
                               />
                             </Card>
