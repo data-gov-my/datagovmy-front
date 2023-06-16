@@ -227,7 +227,8 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                       <Trans>
                         {t("party.no_data", {
                           party: `$t(dashboard-election-explorer:${params.party_name})`,
-                          context: "parliament",
+                          state: CountryAndStates[data.state],
+                          context: "parlimen",
                         })}
                       </Trans>
                     }
