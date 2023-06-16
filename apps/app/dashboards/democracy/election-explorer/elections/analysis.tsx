@@ -95,7 +95,12 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
                   </div>
                 </div>
               }
-              right={<Choropleth type={index === 1 ? "dun" : "parlimen"} />}
+              right={
+                <Choropleth
+                  className="h-[400px] w-auto lg:h-[500px]"
+                  type={index === 1 ? "dun" : "parlimen"}
+                />
+              }
             />
           </Panel>
           <Panel name={t("election.table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
