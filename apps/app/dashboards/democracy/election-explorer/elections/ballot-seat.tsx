@@ -60,11 +60,6 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
-                x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
-              },
-              {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
                 perc: data.votes.voter_turnout_perc,
@@ -73,6 +68,11 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                 x: "rejected_votes",
                 abs: data.votes.votes_rejected,
                 perc: data.votes.votes_rejected_perc,
+              },
+              {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
               },
             ],
           };
@@ -260,7 +260,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                           {data.seat_result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
                               <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
-                                <p className="w-28 md:w-fit lg:w-28 xl:w-fit">{t(item.x)}:</p>
+                                <p className="w-28">{t(item.x)}:</p>
                                 <div className="flex items-center space-x-3">
                                   <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
                                   <p>{`${
