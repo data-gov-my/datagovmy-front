@@ -14,6 +14,7 @@ import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
 
 /**
  * Election Explorer Dashboard - Trivia Tab
@@ -68,11 +69,6 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
-                x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
-              },
-              {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
                 perc: data.votes.voter_turnout_perc,
@@ -81,6 +77,11 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                 x: "rejected_votes",
                 abs: data.votes.votes_rejected,
                 perc: data.votes.votes_rejected_perc,
+              },
+              {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
               },
             ],
           };
@@ -149,7 +150,11 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
             }
             subtitle
             options={
-              table_top[data.tab_index === ElectionEnum.Parlimen ? "parlimen" : "dun"][data.filter]
+              table_top.dun
+                ? table_top[data.tab_index === ElectionEnum.Parlimen ? "parlimen" : "dun"][
+                    data.filter
+                  ]
+                : {}
             }
             page={row.index}
           />
@@ -171,8 +176,7 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                 url={routes.ELECTION_EXPLORER.concat("/trivia")}
                 anchor="left"
                 width="w-fit"
-                currentState={data.state}
-                exclude={["kul", "lbn", "pjy"]}
+                currentState={params.state}
               />
             </div>
 
@@ -215,13 +219,18 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                   </Panel>
                   <Panel name={t("dun")}>
                     <ElectionTable
-                      data={table_top.dun[data.filter].sort(
-                        (a: Seat, b: Seat) =>
-                          data.filter === "big" && Number(b.majority) - Number(a.majority)
-                      )}
+                      data={
+                        table_top.dun
+                          ? table_top.dun[data.filter].sort(
+                              (a: Seat, b: Seat) =>
+                                data.filter === "big" && Number(b.majority) - Number(a.majority)
+                            )
+                          : {}
+                      }
                       columns={seat_schema}
                       isLoading={data.loading}
                       highlightedRows={[0, 1, 2]}
+                      empty={t("party.no_data_dun_wp")}
                     />
                   </Panel>
                 </Tabs>
@@ -240,18 +249,31 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                     )}
                   />
                 </div>
-                <div className="border-outline dark:border-washed-dark space-y-6 rounded-xl border-0 p-0 lg:border lg:p-8">
+                <div className="border-outline dark:border-washed-dark flex h-max flex-col gap-y-6 rounded-xl border-0 p-0 lg:border lg:p-8">
                   <h5 className="text-center">{t("trivia.se_veterans")}</h5>
-                  <BarMeter
-                    layout="horizontal"
-                    data={dun_bar.competed}
-                    relative
-                    formatY={(y, x) => (
-                      <p className="whitespace-nowrap">{`${y} (${t("trivia.won")} ${
-                        dun_bar.won.find((e: Record<string, any>) => e.x === x)?.y
-                      })`}</p>
-                    )}
-                  />
+                  {dun_bar.data ? (
+                    <BarMeter
+                      layout="horizontal"
+                      data={dun_bar.data && dun_bar.data.competed}
+                      relative
+                      formatY={(y, x) => (
+                        <p className="whitespace-nowrap">{`${y} (${t("trivia.won")} ${
+                          dun_bar.data.won.find((e: Record<string, any>) => e.x === x)?.y
+                        })`}</p>
+                      )}
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <div className="bg-outline dark:bg-washed-dark flex h-auto w-[300px] rounded-md px-3 pb-2 pt-1">
+                        <p className="text-sm">
+                          <span className="inline-flex pr-1">
+                            <FaceFrownIcon className="h-5 w-5 translate-y-1" />
+                          </span>
+                          {t("party.no_data_dun_wp")}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

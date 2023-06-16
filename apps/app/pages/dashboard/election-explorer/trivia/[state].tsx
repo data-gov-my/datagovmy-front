@@ -39,16 +39,11 @@ ElectionTriviaState.layout = (page, props) => (
       <StateDropdown
         url={routes.ELECTION_EXPLORER.concat("/trivia")}
         currentState={props.params.state}
-        exclude={["kul", "lbn", "pjy"]}
         hideOnScroll
       />
     }
   >
-    <StateModal
-      state={props.params.state}
-      url={routes.ELECTION_EXPLORER.concat("/trivia")}
-      exclude={["kul", "lbn", "pjy"]}
-    />
+    <StateModal state={props.params.state} url={routes.ELECTION_EXPLORER.concat("/trivia")} />
     {page}
   </Layout>
 );
@@ -93,7 +88,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "democracy",
           agency: "SPR",
         },
-        dun_bar: data.dun_bar.data,
+        dun_bar: data.dun_bar ?? {},
         params: params,
         parlimen_bar: data.parlimen_bar.data,
         table_top: data.table_top.data,
