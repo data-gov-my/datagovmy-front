@@ -345,7 +345,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                 </div>
               )}
               {/* Row 2 - Seat (if available)*/}
-              {_row.result && (
+              {(_row.result || _row.index) && (
                 <div>
                   <p>{_row.seat} </p>
                 </div>
