@@ -2,8 +2,8 @@ import { Fragment, useState, ReactElement } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
-import { BREAKPOINTS } from "src/lib/constants";
-// import { useWindowWidth } from "src/hooks/useWindowWidth";
+import { BREAKPOINTS } from "../../lib/constants";
+// import { useWindowWidth } from "../../hooks/useWindowWidth";
 
 /**
  * @deprecated No longer used. To revisit when the need arises

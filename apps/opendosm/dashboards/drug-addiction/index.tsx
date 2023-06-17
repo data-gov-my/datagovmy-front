@@ -1,6 +1,6 @@
 import Hero from "@components/Hero";
 import { Container, Section, StateDropdown } from "datagovmy-ui/components";
-import { ComponentType, FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { toDate } from "@lib/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
@@ -8,32 +8,17 @@ import { useRouter } from "next/router";
 import { routes } from "@lib/routes";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { track } from "@lib/mixpanel";
-import { BarMeterProps } from "datagovmy-ui/src/components/Chart/BarMeter";
-import { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Drug Addiction Dashboard
  * @overview Status: Live
  */
-const Timeseries = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
-const BarMeter = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.BarMeter as ComponentType<BarMeterProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), {
+  ssr: false,
+});
 
 interface DrugAddictionDashboardProps {
   last_updated: number;

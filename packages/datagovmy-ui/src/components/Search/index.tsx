@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "src/hooks/useTranslation";
-import { clx } from "src/lib/helpers";
+import { useTranslation } from "../../hooks/useTranslation";
+import { clx } from "../../lib/helpers";
 import { FunctionComponent, useEffect, useRef } from "react";
 
 type SearchProps = {

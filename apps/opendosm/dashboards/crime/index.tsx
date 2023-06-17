@@ -6,28 +6,21 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { Container, Dropdown, Panel, Section, StateDropdown, Tabs } from "datagovmy-ui/components";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
+
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ComponentType, FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useEffect } from "react";
 
 /**
  * Violent / Property Crime Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
 
 interface CrimeDashboardProps {
@@ -160,11 +153,12 @@ const CrimeDashboard: FunctionComponent<CrimeDashboardProps> = ({
             }
           >
             <Panel name={t("common.charts.heatmap")}>
-              <Choropleth
+              {/* TODO @irfan */}
+              {/* <Choropleth
                 className="mx-auto h-[460px] max-w-screen-xl"
                 data={CHOROPLETH_DATA[data.indicator.value]}
                 colorScale="reds"
-              />
+              /> */}
             </Panel>
             <Panel name={t("common.charts.table")}>
               <div className="mx-auto w-full md:max-w-screen-md">

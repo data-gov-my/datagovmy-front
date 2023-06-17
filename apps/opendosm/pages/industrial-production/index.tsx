@@ -19,11 +19,11 @@ const IndustrialProduction = ({
         description={t("industry.description")}
         keywords={""}
       />
-      <IndustrialProductionDashboard
+      {/* <IndustrialProductionDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
-      />
+      /> */}
     </>
   );
 };
@@ -31,16 +31,17 @@ const IndustrialProduction = ({
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
 
-  const { data } = await get("/dashboard", { dashboard: "industrial_production" });
+  // const { data } = await get("/dashboard", { dashboard: "industrial_production" });
 
   return {
+    notFound: true,
     props: {
       ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries: data.timeseries,
-      timeseries_callouts: data.statistics,
+      // last_updated: new Date().valueOf(),
+      // timeseries: data.timeseries,
+      // timeseries_callouts: data.statistics,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };
 

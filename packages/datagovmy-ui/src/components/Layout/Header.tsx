@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FunctionComponent, ReactNode } from "react";
-import { useTranslation } from "src/hooks/useTranslation";
-import Nav from "src/components/Nav";
-import Container from "src/components/Container";
+import { useTranslation } from "../../hooks/useTranslation";
+import Nav from "../Nav";
+import Container from "../Container";
 
 interface HeaderProps {
   stateSelector?: ReactNode;

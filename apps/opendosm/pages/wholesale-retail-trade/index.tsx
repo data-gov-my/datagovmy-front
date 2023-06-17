@@ -33,16 +33,17 @@ const WholesaleRetail: Page = ({
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
 
-  const { data } = await get("/dashboard", { dashboard: "wholesale_retail_trade" });
+  // const { data } = await get("/dashboard", { dashboard: "wholesale_retail_trade" });
 
   return {
+    notFound: true,
     props: {
       ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries: data.timeseries,
-      timeseries_callouts: data.statistics,
+      // last_updated: new Date().valueOf(),
+      // timeseries: data.timeseries,
+      // timeseries_callouts: data.statistics,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };
 

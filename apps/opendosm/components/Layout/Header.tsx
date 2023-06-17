@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FunctionComponent, ReactElement, useState } from "react";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import {
   HomeIcon,
   Bars3BottomRightIcon,

@@ -2,7 +2,7 @@ import type { BarMeterData } from "@components/Chart/BarMeter";
 import type { JitterData } from "@components/Chart/Jitterplot";
 import type { OptionType } from "@components/types";
 import type { GeoJsonObject } from "geojson";
-import { ComponentType, FunctionComponent, useEffect, useMemo } from "react";
+import { FunctionComponent, useEffect, useMemo } from "react";
 import {
   Button,
   Chips,
@@ -25,9 +25,6 @@ import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { DISTRICTS, DUNS, PARLIMENS, STATES, jitterTooltipFormats } from "@lib/schema/kawasanku";
 import type { ChoroplethColors } from "@lib/types";
-import { BarMeterProps } from "datagovmy-ui/src/components/Chart/BarMeter";
-import { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import { PyramidProps } from "datagovmy-ui/src/components/Chart/Pyramid";
 import { useRouter } from "next/router";
 
 /**
@@ -38,25 +35,13 @@ import { useRouter } from "next/router";
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 const Jitterplot = dynamic(() => import("@components/Chart/Jitterplot"), { ssr: false });
 
-const Pyramid = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Pyramid as ComponentType<PyramidProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
+const Pyramid = dynamic(() => import("datagovmy-ui/charts/pyramid"), {
+  ssr: false,
+});
 const OSMapWrapper = dynamic(() => import("@components/OSMapWrapper"), { ssr: false });
-const BarMeter = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.BarMeter as ComponentType<BarMeterProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), {
+  ssr: false,
+});
 
 interface KawasankuDashboardProps {
   area_type?: AreaType | undefined;

@@ -1,4 +1,4 @@
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 import Image, { ImageProps } from "next/image";
 import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 

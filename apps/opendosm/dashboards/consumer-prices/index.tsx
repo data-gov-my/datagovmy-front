@@ -1,23 +1,20 @@
 import Hero from "@components/Hero";
 import { numFormat, toDate } from "@lib/helpers";
-import { Container, Dropdown, Section } from "datagovmy-ui/components";
+import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { Slider } from "datagovmy-ui/charts";
+
 import dynamic from "next/dynamic";
-import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback, useEffect } from "react";
 import type { OptionType } from "@components/types";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { AKSARA_COLOR } from "@lib/constants";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 import InflationGeography from "./inflation-geography";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationTrends from "./inflation-trends";
-
-import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -34,16 +31,10 @@ interface TimeseriesChartData {
   prefix?: string;
 }
 
-const Timeseries = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 interface ConsumerPricesDashboardProps {
   last_updated: number;
@@ -71,8 +62,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
       value: key,
     })
   );
-  const COICOP_OPTIONS: Array<OptionType> = Object.keys(choropleth.data).map((key: string) => ({
-    label: t(`consumer_prices.keys.${key}`),
+  const COICOP_OPTIONS: Array<OptionType> = Object.keys(choropleth.data.y).map((key: string) => ({
+    label: t(`keys.${key}`),
     value: key,
   }));
   const SHADE_OPTIONS: Array<OptionType> = [
@@ -96,9 +87,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     data.minmax
   );
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -176,6 +165,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
       route: routes.CONSUMER_PRICES,
     });
   }, []);
+
+  console.log(choropleth);
 
   return (
     <>
@@ -379,14 +370,14 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               onChange={(e: any) => setData("coicop_type", e)}
             />
             <Choropleth
-              data={choropleth.data[data.coicop_type.value].map((item: any) => ({
-                ...item,
-                value: item.value !== null ? item.value : -1,
-              }))}
+              data={{
+                labels: choropleth.data.x,
+                values: choropleth.data.y[data.coicop_type.value],
+              }}
               precision={[2, 2]}
-              prefixY="RM"
-              graphChoice="district"
-              colorScale="reds"
+              prefix="RM"
+              type="district"
+              color="reds"
             />
           </div>
         </Section>

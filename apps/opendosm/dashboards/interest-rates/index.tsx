@@ -1,18 +1,16 @@
 import Hero from "@components/Hero";
-import { Container, Dropdown, Section } from "datagovmy-ui/components";
-import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
+import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
+import { FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, toDate } from "@lib/helpers";
 import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
 
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import { Slider } from "datagovmy-ui/charts";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
-import { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Interest Rates Dashboard
@@ -28,15 +26,9 @@ interface TimeseriesChartData {
   callout: string;
 }
 
-const Timeseries = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 interface InterestRatesDashboardProps {
   last_updated: number;
   timeseries: any;
@@ -66,9 +58,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
   const { coordinate: opr_coordinate } = useSlice(timeseries_opr.data, data.opr_minmax);
   const { coordinate: non_opr_coordinate } = useSlice(timeseries.data, data.non_opr_minmax);
 
-  const oprShader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const oprShader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -106,9 +96,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
 
   const LATEST_TIMESTAMP = timeseries.data.x[timeseries.data.x.length - 1];
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {

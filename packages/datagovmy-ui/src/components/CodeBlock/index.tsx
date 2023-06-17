@@ -1,16 +1,16 @@
-import Button from "src/components/Button";
-import Dropdown from "src/components/Dropdown";
+import Button from "../Button";
+import Dropdown from "../Dropdown";
 import { DocumentDuplicateIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
 import { FunctionComponent, useState } from "react";
 import hljs from "highlight.js";
 // import python from "highlight.js/";
-// import julia from "highlight.js/src/lib/languages/julia";
-// import r from "highlight.js/src/lib/languages/r";
+// import julia from "highlight.js/../../lib/languages/julia";
+// import r from "highlight.js/../../lib/languages/r";
 import "highlight.js/styles/shades-of-purple.css";
-import { OptionType } from "src/components/types";
-import { copyClipboard } from "src/lib/helpers";
-import { useTranslation } from "src/hooks/useTranslation";
-import { track } from "src/lib/mixpanel";
+import { OptionType } from "../types";
+import { copyClipboard } from "../../lib/helpers";
+import { useTranslation } from "../../hooks/useTranslation";
+import { track } from "../../lib/mixpanel";
 
 interface CodeBlockProps {
   children: string;

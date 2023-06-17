@@ -12,6 +12,10 @@ import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 
+/**
+ * TODO @irfan
+ */
+
 const DrugAddiction: Page = ({
   last_updated,
   timeseries,
@@ -45,29 +49,28 @@ DrugAddiction.layout = (page: ReactNode) => (
       />
     }
   >
-    <StateModal url={routes.DRUG} />
+    {/* <StateModal url={routes.DRUG} /> */}
     {page}
   </Layout>
 );
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
-
-  const { data } = await get("/dashboard", { dashboard: "drugs" });
+  // const { data } = await get("/dashboard", { dashboard: "drugs" });
 
   return {
     props: {
       ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries: {
-        data_as_of: data.timeseries.data_as_of,
-        data: data.timeseries.data.mys,
-      },
-      barmeter: {
-        data_as_of: data.bar_chart.data_as_of,
-        data: data.bar_chart.data.mys,
-      },
+      // last_updated: new Date().valueOf(),
+      // timeseries: {
+      //   data_as_of: data.timeseries.data_as_of,
+      //   data: data.timeseries.data.mys,
+      // },
+      // barmeter: {
+      //   data_as_of: data.bar_chart.data_as_of,
+      //   data: data.bar_chart.data.mys,
+      // },
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };
 

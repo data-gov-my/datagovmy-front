@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactElement, ReactNode, useMemo } from "react";
 import { Tab } from "@headlessui/react";
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 import { useRouter } from "next/router";
 import { Url } from "next/dist/shared/lib/router/router";
 

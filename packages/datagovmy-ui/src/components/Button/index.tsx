@@ -1,5 +1,5 @@
 import { FunctionComponent, MouseEventHandler, ReactNode } from "react";
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 
 interface ButtonProps {
   className?: string;

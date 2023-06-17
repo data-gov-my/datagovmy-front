@@ -44,7 +44,7 @@ CrimeState.layout = (page: ReactNode) => (
       />
     }
   >
-    <StateModal url={routes.CRIME} exclude={["pjy", "lbn"]} />
+    {/* <StateModal url={routes.CRIME} exclude={["pjy", "lbn"]} /> */}
     {page}
   </Layout>
 );
@@ -75,20 +75,21 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
   const state = params!.state as string;
-  const { data } = await get("/dashboard", { dashboard: "crime" });
+  // const { data } = await get("/dashboard", { dashboard: "crime" });
 
   return {
+    notFound: true,
     props: {
       ...i18n,
-      state: state,
-      last_updated: new Date().valueOf(),
-      timeseries: {
-        data_as_of: data.timeseries.data_as_of,
-        data: data.timeseries.data[state],
-      },
-      choropleth: data.choropleth_malaysia,
+      // state: state,
+      // last_updated: new Date().valueOf(),
+      // timeseries: {
+      //   data_as_of: data.timeseries.data_as_of,
+      //   data: data.timeseries.data[state],
+      // },
+      // choropleth: data.choropleth_malaysia,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };
 

@@ -1,6 +1,5 @@
 {
   "extends": "tsconfig/react-library.json",
-
   "compilerOptions": {
     "useDefineForClassFields": true,
     "skipLibCheck": true,
@@ -8,23 +7,14 @@
 
     /* Bundler mode */
     "declaration": true,
-    "outFile": "datagovmy-ui.ts",
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
     "declarationMap": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "isolatedModules": false,
-    "emitDeclarationOnly": true,
-    "outDir": "dist/types"
+    "isolatedModules": true,
+    "emitDeclarationOnly": true
   },
-  "include": [
-    "src/components/**/*.tsx",
-    "src/components/**/*.ts",
-    "src/hooks/**/*.ts",
-    "src/hooks/**/*.tsx",
-    "src/lib/**/*.ts",
-    "index.d.ts"
-  ],
-  "exclude": ["node_modules", ".next", ".turbo", "dist"]
+
+  "exclude": ["node_modules"]
 }

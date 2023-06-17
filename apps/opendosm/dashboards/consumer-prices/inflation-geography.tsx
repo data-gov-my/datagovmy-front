@@ -2,18 +2,10 @@ import { Tabs, Panel } from "datagovmy-ui/components";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { CountryAndStates, AKSARA_COLOR } from "@lib/constants";
 import dynamic from "next/dynamic";
-import { ComponentType, FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback } from "react";
 import { sortMulti } from "@lib/helpers";
-import type { BarProps } from "datagovmy-ui/src/components/Chart/Bar";
-import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
 
-const Bar = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Bar as ComponentType<BarProps & ChartHeaderProps>
-    ),
-  { ssr: false }
-);
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 /**
  * Consumer Prices (CPI) - Inflation Geography Section

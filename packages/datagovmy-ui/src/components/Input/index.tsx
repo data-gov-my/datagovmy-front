@@ -1,5 +1,5 @@
-import Label, { LabelProps } from "src/components/Label";
-import { clx } from "src/lib/helpers";
+import Label, { LabelProps } from "../Label";
+import { clx } from "../../lib/helpers";
 import { FunctionComponent, HTMLInputTypeAttribute, ReactElement, useEffect, useRef } from "react";
 
 interface InputProps extends LabelProps {

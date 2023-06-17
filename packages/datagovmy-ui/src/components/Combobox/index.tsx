@@ -1,12 +1,12 @@
 import { Fragment, ReactNode, useState } from "react";
-import ImageWithFallback from "src/components/ImageWithFallback";
-import { OptionType } from "src/components/types";
+import ImageWithFallback from "../ImageWithFallback";
+import { OptionType } from "../types";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "src/hooks/useTranslation";
-import { clx } from "src/lib/helpers";
+import { useTranslation } from "../../hooks/useTranslation";
+import { clx } from "../../lib/helpers";
 import { matchSorter } from "match-sorter";
-import Spinner from "src/components/Spinner";
+import Spinner from "../Spinner";
 
 type ComboBoxProps<L, V> = {
   options: OptionType<L, V>[];

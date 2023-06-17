@@ -1,4 +1,3 @@
-import "datagovmy-ui/dist/style.css";
 import "../styles/globals.css";
 import { appWithTranslation } from "next-i18next";
 import Layout from "@components/Layout";
@@ -10,6 +9,7 @@ import { ga_track, init_session } from "@lib/mixpanel";
 import { clx } from "datagovmy-ui/helpers";
 import { body, header } from "@config/font";
 import Nexti18NextConfig from "../next-i18next.config";
+import { WindowProvider } from "datagovmy-ui/hooks";
 // import "@formatjs/intl-numberformat/polyfill";
 // import "@formatjs/intl-numberformat/locale-data/en";
 
@@ -42,13 +42,13 @@ function App({ Component, pageProps }: any) {
   }, [router.events]);
 
   return (
-    <>
+    <WindowProvider>
       {layout(
         <div className={clx(body.variable, header.variable, "font-sans")}>
           <Component {...pageProps} />
         </div>
       )}
-    </>
+    </WindowProvider>
   );
 }
 

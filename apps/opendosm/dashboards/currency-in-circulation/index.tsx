@@ -1,20 +1,15 @@
 import Hero from "@components/Hero";
 import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
-import { Container, Dropdown, Section } from "datagovmy-ui/components";
+import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
 import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
-import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback, useEffect } from "react";
 
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR, MYR_COLOR } from "@lib/constants";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import { Slider } from "datagovmy-ui/charts";
-
-import type { BarMeterProps } from "datagovmy-ui/src/components/Chart/BarMeter";
-import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 /**
  * Currency in Circulation Dashboard
@@ -26,24 +21,12 @@ export interface DenoData {
   y: number;
 }
 
-const Timeseries = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
-const BarMeter = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.BarMeter as ComponentType<BarMeterProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), {
+  ssr: false,
+});
 
 interface CurrencyInCirculationDashboardProps {
   last_updated: number;
@@ -79,9 +62,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
     timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
   const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {

@@ -47,54 +47,39 @@ DrugAddictionState.layout = (page: ReactNode) => (
       />
     }
   >
-    <StateModal url={routes.DRUG} />
+    {/* <StateModal url={routes.DRUG} /> */}
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
-  let paths: Array<any> = [];
-  STATES.forEach(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
   return {
-    paths: paths,
+    paths: [],
     fallback: false, // can also be true or 'blocking'
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
-  const state = params!.state as string;
-  const { data } = await get("/dashboard", { dashboard: "drugs" });
+  // const state = params!.state as string;
+  // const { data } = await get("/dashboard", { dashboard: "drugs" });
 
   return {
+    notFound: true,
     props: {
       ...i18n,
-      state: state,
-      last_updated: new Date().valueOf(),
-      timeseries: {
-        data_as_of: data.timeseries.data_as_of,
-        data: data.timeseries.data[state],
-      },
-      barmeter: {
-        data_as_of: data.bar_chart.data_as_of,
-        data: data.bar_chart.data[state],
-      },
+      // state: state,
+      // last_updated: new Date().valueOf(),
+      // timeseries: {
+      //   data_as_of: data.timeseries.data_as_of,
+      //   data: data.timeseries.data[state],
+      // },
+      // barmeter: {
+      //   data_as_of: data.bar_chart.data_as_of,
+      //   data: data.bar_chart.data[state],
+      // },
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };
 

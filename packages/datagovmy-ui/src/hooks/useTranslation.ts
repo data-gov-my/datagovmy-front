@@ -1,5 +1,5 @@
 import { useTranslation as _useTranslation } from "next-i18next";
-import { interpolate } from "src/lib/helpers";
+import { interpolate } from "../lib/helpers";
 
 /**
  * Modified translation hook. Supports anchor (<a>) tag generation.

@@ -1,4 +1,4 @@
-import Button from "src/components/Button";
+import Button from "../Button";
 import { Transition } from "@headlessui/react";
 import MoonIcon from "@heroicons/react/20/solid/MoonIcon";
 import SunIcon from "@heroicons/react/20/solid/SunIcon";

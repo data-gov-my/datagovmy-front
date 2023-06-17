@@ -1,11 +1,11 @@
-import { statesOptions } from "src/lib/options";
+import { statesOptions } from "../../lib/options";
 import Link from "next/link";
 import Image from "next/image";
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import Modal from ".";
-import { WindowContext } from "src/hooks/useWindow";
-import { useTranslation } from "src/hooks/useTranslation";
-import { clx } from "src/lib/helpers";
+import { WindowContext } from "../../hooks/useWindow";
+import { useTranslation } from "../../hooks/useTranslation";
+import { clx } from "../../lib/helpers";
 
 interface StateModalProps {
   state: string;

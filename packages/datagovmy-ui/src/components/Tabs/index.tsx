@@ -1,8 +1,8 @@
 import { FunctionComponent, ReactElement, ReactNode, useMemo } from "react";
 import { Tab } from "@headlessui/react";
-import { CountryAndStates } from "src/lib/constants";
-import { useTranslation } from "src/hooks/useTranslation";
-import { clx } from "src/lib/helpers";
+import { CountryAndStates } from "../../lib/constants";
+import { useTranslation } from "../../hooks/useTranslation";
+import { clx } from "../../lib/helpers";
 
 interface TabsProps {
   children: ReactNode;

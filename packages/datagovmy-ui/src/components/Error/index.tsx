@@ -1,7 +1,7 @@
-// import Dropdown from "src/components/Dropdown";
+// import Dropdown from "../Dropdown";
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import "highlight.js/styles/shades-of-purple.css";
-import { useTranslation } from "src/hooks/useTranslation";
+import { useTranslation } from "../../hooks/useTranslation";
 import { FunctionComponent } from "react";
 
 interface ErrorProps {

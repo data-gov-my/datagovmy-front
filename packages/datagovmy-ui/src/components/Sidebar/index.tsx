@@ -1,8 +1,8 @@
 import { FunctionComponent, ReactNode, useState } from "react";
 import { Transition } from "@headlessui/react";
-import Button from "src/components/Button";
+import Button from "../Button";
 import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useTranslation } from "src/hooks/useTranslation";
+import { useTranslation } from "../../hooks/useTranslation";
 
 interface SidebarProps {
   children: ReactNode;

@@ -27,7 +27,7 @@ import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/20/solid";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { CountryAndStates } from "@lib/constants";
 import Image from "next/image";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { default as debounce } from "lodash/debounce";
 import type { DebouncedFunc } from "lodash";
 
@@ -295,7 +295,7 @@ const Table: FunctionComponent<TableProps> = ({
       {enablePagination && (
         <div className={`mt-5 flex items-center justify-center gap-4 text-sm ${className}`}>
           <button
-            className="flex flex-row gap-2 rounded border py-1 px-2 disabled:bg-slate-100 disabled:opacity-50"
+            className="flex flex-row gap-2 rounded border px-2 py-1 disabled:bg-slate-100 disabled:opacity-50"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -310,7 +310,7 @@ const Table: FunctionComponent<TableProps> = ({
             })}
           </span>
           <button
-            className="flex flex-row gap-2 rounded border py-1 px-2 disabled:bg-slate-100 disabled:opacity-50"
+            className="flex flex-row gap-2 rounded border px-2 py-1 disabled:bg-slate-100 disabled:opacity-50"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

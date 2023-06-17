@@ -1,6 +1,6 @@
-import { OptionType } from "src/components/types";
+import { OptionType } from "../types";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useTranslation } from "src/hooks/useTranslation";
+import { useTranslation } from "../../hooks/useTranslation";
 import { FunctionComponent } from "react";
 
 interface ChipsProps {

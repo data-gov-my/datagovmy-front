@@ -45,7 +45,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };
 

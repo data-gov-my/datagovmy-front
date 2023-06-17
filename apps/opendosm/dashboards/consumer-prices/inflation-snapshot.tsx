@@ -3,25 +3,18 @@ import { OptionType } from "@components/types";
 import { get } from "@lib/api";
 import { SHORT_LANG } from "@lib/constants";
 import type { ChartDataset } from "chart.js";
-import { Slider } from "datagovmy-ui/charts";
-import { Chips, Dropdown } from "datagovmy-ui/components";
+
+import { Chips, Dropdown, Slider } from "datagovmy-ui/components";
 import { useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
-import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import type { ScatterProps } from "datagovmy-ui/src/components/Chart/Scatter";
+
 import dynamic from "next/dynamic";
-import { ComponentType, FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback } from "react";
 /**
  * Consumer Prices (CPI) - Inflation Snapshot Section
  * @overview Status: Live
  */
 
-const Scatter = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Scatter as ComponentType<ScatterProps & ChartHeaderProps>
-    ),
-  { ssr: false }
-);
+const Scatter = dynamic(() => import("datagovmy-ui/charts/scatter"), { ssr: false });
 
 const InflationSnapshot: FunctionComponent = () => {
   const { t, i18n } = useTranslation();

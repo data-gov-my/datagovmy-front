@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactElement, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 
 interface ModalProps {
   trigger?: (open: () => void) => ReactElement;

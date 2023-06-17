@@ -1,5 +1,5 @@
-import type { OptionType } from "src/components/types";
-import { default as Label, LabelProps } from "src/components/Label";
+import type { OptionType } from "../types";
+import { default as Label, LabelProps } from "../Label";
 import { FunctionComponent, useRef } from "react";
 import { Transition, Popover } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon, ClockIcon, XMarkIcon } from "@heroicons/react/20/solid";

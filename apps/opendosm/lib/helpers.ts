@@ -2,7 +2,6 @@ import { DateTime } from "luxon";
 import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
 import { numFormat } from "datagovmy-ui/helpers";
-import dynamic from "next/dynamic";
 
 /**
  * Shared helpers.

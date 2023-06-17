@@ -1,23 +1,22 @@
+import Hero from "@components/Hero";
 import {
   At,
   Button,
   Checkbox,
   Container,
   Dropdown,
-  Hero,
   Input,
   Modal,
   Radio,
   Section,
+  Sidebar,
+  Label,
 } from "datagovmy-ui/components";
 import { ArrowTrendingUpIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { FunctionComponent, useMemo, useRef } from "react";
-import Label from "@components/Label";
-import { useFilter } from "@hooks/useFilter";
-import { useTranslation } from "@hooks/useTranslation";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { useFilter, useTranslation, WindowContext } from "datagovmy-ui/hooks";
 import { OptionType } from "@components/types";
-import Sidebar from "@components/Sidebar";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+
 import { BREAKPOINTS } from "@lib/constants";
 
 /**
@@ -45,7 +44,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 }) => {
   const { t } = useTranslation();
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     let resultCollection: Array<[string, Catalogue[]]> = [];
@@ -81,7 +80,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: windowWidth <= BREAKPOINTS.LG ? "start" : "center",
+              block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }
@@ -216,7 +215,6 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
               className="block text-sm font-medium text-black"
             />
           }
-          fullScreen
         >
           {close => (
             <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28">

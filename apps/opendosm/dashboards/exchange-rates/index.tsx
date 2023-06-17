@@ -1,4 +1,4 @@
-import { ComponentType, FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { sortMulti, toDate } from "@lib/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -8,33 +8,18 @@ import Hero from "@components/Hero";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { closestIndex, getColor } from "@lib/schema/exchange-rates";
-import type { BarProps } from "datagovmy-ui/src/components/Chart/Bar";
-import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
 
 /**
  * Exchange Rates Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
-const Bar = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Bar as ComponentType<BarProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), {
+  ssr: false,
+});
 
 interface ExchangeRatesDashboardProps {
   last_updated: number;

@@ -1,4 +1,4 @@
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 import { FunctionComponent, ReactNode } from "react";
 
 interface CardProps {

@@ -38,18 +38,19 @@ const Labour: Page = ({
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const i18n = await serverSideTranslations(locale!, ["common"]);
 
-  const { data } = await get("/dashboard", { dashboard: "labour" });
+  // const { data } = await get("/dashboard", { dashboard: "labour" });
 
   return {
+    notFound: true,
     props: {
       ...i18n,
-      last_updated: new Date().valueOf(),
-      bar: data.bar_chart,
-      timeseries: data.timeseries,
-      timeseries_callouts: data.statistics,
-      choropleth: data.choropleth_malaysia,
+      // last_updated: new Date().valueOf(),
+      // bar: data.bar_chart,
+      // timeseries: data.timeseries,
+      // timeseries_callouts: data.statistics,
+      // choropleth: data.choropleth_malaysia,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 };
 

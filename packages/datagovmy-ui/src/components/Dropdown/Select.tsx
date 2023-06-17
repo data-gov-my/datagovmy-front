@@ -1,5 +1,5 @@
-import type { OptionType } from "src/components/types";
-import { default as Label, LabelProps } from "src/components/Label";
+import type { OptionType } from "../types";
+import { default as Label, LabelProps } from "../Label";
 import { Fragment, ReactElement, ReactNode } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";

@@ -1,5 +1,4 @@
-import { Slider } from "datagovmy-ui/charts";
-import { Chips, Dropdown } from "datagovmy-ui/components";
+import { Chips, Dropdown, Slider } from "datagovmy-ui/components";
 import Select from "@components/Dropdown/Select";
 import { OptionType } from "@components/types";
 import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
@@ -9,24 +8,16 @@ import { numFormat } from "@lib/helpers";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import groupBy from "lodash/groupBy";
 import dynamic from "next/dynamic";
-import { ComponentType, FunctionComponent, useCallback } from "react";
-import type { ChartHeaderProps } from "datagovmy-ui/src/components/Chart/ChartHeader";
-import type { TimeseriesProps } from "datagovmy-ui/src/components/Chart/Timeseries";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Consumer Prices (CPI) - Inflation Trends Section
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(
-  () =>
-    import("datagovmy-ui/charts").then(
-      module => module.Timeseries as ComponentType<TimeseriesProps & ChartHeaderProps>
-    ),
-  {
-    ssr: false,
-  }
-);
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 const InflationTrends: FunctionComponent = ({}) => {
   const { t, i18n } = useTranslation();
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];

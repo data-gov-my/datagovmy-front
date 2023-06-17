@@ -1,5 +1,3 @@
-import "../styles/globals.css";
-
 /** Base components */
 export { default as Accordion } from "./Accordion";
 export { default as At } from "./At";
@@ -24,6 +22,8 @@ export { default as Radio } from "./Radio";
 export { default as Search } from "./Search";
 export { default as Section } from "./Section";
 export { default as Sidebar } from "./Sidebar";
+export { default as Slider } from "./Slider";
+export { SliderContext, SliderProvider } from "./Slider/context";
 export { default as Spinner } from "./Spinner";
 export { default as Tabs, Panel } from "./Tabs";
 export { default as Toast, toast } from "./Toast";

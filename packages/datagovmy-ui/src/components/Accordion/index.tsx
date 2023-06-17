@@ -1,5 +1,5 @@
 import { Disclosure, Transition } from "@headlessui/react";
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 import { FunctionComponent, ReactNode } from "react";
 
 type AccordionProps = {

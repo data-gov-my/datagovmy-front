@@ -1,13 +1,13 @@
 import { Bars3BottomRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { clx } from "src/lib/helpers";
-import At from "src/components/At";
+import { clx } from "../../lib/helpers";
+import At from "../At";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode, useState } from "react";
-import Dropdown from "src/components/Dropdown";
-import { languages } from "src/lib/options";
+import Dropdown from "../Dropdown";
+import { languages } from "../../lib/options";
 import ThemeToggle from "./theme";
 
-import { useLanguage } from "src/hooks/useLanguage";
+import { useLanguage } from "../../hooks/useLanguage";
 
 type NavRootProps = {
   children: (close: () => void) => ReactNode;

@@ -1,10 +1,10 @@
 import type { OptionType } from "@components/types";
 import { default as Label, LabelProps } from "@components/Label";
-import { Fragment, ReactElement, ReactNode } from "react";
+import { Fragment, FunctionComponent, ReactElement, ReactNode } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
-type CommonProps<L, V> = {
+type CommonProps = {
   className?: string;
   disabled?: boolean;
   options?: OptionType[] | Record<string, OptionType[]> | never[];
@@ -18,7 +18,7 @@ type ConditionalProps =
       multiple?: true;
       selected?: any[];
       title?: string;
-      placeholder?: never;
+      placeholder?: string;
       onChange: (selected: any) => void;
     }
   | {
@@ -29,9 +29,9 @@ type ConditionalProps =
       onChange: (selected: any) => void;
     };
 
-type SelectProps<L, V> = CommonProps<L, V> & ConditionalProps & LabelProps;
+type SelectProps = CommonProps & ConditionalProps & LabelProps;
 
-const Select = <L extends string | number | ReactElement = string, V = string>({
+const Select: FunctionComponent<SelectProps> = ({
   className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm",
   disabled = false,
   multiple = false,
@@ -43,7 +43,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
   placeholder,
   label,
   sublabel,
-}: SelectProps<L, V>) => {
+}: SelectProps) => {
   const handleChange = (options: any) => {
     onChange(options);
   };
@@ -55,7 +55,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
     if (isOptions(options)) {
       return (
         <div className="relative w-full bg-white" key={key}>
-          {key && <h5 className="sticky top-0 z-10 bg-washed py-1.5 px-4 text-sm">{key}</h5>}
+          {key && <h5 className="sticky top-0 z-10 bg-washed px-4 py-1.5 text-sm">{key}</h5>}
           <div>
             {options.map(option => (
               <Listbox.Option
@@ -85,7 +85,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
                       readOnly
                       checked={
                         selected &&
-                        (selected as OptionType<L, V>[]).some(item => item.value === option.value)
+                        (selected as OptionType[]).some(item => item.value === option.value)
                       }
                       className="h-4 w-4 rounded border-outline text-dim focus:ring-0"
                     />
@@ -112,9 +112,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
       {label && <Label label={label} />}
       <Listbox
         value={selected}
-        onChange={(option: OptionType<L, V> & OptionType<L, V>[]) =>
-          !multiple && handleChange(option)
-        }
+        onChange={(option: OptionType & OptionType[]) => !multiple && handleChange(option)}
         multiple={multiple}
         disabled={disabled}
       >
@@ -136,7 +134,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
                   <span className={`block truncate ${label ? "" : ""}`}>
                     {multiple
                       ? title ?? placeholder
-                      : (selected as OptionType<L, V>)?.label || placeholder || "Select"}
+                      : (selected as OptionType)?.label || placeholder || "Select"}
                   </span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
                     <ChevronDownIcon className="h-5 w-5 text-dim" aria-hidden="true" />
@@ -170,7 +168,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
 
 export default Select;
 
-const dummy: Record<string, OptionType<string, string>[]> = {
+const dummy: Record<string, OptionType[]> = {
   "Healthcare > Dental Services": [
     {
       label: "Scaling",

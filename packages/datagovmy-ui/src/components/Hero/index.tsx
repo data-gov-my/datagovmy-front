@@ -1,6 +1,6 @@
 import { FunctionComponent, ReactNode, useMemo } from "react";
-import Container from "src/components/Container";
-import { clx, toDate } from "src/lib/helpers";
+import Container from "../Container";
+import { clx, toDate } from "../../lib/helpers";
 import { useTranslation } from "next-i18next";
 
 type ConditionalHeroProps =

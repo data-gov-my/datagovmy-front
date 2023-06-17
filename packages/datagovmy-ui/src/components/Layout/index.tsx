@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactNode } from "react";
 
-import Header from "src/components/Layout/Header";
-import Footer from "src/components/Layout/Footer";
+import Header from "../Layout/Header";
+import Footer from "../Layout/Footer";
 
 interface LayoutProps {
   className?: string;

@@ -1,4 +1,4 @@
-import Spinner from "src/components/Spinner";
+import Spinner from "../Spinner";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { ReactNode } from "react";
 // import Slider from "react-slick";

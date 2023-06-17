@@ -1,11 +1,11 @@
-import { OptionType } from "src/components/types";
-import { WindowContext } from "src/hooks/useWindow";
-import { statesOptions } from "src/lib/options";
-import { useTranslation } from "src/hooks/useTranslation";
+import { OptionType } from "../types";
+import { WindowContext } from "../../hooks/useWindow";
+import { statesOptions } from "../../lib/options";
+import { useTranslation } from "../../hooks/useTranslation";
 import { useRouter } from "next/router";
 import { FunctionComponent, useContext, useMemo } from "react";
 import { default as Dropdown } from ".";
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 
 interface StateDropdownProps {
   anchor?: string;

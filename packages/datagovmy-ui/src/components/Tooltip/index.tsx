@@ -1,10 +1,10 @@
 import { Transition, Dialog } from "@headlessui/react";
-import { WindowContext } from "src/hooks/useWindow";
+import { WindowContext } from "../../hooks/useWindow";
 import { Fragment, FunctionComponent, ReactNode, useContext, useState } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
-import { BREAKPOINTS } from "src/lib/constants";
-import { clx } from "src/lib/helpers";
+import { BREAKPOINTS } from "../../lib/constants";
+import { clx } from "../../lib/helpers";
 
 type TooltipProps = {
   children?: (open: () => void) => ReactNode;

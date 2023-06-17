@@ -1,6 +1,6 @@
-import type { OptionType } from "src/components/types";
+import type { OptionType } from "../types";
 import { default as Image } from "next/image";
-import { default as Label, LabelProps } from "src/components/Label";
+import { default as Label, LabelProps } from "../Label";
 import {
   Fragment,
   FunctionComponent,
@@ -17,9 +17,9 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/20/solid";
-import Input from "src/components/Input";
+import Input from "../Input";
 import { useTranslation } from "next-i18next";
-import { clx } from "src/lib/helpers";
+import { clx } from "../../lib/helpers";
 import { FixedSizeList } from "react-window";
 import { matchSorter } from "match-sorter";
 

@@ -1,5 +1,5 @@
-import { toDate } from "src/lib/helpers";
-import { useTranslation } from "src/hooks/useTranslation";
+import { toDate } from "../../lib/helpers";
+import { useTranslation } from "../../hooks/useTranslation";
 import { FunctionComponent, ReactNode, forwardRef, LegacyRef, ForwardedRef, useMemo } from "react";
 import { DateTime } from "luxon";
 interface SectionProps {
