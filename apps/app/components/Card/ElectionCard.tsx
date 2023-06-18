@@ -110,12 +110,12 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                 <Dialog.Panel
                   className={clx(
                     Font.body.variable,
-                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform overflow-visible rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
+                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
                   )}
                 >
                   <Dialog.Title
                     as="div"
-                    className="flex w-full flex-row items-center justify-between text-base md:text-lg"
+                    className="flex w-full flex-row items-center justify-between text-lg"
                   >
                     {title && typeof title === "string" ? <h5>{title}</h5> : title}
                     <button
@@ -140,10 +140,10 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                       )}
                     </div>
 
-                    <div className="space-y-3 overflow-visible">
+                    <div className="space-y-3">
                       <div className="font-bold">{t("election_result")}</div>
                       <ElectionTable
-                        className="max-h-96 w-full overflow-visible"
+                        className="max-h-96 w-full overflow-y-auto"
                         data={data.result.data}
                         columns={columns}
                         isLoading={data.loading}
@@ -171,12 +171,12 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                     {data.result.votes && (
                       <div className="space-y-3">
                         <div className="font-bold">{t("voting_statistics")}</div>
-                        <div className="flex flex-col gap-3 text-sm md:flex-row md:flex-wrap md:gap-x-6">
+                        <div className="flex flex-col gap-3 text-sm lg:flex-row lg:gap-x-6">
                           {data.result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
-                              <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
+                              <div className="flex flex-wrap gap-3 whitespace-nowrap" key={item.x}>
                                 <p className="w-28 md:w-fit">{t(item.x)}:</p>
-                                <div className="flex items-center space-x-3">
+                                <div className="flex flex-wrap items-center gap-3">
                                   <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
                                   <p>{`${
                                     item.abs !== null ? numFormat(item.abs, "standard") : "—"
@@ -219,7 +219,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                       )}
                       <div className="flex items-center justify-center gap-4 text-sm">
                         <Button
-                          className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                          className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                           onClick={() =>
                             onChange(options[data.index - 1]).then(item => {
                               if (!item) return;
@@ -238,7 +238,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                           </span>
                         )}
                         <Button
-                          className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                          className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                           onClick={() =>
                             onChange(options[data.index + 1]).then(item => {
                               if (!item) return;
