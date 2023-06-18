@@ -200,13 +200,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                     columns={candidate_schema}
                     isLoading={data.loading}
                     empty={
-                      <p>
+                      <>
                         {t("candidate.no_data", {
                           name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)
                             ?.label,
                           context: "parliament",
                         })}
-                      </p>
+                      </>
                     }
                   />
                 </Panel>
@@ -216,13 +216,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                     columns={candidate_schema}
                     isLoading={data.loading}
                     empty={
-                      <p>
+                      <>
                         {t("candidate.no_data", {
                           name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)
                             ?.label,
                           context: "dun",
                         })}
-                      </p>
+                      </>
                     }
                   />
                 </Panel>

@@ -132,7 +132,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
               left={
                 <div
                   className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden 
-                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:px-6 lg:pb-6"
+                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:pb-6 xl:px-6"
                 >
                   <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
@@ -171,21 +171,19 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                               </span>
                             </div>
                           </div>
-                          <div className="relative flex flex-row gap-1.5">
+                          <div className="flex flex-row items-center gap-1.5">
                             <ImageWithFallback
-                              className="border-outline dark:border-outlineHover-dark absolute rounded border"
+                              className="border-outline dark:border-outlineHover-dark rounded border"
                               src={`/static/images/parties/${seat.party}.png`}
                               width={32}
                               height={18}
                               alt={t(`${seat.party}`)}
                             />
-                            <span className="truncate pl-10 font-medium">{`${seat.name} `}</span>
+                            <span className="truncate font-medium">{`${seat.name} `}</span>
                             <span>{`(${seat.party})`}</span>
-                            <div className="self-center pl-1.5">
-                              <Won />
-                            </div>
+                            <Won />
                           </div>
-                          <div className="flex flex-row items-center gap-2">
+                          <div className="flex flex-row items-center gap-1.5">
                             <p className="text-dim text-sm">{t("majority")}</p>
                             <BarPerc
                               hidden
@@ -196,11 +194,9 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                               {seat.majority.abs === null
                                 ? `—`
                                 : numFormat(seat.majority.abs, "standard")}
-                            </span>
-                            <span>
                               {seat.majority.perc === null
-                                ? `(—)`
-                                : `(${numFormat(seat.majority.perc, "compact", [1, 1])}%)`}
+                                ? ` (—)`
+                                : ` (${numFormat(seat.majority.perc, "compact", [1, 1])}%)`}
                             </span>
                           </div>
                         </Card>
