@@ -58,8 +58,8 @@
   @apply invisible absolute top-8 z-20 inline-block w-max max-w-[150px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:-top-4 md:left-[130%] md:max-w-sm md:translate-x-0;
 }
 
-.tooltip .tooltip-center {
-  @apply invisible absolute bottom-[125%] left-[50%] z-10 w-max max-w-[200px] -translate-x-1/2 transform rounded-md bg-black p-3 text-sm text-white shadow-[0_12px_24px_rgba(0,0,0,0.1)];
+.tooltip .tooltip-left {
+  @apply invisible absolute bottom-[125%] z-10 w-max max-w-[200px] transform rounded-md bg-black p-3 text-sm text-white shadow-[0_12px_24px_rgba(0,0,0,0.1)];
 }
 
 @media only screen and (min-width: 768px) {
@@ -78,7 +78,7 @@
   }
 }
 
-.tooltip:hover .tooltip-center,
+.tooltip:hover .tooltip-left,
 .tooltip:hover .tooltip-content {
   @apply visible;
 }
