@@ -28,7 +28,7 @@ interface WonProps {
 
 export const Won: FunctionComponent<WonProps> = ({ desc }) => {
   return (
-    <span className="flex gap-1.5 text-emerald-500">
+    <span className="text-success flex gap-1.5">
       <CheckCircleIcon className="h-4 w-4 self-center" />
       {desc && <span className="whitespace-nowrap uppercase">{desc}</span>}
     </span>
