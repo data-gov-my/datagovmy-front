@@ -63,7 +63,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     })
   );
   const COICOP_OPTIONS: Array<OptionType> = Object.keys(choropleth.data.y).map((key: string) => ({
-    label: t(`keys.${key}`),
+    label: t(`consumer_prices.keys.${key}`),
     value: key,
   }));
   const SHADE_OPTIONS: Array<OptionType> = [
@@ -165,8 +165,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
       route: routes.CONSUMER_PRICES,
     });
   }, []);
-
-  console.log(choropleth);
 
   return (
     <>

@@ -2,7 +2,7 @@ import type { GeoJsonObject } from "geojson";
 
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import KawasankuDashboard from "@dashboards/kawasanku";
 import { Metadata } from "datagovmy-ui/components";
 import MalaysiaGeojson from "@lib/geojson/malaysia.json";
@@ -10,6 +10,7 @@ import MalaysiaGeojson from "@lib/geojson/malaysia.json";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
 import { STATES } from "@lib/schema/kawasanku";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const KawasankuIndex: Page = ({
   bar,
@@ -40,9 +41,7 @@ const KawasankuIndex: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   // const { data } = await get("/dashboard/", {
   //   "dashboard": "kawasanku_admin",
   //   "area": "malaysia",
@@ -52,7 +51,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     notFound: true,
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-kawasanku",
+        type: "dashboard",
+        category: "demography",
+        agency: "DOSM",
+      },
       // bar: data.bar_chart,
       // population_callout: {
       //   total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
@@ -72,6 +76,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default KawasankuIndex;

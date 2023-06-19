@@ -1,7 +1,7 @@
 import type { GeoJsonObject } from "geojson";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import KawasankuDashboard from "@dashboards/kawasanku";
 import { Metadata } from "datagovmy-ui/components";
 
@@ -9,6 +9,7 @@ import { useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { STATE_MAP, PARLIMENS } from "@lib/schema/kawasanku";
 import { get } from "@lib/api";
 import { useState } from "react";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const KawasankuArea: Page = ({
   ctx,
@@ -85,9 +86,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   // const { data } = await get("/dashboard/", {
   //   "dashboard": "kawasanku_electoral",
   //   "area": params!.id,
@@ -108,7 +107,12 @@ export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
   return {
     notFound: true,
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-kawasanku",
+        type: "dashboard",
+        category: "demography",
+        agency: "DOSM",
+      },
       // ctx: params,
       // bar: data.bar_chart,
       // jitterplot: data.jitter_chart,
@@ -130,6 +134,6 @@ export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
     },
     // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default KawasankuArea;

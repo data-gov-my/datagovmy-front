@@ -2,7 +2,7 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import DrugAddictionDashboard from "@dashboards/drug-addiction";
@@ -11,6 +11,7 @@ import Layout from "@components/Layout";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import { withi18n } from "datagovmy-ui/decorators";
 
 /**
  * TODO @irfan
@@ -53,13 +54,12 @@ DrugAddiction.layout = (page: ReactNode) => (
     {page}
   </Layout>
 );
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   // const { data } = await get("/dashboard", { dashboard: "drugs" });
 
   return {
+    notFound: true,
     props: {
-      ...i18n,
       // last_updated: new Date().valueOf(),
       // timeseries: {
       //   data_as_of: data.timeseries.data_as_of,
@@ -72,6 +72,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default DrugAddiction;

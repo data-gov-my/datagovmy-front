@@ -5,7 +5,6 @@ export { useData } from "./useData";
 export { useExport } from "./useExport";
 export { useFilter } from "./useFilter";
 export { useLanguage } from "./useLanguage";
-// export { MapControl } from "./useMap";
 export { useScrollIntersect } from "./useScrollIntersect";
 export { useSlice } from "./useSlice";
 export { useTrace } from "./useTrace";

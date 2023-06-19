@@ -2,11 +2,12 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 
 import LabourMarketDashboard from "@dashboards/labour-market";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const Labour: Page = ({
   last_updated,
@@ -35,15 +36,18 @@ const Labour: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   // const { data } = await get("/dashboard", { dashboard: "labour" });
 
   return {
     notFound: true,
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-labour-market",
+        type: "dashboard",
+        category: "economy",
+        agency: "DOSM",
+      },
       // last_updated: new Date().valueOf(),
       // bar: data.bar_chart,
       // timeseries: data.timeseries,
@@ -52,6 +56,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     },
     // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default Labour;

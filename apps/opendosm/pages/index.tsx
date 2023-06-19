@@ -1,6 +1,6 @@
 import type { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import dynamic from "next/dynamic";
 import { get } from "@lib/api";
 import {
@@ -32,6 +32,7 @@ import {
   InflationIcon,
 } from "@components/Icon";
 import { track } from "@lib/mixpanel";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -406,13 +407,15 @@ const Ranking = ({ title, ranks, type = "catalogue", icon }: RankingProps) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-  const { data } = await get("/dashboard", { dashboard: "homepage" });
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "home",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
       // timeseries_callouts: data.statistics,
       // timeseries: data.timeseries,
       // highlights: data.highlight,
@@ -439,6 +442,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       // },
     },
   };
-};
+});
 
 export default Home;

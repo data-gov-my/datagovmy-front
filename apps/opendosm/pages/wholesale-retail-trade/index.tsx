@@ -2,10 +2,11 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import WholesaleRetailDashboard from "@dashboards/wholesale-retail";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const WholesaleRetail: Page = ({
   last_updated,
@@ -30,21 +31,24 @@ const WholesaleRetail: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   // const { data } = await get("/dashboard", { dashboard: "wholesale_retail_trade" });
 
   return {
     notFound: true,
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-wholesale-retail-trade",
+        type: "dashboard",
+        category: "economy",
+        agency: "DOSM",
+      },
       // last_updated: new Date().valueOf(),
       // timeseries: data.timeseries,
       // timeseries_callouts: data.statistics,
     },
     // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default WholesaleRetail;

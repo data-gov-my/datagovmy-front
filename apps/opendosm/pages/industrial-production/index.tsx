@@ -3,7 +3,8 @@ import IndustrialProductionDashboard from "@dashboards/industrial-production";
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+import { withi18n } from "datagovmy-ui/decorators";
 
 const IndustrialProduction = ({
   last_updated,
@@ -28,21 +29,24 @@ const IndustrialProduction = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   // const { data } = await get("/dashboard", { dashboard: "industrial_production" });
 
   return {
     notFound: true,
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-indusrial-production",
+        type: "dashboard",
+        category: "economy",
+        agency: "DOSM",
+      },
       // last_updated: new Date().valueOf(),
       // timeseries: data.timeseries,
       // timeseries_callouts: data.statistics,
     },
     // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default IndustrialProduction;

@@ -3,7 +3,7 @@ import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import { CountryAndStates, STATES } from "@lib/constants";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import DrugAddictionDashboard from "@dashboards/drug-addiction";
@@ -12,6 +12,7 @@ import Layout from "@components/Layout";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const DrugAddictionState: Page = ({
   last_updated,
@@ -59,15 +60,13 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n("common", async ({ params }) => {
   // const state = params!.state as string;
   // const { data } = await get("/dashboard", { dashboard: "drugs" });
 
   return {
     notFound: true,
     props: {
-      ...i18n,
       // state: state,
       // last_updated: new Date().valueOf(),
       // timeseries: {
@@ -81,6 +80,6 @@ export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
     },
     // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default DrugAddictionState;

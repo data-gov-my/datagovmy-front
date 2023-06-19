@@ -3,7 +3,8 @@ import Container from "@components/Container";
 import { Metadata } from "datagovmy-ui/components";
 import ErrorCode from "@components/Error";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+import { withi18n } from "datagovmy-ui/decorators";
 
 const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
@@ -24,11 +25,15 @@ const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Fallback;
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "offline",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
     },
   };
-};
+});
