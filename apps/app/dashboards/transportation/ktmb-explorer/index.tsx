@@ -296,7 +296,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           labels: A_to_B_coords.x,
                           datasets: [
                             {
-                              type: "line",
+                              type: A_to_B_coords.x.length === 1 ? "bar" : "line",
                               data: A_to_B_coords.y,
                               label: t(data.period),
                               fill: true,
@@ -308,6 +308,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                                   : breakpoint <= BREAKPOINTS.LG
                                   ? 1.0
                                   : 1.5,
+                              barThickness: 12,
                             },
                           ],
                         }}
@@ -339,7 +340,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                             labels: B_to_A_coords.x,
                             datasets: [
                               {
-                                type: "line",
+                                type: B_to_A_coords.x.length === 1 ? "bar" : "line",
                                 data: B_to_A_coords.y,
                                 label: t(data.period),
                                 fill: true,
@@ -351,6 +352,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                                     : breakpoint <= BREAKPOINTS.LG
                                     ? 1.0
                                     : 1.5,
+                                barThickness: 12,
                               },
                             ],
                           }}
@@ -386,12 +388,11 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               labels: B_to_A_coords.x,
                               datasets: [
                                 {
-                                  type: "line",
+                                  type: B_to_A_coords.x.length === 1 ? "bar" : "line",
                                   data: B_to_A_coords.y,
                                   fill: true,
-                                  backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                                  borderColor: AKSARA_COLOR.PRIMARY_H,
                                   borderWidth: 1,
+                                  barThickness: 12,
                                 },
                               ],
                             }}
