@@ -55,8 +55,7 @@ const ComboBox: FunctionComponent<ComboBoxProps> = ({
 
   const filteredOptions =
     query === "" ? options.slice(0, 50) : matchSorter(options, query, config).slice(0, 50);
-  // console.log(items)
-  //   console.log(matchSorter(items, query.toLowerCase().replace(/\s+/g, ""), config).slice(0, 50));
+
   return (
     <Combobox value={selected} onChange={onChange}>
       <div className="relative w-full overflow-visible rounded-full">
