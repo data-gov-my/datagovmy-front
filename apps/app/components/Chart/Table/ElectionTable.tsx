@@ -1,5 +1,4 @@
 import { FunctionComponent, ReactNode } from "react";
-import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import Spinner from "@components/Spinner";
 import { FaceFrownIcon } from "@heroicons/react/24/outline";
@@ -65,10 +64,21 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         ) : (
           value
         );
+      case "name":
+        return highlightedRows.includes(+cell.row.id) ? (
+          <>
+            {value}
+            <span className="inline-flex translate-y-0.5 pl-1">
+              <ResultBadge hidden value={cell.row.original.result} />
+            </span>
+          </>
+        ) : (
+          value
+        );
       case "election_name":
         return (
           <Tooltip
-            className="tooltip-center"
+            className="tooltip-left"
             tip={
               cell.row.original.date && toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
             }
@@ -86,15 +96,16 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         );
       case "party":
         return (
-          <>
+          <div className="flex items-center">
             <ImageWithFallback
-              className="border-outline dark:border-outlineHover-dark aspect-4/3 absolute rounded border object-contain"
+              className="border-outline dark:border-outlineHover-dark absolute rounded border"
               src={`/static/images/parties/${value}.png`}
               width={32}
-              height={32}
+              height={18}
               alt={t(value)}
+              style={{ width: "auto", maxWidth: "32px", height: "auto", maxHeight: "32px" }}
             />
-            <span className="relative pl-10">
+            <span className="pl-10">
               {!table
                 .getAllColumns()
                 .map(col => col.id)
@@ -102,7 +113,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                 ? t(value)
                 : value}
             </span>
-          </>
+          </div>
         );
       case "seats":
         return (
@@ -155,11 +166,12 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         return (
           <div className="flex flex-row items-center gap-1.5">
             <ImageWithFallback
-              className="border-outline dark:border-outlineHover-dark aspect-4/3 absolute rounded border object-contain"
+              className="border-outline dark:border-outlineHover-dark absolute rounded border"
               src={`/static/images/parties/${value}.png`}
               width={32}
               height={18}
               alt={t(value)}
+              style={{ width: "32px", height: "auto" }}
             />
             {cell.row.original.name ? (
               <p className="relative pl-10">
@@ -173,7 +185,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         );
       case "election_name":
         return (
-          <div className="flex gap-3 text-sm">
+          <div className="flex flex-wrap gap-x-3 text-sm">
             <p className="font-medium">
               {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
             </p>
@@ -207,7 +219,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             <p className="text-dim font-medium">
               {flexRender(cell.column.columnDef.header, cell.getContext())}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <BarPerc hidden value={value.perc} />
               <p>{`${value.abs !== null ? numFormat(value.abs, "standard") : "—"} (${
                 value.perc !== null ? `${numFormat(value.perc, "compact", [1, 1])}%` : "—"
@@ -300,12 +312,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                         "px-2 py-[10px]"
                       )}
                     >
-                      <div className="flex flex-row gap-2">
-                        {lookupDesktop(cell.column.columnDef.id, cell)}
-                        {highlightedRows.includes(rowIndex) && colIndex === 0 && (
-                          <ResultBadge hidden value={result} />
-                        )}
-                      </div>
+                      {lookupDesktop(cell.column.columnDef.id, cell)}
                     </td>
                   ))}
                 </tr>
@@ -336,7 +343,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
             >
               {/* Row 1 - Election Name / Date / Full result */}
               {["election_name", "full_result"].some(id => ids.includes(id)) && (
-                <div className="flex justify-between gap-x-2">
+                <div className="flex items-start justify-between gap-x-2">
                   <div className="flex gap-x-2">
                     {_row.index}
                     {_row.election_name}
