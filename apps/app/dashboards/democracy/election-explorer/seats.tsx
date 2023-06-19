@@ -1,5 +1,5 @@
 import ElectionLayout from "./layout";
-import type { BaseResult, ElectionResource, ElectionType, Seat, SeatResult } from "./types";
+import type { BaseResult, ElectionResource, Seat, SeatOptions, SeatResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { Container, Section } from "@components/index";
@@ -26,10 +26,7 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
 });
 
 interface ElectionSeatsProps extends ElectionResource<Seat> {
-  selection: Array<{
-    seat_name: string;
-    type: ElectionType;
-  }>;
+  selection: Array<SeatOptions>;
 }
 
 const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
@@ -46,10 +43,15 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
     loading: false,
   });
 
-  const SEAT_OPTIONS: Array<OptionType> = selection.map(key => ({
-    label: key.seat_name.concat(` (${t(key.type)})`),
-    value: key.type + "_" + slugify(key.seat_name),
-  }));
+  const SEAT_OPTIONS: Array<OptionType & SeatOptions & { seat_area: string }> = selection.map(
+    key => ({
+      label: key.seat_name.concat(` (${t(key.type)})`),
+      value: key.type + "_" + slugify(key.seat_name),
+      seat_area: key.seat_name.split(", ")[1],
+      seat_name: key.seat_name.split(", ")[0],
+      type: key.type,
+    })
+  );
 
   const navigateToSeat = (seat?: string) => {
     if (!seat) {
@@ -88,6 +90,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
+              },
+              {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
                 perc: data.votes.voter_turnout_perc,
@@ -96,11 +103,6 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                 x: "rejected_votes",
                 abs: data.votes.votes_rejected,
                 perc: data.votes.votes_rejected_perc,
-              },
-              {
-                x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
               },
             ],
           };
@@ -180,13 +182,23 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                   <ComboBox
                     placeholder={t("seat.search_seat")}
                     options={SEAT_OPTIONS}
+                    config={{
+                      baseSort: (a, b) => {
+                        if (a.item.seat_name === b.item.seat_name) {
+                          return a.item.type === "parlimen" ? -1 : 1;
+                        } else {
+                          return String(a.item.seat_name).localeCompare(String(b.item.seat_name));
+                        }
+                      },
+                      keys: ["seat_name", "seat_area", "type"],
+                    }}
                     selected={
                       data.seat
                         ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
                         : null
                     }
                     onChange={selected => navigateToSeat(selected?.value)}
-                    enableType={true}
+                    styleElectionType={true}
                   />
                 </div>
               </div>
