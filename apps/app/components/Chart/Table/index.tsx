@@ -195,7 +195,10 @@ const Table: FunctionComponent<TableProps> = ({
                       key={header.id}
                       id={header.id}
                       colSpan={header.colSpan}
-                      className={clx(freeze?.includes(header.id)) && "sticky-col"}
+                      className={clx(
+                        freeze?.includes(header.id) && "sticky-col",
+                        "border-outline dark:border-washed-dark whitespace-nowrap border-b-2 py-[10px] font-medium"
+                      )}
                       style={{
                         left: freeze?.includes(header.id) ? calcStickyLeft(header.id) : 0,
                       }}

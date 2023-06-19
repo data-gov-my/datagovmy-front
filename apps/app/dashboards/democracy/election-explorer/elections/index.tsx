@@ -305,17 +305,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                           }
                         >
                           <Panel
-                            name={t("election.map")}
-                            icon={<MapIcon className="mr-1 h-5 w-5" />}
-                          >
-                            <Card className="bg-background dark:bg-background-dark static xl:py-4">
-                              <Choropleth
-                                className="h-[400px] w-auto lg:h-[500px]"
-                                type={TOGGLE_IS_DUN ? "dun" : "parlimen"}
-                              />
-                            </Card>
-                          </Panel>
-                          <Panel
                             name={t("election.table")}
                             icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                           >
@@ -337,7 +326,18 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                               ])}
                             />
                           </Panel>
-                          <Panel name={t("election.summary")}>
+                          {/* <Panel
+                            name={t("election.map")}
+                            icon={<MapIcon className="mr-1 h-5 w-5" />}
+                          >
+                            <Card className="bg-background dark:bg-background-dark static xl:py-4">
+                              <Choropleth
+                                className="h-[400px] w-auto lg:h-[500px]"
+                                type={TOGGLE_IS_DUN ? "dun" : "parlimen"}
+                              />
+                            </Card>
+                          </Panel> */}
+                          {/* <Panel name={t("election.summary")}>
                             <div className="space-y-6">
                               <p className="text-center text-sm font-medium">
                                 {t("election.simple_majority")}
@@ -388,7 +388,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                                 {t("election.explore")}
                               </p>
                             </div>
-                          </Panel>
+                          </Panel> */}
                         </Tabs>
                       </div>
                     </div>
@@ -400,7 +400,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             <BallotSeat seats={seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
 
             {/* Election analysis */}
-            <ElectionAnalysis index={data.toggle_index} />
+            <ElectionAnalysis index={data.toggle_index} seats={seats} />
           </Section>
         </Container>
       </ElectionLayout>

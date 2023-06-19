@@ -1,14 +1,14 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
-import { Dropdown, Tabs } from "@components/index";
+import BarPerc from "@components/Chart/BarMeter/BarPerc";
+import { Tabs } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
 import { List, Panel } from "@components/Tabs";
-import { OptionType } from "@components/types";
+import { MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { generateSchema } from "@lib/schema/election-explorer";
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
+import { Seat } from "../types";
 
 /**
  * Election Explorer - Election Analysis
@@ -18,63 +18,117 @@ import BarPerc from "@components/Chart/BarMeter/BarPerc";
 const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {
   ssr: false,
 });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Table = dynamic(() => import("@components/Chart/Table"), {
+  ssr: false,
+});
+// const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 
-type AnalysisPlaceholder = {
+type Analysis = {
   seat: string;
-  data: {
+  state: string;
+  party: string;
+  majority: {
+    abs: number;
     perc: number;
   };
 };
 
 interface ElectionAnalysisProps {
   index: number;
+  seats: Seat[];
 }
 
-const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) => {
+const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, seats }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
-  const FILTER_OPTIONS: Array<OptionType> = [
-    "voter_turnout",
-    "majority_%",
-    "rejected_votes",
-    "%_PH",
-    "num_voters",
-  ].map((key: string) => ({
-    label: t(key),
-    value: key,
-  }));
+  const analysisData: Array<Analysis> = seats.map(seat => {
+    const matches = seat.seat.split(",");
+    return {
+      seat: matches[0],
+      state: matches[1],
+      party: seat.party,
+      majority: { abs: seat.majority.abs, perc: parseFloat(seat.majority.perc.toFixed(1)) },
+    };
+  });
 
   const { data, setData } = useData({
     tab_index: 0,
     loading: false,
-    analysis_type: FILTER_OPTIONS[0],
   });
 
   return (
     <div className="grid grid-cols-12 py-8 lg:py-12">
       <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
         <h4 className="py-4 text-center">{t("election.header_3")}</h4>
-        <div className="flex flex-row flex-wrap justify-between gap-4 pb-6">
-          <Dropdown
-            anchor="left"
-            width="w-fit"
-            options={FILTER_OPTIONS}
-            selected={FILTER_OPTIONS.find(e => e.value === data.analysis_type.value)}
-            onChange={e => setData("analysis_type", e)}
-          />
+        {/* <div className="flex justify-end pb-6">
           <List
-            options={[t("election.map"), t("election.table")]}
+            options={[
+              t("election.table"),
+              t("election.map"),
+            ]}
             icons={[
-              <MapIcon key="map_icon" className="mr-1 h-5 w-5" />,
               <TableCellsIcon key="table_cell_icon" className="mr-1 h-5 w-5" />,
+              <MapIcon key="map_icon" className="mr-1 h-5 w-5" />,
             ]}
             current={data.tab_index}
             onChange={index => setData("tab_index", index)}
           />
-        </div>
+        </div> */}
         <Tabs hidden current={data.tab_index} onChange={index => setData("tab_index", index)}>
-          <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
+          <Panel name={t("election.table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
+            <Table
+              // className="max-h-96 w-full overflow-y-auto"
+              // isLoading={data.loading}
+              data={analysisData}
+              // columns={generateSchema<Analysis>([
+              enablePagination={15}
+              config={[
+                {
+                  accessorKey: "seat",
+                  id: "constituency",
+                  header: t("constituency"),
+                  className: "text-left",
+                },
+                {
+                  accessorKey: "state",
+                  id: "state",
+                  header: t("election.state"),
+                  className: "text-left",
+                },
+                {
+                  accessorKey: "majority.abs",
+                  id: "majority.abs",
+                  header: t("majority"),
+                },
+                {
+                  accessorKey: "majority.perc",
+                  id: "majority.perc",
+                  header: t("majority_%"),
+                },
+                {
+                  accessorKey: "majority.abs",
+                  id: "majority.abs",
+                  header: t("voter_turnout"),
+                },
+                {
+                  accessorKey: "majority.perc",
+                  id: "majority.perc",
+                  header: t("voter_turnout_%"),
+                },
+                {
+                  accessorKey: "majority.abs",
+                  id: "majority.abs",
+                  header: t("rejected_votes"),
+                },
+                {
+                  accessorKey: "majority.perc",
+                  id: "majority.perc",
+                  header: t("rejected_votes_%"),
+                },
+              ]}
+            />
+          </Panel>
+          {/* <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
             <LeftRightCard
               left={
                 <div className="flex h-full w-full flex-col space-y-6 p-8">
@@ -85,7 +139,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
                       })}
                     </h4>
                     <span className="text-dim text-sm">
-                      {/* {t("common.data_of", { date: choropleth.data_as_of })} */}
+                      {t("common.data_of", { date: choropleth.data_as_of })}
                     </span>
                   </div>
                   <div className="flex grow flex-col justify-between space-y-6">
@@ -102,33 +156,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index }) =
                 />
               }
             />
-          </Panel>
-          <Panel name={t("election.table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
-            <ElectionTable
-              isLoading={data.loading}
-              data={dummyData}
-              columns={generateSchema<AnalysisPlaceholder>([
-                {
-                  key: "seat",
-                  id: "constituency",
-                  header: t("constituency"),
-                },
-                {
-                  key: "data",
-                  id: "data",
-                  header: t(data.analysis_type.value),
-                  cell: ({ getValue }) => {
-                    return (
-                      <BarPerc
-                        className="flex flex-row-reverse items-center gap-3"
-                        value={getValue().perc}
-                      />
-                    );
-                  },
-                },
-              ])}
-            />
-          </Panel>
+          </Panel> */}
         </Tabs>
       </div>
     </div>
