@@ -55,10 +55,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
         seat,
       })
         .then(({ data }: { data: SeatResult }) => {
-          console.log(data);
           const result = {
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
+              {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
+              },
               {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
@@ -68,11 +72,6 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                 x: "rejected_votes",
                 abs: data.votes.votes_rejected,
                 perc: data.votes.votes_rejected_perc,
-              },
-              {
-                x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
               },
             ],
           };
@@ -134,7 +133,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                   className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden 
                 rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:pb-6 xl:px-6"
                 >
-                  <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
+                  <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
                       options={SEAT_OPTIONS}
@@ -150,8 +149,8 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                       _seats.map((seat: Seat) => (
                         <Card
                           key={seat.seat}
-                          className="focus:border-primary dark:focus:border-primary-dark hover:border-primary dark:hover:border-primary-dark
-                         hover:bg-primary/5 dark:hover:bg-primary-dark/5 flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black
+                          className="focus:border-primary dark:focus:border-primary-dark hover:border-outlineHover dark:hover:border-outlineHover-dark
+                          active:bg-washed flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black hover:dark:bg-black/50 active:dark:bg-black
                           lg:w-auto xl:w-full"
                           onClick={() => fetchSeatResult(seat.seat)}
                         >

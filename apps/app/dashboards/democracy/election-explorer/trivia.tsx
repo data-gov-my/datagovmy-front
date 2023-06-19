@@ -69,6 +69,11 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
+              },
+              {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
                 perc: data.votes.voter_turnout_perc,
@@ -77,11 +82,6 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                 x: "rejected_votes",
                 abs: data.votes.votes_rejected,
                 perc: data.votes.votes_rejected_perc,
-              },
-              {
-                x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
               },
             ],
           };
