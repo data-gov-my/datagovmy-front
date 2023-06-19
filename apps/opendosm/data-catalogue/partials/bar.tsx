@@ -11,7 +11,7 @@ import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { toast } from "datagovmy-ui/components";
 
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 interface CatalogueBarProps {
   config: any;
   dataset: any;

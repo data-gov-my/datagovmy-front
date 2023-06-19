@@ -1,10 +1,9 @@
-import Select from "@components/Dropdown/Select";
 import { OptionType } from "@components/types";
 import { get } from "@lib/api";
 import { SHORT_LANG } from "@lib/constants";
 import type { ChartDataset } from "chart.js";
 
-import { Chips, Dropdown, Slider } from "datagovmy-ui/components";
+import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
 import { useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
 
 import dynamic from "next/dynamic";

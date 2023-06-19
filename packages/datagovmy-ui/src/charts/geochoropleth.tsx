@@ -64,7 +64,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   const { interpolate } = useColor(color, [min, max]);
 
   useEffect(() => {
-    import(`datagovmy-ui/../lib/geojson/${type}/_map`).then(item => {
+    import(`../lib/geojson/${type}/_map`).then(item => {
       setChoromap(item.default as unknown as FeatureCollection);
       if (onReady) onReady(true);
     });

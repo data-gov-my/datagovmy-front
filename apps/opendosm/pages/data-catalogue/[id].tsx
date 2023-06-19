@@ -2,10 +2,9 @@ import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { SHORT_LANG } from "@lib/constants";
 import { OptionType } from "@components/types";
-import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
-
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import DataCatalogueShow from "@data-catalogue/show";
 import { useMemo } from "react";
 import { withi18n } from "datagovmy-ui/decorators";
@@ -60,7 +59,7 @@ const CatalogueShow: Page = ({
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  "common",
+  ["catalogue", "common"],
   async ({ locale, query, params }) => {
     const { data } = await get("/data-variable/", {
       id: params?.id,

@@ -1,5 +1,5 @@
-import { Chips, Dropdown, Slider } from "datagovmy-ui/components";
-import Select from "@components/Dropdown/Select";
+import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
+
 import { OptionType } from "@components/types";
 import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";

@@ -16,8 +16,7 @@ import { routes } from "@lib/routes";
 import { useLanguage } from "@hooks/useLanguage";
 import Nav from "@components/Nav";
 import NavItem from "@components/Nav/Item";
-import Dropdown from "@components/Dropdown";
-import Container from "@components/Container";
+import { Dropdown, Container } from "datagovmy-ui/components";
 import MegaMenu from "@components/Nav/MegaMenu";
 
 interface HeaderProps {

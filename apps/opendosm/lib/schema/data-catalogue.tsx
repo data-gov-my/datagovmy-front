@@ -1,6 +1,6 @@
-import type { TableConfig } from "@components/Chart/Table";
+import type { TableConfig } from "datagovmy-ui/charts/table";
 import { numFormat } from "@lib/helpers";
-import At from "@components/At";
+import { At } from "datagovmy-ui/components";
 
 /**
  * Table schema for data catalogue

@@ -223,6 +223,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   };
 
   useEffect(() => {
+    track("page_view", {
+      type: "catalogue",
+      id: dataset.meta.unique_id,
+      name_en: dataset.meta.title,
+      name_bm: dataset.meta.title,
+    });
     if (dataset.type === "TABLE") {
       setDownloads({
         chart: [],

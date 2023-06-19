@@ -5,14 +5,14 @@ import {
   Checkbox,
   Container,
   Dropdown,
-  Input,
   Modal,
   Radio,
   Section,
   Sidebar,
   Label,
+  Search,
 } from "datagovmy-ui/components";
-import { ArrowTrendingUpIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { ArrowTrendingUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { FunctionComponent, useContext, useMemo, useRef } from "react";
 import { useFilter, useTranslation, WindowContext } from "datagovmy-ui/hooks";
 import { OptionType } from "@components/types";
@@ -185,14 +185,11 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   return (
     <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 lg:pl-2">
       <div className="flex-grow">
-        <Input
-          className="border-0 pl-10"
-          type="search"
+        <Search
+          className="border-0"
           placeholder={t("catalogue.search_placeholder")}
-          autoFocus
-          value={filter.search}
+          query={filter.search}
           onChange={e => setFilter("search", e)}
-          icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
         />
       </div>
       {/* Mobile */}

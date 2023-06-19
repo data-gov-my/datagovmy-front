@@ -14,7 +14,7 @@ const CatalogueIndex: Page = ({
   total,
   sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
 
   return (
     <>
@@ -38,7 +38,7 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  "common",
+  ["catalogue", "common"],
   async ({ locale, query }) => {
     const { data } = await get("/data-catalog/", {
       lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],

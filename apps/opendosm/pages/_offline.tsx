@@ -1,5 +1,5 @@
 import type { Page } from "@lib/types";
-import Container from "@components/Container";
+import { Container } from "datagovmy-ui/components";
 import { Metadata } from "datagovmy-ui/components";
 import ErrorCode from "@components/Error";
 import { GetStaticProps, InferGetStaticPropsType } from "next";

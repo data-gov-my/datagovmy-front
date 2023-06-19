@@ -21,6 +21,7 @@ export { default as Modal } from "./Modal";
 export { default as Radio } from "./Radio";
 export { default as Search } from "./Search";
 export { default as Section } from "./Section";
+export { default as Select } from "./Dropdown/Select";
 export { default as Sidebar } from "./Sidebar";
 export { default as Slider } from "./Slider";
 export { SliderContext, SliderProvider } from "./Slider/context";

@@ -4,7 +4,7 @@ import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useTranslation } from "datagovmy-ui/hooks";
 
-import { withi18n } from "datagovmy-ui/src/lib/decorators";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const GDP = ({
   last_updated,

@@ -5,13 +5,11 @@ import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import mixpanel from "mixpanel-browser";
 import mixpanelConfig from "@config/mixpanel";
-import { ga_track, init_session, track } from "@lib/mixpanel";
+import { ga_track, init_session } from "@lib/mixpanel";
 import { clx } from "datagovmy-ui/helpers";
 import { body, header } from "@config/font";
 import Nexti18NextConfig from "../next-i18next.config";
 import { WindowProvider } from "datagovmy-ui/hooks";
-// import "@formatjs/intl-numberformat/polyfill";
-// import "@formatjs/intl-numberformat/locale-data/en";
 
 // Global settings
 mixpanel.init(mixpanelConfig.token, { debug: process.env.NODE_ENV === "development" });
@@ -27,7 +25,7 @@ function App({ Component, pageProps }: any) {
     // trigger page view event for client-side navigation
     const handleRouteChange = (url: string) => {
       ga_track(url);
-      track("page_view", pageProps?.meta);
+      init_session();
     };
     router.events.on("routeChangeComplete", handleRouteChange);
 
