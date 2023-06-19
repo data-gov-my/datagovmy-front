@@ -5,7 +5,7 @@ import { Page } from "@lib/types";
 
 import KawasankuDashboard from "@dashboards/kawasanku";
 import { Metadata } from "datagovmy-ui/components";
-import MalaysiaGeojson from "@lib/geojson/malaysia.json";
+import MalaysiaGeojson from "datagovmy-ui/geojson/state/_map";
 
 import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";

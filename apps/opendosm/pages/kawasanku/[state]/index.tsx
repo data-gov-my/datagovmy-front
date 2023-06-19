@@ -22,15 +22,15 @@ const KawasankuState: Page = ({
   const { t } = useTranslation();
   const [geo, setGeo] = useState<undefined | GeoJsonObject>(undefined);
 
-  useWatch(
-    () => {
-      import(`@lib/geojson/kawasanku/state/${ctx.state}`).then(item => {
-        setGeo(item.default as unknown as GeoJsonObject);
-      });
-    },
-    [ctx.state],
-    true
-  );
+  // useWatch(
+  //   () => {
+  //     import(`datagovmy-ui/geojson/state/${ctx.id}`).then(item => {
+  //       setGeo(item.default as unknown as GeoJsonObject);
+  //     });
+  //   },
+  //   [ctx.state],
+  //   true
+  // );
 
   return (
     <>

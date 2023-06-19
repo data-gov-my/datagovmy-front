@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, FunctionComponent, ReactNode, useState } from "react";
 import ImageWithFallback from "../ImageWithFallback";
 import { OptionType } from "../types";
 import { Combobox, Transition } from "@headlessui/react";
@@ -8,10 +8,10 @@ import { clx } from "../../lib/helpers";
 import { matchSorter } from "match-sorter";
 import Spinner from "../Spinner";
 
-type ComboBoxProps<L, V> = {
-  options: OptionType<L, V>[];
-  selected?: OptionType<L, V> | null;
-  onChange: (option?: OptionType<L, V>) => void;
+type ComboBoxProps = {
+  options: OptionType[];
+  selected?: OptionType | null;
+  onChange: (option?: OptionType) => void;
   onSearch?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
@@ -21,7 +21,7 @@ type ComboBoxProps<L, V> = {
   loading?: boolean;
 };
 
-const ComboBox = <L extends string | number = string, V = string>({
+const ComboBox: FunctionComponent<ComboBoxProps> = ({
   options,
   selected,
   onChange,
@@ -32,7 +32,7 @@ const ComboBox = <L extends string | number = string, V = string>({
   fallback,
   enableType = false,
   loading = false,
-}: ComboBoxProps<L, V>) => {
+}) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
 

@@ -216,55 +216,61 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
               common: {
                 drawTime: "afterDraw",
               },
-              annotations: data.datasets.map((set, index) => {
-                const INDEXES = {
-                  year: data.labels!.length - 200,
-                  quarter: data.labels!.length - 45,
-                  month: data.labels!.length - 15,
-                  week: data.labels!.length - 4,
-                  millisecond: data.labels!.length - 1,
-                  second: data.labels!.length - 1,
-                  minute: data.labels!.length - 1,
-                  hour: data.labels!.length - 1,
-                  day: data.labels!.length - 1,
-                };
-                const xIndex = round && round !== "auto" ? INDEXES[round] : data.labels!.length - 1;
-                const yIndex = data.labels!.length - 1;
+              annotations: Object.fromEntries(
+                data.datasets.map((set, i) => {
+                  const INDEXES = {
+                    year: data.labels!.length - 200,
+                    quarter: data.labels!.length - 45,
+                    month: data.labels!.length - 15,
+                    week: data.labels!.length - 4,
+                    millisecond: data.labels!.length - 1,
+                    second: data.labels!.length - 1,
+                    minute: data.labels!.length - 1,
+                    hour: data.labels!.length - 1,
+                    day: data.labels!.length - 1,
+                  };
+                  const xIndex =
+                    round && round !== "auto" ? INDEXES[round] : data.labels!.length - 1;
+                  const yIndex = data.labels!.length - 1;
 
-                return {
-                  type: "label",
-                  callout: {
-                    display: true,
-                  },
-                  content() {
-                    let text: string = set.label!;
-                    if (text.length > 25) text = text.slice(0, 25).concat("..");
-                    // if (text.length > 25) return chunkSplit(text, 25);
-                    return text;
-                  },
-                  font: {
-                    family: "Inter",
-                    style: "normal",
-                    lineHeight: 1,
-                    weight: "400",
-                    size: 12,
-                  },
-                  color: set.borderColor as string,
-                  position: {
-                    x: "start",
-                    y: "center",
-                  },
-                  xAdjust: 0,
-                  xValue: data.labels![xIndex] as string | number,
-                  yAdjust: (data.datasets as any[]).reduce((prev: any, current: any) => {
-                    if (Math.abs(current.data[yIndex] - set.data[yIndex]) < 3) {
-                      return prev + 1;
-                    }
-                    return prev;
-                  }, -1) as number,
-                  yValue: set.data[yIndex],
-                };
-              }),
+                  return [
+                    i,
+                    {
+                      type: "label",
+                      callout: {
+                        display: true,
+                      },
+                      content() {
+                        let text: string = set.label!;
+                        if (text.length > 25) text = text.slice(0, 25).concat("..");
+                        // if (text.length > 25) return chunkSplit(text, 25);
+                        return text;
+                      },
+                      font: {
+                        family: "Inter",
+                        style: "normal",
+                        lineHeight: 1,
+                        weight: "400",
+                        size: 12,
+                      },
+                      color: set.borderColor as string,
+                      position: {
+                        x: "start",
+                        y: "center",
+                      },
+                      xAdjust: 0,
+                      xValue: data.labels![xIndex] as string | number,
+                      yAdjust: (data.datasets as any[]).reduce((prev: any, current: any) => {
+                        if (Math.abs(current.data[yIndex] - set.data[yIndex]) < 3) {
+                          return prev + 1;
+                        }
+                        return prev;
+                      }, -1) as number,
+                      yValue: set.data[yIndex],
+                    },
+                  ];
+                })
+              ),
             }
           : false,
         crosshair: enableCrosshair
@@ -387,14 +393,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     };
   }, [data, interval, theme]);
 
-  const autoScale = useMemo(
-    () => data.labels && (data.labels.length > 200 ? "month" : "day"),
-    [data.labels]
-  );
-  const autoRound = useMemo(
-    () => data.labels && (data.labels.length > 720 ? "week" : "day"),
-    [data.labels]
-  );
+  const autoScale = useMemo(() => (data.labels!.length > 200 ? "month" : "day"), [data.labels]);
+  const autoRound = useMemo(() => (data.labels!.length > 720 ? "week" : "day"), [data.labels]);
 
   return (
     <div>

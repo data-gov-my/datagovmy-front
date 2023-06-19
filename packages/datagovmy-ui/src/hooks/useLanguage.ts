@@ -1,4 +1,4 @@
-import type { OptionType } from "src/components/types";
+import type { OptionType } from "../components/types";
 import { useRouter } from "next/router";
 /**
  * Language switcher hook.

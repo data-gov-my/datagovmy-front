@@ -9,6 +9,7 @@ import { STATE_MAP, DISTRICTS } from "@lib/schema/kawasanku";
 import { get } from "@lib/api";
 import { useState } from "react";
 import { withi18n } from "datagovmy-ui/decorators";
+import dynamic from "next/dynamic";
 
 const KawasankuArea: Page = ({
   ctx,
@@ -22,15 +23,15 @@ const KawasankuArea: Page = ({
   const { t } = useTranslation();
   const [geo, setGeo] = useState<undefined | GeoJsonObject>(undefined);
 
-  useWatch(
-    () => {
-      import(`@lib/geojson/kawasanku/district/${ctx.id}`).then(item => {
-        setGeo(item.default as unknown as GeoJsonObject);
-      });
-    },
-    [ctx.id],
-    true
-  );
+  // useWatch(
+  //   () => {
+  //     import(`datagovmy-ui/geojson/district/${ctx.id}`).then(item => {
+  //       setGeo(item.default as unknown as GeoJsonObject);
+  //     });
+  //   },
+  //   [ctx.id],
+  //   true
+  // );
 
   return (
     <>

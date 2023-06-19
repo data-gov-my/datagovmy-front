@@ -3,14 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite build --watch",
-    "build": "vite build",
-    "clear": "rm -rf dist/",
-    "type": "tsc src/components/index.ts src/components/Chart/index.ts",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
   "files": [
     "src",
     "types"
@@ -21,7 +13,7 @@
     "./decorators": "./src/lib/decorators.ts",
     "./helpers": "./src/lib/helpers.ts",
     "./hooks": "./src/hooks/index.ts",
-    "./dist/*.css": "./src/styles/*.css"
+    "./geojson/*": "./src/lib/geojson/*/*.ts"
   },
   "typesVersions": {
     "*": {
@@ -39,6 +31,9 @@
       ],
       "hooks": [
         "./types/hooks.d.ts"
+      ],
+      "geojson/*": [
+        "./src/lib/geojson/*"
       ]
     }
   },

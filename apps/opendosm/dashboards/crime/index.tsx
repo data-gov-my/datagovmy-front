@@ -21,7 +21,7 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
 });
 const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
-const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 
 interface CrimeDashboardProps {
   last_updated: number;

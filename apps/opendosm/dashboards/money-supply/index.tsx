@@ -1,6 +1,5 @@
 import Hero from "@components/Hero";
 import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
-
 import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
@@ -8,7 +7,7 @@ import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks"
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import type { TableConfig } from "@components/Chart/Table";
+import type { TableConfig } from "datagovmy-ui/charts/table";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 
@@ -17,7 +16,7 @@ import { routes } from "@lib/routes";
  * @overview Status: Live
  */
 
-const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
 });

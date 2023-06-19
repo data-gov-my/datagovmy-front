@@ -1,5 +1,5 @@
-import type { OptionType } from "src/components/types";
-import type { Color } from "src/hooks/useColor";
+import type { OptionType } from "../components/types";
+import type { Color } from "../hooks/useColor";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
 import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";

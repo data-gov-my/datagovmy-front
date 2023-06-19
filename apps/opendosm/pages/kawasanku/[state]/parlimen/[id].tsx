@@ -23,15 +23,15 @@ const KawasankuArea: Page = ({
   const { t } = useTranslation();
   const [geo, setGeo] = useState<undefined | GeoJsonObject>(undefined);
 
-  useWatch(
-    () => {
-      import(`@lib/geojson/kawasanku/parlimen/${ctx.id}`).then(item => {
-        setGeo(item.default as unknown as GeoJsonObject);
-      });
-    },
-    [ctx.id],
-    true
-  );
+  // useWatch(
+  //   () => {
+  //     import(`datagovmy-ui/geojson/parlimen/${ctx.id}`).then(item => {
+  //       setGeo(item.default as unknown as GeoJsonObject);
+  //     });
+  //   },
+  //   [ctx.id],
+  //   true
+  // );
 
   return (
     <>
