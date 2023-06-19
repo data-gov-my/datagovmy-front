@@ -177,6 +177,11 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
               <p className="relative pl-10">
                 <span className="font-medium">{cell.row.original.name}</span>
                 <span>{` (${value})`}</span>
+                <span className="inline-flex translate-y-0.5 pl-1">
+                  {highlightedRows.includes(+cell.row.id) && (
+                    <ResultBadge hidden value={cell.row.original.result} />
+                  )}
+                </span>
               </p>
             ) : (
               <span className="relative pl-10 font-medium">{t(value)}</span>
