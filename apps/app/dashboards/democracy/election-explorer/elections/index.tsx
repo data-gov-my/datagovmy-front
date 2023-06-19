@@ -1,7 +1,7 @@
 import ElectionAnalysis from "./analysis";
 import BallotSeat from "./ballot-seat";
-import { Party, PartyResult, Seat, ElectionEnum } from "../types";
 import ElectionLayout from "../layout";
+import { Party, PartyResult, Seat, ElectionEnum } from "../types";
 import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import {
@@ -16,13 +16,8 @@ import {
 import Label from "@components/Label";
 import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
-import {
-  BuildingLibraryIcon,
-  ChevronDownIcon,
-  FlagIcon,
-  MapIcon,
-  TableCellsIcon,
-} from "@heroicons/react/24/solid";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
 import { useTranslation } from "@hooks/useTranslation";
@@ -107,13 +102,20 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   ];
   const waffleColours = ["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"];
 
+  const ELECTION_ACRONYM = params.election.slice(-5);
+  const ELECTION_FULLNAME = params.election;
+  const CURRENT_STATE = params.state;
+
   const { data, setData } = useData({
-    list_index: params.election.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
-    election: params.election.slice(-5),
-    state: params.state,
+    toggle_index: ELECTION_ACRONYM.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
+    election: ELECTION_ACRONYM,
+    state: CURRENT_STATE,
   });
 
+  const TOGGLE_IS_DUN = data.toggle_index === ElectionEnum.Dun;
+  const TOGGLE_IS_PARLIMEN = data.toggle_index === ElectionEnum.Parlimen;
   const NON_SE_STATE = ["mys", "kul", "lbn", "pjy"];
+
   const GE_OPTIONS: Array<OptionType> = selection["mys"]
     .map((election: Record<string, any>) => ({
       label: t(election.name) + ` (${election.year})`,
@@ -138,9 +140,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
     setData("loading", true);
     setData("election", election);
 
-    const route = state
-      ? `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}/${state}`
-      : `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}`;
+    const route = `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}/${state}`;
 
     push(route, undefined, {
       scroll: false,
@@ -150,12 +150,12 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
 
   const handleElectionTab = (index: number) => {
     if (index === ElectionEnum.Dun) {
-      setData("state", !NON_SE_STATE.includes(params.state) ? data.state || params.state : null);
+      setData("state", !NON_SE_STATE.includes(CURRENT_STATE) ? data.state || CURRENT_STATE : null);
       setData("election", null);
     } else {
-      setData("state", data.state || params.state);
+      setData("state", data.state || CURRENT_STATE);
     }
-    setData("list_index", index);
+    setData("toggle_index", index);
   };
 
   return (
@@ -167,33 +167,33 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             <h4 className="text-center">{t("election.header_1")}</h4>
 
             {/* Mobile */}
-            <div className={clx("fixed right-0 top-16 z-20 lg:hidden")}>
+            <div className={clx("fixed right-3 top-16 z-10 lg:hidden")}>
               <Modal
                 trigger={open => (
-                  <Button
+                  <button
                     onClick={open}
-                    className="border-outline bg-background dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-lg"
+                    className="btn btn-dropdown shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
                   >
                     <span>{t("filter")}:</span>
-                    <div className="bg-primary dark:bg-primary-dark w-4.5 flex h-5 justify-center rounded-md">
-                      <p className="self-center text-white">3</p>
+                    <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
+                      <p className="text-center text-white">3</p>
                     </div>
-                    {/* <ChevronDownIcon
+                    <ChevronDownIcon
                       className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5"
                       aria-hidden="true"
-                    /> */}
-                  </Button>
+                    />
+                  </button>
                 )}
                 title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
               >
                 {close => (
-                  <div className="flex-grow space-y-4 overflow-y-auto pb-36 pt-4">
+                  <div className="flex-grow space-y-4 overflow-y-auto pb-[100px] pt-4">
                     <Label label={t("election.election") + ":"} className="text-sm" />
                     <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
                       <List
                         options={PANELS.map(item => item.name)}
                         icons={PANELS.map(item => item.icon)}
-                        current={data.list_index}
+                        current={data.toggle_index}
                         onChange={handleElectionTab}
                       />
                     </div>
@@ -205,22 +205,21 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                         onChange={selected => {
                           navigateToElection(data.election, selected.value);
                           setData("state", selected.value);
-                          data.list_index === ElectionEnum.Dun && setData("election", null);
+                          TOGGLE_IS_DUN && setData("election", null);
                         }}
-                        exclude={data.list_index === ElectionEnum.Parlimen ? [] : NON_SE_STATE}
+                        exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
                         width="w-full"
-                        anchor="left"
+                        anchor="left-0 bottom-10"
                       />
                       <Dropdown
                         width="w-full"
+                        anchor="right-0 bottom-10"
                         placeholder={t("select_election")}
-                        options={
-                          data.list_index === ElectionEnum.Parlimen ? GE_OPTIONS : SE_OPTIONS
-                        }
+                        options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
                         selected={
-                          data.list_index === ElectionEnum.Parlimen
-                            ? GE_OPTIONS.find(e => e.value === params.election)
-                            : SE_OPTIONS.find(e => e.value === params.election.slice(-5))
+                          TOGGLE_IS_PARLIMEN
+                            ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
+                            : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
                         }
                         disabled={!data.state}
                         onChange={selected => {
@@ -251,31 +250,30 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                 <List
                   options={PANELS.map(item => item.name)}
                   icons={PANELS.map(item => item.icon)}
-                  current={data.list_index}
+                  current={data.toggle_index}
                   onChange={handleElectionTab}
                 />
               </div>
               <StateDropdown
                 currentState={data.state}
                 onChange={selected => {
-                  data.list_index === ElectionEnum.Dun
-                    ? setData("election", null)
-                    : navigateToElection(data.election, selected.value);
+                  TOGGLE_IS_PARLIMEN
+                    ? navigateToElection(data.election, selected.value)
+                    : setData("election", null);
                   setData("state", selected.value);
                 }}
-                exclude={data.list_index === ElectionEnum.Parlimen ? [] : NON_SE_STATE}
-                width="min-w-max"
+                exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
+                width="w-fit"
                 anchor="left"
               />
               <Dropdown
                 anchor="left"
-                width="max-w-fit"
                 placeholder={t("select_election")}
-                options={data.list_index === ElectionEnum.Parlimen ? GE_OPTIONS : SE_OPTIONS}
+                options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
                 selected={
-                  data.list_index === ElectionEnum.Parlimen
-                    ? GE_OPTIONS.find(e => e.value === data.election ?? params.election)
-                    : SE_OPTIONS.find(e => e.value === data.election ?? params.election.slice(-5))
+                  TOGGLE_IS_PARLIMEN
+                    ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
+                    : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
                 }
                 onChange={selected => {
                   setData("election", selected.value);
@@ -287,8 +285,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             <Section>
               <Tabs
                 hidden
-                current={data.list_index}
-                onChange={index => setData("list_index", index)}
+                current={data.toggle_index}
+                onChange={index => setData("toggle_index", index)}
               >
                 {PANELS.map((panel, index) => (
                   <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
@@ -298,9 +296,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                           title={
                             <div className="text-base font-bold">
                               {t("election.parliament_of")}
-                              <span className="text-primary">{CountryAndStates[params.state]}</span>
+                              <span className="text-primary">
+                                {CountryAndStates[CURRENT_STATE]}
+                              </span>
                               <span>: </span>
-                              <span className="text-primary">{t(params.election.slice(-5))}</span>
+                              <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
                             </div>
                           }
                         >
@@ -311,7 +311,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                             <Card className="bg-background dark:bg-background-dark static xl:py-4">
                               <Choropleth
                                 className="h-[400px] w-auto lg:h-[500px]"
-                                type={data.list_index === ElectionEnum.Dun ? "dun" : "parlimen"}
+                                type={TOGGLE_IS_DUN ? "dun" : "parlimen"}
                               />
                             </Card>
                           </Panel>
@@ -384,7 +384,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                                   </div>
                                 ))}
                               </div>
-                              <p className="text-dim whitespace-pre-line text-center text-sm ">
+                              <p className="text-dim whitespace-pre-line text-center text-sm">
                                 {t("election.explore")}
                               </p>
                             </div>
@@ -397,10 +397,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
               </Tabs>
             </Section>
             {/* View the full ballot for a specific seat */}
-            <BallotSeat seats={seats} state={params.state} election={params.election} />
+            <BallotSeat seats={seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
 
             {/* Election analysis */}
-            <ElectionAnalysis index={data.list_index} />
+            <ElectionAnalysis index={data.toggle_index} />
           </Section>
         </Container>
       </ElectionLayout>
