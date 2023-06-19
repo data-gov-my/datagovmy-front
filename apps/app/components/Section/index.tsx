@@ -68,7 +68,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                   ) : (
                     <div>{description}</div>
                   )}
-                  {menu && <div className="flex w-full justify-end gap-3">{menu}</div>}
+                  {menu && <div className="flex w-full justify-end gap-3 md:w-auto">{menu}</div>}
                 </div>
               )}
             </div>
