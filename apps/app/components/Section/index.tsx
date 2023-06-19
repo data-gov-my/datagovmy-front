@@ -52,7 +52,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
               {(description || menu) && (
                 <div
                   className={clx(
-                    "text-dim flex w-full flex-wrap gap-y-3 md:flex-nowrap md:items-end md:justify-between",
+                    "text-dim flex w-full flex-wrap justify-between gap-y-3 md:flex-nowrap md:items-end",
                     description && menu && "gap-x-6"
                   )}
                 >
@@ -68,7 +68,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                   ) : (
                     <div>{description}</div>
                   )}
-                  {menu && <div className="flex w-full justify-end gap-3 md:w-auto">{menu}</div>}
+                  {menu && <div className="flex justify-end gap-3 md:w-auto">{menu}</div>}
                 </div>
               )}
             </div>
