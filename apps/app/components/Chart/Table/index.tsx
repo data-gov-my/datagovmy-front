@@ -22,7 +22,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 
-import { ArrowLeftIcon, ArrowRightIcon, ArrowsUpDownIcon } from "@heroicons/react/24/solid";
+import { ChevronLeftIcon, ChevronRightIcon, ArrowsUpDownIcon } from "@heroicons/react/24/solid";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/20/solid";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { CountryAndStates } from "@lib/constants";
@@ -310,13 +310,22 @@ const Table: FunctionComponent<TableProps> = ({
         </table>
       </div>
       {enablePagination && (
-        <div className={`mt-5 flex items-center justify-center gap-4 text-sm ${className}`}>
+        <div
+          className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium ${className}`}
+        >
           <button
-            className="flex flex-row gap-2 rounded border px-2 py-1 disabled:bg-slate-100 disabled:opacity-50"
+            className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <ArrowLeftIcon className="text-dim h-5 w-4" />
+            <ChevronLeftIcon
+              className={clx(
+                "h-4 w-4",
+                !table.getCanPreviousPage()
+                  ? "text-outlineHover dark:text-outlineHover-dark"
+                  : "text-black dark:text-white"
+              )}
+            />
             {t("common:common.previous")}
           </button>
 
@@ -327,11 +336,19 @@ const Table: FunctionComponent<TableProps> = ({
             })}
           </span>
           <button
-            className="flex flex-row gap-2 rounded border px-2 py-1 disabled:bg-slate-100 disabled:opacity-50"
+            className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            {t("common:common.next")} <ArrowRightIcon className="text-dim h-5 w-4" />
+            {t("common:common.next")}{" "}
+            <ChevronRightIcon
+              className={clx(
+                "h-4 w-4",
+                !table.getCanNextPage()
+                  ? "text-outlineHover dark:text-outlineHover-dark"
+                  : "text-black dark:text-white"
+              )}
+            />
           </button>
         </div>
       )}

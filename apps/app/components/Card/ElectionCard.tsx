@@ -7,7 +7,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   XMarkIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/20/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
 import { clx, numFormat, slugify, toDate } from "@lib/helpers";
@@ -217,9 +217,9 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                           ))}
                         </div>
                       )}
-                      <div className="flex items-center justify-center gap-4 text-sm">
-                        <Button
-                          className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                      <div className="flex items-center justify-center gap-4 text-sm font-medium">
+                        <button
+                          className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
                           onClick={() =>
                             onChange(options[data.index - 1]).then(item => {
                               if (!item) return;
@@ -229,16 +229,23 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                           }
                           disabled={data.index === 0}
                         >
-                          <ChevronLeftIcon className="h-4 w-4 text-black dark:text-white" />
+                          <ChevronLeftIcon
+                            className={clx(
+                              "h-4.5 w-4.5",
+                              data.index === 0
+                                ? "text-outlineHover dark:text-outlineHover-dark"
+                                : "text-black dark:text-white"
+                            )}
+                          />
                           {t("common:common.previous")}
-                        </Button>
+                        </button>
                         {options && options?.length > 10 && (
                           <span className="flex items-center gap-1 text-center text-sm">
                             {`${data.index + 1} / ${options?.length}`}
                           </span>
                         )}
-                        <Button
-                          className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                        <button
+                          className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
                           onClick={() =>
                             onChange(options[data.index + 1]).then(item => {
                               if (!item) return;
@@ -249,8 +256,15 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                           disabled={options && data.index === options?.length - 1}
                         >
                           {t("common:common.next")}
-                          <ChevronRightIcon className="h-4 w-4 text-black dark:text-white" />
-                        </Button>
+                          <ChevronRightIcon
+                            className={clx(
+                              "h-4.5 w-4.5",
+                              options && data.index === options?.length - 1
+                                ? "text-outlineHover dark:text-outlineHover-dark"
+                                : "text-black dark:text-white"
+                            )}
+                          />
+                        </button>
                       </div>
                     </div>
                   </div>
