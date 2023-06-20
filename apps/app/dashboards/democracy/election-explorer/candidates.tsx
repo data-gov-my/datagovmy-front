@@ -1,19 +1,21 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
-import { Container, Panel, Section, Tabs } from "@components/index";
+import ElectionLayout from "./layout";
+import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
+import { ResultBadge } from "@components/Badge/election";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
+import { Container, Panel, Section, Tabs } from "@components/index";
+import { toast } from "@components/Toast";
+import { OptionType } from "@components/types";
+import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
+import { slugify } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
 import { generateSchema } from "@lib/schema/election-explorer";
-import { ResultBadge } from "@components/Badge/election";
-import ElectionLayout from "./layout";
-import { toast } from "@components/Toast";
-import { useCache } from "@hooks/useCache";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { FunctionComponent, useEffect } from "react";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -105,7 +107,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     setData("loading", true);
     setData("candidate", name);
 
-    push(`${routes.ELECTION_EXPLORER}/candidates/${encodeURIComponent(name)}`, undefined, {
+    push(`${routes.ELECTION_EXPLORER}/candidates/${name}`, undefined, {
       scroll: false,
       locale: i18n.language,
     }).then(() => {
@@ -130,6 +132,11 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
             data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
+                x: "majority",
+                abs: data.votes.majority,
+                perc: data.votes.majority_perc,
+              },
+              {
                 x: "voter_turnout",
                 abs: data.votes.voter_turnout,
                 perc: data.votes.voter_turnout_perc,
@@ -150,17 +157,16 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
         });
     });
   };
-
-  const CANDIDATE_OPTIONS = selection.map((key: string) => {
-    return { label: key, value: key };
+  const CANDIDATE_OPTIONS: Array<OptionType> = selection.map((key: string) => {
+    return { label: key, value: slugify(key) };
   });
 
   return (
     <ElectionLayout>
       <Container className="min-h-fit">
         <Section>
-          <div className="lg:grid lg:grid-cols-12">
-            <div className="lg:col-span-10 lg:col-start-2">
+          <div className="grid grid-cols-12">
+            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
               <h4 className="text-center">{t("candidate.header")}</h4>
               <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
                 <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
@@ -178,42 +184,46 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
               </div>
               <Tabs
                 title={
-                  <div className="text-base font-bold">
+                  <h5>
                     {t("candidate.title")}
-                    <span className="text-primary">{params.candidate_name}</span>
-                  </div>
+                    <span className="text-primary">
+                      {CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)?.label}
+                    </span>
+                  </h5>
                 }
                 current={data.tab_index}
                 onChange={index => setData("tab_index", index)}
                 className="pb-6"
               >
-                <Panel name={t("parliament_elections")}>
+                <Panel name={t("parlimen")}>
                   <ElectionTable
                     data={elections.parlimen}
                     columns={candidate_schema}
                     isLoading={data.loading}
                     empty={
-                      <p>
+                      <>
                         {t("candidate.no_data", {
-                          name: data.candidate,
+                          name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)
+                            ?.label,
                           context: "parliament",
                         })}
-                      </p>
+                      </>
                     }
                   />
                 </Panel>
-                <Panel name={t("state_elections")}>
+                <Panel name={t("dun")}>
                   <ElectionTable
                     data={elections.dun}
                     columns={candidate_schema}
                     isLoading={data.loading}
                     empty={
-                      <p>
+                      <>
                         {t("candidate.no_data", {
-                          name: params.candidate_name,
+                          name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)
+                            ?.label,
                           context: "dun",
                         })}
-                      </p>
+                      </>
                     }
                   />
                 </Panel>

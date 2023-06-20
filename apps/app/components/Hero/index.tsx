@@ -63,9 +63,7 @@ const Hero: FunctionComponent<HeroProps> = ({
         background={background_style.concat(" border-b dark:border-washed-dark")}
         className={clx("relative", className)}
       >
-        <div className="sticky left-0 top-14 z-10 flex flex-row-reverse md:hidden md:pb-0">
-          {agencyBadge}
-        </div>
+        <div className="sticky inset-x-0 top-14 z-20 -ml-3 flex md:hidden">{agencyBadge}</div>
         {children ? (
           children
         ) : (
