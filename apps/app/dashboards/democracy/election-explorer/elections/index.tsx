@@ -1,7 +1,7 @@
 import ElectionAnalysis from "./analysis";
 import BallotSeat from "./ballot-seat";
 import ElectionLayout from "../layout";
-import { Party, PartyResult, Seat, ElectionEnum } from "../types";
+import { Party, PartyResult, OverallSeat, ElectionEnum } from "../types";
 import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import {
@@ -45,7 +45,7 @@ interface ElectionExplorerProps {
     state: string;
     election: string;
   };
-  seats: Seat[];
+  seats: OverallSeat[];
   selection: Record<string, any>;
   table: PartyResult;
 }
@@ -61,6 +61,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
 
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
+
+  const mobileRef = useRef<HTMLDivElement>(null);
+  // useScrollIntersect(mobileRef.current, "translate-y-28");
 
   const PANELS = [
     {
@@ -167,7 +170,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             <h4 className="text-center">{t("election.header_1")}</h4>
 
             {/* Mobile */}
-            <div className={clx("fixed right-3 top-16 z-10 lg:hidden")}>
+            <div className={clx("fixed right-3 top-28 z-10 lg:hidden")} ref={mobileRef}>
               <Modal
                 trigger={open => (
                   <button

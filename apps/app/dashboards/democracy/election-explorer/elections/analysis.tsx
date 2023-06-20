@@ -1,4 +1,3 @@
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import { Tabs } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
 import { List, Panel } from "@components/Tabs";
@@ -8,7 +7,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
-import { Seat } from "../types";
+import { OverallSeat } from "../types";
 
 /**
  * Election Explorer - Election Analysis
@@ -31,23 +30,39 @@ type Analysis = {
     abs: number;
     perc: number;
   };
+  voter_turnout: {
+    abs: number;
+    perc: number;
+  };
+  votes_rejected: {
+    abs: number;
+    perc: number;
+  };
 };
 
 interface ElectionAnalysisProps {
   index: number;
-  seats: Seat[];
+  seats: OverallSeat[];
 }
 
 const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, seats }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   const analysisData: Array<Analysis> = seats.map(seat => {
-    const matches = seat.seat.split(",");
+    const matches = seat.seat.split(", ");
     return {
       seat: matches[0],
       state: matches[1],
       party: seat.party,
       majority: { abs: seat.majority.abs, perc: parseFloat(seat.majority.perc.toFixed(1)) },
+      voter_turnout: {
+        abs: seat.voter_turnout.abs,
+        perc: parseFloat(seat.voter_turnout.perc.toFixed(1)),
+      },
+      votes_rejected: {
+        abs: seat.votes_rejected.abs,
+        perc: parseFloat(seat.votes_rejected.perc.toFixed(1)),
+      },
     };
   });
 
@@ -79,8 +94,8 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
             <Table
               // className="max-h-96 w-full overflow-y-auto"
               // isLoading={data.loading}
-              data={analysisData}
               // columns={generateSchema<Analysis>([
+              data={analysisData}
               enablePagination={15}
               config={[
                 {
@@ -106,23 +121,23 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
                   header: t("majority_%"),
                 },
                 {
-                  accessorKey: "majority.abs",
-                  id: "majority.abs",
+                  accessorKey: "voter_turnout.abs",
+                  id: "voter_turnout.abs",
                   header: t("voter_turnout"),
                 },
                 {
-                  accessorKey: "majority.perc",
-                  id: "majority.perc",
+                  accessorKey: "voter_turnout.perc",
+                  id: "voter_turnout.perc",
                   header: t("voter_turnout_%"),
                 },
                 {
-                  accessorKey: "majority.abs",
-                  id: "majority.abs",
+                  accessorKey: "votes_rejected.abs",
+                  id: "votes_rejected.abs",
                   header: t("rejected_votes"),
                 },
                 {
-                  accessorKey: "majority.perc",
-                  id: "majority.perc",
+                  accessorKey: "votes_rejected.perc",
+                  id: "votes_rejected.perc",
                   header: t("rejected_votes_%"),
                 },
               ]}

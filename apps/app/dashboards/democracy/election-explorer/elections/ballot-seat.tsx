@@ -1,4 +1,4 @@
-import type { BaseResult, Seat, SeatResult } from "../types";
+import type { BaseResult, OverallSeat, SeatResult } from "../types";
 import { Won } from "@components/Badge/election";
 import Card from "@components/Card";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
@@ -23,7 +23,7 @@ import { FunctionComponent, useEffect, useMemo } from "react";
  */
 
 interface BallotSeatProps {
-  seats: Seat[];
+  seats: OverallSeat[];
   state: string;
   election: string | undefined;
 }
@@ -115,7 +115,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
   }, [data.seat_result, seats]);
 
   const SEAT_OPTIONS = seats.map(seat => ({ label: seat.seat, value: seat.seat }));
-  const _seats = useMemo<Seat[]>(() => {
+  const _seats = useMemo<OverallSeat[]>(() => {
     if (!data.seat) return seats;
     return seats.filter(seat => seat.seat.includes(data.seat.value));
   }, [data.seat, seats]);
@@ -146,7 +146,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                   </div>
                   <div className="grid w-full grid-flow-col-dense grid-rows-2 flex-row gap-3 overflow-x-scroll md:flex-col md:overflow-x-clip md:pb-0 lg:flex">
                     {election &&
-                      _seats.map((seat: Seat) => (
+                      _seats.map((seat: OverallSeat) => (
                         <Card
                           key={seat.seat}
                           className="focus:border-primary dark:focus:border-primary-dark hover:border-outlineHover dark:hover:border-outlineHover-dark
