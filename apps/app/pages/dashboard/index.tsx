@@ -12,7 +12,7 @@ const DashboardIndex: Page = ({
   dashboards,
   agency,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
     <>
@@ -22,8 +22,14 @@ const DashboardIndex: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n(null, async () => {
-  const { data } = await get("/dashboard/", { dashboard: "dashboards" });
+export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"], async () => {
+  const [agencyDropdown, data] = await Promise.all([
+    get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
+    get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),
+  ]).catch(e => {
+    throw new Error("Error retrieving dashboards data. Message: " + e);
+  });
+
   return {
     props: {
       meta: {
@@ -33,19 +39,12 @@ export const getStaticProps: GetStaticProps = withi18n(null, async () => {
         agency: null,
       },
       agency: null,
-      sources: data.agencies_all.data,
+      sources: agencyDropdown.data,
       analytics: {
         data_as_of: data.dashboards_top.data_as_of,
-        en: {
-          today: data.dashboards_top.data.en.today,
-          last_month: data.dashboards_top.data.en.last_month,
-          all_time: data.dashboards_top.data.en.all_time,
-        },
-        bm: {
-          today: data.dashboards_top.data.bm.today,
-          last_month: data.dashboards_top.data.bm.last_month,
-          all_time: data.dashboards_top.data.bm.all_time,
-        },
+        today: data.dashboards_top.data.today,
+        last_month: data.dashboards_top.data.last_month,
+        all_time: data.dashboards_top.data.all_time,
       },
       dashboards: data.dashboards_all.data,
     },
