@@ -22,7 +22,7 @@
 }
 
 .table td {
-  @apply w-auto px-2 py-2;
+  @apply border-outline dark:border-washed-dark w-auto border-b px-2 py-2;
 }
 /* .table td:not(:first-child) {
   @apply whitespace-nowrap;
