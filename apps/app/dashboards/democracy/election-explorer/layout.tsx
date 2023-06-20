@@ -4,10 +4,12 @@ import Hero from "@components/Hero";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
+import { WindowContext } from "@hooks/useWindow";
+import { BREAKPOINTS } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode, useContext } from "react";
 
 interface ElectionLayoutProps {
   children: ReactNode;
@@ -16,6 +18,7 @@ interface ElectionLayoutProps {
 const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { pathname } = useRouter();
+  const { breakpoint } = useContext(WindowContext);
 
   const election_navs = [
     {
@@ -62,11 +65,11 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
       />
 
       {/* Navigations */}
-      <div className="border-b-outline dark:border-b-washed-dark flex flex-row gap-2 overflow-x-auto border-b sm:justify-center">
+      <div className="border-b-outline dark:border-b-washed-dark no-scrollbar sticky top-14 z-10 flex flex-row gap-1 overflow-x-auto border-b bg-white pl-3 dark:bg-black sm:justify-center md:pl-0 lg:static">
         {election_navs.map(nav => (
           <At
             className={clx(
-              "flex flex-row items-center gap-1 whitespace-nowrap px-4 py-4 text-center text-base font-medium transition",
+              "flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center text-base font-medium transition lg:p-4",
               pathname.startsWith(nav.url)
                 ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
                 : "text-dim"
@@ -75,7 +78,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
             href={nav.url}
             scrollTop={false}
           >
-            {nav.icon}
+            {breakpoint >= BREAKPOINTS.SM && nav.icon}
             {nav.name}
           </At>
         ))}
