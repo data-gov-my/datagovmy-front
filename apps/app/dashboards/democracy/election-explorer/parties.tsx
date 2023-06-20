@@ -1,23 +1,23 @@
+import ElectionLayout from "./layout";
+import { ElectionEnum, ElectionResource, Party, PartyResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import { Container, Panel, Section, StateDropdown, Tabs } from "@components/index";
+import { toast } from "@components/Toast";
 import type { OptionType } from "@components/types";
+import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
+import { toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
-import type { ElectionResource, Party, PartyResult } from "./types";
-import ElectionLayout from "./layout";
-import { toast } from "@components/Toast";
-import { toDate } from "@lib/helpers";
-import { useCache } from "@hooks/useCache";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -122,6 +122,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     }
     setData("loading", true);
     setData("party", name);
+    setData("state", state);
 
     const route = state
       ? `${routes.ELECTION_EXPLORER}/parties/${encodeURIComponent(name)}/${state}`
@@ -171,8 +172,8 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     <ElectionLayout>
       <Container className="min-h-fit">
         <Section>
-          <div className="lg:grid lg:grid-cols-12">
-            <div className="lg:col-span-10 lg:col-start-2">
+          <div className="grid grid-cols-12">
+            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
               {/* Explore any party's entire electoral history */}
               <h4 className="text-center">{t("party.header")}</h4>
               <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
@@ -207,7 +208,6 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                           setData("state", selected.value);
                           navigateToParty(data.party, selected.value);
                         }}
-                        exclude={["kul", "lbn", "pjy"]}
                         width="inline-block pl-1 min-w-max"
                         anchor="left"
                       />
@@ -218,7 +218,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 onChange={(index: number) => setData("tab_index", index)}
                 className="pb-6"
               >
-                <Panel name={t("parliament_elections")}>
+                <Panel name={t("parlimen")}>
                   <ElectionTable
                     data={elections.parlimen}
                     columns={party_schema}
@@ -227,15 +227,20 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                       <Trans>
                         {t("party.no_data", {
                           party: `$t(dashboard-election-explorer:${params.party_name})`,
-                          context: "parliament",
+                          state: CountryAndStates[data.state],
+                          context: "parlimen",
                         })}
                       </Trans>
                     }
                   />
                 </Panel>
-                <Panel name={t("state_elections")}>
+                <Panel name={t("dun")}>
                   <ElectionTable
-                    data={elections.dun}
+                    data={
+                      data.tab_index === ElectionEnum.Dun && params.state === "mys"
+                        ? []
+                        : elections.dun
+                    }
                     columns={party_schema}
                     isLoading={data.loading}
                     empty={
@@ -243,7 +248,11 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                         {t("party.no_data", {
                           party: `$t(dashboard-election-explorer:${params.party_name})`,
                           state: CountryAndStates[data.state],
-                          context: data.state === "mys" ? "dun_mys" : "dun",
+                          context: ["kul", "lbn", "pjy"].includes(data.state)
+                            ? "dun_wp"
+                            : data.state === "mys"
+                            ? "dun_mys"
+                            : "dun",
                         })}
                       </Trans>
                     }

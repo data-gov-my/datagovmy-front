@@ -24,7 +24,7 @@ const ElectionSeats: Page = ({
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
   try {
-    const name = "Padang Besar, Perlis";
+    const name = "padang-besar-perlis";
     const type = "parlimen";
     const [dropdown, seat] = await Promise.all([
       get("/explorer", {
