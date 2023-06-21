@@ -235,8 +235,8 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                   </Panel>
                 </Tabs>
               </div>
-              <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:gap-6">
-                <div className="border-outline dark:border-washed-dark space-y-6 rounded-xl border-0 p-0 lg:border lg:p-8">
+              <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:gap-6 xl:grid-cols-6">
+                <div className="border-outline dark:border-washed-dark space-y-6 rounded-xl border-0 p-0 lg:border lg:p-8 xl:col-span-2 xl:col-start-2">
                   <h5 className="text-center">{t("trivia.ge_veterans")}</h5>
                   <BarMeter
                     layout="horizontal"
@@ -249,7 +249,7 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                     )}
                   />
                 </div>
-                <div className="border-outline dark:border-washed-dark flex h-max flex-col gap-y-6 rounded-xl border-0 p-0 lg:border lg:p-8">
+                <div className="border-outline dark:border-washed-dark flex h-max flex-col gap-y-6 rounded-xl border-0 p-0 lg:border lg:p-8 xl:col-span-2 xl:col-start-4">
                   <h5 className="text-center">{t("trivia.se_veterans")}</h5>
                   {dun_bar.data ? (
                     <BarMeter
