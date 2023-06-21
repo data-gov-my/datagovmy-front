@@ -192,12 +192,11 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                   <Trans>
                     <span className="text-lg font-normal leading-9">
                       <ImageWithFallback
-                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block items-center rounded border"
+                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
                         src={`/static/images/parties/${params.party_name}.png`}
                         width={32}
                         height={18}
                         alt={t(`${params.party_name}`)}
-                        inline
                       />
                       {t("party.title", {
                         party: `$t(dashboard-election-explorer:${params.party_name})`,
