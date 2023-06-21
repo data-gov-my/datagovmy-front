@@ -26,7 +26,7 @@ type ComboBoxProps = {
   imageSource?: string;
   fallback?: ReactNode;
   styleElectionType?: boolean;
-  loading: boolean;
+  loading?: boolean;
   config?: MatchSorterOptions<ComboBoxOption>;
   virtualise?: boolean;
 };
