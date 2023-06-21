@@ -8,6 +8,7 @@ import { clx } from "@lib/helpers";
 import { matchSorter, MatchSorterOptions } from "match-sorter";
 import { CSSProperties, Fragment, FunctionComponent, ReactNode, useState } from "react";
 import { FixedSizeList } from "react-window";
+import { Spinner } from "..";
 
 interface ComboBoxOption extends OptionType {
   seat_area?: string;
@@ -25,6 +26,7 @@ type ComboBoxProps = {
   imageSource?: string;
   fallback?: ReactNode;
   styleElectionType?: boolean;
+  loading: boolean;
   config?: MatchSorterOptions<ComboBoxOption>;
   virtualise?: boolean;
 };
@@ -39,6 +41,7 @@ const ComboBox: FunctionComponent<ComboBoxProps> = ({
   imageSource = "/static/images/parties/",
   fallback,
   styleElectionType = false,
+  loading = false,
   config = { keys: ["label"] },
   virtualise = false,
 }) => {
@@ -164,7 +167,11 @@ const ComboBox: FunctionComponent<ComboBoxProps> = ({
         >
           <Combobox.Options className="border-outline dark:border-washed-dark absolute z-20 mt-1 max-h-60 w-full rounded-md border bg-white text-sm shadow-[0_6px_24px_rgba(0,0,0,0.1)] focus:outline-none dark:bg-black sm:text-sm">
             {
-              filteredOptions.length === 0 && query !== "" ? (
+              loading ? (
+                <div className="text-dim cursor-deault relative flex select-none flex-row items-center gap-2 px-4 py-2	">
+                  <Spinner loading={loading} /> {t("common:placeholder.loading")}
+                </div>
+              ) : filteredOptions.length === 0 && query !== "" ? (
                 <div className="text-dim relative cursor-default select-none px-4 py-2">
                   {t("common:placeholder.no_results")}
                 </div>
