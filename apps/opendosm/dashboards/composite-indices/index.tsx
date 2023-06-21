@@ -1,24 +1,22 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
-import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
-import type { OptionType } from "@components/types";
+import Hero from "@components/Hero";
 import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
+import { numFormat, toDate } from "@lib/helpers";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
-import { useWatch } from "@hooks/useWatch";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
+
+import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
 
 /**
  * Composite Index Dashboard
  * @overview Status: Live
  */
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 interface CompositeIndexDashboardProps {
   last_updated: number;
   timeseries: any;
@@ -31,13 +29,11 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation();
-  const INDEX_OPTIONS: Array<OptionType> = ["growth_yoy", "growth_mom", "index"].map(
-    (key: string) => ({
-      label: t(`compositeindex.keys.${key}`),
-      value: key,
-    })
-  );
-  const SHADE_OPTIONS: Array<OptionType> = [
+  const INDEX_OPTIONS = ["growth_yoy", "growth_mom", "index"].map((key: string) => ({
+    label: t(`compositeindex.keys.${key}`) as string,
+    value: key,
+  }));
+  const SHADE_OPTIONS = [
     { label: t("compositeindex.keys.no_shade"), value: "no_shade" },
     { label: t("compositeindex.keys.recession_growth"), value: "flag_recession_growth" },
     { label: t("compositeindex.keys.recession_business"), value: "flag_recession_business" },
@@ -69,9 +65,7 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
     timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
   const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -148,21 +142,22 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                 anchor="left"
                 selected={data.index_type}
                 options={INDEX_OPTIONS}
-                onChange={e => setData("index_type", e)}
+                onChange={(e: any) => setData("index_type", e)}
               />
               <Dropdown
                 options={SHADE_OPTIONS}
                 selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
+                onChange={(e: any) => setData("shade_type", e)}
               />
             </div>
 
             <Slider
+              className=""
               type="range"
               value={data.minmax}
               data={timeseries.data[data.index_type.value].x}
               period="month"
-              onChange={(e: [number, number]) => setData("minmax", e)}
+              onChange={e => setData("minmax", e)}
             />
             <Timeseries
               className="h-[350px] w-full"

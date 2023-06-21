@@ -1,9 +1,10 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import InterestRatesDashboard from "@dashboards/interest-rates";
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
-import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "datagovmy-ui/hooks";
+
+import { withi18n } from "datagovmy-ui/decorators";
 
 const InterestRates = ({
   last_updated,
@@ -30,9 +31,7 @@ const InterestRates = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   const { data } = await get("/dashboard", { dashboard: "interest_rates" });
 
   // Fill the "in-betweens".
@@ -106,13 +105,18 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-interest-rates",
+        type: "dashboard",
+        category: "financial-sector",
+        agency: "BNM",
+      },
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
       timeseries_opr: data.timeseries_opr,
     },
   };
-};
+});
 
 export default InterestRates;
