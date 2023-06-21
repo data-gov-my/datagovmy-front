@@ -1,4 +1,3 @@
-import At from "@components/At";
 import AgencyBadge from "@components/Badge/agency";
 import Hero from "@components/Hero";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
@@ -8,8 +7,11 @@ import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode, useContext } from "react";
+
+const At = dynamic(() => import("@components/At"), { ssr: false });
 
 interface ElectionLayoutProps {
   children: ReactNode;
@@ -23,7 +25,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
   const election_navs = [
     {
       name: t("elections"),
-      icon: <SPRIconSolid className="-mb-1" />,
+      icon: <SPRIconSolid />,
       url: routes.ELECTION_EXPLORER.concat("/elections"),
     },
     {
@@ -65,7 +67,12 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
       />
 
       {/* Navigations */}
-      <div className="border-b-outline dark:border-b-washed-dark no-scrollbar sticky top-14 z-10 flex flex-row gap-1 overflow-x-auto border-b bg-white pl-3 dark:bg-black sm:justify-center md:pl-0 lg:static">
+      <div
+        className={clx(
+          "border-b-outline dark:border-b-washed-dark hide-scrollbar sticky top-14 z-20 flex flex-row gap-2 overflow-x-auto border-b bg-white px-3 dark:bg-black sm:justify-center md:pl-0 lg:static",
+          pathname.endsWith("/trivia") ? "justify-end" : "justify-start"
+        )}
+      >
         {election_navs.map(nav => (
           <At
             className={clx(
@@ -78,7 +85,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
             href={nav.url}
             scrollTop={false}
           >
-            {breakpoint >= BREAKPOINTS.SM && nav.icon}
+            {breakpoint > BREAKPOINTS.SM && nav.icon}
             {nav.name}
           </At>
         ))}
