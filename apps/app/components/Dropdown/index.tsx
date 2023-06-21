@@ -285,7 +285,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                   height={240}
                   width={"100%"}
                   itemCount={availableOptions.length}
-                  itemSize={35}
+                  itemSize={36}
                 >
                   {({ index, style }: { index: number; style: CSSProperties }) => {
                     const option = availableOptions[index];
