@@ -27,7 +27,8 @@ import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useMemo, useRef } from "react";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { WindowContext } from "@hooks/useWindow";
 
 /**
  * Election Explorer Dashboard
@@ -62,16 +63,16 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
 
-  const mobileRef = useRef<HTMLDivElement>(null);
-  // useScrollIntersect(mobileRef.current, "translate-y-28");
+  const { scroll } = useContext(WindowContext);
+  const show = useMemo(() => scroll.y > 500, [scroll.y]);
 
   const PANELS = [
     {
-      name: t("election.parliament"),
+      name: t("parlimen"),
       icon: <BuildingLibraryIcon className="mr-1 h-5 w-5" />,
     },
     {
-      name: t("election.state"),
+      name: t("state"),
       icon: <FlagIcon className="mr-1 h-5 w-5" />,
     },
   ];
@@ -111,8 +112,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
 
   const { data, setData } = useData({
     toggle_index: ELECTION_ACRONYM.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
+    tab_index: 0,
     election: ELECTION_ACRONYM,
     state: CURRENT_STATE,
+    showFullTable: table.length <= 10,
   });
 
   const TOGGLE_IS_DUN = data.toggle_index === ElectionEnum.Dun;
@@ -167,15 +170,16 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
         <Container className="min-h-fit">
           {/* Explore any election from Merdeka to the present! */}
           <Section>
-            <h4 className="text-center">{t("election.header_1")}</h4>
+            <h4 className="text-center">{t("header_1")}</h4>
 
             {/* Mobile */}
-            <div className={clx("fixed right-3 top-28 z-10 lg:hidden")} ref={mobileRef}>
+            <div className={clx(show ? "fixed right-3 top-[116px] z-20 lg:hidden" : "hidden")}>
               <Modal
                 trigger={open => (
-                  <button
+                  <Button
+                    variant="dropdown"
                     onClick={open}
-                    className="btn btn-dropdown shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
+                    className="shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
                   >
                     <span>{t("filter")}:</span>
                     <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
@@ -185,13 +189,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                       className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5"
                       aria-hidden="true"
                     />
-                  </button>
+                  </Button>
                 )}
                 title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
               >
                 {close => (
                   <div className="flex-grow space-y-4 overflow-y-auto pb-[100px] pt-4">
-                    <Label label={t("election.election") + ":"} className="text-sm" />
+                    <Label label={t("election") + ":"} className="text-sm" />
                     <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
                       <List
                         options={PANELS.map(item => item.name)}
@@ -201,8 +205,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                       />
                     </div>
                     <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
-                      <Label label={t("election.state") + ":"} className="text-sm" />
-                      <Label label={t("election.election_year") + ":"} className="text-sm" />
+                      <Label label={t("state") + ":"} className="text-sm" />
+                      <Label label={t("election_year") + ":"} className="text-sm" />
                       <StateDropdown
                         currentState={data.state}
                         onChange={selected => {
@@ -232,8 +236,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                       />
                     </div>
                     <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
-                      <Button className="btn btn-primary w-full justify-center" onClick={close}>
-                        {t("election.apply_filters")}
+                      <Button variant="primary" className="w-full justify-center" onClick={close}>
+                        {t("apply_filters")}
                       </Button>
                       <Button className="btn w-full justify-center" onClick={close}>
                         {t("common:common.close")}
@@ -294,56 +298,78 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                 {PANELS.map((panel, index) => (
                   <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
                     <div className="grid grid-cols-12">
-                      <div className="col-span-full col-start-1 space-y-6 lg:col-span-10 lg:col-start-2">
+                      <div className="col-span-full col-start-1 flex flex-col gap-y-3 lg:col-span-10 lg:col-start-2">
+                        <div className="flex flex-col items-baseline justify-between gap-y-2 sm:flex-row md:gap-y-0">
+                          <div className="w-fit text-base font-bold">
+                            {t("election_of", {
+                              context: ELECTION_ACRONYM.startsWith("G") ? "parlimen" : "dun",
+                            })}
+                            <span className="text-primary">{CountryAndStates[CURRENT_STATE]}</span>
+                            <span>: </span>
+                            <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
+                          </div>
+                          <div className="flex w-full justify-end sm:w-auto">
+                            <List
+                              options={[t("table"), t("map"), t("summary")]}
+                              icons={[
+                                <TableCellsIcon key="table_cell_icon" className="mr-1 h-5 w-5" />,
+                                <MapIcon key="map_icon" className="mr-1 h-5 w-5" />,
+                              ]}
+                              current={data.tab_index}
+                              onChange={index => 0} //setData("tab_index", index)}
+                            />
+                          </div>
+                        </div>
                         <Tabs
-                          title={
-                            <div className="text-base font-bold">
-                              {t("election.parliament_of")}
-                              <span className="text-primary">
-                                {CountryAndStates[CURRENT_STATE]}
-                              </span>
-                              <span>: </span>
-                              <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
-                            </div>
-                          }
+                          hidden
+                          current={data.tab_index}
+                          onChange={index => setData("tab_index", index)}
                         >
                           <Panel
-                            name={t("election.table")}
+                            name={t("table")}
                             icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                           >
-                            <ElectionTable
-                              isLoading={false}
-                              data={table}
-                              columns={generateSchema<Party>([
-                                {
-                                  key: "party",
-                                  id: "party",
-                                  header: t("party_name"),
-                                },
-                                {
-                                  key: "seats",
-                                  id: "seats",
-                                  header: t("seats_won"),
-                                },
-                                { key: "votes", id: "votes", header: t("votes_won") },
-                              ])}
-                            />
+                            <>
+                              <ElectionTable
+                                isLoading={false}
+                                data={data.showFullTable ? table : table.slice(0, 10)}
+                                columns={generateSchema<Party>([
+                                  {
+                                    key: "party",
+                                    id: "party",
+                                    header: t("party_name"),
+                                  },
+                                  {
+                                    key: "seats",
+                                    id: "seats",
+                                    header: t("seats_won"),
+                                  },
+                                  { key: "votes", id: "votes", header: t("votes_won") },
+                                ])}
+                              />
+                              {data.showFullTable !== true && (
+                                <Button
+                                  variant="default"
+                                  className="mx-auto mt-6"
+                                  onClick={() => setData("showFullTable", true)}
+                                >
+                                  {t("show_more")}
+                                </Button>
+                              )}
+                            </>
                           </Panel>
-                          {/* <Panel
-                            name={t("election.map")}
-                            icon={<MapIcon className="mr-1 h-5 w-5" />}
-                          >
+                          <Panel name={t("map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
                             <Card className="bg-background dark:bg-background-dark static xl:py-4">
                               <Choropleth
                                 className="h-[400px] w-auto lg:h-[500px]"
-                                type={TOGGLE_IS_DUN ? "dun" : "parlimen"}
+                                type={ELECTION_ACRONYM.startsWith("S") ? "dun" : "parlimen"}
                               />
                             </Card>
-                          </Panel> */}
-                          {/* <Panel name={t("election.summary")}>
+                          </Panel>
+                          <Panel name={t("summary")}>
                             <div className="space-y-6">
                               <p className="text-center text-sm font-medium">
-                                {t("election.simple_majority")}
+                                {t("simple_majority")}
                               </p>
                               <div className="relative h-12 w-full">
                                 <Waffle
@@ -388,10 +414,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                                 ))}
                               </div>
                               <p className="text-dim whitespace-pre-line text-center text-sm">
-                                {t("election.explore")}
+                                {t("explore")}
                               </p>
                             </div>
-                          </Panel> */}
+                          </Panel>
                         </Tabs>
                       </div>
                     </div>
@@ -403,7 +429,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             <BallotSeat seats={seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
 
             {/* Election analysis */}
-            <ElectionAnalysis index={data.toggle_index} seats={seats} />
+            <ElectionAnalysis state={CURRENT_STATE} index={data.toggle_index} seats={seats} />
           </Section>
         </Container>
       </ElectionLayout>
