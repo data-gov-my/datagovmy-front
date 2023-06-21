@@ -118,15 +118,15 @@ button[role="tab"][aria-selected="true"]::after {
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-/* .hide-scrollbar::-webkit-scrollbar {
+.hide-scrollbar::-webkit-scrollbar {
   display: none;
-} */
+}
 
 /* Hide scrollbar for IE, Edge and Firefox */
-/* .hide-scrollbar {
-  -ms-overflow-style: none; 
-  scrollbar-width: none; 
-} */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 /* Hides outline for GeoChoropleth onclick */
 g:focus {
@@ -171,20 +171,4 @@ path:focus {
 
 :focus-visible {
   outline: unset;
-}
-
-/*
-    https://github.com/tailwindlabs/tailwindcss/discussions/2394
-    https://github.com/tailwindlabs/tailwindcss/pull/5732
-*/
-@layer utilities {
-  /* Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
 }
