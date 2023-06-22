@@ -23,11 +23,7 @@ const ChartHeader: FunctionComponent<ChartHeaderProps> = ({
       {[title, state, controls, menu].some(Boolean) && (
         <div className={clx("flex flex-wrap items-start justify-between gap-2", className)}>
           <div>
-            {title && typeof title === "string" ? (
-              <span className="text-lg font-bold dark:text-white">{title}</span>
-            ) : (
-              title
-            )}
+            {title && typeof title === "string" ? <h5>{title}</h5> : title}
             {state && typeof state === "string" ? (
               <p className="text-dim pt-4 text-sm">
                 {t("common:common.data_for", { state: CountryAndStates[state] })}
