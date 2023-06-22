@@ -3,15 +3,16 @@ import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import { CountryAndStates, STATES } from "@lib/constants";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import DrugAddictionDashboard from "@dashboards/drug-addiction";
-import { StateDropdown, StateModal } from "@components/index";
+import { StateDropdown, StateModal } from "datagovmy-ui/components";
 import Layout from "@components/Layout";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const DrugAddictionState: Page = ({
   last_updated,
@@ -47,55 +48,38 @@ DrugAddictionState.layout = (page: ReactNode) => (
       />
     }
   >
-    <StateModal url={routes.DRUG} />
+    {/* <StateModal url={routes.DRUG} /> */}
     {page}
   </Layout>
 );
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
-  let paths: Array<any> = [];
-  STATES.forEach(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
   return {
-    paths: paths,
+    paths: [],
     fallback: false, // can also be true or 'blocking'
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-  const state = params!.state as string;
-  const { data } = await get("/dashboard", { dashboard: "drugs" });
+export const getStaticProps: GetStaticProps = withi18n("common", async ({ params }) => {
+  // const state = params!.state as string;
+  // const { data } = await get("/dashboard", { dashboard: "drugs" });
 
   return {
+    notFound: true,
     props: {
-      ...i18n,
-      state: state,
-      last_updated: new Date().valueOf(),
-      timeseries: {
-        data_as_of: data.timeseries.data_as_of,
-        data: data.timeseries.data[state],
-      },
-      barmeter: {
-        data_as_of: data.bar_chart.data_as_of,
-        data: data.bar_chart.data[state],
-      },
+      // state: state,
+      // last_updated: new Date().valueOf(),
+      // timeseries: {
+      //   data_as_of: data.timeseries.data_as_of,
+      //   data: data.timeseries.data[state],
+      // },
+      // barmeter: {
+      //   data_as_of: data.bar_chart.data_as_of,
+      //   data: data.bar_chart.data[state],
+      // },
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default DrugAddictionState;

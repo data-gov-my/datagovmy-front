@@ -57,6 +57,10 @@
     @apply from-primary hover:to-primary bg-gradient-to-t to-[#3E7AFF] text-white hover:shadow;
   }
 
+  .btn-primary svg {
+    @apply fill-white;
+  }
+
   .btn-default {
     @apply border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark dark:active:bg-washed-dark bg-white text-black dark:active:text-white;
   }

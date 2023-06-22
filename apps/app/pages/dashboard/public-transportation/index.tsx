@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import PublicTransportationDashboard from "@dashboards/transportation/public-transportation";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const PublicTransportation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PublicTransportation: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-public-transportation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PublicTransportationDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

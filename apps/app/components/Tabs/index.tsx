@@ -35,9 +35,9 @@ const Panel: FunctionComponent<PanelProps> = ({ children, name }) => {
   return <>{children}</>;
 };
 
-const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons }) => {
+const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons, className }) => {
   return (
-    <ul className="flex">
+    <ul className={clx("flex", className)}>
       {options.map((option, index) => (
         <li
           key={option}

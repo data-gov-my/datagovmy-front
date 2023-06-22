@@ -8,8 +8,10 @@ import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const PekaB40: Page = ({
+  meta,
   last_updated,
   params,
   timeseries,
@@ -18,7 +20,7 @@ const PekaB40: Page = ({
   const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PekaB40Dashboard
         params={params}
@@ -26,7 +28,7 @@ const PekaB40: Page = ({
         timeseries={timeseries}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

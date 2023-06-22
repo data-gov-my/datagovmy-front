@@ -1,25 +1,21 @@
-import Slider from "@components/Chart/Slider";
-import Chips from "@components/Chips";
-import Dropdown from "@components/Dropdown";
-import Select from "@components/Dropdown/Select";
 import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useWatch } from "@hooks/useWatch";
 import { get } from "@lib/api";
 import { SHORT_LANG } from "@lib/constants";
 import type { ChartDataset } from "chart.js";
-import { useTranslation } from "@hooks/useTranslation";
+
+import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
+import { useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
+
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
-
 /**
  * Consumer Prices (CPI) - Inflation Snapshot Section
  * @overview Status: Live
  */
 
-const Scatter = dynamic(() => import("@components/Chart/Scatter"), { ssr: false });
+const Scatter = dynamic(() => import("datagovmy-ui/charts/scatter"), { ssr: false });
 
-const InflationSnapshot: FunctionComponent = ({}) => {
+const InflationSnapshot: FunctionComponent = () => {
   const { t, i18n } = useTranslation();
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
   const HIGHLIGHT_COLOR = ["#DC2626", "#2563EB", "#FBBF24"];
@@ -134,14 +130,14 @@ const InflationSnapshot: FunctionComponent = ({}) => {
           sublabel={t("consumer_prices.section_4.select_axis", { axis: "X" }) + ":"}
           selected={data.x_axis}
           options={AXES_OPTIONS}
-          onChange={e => setData("x_axis", e)}
+          onChange={(e: any) => setData("x_axis", e)}
         />
         <Dropdown
           anchor="right-0 lg:left-0"
           sublabel={t("consumer_prices.section_4.select_axis", { axis: "Y" }) + ":"}
           selected={data.y_axis}
           options={AXES_OPTIONS}
-          onChange={e => setData("y_axis", e)}
+          onChange={(e: any) => setData("y_axis", e)}
         />
       </div>
       <div className="flex flex-col justify-between gap-2 lg:flex-wrap">
@@ -152,7 +148,7 @@ const InflationSnapshot: FunctionComponent = ({}) => {
               sublabel={t("consumer_prices.section_4.select_granularity") + ":"}
               selected={data.granular_type}
               options={GRANULAR_OPTIONS}
-              onChange={e => setData("granular_type", e)}
+              onChange={(e: any) => setData("granular_type", e)}
             />
 
             <Select
@@ -182,13 +178,12 @@ const InflationSnapshot: FunctionComponent = ({}) => {
       </div>
       <Scatter
         className="mx-auto aspect-square w-full lg:w-3/4 xl:w-1/2"
-        data={{ datasets: activeSnapshot() }}
+        data={activeSnapshot()}
         unitY="%"
         titleX={data.x_axis.label}
         titleY={data.y_axis.label}
       />
       <Slider
-        className="pt-7"
         type="single"
         value={data.snapshot_index}
         data={data.snapshot_x}

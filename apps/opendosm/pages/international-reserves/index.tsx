@@ -2,10 +2,11 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import InternationalReservesDashboard from "@dashboards/international-reserves";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const InternationalReserves: Page = ({
   last_updated,
@@ -30,20 +31,23 @@ const InternationalReserves: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   const { data } = await get("/dashboard", { dashboard: "international_reserves" });
 
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-",
+        type: "dashboard",
+        category: "financial-sector",
+        agency: "BNM",
+      },
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default InternationalReserves;
