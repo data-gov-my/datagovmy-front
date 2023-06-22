@@ -197,6 +197,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                         width={32}
                         height={18}
                         alt={t(`${params.party_name}`)}
+                        inline
                       />
                       {t("party.title", {
                         party: `$t(dashboard-election-explorer:${params.party_name})`,

@@ -8,16 +8,22 @@ interface FallbackProps {
 }
 const Fallback: FunctionComponent<FallbackProps> = ({ children, inline = false }) => {
   return (
-    <div className="border-outline dark:border-outlineHover-dark h-4.5 inline-block w-[32px] rounded border bg-white">
+    <div
+      className={clx(
+        "border-outline dark:border-outlineHover-dark h-4.5 w-[32px] rounded border bg-white",
+        inline && "mr-2 inline-block"
+      )}
+    >
       {children ?? <div className="text-center font-black leading-4 text-black">?</div>}
     </div>
   );
 };
 interface ImageWithFallbackProps extends ImageProps {
   fallback?: ReactNode;
+  inline?: boolean;
 }
 
-const ImageWithFallback = ({ fallback, alt, src, ...props }: ImageWithFallbackProps) => {
+const ImageWithFallback = ({ fallback, alt, src, inline, ...props }: ImageWithFallbackProps) => {
   const [error, setError] = useState<React.SyntheticEvent<HTMLImageElement, Event> | null>(null);
 
   useEffect(() => {
@@ -25,7 +31,7 @@ const ImageWithFallback = ({ fallback, alt, src, ...props }: ImageWithFallbackPr
   }, [src]);
 
   return error ? (
-    <Fallback>{fallback}</Fallback>
+    <Fallback inline={inline}>{fallback}</Fallback>
   ) : (
     <Image alt={alt} onError={setError} src={src} {...props} />
   );
