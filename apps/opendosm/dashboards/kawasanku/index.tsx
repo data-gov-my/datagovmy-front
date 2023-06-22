@@ -1,41 +1,47 @@
-import type { GeoJsonObject } from "geojson";
+import type { BarMeterData } from "datagovmy-ui/charts/bar-meter";
+import type { JitterData } from "datagovmy-ui/charts/jitterplot";
 import type { OptionType } from "@components/types";
-import type { BarMeterData } from "@components/Chart/BarMeter";
-import type { JitterData } from "@components/Chart/Jitterplot";
-import Container from "@components/Container";
-import Hero from "@components/Hero";
-import Section from "@components/Section";
-import { useTranslation } from "@hooks/useTranslation";
+import type { Color } from "datagovmy-ui/hooks";
+import type { GeoJsonObject } from "geojson";
 import { FunctionComponent, useEffect, useMemo } from "react";
-import JitterplotOverlay from "@components/Chart/Jitterplot/overlay";
-import Dropdown from "@components/Dropdown";
-import Button from "@components/Button";
-import Spinner from "@components/Spinner";
+import {
+  Button,
+  Chips,
+  Container,
+  Dropdown,
+  Panel,
+  Section,
+  Spinner,
+  Tabs,
+  Tooltip,
+} from "datagovmy-ui/components";
+import JitterplotOverlay from "datagovmy-ui/charts/jitterplot-overlay";
+import Hero from "@components/Hero";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
-
-import { useData } from "@hooks/useData";
-import { useRouter } from "next/router";
-import { STATES, DISTRICTS, PARLIMENS, DUNS, jitterTooltipFormats } from "@lib/schema/kawasanku";
-import { routes } from "@lib/routes";
-import { track } from "@lib/mixpanel";
-import Tooltip from "@components/Tooltip";
-import Chips from "@components/Chips";
-import { AKSARA_COLOR, CHOROPLETH_YELLOW_GREEN_BLUE_SCALE } from "@lib/constants";
-import Tabs, { Panel } from "@components/Tabs";
-import type { ChoroplethColors } from "@lib/types";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { AKSARA_COLOR } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
+import { track } from "@lib/mixpanel";
+import { routes } from "@lib/routes";
+import { DISTRICTS, DUNS, PARLIMENS, STATES, jitterTooltipFormats } from "@lib/schema/kawasanku";
+import { useRouter } from "next/router";
 
 /**
  * Kawasanku Dashboard
  * @overview Status: Live (Partially on-hold)
  */
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Jitterplot = dynamic(() => import("@components/Chart/Jitterplot"), { ssr: false });
-const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
-const OSMapWrapper = dynamic(() => import("@components/OSMapWrapper"), { ssr: false });
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Jitterplot = dynamic(() => import("datagovmy-ui/charts/jitterplot"), { ssr: false });
+
+const Pyramid = dynamic(() => import("datagovmy-ui/charts/pyramid"), {
+  ssr: false,
+});
+const OSMapWrapper = dynamic(() => import("datagovmy-ui/charts/map-plot"), { ssr: false });
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), {
+  ssr: false,
+});
 
 interface KawasankuDashboardProps {
   area_type?: AreaType | undefined;
@@ -143,14 +149,13 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
     };
   }, [router.events]);
 
-  const indicator_colors = useMemo<ChoroplethColors | string[]>(() => {
+  const indicator_colors = useMemo<Color>(() => {
     if (data.indicator_type.value === "treecover") return "greens";
     if (data.indicator_type.value === "water") return "blues";
     if (["max_elevation", "gini", "poverty"].includes(data.indicator_type.value)) return "reds";
-    if (["nightlights", "electricity"].includes(data.indicator_type.value))
-      return CHOROPLETH_YELLOW_GREEN_BLUE_SCALE;
+    if (["nightlights", "electricity"].includes(data.indicator_type.value)) return "ylGnBu";
 
-    return "RdPu";
+    return "rdPu";
   }, [data.indicator_type]);
 
   const indicator_unit = useMemo<string>(() => {
@@ -216,7 +221,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
               }
               disabled={!data.area_type || data.state.value === "malaysia"}
               selected={data.area}
-              onChange={e => {
+              onChange={(e: { value: string }) => {
                 setData("area", e);
                 setData("loading", true);
                 router.push(
@@ -400,7 +405,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                 selected={data.indicator_type}
                 sublabel={t("common.indicator") + ":"}
                 options={INDICATOR_OPTIONS}
-                onChange={e => setData("indicator_type", e)}
+                onChange={(e: any) => setData("indicator_type", e)}
               />
             }
             onChange={index => setData("indicator_index", index)}
@@ -408,12 +413,12 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
             {AREA_TYPES.filter(type => type.value !== "district").map(type => (
               <Panel name={type.label}>
                 <Choropleth
-                  prefixY={indicator_prefix}
-                  unitY={indicator_unit}
-                  hideValue={data.indicator_type.value === "nightlights"}
+                  prefix={indicator_prefix}
+                  unit={indicator_unit}
+                  // hideValue={data.indicator_type.value === "nightlights"}
                   data={choropleth.data[type.value][data.indicator_type.value]}
-                  colorScale={indicator_colors}
-                  graphChoice={type.value as "parlimen" | "dun"}
+                  color={indicator_colors}
+                  type={type.value as "parlimen" | "dun"}
                 />
               </Panel>
             ))}

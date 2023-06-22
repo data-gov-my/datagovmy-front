@@ -61,6 +61,8 @@ export type BaseResult = {
 
 export type SeatResult = {
   votes: {
+    majority: number;
+    majority_perc: number;
     voter_turnout: number;
     voter_turnout_perc: number;
     votes_rejected: number;
@@ -88,6 +90,11 @@ export type PartyResult = Array<{
   };
 }>;
 
+export type SeatOptions = {
+  seat_name: string;
+  type: ElectionType;
+};
+
 type ElectionParams<T> = T extends Candidate
   ? { candidate_name: string }
   : T extends Party
@@ -96,10 +103,7 @@ type ElectionParams<T> = T extends Candidate
       state: string;
     }
   : T extends Seat
-  ? {
-      seat_name: string;
-      type: ElectionType;
-    }
+  ? SeatOptions
   : never;
 
 export type ElectionResource<T extends Candidate | Party | Seat> = {

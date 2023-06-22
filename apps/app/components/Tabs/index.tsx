@@ -58,7 +58,7 @@ const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons 
 };
 
 const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof List } = ({
-  className = "flex justify-start gap-2",
+  className = "",
   hidden,
   children,
   title,
@@ -76,30 +76,23 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
   return (
     <>
       <Tab.Group selectedIndex={current} onChange={onChange}>
-        <div className={clx("flex flex-wrap items-baseline justify-between gap-4", className)}>
+        <div className={clx("flex flex-wrap items-end justify-between gap-4", className)}>
           <div>
             {title && typeof title === "string" ? (
               <span className="text-base font-bold">{title}</span>
             ) : (
               title
             )}
-            {state && typeof state === "string" ? (
-              <p className="text-dim pt-4 text-sm">
-                {t("common:common.data_for", { state: CountryAndStates[state] })}
-              </p>
-            ) : (
-              <>{state}</>
-            )}
           </div>
 
           <Tab.List
             className={clx(
-              "flex flex-wrap items-center justify-between gap-[10px] lg:items-start lg:justify-end",
+              "flex flex-wrap items-center justify-between gap-2.5",
               hidden && "hidden"
             )}
           >
             {controls}
-            <div className="flex flex-grow flex-wrap">
+            <div className="flex flex-wrap">
               {_children.map(({ props: { name, icon } }, index) => (
                 <Tab
                   key={index}
@@ -124,7 +117,7 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
 
         <Tab.Panels className="w-full">
           {_children.map(({ props: { children } }, index) => (
-            <Tab.Panel className="overflow-auto" key={index}>
+            <Tab.Panel className="overflow-visible" key={index}>
               {children}
             </Tab.Panel>
           ))}

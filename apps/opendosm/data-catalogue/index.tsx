@@ -1,23 +1,22 @@
+import Hero from "@components/Hero";
 import {
   At,
   Button,
   Checkbox,
   Container,
   Dropdown,
-  Hero,
-  Input,
   Modal,
   Radio,
   Section,
-} from "@components/index";
-import { ArrowTrendingUpIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { FunctionComponent, useMemo, useRef } from "react";
-import Label from "@components/Label";
-import { useFilter } from "@hooks/useFilter";
-import { useTranslation } from "@hooks/useTranslation";
+  Sidebar,
+  Label,
+  Search,
+} from "datagovmy-ui/components";
+import { ArrowTrendingUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { useFilter, useTranslation, WindowContext } from "datagovmy-ui/hooks";
 import { OptionType } from "@components/types";
-import Sidebar from "@components/Sidebar";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+
 import { BREAKPOINTS } from "@lib/constants";
 
 /**
@@ -45,7 +44,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 }) => {
   const { t } = useTranslation();
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     let resultCollection: Array<[string, Catalogue[]]> = [];
@@ -81,7 +80,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: windowWidth <= BREAKPOINTS.LG ? "start" : "center",
+              block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }
@@ -186,14 +185,11 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   return (
     <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 lg:pl-2">
       <div className="flex-grow">
-        <Input
-          className="border-0 pl-10"
-          type="search"
+        <Search
+          className="border-0"
           placeholder={t("catalogue.search_placeholder")}
-          autoFocus
-          value={filter.search}
+          query={filter.search}
           onChange={e => setFilter("search", e)}
-          icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
         />
       </div>
       {/* Mobile */}
@@ -216,7 +212,6 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
               className="block text-sm font-medium text-black"
             />
           }
-          fullScreen
         >
           {close => (
             <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28">
