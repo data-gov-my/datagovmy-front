@@ -4,8 +4,10 @@ import { get } from "@lib/api";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ConsumerPrices = ({
+  meta,
   last_updated,
   bar,
   timeseries,
@@ -15,7 +17,7 @@ const ConsumerPrices = ({
   const { t } = useTranslation(["dashboard-consumer-prices", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ConsumerPricesDashboard
         last_updated={last_updated}
@@ -24,7 +26,7 @@ const ConsumerPrices = ({
         timeseries_callouts={timeseries_callouts}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

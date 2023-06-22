@@ -12,8 +12,10 @@ import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 import { withi18n } from "@lib/decorators";
 import { Page } from "@lib/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CovidVaccinationState: Page = ({
+  meta,
   lastUpdated,
   params,
   waffle,
@@ -23,7 +25,7 @@ const CovidVaccinationState: Page = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("page_title"))}
         description={t("description")}
@@ -37,7 +39,7 @@ const CovidVaccinationState: Page = ({
         timeseries={timeseries}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

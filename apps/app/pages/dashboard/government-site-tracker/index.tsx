@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import GovernmentSiteTrackerDashboard from "@dashboards/digitalisation/government-site-tracker";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const GovernmentSiteTracker: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const GovernmentSiteTracker: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-government-site-tracker", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GovernmentSiteTrackerDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import IncomeTaxationDashboard from "@dashboards/economy/income-taxation";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const IncomeTaxation: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const IncomeTaxation: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IncomeTaxationDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

@@ -4,8 +4,10 @@ import { get } from "@lib/api";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const GDP = ({
+  meta,
   last_updated,
   timeseries,
   timeseries_callouts,
@@ -13,14 +15,14 @@ const GDP = ({
   const { t } = useTranslation(["dashboard-gdp", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GDPDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

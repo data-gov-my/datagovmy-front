@@ -6,8 +6,10 @@ import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer/elections";
 import { withi18n } from "@lib/decorators";
 import { Party } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ElectionExplorerIndex: Page = ({
+  meta,
   params,
   seats,
   selection,
@@ -16,7 +18,7 @@ const ElectionExplorerIndex: Page = ({
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionExplorerDashboard
         params={params}
@@ -24,7 +26,7 @@ const ElectionExplorerIndex: Page = ({
         selection={selection}
         table={table}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

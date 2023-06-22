@@ -11,8 +11,10 @@ import { StateDropdown, StateModal } from "@components/index";
 import { routes } from "@lib/routes";
 import { clx } from "@lib/helpers";
 import Fonts from "@config/font";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CovidVaccination: Page = ({
+  meta,
   params,
   timeseries,
   statistics,
@@ -22,7 +24,7 @@ const CovidVaccination: Page = ({
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("page_title")} description={t("description")} keywords={""} />
       <COVIDVaccinationDashboard
         params={params}
@@ -32,7 +34,7 @@ const CovidVaccination: Page = ({
         barmeter={barmeter}
         waffle={waffle}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

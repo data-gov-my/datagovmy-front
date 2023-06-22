@@ -9,8 +9,10 @@ import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useTranslation } from "next-i18next";
 import { withi18n } from "@lib/decorators";
 import Fonts from "@config/font";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const COVID19State: Page = ({
+  meta,
   params,
   last_updated,
   snapshot_bar,
@@ -21,7 +23,7 @@ const COVID19State: Page = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("dashboard-covid-19.header"))}
         description={t("dashboard-covid-19.description")}
@@ -36,7 +38,7 @@ const COVID19State: Page = ({
         util_chart={util_chart}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

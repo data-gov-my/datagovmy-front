@@ -12,8 +12,10 @@ import StateModal from "@components/Modal/StateModal";
 import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const BloodDonation: Page = ({
+  meta,
   last_updated,
   params,
   timeseries_all,
@@ -45,7 +47,7 @@ const BloodDonation: Page = ({
   });
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords="" />
       <BloodDonationDashboard
         last_updated={last_updated}
@@ -65,7 +67,7 @@ const BloodDonation: Page = ({
         map_facility={map_facility}
         choropleth_malaysia_blood_donation={choropleth_malaysia_blood_donation}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

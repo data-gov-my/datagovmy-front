@@ -42,7 +42,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                   onClick={close}
                 />
 
-                <Nav.Item title={"API Docs"} link="#" onClick={close} />
+                <Nav.Item title={t("common:nav.api_docs")} link="#" onClick={close} external />
                 <Nav.Item
                   title={t("common:nav.community")}
                   key="/community"

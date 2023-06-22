@@ -15,10 +15,10 @@ const DashboardAgency: Page = ({
   const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
       <Dashboard agency={agency} sources={sources} analytics={analytics} dashboards={dashboards} />
-    </>
+    </AnalyticsProvider>
   );
 };
 

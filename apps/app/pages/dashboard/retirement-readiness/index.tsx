@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import RetirementReadinessDashboard from "@dashboards/economy/retirement-readiness";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const RetirementReadiness: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const RetirementReadiness: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-retirement-readiness", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <RetirementReadinessDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

@@ -10,8 +10,10 @@ import { routes } from "@lib/routes";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const BloodDonationState: Page = ({
+  meta,
   last_updated,
   params,
   timeseries_all,
@@ -42,7 +44,7 @@ const BloodDonationState: Page = ({
   });
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
@@ -66,7 +68,7 @@ const BloodDonationState: Page = ({
         }}
         choropleth_malaysia_blood_donation={choropleth_malaysia_blood_donation}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
