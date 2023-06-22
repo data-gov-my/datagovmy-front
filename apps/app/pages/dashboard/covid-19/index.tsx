@@ -8,8 +8,10 @@ import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const COVID19: Page = ({
+  meta,
   params,
   last_updated,
   snapshot_bar,
@@ -20,7 +22,7 @@ const COVID19: Page = ({
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVID19Dashboard
         params={params}
@@ -30,7 +32,7 @@ const COVID19: Page = ({
         timeseries={timeseries}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

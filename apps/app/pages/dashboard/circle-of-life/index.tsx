@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CircleofLifeDashboard from "@dashboards/demography/circle-of-life";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const CircleofLife: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const CircleofLife: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-circle-of-life", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CircleofLifeDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

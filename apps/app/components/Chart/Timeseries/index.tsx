@@ -405,11 +405,13 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
         </div>
       ) : (
         <div className="flex flex-col gap-y-6">
-          <div className="flex flex-col gap-y-3">
-            <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-            {stats && <Stats data={stats} />}
-            {subheader && <div>{subheader}</div>}
-          </div>
+          {[menu, title, controls, state, stats, subheader].some(Boolean) && (
+            <div className="flex flex-col gap-y-3">
+              <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+              {stats && <Stats data={stats} />}
+              {subheader && <div>{subheader}</div>}
+            </div>
+          )}
           <div className={className}>
             <Chart
               ref={_ref}

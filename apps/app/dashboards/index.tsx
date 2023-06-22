@@ -7,10 +7,10 @@ import {
   Container,
   Dropdown,
   Hero,
-  Input,
   Section,
   Tabs,
 } from "@components/index";
+import Search from "@components/Search";
 import { OptionType } from "@components/types";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 import { ArrowUpRightIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -245,14 +245,11 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
             enableSearch
             enableClear
           />
-          <Input
-            className="border-0 "
-            type="search"
+          <Search
+            className="w-full border-0"
             placeholder={t("search_placeholder")}
-            autoFocus
-            value={data.search}
-            onChange={e => onSearch(e)}
-            icon={<MagnifyingGlassIcon className="h-4 w-4 lg:h-5 lg:w-5" />}
+            query={data.search}
+            onChange={e => typeof e === "string" && onSearch(e)}
           />
           {renderClear("hidden lg:block")}
         </div>

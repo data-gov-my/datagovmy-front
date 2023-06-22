@@ -2,6 +2,7 @@ import Metadata from "@components/Metadata";
 import { Layout, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
 import ElectionTriviaDashboard from "@dashboards/democracy/election-explorer/trivia";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
@@ -11,6 +12,7 @@ import type { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const ElectionTrivia: Page = ({
+  meta,
   dun_bar,
   params,
   parlimen_bar,
@@ -19,7 +21,7 @@ const ElectionTrivia: Page = ({
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionTriviaDashboard
         dun_bar={dun_bar}
@@ -27,7 +29,7 @@ const ElectionTrivia: Page = ({
         parlimen_bar={parlimen_bar}
         table_top={table_top}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

@@ -79,14 +79,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         background="red"
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim"}>{t("description")}</p>
-            <div className="pt-6">
-              <StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />
-            </div>
-          </>
-        }
+        description={[t("description"), "text-dim"]}
+        action={<StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />}
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
