@@ -1,6 +1,5 @@
 {
-    "what-is-openapi": "What is Open API?",
-    "about-docs": "About this Docs",
+    "quickstart": "Quickstart Guide",
     "authentication": "Authentication",
     "request-query": "Request Query",
     "response-format": "Response Format"
