@@ -20,13 +20,21 @@ type NavItemProps = {
   link: string;
   onClick: () => void;
   className?: string;
+  external?: boolean;
 };
 
 type NavFunctionComponent = FunctionComponent<NavRootProps> & {
   Item: typeof Item;
 };
 
-const Item: FunctionComponent<NavItemProps> = ({ link, onClick, className, icon, title }) => {
+const Item: FunctionComponent<NavItemProps> = ({
+  link,
+  onClick,
+  className,
+  icon,
+  title,
+  external = false,
+}) => {
   const { pathname } = useRouter();
   return (
     <At
@@ -38,6 +46,7 @@ const Item: FunctionComponent<NavItemProps> = ({ link, onClick, className, icon,
         pathname.startsWith(link) && link !== "/" ? "bg-washed dark:bg-washed-dark" : "",
         className
       )}
+      external={external}
     >
       {icon}
       {title}

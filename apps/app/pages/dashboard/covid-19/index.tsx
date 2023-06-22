@@ -8,20 +8,21 @@ import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const COVID19: Page = ({
+  meta,
   params,
   last_updated,
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  util_chart,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVID19Dashboard
         params={params}
@@ -29,10 +30,9 @@ const COVID19: Page = ({
         snapshot_bar={snapshot_bar}
         snapshot_graphic={snapshot_graphic}
         timeseries={timeseries}
-        util_chart={util_chart}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -83,7 +83,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
           vents_line: data.timeseries_vents.data.line,
         },
       },
-      util_chart: data.util_chart,
       statistics: data.statistics,
     },
   };

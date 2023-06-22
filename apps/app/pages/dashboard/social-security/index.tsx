@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import SocialSecurityDashboard from "@dashboards/economy/social-security";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const SocialSecurity: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const SocialSecurity: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-social-security", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SocialSecurityDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

@@ -6,8 +6,9 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ImmigrationDashboard from "@dashboards/demography/immigration";
 import { withi18n } from "@lib/decorators";
-
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 const Immigration: Page = ({
+  meta,
   choropleth,
   countries,
   last_updated,
@@ -19,7 +20,7 @@ const Immigration: Page = ({
   const { t } = useTranslation(["dashboard-immigration", "common", "countries"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ImmigrationDashboard
         choropleth={choropleth}
@@ -30,7 +31,7 @@ const Immigration: Page = ({
         timeseries_country={timeseries_country}
         timeseries_country_callout={timeseries_country_callout}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

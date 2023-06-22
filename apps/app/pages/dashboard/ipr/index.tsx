@@ -9,8 +9,10 @@ import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const IPR: Page = ({
+  meta,
   choropleth,
   last_updated,
   params,
@@ -20,7 +22,7 @@ const IPR: Page = ({
   const { t } = useTranslation(["dashboard-ipr", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IPRDashboard
         choropleth={choropleth}
@@ -29,7 +31,7 @@ const IPR: Page = ({
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

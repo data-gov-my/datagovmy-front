@@ -10,8 +10,10 @@ import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const FireandRescueState: Page = ({
+  meta,
   choropleth,
   last_updated,
   params,
@@ -21,7 +23,7 @@ const FireandRescueState: Page = ({
   const { t } = useTranslation(["dashboard-fire-and-rescue", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <FireandRescueDashboard
         choropleth={choropleth}
@@ -30,7 +32,7 @@ const FireandRescueState: Page = ({
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 FireandRescueState.layout = (page, props) => (

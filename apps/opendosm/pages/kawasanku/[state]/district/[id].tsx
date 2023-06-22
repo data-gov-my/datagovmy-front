@@ -1,14 +1,15 @@
 import type { GeoJsonObject } from "geojson";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import KawasankuDashboard from "@dashboards/kawasanku";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { STATE_MAP, DISTRICTS } from "@lib/schema/kawasanku";
 import { get } from "@lib/api";
 import { useState } from "react";
-import { useWatch } from "@hooks/useWatch";
+import { withi18n } from "datagovmy-ui/decorators";
+import dynamic from "next/dynamic";
 
 const KawasankuArea: Page = ({
   ctx,
@@ -22,15 +23,15 @@ const KawasankuArea: Page = ({
   const { t } = useTranslation();
   const [geo, setGeo] = useState<undefined | GeoJsonObject>(undefined);
 
-  useWatch(
-    () => {
-      import(`@lib/geojson/kawasanku/district/${ctx.id}`).then(item => {
-        setGeo(item.default as unknown as GeoJsonObject);
-      });
-    },
-    [ctx.id],
-    true
-  );
+  // useWatch(
+  //   () => {
+  //     import(`datagovmy-ui/geojson/district/${ctx.id}`).then(item => {
+  //       setGeo(item.default as unknown as GeoJsonObject);
+  //     });
+  //   },
+  //   [ctx.id],
+  //   true
+  // );
 
   return (
     <>
@@ -55,80 +56,60 @@ const KawasankuArea: Page = ({
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
-  /* First visit: SSR, consequent visits: ISR */
-
-  //   let paths: Array<any> = [];
-
-  //   STATES.filter(state => state.value !== "malaysia").forEach(state => {
-  //     DISTRICTS[state.value].forEach(({ value }) => {
-  //       paths = paths.concat([
-  //         {
-  //           params: {
-  //             state: state.value,
-  //             id: value,
-  //           },
-  //         },
-  //         {
-  //           params: {
-  //             state: state.value,
-  //             id: value,
-  //           },
-  //           locale: "ms-MY",
-  //         },
-  //       ]);
-  //     });
-  //   });
-
   return {
     paths: [],
     fallback: "blocking",
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+  // const { data } = await get("/dashboard/", {
+  //   "dashboard": "kawasanku_admin",
+  //   "area": params!.id,
+  //   "area-type": "district",
+  // });
 
-  const { data } = await get("/dashboard/", {
-    "dashboard": "kawasanku_admin",
-    "area": params!.id,
-    "area-type": "district",
-  });
-
-  const options = Object.entries(DISTRICTS)
-    .sort((a: [string, unknown], b: [string, unknown]) =>
-      a[0] === params!.state ? -1 : a[0].localeCompare(b[0])
-    )
-    .flatMap(([key, districts]) =>
-      districts.map(({ label, value }) => ({
-        label: `${label}, ${STATE_MAP[key]}`,
-        value: value,
-      }))
-    );
+  // const options = Object.entries(DISTRICTS)
+  //   .sort((a: [string, unknown], b: [string, unknown]) =>
+  //     a[0] === params!.state ? -1 : a[0].localeCompare(b[0])
+  //   )
+  //   .flatMap(([key, districts]) =>
+  //     districts.map(({ label, value }) => ({
+  //       label: `${label}, ${STATE_MAP[key]}`,
+  //       value: value,
+  //     }))
+  //   );
 
   return {
+    notFound: true,
     props: {
-      ...i18n,
-      ctx: params,
-      bar: data.bar_chart,
-      jitterplot: data.jitter_chart,
-      pyramid: data.pyramid_chart,
-      jitterplot_options: options,
-      population_callout: {
-        total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
-        male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
-        female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
-          ?.y,
+      meta: {
+        id: "dashboard-kawasanku",
+        type: "dashboard",
+        category: "demography",
+        agency: "DOSM",
       },
-      choropleth: {
-        data_as_of: data.choropleth_parlimen.data_as_of,
-        data: {
-          dun: data.choropleth_dun.data,
-          parlimen: data.choropleth_parlimen.data,
-        },
-      },
+      // ctx: params,
+      // bar: data.bar_chart,
+      // jitterplot: data.jitter_chart,
+      // pyramid: data.pyramid_chart,
+      // jitterplot_options: options,
+      // population_callout: {
+      //   total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
+      //   male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
+      //   female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
+      //     ?.y,
+      // },
+      // choropleth: {
+      //   data_as_of: data.choropleth_parlimen.data_as_of,
+      //   data: {
+      //     dun: data.choropleth_dun.data,
+      //     parlimen: data.choropleth_parlimen.data,
+      //   },
+      // },
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default KawasankuArea;

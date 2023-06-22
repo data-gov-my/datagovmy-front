@@ -11,7 +11,7 @@ const Nav: FunctionComponent<NavProps> = ({ isTabletNavOpen, children }) => {
       {/* MOBILE NAV MENU */}
       <div
         className={[
-          "fixed top-[57px] left-0 w-full flex-col gap-0 bg-white py-1 px-0 shadow-lg md:hidden md:gap-1 md:p-1",
+          "fixed left-0 top-[57px] w-full flex-col gap-0 bg-white px-0 py-1 shadow-lg md:hidden md:gap-1 md:p-1",
           isTabletNavOpen ? "flex" : "hidden",
         ].join(" ")}
       >

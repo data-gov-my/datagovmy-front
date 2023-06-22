@@ -6,15 +6,19 @@ import { withi18n } from "@lib/decorators";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const CarPopularity: Page = ({ queryOptions }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const CarPopularity: Page = ({
+  meta,
+  queryOptions,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CarPopularityDashboard queryOptions={queryOptions} />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

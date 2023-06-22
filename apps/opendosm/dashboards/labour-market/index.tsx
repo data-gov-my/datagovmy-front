@@ -1,26 +1,23 @@
-import { Hero, Container, Tabs, Panel, Section, Dropdown } from "@components/index";
-import Slider from "@components/Chart/Slider";
+import Hero from "@components/Hero";
+import { Container, Section, Slider } from "datagovmy-ui/components";
+
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { default as Image } from "next/image";
-import { useTranslation } from "@hooks/useTranslation";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import type { OptionType } from "@components/types";
 import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
+import dynamic from "next/dynamic";
 
 /**
  * Labour Market Dashboard
  * @overview Status: Live (Partially on-hold)
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-// const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-// const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
-// const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 
 interface LabourMarketProps {
   last_updated: number;

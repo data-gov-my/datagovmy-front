@@ -1,7 +1,7 @@
-import Dropdown from "@components/Dropdown";
+import { Dropdown } from "datagovmy-ui/components";
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import "highlight.js/styles/shades-of-purple.css";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
 
 interface ErrorProps {

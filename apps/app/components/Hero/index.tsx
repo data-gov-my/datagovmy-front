@@ -1,7 +1,8 @@
-import { FunctionComponent, ReactNode, useMemo } from "react";
+import { FunctionComponent, ReactNode, useContext, useMemo } from "react";
 import Container from "@components/Container";
-import { clx, toDate } from "@lib/helpers";
+import { clx, numFormat, toDate } from "@lib/helpers";
 import { useTranslation } from "next-i18next";
+import { AnalyticsContext } from "@hooks/useAnalytics";
 
 type ConditionalHeroProps =
   | {
@@ -10,6 +11,7 @@ type ConditionalHeroProps =
       header?: never;
       category?: never;
       description?: never;
+      action?: never;
       agencyBadge?: never;
     }
   | HeroDefault;
@@ -20,6 +22,7 @@ type HeroDefault = {
   header?: [text: string, className?: string];
   category?: [text: string, className?: string];
   description?: [text: string, className?: string] | ReactNode;
+  action?: ReactNode;
   agencyBadge?: ReactNode;
 };
 
@@ -35,10 +38,12 @@ const Hero: FunctionComponent<HeroProps> = ({
   category,
   header,
   description,
+  action,
   last_updated,
   agencyBadge,
 }) => {
   const { t, i18n } = useTranslation();
+  const { result } = useContext(AnalyticsContext);
 
   const background_style = useMemo<string>(() => {
     switch (background) {
@@ -82,23 +87,34 @@ const Hero: FunctionComponent<HeroProps> = ({
                 </div>
               )}
 
-              {(header || description) && (
+              {(header || description || result?.all_time_view) && (
                 <div className="space-y-3">
                   {header && <h2 className={clx("text-black", header[1])}>{header[0]}</h2>}
+
                   {description && Array.isArray(description) ? (
                     <p className={clx("text-dim xl:w-2/3", description[1])}>{description[0]}</p>
                   ) : (
                     description
                   )}
+                  {result?.all_time_view && (
+                    <p className="text-dim text-sm">
+                      {numFormat(result.all_time_view, "standard")} {t("common:common.views")}
+                    </p>
+                  )}
                 </div>
               )}
 
-              {last_updated && (
-                <p className="text-dim text-sm">
-                  {t("common:common.last_updated", {
-                    date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-                  })}
-                </p>
+              {(action || last_updated) && (
+                <div className="space-y-3">
+                  {action}
+                  {last_updated && (
+                    <p className="text-dim text-sm">
+                      {t("common:common.last_updated", {
+                        date: toDate(last_updated, "dd MMM yyyy, HH:mm a", i18n.language),
+                      })}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </>

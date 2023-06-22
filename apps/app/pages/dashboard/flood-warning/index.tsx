@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import FloodWarningDashboard from "@dashboards/environment/flood-warning";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const FloodWarning: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const FloodWarning: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-flood-warning", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <FloodWarningDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

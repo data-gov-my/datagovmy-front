@@ -6,8 +6,10 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import ReserveMoneyDashboard from "@dashboards/financial-sector/reserve-money";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ReserveMoney: Page = ({
+  meta,
   last_updated,
   timeseries,
   timeseries_callouts,
@@ -15,14 +17,14 @@ const ReserveMoney: Page = ({
   const { t } = useTranslation(["dashboard-reserve-money", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ReserveMoneyDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

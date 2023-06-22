@@ -29,6 +29,7 @@ const namespace = [
   "dashboard-interest-rates",
   "dashboard-international-reserves",
   "dashboard-internet-penetration",
+  "dashboard-ktmb-explorer",
   "dashboard-money-supply",
   "dashboard-name-popularity",
   "dashboard-organ-donation",
