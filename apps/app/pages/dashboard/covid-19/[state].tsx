@@ -35,7 +35,6 @@ const COVID19State: Page = ({
         snapshot_bar={snapshot_bar}
         snapshot_graphic={snapshot_graphic}
         timeseries={timeseries}
-        util_chart={util_chart}
         statistics={statistics}
       />
     </AnalyticsProvider>
@@ -55,22 +54,6 @@ COVID19State.layout = (page, props) => (
 );
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
-  //   let paths: Array<any> = [];
-  //   STATES.forEach(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
   return {
     paths: [],
     fallback: "blocking",
@@ -114,7 +97,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
           vents_line: data.timeseries_vents.data.line,
         },
       },
-      util_chart: data.util_chart,
       statistics: data.statistics,
     },
   };

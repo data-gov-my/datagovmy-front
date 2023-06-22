@@ -17,7 +17,6 @@ const COVID19: Page = ({
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  util_chart,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
@@ -31,7 +30,6 @@ const COVID19: Page = ({
         snapshot_bar={snapshot_bar}
         snapshot_graphic={snapshot_graphic}
         timeseries={timeseries}
-        util_chart={util_chart}
         statistics={statistics}
       />
     </AnalyticsProvider>
@@ -85,7 +83,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
           vents_line: data.timeseries_vents.data.line,
         },
       },
-      util_chart: data.util_chart,
       statistics: data.statistics,
     },
   };
