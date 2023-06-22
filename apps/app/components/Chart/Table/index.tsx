@@ -21,9 +21,7 @@ import {
   FilterFn,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-
-import { ChevronLeftIcon, ChevronRightIcon, ArrowsUpDownIcon } from "@heroicons/react/24/solid";
-import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/20/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { CountryAndStates } from "@lib/constants";
 import Image from "next/image";
@@ -31,6 +29,8 @@ import { useTranslation } from "@hooks/useTranslation";
 import { default as debounce } from "lodash/debounce";
 import type { DebouncedFunc } from "lodash";
 import { clx } from "@lib/helpers";
+import { UpDownIcon } from "@components/Icon";
+import Button from "@components/Button";
 
 export interface TableConfigColumn {
   id: string;
@@ -114,12 +114,12 @@ const Table: FunctionComponent<TableProps> = ({
   const [sorting, setSorting] = useState<SortingState>(sorts);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { t } = useTranslation();
+  const { t } = useTranslation("catalogue");
 
   const sortTooltip = (sortDir: "asc" | "desc" | false) => {
-    if (sortDir === false) return "Sort";
-    else if (sortDir === "desc") return "Desc order";
-    else if (sortDir === "asc") return "Asc order";
+    if (sortDir === false) return t("sort");
+    else if (sortDir === "desc") return t("desc_order");
+    else if (sortDir === "asc") return t("asc_order");
 
     return undefined;
   };
@@ -141,10 +141,10 @@ const Table: FunctionComponent<TableProps> = ({
     getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
     sortingFns: {
       localeNumber: (row_a: any, row_b: any, column_id: any): number => {
-        const [a, b] = [
-          Number(row_a.getValue(column_id).replaceAll(",", "")),
-          Number(row_b.getValue(column_id).replaceAll(",", "")),
-        ];
+        let [a, b] = [row_a.getValue(column_id), row_b.getValue(column_id)];
+        if (typeof a === "string" && typeof b === "string") {
+          [a, b] = [Number(a.replaceAll(",", "")), Number(b.replaceAll(",", ""))];
+        }
         return a > b ? 1 : -1;
       },
     },
@@ -166,7 +166,7 @@ const Table: FunctionComponent<TableProps> = ({
 
   const calcStickyLeft = (cellId: string) => {
     const ele = document.getElementById(cellId)?.previousElementSibling;
-    return ele !== undefined && ele !== null ? ele.clientWidth : 0;
+    return ele !== undefined && ele !== null ? ele.clientWidth + 2 : 0; // + 2 for border width
   };
 
   return (
@@ -197,10 +197,12 @@ const Table: FunctionComponent<TableProps> = ({
                       colSpan={header.colSpan}
                       className={clx(
                         freeze?.includes(header.id) && "sticky-col",
-                        "border-outline dark:border-washed-dark whitespace-nowrap border-b-2 py-[10px] font-medium"
+                        "border-outline dark:border-washed-dark border-b-2 py-[10px] font-medium"
                       )}
                       style={{
                         left: freeze?.includes(header.id) ? calcStickyLeft(header.id) : 0,
+                        maxWidth: header.getSize(),
+                        minWidth: header.getSize(),
                       }}
                     >
                       {header.isPlaceholder ? null : (
@@ -231,21 +233,27 @@ const Table: FunctionComponent<TableProps> = ({
                           </div>
                           {header.subHeaders.length < 1 && (
                             <span
-                              className="ml-2 inline-block"
+                              className="ml-1 inline-block"
                               title={sortTooltip(header.column.getIsSorted())}
                             >
                               {
                                 {
                                   asc: (
-                                    <ArrowUpIcon className="inline-block h-4 w-auto text-black dark:text-white" />
+                                    <UpDownIcon
+                                      className="h-5 w-5 text-black dark:text-white"
+                                      transform="down"
+                                    />
                                   ),
                                   desc: (
-                                    <ArrowDownIcon className="inline-block h-4 w-auto text-black dark:text-white" />
+                                    <UpDownIcon
+                                      className="h-5 w-5 text-black dark:text-white"
+                                      transform="up"
+                                    />
                                   ),
                                 }[header.column.getIsSorted() as "asc" | "desc"]
                               }
                               {header.column.getCanSort() && !header.column.getIsSorted() && (
-                                <ArrowsUpDownIcon className="text-dim inline-block h-4 w-auto" />
+                                <UpDownIcon className="h-5 w-5 text-black dark:text-white" />
                               )}
                             </span>
                           )}
@@ -276,7 +284,7 @@ const Table: FunctionComponent<TableProps> = ({
                         lastCellInGroup.id === cell.column.id && "text-sm",
                         relative ? relativeColor(value as number, inverse) : "bg-opacity-20",
                         scale && scaleColor(value as number),
-                        freeze?.includes(cell.column.id) && "sticky-col border-l",
+                        freeze?.includes(cell.column.id) && "sticky-col",
                         cell.column.columnDef.className
                           ? cell.column.columnDef.className
                           : cellClass
@@ -288,6 +296,9 @@ const Table: FunctionComponent<TableProps> = ({
                           className={classNames}
                           style={{
                             left: freeze?.includes(cell.column.id) ? calcStickyLeft(cell.id) : 0,
+                            maxWidth: cell.column.getSize(),
+                            minWidth: cell.column.getSize(),
+                            // width: cell.column.getSize(),
                           }}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -313,8 +324,8 @@ const Table: FunctionComponent<TableProps> = ({
         <div
           className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium ${className}`}
         >
-          <button
-            className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
+          <Button
+            variant="default"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -327,7 +338,7 @@ const Table: FunctionComponent<TableProps> = ({
               )}
             />
             {t("common:common.previous")}
-          </button>
+          </Button>
 
           <span className="flex items-center gap-1 text-center text-sm">
             {t("common:common.page_of", {
@@ -335,8 +346,8 @@ const Table: FunctionComponent<TableProps> = ({
               total: table.getPageCount(),
             })}
           </span>
-          <button
-            className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
+          <Button
+            variant="default"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
@@ -349,7 +360,7 @@ const Table: FunctionComponent<TableProps> = ({
                   : "text-black dark:text-white"
               )}
             />
-          </button>
+          </Button>
         </div>
       )}
     </>
