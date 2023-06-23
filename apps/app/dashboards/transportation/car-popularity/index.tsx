@@ -163,7 +163,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
                     <th className="px-1 py-2 text-start text-sm font-medium">{t("Car model")}</th>
-                    <th className="px-1 py-2 text-start text-sm font-medium">
+                    <th className="px-1 py-2 text-end text-sm font-medium">
                       {t("Total cars sold")}
                     </th>
                   </tr>
@@ -179,7 +179,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                         >
                           {i + 1}
                         </td>
-                        <td className="px-1 py-2 text-start text-sm font-medium">{`${item.maker} ${item.model}`}</td>
+                        <td className="px-1 py-2 text-start text-sm font-medium capitalize">
+                          {`${item.maker} ${item.model}`.toLocaleLowerCase()}
+                        </td>
                         <td className="px-1 py-2 text-end text-sm font-medium">
                           {item.vehicles.toLocaleString()}
                         </td>
@@ -194,7 +196,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
                     <th className="px-1 py-2 text-start text-sm font-medium">{t("Car brand")}</th>
-                    <th className="px-1 py-2 text-start text-sm font-medium">
+                    <th className="px-1 py-2 text-end text-sm font-medium">
                       {t("Total cars sold")}
                     </th>
                   </tr>
@@ -209,7 +211,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                       >
                         {i + 1}
                       </td>
-                      <td className="px-1 py-2 text-start text-sm font-medium">{`${item.maker}`}</td>
+                      <td className="px-1 py-2 text-start text-sm font-medium capitalize">
+                        {item.maker.toLocaleLowerCase()}
+                      </td>
                       <td className="px-1 py-2 text-end text-sm font-medium">
                         {item.vehicles.toLocaleString()}
                       </td>
