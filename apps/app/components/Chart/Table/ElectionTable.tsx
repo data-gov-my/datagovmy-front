@@ -96,16 +96,18 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         );
       case "party":
         return (
-          <div className="flex items-center">
-            <ImageWithFallback
-              className="border-outline dark:border-outlineHover-dark absolute rounded border"
-              src={`/static/images/parties/${value}.png`}
-              width={32}
-              height={18}
-              alt={t(value)}
-              style={{ width: "auto", maxWidth: "32px", height: "auto", maxHeight: "32px" }}
-            />
-            <span className="pl-10">
+          <div className="flex items-center gap-1.5">
+            <div className="relative flex h-auto w-8 justify-center">
+              <ImageWithFallback
+                className="border-outline dark:border-outlineHover-dark  rounded border"
+                src={`/static/images/parties/${value}.png`}
+                width={32}
+                height={18}
+                alt={t(value)}
+                style={{ width: "auto", maxWidth: "32px", height: "auto", maxHeight: "32px" }}
+              />
+            </div>
+            <span className="">
               {!table
                 .getAllColumns()
                 .map(col => col.id)
@@ -164,7 +166,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         );
       case "party":
         return (
-          <div className="flex flex-row items-center gap-1.5">
+          <div className="flex items-center gap-1.5">
             <div className="relative flex h-auto w-8 justify-center">
               <ImageWithFallback
                 className="border-outline dark:border-outlineHover-dark rounded border"
