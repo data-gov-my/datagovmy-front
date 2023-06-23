@@ -22,11 +22,12 @@ import { toast } from "@components/Toast";
 
 interface CarPopularityProps {
   queryOptions: Record<string, any>;
+  tableData: Record<string, any>;
 }
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
-const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) => {
+const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, tableData }) => {
   const { t, i18n } = useTranslation(["dashboard-car-popularity", "common"]);
   const { breakpoint } = useContext(WindowContext);
 
@@ -39,7 +40,11 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
     loading: false,
   });
 
-  // timeseries data
+  const yearOptions: OptionType[] = Object.keys(tableData.top_makers.data).map(val => {
+    return { label: new Date(val).getFullYear().toString(), value: val };
+  });
+
+  // table & timeseries data
   const { data, setData } = useData({
     x: [],
     y: [],
@@ -56,6 +61,11 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
       78252, 60954, 88490, 15135, 17795, 43085, 54941, 20484, 35517, 91158, 68620, 59882, 94217,
       3477, 45860, 82643, 6464, 554, 16730, 20919,
     ],
+
+    // table data
+    selectedYear: yearOptions.at(-1),
+    topMakers: tableData.top_makers.data[yearOptions.at(-1)?.value || -1],
+    topModels: tableData.top_models.data[yearOptions.at(-1)?.value || -1],
   });
 
   const filterManufacturers = useMemo<Array<OptionType>>(() => {
@@ -114,7 +124,6 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         console.error(e);
       });
   };
-
   return (
     <>
       <Hero
@@ -131,6 +140,66 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         }
       />
       <Container className="min-h-screen">
+        {/* Best selling cars models and brands in {year} */}
+        <Section>
+          <div className="flex place-content-center place-items-center gap-[12px]">
+            <h4 className="text-center">{t("Best selling cars model and brands in")}</h4>
+            <Dropdown
+              width="w-fit"
+              selected={data.selectedYear}
+              onChange={e => {
+                setData("selectedYear", e);
+                setData("topMakers", tableData.top_makers.data[data.selectedYear.value]);
+                setData("topModels", tableData.top_models.data[data.selectedYear.value]);
+              }}
+              options={yearOptions}
+            />
+          </div>
+
+          <div className="flex flex-row gap-3">
+            <table className="w-full table-auto">
+              <thead>
+                <tr className="font-body text-sm font-thin">
+                  <th>#</th>
+                  <th>{t("Car model")}</th>
+                  <th>{t("Total cars sold")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.topModels.map(
+                  (item: { maker: string; model: string; vehicles: number }, i: number) => (
+                    <tr>
+                      <td>{i + 1}</td>
+                      <td>{`${item.maker} ${item.model}`}</td>
+                      <td>{item.vehicles}</td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+
+            <table className="w-full table-auto">
+              <thead>
+                <tr className="font-body text-sm font-thin">
+                  <th>#</th>
+                  <th>{t("Car model")}</th>
+                  <th>{t("Total cars sold")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.topMakers.map((item: { maker: string; vehicles: number }, i: number) => (
+                  <tr>
+                    <td>{i + 1}</td>
+                    <td>{item.maker}</td>
+                    <td>{item.vehicles}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Section>
+
+        {/* How popular is your car? */}
         <Section title={t("section_title")} date={data.data_as_of}>
           <div className="flex flex-col gap-8 lg:flex-row">
             <div className="w-full lg:w-fit">
