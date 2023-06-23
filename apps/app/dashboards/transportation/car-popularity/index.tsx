@@ -180,7 +180,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                           {i + 1}
                         </td>
                         <td className="py-1.5 text-start text-sm font-medium">{`${item.maker} ${item.model}`}</td>
-                        <td className="py-1.5 text-start text-sm font-medium">
+                        <td className="py-1.5 text-end text-sm font-medium">
                           {item.vehicles.toLocaleString()}
                         </td>
                       </tr>
@@ -210,7 +210,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                         {i + 1}
                       </td>
                       <td className="py-1.5 text-start text-sm font-medium">{`${item.maker}`}</td>
-                      <td className="py-1.5 text-start text-sm font-medium">
+                      <td className="py-1.5 text-end text-sm font-medium">
                         {item.vehicles.toLocaleString()}
                       </td>
                     </tr>
