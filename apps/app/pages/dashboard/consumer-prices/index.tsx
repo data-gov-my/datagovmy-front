@@ -32,7 +32,7 @@ const ConsumerPrices = ({
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-consumer-prices", async () => {
   const { data } = await get("/dashboard", { dashboard: "consumer_price_index" });
-
+  console.log(data.data_last_updated);
   return {
     props: {
       meta: {
@@ -41,7 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-consumer-price
         category: "economy",
         agency: "DOSM",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       bar: data.bar_chart,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

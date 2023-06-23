@@ -32,7 +32,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 
 interface FireandRescueProps {
   choropleth: any;
-  last_updated: any;
+  last_updated: string;
   params: { state: string };
   timeseries: any;
   timeseries_callout: any;

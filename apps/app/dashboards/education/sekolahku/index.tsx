@@ -25,6 +25,7 @@ import { toast } from "@components/Toast";
 
 interface SekolahkuProps {
   dropdown_data: Record<string, string>[];
+  last_updated: string;
   total_schools: number;
   sekolahku_info: any;
   sekolahku_barmeter: any;

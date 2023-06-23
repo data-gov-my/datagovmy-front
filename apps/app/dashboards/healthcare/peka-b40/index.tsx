@@ -22,7 +22,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 
 interface PekaB40Props {
-  last_updated: number;
+  last_updated: string;
   params: { state: string };
   timeseries: any;
   choropleth: any;

@@ -31,7 +31,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 
 interface COVID19Props {
   params: Record<string, any>;
-  last_updated: number;
+  last_updated: string;
   snapshot_bar: any;
   snapshot_graphic: any;
   timeseries: any;

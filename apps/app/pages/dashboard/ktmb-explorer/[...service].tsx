@@ -81,7 +81,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         B_to_A: B_to_A ? B_to_A.data.timeseries.data : null,
         B_to_A_callout: B_to_A ? B_to_A.data.timeseries_callout.data : null,
         dropdown: dropdown.data,
-        last_updated: Date.now(),
+        last_updated: A_to_B.data_last_updated,
         params: { service: service, origin: origin, destination: destination },
       },
     };

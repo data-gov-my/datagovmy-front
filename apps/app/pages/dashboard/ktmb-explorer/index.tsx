@@ -70,7 +70,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer"
         B_to_A: B_to_A.data.timeseries.data,
         B_to_A_callout: B_to_A.data.timeseries_callout.data,
         dropdown: dropdown.data.data,
-        last_updated: Date.now(),
+        last_updated: A_to_B.data.data_last_updated,
         params: {},
       },
     };

@@ -84,7 +84,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "public-safety",
           agency: "BOMBA",
         },
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         params: params,
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,

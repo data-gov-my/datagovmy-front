@@ -32,7 +32,7 @@ const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
 interface OrganDonationProps {
-  last_updated: number;
+  last_updated: string;
   params: { state: string };
   timeseries: any;
   choropleth: any;

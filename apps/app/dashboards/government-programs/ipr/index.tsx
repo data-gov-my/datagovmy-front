@@ -30,7 +30,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 
 interface IPRProps {
   choropleth: any;
-  last_updated: any;
+  last_updated: string;
   params: { state: string };
   timeseries: any;
   timeseries_callout: any;
@@ -46,9 +46,9 @@ const IPR: FunctionComponent<IPRProps> = ({
   const { t, i18n } = useTranslation(["dashboard-ipr", "common"]);
   const FILTER_OPTIONS: Array<OptionType> = [
     "absolute",
-    "absolute_hardcore_poor",
-    "per_capita",
-    "per_capita_hardcore_poor",
+    // "absolute_hardcore_poor",
+    // "per_capita",
+    // "per_capita_hardcore_poor",
   ].map((key: string) => ({
     label: t(key),
     value: key,

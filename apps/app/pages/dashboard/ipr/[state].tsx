@@ -86,7 +86,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async ({
         category: "government-programs",
         agency: "EPU",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       params: params,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout.data,
