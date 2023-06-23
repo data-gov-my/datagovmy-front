@@ -49,14 +49,9 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         background="purple"
         category={[t("common:categories.healthcare"), "text-purple"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.PEKA_B40} currentState={currentState} />
-            </div>
-          </>
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={"ProtectHealth Corporation"}
@@ -64,7 +59,6 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
             icon={<PHCorpIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">

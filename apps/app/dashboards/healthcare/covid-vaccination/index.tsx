@@ -124,14 +124,8 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         background="green"
         category={[t("common:categories.healthcare"), "text-green-600"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-6">
-              <StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />
-            </div>
-          </>
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge

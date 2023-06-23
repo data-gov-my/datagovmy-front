@@ -104,14 +104,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         background="red"
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.COVID_19} currentState={currentState} />
-            </div>
-          </>
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Health (MoH)"}
@@ -119,7 +114,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             icon={<MOHIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">

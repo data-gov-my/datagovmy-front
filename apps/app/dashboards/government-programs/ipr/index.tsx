@@ -70,14 +70,9 @@ const IPR: FunctionComponent<IPRProps> = ({
         background="gray"
         category={[t("common:categories.government_programs"), "text-black dark:text-white"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.IPR} currentState={params.state} />
-            </div>
-          </>
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.IPR} currentState={params.state} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:epu.full")}
@@ -85,7 +80,6 @@ const IPR: FunctionComponent<IPRProps> = ({
             icon={<IPREPUIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
