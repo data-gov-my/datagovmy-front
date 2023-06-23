@@ -114,12 +114,12 @@ const Table: FunctionComponent<TableProps> = ({
   const [sorting, setSorting] = useState<SortingState>(sorts);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { t } = useTranslation("catalogue");
+  const { t } = useTranslation("common");
 
   const sortTooltip = (sortDir: "asc" | "desc" | false) => {
-    if (sortDir === false) return t("sort");
-    else if (sortDir === "desc") return t("desc_order");
-    else if (sortDir === "asc") return t("asc_order");
+    if (sortDir === false) return t("common:common.sort");
+    else if (sortDir === "desc") return t("common:common.desc_order");
+    else if (sortDir === "asc") return t("common:common.asc_order");
 
     return undefined;
   };
@@ -166,7 +166,7 @@ const Table: FunctionComponent<TableProps> = ({
 
   const calcStickyLeft = (cellId: string) => {
     const ele = document.getElementById(cellId)?.previousElementSibling;
-    return ele !== undefined && ele !== null ? ele.clientWidth + 2 : 0; // + 2 for border width
+    return ele !== undefined && ele !== null ? ele.clientWidth : 0;
   };
 
   return (
@@ -201,15 +201,14 @@ const Table: FunctionComponent<TableProps> = ({
                       )}
                       style={{
                         left: freeze?.includes(header.id) ? calcStickyLeft(header.id) : 0,
-                        maxWidth: header.getSize(),
-                        minWidth: header.getSize(),
+                        // width: header.getSize(),
                       }}
                     >
                       {header.isPlaceholder ? null : (
                         <div
                           className={clx(
                             header.subHeaders.length < 1
-                              ? "flex select-none justify-between gap-1 px-2 text-left text-sm"
+                              ? "flex select-none items-center justify-between gap-1 px-2 text-left text-sm"
                               : !header.column.columnDef.header
                               ? "hidden"
                               : "pr-2 text-end",
@@ -253,7 +252,7 @@ const Table: FunctionComponent<TableProps> = ({
                                 }[header.column.getIsSorted() as "asc" | "desc"]
                               }
                               {header.column.getCanSort() && !header.column.getIsSorted() && (
-                                <UpDownIcon className="h-5 w-5 text-black dark:text-white" />
+                                <UpDownIcon className="-m-1 h-5 w-5 text-black dark:text-white" />
                               )}
                             </span>
                           )}
@@ -296,9 +295,8 @@ const Table: FunctionComponent<TableProps> = ({
                           className={classNames}
                           style={{
                             left: freeze?.includes(cell.column.id) ? calcStickyLeft(cell.id) : 0,
-                            maxWidth: cell.column.getSize(),
-                            minWidth: cell.column.getSize(),
-                            // width: cell.column.getSize(),
+                            // minWidth: cell.column.getSize(),
+                            width: cell.column.getSize(),
                           }}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -351,7 +349,7 @@ const Table: FunctionComponent<TableProps> = ({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            {t("common:common.next")}{" "}
+            {t("common:common.next")}
             <ChevronRightIcon
               className={clx(
                 "h-4 w-4",
