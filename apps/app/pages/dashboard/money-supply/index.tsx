@@ -4,8 +4,10 @@ import { get } from "@lib/api";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const MoneySupply = ({
+  meta,
   last_updated,
   table_summary,
   timeseries,
@@ -14,7 +16,7 @@ const MoneySupply = ({
   const { t } = useTranslation(["dashboard-money-supply", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <MoneySupplyDashboard
         last_updated={last_updated}
@@ -22,7 +24,7 @@ const MoneySupply = ({
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

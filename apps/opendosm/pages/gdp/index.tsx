@@ -1,9 +1,10 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import GDPDashboard from "@dashboards/gdp";
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
-import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "datagovmy-ui/hooks";
+
+import { withi18n } from "datagovmy-ui/decorators";
 
 const GDP = ({
   last_updated,
@@ -28,20 +29,23 @@ const GDP = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   const { data } = await get("/dashboard", { dashboard: "gross_domestic_product" });
 
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-gdp",
+        type: "dashboard",
+        category: "economy",
+        agency: "DOSM",
+      },
       last_updated: new Date().valueOf(),
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },
     revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default GDP;

@@ -1,17 +1,12 @@
-import Slider from "@components/Chart/Slider";
-import Chips from "@components/Chips";
-import Dropdown from "@components/Dropdown";
-import Select from "@components/Dropdown/Select";
+import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
+
 import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useWatch } from "@hooks/useWatch";
+import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
 import { SHORT_LANG } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import groupBy from "lodash/groupBy";
-import { useTranslation } from "@hooks/useTranslation";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -20,8 +15,9 @@ import { FunctionComponent, useCallback } from "react";
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 const InflationTrends: FunctionComponent = ({}) => {
   const { t, i18n } = useTranslation();
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
@@ -155,7 +151,7 @@ const InflationTrends: FunctionComponent = ({}) => {
             sublabel={t("consumer_prices.section_3.select_granularity") + ":"}
             selected={data.granular_type}
             options={GRANULAR_OPTIONS}
-            onChange={e => setData("granular_type", e)}
+            onChange={(e: any) => setData("granular_type", e)}
           />
 
           <Select

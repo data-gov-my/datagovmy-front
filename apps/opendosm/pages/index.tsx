@@ -1,26 +1,25 @@
 import type { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import dynamic from "next/dynamic";
 import { get } from "@lib/api";
-import { useTranslation } from "@hooks/useTranslation";
-
-import Metadata from "@components/Metadata";
+import {
+  Container,
+  Section,
+  Tabs,
+  Panel,
+  Metadata,
+  Card,
+  At,
+  Slider,
+} from "datagovmy-ui/components";
 import Hero from "@components/Hero";
-import Container from "@components/Container";
-import Section from "@components/Section";
-import { default as Tabs, Panel } from "@components/Tabs";
-import Slider from "@components/Chart/Slider";
+import { useSlice, useData, useTranslation, WindowContext } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, BREAKPOINTS, SHORT_LANG } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
-import Card from "@components/Card";
 import { EyeIcon, DocumentArrowDownIcon } from "@heroicons/react/24/solid";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
-import At from "@components/At";
-import { ReactNode, useEffect, useMemo } from "react";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { ReactNode, useContext, useEffect, useMemo } from "react";
 import { routes } from "@lib/routes";
 import {
   UsersIcon,
@@ -33,8 +32,11 @@ import {
   InflationIcon,
 } from "@components/Icon";
 import { track } from "@lib/mixpanel";
+import { withi18n } from "datagovmy-ui/decorators";
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 
 const Home: Page = ({
   highlights,
@@ -42,136 +44,136 @@ const Home: Page = ({
   timeseries_callouts,
   analytics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const windowWidth = useWindowWidth();
+  const { breakpoint } = useContext(WindowContext);
   const { t, i18n } = useTranslation();
 
-  const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
-  });
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
+  // const { data, setData } = useData({
+  //   minmax: [0, timeseries.data.x.length - 1],
+  // });
+  // const { coordinate } = useSlice(timeseries.data, data.minmax);
 
-  const yieldPrefix = (value: number) => (value >= 0 ? "+" : "");
+  // const yieldPrefix = (value: number) => (value >= 0 ? "+" : "");
 
-  const yieldCallout = (key: string) => {
-    return [
-      {
-        title: t("home.section_3.daily"),
-        value:
-          yieldPrefix(timeseries_callouts.data[key].callout1) +
-          numFormat(timeseries_callouts.data[key].callout1, "standard"),
-      },
-      {
-        title: t("home.section_3.total"),
-        value: numFormat(timeseries_callouts.data[key].callout2, "standard"),
-      },
-    ];
-  };
+  // const yieldCallout = (key: string) => {
+  //   return [
+  //     {
+  //       title: t("home.section_3.daily"),
+  //       value:
+  //         yieldPrefix(timeseries_callouts.data[key].callout1) +
+  //         numFormat(timeseries_callouts.data[key].callout1, "standard"),
+  //     },
+  //     {
+  //       title: t("home.section_3.total"),
+  //       value: numFormat(timeseries_callouts.data[key].callout2, "standard"),
+  //     },
+  //   ];
+  // };
 
-  const PANELS = [
-    {
-      name: t("home.section_2.today"),
-      data: analytics.today,
-    },
-    {
-      name: t("home.section_2.past_month"),
-      data: analytics.last_month,
-    },
-    {
-      name: t("home.section_2.all_time"),
-      data: analytics.all_time,
-    },
-  ];
+  // const PANELS = [
+  //   {
+  //     name: t("home.section_2.today"),
+  //     data: analytics.today,
+  //   },
+  //   {
+  //     name: t("home.section_2.past_month"),
+  //     data: analytics.last_month,
+  //   },
+  //   {
+  //     name: t("home.section_2.all_time"),
+  //     data: analytics.all_time,
+  //   },
+  // ];
 
-  interface StatProps {
-    icon: ReactNode;
-    title: string;
-    url: string;
-    value: string;
-  }
+  // interface StatProps {
+  //   icon: ReactNode;
+  //   title: string;
+  //   url: string;
+  //   value: string;
+  // }
 
-  const STATS = useMemo<StatProps[]>(
-    () => [
-      {
-        icon: <UsersIcon className="h-6 w-6" />,
-        title: t("home.section_1.stats.population"),
-        url: routes.KAWASANKU,
-        value: numFormat(
-          highlights.data.population.callout,
-          "compact",
-          [1, 1],
-          "long",
-          i18n.language,
-          true
-        ),
-      },
-      {
-        icon: <EconomicGrowthIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.economic_growth"),
-        url: routes.GDP,
-        value: numFormat(highlights.data.growth.callout, "compact", [1, 1]) + "%",
-      },
-      {
-        icon: <BankIcon className="h-4 w-4" />,
-        title: t("home.section_1.stats.bnm_opr"),
-        url: routes.INTEREST_RATES,
-        value: numFormat(highlights.data.opr.callout, "compact", [2, 2]) + "%",
-      },
-      {
-        icon: <UnemploymentIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.unemployment"),
-        url: routes.LABOUR_MARKET,
-        value: numFormat(highlights.data.unemployment.callout, "compact", [1, 1]) + "%",
-      },
-      {
-        icon: <InflationIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.inflation"),
-        url: routes.CONSUMER_PRICES,
-        value: numFormat(highlights.data.inflation.callout, "compact", [1, 1]) + "%",
-      },
-      {
-        icon: <ProductionIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.production_cost"),
-        url: routes.PRODUCER_PRICES,
-        value:
-          yieldPrefix(highlights.data.ppi.callout) +
-          numFormat(highlights.data.ppi.callout, "compact", [1, 1]) +
-          "%",
-      },
-      {
-        icon: <IndustryIcon className="h-4 w-4" />,
-        title: t("home.section_1.stats.industrial_production"),
-        url: routes.INDUSTRIAL_PRODUCTION,
-        value:
-          yieldPrefix(highlights.data.ipi.callout) +
-          numFormat(highlights.data.ipi.callout, "compact", [1, 1]) +
-          "%",
-      },
-      {
-        icon: <RetailTradeIcon className="h-5 w-5" />,
-        title: t("home.section_1.stats.wholesale_retail"),
-        url: routes.WHOLESALE_RETAIL,
-        value:
-          yieldPrefix(highlights.data.iowrt.callout) +
-          numFormat(highlights.data.iowrt.callout, "compact", [1, 1]) +
-          "%",
-      },
-    ],
-    []
-  );
+  // const STATS = useMemo<StatProps[]>(
+  //   () => [
+  //     {
+  //       icon: <UsersIcon className="h-6 w-6" />,
+  //       title: t("home.section_1.stats.population"),
+  //       url: routes.KAWASANKU,
+  //       value: numFormat(
+  //         highlights.data.population.callout,
+  //         "compact",
+  //         [1, 1],
+  //         "long",
+  //         i18n.language,
+  //         true
+  //       ),
+  //     },
+  //     {
+  //       icon: <EconomicGrowthIcon className="h-5 w-5" />,
+  //       title: t("home.section_1.stats.economic_growth"),
+  //       url: routes.GDP,
+  //       value: numFormat(highlights.data.growth.callout, "compact", [1, 1]) + "%",
+  //     },
+  //     {
+  //       icon: <BankIcon className="h-4 w-4" />,
+  //       title: t("home.section_1.stats.bnm_opr"),
+  //       url: routes.INTEREST_RATES,
+  //       value: numFormat(highlights.data.opr.callout, "compact", [2, 2]) + "%",
+  //     },
+  //     {
+  //       icon: <UnemploymentIcon className="h-5 w-5" />,
+  //       title: t("home.section_1.stats.unemployment"),
+  //       url: routes.LABOUR_MARKET,
+  //       value: numFormat(highlights.data.unemployment.callout, "compact", [1, 1]) + "%",
+  //     },
+  //     {
+  //       icon: <InflationIcon className="h-5 w-5" />,
+  //       title: t("home.section_1.stats.inflation"),
+  //       url: routes.CONSUMER_PRICES,
+  //       value: numFormat(highlights.data.inflation.callout, "compact", [1, 1]) + "%",
+  //     },
+  //     {
+  //       icon: <ProductionIcon className="h-5 w-5" />,
+  //       title: t("home.section_1.stats.production_cost"),
+  //       url: routes.PRODUCER_PRICES,
+  //       value:
+  //         yieldPrefix(highlights.data.ppi.callout) +
+  //         numFormat(highlights.data.ppi.callout, "compact", [1, 1]) +
+  //         "%",
+  //     },
+  //     {
+  //       icon: <IndustryIcon className="h-4 w-4" />,
+  //       title: t("home.section_1.stats.industrial_production"),
+  //       url: routes.INDUSTRIAL_PRODUCTION,
+  //       value:
+  //         yieldPrefix(highlights.data.ipi.callout) +
+  //         numFormat(highlights.data.ipi.callout, "compact", [1, 1]) +
+  //         "%",
+  //     },
+  //     {
+  //       icon: <RetailTradeIcon className="h-5 w-5" />,
+  //       title: t("home.section_1.stats.wholesale_retail"),
+  //       url: routes.WHOLESALE_RETAIL,
+  //       value:
+  //         yieldPrefix(highlights.data.iowrt.callout) +
+  //         numFormat(highlights.data.iowrt.callout, "compact", [1, 1]) +
+  //         "%",
+  //     },
+  //   ],
+  //   []
+  // );
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "home",
-      name_en: "Home",
-      name_bm: "Utama",
-      route: routes.HOME,
-    });
-  }, []);
+  // useEffect(() => {
+  //   track("page_view", {
+  //     type: "dashboard",
+  //     id: "home",
+  //     name_en: "Home",
+  //     name_bm: "Utama",
+  //     route: routes.HOME,
+  //   });
+  // }, []);
 
   return (
     <>
-      <Metadata keywords={"opendosm data negara inflasi"} />
+      <Metadata title="OpenDOSM" keywords={"opendosm data negara inflasi"} />
 
       <Hero
         background="home-banner"
@@ -180,7 +182,8 @@ const Home: Page = ({
         <h3 className="mb-3">{t("home.title")}</h3>
         <p className="max-w-3xl text-dim">{t("home.description")}</p>
       </Hero>
-      <Container className="min-h-screen">
+      <Container className="min-h-screen"></Container>
+      {/* <Container className="min-h-screen">
         <Section title={t("home.section_1.title")}>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
             {STATS.map(({ icon, title, value, url }: StatProps) => (
@@ -212,11 +215,11 @@ const Home: Page = ({
             {PANELS.map((panel, index) => (
               <Panel name={panel.name as string} key={index}>
                 <div className="grid grid-cols-2 gap-6 py-6 lg:grid-cols-4">
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">{t("home.section_2.dashboards")}</h4>
                     <h3 className="font-medium">16</h3>
                   </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">
                       {t("home.section_2.datasets_available")}
                     </h4>
@@ -224,24 +227,24 @@ const Home: Page = ({
                       {numFormat(analytics.total.catalogue, "standard")}
                     </h3>
                   </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">{t("home.section_2.resource_views")}</h4>
                     <h3 className="font-medium">
                       {numFormat(
                         panel.data.resource_views,
-                        windowWidth > BREAKPOINTS.MD ? "standard" : "compact",
+                        breakpoint > BREAKPOINTS.MD ? "standard" : "compact",
                         2
                       )}
                     </h3>
                   </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3">
+                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
                     <h4 className="flex gap-3 text-base">
                       {t("home.section_2.resource_downloads")}
                     </h4>
                     <h3 className="font-medium">
                       {numFormat(
                         panel.data.resource_downloads,
-                        windowWidth > BREAKPOINTS.MD ? "standard" : "compact",
+                        breakpoint > BREAKPOINTS.MD ? "standard" : "compact",
                         2
                       )}
                     </h3>
@@ -249,7 +252,7 @@ const Home: Page = ({
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type="dashboard"
                       ranks={panel.data.dashboard_views}
@@ -257,7 +260,7 @@ const Home: Page = ({
                       icon={<EyeIcon className="h-4 w-4" />}
                     />
                   </Card>
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type={"catalogue"}
                       ranks={panel.data.dataset_views}
@@ -265,7 +268,7 @@ const Home: Page = ({
                       icon={<EyeIcon className="h-4 w-4" />}
                     />
                   </Card>
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type={"catalogue"}
                       ranks={panel.data.dataset_downloads}
@@ -273,7 +276,7 @@ const Home: Page = ({
                       icon={<DocumentArrowDownIcon className="h-4 w-4" />}
                     />
                   </Card>
-                  <Card className="space-y-3">
+                  <Card className="space-y-3 bg-white p-6">
                     <Ranking
                       type={"catalogue"}
                       ranks={panel.data.graphic_downloads}
@@ -289,7 +292,7 @@ const Home: Page = ({
         <Section title={t("home.section_3.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <Timeseries
-              className="h-[350px] w-full"
+              className="h-[250px] w-full"
               title={t("home.keys.views")}
               data={{
                 labels: coordinate.x,
@@ -308,7 +311,7 @@ const Home: Page = ({
               stats={yieldCallout("views")}
             />
             <Timeseries
-              className="h-[350px] w-full"
+              className="h-[250px] w-full"
               title={t("home.keys.users")}
               data={{
                 labels: coordinate.x,
@@ -327,7 +330,7 @@ const Home: Page = ({
               stats={yieldCallout("users")}
             />
             <Timeseries
-              className="h-[350px] w-full"
+              className="h-[250px] w-full"
               title={t("home.keys.downloads")}
               data={{
                 labels: coordinate.x,
@@ -352,10 +355,10 @@ const Home: Page = ({
             type="range"
             value={data.minmax}
             data={timeseries.data.x}
-            onChange={e => setData("minmax", e)}
+            onChange={(e: any) => setData("minmax", e)}
           />
         </Section>
-      </Container>
+      </Container> */}
     </>
   );
 };
@@ -404,40 +407,41 @@ const Ranking = ({ title, ranks, type = "catalogue", icon }: RankingProps) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-  const { data } = await get("/dashboard", { dashboard: "homepage" });
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   return {
     props: {
-      ...i18n,
-      timeseries_callouts: data.statistics,
-      timeseries: data.timeseries,
-      highlights: data.highlight,
-      analytics: {
-        data_as_of: data.table_summary.data_as_of,
-        today: {
-          resource_views: data.metrics_stats.data.today.resource_views.count,
-          resource_downloads: data.metrics_stats.data.today.resource_downloads.count,
-          ...data.table_summary.data.today,
-        },
-        last_month: {
-          resource_views: data.metrics_stats.data.last_month.resource_views.count,
-          resource_downloads: data.metrics_stats.data.last_month.resource_downloads.count,
-          ...data.table_summary.data.last_month,
-        },
-        all_time: {
-          resource_views: data.metrics_stats.data.all_time.resource_views.count,
-          resource_downloads: data.metrics_stats.data.all_time.resource_downloads.count,
-          ...data.table_summary.data.all_time,
-        },
-        total: {
-          catalogue: data.total_catalog,
-        },
+      meta: {
+        id: "home",
+        type: "misc",
+        category: null,
+        agency: null,
       },
+      // timeseries_callouts: data.statistics,
+      // timeseries: data.timeseries,
+      // highlights: data.highlight,
+      // analytics: {
+      //   data_as_of: data.table_summary.data_as_of,
+      //   today: {
+      //     resource_views: data.metrics_stats.data.today.resource_views.count,
+      //     resource_downloads: data.metrics_stats.data.today.resource_downloads.count,
+      //     ...data.table_summary.data.today,
+      //   },
+      //   last_month: {
+      //     resource_views: data.metrics_stats.data.last_month.resource_views.count,
+      //     resource_downloads: data.metrics_stats.data.last_month.resource_downloads.count,
+      //     ...data.table_summary.data.last_month,
+      //   },
+      //   all_time: {
+      //     resource_views: data.metrics_stats.data.all_time.resource_views.count,
+      //     resource_downloads: data.metrics_stats.data.all_time.resource_downloads.count,
+      //     ...data.table_summary.data.all_time,
+      //   },
+      //   total: {
+      //     catalogue: data.total_catalog,
+      //   },
+      // },
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default Home;

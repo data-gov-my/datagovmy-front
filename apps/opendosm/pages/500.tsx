@@ -1,10 +1,11 @@
-import Container from "@components/Container";
+import { Container } from "datagovmy-ui/components";
 import ErrorCode from "@components/Error";
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+import { withi18n } from "datagovmy-ui/decorators";
 
 const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
@@ -25,11 +26,15 @@ const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Error500;
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "500",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
     },
   };
-};
+});

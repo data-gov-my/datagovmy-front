@@ -35,7 +35,6 @@ interface COVID19Props {
   snapshot_bar: any;
   snapshot_graphic: any;
   timeseries: any;
-  util_chart: any;
   statistics: any;
 }
 
@@ -45,7 +44,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  util_chart,
   statistics,
 }) => {
   const currentState = params.state;

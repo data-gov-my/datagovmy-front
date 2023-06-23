@@ -1,24 +1,27 @@
-import { Container, Dropdown, Hero, Panel, Section, StateDropdown, Tabs } from "@components/index";
-import Image from "next/image";
-import { FunctionComponent, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { flip, numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useData } from "@hooks/useData";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { useRouter } from "next/router";
+import Hero from "@components/Hero";
 import type { OptionType } from "@components/types";
-import { routes } from "@lib/routes";
+import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
+import { flip, numFormat, toDate } from "@lib/helpers";
 import { track } from "@lib/mixpanel";
+import { routes } from "@lib/routes";
+import { Container, Dropdown, Panel, Section, StateDropdown, Tabs } from "datagovmy-ui/components";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { FunctionComponent, useEffect } from "react";
 
 /**
  * Violent / Property Crime Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 
 interface CrimeDashboardProps {
   last_updated: number;
@@ -145,16 +148,17 @@ const CrimeDashboard: FunctionComponent<CrimeDashboardProps> = ({
                 sublabel={t("crime.crime") + ":"}
                 options={CRIME_OPTIONS}
                 selected={data.indicator}
-                onChange={e => setData("indicator", e)}
+                onChange={(e: any) => setData("indicator", e)}
               />
             }
           >
             <Panel name={t("common.charts.heatmap")}>
-              <Choropleth
+              {/* TODO @irfan */}
+              {/* <Choropleth
                 className="mx-auto h-[460px] max-w-screen-xl"
                 data={CHOROPLETH_DATA[data.indicator.value]}
                 colorScale="reds"
-              />
+              /> */}
             </Panel>
             <Panel name={t("common.charts.table")}>
               <div className="mx-auto w-full md:max-w-screen-md">

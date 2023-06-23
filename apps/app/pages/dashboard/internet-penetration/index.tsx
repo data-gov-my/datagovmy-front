@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import InternetPenetrationDashboard from "@dashboards/digitalisation/internet-penetration";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const InternetPenetration: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const InternetPenetration: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-internet-penetration", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternetPenetrationDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

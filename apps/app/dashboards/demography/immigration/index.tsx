@@ -203,7 +203,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                 <div className="mx-auto w-full md:w-96">
                   <ComboBox
                     enableFlag
-                    imageSource="https://flagcdn.com/h20/"
+                    imageSource="https://flagcdn.com/h40/"
                     fallback={<GlobeAltIcon className="w-4.5 h-4.5 mx-auto text-black" />}
                     placeholder={t("search_country")}
                     options={COUNTRY_OPTIONS}

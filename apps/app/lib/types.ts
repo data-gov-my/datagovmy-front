@@ -125,7 +125,7 @@ export type MixpanelBase = {
 export type MetaPage = Record<string, any> & {
   meta: {
     id: string;
-    type: "misc" | "dashboard" | "catalogue";
+    type: "misc" | "dashboard" | "data-catalogue";
     category:
       | "democracy"
       | "demography"

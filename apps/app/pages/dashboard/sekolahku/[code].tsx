@@ -6,8 +6,10 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import SekolahkuDashboard from "@dashboards/education/sekolahku";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const Sekolahku: Page = ({
+  meta,
   dropdown_data,
   total_schools,
   sekolahku_info,
@@ -19,7 +21,7 @@ const Sekolahku: Page = ({
   const { t } = useTranslation(["dashboard-sekolahku", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <SekolahkuDashboard
         dropdown_data={dropdown_data}
@@ -30,7 +32,7 @@ const Sekolahku: Page = ({
         bellcurve_callout={bellcurve_callout}
         bellcurve_linechart={bellcurve_linechart}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
