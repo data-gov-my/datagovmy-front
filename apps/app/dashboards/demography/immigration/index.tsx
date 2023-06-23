@@ -1,3 +1,6 @@
+import Slider from "@components/Chart/Slider";
+import { SliderProvider } from "@components/Chart/Slider/context";
+import { JIMIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   ComboBox,
@@ -8,21 +11,19 @@ import {
   Section,
   Tabs,
 } from "@components/index";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { JIMIcon } from "@components/Icon/agency";
 import { OptionType } from "@components/types";
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
+import { WindowContext } from "@hooks/useWindow";
 
 /**
  * Immigration Dashboard
@@ -54,6 +55,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-immigration", "common", "countries"]);
+  const { breakpoint } = useContext(WindowContext);
   const { push } = useRouter();
   const { theme } = useTheme();
   const COUNTRY_OPTIONS: Array<OptionType> = countries.map((key: string) => ({
@@ -236,8 +238,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                     isLoading={data.loading}
                     enableAnimation={!play}
                     mode="grouped"
-                    interval={data.country_period}
-                    round={data.country_period}
+                    interval={data.country_period === "year" ? "year" : "auto"}
                     data={{
                       labels: country_coords.x,
                       datasets: [
@@ -248,7 +249,12 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                           fill: true,
                           backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderColor: AKSARA_COLOR.PURPLE,
-                          borderWidth: 1.5,
+                          borderWidth:
+                            breakpoint <= BREAKPOINTS.SM
+                              ? 0.5
+                              : country_coords.x.length > 720
+                              ? 1
+                              : 1.5,
                         },
                         {
                           type: "line",
@@ -257,7 +263,12 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                           fill: true,
                           backgroundColor: AKSARA_COLOR.DIM_H,
                           borderColor: AKSARA_COLOR.DIM,
-                          borderWidth: 1.5,
+                          borderWidth:
+                            breakpoint <= BREAKPOINTS.SM
+                              ? 0.5
+                              : country_coords.x.length > 720
+                              ? 1
+                              : 1.5,
                         },
                         {
                           type: "line",
@@ -268,7 +279,12 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                             theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WHITE_H,
                           borderColor: theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
                           borderDash: [2, 2],
-                          borderWidth: 1.5,
+                          borderWidth:
+                            breakpoint <= BREAKPOINTS.SM
+                              ? 0.5
+                              : country_coords.x.length > 720
+                              ? 1
+                              : 1.5,
                         },
                       ],
                     }}
@@ -322,8 +338,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                   className="h-[300px] w-full"
                   title={t("passport")}
                   enableAnimation={!play}
-                  interval={data.period}
-                  round={data.period}
+                  interval={data.period === "year" ? "year" : "auto"}
                   data={{
                     labels: coordinate.x,
                     datasets: [
@@ -334,7 +349,12 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                         fill: true,
                         backgroundColor: AKSARA_COLOR.PURPLE_H,
                         borderColor: AKSARA_COLOR.PURPLE,
-                        borderWidth: 1.5,
+                        borderWidth:
+                          breakpoint <= BREAKPOINTS.SM
+                            ? 0.5
+                            : country_coords.x.length > 720
+                            ? 1
+                            : 1.5,
                       },
                     ],
                   }}
@@ -367,8 +387,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                       title={t(key)}
                       className="h-[300px] w-full"
                       enableAnimation={!play}
-                      interval={data.period}
-                      round={data.period}
+                      interval={data.period === "year" ? "year" : "auto"}
                       data={{
                         labels: coordinate.x,
                         datasets: [
@@ -379,7 +398,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                             fill: true,
                             backgroundColor: AKSARA_COLOR.PURPLE_H,
                             borderColor: AKSARA_COLOR.PURPLE,
-                            borderWidth: 1.5,
+                            borderWidth: coordinate.x.length > 180 ? 0.5 : 1,
                           },
                         ],
                       }}
