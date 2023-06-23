@@ -161,9 +161,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
               <table className="lg:col-span-4 lg:col-start-3">
                 <thead className="border-b-2">
                   <tr>
-                    <th className="py-1.5 text-center text-sm font-medium">#</th>
-                    <th className="py-1.5 text-start text-sm font-medium">{t("Car model")}</th>
-                    <th className="py-1.5 text-start text-sm font-medium">
+                    <th className="px-1 py-2 text-center text-sm font-medium">#</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">{t("Car model")}</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
                       {t("Total cars sold")}
                     </th>
                   </tr>
@@ -173,14 +173,14 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                     (item: { maker: string; model: string; vehicles: number }, i: number) => (
                       <tr key={i} className={"border-b".concat(i < 3 ? " bg-background" : "")}>
                         <td
-                          className={"py-1.5 text-center text-sm font-medium".concat(
+                          className={"px-1 py-2 text-center text-sm font-medium".concat(
                             i < 3 ? " text-primary dark:text-primary-dark" : ""
                           )}
                         >
                           {i + 1}
                         </td>
-                        <td className="py-1.5 text-start text-sm font-medium">{`${item.maker} ${item.model}`}</td>
-                        <td className="py-1.5 text-end text-sm font-medium">
+                        <td className="px-1 py-2 text-start text-sm font-medium">{`${item.maker} ${item.model}`}</td>
+                        <td className="px-1 py-2 text-end text-sm font-medium">
                           {item.vehicles.toLocaleString()}
                         </td>
                       </tr>
@@ -192,9 +192,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
               <table className="lg:col-span-4 lg:col-start-7">
                 <thead className="border-b-2">
                   <tr>
-                    <th className="py-1.5 text-center text-sm font-medium">#</th>
-                    <th className="py-1.5 text-start text-sm font-medium">{t("Car brand")}</th>
-                    <th className="py-1.5 text-start text-sm font-medium">
+                    <th className="px-1 py-2 text-center text-sm font-medium">#</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">{t("Car brand")}</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
                       {t("Total cars sold")}
                     </th>
                   </tr>
@@ -203,14 +203,14 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                   {data.topMakers.map((item: { maker: string; vehicles: number }, i: number) => (
                     <tr key={i} className={"border-b".concat(i < 3 ? " bg-background" : "")}>
                       <td
-                        className={"py-1.5 text-center text-sm font-medium".concat(
+                        className={"px-1 py-2 text-center text-sm font-medium".concat(
                           i < 3 ? " text-primary dark:text-primary-dark" : ""
                         )}
                       >
                         {i + 1}
                       </td>
-                      <td className="py-1.5 text-start text-sm font-medium">{`${item.maker}`}</td>
-                      <td className="py-1.5 text-end text-sm font-medium">
+                      <td className="px-1 py-2 text-start text-sm font-medium">{`${item.maker}`}</td>
+                      <td className="px-1 py-2 text-end text-sm font-medium">
                         {item.vehicles.toLocaleString()}
                       </td>
                     </tr>
