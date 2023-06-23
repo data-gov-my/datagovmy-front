@@ -2,7 +2,7 @@ import At from "@components/At";
 import AgencyBadge from "@components/Badge/agency";
 import Hero from "@components/Hero";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
-import { FlagIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
+import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -14,7 +14,7 @@ interface ElectionLayoutProps {
 }
 
 const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) => {
-  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { pathname } = useRouter();
 
   const election_navs = [
@@ -38,6 +38,11 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
       icon: <MapIcon className="m-1 h-5 w-5" />,
       url: routes.ELECTION_EXPLORER.concat("/seats"),
     },
+    {
+      name: "Trivia",
+      icon: <LightBulbIcon className="m-1 h-5 w-5" />,
+      url: routes.ELECTION_EXPLORER.concat("/trivia"),
+    },
   ];
 
   return (
@@ -57,11 +62,11 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
       />
 
       {/* Navigations */}
-      <div className="border-outline dark:border-b-washed-dark flex flex-row overflow-x-auto border-b md:justify-center">
+      <div className="border-b-outline dark:border-b-washed-dark flex flex-row gap-2 overflow-x-auto border-b sm:justify-center">
         {election_navs.map(nav => (
           <At
             className={clx(
-              "flex flex-row items-center gap-1 px-4 py-4 text-sm font-medium transition lg:text-base",
+              "flex flex-row items-center gap-1 whitespace-nowrap px-4 py-4 text-center text-base font-medium transition",
               pathname.startsWith(nav.url)
                 ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
                 : "text-dim"

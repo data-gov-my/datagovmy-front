@@ -1,18 +1,18 @@
+import Fonts from "@config/font";
 import { Transition, Dialog } from "@headlessui/react";
-import { WindowContext } from "@hooks/useWindow";
-import { Fragment, FunctionComponent, ReactNode, useContext, useState } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-
+import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import { clx } from "@lib/helpers";
-import Fonts from "@config/font";
+import { Fragment, FunctionComponent, ReactNode, useContext, useState } from "react";
 
 type TooltipProps = {
   children?: (open: () => void) => ReactNode;
   tip: ReactNode;
+  className?: string;
 };
 
-const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip }) => {
+const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) => {
   const { breakpoint } = useContext(WindowContext);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +36,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip }) => {
       )}
 
       {breakpoint > BREAKPOINTS.MD ? (
-        <div className="tooltip-content">{tip}</div>
+        <div className={className ? className : "tooltip-content"}>{tip}</div>
       ) : (
         <Transition.Root show={isOpen} as={Fragment}>
           <Dialog

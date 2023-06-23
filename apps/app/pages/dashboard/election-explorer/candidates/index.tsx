@@ -24,7 +24,7 @@ const ElectionCandidates: Page = ({
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
   try {
-    const name = "Tunku Abdul Rahman Putra Al-Haj";
+    const name = "tunku-abdul-rahman-putra-alhaj";
     const [dropdown, candidate] = await Promise.all([
       get("/explorer", {
         explorer: "ELECTIONS",
@@ -50,12 +50,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         params: { candidate_name: name },
         selection: dropdown.data ?? [],
         elections: {
-          parlimen: candidate.data.parlimen.sort(
-            (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
-          ),
-          dun: candidate.data.dun.sort(
-            (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
-          ),
+          parlimen:
+            candidate.data.parlimen?.sort(
+              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+            ) ?? [],
+          dun:
+            candidate.data.dun?.sort(
+              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+            ) ?? [],
         },
       },
     };

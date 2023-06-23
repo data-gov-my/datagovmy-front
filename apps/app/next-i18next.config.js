@@ -1,11 +1,12 @@
-const I18NextHttpBackend = require("i18next-http-backend");
-I18NextHttpBackend.type = "backend"; // Issue: https://github.com/i18next/next-i18next/issues/1319
+const I18NextHttpBackend = require("i18next-http-backend/cjs");
 
 const namespace = [
   "common",
   "catalogue",
   "community",
   "countries",
+  "dashboards",
+  "agencies",
   "dashboard-999-tracker",
   "dashboard-birthday-explorer",
   "dashboard-blood-donation",
@@ -32,7 +33,7 @@ const namespace = [
   "dashboard-name-popularity",
   "dashboard-organ-donation",
   "dashboard-peka-b40",
-  "dashboard-peoples-income-initiative",
+  "dashboard-ipr",
   "dashboard-poverty",
   "dashboard-public-contracting",
   "dashboard-public-pension",

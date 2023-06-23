@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { Dialog, Transition } from "@headlessui/react";
-import { clx, numFormat, toDate } from "@lib/helpers";
+import { clx, numFormat, slugify, toDate } from "@lib/helpers";
 import { useData } from "@hooks/useData";
 import type {
   BaseResult,
@@ -21,7 +21,7 @@ import type {
 } from "@dashboards/democracy/election-explorer/types";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 
-type Result<T> = {
+export type Result<T> = {
   data: T;
   votes?: Array<{
     x: string;
@@ -110,12 +110,12 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                 <Dialog.Panel
                   className={clx(
                     Font.body.variable,
-                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform overflow-hidden rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
+                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
                   )}
                 >
                   <Dialog.Title
                     as="div"
-                    className="flex w-full flex-row items-center justify-between text-base md:text-lg"
+                    className="flex w-full flex-row items-center justify-between text-lg"
                   >
                     {title && typeof title === "string" ? <h5>{title}</h5> : title}
                     <button
@@ -130,7 +130,9 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                     <div className="space-x-3 pt-2">
                       {subtitle && (
                         <>
-                          <span className="uppercase">{t(options[data.index]?.election_name)}</span>
+                          <span className="uppercase">
+                            {t(options[data.index]?.election_name.slice(-5))}
+                          </span>
                           <span className="text-dim">
                             {toDate(options[data.index]?.date, "dd MMM yyyy", i18n.language)}
                           </span>
@@ -139,23 +141,28 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                     </div>
 
                     <div className="space-y-3">
-                      <div className="font-bold">{t("election.election_result")}</div>
+                      <div className="font-bold">{t("election_result")}</div>
                       <ElectionTable
                         className="max-h-96 w-full overflow-y-auto"
                         data={data.result.data}
                         columns={columns}
                         isLoading={data.loading}
-                        highlightedRow={
+                        highlightedRows={
                           data.result.data && highlighted
                             ? "name" in data.result.data[0]
-                              ? data.result.data.findIndex(
-                                  (e: BaseResult) => e.name === highlighted
-                                )
-                              : "party" in data.result.data[0] &&
-                                data.result.data.findIndex(
-                                  (e: BaseResult) => e.party === highlighted
-                                )
-                            : 0
+                              ? [
+                                  data.result.data.findIndex(
+                                    (e: BaseResult) => slugify(e.name) === highlighted
+                                  ),
+                                ]
+                              : "party" in data.result.data[0]
+                              ? [
+                                  data.result.data.findIndex(
+                                    (e: BaseResult) => e.party === highlighted
+                                  ),
+                                ]
+                              : [-1]
+                            : [0]
                         }
                         result={"result" in defaultParams ? defaultParams.result : undefined}
                       />
@@ -163,13 +170,13 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
 
                     {data.result.votes && (
                       <div className="space-y-3">
-                        <div className="font-bold">{t("election.voting_statistics")}</div>
-                        <div className="flex flex-col gap-3 text-sm md:flex-row md:flex-wrap md:gap-x-6">
+                        <div className="font-bold">{t("voting_statistics")}</div>
+                        <div className="flex flex-col gap-3 text-sm lg:flex-row lg:gap-x-6">
                           {data.result.votes.map(
                             (item: { x: string; abs: number; perc: number }) => (
-                              <div className="flex space-x-3 whitespace-nowrap" key={item.x}>
-                                <p className="w-28 md:w-fit">{t(`election.${item.x}`)}:</p>
-                                <div className="flex items-center space-x-3">
+                              <div className="flex flex-wrap gap-3 whitespace-nowrap" key={item.x}>
+                                <p className="w-28 md:w-fit">{t(item.x)}:</p>
+                                <div className="flex flex-wrap items-center gap-3">
                                   <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
                                   <p>{`${
                                     item.abs !== null ? numFormat(item.abs, "standard") : "—"
@@ -212,7 +219,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                       )}
                       <div className="flex items-center justify-center gap-4 text-sm">
                         <Button
-                          className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                          className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                           onClick={() =>
                             onChange(options[data.index - 1]).then(item => {
                               if (!item) return;
@@ -231,7 +238,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                           </span>
                         )}
                         <Button
-                          className="disabled:bg-washed dark:disabled:bg-washed-dark hover:bg-outline dark:hover:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
+                          className="disabled:bg-washed dark:disabled:bg-washed-dark group flex flex-row gap-2 rounded border px-3 py-2 dark:border-none"
                           onClick={() =>
                             onChange(options[data.index + 1]).then(item => {
                               if (!item) return;

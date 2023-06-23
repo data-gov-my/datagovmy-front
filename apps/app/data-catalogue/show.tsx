@@ -59,6 +59,9 @@ const CataloguePyramid = dynamic(() => import("@data-catalogue/partials/pyramid"
 const CatalogueHeatmap = dynamic(() => import("@data-catalogue/partials/heatmap"), {
   ssr: true,
 });
+const CatalogueLine = dynamic(() => import("@data-catalogue/partials/line"), {
+  ssr: true,
+});
 
 interface CatalogueShowProps {
   options: OptionType[];
@@ -196,6 +199,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         return (
           <CatalogueScatter
             className="mx-auto aspect-square w-full lg:h-[512px] lg:w-1/2"
+            dataset={dataset}
+            urls={urls}
+            translations={translations}
+            onDownload={prop => setDownloads(prop)}
+          />
+        );
+      case "LINE":
+        return (
+          <CatalogueLine
             config={config}
             dataset={dataset}
             urls={urls}

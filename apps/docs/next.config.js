@@ -10,6 +10,11 @@ const config = {
 const nextra = require("nextra")({
   theme: "datagovmy-nextra",
   themeConfig: "./theme.config.jsx",
+  staticImage: true,
+  latex: true,
+  flexsearch: {
+    codeblock: false,
+  },
 });
 
 module.exports = () => {

@@ -1,27 +1,43 @@
-import { Fragment, ReactNode, useState } from "react";
+import {
+  DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_REACT_NODES,
+  Fragment,
+  FunctionComponent,
+  ReactNode,
+  useState,
+} from "react";
 import ImageWithFallback from "@components/ImageWithFallback";
 import { OptionType } from "@components/types";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
-import { matchSorter } from "match-sorter";
+import { matchSorter, MatchSorterOptions } from "match-sorter";
 import Spinner from "@components/Spinner";
+import { ElectionType } from "@dashboards/democracy/election-explorer/types";
 
-type ComboBoxProps<L, V> = {
-  options: OptionType<L, V>[];
-  selected?: OptionType<L, V> | null;
-  onChange: (option?: OptionType<L, V>) => void;
+export type SeatOptionType = OptionType;
+
+interface ComboBoxOption extends OptionType {
+  seat_area?: string;
+  seat_name?: string;
+  type?: ElectionType;
+}
+
+type ComboBoxProps = {
+  options: ComboBoxOption[];
+  selected?: ComboBoxOption | null;
+  onChange: (option?: ComboBoxOption) => void;
   onSearch?: (query: string) => void;
   placeholder?: string;
   enableFlag?: boolean;
   imageSource?: string;
   fallback?: ReactNode;
-  enableType?: boolean;
+  styleElectionType?: boolean;
   loading?: boolean;
+  config?: MatchSorterOptions<ComboBoxOption>;
 };
 
-const ComboBox = <L extends string | number = string, V = string>({
+const ComboBox: FunctionComponent<ComboBoxProps> = ({
   options,
   selected,
   onChange,
@@ -30,19 +46,15 @@ const ComboBox = <L extends string | number = string, V = string>({
   enableFlag = false,
   imageSource = "/static/images/parties/",
   fallback,
-  enableType = false,
+  styleElectionType = false,
   loading = false,
-}: ComboBoxProps<L, V>) => {
+  config = { keys: ["label"] },
+}) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
   const filteredOptions =
-    query === ""
-      ? options.slice(0, 15)
-      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
-          0,
-          50
-        );
+    query === "" ? options.slice(0, 50) : matchSorter(options, query, config).slice(0, 50);
 
   return (
     <Combobox value={selected} onChange={onChange}>
@@ -138,7 +150,7 @@ const ComboBox = <L extends string | number = string, V = string>({
                             {option.label}
                           </span>
                         </>
-                      ) : enableType ? (
+                      ) : styleElectionType ? (
                         <span
                           className={clx(
                             "block truncate",

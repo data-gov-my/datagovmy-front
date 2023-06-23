@@ -63,9 +63,7 @@ const Hero: FunctionComponent<HeroProps> = ({
         background={background_style.concat(" border-b dark:border-washed-dark")}
         className={clx("relative", className)}
       >
-        <div className="sticky left-0 top-14 z-10 flex flex-row-reverse md:hidden md:pb-0">
-          {agencyBadge}
-        </div>
+        <div className="sticky inset-x-0 top-14 z-20 -ml-3 flex md:hidden">{agencyBadge}</div>
         {children ? (
           children
         ) : (
@@ -86,7 +84,7 @@ const Hero: FunctionComponent<HeroProps> = ({
 
               {(header || description) && (
                 <div className="space-y-3">
-                  {header && <h2 className={clx("text-black", header[1])}>{t(header[0])}</h2>}
+                  {header && <h2 className={clx("text-black", header[1])}>{header[0]}</h2>}
                   {description && Array.isArray(description) ? (
                     <p className={clx("text-dim xl:w-2/3", description[1])}>{description[0]}</p>
                   ) : (

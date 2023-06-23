@@ -121,7 +121,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.Imigresen")}
+            agency={t("agencies:imigresen.full")}
             link="https://www.jpn.gov.my/en/"
             icon={<JIMIcon />}
           />
