@@ -11,7 +11,7 @@ import {
   Search,
   Section,
 } from "@components/index";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import {
   FunctionComponent,
   useMemo,
@@ -189,11 +189,11 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.yearly"), value: "YEARLY" },
     ];
     const geographies: OptionType[] = [
+      { label: t("filter_options.national"), value: "NATIONAL" },
       { label: t("filter_options.state"), value: "STATE" },
       { label: t("filter_options.district"), value: "DISTRICT" },
       { label: t("filter_options.parlimen"), value: "PARLIMEN" },
       { label: t("filter_options.dun"), value: "DUN" },
-      { label: t("filter_options.national"), value: "NATIONAL" },
     ];
     const demographies: OptionType[] = [
       { label: t("filter_options.sex"), value: "SEX" },
@@ -266,55 +266,52 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         <div className="block xl:hidden">
           <Modal
             trigger={open => (
-              <Button
+              <button
                 onClick={open}
-                className="border-outline dark:border-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-sm"
+                className="btn btn-dropdown shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
               >
                 <span>{t("filter")}</span>
-                <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-white dark:text-black">
-                  {actives.length}
-                </span>
-              </Button>
+                <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
+                  <p className="text-center text-white">{actives.length}</p>
+                </div>
+                <ChevronDownIcon className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5" />
+              </button>
             )}
-            title={
-              <Label
-                label={t("filter") + ":"}
-                className="block text-sm font-medium text-black dark:text-white"
-              />
-            }
+            title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="flex-grow space-y-4 overflow-y-auto pb-28 pt-4">
+              <div className="px-4.5 pb-4.5 mb-[107px] flex h-[400px] flex-col overflow-y-auto pt-3">
                 <Radio
                   label={t("period")}
                   name="period"
-                  className="flex flex-wrap gap-4 px-1 pt-2"
+                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
                   options={periods}
                   value={filter.period}
                   onChange={e => setFilter("period", e)}
                 />
+                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
                 <Checkbox
                   label={t("geography")}
-                  className="flex flex-wrap gap-4 px-1 pt-2"
+                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
                   name="geography"
                   options={geographies}
                   value={filter.geography}
                   onChange={e => setFilter("geography", e)}
                 />
+                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
                 <Checkbox
-                  className="flex flex-wrap gap-4 px-1 pt-2"
+                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
                   name="demographic"
                   label={t("demography")}
                   options={demographies}
                   value={filter.demographic}
                   onChange={e => setFilter("demographic", e)}
                 />
-
-                <div className="grid grid-cols-2 gap-4">
+                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
+                <div className="grid grid-cols-2 gap-3">
                   <Dropdown
                     width="w-full"
                     label={t("begin")}
-                    sublabel={t("begin") + ":"}
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
                     placeholder={t("common:common.select")}
@@ -322,7 +319,6 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   />
                   <Dropdown
                     label={t("end")}
-                    sublabel={t("end") + ":"}
                     width="w-full"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
@@ -331,8 +327,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                     onChange={e => setFilter("end", e)}
                   />
                 </div>
-
-                <div className="fixed bottom-0 left-0 flex w-full gap-2 bg-white px-2 py-3 dark:bg-black">
+                <div className="dark:border-outlineHover-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
                   <Button
                     className="btn btn-primary w-full justify-center"
                     disabled={!actives.length}
@@ -340,7 +335,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   >
                     {t("common:common.reset")}
                   </Button>
-                  <Button className="btn btn-default w-full justify-center" onClick={close}>
+                  <Button className="btn w-full justify-center" onClick={close}>
+                    <XMarkIcon className="h-5 w-5" />
                     {t("common:common.close")}
                   </Button>
                 </div>

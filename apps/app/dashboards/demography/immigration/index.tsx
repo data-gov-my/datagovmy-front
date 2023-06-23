@@ -35,7 +35,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 interface ImmigrationProps {
   choropleth: any;
   countries: any;
-  last_updated: any;
+  last_updated: string;
   timeseries: any;
   timeseries_callout: any;
   timeseries_country: any;
@@ -59,11 +59,11 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
   }));
   const FILTER_OPTIONS: Array<OptionType> = [
     "absolute",
-    "absolute_adult",
-    "absolute_children",
-    "per_capita",
-    "per_capita_adult",
-    "per_capita_children",
+    // "absolute_adult",
+    // "absolute_children",
+    // "per_capita",
+    // "per_capita_adult",
+    // "per_capita_children",
   ].map((key: string) => ({
     label: t(`${key}`),
     value: key,

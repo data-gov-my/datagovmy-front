@@ -109,7 +109,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "healthcare",
           agency: "PDN",
         },
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         params: params,
         timeseries_all: data.timeseries_all,
         barchart_age: data.bar_chart_age,

@@ -83,7 +83,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", asy
         category: "healthcare",
         agency: "PHCorp",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       params: params,
       choropleth: data.choropleth_malaysia,

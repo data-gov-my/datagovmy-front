@@ -96,7 +96,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "healthcare",
           agency: "NTRC",
         },
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         params: params,
         timeseries: data.timeseries,
         choropleth: data.choropleth_malaysia,

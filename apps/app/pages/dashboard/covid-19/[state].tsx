@@ -72,7 +72,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
         agency: "KKM",
       },
       params: params,
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       snapshot_bar: data.snapshot_bar,
       snapshot_graphic: data.snapshot_graphic,
       timeseries: {

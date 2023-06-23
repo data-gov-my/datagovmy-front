@@ -20,7 +20,7 @@ import COVIDVaccinationTrends from "./vaccine-trends";
  */
 
 interface COVIDVaccinationProps {
-  lastUpdated: number;
+  last_updated: string;
   params: { state: string };
   timeseries: Record<string, any>;
   statistics: Record<string, any>;
@@ -33,7 +33,7 @@ const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false })
 
 const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   params,
-  lastUpdated,
+  last_updated,
   timeseries,
   statistics,
   barmeter,
@@ -124,15 +124,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         background="green"
         category={[t("common:categories.healthcare"), "text-green-600"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-6">
-              <StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />
-            </div>
-          </>
-        }
-        last_updated={lastUpdated}
+        description={[t("description")]}
+        action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Health (MoH)"}

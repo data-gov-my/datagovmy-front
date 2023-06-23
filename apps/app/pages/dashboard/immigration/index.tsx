@@ -57,7 +57,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         choropleth: data.choropleth,
         countries: dropdown.data,
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,
         timeseries_country: country.timeseries_country,
