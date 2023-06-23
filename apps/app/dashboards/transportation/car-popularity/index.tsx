@@ -142,60 +142,82 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
       <Container className="min-h-screen">
         {/* Best selling cars models and brands in {year} */}
         <Section>
-          <div className="flex place-content-center place-items-center gap-[12px]">
-            <h4 className="text-center">{t("Best selling cars model and brands in")}</h4>
-            <Dropdown
-              width="w-fit"
-              selected={data.selectedYear}
-              onChange={e => {
-                setData("selectedYear", e);
-                setData("topMakers", tableData.top_makers.data[data.selectedYear.value]);
-                setData("topModels", tableData.top_models.data[data.selectedYear.value]);
-              }}
-              options={yearOptions}
-            />
-          </div>
+          <div className="space-y-6">
+            <div className="flex place-content-center place-items-center gap-3">
+              <h4 className="text-center">{t("Best selling cars model and brands in")}</h4>
+              <Dropdown
+                width="w-fit"
+                selected={data.selectedYear}
+                onChange={e => {
+                  setData("selectedYear", e);
+                  setData("topMakers", tableData.top_makers.data[data.selectedYear.value]);
+                  setData("topModels", tableData.top_models.data[data.selectedYear.value]);
+                }}
+                options={yearOptions}
+              />
+            </div>
 
-          <div className="flex flex-row gap-3">
-            <table className="w-full table-auto">
-              <thead>
-                <tr className="font-body text-sm font-thin">
-                  <th>#</th>
-                  <th>{t("Car model")}</th>
-                  <th>{t("Total cars sold")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.topModels.map(
-                  (item: { maker: string; model: string; vehicles: number }, i: number) => (
-                    <tr>
-                      <td>{i + 1}</td>
-                      <td>{`${item.maker} ${item.model}`}</td>
-                      <td>{item.vehicles}</td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
-
-            <table className="w-full table-auto">
-              <thead>
-                <tr className="font-body text-sm font-thin">
-                  <th>#</th>
-                  <th>{t("Car model")}</th>
-                  <th>{t("Total cars sold")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.topMakers.map((item: { maker: string; vehicles: number }, i: number) => (
+            <div className="flex flex-col gap-3 lg:grid lg:grid-cols-12">
+              <table className="lg:col-span-4 lg:col-start-3">
+                <thead className="border-b-2">
                   <tr>
-                    <td>{i + 1}</td>
-                    <td>{item.maker}</td>
-                    <td>{item.vehicles}</td>
+                    <th className="py-1.5 text-center text-sm font-medium">#</th>
+                    <th className="py-1.5 text-start text-sm font-medium">{t("Car model")}</th>
+                    <th className="py-1.5 text-start text-sm font-medium">
+                      {t("Total cars sold")}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.topModels.map(
+                    (item: { maker: string; model: string; vehicles: number }, i: number) => (
+                      <tr key={i} className={"border-b".concat(i < 3 ? " bg-background" : "")}>
+                        <td
+                          className={"py-1.5 text-center text-sm font-medium".concat(
+                            i < 3 ? " text-primary dark:text-primary-dark" : ""
+                          )}
+                        >
+                          {i + 1}
+                        </td>
+                        <td className="py-1.5 text-start text-sm font-medium">{`${item.maker} ${item.model}`}</td>
+                        <td className="py-1.5 text-start text-sm font-medium">
+                          {item.vehicles.toLocaleString()}
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+
+              <table className="lg:col-span-4 lg:col-start-7">
+                <thead className="border-b-2">
+                  <tr>
+                    <th className="py-1.5 text-center text-sm font-medium">#</th>
+                    <th className="py-1.5 text-start text-sm font-medium">{t("Car brand")}</th>
+                    <th className="py-1.5 text-start text-sm font-medium">
+                      {t("Total cars sold")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.topMakers.map((item: { maker: string; vehicles: number }, i: number) => (
+                    <tr key={i} className={"border-b".concat(i < 3 ? " bg-background" : "")}>
+                      <td
+                        className={"py-1.5 text-center text-sm font-medium".concat(
+                          i < 3 ? " text-primary dark:text-primary-dark" : ""
+                        )}
+                      >
+                        {i + 1}
+                      </td>
+                      <td className="py-1.5 text-start text-sm font-medium">{`${item.maker}`}</td>
+                      <td className="py-1.5 text-start text-sm font-medium">
+                        {item.vehicles.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </Section>
 
