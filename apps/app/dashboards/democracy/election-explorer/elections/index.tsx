@@ -21,7 +21,7 @@ import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroico
 import { useData } from "@hooks/useData";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
 import { useTranslation } from "@hooks/useTranslation";
-import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
+import { BREAKPOINTS, CountryAndStates, PoliticalPartyColours } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
@@ -63,7 +63,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
 
-  const { scroll } = useContext(WindowContext);
+  const { breakpoint, scroll } = useContext(WindowContext);
   const show = useMemo(() => scroll.y > 500, [scroll.y]);
 
   const PANELS = [
@@ -115,12 +115,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
     tab_index: 0,
     election: ELECTION_ACRONYM,
     state: CURRENT_STATE,
-    showFullTable: table.length <= 10,
+    showFullTable: false,
   });
 
   const TOGGLE_IS_DUN = data.toggle_index === ElectionEnum.Dun;
   const TOGGLE_IS_PARLIMEN = data.toggle_index === ElectionEnum.Parlimen;
   const NON_SE_STATE = ["mys", "kul", "lbn", "pjy"];
+  const TABLE_LENGTH = breakpoint < BREAKPOINTS.LG ? 5 : 10;
 
   const GE_OPTIONS: Array<OptionType> = selection["mys"]
     .map((election: Record<string, any>) => ({
@@ -299,16 +300,16 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                   <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
                     <div className="grid grid-cols-12">
                       <div className="col-span-full col-start-1 flex flex-col gap-y-3 lg:col-span-10 lg:col-start-2">
-                        <div className="flex flex-col items-baseline justify-between gap-y-2 sm:flex-row md:gap-y-0">
-                          <div className="w-fit text-base font-bold">
+                        <div className="flex flex-col items-baseline justify-between gap-y-3 sm:flex-row md:gap-y-0">
+                          <h5 className="w-fit">
                             {t("election_of", {
                               context: ELECTION_ACRONYM.startsWith("G") ? "parlimen" : "dun",
                             })}
                             <span className="text-primary">{CountryAndStates[CURRENT_STATE]}</span>
                             <span>: </span>
                             <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
-                          </div>
-                          <div className="flex w-full justify-end sm:w-auto">
+                          </h5>
+                          <div className="flex w-full justify-start sm:w-auto">
                             <List
                               options={[t("table"), t("map"), t("summary")]}
                               icons={[
@@ -332,7 +333,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                             <>
                               <ElectionTable
                                 isLoading={false}
-                                data={data.showFullTable ? table : table.slice(0, 10)}
+                                data={data.showFullTable ? table : table.slice(0, TABLE_LENGTH)}
                                 columns={generateSchema<Party>([
                                   {
                                     key: "party",
