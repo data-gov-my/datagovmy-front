@@ -11,19 +11,21 @@ import { AnalyticsProvider } from "@hooks/useAnalytics";
 const CarPopularity: Page = ({
   meta,
   queryOptions,
+  tableData,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <CarPopularityDashboard queryOptions={queryOptions} />
+      <CarPopularityDashboard queryOptions={queryOptions} tableData={tableData} />
     </AnalyticsProvider>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
   const { data: dropdownData } = await get("/dropdown", { dashboard: "car_popularity" });
+  const { data: tableData } = await get("/dashboard", { dashboard: "car_popularity" });
   return {
     notFound: false,
     props: {
@@ -34,6 +36,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
         agency: "JPJ",
       },
       queryOptions: dropdownData.data,
+      tableData: tableData,
     },
   };
 });
