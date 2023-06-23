@@ -202,7 +202,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
                         />
                       </div>
-                      <div className="dark:border-outlineHover-dark fixed bottom-0 left-0 flex w-full flex-col gap-2 border-t p-3">
+                      <div className="dark:border-outlineHover-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
                         <Button
                           className="btn btn-primary w-full justify-center"
                           onClick={() =>
