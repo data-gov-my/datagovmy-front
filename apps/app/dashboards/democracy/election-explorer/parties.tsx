@@ -208,7 +208,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                           setData("state", selected.value);
                           navigateToParty(data.party, selected.value);
                         }}
-                        width="inline-block pl-1 min-w-max"
+                        width="inline-flex ml-0.5"
                         anchor="left"
                       />
                     </span>

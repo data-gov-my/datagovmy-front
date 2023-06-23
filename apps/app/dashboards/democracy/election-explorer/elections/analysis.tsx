@@ -23,7 +23,7 @@ const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: 
 
 type Analysis = {
   seat: string;
-  state: string;
+  state?: string;
   party: string;
   majority: {
     abs: string;
