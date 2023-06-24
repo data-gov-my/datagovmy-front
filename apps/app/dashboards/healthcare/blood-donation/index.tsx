@@ -21,7 +21,7 @@ const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 
 interface BloodDonationDashboardProps {
-  last_updated: number;
+  last_updated: string;
   params: { state: string };
   timeseries_all: any;
   barchart_age: any;

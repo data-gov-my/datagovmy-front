@@ -27,7 +27,6 @@ import Image from "next/image";
 import CatalogueCode from "./partials/code";
 import { AnalyticsContext } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
-import Tabs from "@components/Tabs";
 
 /**
  * Catalogue Show
@@ -117,10 +116,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   translations,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const [show, setShow] = useState<number>(0);
+  const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
   const { filter, setFilter } = useFilter(config.context, { id: params.id });
-  const { result, realtime_track } = useContext(AnalyticsContext);
+  const { result } = useContext(AnalyticsContext);
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -295,10 +294,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           menu={
             <>
               <Dropdown
-                className="btn btn-primary"
+                className="flex-row items-center"
+                sublabel={<EyeIcon className="h-4 w-4" />}
+                selected={show}
+                options={options}
+                onChange={e => setShow(e)}
+              />
+              <Dropdown
                 width="w-fit"
                 anchor="right"
-                sublabel={<DocumentArrowDownIcon className="text h-4 w-4 text-white" />}
+                sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
                 options={
                   downloads
@@ -355,16 +360,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 />
               ))}
             </div>
-            <Tabs.List
-              className="justify-end"
-              options={options.map(option => option.label)}
-              current={show}
-              onChange={index => setShow(index)}
-            />
           </div>
 
           {/* Chart */}
-          <div className={clx(options[show].value === "chart" ? "block" : "hidden", "space-y-2")}>
+          <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
           </div>
 
@@ -373,7 +372,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             <div
               className={clx(
                 dataset.type !== "TABLE" && "mx-auto max-h-[500px] overflow-auto",
-                options[show].value === "table" ? "block" : "hidden"
+                show.value === "table" ? "block" : "hidden"
               )}
             >
               <Table
@@ -639,6 +638,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         ext: props.id,
                         type: ["csv", "parquet"].includes(props.id) ? "file" : "image",
                       }}
+                      views={
+                        result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
+                      }
                       {...props}
                     />
                   ))}

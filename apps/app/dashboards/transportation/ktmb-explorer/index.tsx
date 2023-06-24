@@ -41,7 +41,7 @@ interface KTMBExplorerProps {
   B_to_A?: any;
   B_to_A_callout?: any;
   dropdown: any;
-  last_updated: any;
+  last_updated: string;
   params: any;
 }
 

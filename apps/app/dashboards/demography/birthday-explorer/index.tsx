@@ -27,12 +27,14 @@ import { toast } from "@components/Toast";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface BirthdayExplorerDashboardProps {
-  timeseries: any;
+  // timeseries: any;
 }
 
-const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProps> = ({
-  timeseries,
-}) => {
+const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProps> = (
+  {
+    // timeseries,
+  }
+) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common"]);
   const { breakpoint } = useContext(WindowContext);
 
@@ -56,8 +58,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
 
   const { data, setData } = useData({
     // consumed data
-    x: timeseries.data.x,
-    y: timeseries.data.y,
+    // x: timeseries.data.x,
+    // y: timeseries.data.y,
     state_total: 0,
     nationwide_total: 0,
     popularity: {
@@ -169,6 +171,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         }
       />
       <Container className="min-h-screen">
+        {/* 
+        <WindowProvider>
         <Section title={t("section_1.title")} description={t("section_1.description")}>
           <div className="flex flex-col gap-8 rounded-xl lg:flex-row">
             <Card className="border-outline dark:border-washed-dark flex flex-shrink-0 basis-1/3 flex-col justify-between rounded-xl border p-6">
@@ -364,10 +368,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               )}
             </div>
           </div>
-        </Section>
+        </Section> */}
 
         {/* Number of babies born on each date */}
-        <Section
+        {/* <Section
           className="py-12"
           title={t("section_2.title", {
             start_year: data.start,
@@ -451,9 +455,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   <Spinner loading={data.loading} />
                 </div>
               </div>
-            )}
-          </WindowProvider>
-        </Section>
+            </div>
+          )}
+        </WindowProvider/>
+        </Section> */}
       </Container>
     </>
   );

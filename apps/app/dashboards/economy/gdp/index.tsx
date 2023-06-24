@@ -32,7 +32,7 @@ interface TimeseriesChartData {
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface GDPDashboardProps {
-  last_updated: number;
+  last_updated: string;
   timeseries: any;
   timeseries_callouts: any;
 }

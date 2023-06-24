@@ -31,7 +31,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 interface RefugeeSituationProps {
   barmeter: any;
   choropleth: any;
-  last_updated: any;
+  last_updated: string;
   timeseries: any;
   timeseries_callout: any;
 }

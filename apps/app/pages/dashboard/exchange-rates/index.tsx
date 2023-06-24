@@ -41,7 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rates
         category: "economy",
         agency: "MAMPU",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       bar: data.bar_chart,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

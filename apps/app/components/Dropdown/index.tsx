@@ -191,7 +191,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         <div className="relative text-sm">
           <Listbox.Button
             className={clx(
-              "btn btn-dropdown",
+              "btn btn-dropdown flex items-center",
               className,
               width,
               darkMode &&
