@@ -6,11 +6,8 @@ import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent } from "react";
 import { OverallSeat } from "../types";
-import { BREAKPOINTS } from "@lib/constants";
-import { WindowContext } from "@hooks/useWindow";
-
 /**
  * Election Explorer - Election Analysis
  * @overview Status: In-development
@@ -47,62 +44,59 @@ interface ElectionAnalysisProps {
 
 const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, seats, state }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
-  const { breakpoint } = useContext(WindowContext);
 
-  const cellSize = breakpoint >= BREAKPOINTS.SM ? 150 : (breakpoint - 24) / 2;
   const config = [
     {
       accessorKey: "seat",
       id: "constituency",
       header: t("constituency"),
-      className: "text-left",
-      size: cellSize,
+      className: "text-left w-auto lg:w-[150px]",
     },
     {
       accessorKey: "state",
       id: "state",
       header: t("state"),
-      className: "text-left",
-      size: cellSize,
+
+      className: "text-left w-auto lg:w-[150px]",
     },
     {
       accessorKey: "majority.abs",
       id: "majority.abs",
       header: t("majority"),
       sortingFn: "localeNumber",
-      size: cellSize,
+      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "majority.perc",
       id: "majority.perc",
       header: t("majority_%"),
-      size: cellSize,
+      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "voter_turnout.abs",
       id: "voter_turnout.abs",
       header: t("voter_turnout"),
       sortingFn: "localeNumber",
-      size: cellSize,
+      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "voter_turnout.perc",
       id: "voter_turnout.perc",
       header: t("voter_turnout_%"),
-      size: cellSize,
+      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "votes_rejected.abs",
       id: "votes_rejected.abs",
       header: t("rejected_votes"),
       sortingFn: "localeNumber",
-      size: cellSize,
+      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "votes_rejected.perc",
       id: "votes_rejected.perc",
       header: t("rejected_votes_%"),
-      size: cellSize,
+      className: "text-right w-auto lg:w-[150px]",
     },
   ];
 

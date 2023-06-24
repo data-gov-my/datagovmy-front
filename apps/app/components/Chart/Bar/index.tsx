@@ -14,7 +14,7 @@ import { Bar as BarCanvas, getElementAtEvent } from "react-chartjs-2";
 import { numFormat } from "@lib/helpers";
 import { ChartCrosshairOption } from "@lib/types";
 import type { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 
@@ -221,36 +221,38 @@ const Bar: FunctionComponent<BarProps> = ({
     },
   };
   return (
-    <div className="space-y-4">
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-      <div className={className}>
-        <BarCanvas
-          ref={_ref ?? ref}
-          onClick={event => {
-            if (ref?.current) {
-              const element = getElementAtEvent(ref.current, event);
-              onClick &&
-                element.length &&
-                onClick(_data?.labels![element[0].index].toString(), element[0].index);
-            }
-          }}
-          data={_data}
-          options={options}
-          plugins={[
-            {
-              id: "increase-legend-spacing",
-              beforeInit(chart) {
-                const originalFit = (chart.legend as any).fit;
-                (chart.legend as any).fit = function fit() {
-                  originalFit.bind(chart.legend)();
-                  this.height += 20;
-                };
+    <WindowProvider>
+      <div className="space-y-4">
+        <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+        <div className={className}>
+          <BarCanvas
+            ref={_ref ?? ref}
+            onClick={event => {
+              if (ref?.current) {
+                const element = getElementAtEvent(ref.current, event);
+                onClick &&
+                  element.length &&
+                  onClick(_data?.labels![element[0].index].toString(), element[0].index);
+              }
+            }}
+            data={_data}
+            options={options}
+            plugins={[
+              {
+                id: "increase-legend-spacing",
+                beforeInit(chart) {
+                  const originalFit = (chart.legend as any).fit;
+                  (chart.legend as any).fit = function fit() {
+                    originalFit.bind(chart.legend)();
+                    this.height += 20;
+                  };
+                },
               },
-            },
-          ]}
-        />
+            ]}
+          />
+        </div>
       </div>
-    </div>
+    </WindowProvider>
   );
 };
 

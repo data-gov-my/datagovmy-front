@@ -20,7 +20,6 @@ interface ElectionLayoutProps {
 const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { pathname } = useRouter();
-  const { breakpoint } = useContext(WindowContext);
 
   const election_navs = [
     {
@@ -85,7 +84,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
             href={nav.url}
             scrollTop={false}
           >
-            {breakpoint > BREAKPOINTS.SM && nav.icon}
+            <div className="hidden sm:block">{nav.icon}</div>
             {nav.name}
           </At>
         ))}

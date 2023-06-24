@@ -295,8 +295,6 @@ const Table: FunctionComponent<TableProps> = ({
                           className={classNames}
                           style={{
                             left: freeze?.includes(cell.column.id) ? calcStickyLeft(cell.id) : 0,
-                            // minWidth: cell.column.getSize(),
-                            width: cell.column.getSize(),
                           }}
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}

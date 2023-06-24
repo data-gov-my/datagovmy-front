@@ -23,7 +23,7 @@
 }
 
 .table td {
-  @apply border-outline dark:border-washed-dark w-auto snap-end border-b px-2 py-2;
+  @apply border-outline dark:border-washed-dark snap-end border-b px-2 py-2;
 }
 /* .table td:not(:first-child) {
   @apply whitespace-nowrap;

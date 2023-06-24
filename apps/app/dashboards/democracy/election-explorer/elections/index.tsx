@@ -28,7 +28,7 @@ import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useContext, useMemo, useRef } from "react";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 
 /**
  * Election Explorer Dashboard
@@ -63,8 +63,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
 
-  const { breakpoint, scroll } = useContext(WindowContext);
+  const { scroll } = useContext(WindowContext);
   const show = useMemo(() => scroll.y > 500, [scroll.y]);
+  const { breakpoint } = useContext(WindowContext);
 
   const PANELS = [
     {
@@ -331,23 +332,25 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                             icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
                           >
                             <>
-                              <ElectionTable
-                                isLoading={false}
-                                data={data.showFullTable ? table : table.slice(0, TABLE_LENGTH)}
-                                columns={generateSchema<Party>([
-                                  {
-                                    key: "party",
-                                    id: "party",
-                                    header: t("party_name"),
-                                  },
-                                  {
-                                    key: "seats",
-                                    id: "seats",
-                                    header: t("seats_won"),
-                                  },
-                                  { key: "votes", id: "votes", header: t("votes_won") },
-                                ])}
-                              />
+                              <WindowProvider>
+                                <ElectionTable
+                                  isLoading={false}
+                                  data={data.showFullTable ? table : table.slice(0, TABLE_LENGTH)}
+                                  columns={generateSchema<Party>([
+                                    {
+                                      key: "party",
+                                      id: "party",
+                                      header: t("party_name"),
+                                    },
+                                    {
+                                      key: "seats",
+                                      id: "seats",
+                                      header: t("seats_won"),
+                                    },
+                                    { key: "votes", id: "votes", header: t("votes_won") },
+                                  ])}
+                                />
+                              </WindowProvider>
                               {data.showFullTable !== true && (
                                 <Button
                                   variant="default"

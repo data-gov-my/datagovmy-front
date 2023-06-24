@@ -1,7 +1,7 @@
 import Fonts from "@config/font";
 import { Transition, Dialog } from "@headlessui/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { Fragment, FunctionComponent, ReactNode, useContext, useState } from "react";
@@ -18,65 +18,67 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="tooltip w-fit">
-      {children ? (
-        children(() => setIsOpen(true))
-      ) : (
-        <>
-          {Boolean(tip) && (
-            <>
-              <InformationCircleIcon className="text-outlineHover mb-1 hidden h-4 w-4 md:inline-block" />
-              <InformationCircleIcon
-                className="text-outlineHover mb-1 inline-block h-4 w-4 md:hidden"
-                onClick={() => setIsOpen(true)}
-              />
-            </>
-          )}
-        </>
-      )}
+    <WindowProvider>
+      <div className="tooltip w-fit">
+        {children ? (
+          children(() => setIsOpen(true))
+        ) : (
+          <>
+            {Boolean(tip) && (
+              <>
+                <InformationCircleIcon className="text-outlineHover mb-1 hidden h-4 w-4 md:inline-block" />
+                <InformationCircleIcon
+                  className="text-outlineHover mb-1 inline-block h-4 w-4 md:hidden"
+                  onClick={() => setIsOpen(true)}
+                />
+              </>
+            )}
+          </>
+        )}
 
-      {breakpoint > BREAKPOINTS.MD ? (
-        <div className={className ? className : "tooltip-content"}>{tip}</div>
-      ) : (
-        <Transition.Root show={isOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className={clx(Fonts.body.variable, "relative z-10 font-sans")}
-            onClose={setIsOpen}
-          >
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
+        {breakpoint > BREAKPOINTS.MD ? (
+          <div className={className ? className : "tooltip-content"}>{tip}</div>
+        ) : (
+          <Transition.Root show={isOpen} as={Fragment}>
+            <Dialog
+              as="div"
+              className={clx(Fonts.body.variable, "relative z-10 font-sans")}
+              onClose={setIsOpen}
             >
-              <div className="bg-outlineHover fixed inset-0 bg-opacity-70 transition-opacity" />
-            </Transition.Child>
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="bg-outlineHover fixed inset-0 bg-opacity-70 transition-opacity" />
+              </Transition.Child>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div className="flex min-h-full items-center justify-center p-4 text-center">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <Dialog.Panel className="relative h-fit transform overflow-hidden rounded bg-black p-3 text-left text-sm text-white shadow-xl transition-all">
-                    {tip}
-                  </Dialog.Panel>
-                </Transition.Child>
+              <div className="fixed inset-0 z-10 overflow-y-auto">
+                <div className="flex min-h-full items-center justify-center p-4 text-center">
+                  <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    enterTo="opacity-100 translate-y-0 sm:scale-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  >
+                    <Dialog.Panel className="relative h-fit transform overflow-hidden rounded bg-black p-3 text-left text-sm text-white shadow-xl transition-all">
+                      {tip}
+                    </Dialog.Panel>
+                  </Transition.Child>
+                </div>
               </div>
-            </div>
-          </Dialog>
-        </Transition.Root>
-      )}
-    </div>
+            </Dialog>
+          </Transition.Root>
+        )}
+      </div>
+    </WindowProvider>
   );
 };
 export default Tooltip;
