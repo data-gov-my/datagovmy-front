@@ -1,6 +1,5 @@
 import { FunctionComponent } from "react";
-
-import Container from "@components/Container";
+import { Container } from "datagovmy-ui/components";
 
 type HeroProps = {
   background?: string;

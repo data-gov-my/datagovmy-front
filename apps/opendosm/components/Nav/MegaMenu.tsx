@@ -1,9 +1,9 @@
-import { Fragment, useState, ReactElement, SetStateAction, Dispatch } from "react";
+import { Fragment, useState, ReactElement, SetStateAction, Dispatch, useContext } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 import { BREAKPOINTS } from "@lib/constants";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "datagovmy-ui/hooks";
 
 type MegaMenuProps = {
   icon?: JSX.Element;
@@ -12,8 +12,8 @@ type MegaMenuProps = {
 };
 
 const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
-  const windowWidth = useWindowWidth();
-  const isTablet = windowWidth >= BREAKPOINTS.MD;
+  const { breakpoint } = useContext(WindowContext);
+  const isTablet = breakpoint > BREAKPOINTS.MD;
 
   const [isOpen, setIsOpen] = useState(false);
 

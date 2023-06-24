@@ -1,9 +1,9 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import ConsumerPricesDashboard from "@dashboards/consumer-prices";
 import { get } from "@lib/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
-import { useTranslation } from "@hooks/useTranslation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const ConsumerPrices = ({
   last_updated,
@@ -32,22 +32,24 @@ const ConsumerPrices = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   const { data } = await get("/dashboard", { dashboard: "consumer_price_index" });
 
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "dashboard-consumer-price",
+        type: "dashboard",
+        category: "demography",
+        agency: "DOSM",
+      },
       last_updated: new Date().valueOf(),
       bar: data.bar_chart,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
       choropleth: data.choropleth_district,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default ConsumerPrices;

@@ -35,9 +35,9 @@ const Panel: FunctionComponent<PanelProps> = ({ children, name }) => {
   return <>{children}</>;
 };
 
-const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons }) => {
+const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons, className }) => {
   return (
-    <ul className="flex">
+    <ul className={clx("flex", className)}>
       {options.map((option, index) => (
         <li
           key={option}
@@ -76,7 +76,7 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
   return (
     <>
       <Tab.Group selectedIndex={current} onChange={onChange}>
-        <div className={clx("flex flex-wrap items-end justify-between gap-4", className)}>
+        <div className={clx("flex flex-wrap items-end justify-between gap-3", className)}>
           <div>
             {title && typeof title === "string" ? (
               <span className="text-base font-bold">{title}</span>

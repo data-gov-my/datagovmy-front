@@ -9,18 +9,19 @@ import Fonts from "@config/font";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const PekaB40State: Page = ({
+  meta,
   last_updated,
   params,
   timeseries,
-  state,
   choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
@@ -32,7 +33,7 @@ const PekaB40State: Page = ({
         timeseries={timeseries}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -82,7 +83,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-peka-b40", asy
         category: "healthcare",
         agency: "PHCorp",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       params: params,
       choropleth: data.choropleth_malaysia,

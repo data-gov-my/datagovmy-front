@@ -77,6 +77,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableCallout?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  enableTooltip?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
   tickXCallback?: (
@@ -123,6 +124,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableGridX = false,
   enableGridY = true,
   enableAnimation = true,
+  enableTooltip = true,
   gridOffsetX = true,
   tooltipCallback,
   tickXCallback,
@@ -184,7 +186,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           align: "start",
         },
         tooltip: {
-          enabled: true,
+          enabled: enableTooltip,
           bodyFont: {
             family: "Inter",
           },
@@ -297,7 +299,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             round: round === "auto" ? autoRound : round,
             displayFormats: {
               quarter: "qQ yyyy",
-              month: "MMM",
+              month: "MMM yy",
               week: "dd MMM",
             },
             tooltipFormat: tooltipFormat
@@ -403,11 +405,13 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
         </div>
       ) : (
         <div className="flex flex-col gap-y-6">
-          <div className="flex flex-col gap-y-3">
-            <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-            {stats && <Stats data={stats} />}
-            {subheader && <div>{subheader}</div>}
-          </div>
+          {[menu, title, controls, state, stats, subheader].some(Boolean) && (
+            <div className="flex flex-col gap-y-3">
+              <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+              {stats && <Stats data={stats} />}
+              {subheader && <div>{subheader}</div>}
+            </div>
+          )}
           <div className={className}>
             <Chart
               ref={_ref}

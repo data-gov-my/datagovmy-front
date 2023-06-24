@@ -11,9 +11,12 @@ import { StateDropdown, StateModal } from "@components/index";
 import { routes } from "@lib/routes";
 import { clx } from "@lib/helpers";
 import Fonts from "@config/font";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CovidVaccination: Page = ({
+  meta,
   params,
+  last_updated,
   timeseries,
   statistics,
   barmeter,
@@ -22,17 +25,17 @@ const CovidVaccination: Page = ({
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("page_title")} description={t("description")} keywords={""} />
       <COVIDVaccinationDashboard
         params={params}
-        lastUpdated={Date.now()}
+        last_updated={last_updated}
         timeseries={timeseries}
         statistics={statistics}
         barmeter={barmeter}
         waffle={waffle}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -66,6 +69,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccinat
         agency: "KKM",
       },
       params: { state: "mys" },
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       statistics: data.statistics,
       barmeter: data.bar_chart,

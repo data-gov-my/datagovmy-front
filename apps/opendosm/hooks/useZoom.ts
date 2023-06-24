@@ -16,7 +16,7 @@ type Viewbox = {
 };
 
 /**
- *
+ * @deprecated No longer used
  * @param enableZoom true | false
  * @param ref ref to the <div> containing the subject
  * @returns { onWheel, onMove, onDown, onUp, onReset, zoomIn, zoomOut }

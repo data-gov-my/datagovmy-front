@@ -7,7 +7,7 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { toast } from "@components/Toast";
@@ -132,29 +132,31 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   }, [dataset.chart.x, ctx]);
 
   return (
-    <Bar
-      _ref={ref => setCtx(ref)}
-      className={
-        bar_layout === "vertical"
-          ? "h-[350px] w-full lg:h-[450px]"
-          : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
-      }
-      type="category"
-      enableStack={dataset.type === "STACKED_BAR"}
-      layout={bar_layout}
-      enableGridX={bar_layout !== "vertical"}
-      enableGridY={bar_layout === "vertical"}
-      enableLegend={_datasets.length > 1}
-      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-      // formatX={value => {
-      //   if (t(`catalogue.show_filters.${value}`).includes(".show_filters")) return value;
-      //   return t(`catalogue.show_filters.${value}`);
-      // }}
-      data={{
-        labels: dataset.chart.x,
-        datasets: _datasets,
-      }}
-    />
+    <WindowProvider>
+      <Bar
+        _ref={ref => setCtx(ref)}
+        className={
+          bar_layout === "vertical"
+            ? "h-[350px] w-full lg:h-[450px]"
+            : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
+        }
+        type="category"
+        enableStack={dataset.type === "STACKED_BAR"}
+        layout={bar_layout}
+        enableGridX={bar_layout !== "vertical"}
+        enableGridY={bar_layout === "vertical"}
+        enableLegend={_datasets.length > 1}
+        precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+        // formatX={value => {
+        //   if (t(`catalogue.show_filters.${value}`).includes(".show_filters")) return value;
+        //   return t(`catalogue.show_filters.${value}`);
+        // }}
+        data={{
+          labels: dataset.chart.x,
+          datasets: _datasets,
+        }}
+      />
+    </WindowProvider>
   );
 };
 

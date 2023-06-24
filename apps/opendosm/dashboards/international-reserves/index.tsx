@@ -1,14 +1,14 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
+import Hero from "@components/Hero";
+import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
 import { FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
+import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
+
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDatasetProperties, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
+import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 
@@ -17,7 +17,9 @@ import { routes } from "@lib/routes";
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 
 interface InternationalReservesDashboardProps {
   last_updated: number;
@@ -44,9 +46,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
   const LATEST_TIMESTAMP = timeseries.data.x[timeseries.data.x.length - 1];
   const { coordinate } = useSlice(timeseries.data, data.minmax);
 
-  const shader = useCallback<
-    (key: string) => ChartDatasetProperties<keyof ChartTypeRegistry, any[]>
-  >(
+  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -103,11 +103,12 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 anchor="left"
                 options={SHADE_OPTIONS}
                 selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
+                onChange={(e: any) => setData("shade_type", e)}
               />
             </div>
 
             <Slider
+              className=""
               type="range"
               value={data.minmax}
               data={timeseries.data.x}

@@ -270,6 +270,85 @@ export const IPREPUIcon: FunctionComponent<IconProps> = ({ className }) => {
     </svg>
   );
 };
+
+/**
+ * JAKOA Icon Solid
+ * @param className
+ * @returns JAKOAIconSolid
+ */
+export const JAKOAIconSolid: FunctionComponent<IconProps> = ({
+  className,
+  fillColor = "#18181B",
+}) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <g id="Mini-Icon/JAKOA">
+        <path
+          id="Vector 136"
+          d="M6 1.50008C5.6 1.50008 5.5 1.16675 5.5 1.00008C4.5 0.311621 4.5 1.00008 4.5 1.50008C4.5 2.00008 5.5 3.00008 5.5 4.00008V7.00008C5.5 8.50008 6 8.00008 6.5 8.50008C7 9.00008 6.5 9.00008 6.5 10.5001C6.5 11.7001 7.83333 13.0001 8.5 13.5001C9.16667 14.1667 10.4 15.7001 10 16.5001C9.5 17.5001 11.5 17.5001 12 18.0001C12.5 18.5001 14 18.5001 14.5 19.5001C14.9 20.3001 16.3333 20.8334 17 21.0001L18.5 22.5001C18.5 22.5001 20.5 21.0001 21 22.0001C21.4 22.8001 21.8333 22.3334 22 22.0001C21.6667 21.3334 20.9 19.7001 20.5 18.5001C20 17.0001 20 17.5001 18.5 16.5001C17.3 15.7001 18 14.1667 18.5 13.5001C18.1667 13.6667 17.6 13.6001 18 12.0001C18.5 10.0001 18 6.50008 17 6.00008C16 5.50008 15 4.50008 14 3.50008C13.2 2.70008 12.6667 2.50008 12.5 2.50008C12.3333 2.83341 11.9 3.60008 11.5 4.00008C11 4.50008 11 3.50008 10.5 3.50008C10 3.50008 9 5.50008 8.5 5.00008C8 4.50008 8.5 4.50008 8.5 3.50008C8.5 2.70008 7.83333 2.50008 7.5 2.50008C7.5 2.50008 6.5 1.50008 6 1.50008Z"
+          fill={fillColor}
+        />
+        <g id="Vector 137">
+          <path
+            d="M4.00031 5.49984C4.50031 5.49984 5.30031 5.79984 4.50031 6.99984C3.50031 8.49984 2.50031 4.99984 4.00031 5.49984Z"
+            fill={fillColor}
+          />
+          <path
+            d="M2.50005 2.0003C3.50005 1.5003 4.50057 1.5003 4.00031 2.5003C3.50005 3.5003 2.00005 2.5006 2.50005 2.0003Z"
+            fill={fillColor}
+          />
+        </g>
+      </g>
+    </svg>
+  );
+};
+
+/**
+ * JAKOA Icon
+ * @param className
+ * @returns JAKOAIcon
+ */
+export const JAKOAIcon: FunctionComponent<IconProps> = ({ className }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      className={className}
+    >
+      <g clip-path="url(#clip0_4392_26542)">
+        <circle cx="16" cy="16" r="16" fill="#16A34A" />
+        <path
+          d="M10 5.50008C9.6 5.50008 9.5 5.16675 9.5 5.00008C8.5 4.31162 8.5 5.00008 8.5 5.50008C8.5 6.00008 9.5 7.00008 9.5 8.00008V11.0001C9.5 12.5001 10 12.0001 10.5 12.5001C11 13.0001 10.5 13.0001 10.5 14.5001C10.5 15.7001 11.8333 17.0001 12.5 17.5001C13.1667 18.1667 14.4 19.7001 14 20.5001C13.5 21.5001 15.5 21.5001 16 22.0001C16.5 22.5001 18 22.5001 18.5 23.5001C18.9 24.3001 20.3333 24.8334 21 25.0001L22.5 26.5001C22.5 26.5001 24.5 25.0001 25 26.0001C25.4 26.8001 25.8333 26.3334 26 26.0001C25.6667 25.3334 24.9 23.7001 24.5 22.5001C24 21.0001 24 21.5001 22.5 20.5001C21.3 19.7001 22 18.1667 22.5 17.5001C22.1667 17.6667 21.6 17.6001 22 16.0001C22.5 14.0001 22 10.5001 21 10.0001C20 9.50008 19 8.50008 18 7.50008C17.2 6.70008 16.6667 6.50008 16.5 6.50008C16.3333 6.83341 15.9 7.60008 15.5 8.00008C15 8.50008 15 7.50008 14.5 7.50008C14 7.50008 13 9.50008 12.5 9.00008C12 8.50008 12.5 8.50008 12.5 7.50008C12.5 6.70008 11.8333 6.50008 11.5 6.50008C11.5 6.50008 10.5 5.50008 10 5.50008Z"
+          fill="white"
+        />
+        <path
+          d="M8.00031 9.49984C8.50031 9.49984 9.30031 9.79984 8.50031 10.9998C7.50031 12.4998 6.50031 8.99984 8.00031 9.49984Z"
+          fill="white"
+        />
+        <path
+          d="M6.50005 6.0003C7.50005 5.5003 8.50057 5.5003 8.00031 6.5003C7.50005 7.5003 6.00005 6.5006 6.50005 6.0003Z"
+          fill="white"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_4392_26542">
+          <rect width="32" height="32" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
 /**
  * JIM Icon
  * @param className
@@ -1217,6 +1296,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
     "icu-jpm": ICUJPMIcon,
     "ke": IPREPUIcon,
     "imigresen": JIMIcon,
+    "jakoa": JAKOAIcon,
     "jpa": JPAIcon,
     "jpj": JPJIcon,
     "jpn": JPNIcon,
@@ -1244,7 +1324,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
   if (typeof Components[agency] !== "undefined") {
     return createElement(Components[agency], { className: "h-6 w-6" });
   }
-  return createElement("div", { className: "h-8 w-8 rounded-full" });
+  return createElement("div", { className: "h-6 w-6 rounded-full" });
 };
 
 export default AgencyIcon;

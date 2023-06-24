@@ -2,9 +2,10 @@ import type { InferGetStaticPropsType } from "next";
 import { GetStaticProps } from "next";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { withi18n } from "datagovmy-ui/decorators";
 import CompositeIndexDashboard from "@dashboards/composite-indices";
 
 const CompositeIndices: Page = ({
@@ -21,29 +22,27 @@ const CompositeIndices: Page = ({
         description={t("compositeindex.description")}
         keywords={""}
       />
-      <CompositeIndexDashboard
+      {/* <CompositeIndexDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
-      />
+      /> */}
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
-
-  const { data } = await get("/dashboard", { dashboard: "composite_indices" });
+export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+  // const { data } = await get("/dashboard", { dashboard: "composite_indices" });
 
   return {
+    notFound: true,
     props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries: data.timeseries,
-      timeseries_callouts: data.statistics,
+      //   last_updated: new Date().valueOf(),
+      //   timeseries: data.timeseries,
+      //   timeseries_callouts: data.statistics,
     },
-    revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
-};
+});
 
 export default CompositeIndices;

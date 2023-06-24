@@ -1,8 +1,6 @@
 import Image from "next/image";
-import { useTranslation } from "next-i18next";
-
-import Container from "@components/Container";
-import At from "@components/At";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Container, At } from "datagovmy-ui/components";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -13,7 +11,7 @@ const Footer = () => {
         <div className="flex flex-row gap-4">
           {/* LOGO */}
           <div className="mt-1 w-12">
-            <Image src="/static/images/logo.png" width={48} height={36} />
+            <Image src="/static/images/logo.png" width={48} height={36} alt="Jata Negara" />
           </div>
           <div>
             <div className="mb-2 uppercase">

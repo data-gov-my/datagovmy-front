@@ -1,6 +1,5 @@
-import Button from "@components/Button";
-import Dropdown from "@components/Dropdown";
 import { DocumentDuplicateIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
+import { Button, Dropdown } from "datagovmy-ui/components";
 import { FunctionComponent, useState } from "react";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
@@ -9,7 +8,7 @@ import python from "highlight.js/lib/languages/python";
 import "highlight.js/styles/shades-of-purple.css";
 import { OptionType } from "@components/types";
 import { copyClipboard } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { track } from "@lib/mixpanel";
 
 interface CodeBlockProps {

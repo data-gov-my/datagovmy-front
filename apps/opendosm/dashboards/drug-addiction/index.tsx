@@ -1,8 +1,9 @@
-import { Container, Hero, Section, StateDropdown } from "@components/index";
+import Hero from "@components/Hero";
+import { Container, Section, StateDropdown } from "datagovmy-ui/components";
 import { FunctionComponent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { useRouter } from "next/router";
 import { routes } from "@lib/routes";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
@@ -12,9 +13,12 @@ import { track } from "@lib/mixpanel";
  * Drug Addiction Dashboard
  * @overview Status: Live
  */
-
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), {
+  ssr: false,
+});
 
 interface DrugAddictionDashboardProps {
   last_updated: number;

@@ -50,12 +50,10 @@ function App({ Component, pageProps }: AppPropsLayout) {
 
   return (
     <div className={clx(Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black")}>
-      <WindowProvider>
-        <ThemeProvider attribute="class" enableSystem={false}>
-          {layout(<Component {...pageProps} />, pageProps)}
-          <Toast />
-        </ThemeProvider>
-      </WindowProvider>
+      <ThemeProvider attribute="class" enableSystem={false}>
+        {layout(<Component {...pageProps} />, pageProps)}
+        <Toast />
+      </ThemeProvider>
     </div>
   );
 }

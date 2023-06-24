@@ -69,9 +69,10 @@ const Slider: FunctionComponent<SliderProps> = ({
     return (
       <Root
         className="group relative flex h-5 w-auto touch-none select-none items-center pt-10"
-        defaultValue={[value]}
+        value={[minmax as number]}
         max={data.length - 1}
         step={step}
+        onValueChange={e => setMinmax(e)}
         onValueCommit={(e: number[] & number) => onChange(e)}
       >
         <p className="text-dim w-fit pr-2 text-sm">
@@ -83,7 +84,9 @@ const Slider: FunctionComponent<SliderProps> = ({
           </Track>
           <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary mx-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
             <SliderTooltip>
-              {parseAsDate ? toDate(data[value], dateFormat[period], i18n.language) : data[value]}
+              {parseAsDate
+                ? toDate(data[minmax as number], dateFormat[period], i18n.language)
+                : data[minmax as number]}
             </SliderTooltip>
           </Thumb>
         </div>
@@ -134,7 +137,7 @@ const Slider: FunctionComponent<SliderProps> = ({
       )}
 
       <Root
-        className="group relative flex h-5 w-full touch-none select-none items-center "
+        className="group relative flex h-5 w-full touch-none select-none items-center"
         value={minmax as number[]}
         min={0}
         max={data.length - 1}
@@ -158,15 +161,15 @@ const Slider: FunctionComponent<SliderProps> = ({
           <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary ml-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
             <SliderTooltip play={play}>
               {parseAsDate
-                ? toDate(data[(value as number[])[0]], dateFormat[period], i18n.language)
-                : data[(value as number[])[0]]}
+                ? toDate(data[(minmax as number[])[0]], dateFormat[period], i18n.language)
+                : data[(minmax as number[])[0]]}
             </SliderTooltip>
           </Thumb>
           <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary mr-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
             <SliderTooltip play={play}>
               {parseAsDate
-                ? toDate(data[value[1]], dateFormat[period], i18n.language)
-                : data[value[1]]}
+                ? toDate(data[(minmax as number[])[1]], dateFormat[period], i18n.language)
+                : data[(minmax as number[])[1]]}
             </SliderTooltip>
           </Thumb>
         </div>
