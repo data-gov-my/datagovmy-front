@@ -28,7 +28,7 @@ import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { OptionType } from "@components/types";
 import Sidebar from "@components/Sidebar";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import Daterange from "@components/Dropdown/Daterange";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
@@ -115,49 +115,51 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       />
 
       <Container className="min-h-screen lg:px-0">
-        <Sidebar
-          categories={Object.entries(collection).map(([category, subcategory]) => [
-            category,
-            Object.keys(subcategory),
-          ])}
-          onSelect={selected =>
-            scrollRef.current[selected]?.scrollIntoView({
-              behavior: "smooth",
-              block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
-              inline: "end",
-            })
-          }
-        >
-          <CatalogueFilter ref={filterRef} query={query} sources={sources} />
+        <WindowProvider>
+          <Sidebar
+            categories={Object.entries(collection).map(([category, subcategory]) => [
+              category,
+              Object.keys(subcategory),
+            ])}
+            onSelect={selected =>
+              scrollRef.current[selected]?.scrollIntoView({
+                behavior: "smooth",
+                block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
+                inline: "end",
+              })
+            }
+          >
+            <CatalogueFilter ref={filterRef} query={query} sources={sources} />
 
-          {_collection.length > 0 ? (
-            _collection.map(([title, datasets]) => {
-              return (
-                <Section
-                  title={<p className="text-lg font-bold">{title}</p>}
-                  key={title}
-                  ref={ref => (scrollRef.current[title] = ref)}
-                  className="p-2 pb-8 pt-14 lg:p-8"
-                >
-                  <ul className="columns-1 space-y-3 lg:columns-2 xl:columns-3">
-                    {datasets.map((item: Catalogue, index: number) => (
-                      <li key={index}>
-                        <At
-                          href={`/data-catalogue/${item.id}`}
-                          className="text-primary dark:text-primary-dark no-underline hover:underline"
-                        >
-                          {item.catalog_name}
-                        </At>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              );
-            })
-          ) : (
-            <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
-          )}
-        </Sidebar>
+            {_collection.length > 0 ? (
+              _collection.map(([title, datasets]) => {
+                return (
+                  <Section
+                    title={<p className="text-lg font-bold">{title}</p>}
+                    key={title}
+                    ref={ref => (scrollRef.current[title] = ref)}
+                    className="p-2 pb-8 pt-14 lg:p-8"
+                  >
+                    <ul className="columns-1 space-y-3 lg:columns-2 xl:columns-3">
+                      {datasets.map((item: Catalogue, index: number) => (
+                        <li key={index}>
+                          <At
+                            href={`/data-catalogue/${item.id}`}
+                            className="text-primary dark:text-primary-dark no-underline hover:underline"
+                          >
+                            {item.catalog_name}
+                          </At>
+                        </li>
+                      ))}
+                    </ul>
+                  </Section>
+                );
+              })
+            ) : (
+              <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
+            )}
+          </Sidebar>
+        </WindowProvider>
       </Container>
     </div>
   );

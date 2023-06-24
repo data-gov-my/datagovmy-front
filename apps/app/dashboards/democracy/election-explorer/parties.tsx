@@ -192,7 +192,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                   <Trans>
                     <span className="text-lg font-normal leading-9">
                       <ImageWithFallback
-                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block items-center rounded border"
+                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
                         src={`/static/images/parties/${params.party_name}.png`}
                         width={32}
                         height={18}
@@ -208,7 +208,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                           setData("state", selected.value);
                           navigateToParty(data.party, selected.value);
                         }}
-                        width="inline-block pl-1 min-w-max"
+                        width="inline-flex ml-0.5"
                         anchor="left"
                       />
                     </span>

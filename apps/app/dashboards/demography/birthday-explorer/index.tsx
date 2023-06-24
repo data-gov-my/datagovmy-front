@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import AgencyBadge from "@components/Badge/agency";
 import { CakeIcon, MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
 import { JPNIcon } from "@components/Icon/agency";
@@ -171,7 +171,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         }
       />
       <Container className="min-h-screen">
-        {/* <Section title={t("section_1.title")} description={t("section_1.description")}>
+        {/* 
+        <WindowProvider>
+        <Section title={t("section_1.title")} description={t("section_1.description")}>
           <div className="flex flex-col gap-8 rounded-xl lg:flex-row">
             <Card className="border-outline dark:border-washed-dark flex flex-shrink-0 basis-1/3 flex-col justify-between rounded-xl border p-6">
               <div>
@@ -411,48 +413,51 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               }}
             />
           </div>
-          {!data.loading ? (
-            <Timeseries
-              className="h-[350px] w-full"
-              interval={data.groupBy}
-              round={data.groupBy}
-              beginZero={true}
-              enableGridX={false}
-              enableGridY={true}
-              gridOffsetX={data.groupBy === "day" ? false : true}
-              tickXCallback={(val: number | string, index: number) => {
-                if (data.groupBy !== "day") return val;
-                const x = data.y.length > 365 ? leapTicks : nonLeapTicks;
-                return x.includes(index) ? val : null;
-              }}
-              tooltipFormat={data.groupBy === "day" ? "dd MMMM" : "MMMM"}
-              data={{
-                labels: data.x,
-                datasets: [
-                  {
-                    type: data.groupBy === "day" ? "line" : "bar",
-                    data: data.y,
-                    label: t("section_2.births"),
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    borderWidth:
-                      breakpoint <= BREAKPOINTS.MD
-                        ? 0.75
-                        : breakpoint <= BREAKPOINTS.LG
-                        ? 1.0
-                        : 1.5,
-                    fill: true,
-                  },
-                ],
-              }}
-            />
-          ) : (
-            <div className="flex h-[350px] w-full">
-              <div className="mx-auto self-center">
-                <Spinner loading={data.loading} />
+          <WindowProvider>
+            {!data.loading ? (
+              <Timeseries
+                className="h-[350px] w-full"
+                interval={data.groupBy}
+                round={data.groupBy}
+                beginZero={true}
+                enableGridX={false}
+                enableGridY={true}
+                gridOffsetX={data.groupBy === "day" ? false : true}
+                tickXCallback={(val: number | string, index: number) => {
+                  if (data.groupBy !== "day") return val;
+                  const x = data.y.length > 365 ? leapTicks : nonLeapTicks;
+                  return x.includes(index) ? val : null;
+                }}
+                tooltipFormat={data.groupBy === "day" ? "dd MMMM" : "MMMM"}
+                data={{
+                  labels: data.x,
+                  datasets: [
+                    {
+                      type: data.groupBy === "day" ? "line" : "bar",
+                      data: data.y,
+                      label: t("section_2.births"),
+                      backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                      borderColor: AKSARA_COLOR.PRIMARY,
+                      borderWidth:
+                        breakpoint <= BREAKPOINTS.MD
+                          ? 0.75
+                          : breakpoint <= BREAKPOINTS.LG
+                          ? 1.0
+                          : 1.5,
+                      fill: true,
+                    },
+                  ],
+                }}
+              />
+            ) : (
+              <div className="flex h-[350px] w-full">
+                <div className="mx-auto self-center">
+                  <Spinner loading={data.loading} />
+                </div>
               </div>
             </div>
           )}
+        </WindowProvider/>
         </Section> */}
       </Container>
     </>

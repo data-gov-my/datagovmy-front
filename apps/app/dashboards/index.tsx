@@ -250,7 +250,6 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
             placeholder={t("search_placeholder")}
             query={data.search}
             onChange={e => typeof e === "string" && onSearch(e)}
-
           />
           {renderClear("hidden lg:block")}
         </div>
