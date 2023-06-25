@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { get } from "@lib/api";
 import { OptionType } from "@components/types";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import Spinner from "@components/Spinner";
 import { toast } from "@components/Toast";
@@ -21,14 +21,19 @@ import { toast } from "@components/Toast";
  */
 
 interface CarPopularityProps {
+  last_updated: string;
   queryOptions: Record<string, any>;
   tableData: Record<string, any>;
 }
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
-const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, tableData }) => {
-  const { t, i18n } = useTranslation(["dashboard-car-popularity", "common"]);
+const CarPopularity: FunctionComponent<CarPopularityProps> = ({
+  last_updated,
+  queryOptions,
+  tableData,
+}) => {
+  const { t } = useTranslation(["dashboard-car-popularity", "common"]);
   const { breakpoint } = useContext(WindowContext);
 
   // query data
@@ -131,6 +136,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:jpj.full")}
@@ -270,87 +276,89 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
               </Card>
             </div>
             <div className="w-full">
-              {data.x?.length > 0 ? (
-                query.loading ? (
-                  <div className="flex h-96 items-center justify-center">
-                    <Spinner loading={query.loading} />
-                  </div>
+              <WindowProvider>
+                {data.x?.length > 0 ? (
+                  query.loading ? (
+                    <div className="flex h-96 items-center justify-center">
+                      <Spinner loading={query.loading} />
+                    </div>
+                  ) : (
+                    <Timeseries
+                      stepSize={1}
+                      suggestedMaxY={2}
+                      className="h-96 pt-2"
+                      title={
+                        <div className="flex flex-col gap-3">
+                          <p className="text-lg font-bold">
+                            <span className="capitalize">
+                              {t("timeseries_car_description", {
+                                car: data.params.model,
+                                manufacturer: data.params.manufacturer,
+                                colour: data.params.colour,
+                              })}
+                            </span>
+                            <span>{t("timeseries_title")}</span>
+                          </p>
+                          <p className="text-dim text-sm">
+                            <span>{t("timeseries_description")}</span>
+                          </p>
+                        </div>
+                      }
+                      interval={"year"}
+                      data={{
+                        labels: data.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            data: data.y,
+                            label: t("label"),
+                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            borderWidth:
+                              breakpoint <= BREAKPOINTS.MD
+                                ? 0.75
+                                : breakpoint <= BREAKPOINTS.LG
+                                ? 1.0
+                                : 1.5,
+                            fill: true,
+                          },
+                        ],
+                      }}
+                    />
+                  )
                 ) : (
-                  <Timeseries
-                    stepSize={1}
-                    suggestedMaxY={2}
-                    className="h-96 w-full pt-2"
-                    title={
-                      <div className="flex flex-col gap-3">
-                        <p className="text-lg font-bold">
-                          <span className="capitalize">
-                            {t("timeseries_car_description", {
-                              car: data.params.model,
-                              manufacturer: data.params.manufacturer,
-                              colour: data.params.colour,
-                            })}
-                          </span>
-                          <span>{t("timeseries_title")}</span>
-                        </p>
-                        <p className="text-dim text-sm">
-                          <span>{t("timeseries_description")}</span>
-                        </p>
-                      </div>
-                    }
-                    interval={"year"}
-                    data={{
-                      labels: data.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          data: data.y,
-                          label: t("label"),
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          borderWidth:
-                            breakpoint <= BREAKPOINTS.MD
-                              ? 0.75
-                              : breakpoint <= BREAKPOINTS.LG
-                              ? 1.0
-                              : 1.5,
-                          fill: true,
-                        },
-                      ],
-                    }}
-                  />
-                )
-              ) : (
-                <div className="relative hidden h-96 w-full items-center justify-center lg:flex">
-                  <Timeseries
-                    className="absolute left-0 top-0 h-full w-full opacity-30"
-                    data={{
-                      labels: data.placeholderX,
-                      datasets: [
-                        {
-                          type: "line",
-                          data: data.placeholderY,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          borderWidth:
-                            breakpoint <= BREAKPOINTS.MD
-                              ? 0.75
-                              : breakpoint <= BREAKPOINTS.LG
-                              ? 1.0
-                              : 1.5,
-                          fill: true,
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                    enableCrosshair={false}
-                    interval={"year"}
-                  />
-                  <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
-                    <MagnifyingGlassIcon className=" h-4 w-4" />
-                    <p>{t("search_prompt")}</p>
-                  </Card>
-                </div>
-              )}
+                  <div className="relative hidden h-96 w-full items-center justify-center lg:flex">
+                    <Timeseries
+                      className="absolute left-0 top-0 h-full w-full opacity-30"
+                      data={{
+                        labels: data.placeholderX,
+                        datasets: [
+                          {
+                            type: "line",
+                            data: data.placeholderY,
+                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            borderWidth:
+                              breakpoint <= BREAKPOINTS.MD
+                                ? 0.75
+                                : breakpoint <= BREAKPOINTS.LG
+                                ? 1.0
+                                : 1.5,
+                            fill: true,
+                          },
+                        ],
+                      }}
+                      enableGridX={false}
+                      enableCrosshair={false}
+                      interval={"year"}
+                    />
+                    <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
+                      <MagnifyingGlassIcon className=" h-4 w-4" />
+                      <p>{t("search_prompt")}</p>
+                    </Card>
+                  </div>
+                )}
+              </WindowProvider>
             </div>
           </div>
         </Section>

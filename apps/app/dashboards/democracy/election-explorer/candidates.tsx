@@ -15,7 +15,7 @@ import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent } from "react";
 
 /**
  * Election Explorer Dashboard - Candidates Tab

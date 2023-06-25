@@ -1,5 +1,6 @@
 import Metadata from "@components/Metadata";
 import KTMBExplorerDashboard from "@dashboards/transportation/ktmb-explorer";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
@@ -8,6 +9,7 @@ import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 
 const KTMBExplorer: Page = ({
+  meta,
   A_to_B,
   A_to_B_callout,
   B_to_A,
@@ -19,7 +21,7 @@ const KTMBExplorer: Page = ({
   const { t } = useTranslation(["dashboard-ktmb-explorer", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <KTMBExplorerDashboard
         A_to_B={A_to_B}
@@ -30,7 +32,7 @@ const KTMBExplorer: Page = ({
         last_updated={last_updated}
         params={params}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -70,7 +72,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer"
         B_to_A: B_to_A.data.timeseries.data,
         B_to_A_callout: B_to_A.data.timeseries_callout.data,
         dropdown: dropdown.data.data,
-        last_updated: Date.now(),
+        last_updated: A_to_B.data.data_last_updated,
         params: {},
       },
     };

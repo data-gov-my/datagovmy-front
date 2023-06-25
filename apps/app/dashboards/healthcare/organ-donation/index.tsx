@@ -32,7 +32,7 @@ const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
 interface OrganDonationProps {
-  last_updated: number;
+  last_updated: string;
   params: { state: string };
   timeseries: any;
   choropleth: any;
@@ -66,14 +66,9 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         background="green"
         category={[t("common:categories.healthcare"), "text-[#16A34A]"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />
-            </div>
-          </>
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={"National Transplant Resource Centre (NTRC)"}
@@ -81,7 +76,6 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
             icon={<NTRCIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">

@@ -46,7 +46,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-refugee-situat
       },
       barmeter: data.barmeter,
       choropleth: data.choropleth,
-      last_updated: Date.now(),
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
     },

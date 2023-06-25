@@ -30,7 +30,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 
 interface IPRProps {
   choropleth: any;
-  last_updated: any;
+  last_updated: string;
   params: { state: string };
   timeseries: any;
   timeseries_callout: any;
@@ -46,9 +46,9 @@ const IPR: FunctionComponent<IPRProps> = ({
   const { t, i18n } = useTranslation(["dashboard-ipr", "common"]);
   const FILTER_OPTIONS: Array<OptionType> = [
     "absolute",
-    "absolute_hardcore_poor",
-    "per_capita",
-    "per_capita_hardcore_poor",
+    // "absolute_hardcore_poor",
+    // "per_capita",
+    // "per_capita_hardcore_poor",
   ].map((key: string) => ({
     label: t(key),
     value: key,
@@ -70,14 +70,9 @@ const IPR: FunctionComponent<IPRProps> = ({
         background="gray"
         category={[t("common:categories.government_programs"), "text-black dark:text-white"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.IPR} currentState={params.state} />
-            </div>
-          </>
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.IPR} currentState={params.state} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:epu.full")}
@@ -85,7 +80,6 @@ const IPR: FunctionComponent<IPRProps> = ({
             icon={<IPREPUIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">

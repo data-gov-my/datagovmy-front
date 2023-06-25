@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
+import canvasToSvg from "canvas2svg";
 
 /**
  * Conditional class joiner.
@@ -282,8 +283,18 @@ export const chunkSplit = (text: string, len: number): string[] => {
   return r;
 };
 
-export const exportAs = async (type: "svg" | "png", element: Node): Promise<string> => {
-  return type === "svg" ? DomToImage.toSvg(element) : DomToImage.toPng(element);
+export const exportAs = async (
+  type: "svg" | "png",
+  element: HTMLCanvasElement
+): Promise<string> => {
+  if (type === "svg") {
+    return new Promise(resolve => {
+      const canvas = canvasToSvg(element.width, element.height);
+      canvas.drawImage(element, 0, 0);
+      resolve("data:svg+xml;utf8,".concat(canvas.getSerializedSvg()));
+    });
+  }
+  return DomToImage.toPng(element);
 };
 
 /**

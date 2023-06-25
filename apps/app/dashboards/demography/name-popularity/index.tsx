@@ -28,9 +28,9 @@ interface NamePopularityDashboardProps {}
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
   const { t, i18n } = useTranslation(["dashboard-name-popularity", "common"]);
-  const { breakpoint } = useContext(WindowContext);
+  // const { breakpoint } = useContext(WindowContext);
 
-  const showPlaceholder = breakpoint >= BREAKPOINTS.LG;
+  // const showPlaceholder = breakpoint >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },
@@ -55,31 +55,31 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   const { theme } = useTheme();
 
   // trigger API calls when parameters (user inputs) are updated
-  useWatch(() => {
-    setSearchData("loading", true);
-    get("/explorer", searchData.params)
-      .then(({ data }) => {
-        setSearchData("data", data);
-        setSearchData("loading", false);
-      })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      });
-  }, [searchData.params]);
+  // useWatch(() => {
+  //   setSearchData("loading", true);
+  //   get("/explorer", searchData.params)
+  //     .then(({ data }) => {
+  //       setSearchData("data", data);
+  //       setSearchData("loading", false);
+  //     })
+  //     .catch(e => {
+  //       toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+  //       console.error(e);
+  //     });
+  // }, [searchData.params]);
 
-  useWatch(() => {
-    setCompareData("loading", true);
-    get("/explorer", compareData.params)
-      .then(({ data }) => {
-        setCompareData("data", data);
-        setCompareData("loading", false);
-      })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      });
-  }, [compareData.params]);
+  // useWatch(() => {
+  //   setCompareData("loading", true);
+  //   get("/explorer", compareData.params)
+  //     .then(({ data }) => {
+  //       setCompareData("data", data);
+  //       setCompareData("loading", false);
+  //     })
+  //     .catch(e => {
+  //       toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+  //       console.error(e);
+  //     });
+  // }, [compareData.params]);
 
   const filterTypes: Array<OptionType> = [
     { label: t("first_name"), value: "first" },
