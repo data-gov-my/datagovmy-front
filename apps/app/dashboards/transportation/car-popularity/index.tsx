@@ -179,7 +179,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                         >
                           {i + 1}
                         </td>
-                        <td className="px-1 py-2 text-start text-sm font-medium capitalize">
+                        <td className="w-1/2 px-1 py-2 text-start text-sm font-medium capitalize">
                           {`${item.maker} ${item.model}`.toLocaleLowerCase()}
                         </td>
                         <td className="px-1 py-2 text-end text-sm font-medium">
@@ -211,7 +211,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                       >
                         {i + 1}
                       </td>
-                      <td className="px-1 py-2 text-start text-sm font-medium capitalize">
+                      <td className="w-1/2 px-1 py-2 text-start text-sm font-medium capitalize">
                         {item.maker.toLocaleLowerCase()}
                       </td>
                       <td className="px-1 py-2 text-end text-sm font-medium">
