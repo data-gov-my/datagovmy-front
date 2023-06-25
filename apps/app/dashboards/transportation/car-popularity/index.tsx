@@ -274,7 +274,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                 ) : (
                   <Timeseries
                     stepSize={1}
-                    suggestedMaxY={2} // FIXME: should we put as 2?
+                    suggestedMaxY={2}
                     className="h-96 w-full pt-2"
                     title={
                       <div className="flex flex-col gap-3">
