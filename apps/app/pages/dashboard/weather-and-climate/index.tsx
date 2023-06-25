@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import WeatherandClimateDashboard from "@dashboards/environment/weather-and-climate";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const WeatherandClimate: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const WeatherandClimate: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-weather-and-climate", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WeatherandClimateDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

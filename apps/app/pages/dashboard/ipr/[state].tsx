@@ -10,8 +10,10 @@ import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { STATES } from "@lib/constants";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const IPRState: Page = ({
+  meta,
   choropleth,
   last_updated,
   params,
@@ -21,7 +23,7 @@ const IPRState: Page = ({
   const { t } = useTranslation(["dashboard-ipr", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IPRDashboard
         choropleth={choropleth}
@@ -30,7 +32,7 @@ const IPRState: Page = ({
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -84,7 +86,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async ({
         category: "government-programs",
         agency: "EPU",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       params: params,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout.data,

@@ -6,8 +6,10 @@ import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
 import type { Seat } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ElectionSeats: Page = ({
+  meta,
   params,
   selection,
   elections,
@@ -15,10 +17,10 @@ const ElectionSeats: Page = ({
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionSeatsDashboard params={params} selection={selection} elections={elections} />
-    </>
+    </AnalyticsProvider>
   );
 };
 

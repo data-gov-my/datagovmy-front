@@ -9,8 +9,10 @@ import type { Page } from "@lib/types";
 import { DateTime } from "luxon";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const OrganDonation: Page = ({
+  meta,
   last_updated,
   params,
   timeseries,
@@ -21,7 +23,7 @@ const OrganDonation: Page = ({
   const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <OrganDonationDashboard
         last_updated={last_updated}
@@ -31,7 +33,7 @@ const OrganDonation: Page = ({
         barchart_age={barchart_age}
         barchart_time={barchart_time}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -65,7 +67,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-organ-donation
         category: "healthcare",
         agency: "NTRC",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       params: { state: "mys" },
       timeseries: data.timeseries,
       choropleth: data.choropleth_malaysia,

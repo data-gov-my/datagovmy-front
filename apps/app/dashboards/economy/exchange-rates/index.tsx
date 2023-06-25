@@ -20,7 +20,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
 interface ExchangeRatesDashboardProps {
-  last_updated: number;
+  last_updated: string;
   bar: any;
   timeseries: any;
   timeseries_callouts: any;

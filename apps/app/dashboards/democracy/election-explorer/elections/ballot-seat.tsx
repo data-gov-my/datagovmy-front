@@ -1,6 +1,5 @@
-import type { BaseResult, Seat, SeatResult } from "../types";
+import type { BaseResult, OverallSeat, SeatResult } from "../types";
 import { Won } from "@components/Badge/election";
-import Card from "@components/Card";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
 import ComboBox from "@components/Combobox";
@@ -13,9 +12,11 @@ import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
-import { numFormat, toDate } from "@lib/helpers";
+import { clx, numFormat, toDate } from "@lib/helpers";
 import { generateSchema } from "@lib/schema/election-explorer";
-import { FunctionComponent, useEffect, useMemo } from "react";
+import { CSSProperties, FunctionComponent, useEffect, useMemo, useRef } from "react";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List, FixedSizeGrid as Grid } from "react-window";
 
 /**
  * Election Explorer - Ballot Seat
@@ -23,7 +24,7 @@ import { FunctionComponent, useEffect, useMemo } from "react";
  */
 
 interface BallotSeatProps {
-  seats: Seat[];
+  seats: OverallSeat[];
   state: string;
   election: string | undefined;
 }
@@ -31,6 +32,8 @@ interface BallotSeatProps {
 const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { cache } = useCache();
+  const listRef = useRef<List>(null);
+  const gridRef = useRef<Grid>(null);
 
   const { data, setData } = useData({
     seat: undefined,
@@ -115,25 +118,66 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
   }, [data.seat_result, seats]);
 
   const SEAT_OPTIONS = seats.map(seat => ({ label: seat.seat, value: seat.seat }));
-  const _seats = useMemo<Seat[]>(() => {
-    if (!data.seat) return seats;
-    return seats.filter(seat => seat.seat.includes(data.seat.value));
-  }, [data.seat, seats]);
+
+  const OverallResultCard = ({ seat }: { seat: OverallSeat }) => {
+    return (
+      <div
+        className={clx(
+          `border-outline dark:border-washed-dark focus:border-primary group-focus:dark:ring-primary-dark hover:border-outlineHover
+         dark:hover:border-outlineHover-dark active:bg-washed flex h-full w-full flex-col gap-2
+          rounded-xl border bg-white p-3 text-sm focus:outline-none focus:ring-2 dark:bg-black hover:dark:bg-black/50 active:dark:bg-black`,
+          data.seat &&
+            seat.seat === data.seat.label &&
+            "border-primary dark:border-primary-dark border"
+        )}
+        onClick={() => fetchSeatResult(seat.seat)}
+      >
+        <div className="flex justify-between">
+          <div className="flex gap-2 truncate">
+            <span className="text-dim text-sm font-medium">{seat.seat.slice(0, 5)}</span>
+            <span>{seat.seat.slice(5)}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <ImageWithFallback
+            className="border-outline dark:border-outlineHover-dark rounded border"
+            src={`/static/images/parties/${seat.party}.png`}
+            width={32}
+            height={18}
+            alt={t(`${seat.party}`)}
+          />
+          <span className="truncate font-medium">{`${seat.name} `}</span>
+          <span>{`(${seat.party})`}</span>
+          <Won />
+        </div>
+        <div className="flex items-center gap-1.5">
+          <p className="text-dim text-sm">{t("majority")}</p>
+          <BarPerc hidden value={seat.majority.perc} size="h-[5px] w-[30px] xl:w-[50px]" />
+          <span>
+            {seat.majority.abs === null ? `—` : numFormat(seat.majority.abs, "standard")}
+            {seat.majority.perc === null
+              ? ` (—)`
+              : ` (${numFormat(seat.majority.perc, "compact", [1, 1])}%)`}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Section>
       <div className="grid grid-cols-12">
         <div className="col-span-full col-start-1 space-y-12 lg:col-span-10 lg:col-start-2">
           <div className="space-y-6">
-            <h4 className="text-center">{t("election.header_2")}</h4>
+            <h4 className="text-center">{t("header_2")}</h4>
 
             <LeftRightCard
               left={
                 <div
-                  className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col gap-3 overflow-hidden 
+                  className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col overflow-hidden 
                 rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:pb-6 xl:px-6"
                 >
-                  <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 border-b pb-3 pt-6">
+                  <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
                       options={SEAT_OPTIONS}
@@ -141,66 +185,71 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                       onChange={selected => {
                         setData("seat", selected);
                         if (selected) fetchSeatResult(selected.value);
+
+                        const index = SEAT_OPTIONS.findIndex(e => e === selected);
+                        if (listRef && listRef.current)
+                          listRef.current.scrollToItem(index, "smart");
+                        if (gridRef && gridRef.current)
+                          gridRef.current.scrollToItem({
+                            align: "start",
+                            columnIndex: Math.floor(index / 2),
+                          });
                       }}
                     />
                   </div>
-                  <div className="grid w-full grid-flow-col-dense grid-rows-2 flex-row gap-3 overflow-x-scroll md:flex-col md:overflow-x-clip md:pb-0 lg:flex">
-                    {election &&
-                      _seats.map((seat: Seat) => (
-                        <Card
-                          key={seat.seat}
-                          className="focus:border-primary dark:focus:border-primary-dark hover:border-outlineHover dark:hover:border-outlineHover-dark
-                          active:bg-washed flex h-fit w-72 flex-col gap-2 rounded-xl border bg-white p-3 text-sm dark:bg-black hover:dark:bg-black/50 active:dark:bg-black
-                          lg:w-auto xl:w-full"
-                          onClick={() => fetchSeatResult(seat.seat)}
-                        >
-                          <div className="flex flex-row justify-between">
-                            <div className="flex gap-2 truncate">
-                              <span className="text-dim text-sm font-medium">
-                                {seat.seat.slice(0, 5)}
-                              </span>
-                              <span>{seat.seat.slice(5)}</span>
+                  {election && (
+                    <>
+                      <List
+                        ref={listRef}
+                        height={489}
+                        width={"100%"}
+                        itemCount={seats.length}
+                        itemSize={114}
+                        layout="vertical"
+                        className="hidden lg:flex"
+                      >
+                        {({ index, style }: { index: number; style: CSSProperties }) => {
+                          return (
+                            <div style={style} key={index} className="group px-1.5 pt-3">
+                              <OverallResultCard seat={seats[index]} />
                             </div>
-                            <div className="group relative w-max">
-                              <span
-                                className="invisible absolute inline-block w-max -translate-x-3/4 translate-y-4 transform rounded
-                           bg-black p-3 text-sm font-normal text-white opacity-0 transition-opacity group-hover:visible group-hover:opacity-100"
-                              >
-                                {t("full_result")}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex flex-row items-center gap-1.5">
-                            <ImageWithFallback
-                              className="border-outline dark:border-outlineHover-dark rounded border"
-                              src={`/static/images/parties/${seat.party}.png`}
-                              width={32}
-                              height={18}
-                              alt={t(`${seat.party}`)}
-                            />
-                            <span className="truncate font-medium">{`${seat.name} `}</span>
-                            <span>{`(${seat.party})`}</span>
-                            <Won />
-                          </div>
-                          <div className="flex flex-row items-center gap-1.5">
-                            <p className="text-dim text-sm">{t("majority")}</p>
-                            <BarPerc
-                              hidden
-                              value={seat.majority.perc}
-                              size="h-[5px] w-[30px] xl:w-[50px]"
-                            />
-                            <span>
-                              {seat.majority.abs === null
-                                ? `—`
-                                : numFormat(seat.majority.abs, "standard")}
-                              {seat.majority.perc === null
-                                ? ` (—)`
-                                : ` (${numFormat(seat.majority.perc, "compact", [1, 1])}%)`}
-                            </span>
-                          </div>
-                        </Card>
-                      ))}
-                  </div>
+                          );
+                        }}
+                      </List>
+                      <div className="flex h-[244px] lg:hidden">
+                        <AutoSizer>
+                          {({ height, width }: { height: number; width: number }) => (
+                            <Grid
+                              ref={gridRef}
+                              rowCount={2}
+                              columnCount={Math.ceil(seats.length / 2)}
+                              height={height}
+                              rowHeight={114}
+                              width={width}
+                              columnWidth={288}
+                            >
+                              {({
+                                rowIndex,
+                                columnIndex,
+                                style,
+                              }: {
+                                rowIndex: number;
+                                columnIndex: number;
+                                style: CSSProperties;
+                              }) => {
+                                const seat = seats[columnIndex * 2 + rowIndex];
+                                return (
+                                  <div style={style} key={seat.seat} className="px-1.5 pt-3">
+                                    <OverallResultCard seat={seat} />
+                                  </div>
+                                );
+                              }}
+                            </Grid>
+                          )}
+                        </AutoSizer>
+                      </div>
+                    </>
+                  )}
                 </div>
               }
               right={
@@ -210,7 +259,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                       <div className="flex items-center gap-4">
                         <SPRIconSolid className="text-dim h-10 w-10" />
                         <div>
-                          <div className="flex items-center gap-3 ">
+                          <div className="flex flex-wrap items-center gap-x-3">
                             <h5>{seat_info.area}</h5>
                             <p className="text-dim uppercase">{seat_info.state}</p>
                           </div>

@@ -6,8 +6,10 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import InternationalReservesDashboard from "@dashboards/financial-sector/international-reserves";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const InternationalReserves: Page = ({
+  meta,
   last_updated,
   timeseries,
   timeseries_callouts,
@@ -15,14 +17,14 @@ const InternationalReserves: Page = ({
   const { t } = useTranslation(["dashboard-international-reserves", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternationalReservesDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -40,7 +42,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "financial-sector",
           agency: "BNM",
         },
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         timeseries: data.timeseries,
         timeseries_callouts: data.statistics,
       },

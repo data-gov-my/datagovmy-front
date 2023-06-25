@@ -1,5 +1,5 @@
 import throttle from "lodash/throttle";
-import { FunctionComponent, ReactNode, createContext, useEffect, useRef, useState } from "react";
+import { FunctionComponent, ReactNode, createContext, useEffect, useState } from "react";
 
 interface WindowContextProps {
   breakpoint: number;

@@ -9,19 +9,20 @@ import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useTranslation } from "next-i18next";
 import { withi18n } from "@lib/decorators";
 import Fonts from "@config/font";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const COVID19State: Page = ({
+  meta,
   params,
   last_updated,
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  util_chart,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("dashboard-covid-19.header"))}
         description={t("dashboard-covid-19.description")}
@@ -33,10 +34,9 @@ const COVID19State: Page = ({
         snapshot_bar={snapshot_bar}
         snapshot_graphic={snapshot_graphic}
         timeseries={timeseries}
-        util_chart={util_chart}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -53,22 +53,6 @@ COVID19State.layout = (page, props) => (
 );
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
-  //   let paths: Array<any> = [];
-  //   STATES.forEach(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
   return {
     paths: [],
     fallback: "blocking",
@@ -88,7 +72,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
         agency: "KKM",
       },
       params: params,
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       snapshot_bar: data.snapshot_bar,
       snapshot_graphic: data.snapshot_graphic,
       timeseries: {
@@ -112,7 +96,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
           vents_line: data.timeseries_vents.data.line,
         },
       },
-      util_chart: data.util_chart,
       statistics: data.statistics,
     },
   };

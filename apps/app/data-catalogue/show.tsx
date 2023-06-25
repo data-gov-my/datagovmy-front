@@ -1,5 +1,5 @@
 import { OptionType } from "@components/types";
-import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "@lib/constants";
 import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
@@ -11,7 +11,7 @@ import type {
   DownloadOptions,
   FilterDefault,
 } from "@lib/types";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, useContext, useEffect, useState } from "react";
 import { track } from "@lib/mixpanel";
 import At from "@components/At";
 import Card from "@components/Card";
@@ -25,6 +25,8 @@ import { useFilter } from "@hooks/useFilter";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import CatalogueCode from "./partials/code";
+import { AnalyticsContext } from "@hooks/useAnalytics";
+import sum from "lodash/sum";
 
 /**
  * Catalogue Show
@@ -117,6 +119,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
   const { filter, setFilter } = useFilter(config.context, { id: params.id });
+  const { result } = useContext(AnalyticsContext);
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -298,9 +301,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 onChange={e => setShow(e)}
               />
               <Dropdown
-                className="flex-row items-center"
+                width="w-fit"
                 anchor="right"
-                sublabel={<DocumentArrowDownIcon className="text h-4 w-4" />}
+                sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
                 options={
                   downloads
@@ -336,9 +339,14 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           }
         >
           {/* Dataset Filters & Chart / Table */}
-          {config.options !== null && config.options.length > 0 && (
-            <div className="flex gap-3 pb-2">
-              {config.options.map((item: FilterDefault, index: number) => (
+          <div
+            className={clx(
+              "flex gap-3 pb-3",
+              config.options !== null ? "justify-between" : "justify-end"
+            )}
+          >
+            <div className={clx("flex gap-2")}>
+              {config?.options?.map((item: FilterDefault, index: number) => (
                 <Dropdown
                   key={item.key}
                   width="w-fit"
@@ -352,7 +360,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 />
               ))}
             </div>
-          )}
+          </div>
+
           {/* Chart */}
           <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
@@ -402,6 +411,26 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               }
             />
           )}
+
+          <p className="text-dim mt-6 flex justify-end gap-2 text-sm">
+            <span>
+              {numFormat(result?.all_time_view ?? 0, "compact", 1)} {t("common:common.views")}
+            </span>
+            <span>&middot;</span>
+            <span>
+              {numFormat(
+                sum([
+                  result?.download_csv,
+                  result?.download_parquet,
+                  result?.download_png,
+                  result?.download_svg,
+                ]) ?? 0,
+                "compact",
+                1
+              )}{" "}
+              {t("common:common.downloads")}
+            </span>
+          </p>
         </Section>
 
         <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-12">
@@ -586,6 +615,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         ext: props.id,
                         type: ["csv", "parquet"].includes(props.id) ? "file" : "image",
                       }}
+                      views={
+                        result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
+                      }
                       {...props}
                     />
                   ))}
@@ -606,6 +638,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         ext: props.id,
                         type: ["csv", "parquet"].includes(props.id) ? "file" : "image",
                       }}
+                      views={
+                        result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
+                      }
                       {...props}
                     />
                   ))}
@@ -631,6 +666,7 @@ interface DownloadCard extends DownloadOption {
     ext: string;
     type: string;
   };
+  views?: number;
 }
 
 const DownloadCard: FunctionComponent<DownloadCard> = ({
@@ -640,9 +676,20 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
   description,
   icon,
   meta,
+  views,
 }) => {
+  const { realtime_track } = useContext(AnalyticsContext);
+
+  // csv & parquet
   return typeof href === "string" ? (
-    <a href={href} download onClick={() => track("file_download", meta)}>
+    <a
+      href={href}
+      download
+      onClick={() => {
+        track("file_download", meta);
+        realtime_track(meta.id, "data-catalogue", `download_${meta.ext as "csv" | "parquet"}`);
+      }}
+    >
       <Card className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark">
         <div className="gap-4.5 flex items-center">
           {image && (
@@ -659,14 +706,20 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
             {description && <p className="text-dim text-sm">{description}</p>}
           </div>
 
-          {icon && icon}
+          <div className="space-y-1">
+            {icon}
+            <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact", 1)}</p>
+          </div>
         </div>
       </Card>
     </a>
   ) : (
     // .png & svg
     <Card
-      onClick={href}
+      onClick={() => {
+        href();
+        realtime_track(meta.id, "data-catalogue", `download_${meta.ext as "svg" | "png"}`);
+      }}
       className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
     >
       <div className="gap-4.5 flex items-center">
@@ -684,7 +737,10 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
           {description && <p className="text-dim text-sm">{description}</p>}
         </div>
 
-        {icon && icon}
+        <div className="space-y-1">
+          {icon}
+          <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact", 1)}</p>
+        </div>
       </div>
     </Card>
   );
