@@ -21,13 +21,14 @@ import { toast } from "@components/Toast";
  */
 
 interface CarPopularityProps {
+  last_updated: string;
   queryOptions: Record<string, any>;
 }
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
-const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) => {
-  const { t, i18n } = useTranslation(["dashboard-car-popularity", "common"]);
+const CarPopularity: FunctionComponent<CarPopularityProps> = ({ last_updated, queryOptions }) => {
+  const { t } = useTranslation(["dashboard-car-popularity", "common"]);
   const { breakpoint } = useContext(WindowContext);
 
   // query data
@@ -122,6 +123,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions }) 
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={"Road Transport Department (JPJ)"}

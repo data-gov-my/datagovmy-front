@@ -10,6 +10,7 @@ import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CarPopularity: Page = ({
   meta,
+  last_updated,
   queryOptions,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
@@ -17,25 +18,46 @@ const CarPopularity: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <CarPopularityDashboard queryOptions={queryOptions} />
+      <CarPopularityDashboard last_updated={last_updated} queryOptions={queryOptions} />
     </AnalyticsProvider>
   );
 };
 // Disabled
 export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
-  const { data: dropdownData } = await get("/dropdown", { dashboard: "car_popularity" });
-  return {
-    notFound: false,
-    props: {
-      meta: {
-        id: "dashboard-car-popularity",
-        type: "dashboard",
-        category: "transportation",
-        agency: "JPJ",
+  try {
+    const [dropdown, chart] = await Promise.all([
+      get("/dropdown", {
+        dashboard: "car_popularity",
+      }),
+      get("/chart", {
+        dashboard: "car_popularity",
+        chart_name: "timeseries",
+        manufacturer: "PROTON",
+        model: "WIRA",
+        colour: "All",
+      }),
+    ]).catch(e => {
+      throw new Error("Error: " + e);
+    });
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-car-popularity",
+          type: "dashboard",
+          category: "transportation",
+          agency: "JPJ",
+        },
+        queryOptions: dropdown.data.data,
+        last_updated: chart.data.data_last_updated,
       },
-      queryOptions: dropdownData.data,
-    },
-  };
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      notFound: true,
+    };
+  }
 });
 
 export default CarPopularity;

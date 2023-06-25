@@ -1,7 +1,6 @@
 import { post } from "@lib/api";
 import { MetaPage } from "@lib/types";
 import { FunctionComponent, ReactNode, createContext, useEffect, useState } from "react";
-import { useWatch } from "./useWatch";
 
 /**
  * Realtime view count for dashboard & data-catalogue.
@@ -53,7 +52,7 @@ export const AnalyticsContext = createContext<
 export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, children }) => {
   const [data, setData] = useState<AnalyticsResult<"dashboard" | "data-catalogue"> | undefined>();
   // auto-increment view count for id
-  useWatch(() => {
+  useEffect(() => {
     track(meta.id, meta.type, "view_count");
   }, []);
 
