@@ -55,7 +55,7 @@ const Button: FunctionComponent<ButtonProps> = ({
     ),
     // TODO: refactor buttons, all buttons yet to refactor use box for now
     box: `flex p-2 gap-2 items-center self-center 
-    text-start text-sm text-dim leading-none 
+    text-start text-sm leading-none 
     hover:bg-washed dark:hover:bg-washed-dark
     rounded-md transition hover:bg-opacity-50
     disabled:cursor-not-allowed disabled:opacity-50`,
