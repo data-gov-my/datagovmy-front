@@ -133,7 +133,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Road Transport Department (JPJ)"}
+            agency={t("agencies:jpj.full")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<JPJIcon />}
           />
@@ -144,7 +144,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
         <Section>
           <div className="space-y-6">
             <div className="flex flex-col place-content-center place-items-center gap-3 sm:flex-row">
-              <h4 className="text-center">{t("Best selling cars model and brands in")}</h4>
+              <h4 className="text-center">{t("table_title")}</h4>
               <Dropdown
                 width="w-fit"
                 selected={data.selectedYear}
@@ -162,9 +162,11 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                 <thead className="border-b-2">
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
-                    <th className="px-1 py-2 text-start text-sm font-medium">{t("Car model")}</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
+                      {t("column_model")}
+                    </th>
                     <th className="px-1 py-2 text-end text-sm font-medium">
-                      {t("Total cars sold")}
+                      {t("column_vehicles")}
                     </th>
                   </tr>
                 </thead>
@@ -195,9 +197,11 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                 <thead className="border-b-2">
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
-                    <th className="px-1 py-2 text-start text-sm font-medium">{t("Car brand")}</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
+                      {t("column_maker")}
+                    </th>
                     <th className="px-1 py-2 text-end text-sm font-medium">
-                      {t("Total cars sold")}
+                      {t("column_vehicles")}
                     </th>
                   </tr>
                 </thead>
