@@ -60,6 +60,10 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { breakpoint } = useContext(WindowContext);
+  const sourceOptions = sources.map(source => ({
+    label: source,
+    value: source,
+  }));
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     const resultCollection: Array<[string, Catalogue[]]> = [];
@@ -95,7 +99,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
               className="min-w-[250px]"
               placeholder={t("placeholder.source")}
               anchor="left"
-              options={filterRef.current?.filters ?? []}
+              options={sourceOptions}
               selected={filterRef.current?.source}
               onChange={e => filterRef.current?.setFilter("source", e)}
               enableSearch
@@ -129,7 +133,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
               })
             }
           >
-            <CatalogueFilter ref={filterRef} query={query} sources={sources} />
+            <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
             {_collection.length > 0 ? (
               _collection.map(([title, datasets]) => {
@@ -170,18 +174,17 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
  */
 interface CatalogueFilterProps {
   query: Record<string, any>;
-  sources: string[];
+  sources: OptionType[];
   ref?: ForwardedRef<CatalogueFilterRef>;
 }
 
 interface CatalogueFilterRef {
   source?: OptionType;
-  filters?: OptionType[];
   setFilter: (key: string, value: any) => void;
 }
 
 const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forwardRef(
-  ({ query, sources: _sources }, ref) => {
+  ({ query, sources }, ref) => {
     const { t } = useTranslation(["catalogue", "common"]);
     const periods: OptionType[] = [
       { label: t("filter_options.daily"), value: "DAILY" },
@@ -207,10 +210,6 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.marital"), value: "MARITAL" },
     ];
 
-    const sources: OptionType[] = _sources.map(source => ({
-      label: source,
-      value: source,
-    }));
     const startYear = 1982;
     const endYear: number = new Date().getFullYear();
 
@@ -249,7 +248,6 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
     useImperativeHandle(ref, () => {
       return {
         source: filter.source,
-        filters: sources,
         setFilter,
       };
     });
