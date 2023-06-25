@@ -267,12 +267,14 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
             </div>
             <div className="w-full">
               {data.x?.length > 0 ? (
-                data.loading ? (
+                query.loading ? (
                   <div className="flex h-96 items-center justify-center">
-                    <Spinner loading={data.loading} />
+                    <Spinner loading={query.loading} />
                   </div>
                 ) : (
                   <Timeseries
+                    stepSize={1}
+                    suggestedMaxY={2} // FIXME: should we put as 2?
                     className="h-96 w-full pt-2"
                     title={
                       <div className="flex flex-col gap-3">
