@@ -150,8 +150,8 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
                 selected={data.selectedYear}
                 onChange={e => {
                   setData("selectedYear", e);
-                  setData("topMakers", tableData.top_makers.data[data.selectedYear.value]);
-                  setData("topModels", tableData.top_models.data[data.selectedYear.value]);
+                  setData("topMakers", tableData.top_makers.data[e.value]);
+                  setData("topModels", tableData.top_models.data[e.value]);
                 }}
                 options={yearOptions}
               />
