@@ -143,7 +143,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({ queryOptions, ta
         {/* Best selling cars models and brands in {year} */}
         <Section>
           <div className="space-y-6">
-            <div className="flex place-content-center place-items-center gap-3">
+            <div className="flex flex-col place-content-center place-items-center gap-3 sm:flex-row">
               <h4 className="text-center">{t("Best selling cars model and brands in")}</h4>
               <Dropdown
                 width="w-fit"
