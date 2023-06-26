@@ -71,6 +71,8 @@ export interface TimeseriesProps extends ChartHeaderProps {
   gridYValues?: Array<number> | undefined;
   minY?: number;
   maxY?: number;
+  suggestedMaxY?: number;
+  stepSize?: number;
   precision?: number | [min: number, max: number];
   enableAnimation?: boolean;
   enableRightScale?: boolean;
@@ -131,6 +133,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   beginZero = false,
   minY,
   maxY,
+  stepSize,
+  suggestedMaxY,
   displayNumFormat = numFormat,
   _ref,
 }) => {
@@ -330,6 +334,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           stacked: mode === "stacked",
         },
         y: {
+          suggestedMax: suggestedMaxY,
           grid: {
             display: enableGridY,
             borderWidth: 1,
@@ -347,6 +352,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
           },
           ticks: {
+            stepSize: stepSize,
             padding: 6,
             callback: (value: string | number) => {
               return value && display(value as number, "compact", precision);
