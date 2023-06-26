@@ -17,8 +17,8 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({}) => {
   return (
     <>
       <Hero
-        background="gray"
-        category={[t("category"), "text-black"]}
+        background="green"
+        category={[t("common:categories.demography"), "text-[#16A34A]"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="JAKOA" link="https://www.jakoa.gov.my/" />}

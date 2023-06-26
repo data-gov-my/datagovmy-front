@@ -24,7 +24,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Metereology Department"}
+            agency={t("agencies:met.full")}
             link="https://www.met.gov.my/?lang=en"
             icon={<METIcon />}
           />

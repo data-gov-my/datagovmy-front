@@ -71,7 +71,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={"National Transplant Resource Centre (NTRC)"}
+            agency={t("agencies:ntrc.full")}
             link="https://www.dermaorgan.gov.my/ntrc"
             icon={<NTRCIcon />}
           />

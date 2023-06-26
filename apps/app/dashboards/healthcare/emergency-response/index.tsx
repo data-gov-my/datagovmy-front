@@ -3,6 +3,7 @@ import { Hero, Section } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
+import { MERSIcon } from "@components/Icon/agency";
 
 /**
  * Emergency Response Dashboard
@@ -17,11 +18,17 @@ const EmergencyResponse: FunctionComponent<EmergencyResponseProps> = ({}) => {
   return (
     <>
       <Hero
-        background="gray"
-        category={[t("category"), "text-black"]}
+        background="red"
+        category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="KKM" link="https://www.moh.gov.my" />}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:mers-999.full")}
+            link="https://999.gov.my/"
+            icon={<MERSIcon />}
+          />
+        }
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

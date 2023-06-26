@@ -24,7 +24,7 @@ const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) =>
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Employees Provident Fund"}
+            agency={t("agencies:epf.full")}
             link="https://www.kwsp.gov.my/"
             icon={<EPFIcon />}
           />

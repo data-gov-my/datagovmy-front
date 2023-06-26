@@ -109,7 +109,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Health (MoH)"}
+            agency={t("agencies:moh.full")}
             link="https://www.moh.gov.my"
             icon={<MOHIcon />}
           />

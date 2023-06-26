@@ -126,7 +126,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Keretapi Tanah Melayu Bhd."}
+            agency={t("agencies:ktmb.full")}
             link="https://www.ktmb.com.my/"
             icon={<MOTIcon />}
           />
