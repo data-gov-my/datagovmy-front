@@ -6,7 +6,6 @@ import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import { track as mixpanel_track } from "@lib/mixpanel";
 import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
