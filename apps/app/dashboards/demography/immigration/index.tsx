@@ -16,14 +16,13 @@ import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
-import { FunctionComponent, useContext } from "react";
-import { WindowContext } from "@hooks/useWindow";
+import { FunctionComponent } from "react";
 
 /**
  * Immigration Dashboard
@@ -55,7 +54,6 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-immigration", "common", "countries"]);
-  const { breakpoint } = useContext(WindowContext);
   const { push } = useRouter();
   const { theme } = useTheme();
   const COUNTRY_OPTIONS: Array<OptionType> = countries.map((key: string) => ({
@@ -64,11 +62,11 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
   }));
   const FILTER_OPTIONS: Array<OptionType> = [
     "absolute",
-    "absolute_adult",
-    "absolute_children",
-    "per_capita",
-    "per_capita_adult",
-    "per_capita_children",
+    // "absolute_adult",
+    // "absolute_children",
+    // "per_capita",
+    // "per_capita_adult",
+    // "per_capita_children",
   ].map((key: string) => ({
     label: t(key),
     value: key,
@@ -80,7 +78,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
     country_minmax: [0, country.data.day.x.length - 1],
     period: "day",
     country_period: "day",
-    query: "",
+    query: params.country,
     filter: "absolute",
     loading: false,
   });
@@ -121,6 +119,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
         category={[t("common:categories.demography"), "text-purple"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:imigresen.full")}
@@ -128,7 +127,6 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
             icon={<JIMIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
@@ -148,7 +146,6 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                   <Dropdown
                     anchor="left"
                     className="w-fit"
-                    placeholder={t("common:common.select")}
                     options={FILTER_OPTIONS}
                     selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
                     onChange={e => setData("filter", e.value)}
@@ -162,13 +159,13 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                   {topStateIndices.map((pos, i) => {
                     return (
                       <div className="mr-4.5 flex space-x-3" key={pos}>
-                        <div className="text-dim font-medium">#{i + 1}</div>
-                        <div className="grow">
+                        <span className="text-dim font-medium">#{i + 1}</span>
+                        <span className="grow">
                           {CountryAndStates[choropleth.data[data.filter].x[pos]]}
-                        </div>
-                        <div className="text-purple font-bold">
+                        </span>
+                        <span className="text-purple font-bold">
                           {numFormat(choropleth.data[data.filter].y.value[pos], "standard")}
-                        </div>
+                        </span>
                       </div>
                     );
                   })}
@@ -218,10 +215,9 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                 <p className="text-dim text-sm lg:text-center">{t("country_desc")}</p>
               </div>
             </div>
-
             <SliderProvider>
               {play => (
-                <div>
+                <>
                   <Timeseries
                     title={t("country_title")}
                     menu={
@@ -249,12 +245,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                           fill: true,
                           backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderColor: AKSARA_COLOR.PURPLE,
-                          borderWidth:
-                            breakpoint <= BREAKPOINTS.SM
-                              ? 0.5
-                              : country_coords.x.length > 720
-                              ? 1
-                              : 1.5,
+                          borderWidth: country_coords.x.length > 720 ? 1 : 1.5,
                         },
                         {
                           type: "line",
@@ -263,12 +254,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                           fill: true,
                           backgroundColor: AKSARA_COLOR.DIM_H,
                           borderColor: AKSARA_COLOR.DIM,
-                          borderWidth:
-                            breakpoint <= BREAKPOINTS.SM
-                              ? 0.5
-                              : country_coords.x.length > 720
-                              ? 1
-                              : 1.5,
+                          borderWidth: country_coords.x.length > 720 ? 1 : 1.5,
                         },
                         {
                           type: "line",
@@ -279,12 +265,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                             theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WHITE_H,
                           borderColor: theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
                           borderDash: [2, 2],
-                          borderWidth:
-                            breakpoint <= BREAKPOINTS.SM
-                              ? 0.5
-                              : country_coords.x.length > 720
-                              ? 1
-                              : 1.5,
+                          borderWidth: country_coords.x.length > 720 ? 1 : 1.5,
                         },
                       ],
                     }}
@@ -310,7 +291,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                     data={country.data[data.country_period].x}
                     onChange={e => setData("country_minmax", e)}
                   />
-                </div>
+                </>
               )}
             </SliderProvider>
           </div>
@@ -349,12 +330,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                         fill: true,
                         backgroundColor: AKSARA_COLOR.PURPLE_H,
                         borderColor: AKSARA_COLOR.PURPLE,
-                        borderWidth:
-                          breakpoint <= BREAKPOINTS.SM
-                            ? 0.5
-                            : country_coords.x.length > 720
-                            ? 1
-                            : 1.5,
+                        borderWidth: country_coords.x.length > 720 ? 1 : 1.5,
                       },
                     ],
                   }}
@@ -398,7 +374,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                             fill: true,
                             backgroundColor: AKSARA_COLOR.PURPLE_H,
                             borderColor: AKSARA_COLOR.PURPLE,
-                            borderWidth: coordinate.x.length > 180 ? 0.5 : 1,
+                            borderWidth: coordinate.x.length > 180 ? 0.75 : 1,
                           },
                         ],
                       }}
