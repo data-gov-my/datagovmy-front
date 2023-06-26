@@ -81,17 +81,13 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       <Hero
         background="blue"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
-        header={[
-          `${
-            filterRef.current?.source?.value ? filterRef.current?.source?.value?.concat(":") : ""
-          } ${t("header")}`,
-        ]}
+        header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
         description={
           <div className="space-y-6 xl:w-2/3">
             <p className="text-dim">
               {t("description", {
-                agency: filterRef.current?.source?.value,
-                context: filterRef.current?.source?.value ? "agency" : "",
+                agency: query.source ?? "",
+                context: query.source ? "agency" : "",
               })}
             </p>
             <Dropdown
@@ -100,7 +96,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
               placeholder={t("placeholder.source")}
               anchor="left"
               options={sourceOptions}
-              selected={filterRef.current?.source}
+              selected={query.source ? { label: query.source, value: query.source } : undefined}
               onChange={e => filterRef.current?.setFilter("source", e)}
               enableSearch
               enableClear
@@ -180,7 +176,6 @@ interface CatalogueFilterProps {
 }
 
 interface CatalogueFilterRef {
-  source?: OptionType;
   setFilter: (key: string, value: any) => void;
 }
 
@@ -247,10 +242,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
     };
 
     useImperativeHandle(ref, () => {
-      return {
-        source: filter.source,
-        setFilter,
-      };
+      return { setFilter };
     });
 
     return (
