@@ -30,16 +30,9 @@ const CarPopularity: Page = ({
 // Disabled
 export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
   try {
-    const [dropdown, chart, tableData] = await Promise.all([
+    const [dropdown, tableData] = await Promise.all([
       get("/dropdown", {
         dashboard: "car_popularity",
-      }),
-      get("/chart", {
-        dashboard: "car_popularity",
-        chart_name: "timeseries",
-        manufacturer: "PROTON",
-        model: "WIRA",
-        colour: "All",
       }),
       get("/dashboard", { dashboard: "car_popularity" }),
     ]).catch(e => {
@@ -55,7 +48,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
           agency: "JPJ",
         },
         queryOptions: dropdown.data.data,
-        last_updated: chart.data.data_last_updated,
+        last_updated: tableData.data.data_last_updated,
         tableData: tableData.data,
       },
     };
