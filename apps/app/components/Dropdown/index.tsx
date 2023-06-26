@@ -37,7 +37,6 @@ type CommonProps = {
   enableSearch?: boolean;
   enableFlag?: boolean;
   enableClear?: boolean;
-  virtualise?: boolean;
 };
 
 type ConditionalProps =
@@ -77,7 +76,6 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   darkMode = false,
   enableFlag = false,
   enableClear = false,
-  virtualise = false,
 }) => {
   const [search, setSearch] = useState<string>("");
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -268,7 +266,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                 />
               )}
               {/* Options */}
-              {virtualise ? (
+              {availableOptions.length > 100 ? (
                 <FixedSizeList
                   height={240}
                   width={"100%"}
