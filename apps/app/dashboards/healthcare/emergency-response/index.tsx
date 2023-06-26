@@ -1,19 +1,19 @@
 import AgencyBadge from "@components/Badge/agency";
-import { Hero } from "@components/index";
+import { Hero, Section } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
 import { MERSIcon } from "@components/Icon/agency";
 
 /**
- * Tracker999 Dashboard
+ * Emergency Response Dashboard
  * @overview Status: In-development
  */
 
-interface Tracker999Props {}
+interface EmergencyResponseProps {}
 
-const Tracker999: FunctionComponent<Tracker999Props> = ({}) => {
-  const { t, i18n } = useTranslation(["dashboard-999-tracker", "common"]);
+const EmergencyResponse: FunctionComponent<EmergencyResponseProps> = ({}) => {
+  const { t, i18n } = useTranslation(["dashboard-emergency-response", "common"]);
 
   return (
     <>
@@ -24,7 +24,7 @@ const Tracker999: FunctionComponent<Tracker999Props> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Emergency Response System (MERS)"}
+            agency={t("agencies:mers-999.full")}
             link="https://999.gov.my/"
             icon={<MERSIcon />}
           />
@@ -36,4 +36,4 @@ const Tracker999: FunctionComponent<Tracker999Props> = ({}) => {
   );
 };
 
-export default Tracker999;
+export default EmergencyResponse;

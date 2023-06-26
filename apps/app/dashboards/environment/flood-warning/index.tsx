@@ -24,7 +24,7 @@ const FloodWarning: FunctionComponent<FloodWarningProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Irrigation & Drainage Department (JPS)"}
+            agency={t("agencies:jps.full")}
             link="https://www.jps.gov.my/"
             icon={<MET_FloodIcon />}
           />

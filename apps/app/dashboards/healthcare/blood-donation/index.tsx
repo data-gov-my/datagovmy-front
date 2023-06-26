@@ -84,7 +84,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency="Pusat Darah Negara"
+            agency={t("agencies:pdn.full")}
             link="https://pdn.gov.my/v2/"
             icon={<PDNIcon />}
           />

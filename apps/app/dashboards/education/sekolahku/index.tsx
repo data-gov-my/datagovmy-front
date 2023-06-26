@@ -140,7 +140,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Education (MoE)"}
+            agency={t("agencies:moe.full")}
             link="https://www.moe.gov.my/"
             icon={<MOEIcon />}
           />

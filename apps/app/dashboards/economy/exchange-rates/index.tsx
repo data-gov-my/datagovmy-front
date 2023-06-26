@@ -10,6 +10,7 @@ import Hero from "@components/Hero";
 import Section from "@components/Section";
 import { closestIndex, getColor } from "@lib/schema/exchange-rates";
 import AgencyBadge from "@components/Badge/agency";
+import { MAMPUIcon } from "@components/Icon/agency";
 
 /**
  * Exchange Rates Dashboard
@@ -69,11 +70,17 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
     <>
       <Hero
         background="gray"
-        category={[t("common:categories.economy"), "text-green-300"]}
+        category={[t("common:categories.economy"), "text-black"]}
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="MAMPU" link="https://www.mampu.gov.my/en/" />}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:mampu.full")}
+            link="https://open.mampu.gov.my/"
+            icon={<MAMPUIcon />}
+          />
+        }
       />
 
       <Container className="start-h-screen">

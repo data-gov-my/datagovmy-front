@@ -24,7 +24,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) 
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Transport (MoT)"}
+            agency={t("agencies:mot.full")}
             link="https://www.mot.gov.my/en/"
             icon={<MOTIcon />}
           />

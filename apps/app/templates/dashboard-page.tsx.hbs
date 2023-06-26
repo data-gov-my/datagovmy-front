@@ -6,19 +6,21 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 import {{pascalCase dashboard_name}}Dashboard from "@dashboards/{{dashCase dashboard_category}}/{{dashCase dashboard_name}}";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const {{pascalCase dashboard_name}}: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+
+const {{pascalCase dashboard_name}}: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-{{dashCase dashboard_name}}", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={t("dashboard-{{dashCase dashboard_name}}:header")}
         description={t("dashboard-{{dashCase dashboard_name}}:description")}
         keywords={""}
       />
       <{{pascalCase dashboard_name}}Dashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

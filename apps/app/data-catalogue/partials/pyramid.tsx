@@ -6,10 +6,10 @@ import { AKSARA_COLOR } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import { track } from "@lib/mixpanel";
 import type { ChartDataset } from "chart.js";
-import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { toast } from "@components/Toast";
+import { useAnalytics } from "@hooks/useAnalytics";
 
 const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
 interface CataloguePyramidProps {
@@ -33,6 +33,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
+  const { track } = useAnalytics(dataset);
 
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
@@ -45,13 +46,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name: dataset.meta.title,
-              ext: "png",
-            });
+            track("png");
           },
         },
         {
@@ -63,15 +58,7 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name: dataset.meta.title,
-                  ext: "svg",
-                })
-              )
+              .then(() => track("svg"))
               .catch(e => {
                 toast.error(
                   t("common:error.toast.image_download_failure"),
@@ -89,7 +76,10 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           title: t("csv.title"),
           description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.csv,
+          href: () => {
+            download(urls.csv, dataset.meta.unique_id.concat(".csv"));
+            track("csv");
+          },
         },
         {
           id: "parquet",
@@ -97,7 +87,10 @@ const CataloguePyramid: FunctionComponent<CataloguePyramidProps> = ({
           title: t("parquet.title"),
           description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.parquet,
+          href: () => {
+            download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+            track("parquet");
+          },
         },
       ],
     }),
