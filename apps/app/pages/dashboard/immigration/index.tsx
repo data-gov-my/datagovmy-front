@@ -69,7 +69,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           countries: dropdown.data,
           country: country_data.timeseries_country,
           country_callout: country_data.timeseries_country_callout.data,
-          last_updated: new Date().valueOf(),
+          last_updated: data.data_last_updated,
           params: {},
           timeseries: data.timeseries,
           timeseries_callout: data.timeseries_callout.data.data,
