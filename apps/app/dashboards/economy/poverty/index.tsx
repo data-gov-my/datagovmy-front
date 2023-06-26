@@ -24,7 +24,7 @@ const Poverty: FunctionComponent<PovertyProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Internal Coordination Unit (ICU JPM)"}
+            agency={t("agencies:icu-jpm.full")}
             link="https://www.icu.gov.my/"
             icon={<ICUJPMIcon />}
           />

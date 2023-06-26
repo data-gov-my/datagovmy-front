@@ -23,7 +23,11 @@ const InternetPenetration: FunctionComponent<InternetPenetrationProps> = ({}) =>
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={
-          <AgencyBadge agency={"MCMC"} link="https://www.mcmc.gov.my/en/home" icon={<MCMCIcon />} />
+          <AgencyBadge
+            agency={t("agencies:mcmc.full")}
+            link="https://www.mcmc.gov.my/en/home"
+            icon={<MCMCIcon />}
+          />
         }
       />
       {/* Rest of page goes here */}

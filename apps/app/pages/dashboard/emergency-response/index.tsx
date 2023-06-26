@@ -13,11 +13,7 @@ const EmergencyResponse: Page = ({ meta }: InferGetStaticPropsType<typeof getSta
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata
-        title={t("dashboard-emergency-response:header")}
-        description={t("dashboard-emergency-response:description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <EmergencyResponseDashboard />
     </AnalyticsProvider>
   );

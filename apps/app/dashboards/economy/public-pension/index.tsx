@@ -24,7 +24,7 @@ const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Retirement Fund Inc (KWAP)"}
+            agency={t("agencies:kwap.full")}
             link="https://www.kwap.gov.my"
             icon={<KWAPIcon />}
           />

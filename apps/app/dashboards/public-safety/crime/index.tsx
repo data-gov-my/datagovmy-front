@@ -24,7 +24,7 @@ const Crime: FunctionComponent<CrimeProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Royal Malaysian Police (PDRM)"}
+            agency={t("agencies:pdrm.full")}
             link="https://www.rmp.gov.my/"
             icon={<PDRMIcon />}
           />
