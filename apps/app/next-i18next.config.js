@@ -7,7 +7,6 @@ const namespace = [
   "countries",
   "dashboards",
   "agencies",
-  "dashboard-999-tracker",
   "dashboard-birthday-explorer",
   "dashboard-blood-donation",
   "dashboard-car-popularity",
