@@ -165,7 +165,12 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                 <tbody>
                   {data.topModels.map(
                     (item: { maker: string; model: string; vehicles: number }, i: number) => (
-                      <tr key={i} className={"border-b".concat(i < 3 ? " bg-background" : "")}>
+                      <tr
+                        key={i}
+                        className={"border-b".concat(
+                          i < 3 ? " bg-background dark:bg-background-dark" : ""
+                        )}
+                      >
                         <td
                           className={"px-1 py-2 text-center text-sm font-medium".concat(
                             i < 3 ? " text-primary dark:text-primary-dark" : ""
@@ -199,7 +204,12 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                 </thead>
                 <tbody>
                   {data.topMakers.map((item: { maker: string; vehicles: number }, i: number) => (
-                    <tr key={i} className={"border-b".concat(i < 3 ? " bg-background" : "")}>
+                    <tr
+                      key={i}
+                      className={"border-b".concat(
+                        i < 3 ? " bg-background dark:bg-background-dark" : ""
+                      )}
+                    >
                       <td
                         className={"px-1 py-2 text-center text-sm font-medium".concat(
                           i < 3 ? " text-primary dark:text-primary-dark" : ""
@@ -228,6 +238,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex w-full flex-col justify-items-start gap-6	rounded-xl border p-6 shadow lg:w-96">
                 <Dropdown
                   label={t("label_maker")}
+                  placeholder={t("option_maker")}
                   width="w-full"
                   options={filterMakers}
                   selected={query.maker}
@@ -236,6 +247,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                 />
                 <Dropdown
                   label={t("label_model")}
+                  placeholder={t("option_model")}
                   width="w-full"
                   options={filterModels}
                   selected={query.model}
