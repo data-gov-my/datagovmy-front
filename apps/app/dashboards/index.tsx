@@ -27,6 +27,7 @@ import { FunctionComponent, useMemo } from "react";
  */
 
 type Dashboard = {
+  route: string;
   name: string;
   agency: string;
   views: number;
@@ -37,6 +38,7 @@ interface DashboardIndexProps {
   analytics: any;
   sources: string[];
   dashboards: Record<string, Dashboard[]>;
+  dashboards_route: Record<string, { route: string }>;
 }
 
 const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
@@ -44,6 +46,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   analytics,
   sources,
   dashboards,
+  dashboards_route,
 }) => {
   const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
 
@@ -138,7 +141,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             >
               {PANELS.map((panel, index) => (
                 <Tabs.Panel name={panel.name} key={index}>
-                  <Ranking ranks={panel.data} />
+                  <Ranking ranks={panel.data} dashboards_route={dashboards_route} />
                 </Tabs.Panel>
               ))}
             </Tabs>
@@ -159,7 +162,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                     {dashboards.map(item => (
                       <div className="pt-2" key={item.name}>
                         <At
-                          href={`/dashboard/${item.name}`}
+                          href={dashboards_route[item.name].route}
                           locale={i18n.language}
                           prefetch={false}
                         >
@@ -266,16 +269,22 @@ DashboardFilter.displayName = "DashboardFilter";
 
 interface RankingProps {
   ranks: Dashboard[];
+  dashboards_route: Record<string, { route: string }>;
 }
 
-const Ranking = ({ ranks }: RankingProps) => {
+const Ranking = ({ ranks, dashboards_route }: RankingProps) => {
   const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
 
   return (
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item, i) => (
-          <At href={`/dashboard/${item.name}`} locale={i18n.language} key={i} prefetch={false}>
+          <At
+            href={dashboards_route[item.name].route}
+            locale={i18n.language}
+            key={i}
+            prefetch={false}
+          >
             <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-6 transition-colors">
               <div className="relative flex items-center gap-3">
                 <span className="text-primary text-sm font-bold">#{i + 1}</span>
