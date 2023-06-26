@@ -100,7 +100,9 @@ const Hero: FunctionComponent<HeroProps> = ({
                   {result?.all_time_view && (
                     <p className="text-dim flex gap-2 text-sm">
                       <EyeIcon className="w-4.5 h-4.5 self-center" />
-                      {numFormat(result.all_time_view, "standard")} {t("common:common.views")}
+                      {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
+                        count: result.all_time_view,
+                      })}`}
                     </p>
                   )}
                 </div>

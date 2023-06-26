@@ -1,4 +1,4 @@
-import AgencyBadge from "@components/AgencyBadge";
+import AgencyBadge from "@components/Badge/agency";
 import { Hero, Section } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
@@ -18,9 +18,9 @@ const {{pascalCase dashboard_name}}: FunctionComponent<{{pascalCase dashboard_na
     <>
       <Hero
         background="gray"
-        category={[t("dashboard-{{dashCase dashboard_name}}:category"), "text-black"]}
-        header={[t("dashboard-{{dashCase dashboard_name}}:header")]}
-        description={[t("dashboard-{{dashCase dashboard_name}}:description")]}
+        category={[t("common:categories.{{dashboard_category}}", "text-black"]}
+        header={[t("header")]}
+        description={[t("description")]}
         agencyBadge={
           <AgencyBadge
             agency="{{titleCase agency_name}}"

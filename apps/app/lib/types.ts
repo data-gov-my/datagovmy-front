@@ -43,7 +43,7 @@ export type DownloadOption = {
   title: ReactNode;
   description: ReactNode;
   icon: JSX.Element;
-  href: string | (() => void);
+  href: () => void;
 };
 
 export type DownloadOptions = {
@@ -110,6 +110,7 @@ export type DCConfig = {
 /*************************** MIXPANEL ***************************** */
 
 export type EventType =
+  | "image_download"
   | "file_download"
   | "page_view"
   | "change_language"

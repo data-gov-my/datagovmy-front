@@ -24,7 +24,7 @@ const CivilService: FunctionComponent<CivilServiceProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Public Service Department (JPA)"}
+            agency={t("agencies:jpa.full")}
             link="https://www.jpa.gov.my"
             icon={<JPAIcon />}
           />

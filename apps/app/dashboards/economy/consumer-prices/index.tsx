@@ -17,6 +17,7 @@ import InflationGeography from "./inflation-geography";
 import { useTheme } from "next-themes";
 import AgencyBadge from "@components/Badge/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
+import { DOSMIcon } from "@components/Icon/agency";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -166,7 +167,13 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="DOSM" link="https://open.dosm.gov.my/" />}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:dosm.full")}
+            link="https://open.dosm.gov.my/"
+            icon={<DOSMIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">

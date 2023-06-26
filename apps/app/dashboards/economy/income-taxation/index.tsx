@@ -24,7 +24,7 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Internal Revenue Board"}
+            agency={t("agencies:lhdn.full")}
             link="https://www.hasil.gov.my"
             icon={<LHDNIcon />}
           />

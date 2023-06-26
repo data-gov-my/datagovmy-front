@@ -74,7 +74,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency="UNHCR Malaysia"
+            agency={t("agencies:unhcr.full")}
             link="https://www.unhcr.org/my/"
             icon={<UNHCRIcon />}
           />

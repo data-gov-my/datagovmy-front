@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
+import { rewrite, next } from "@vercel/edge";
 
 // Triggers on relevant pages. Middleware to be removed on launch
 export const config = {
@@ -15,14 +15,14 @@ export function middleware(request: NextRequest) {
 
   // If development, proceed as usual
   if (process.env.NEXT_PUBLIC_APP_ENV === "development")
-    return NextResponse.next({ request: { headers: reqHeaders } });
+    return next({ request: { headers: reqHeaders } });
 
   const auth_cookie = request.cookies.get("auth");
   if (!auth_cookie || auth_cookie.value !== process.env.AUTH_TOKEN) {
     request.nextUrl.pathname = "/login";
-    return NextResponse.rewrite(request.nextUrl, { headers: reqHeaders });
+    return rewrite(request.nextUrl, { headers: reqHeaders });
   }
 
   // Request authenticated
-  return NextResponse.next({ request: { headers: reqHeaders } });
+  return next({ request: { headers: reqHeaders } });
 }
