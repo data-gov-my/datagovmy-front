@@ -290,7 +290,9 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {t(`dashboards.${item.name}.description`)}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {`${numFormat(item.views, "compact")} ${t("common:common.views")}`}
+                  {`${numFormat(item.views, "compact")} ${t("common:common.views", {
+                    count: item.views,
+                  })}`}
                 </p>
                 <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
                   {t("common:components.click_to_explore")}

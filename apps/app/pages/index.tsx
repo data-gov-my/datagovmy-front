@@ -269,7 +269,9 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {item[`name_${lang as "en" | "bm"}`]}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {numFormat(item.count, "compact")} {t("common:common.views")}
+                  {`${numFormat(item.count, "compact")} ${t("common:common.views", {
+                    count: item.count,
+                  })}`}
                 </p>
                 <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
                   {t("common:components.click_to_explore")}

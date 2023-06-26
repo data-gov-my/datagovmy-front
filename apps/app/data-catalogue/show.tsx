@@ -414,11 +414,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
           <p className="text-dim mt-6 flex justify-end gap-2 text-sm">
             <span>
-              {numFormat(result?.all_time_view ?? 0, "compact", 1)} {t("common:common.views")}
+              {`${numFormat(result?.all_time_view ?? 0, "compact", 1)} ${t("common:common.views", {
+                count: result?.all_time_view ?? 0,
+              })}`}
             </span>
             <span>&middot;</span>
             <span>
-              {numFormat(
+              {`${numFormat(
                 sum([
                   result?.download_csv,
                   result?.download_parquet,
@@ -427,8 +429,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 ]) ?? 0,
                 "compact",
                 1
-              )}{" "}
-              {t("common:common.downloads")}
+              )} ${t("common:common.downloads", {
+                count:
+                  sum([
+                    result?.download_csv,
+                    result?.download_parquet,
+                    result?.download_png,
+                    result?.download_svg,
+                  ]) ?? 0,
+              })}`}
             </span>
           </p>
         </Section>
