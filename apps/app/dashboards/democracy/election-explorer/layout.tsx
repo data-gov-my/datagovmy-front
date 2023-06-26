@@ -58,7 +58,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Election Comission (EC)"}
+            agency={t("agencies:spr.full")}
             link="https://www.spr.gov.my/"
             icon={<SPRIcon />}
           />

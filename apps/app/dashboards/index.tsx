@@ -13,7 +13,7 @@ import {
 import Search from "@components/Search";
 import { OptionType } from "@components/types";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
-import { ArrowUpRightIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
@@ -158,7 +158,11 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                     <h5 className="pb-1">{t(`categories.${category}`)}</h5>
                     {dashboards.map(item => (
                       <div className="pt-2" key={item.name}>
-                        <At href={`/dashboard/${item.name}`} locale={i18n.language}>
+                        <At
+                          href={`/dashboard/${item.name}`}
+                          locale={i18n.language}
+                          prefetch={false}
+                        >
                           <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
                               <AgencyIcon agency={item.agency} />
@@ -271,7 +275,7 @@ const Ranking = ({ ranks }: RankingProps) => {
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item, i) => (
-          <At href={`/dashboard/${item.name}`} locale={i18n.language} key={i}>
+          <At href={`/dashboard/${item.name}`} locale={i18n.language} key={i} prefetch={false}>
             <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-6 transition-colors">
               <div className="relative flex items-center gap-3">
                 <span className="text-primary text-sm font-bold">#{i + 1}</span>
@@ -286,7 +290,9 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {t(`dashboards.${item.name}.description`)}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {`${numFormat(item.views, "compact")} ${t("common:common.views")}`}
+                  {`${numFormat(item.views, "compact")} ${t("common:common.views", {
+                    count: item.views,
+                  })}`}
                 </p>
                 <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
                   {t("common:components.click_to_explore")}

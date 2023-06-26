@@ -24,7 +24,7 @@ const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = (
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Health (MoH)"}
+            agency={t("agencies:moh.full")}
             link="https://www.moh.gov.my"
             icon={<MOHIcon />}
           />

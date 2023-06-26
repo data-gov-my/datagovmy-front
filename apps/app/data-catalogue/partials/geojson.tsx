@@ -3,9 +3,10 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
 import type { DownloadOptions } from "@lib/types";
-import { track } from "@lib/mixpanel";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
+import { useAnalytics } from "@hooks/useAnalytics";
+import { download } from "@lib/helpers";
 
 const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochoropleth"), {
   ssr: false,
@@ -30,13 +31,14 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   const ctx = useRef<GeoChoroplethRef | null>(null);
   const [mounted, setMounted] = useState(false);
   const { png } = useExport(mounted, dataset.meta.unique_id);
+  const { track } = useAnalytics(dataset);
 
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);
   }, [png, ctx]);
 
-  const availableDownloads = useMemo(
-    () => ({
+  const availableDownloads = useMemo(() => {
+    return {
       chart: [
         {
           id: "png",
@@ -45,15 +47,9 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
           description: t("image.desc"),
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
-            if (ctx) ctx.current?.print(dataset.meta.unique_id);
-
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name: dataset.meta.title,
-              ext: "png",
-            });
+            if (!ctx) return;
+            ctx.current?.print(dataset.meta.unique_id);
+            track("png");
           },
         },
       ],
@@ -64,12 +60,14 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
           title: t("geojson.title"),
           description: t("geojson.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls[Object.keys(urls)[0]],
+          href: () => {
+            download(urls[Object.keys(urls)[0]], dataset.meta.unique_id.concat(".geojson"));
+            track("csv");
+          },
         },
       ],
-    }),
-    [png, ctx]
-  );
+    };
+  }, [png, ctx]);
 
   return (
     <GeoChoropleth

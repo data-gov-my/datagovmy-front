@@ -193,7 +193,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency="Jabatan Pendaftaran Negara"
+            agency={t("agencies:jpn.full")}
             link="https://www.jpn.gov.my/en/"
             icon={<JPNIcon />}
           />

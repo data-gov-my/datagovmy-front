@@ -39,6 +39,6 @@ export const withi18n = <T extends Context>(
       getProps(context),
     ]);
 
-    return merge({}, { props: i18n }, props);
+    return merge(props, { props: i18n });
   };
 };

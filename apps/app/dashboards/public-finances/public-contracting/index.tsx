@@ -24,7 +24,7 @@ const PublicContracting: FunctionComponent<PublicContractingProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Finance (MoF)"}
+            agency={t("agencies:mof.full")}
             link="https://www.mof.gov.my/portal/en"
             icon={<MOFIcon />}
           />

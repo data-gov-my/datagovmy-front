@@ -54,7 +54,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={"ProtectHealth Corporation"}
+            agency={t("agencies:phcorp.full")}
             link="https://protecthealth.com.my"
             icon={<PHCorpIcon />}
           />

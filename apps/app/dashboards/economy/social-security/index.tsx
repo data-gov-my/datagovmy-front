@@ -24,7 +24,7 @@ const SocialSecurity: FunctionComponent<SocialSecurityProps> = ({}) => {
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Social Security Organisation (SOCSO)"}
+            agency={t("agencies:perkeso.full")}
             link="https://www.perkeso.gov.my/en/"
             icon={<SOCSOIcon />}
           />
