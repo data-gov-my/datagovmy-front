@@ -6,8 +6,10 @@ import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
 import type { Candidate } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ElectionCandidates: Page = ({
+  meta,
   elections,
   selection,
   params,
@@ -15,16 +17,16 @@ const ElectionCandidates: Page = ({
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionCandidatesDashboard elections={elections} selection={selection} params={params} />
-    </>
+    </AnalyticsProvider>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
   try {
-    const name = "Tunku Abdul Rahman Putra Al-Haj";
+    const name = "tunku-abdul-rahman-putra-alhaj";
     const [dropdown, candidate] = await Promise.all([
       get("/explorer", {
         explorer: "ELECTIONS",
@@ -50,12 +52,14 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         params: { candidate_name: name },
         selection: dropdown.data ?? [],
         elections: {
-          parlimen: candidate.data.parlimen.sort(
-            (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
-          ),
-          dun: candidate.data.dun.sort(
-            (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
-          ),
+          parlimen:
+            candidate.data.parlimen?.sort(
+              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+            ) ?? [],
+          dun:
+            candidate.data.dun?.sort(
+              (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
+            ) ?? [],
         },
       },
     };

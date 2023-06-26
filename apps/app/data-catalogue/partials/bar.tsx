@@ -7,7 +7,7 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { toast } from "@components/Toast";
@@ -132,12 +132,12 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   }, [dataset.chart.x, ctx]);
 
   return (
-    <>
+    <WindowProvider>
       <Bar
         _ref={ref => setCtx(ref)}
         className={
           bar_layout === "vertical"
-            ? "h-[450px] w-full lg:h-[350px]"
+            ? "h-[350px] w-full lg:h-[450px]"
             : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
         }
         type="category"
@@ -156,7 +156,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
           datasets: _datasets,
         }}
       />
-    </>
+    </WindowProvider>
   );
 };
 

@@ -37,7 +37,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 
 interface ConsumerPricesDashboardProps {
-  last_updated: number;
+  last_updated: string;
   bar: any;
   timeseries: any;
   timeseries_callouts: any;

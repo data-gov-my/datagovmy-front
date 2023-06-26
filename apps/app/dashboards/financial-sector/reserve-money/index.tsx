@@ -32,7 +32,7 @@ interface TimeseriesChartData {
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface ReserveMoneyDashboardProps {
-  last_updated: number;
+  last_updated: string;
   timeseries: any;
   timeseries_callouts: any;
 }
@@ -152,7 +152,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.bnm")}
+            agency={t("agencies:bnm.full")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BNMIcon />}
           />

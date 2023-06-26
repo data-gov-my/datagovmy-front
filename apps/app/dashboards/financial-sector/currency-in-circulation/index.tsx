@@ -29,7 +29,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
 
 interface CurrencyInCirculationDashboardProps {
-  last_updated: number;
+  last_updated: string;
   bar: any;
   timeseries: any;
   timeseries_callouts: any;
@@ -153,7 +153,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.bnm")}
+            agency={t("agencies:bnm.full")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BNMIcon />}
           />

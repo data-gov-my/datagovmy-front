@@ -49,7 +49,7 @@ interface TableSummary {
 }
 
 interface MoneySupplyDashboardProps {
-  last_updated: number;
+  last_updated: string;
   table_summary: TableSummary;
   timeseries: any;
   timeseries_callouts: any;
@@ -223,7 +223,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.bnm")}
+            agency={t("agencies:bnm.full")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BNMIcon />}
           />

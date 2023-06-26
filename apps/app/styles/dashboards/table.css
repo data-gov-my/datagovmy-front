@@ -1,14 +1,15 @@
 .table {
-  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit md:max-w-full;
+  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 md:w-fit md:max-w-full;
 }
 
 .table-responsive {
-  @apply relative overflow-x-auto;
+  @apply relative snap-x snap-mandatory overflow-x-auto sm:snap-none;
 }
 
 .table th {
-  @apply text-dim w-auto py-3 font-normal dark:text-white md:whitespace-nowrap;
+  @apply text-dim w-auto snap-end py-3 font-normal dark:text-white md:whitespace-nowrap;
 }
+
 .table tbody tr {
   @apply border-l-outline dark:border-b-washed-dark dark:border-l-outlineHover-dark border-b-[0.5px] border-l-[0.5px];
 }
@@ -22,7 +23,7 @@
 }
 
 .table td {
-  @apply dark:border-outlineHover-dark w-auto border-r-[0.5px] px-2 py-2;
+  @apply border-outline dark:border-washed-dark snap-end border-b px-2 py-2;
 }
 /* .table td:not(:first-child) {
   @apply whitespace-nowrap;
@@ -37,11 +38,11 @@
 }
 
 .table-sticky-header tr > th {
-  @apply dark:border-b-outlineHover-dark sticky top-0 border-b bg-white dark:bg-black;
+  @apply border-b-outline dark:border-b-washed-dark sticky top-0 border-b-2 bg-white dark:bg-black;
 }
 
 .sticky-col {
-  @apply sticky z-10 max-w-fit whitespace-normal bg-white dark:bg-black md:whitespace-nowrap;
+  @apply border-outline dark:border-washed-dark sticky z-10 max-w-fit whitespace-normal border-r-2 bg-white dark:bg-black lg:border-r-0;
 }
 
 /* .table tr > td:first-child {

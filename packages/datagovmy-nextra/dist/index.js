@@ -1160,7 +1160,6 @@ var loadIndexesImpl = (basePath, locale) =>
         const content = data[route].data[heading] || "";
         const paragraphs = content.split("\n").filter(Boolean);
         sectionIndex.add(
-          url,
           __spreadValues(
             {
               id: url,
@@ -1173,7 +1172,7 @@ var loadIndexesImpl = (basePath, locale) =>
           )
         );
         for (let i = 0; i < paragraphs.length; i++) {
-          sectionIndex.add(`${url}_${i}`, {
+          sectionIndex.add({
             id: `${url}_${i}`,
             url,
             title,
@@ -1183,7 +1182,7 @@ var loadIndexesImpl = (basePath, locale) =>
         }
         pageContent += ` ${title} ${content}`;
       }
-      pageIndex.add(pageId, {
+      pageIndex.add({
         id: pageId,
         title: data[route].title,
         content: pageContent,
@@ -1743,108 +1742,113 @@ function Navbar({ flatDirectories, items }) {
       }),
       /* @__PURE__ */ jsxs15("nav", {
         className:
-          "mx-auto flex h-[var(--nextra-navbar-height)] max-w-[90rem] items-center justify-end gap-2 pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]",
+          "mx-auto flex h-[var(--nextra-navbar-height)] max-w-[90rem] items-center justify-between gap-2 pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]",
         children: [
-          config.logoLink
-            ? /* @__PURE__ */ jsx21(Anchor, {
-                href: typeof config.logoLink === "string" ? config.logoLink : "/",
-                className: "flex items-center gap-2 hover:opacity-75",
-                children: renderComponent(config.logo),
-              })
-            : /* @__PURE__ */ jsxs15("div", {
-                className: "flex items-center gap-2 ltr:mr-auto rtl:ml-auto",
-                children: [
-                  renderComponent(config.logo),
-                  renderComponent(config.search.component, {
-                    directories: flatDirectories,
-                    className: "hidden md:inline-block mx-min-w-[200px]",
+          /* @__PURE__ */ jsxs15("div", {
+            className: "flex gap-2",
+            children: [
+              config.logoLink
+                ? /* @__PURE__ */ jsx21(Anchor, {
+                    href: typeof config.logoLink === "string" ? config.logoLink : "/",
+                    className: "flex items-center gap-2 hover:opacity-75 ltr:mr-auto",
+                    children: renderComponent(config.logo),
+                  })
+                : /* @__PURE__ */ jsx21("div", {
+                    className: "flex items-center gap-2 ltr:mr-auto rtl:ml-auto",
+                    children: renderComponent(config.logo),
                   }),
-                ],
+              renderComponent(config.search.component, {
+                directories: flatDirectories,
+                className: "hidden md:inline-block min-w-[200px] ml-4 mr-auto",
               }),
-          renderComponent(config.search.component, {
-            directories: flatDirectories,
-            className: "hidden md:inline-block mx-min-w-[200px] ml-4 ltr:mr-auto",
+            ],
           }),
-          items.map(pageOrMenu => {
-            if (pageOrMenu.display === "hidden") return null;
-            if (pageOrMenu.type === "menu") {
-              const menu2 = pageOrMenu;
-              const isActive2 =
-                menu2.route === activeRoute || activeRoute.startsWith(menu2.route + "/");
-              return /* @__PURE__ */ jsxs15(
-                NavbarMenu,
-                {
-                  className: cn14(
-                    classes3.link,
-                    "flex gap-1",
-                    isActive2 ? classes3.active : classes3.inactive
-                  ),
-                  menu: menu2,
-                  children: [
-                    menu2.title,
-                    /* @__PURE__ */ jsx21(ArrowRightIcon3, {
-                      className: "h-[18px] min-w-[18px] rounded-sm p-0.5",
-                      pathClassName: "origin-center transition-transform rotate-90",
-                    }),
-                  ],
-                },
-                menu2.title
-              );
-            }
-            const page = pageOrMenu;
-            let href = page.href || page.route || "#";
-            if (page.children) {
-              href = (page.withIndexPage ? page.route : page.firstChildRoute) || href;
-            }
-            const isActive = page.route === activeRoute || activeRoute.startsWith(page.route + "/");
-            return /* @__PURE__ */ jsxs15(
-              Anchor,
-              {
-                href,
-                "className": cn14(
-                  classes3.link,
-                  "relative -ml-2 hidden whitespace-nowrap p-2 md:inline-block",
-                  !isActive || page.newWindow ? classes3.inactive : classes3.active
-                ),
-                "newWindow": page.newWindow,
-                "aria-current": !page.newWindow && isActive,
-                "children": [
-                  /* @__PURE__ */ jsx21("span", {
-                    className: "absolute inset-x-0 text-center",
-                    children: page.title,
-                  }),
-                  /* @__PURE__ */ jsx21("span", {
-                    className: "invisible font-medium",
-                    children: page.title,
-                  }),
-                ],
-              },
-              href
-            );
-          }),
-          config.project.link
-            ? /* @__PURE__ */ jsx21(Anchor, {
-                className: "p-2 text-current",
-                href: config.project.link,
-                newWindow: true,
-                children: renderComponent(config.project.icon),
-              })
-            : null,
-          config.chat.link
-            ? /* @__PURE__ */ jsx21(Anchor, {
-                className: "p-2 text-current",
-                href: config.chat.link,
-                newWindow: true,
-                children: renderComponent(config.chat.icon),
-              })
-            : null,
-          renderComponent(config.navbar.extraContent),
-          /* @__PURE__ */ jsx21("button", {
-            "type": "button",
-            "aria-label": "Menu",
-            "className": "nextra-hamburger -mr-2 rounded p-2 active:bg-gray-400/20 md:hidden",
-            "onClick": () => setMenu(!menu),
-            "children": /* @__PURE__ */ jsx21(MenuIcon, { className: cn14({ open: menu }) }),
+          /* @__PURE__ */ jsxs15("div", {
+            className: "flex items-center gap-2",
+            children: [
+              items.map(pageOrMenu => {
+                if (pageOrMenu.display === "hidden") return null;
+                if (pageOrMenu.type === "menu") {
+                  const menu2 = pageOrMenu;
+                  const isActive2 =
+                    menu2.route === activeRoute || activeRoute.startsWith(menu2.route + "/");
+                  return /* @__PURE__ */ jsxs15(
+                    NavbarMenu,
+                    {
+                      className: cn14(
+                        classes3.link,
+                        "flex gap-1",
+                        isActive2 ? classes3.active : classes3.inactive
+                      ),
+                      menu: menu2,
+                      children: [
+                        menu2.title,
+                        /* @__PURE__ */ jsx21(ArrowRightIcon3, {
+                          className: "h-[18px] min-w-[18px] rounded-sm p-0.5",
+                          pathClassName: "origin-center transition-transform rotate-90",
+                        }),
+                      ],
+                    },
+                    menu2.title
+                  );
+                }
+                const page = pageOrMenu;
+                let href = page.href || page.route || "#";
+                if (page.children) {
+                  href = (page.withIndexPage ? page.route : page.firstChildRoute) || href;
+                }
+                const isActive =
+                  page.route === activeRoute || activeRoute.startsWith(page.route + "/");
+                return /* @__PURE__ */ jsxs15(
+                  Anchor,
+                  {
+                    href,
+                    "className": cn14(
+                      classes3.link,
+                      "relative -ml-2 hidden whitespace-nowrap p-2 md:inline-block",
+                      !isActive || page.newWindow ? classes3.inactive : classes3.active
+                    ),
+                    "newWindow": page.newWindow,
+                    "aria-current": !page.newWindow && isActive,
+                    "children": [
+                      /* @__PURE__ */ jsx21("span", {
+                        className: "absolute inset-x-0 text-center",
+                        children: page.title,
+                      }),
+                      /* @__PURE__ */ jsx21("span", {
+                        className: "invisible font-medium",
+                        children: page.title,
+                      }),
+                    ],
+                  },
+                  href
+                );
+              }),
+              config.project.link
+                ? /* @__PURE__ */ jsx21(Anchor, {
+                    className: "p-2 text-current",
+                    href: config.project.link,
+                    newWindow: true,
+                    children: renderComponent(config.project.icon),
+                  })
+                : null,
+              config.chat.link
+                ? /* @__PURE__ */ jsx21(Anchor, {
+                    className: "p-2 text-current",
+                    href: config.chat.link,
+                    newWindow: true,
+                    children: renderComponent(config.chat.icon),
+                  })
+                : null,
+              renderComponent(config.navbar.extraContent),
+              /* @__PURE__ */ jsx21("button", {
+                "type": "button",
+                "aria-label": "Menu",
+                "className": "nextra-hamburger -mr-2 rounded p-2 active:bg-gray-400/20 md:hidden",
+                "onClick": () => setMenu(!menu),
+                "children": /* @__PURE__ */ jsx21(MenuIcon, { className: cn14({ open: menu }) }),
+              }),
+            ],
           }),
         ],
       }),

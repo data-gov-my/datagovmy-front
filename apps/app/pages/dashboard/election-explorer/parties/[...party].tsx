@@ -6,8 +6,10 @@ import { useTranslation } from "@hooks/useTranslation";
 import ElectionPartiesDashboard from "@dashboards/democracy/election-explorer/parties";
 import { withi18n } from "@lib/decorators";
 import type { Party } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ElectionParties: Page = ({
+  meta,
   params,
   selection,
   elections,
@@ -15,10 +17,10 @@ const ElectionParties: Page = ({
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ElectionPartiesDashboard params={params} selection={selection} elections={elections} />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -71,12 +73,14 @@ export const getStaticProps: GetStaticProps = withi18n(
           },
           selection: dropdown.data,
           elections: {
-            parlimen: party.data.parlimen.sort(
-              (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
-            ),
-            dun: party.data.dun.sort(
-              (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
-            ),
+            parlimen:
+              party.data.parlimen?.sort(
+                (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
+              ) ?? [],
+            dun:
+              party.data.dun?.sort(
+                (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
+              ) ?? [],
           },
         },
       };

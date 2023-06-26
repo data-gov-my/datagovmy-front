@@ -17,10 +17,11 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/20/solid";
-import { Input } from "..";
+import Input from "@components/Input";
 import { useTranslation } from "next-i18next";
 import { clx } from "@lib/helpers";
 import { FixedSizeList } from "react-window";
+import { matchSorter } from "match-sorter";
 
 type CommonProps = {
   className?: string;
@@ -106,9 +107,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const availableOptions = useMemo<OptionType[]>(() => {
     if (!enableSearch) return options;
 
-    return options.filter(
-      option => !option.label.toString().toLowerCase().search(search.toLowerCase())
-    );
+    return matchSorter(options, search.toLowerCase(), { keys: ["label"] });
   }, [options, search]);
 
   const ListboxOption = ({
@@ -127,7 +126,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
         multiple ? "pl-10" : "pl-4",
         darkMode
-          ? "hover:bg-washed/10 text-white"
+          ? "hover:bg-washed-dark/50 text-white"
           : "hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
         multiple &&
           selected &&
@@ -161,7 +160,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
         {/* Checkbox (multiple mode) */}
         {multiple && (
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+          <span className="absolute inset-y-0 left-3 flex items-center">
             <input
               type="checkbox"
               checked={
@@ -189,18 +188,14 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         multiple={multiple}
         disabled={disabled}
       >
-        <div className={`relative text-sm ${disabled ? "cursor-not-allowed" : ""}`}>
+        <div className="relative text-sm">
           <Listbox.Button
             className={clx(
-              "dark:border-washed-dark relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:bg-black lg:items-center",
+              "btn btn-dropdown flex items-center",
               className,
               width,
-              darkMode
-                ? "border-outline/10 active:bg-washed/10 bg-black"
-                : "border-outline active:bg-washed bg-white",
-              disabled
-                ? "bg-outline text-dim pointer-events-none"
-                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+              darkMode &&
+                "border-washed-dark active:bg-washed-dark hover:border-outlineHover-dark bg-black text-white"
             )}
           >
             <>
@@ -225,12 +220,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* Label */}
-              <span
-                className={clx(
-                  disabled ? "dark:text-dim" : "dark:text-white",
-                  "block w-full truncate lg:w-auto"
-                )}
-              >
+              <span className="block w-full truncate lg:w-auto">
                 {multiple ? title : (selected as OptionType)?.label || placeholder || "Select"}
               </span>
               {/* Label (multiple) */}
@@ -241,12 +231,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* ChevronDown Icon */}
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
+              <span className="absolute inset-y-0 right-3 flex items-center">
                 <ChevronDownIcon
-                  className={clx(
-                    disabled ? "dark:text-dim" : "dark:text-white",
-                    "h-5 w-5 text-black"
-                  )}
+                  className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark -mx-[5px] h-5 w-5"
                   aria-hidden="true"
                 />
               </span>
@@ -261,9 +248,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
             <Listbox.Options
               ref={optionsRef}
               className={clx(
-                "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+                "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md text-black shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                darkMode ? "border-outline/10 border bg-black" : "bg-white"
+                darkMode ? "border-washed-dark border bg-black" : "bg-white"
               )}
             >
               {/* Description - optional*/}
@@ -274,6 +261,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                 <Input
                   type="search"
                   icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
+                  value={search}
                   className="border-outline dark:border-washed-dark w-full rounded-b-none border-0 border-b text-sm"
                   placeholder={t("common:placeholder.search") + " ..."}
                   onChange={value => setSearch(value)}
@@ -285,7 +273,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                   height={240}
                   width={"100%"}
                   itemCount={availableOptions.length}
-                  itemSize={35}
+                  itemSize={36}
                 >
                   {({ index, style }: { index: number; style: CSSProperties }) => {
                     const option = availableOptions[index];

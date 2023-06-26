@@ -78,25 +78,23 @@ const Home: Page = ({
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[t("common:home.title")]}
-        description={
-          <div className="space-y-6">
-            <p className="text-dim xl:w-2/3">{t("common:home.description")}</p>
-            <div className="flex flex-wrap gap-3">
-              <At className="btn btn-primary text-sm" href="/dashboard" enableIcon>
-                {t("common:nav.dashboards")}
-              </At>
-              <At className="btn btn-default text-sm" href="/data-catalogue" enableIcon>
-                {t("common:nav.catalogue")}
-              </At>
-              <At className="btn text-sm" href="#" enableIcon>
-                API Docs
-              </At>
-            </div>
+        description={[t("common:home.description"), "text-dim"]}
+        action={
+          <div className="flex flex-wrap gap-3">
+            <At className="btn btn-primary text-sm" href="/dashboard" enableIcon>
+              {t("common:nav.dashboards")}
+            </At>
+            <At className="btn btn-default text-sm" href="/data-catalogue" enableIcon>
+              {t("common:nav.catalogue")}
+            </At>
+            <At className="btn text-sm" href="https://developer.data.gov.my" enableIcon external>
+              {t("common:nav.api_docs")}
+            </At>
           </div>
         }
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.govt")}
+            agency={t("agencies:govt.full")}
             link="https://www.malaysia.gov.my/portal/index"
             icon={
               <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />

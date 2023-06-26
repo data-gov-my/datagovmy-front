@@ -1,0 +1,206 @@
+/* SNAPSHOT STYLES */
+.snapshot-container {
+  @apply flex flex-col pt-5 md:pt-14;
+}
+
+.snapshot-container-background {
+  @apply bg-gray-100;
+}
+
+.snapshot-container {
+  @apply flex flex-col pt-5 md:pt-14;
+}
+
+.snapshot-layout {
+  @apply mb-10 flex w-full flex-col gap-4 md:mb-14 lg:flex-row;
+}
+
+/* JITTERPLOT STYLES */
+.jitterplot-container-background {
+  @apply bg-white md:bg-gray-100;
+}
+
+.jitterplot-container {
+  @apply md:rounded-lg;
+}
+
+.jitterplot-card-padding {
+  @apply px-0 py-4 sm:p-4;
+}
+
+.jitterplot-card {
+  @apply relative overflow-hidden rounded-lg md:border;
+}
+
+/* TITLE _STYLES */
+.section-title-layout {
+  @apply mb-5 flex w-full flex-col items-start justify-between gap-2 md:mb-7 md:flex-row md:items-center md:gap-0;
+}
+
+.section-title {
+  @apply text-xl font-semibold;
+}
+
+.doughnut-chart-title {
+  @apply text-sm font-bold;
+}
+
+.census-text {
+  @apply text-sm text-gray-400;
+}
+
+/* TOOLTIP STYLES */
+.tooltip {
+  @apply relative inline-block w-fit overflow-visible;
+}
+
+.tooltip .tooltip-content {
+  @apply invisible absolute top-8 z-20 inline-block w-max max-w-[150px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:-top-4 md:left-[130%] md:max-w-sm md:translate-x-0;
+}
+
+@media only screen and (min-width: 768px) {
+  .tooltip-content::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #18181b;
+    left: -7px;
+    top: 18px;
+  }
+}
+
+.tooltip:hover .tooltip-content {
+  @apply visible;
+}
+
+.nivo-tooltip {
+  @apply flex min-w-max origin-center items-center justify-center rounded bg-black px-[9px] py-[5px] text-sm text-white shadow;
+}
+
+.donut-meter::before {
+  content: "";
+  transform: translate(-50%, -50%);
+  @apply absolute left-1/2 top-1/2 h-[75%] w-[75%] rounded-[50%] bg-white transition-all dark:bg-black;
+}
+
+/* SLIDER STYLES */
+.slick-slider {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.slick-list {
+  position: relative;
+  display: block !important;
+  overflow: hidden;
+  padding: 0 0px !important;
+  width: 100%;
+}
+.slick-track {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+}
+
+/* FLOATING ICONS STYLES */
+.atom1-float {
+  position: absolute;
+  top: calc(50% - 286.5px);
+  left: calc(50% - 194px);
+  animation: float 3s infinite;
+}
+
+.atom2-float {
+  position: absolute;
+  top: calc(50% + 290.5px);
+  left: calc(50% + 399px);
+  opacity: 0.3;
+  filter: blur(3.5px);
+  animation: float 4s infinite;
+}
+
+.bar1-float {
+  position: absolute;
+  top: calc(50% + 180.5px);
+  left: calc(50% + 74px);
+  opacity: 0.3;
+  filter: blur(3.5px);
+  animation: float 4s infinite;
+}
+
+.bar2-float {
+  position: absolute;
+  top: calc(50% - 230.5px);
+  left: calc(50% + 611px);
+  animation: float 5s infinite;
+}
+
+.bar3-float {
+  position: absolute;
+  top: calc(50% - 93.5px);
+  left: calc(50% - 750px);
+  opacity: 0.3;
+  filter: blur(3.5px);
+  animation: float 4s infinite;
+}
+
+.line1-float {
+  position: absolute;
+  top: calc(50% + 212.5px);
+  left: calc(50% - 582px);
+  animation: float 3s infinite;
+}
+
+.line2-float {
+  position: absolute;
+  top: calc(50% - 339.5px);
+  left: calc(50% + 345px);
+  opacity: 0.3;
+  filter: blur(2px);
+  animation: float 5s infinite;
+}
+
+.pie1-float {
+  position: absolute;
+  top: calc(50% - 306.5px);
+  left: calc(50% - 592px);
+  opacity: 0.3;
+  filter: blur(2px);
+  animation: float 4s infinite;
+}
+
+.pie2-float {
+  position: absolute;
+  top: calc(50% + 192.5px);
+  left: calc(50% - 267px);
+  animation: float 4s infinite;
+}
+
+.pie3-float {
+  position: absolute;
+  top: calc(22% + 306px);
+  left: calc(50% + 693px);
+  opacity: 0.3;
+  filter: blur(3.5px);
+  animation: float 4s infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(-20%);
+    animation-timing-function: ease-in-out;
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: ease-in-out;
+  }
+}

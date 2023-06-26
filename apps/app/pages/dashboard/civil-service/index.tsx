@@ -6,15 +6,16 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CivilServiceDashboard from "@dashboards/public-finances/civil-service";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const CivilService: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const CivilService: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CivilServiceDashboard />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled

@@ -1,4 +1,4 @@
-import { toDate } from "@lib/helpers";
+import { clx, toDate } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, ReactNode, forwardRef, LegacyRef, ForwardedRef, useMemo } from "react";
 import { DateTime } from "luxon";
@@ -40,7 +40,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
       <section className={className} ref={ref}>
         <div className="flex flex-col gap-6 lg:gap-8">
           {title || date || description ? (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-y-3">
               <div className="flex flex-col flex-wrap items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
                 {title && typeof title === "string" ? <h4>{title}</h4> : title}
                 {date && date !== null && (
@@ -50,7 +50,12 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                 )}
               </div>
               {(description || menu) && (
-                <div className="text-dim flex flex-wrap gap-x-6 gap-y-3 md:flex-nowrap md:items-end md:justify-between">
+                <div
+                  className={clx(
+                    "text-dim flex w-full flex-wrap justify-between gap-y-3 md:flex-nowrap md:items-end",
+                    description && menu && "gap-x-6"
+                  )}
+                >
                   {description && typeof description === "string" ? (
                     <p
                       className={[
@@ -63,7 +68,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                   ) : (
                     <div>{description}</div>
                   )}
-                  {menu && <div className="flex w-full justify-end gap-3 md:w-auto">{menu}</div>}
+                  {menu && <div className="flex justify-end gap-3 md:w-auto">{menu}</div>}
                 </div>
               )}
             </div>

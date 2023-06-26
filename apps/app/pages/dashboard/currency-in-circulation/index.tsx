@@ -6,8 +6,10 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CurrencyInCirculationDashboard from "@dashboards/financial-sector/currency-in-circulation";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CurrencyInCirculation: Page = ({
+  meta,
   last_updated,
   bar,
   timeseries,
@@ -16,7 +18,7 @@ const CurrencyInCirculation: Page = ({
   const { t } = useTranslation(["dashboard-currency-in-circulation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CurrencyInCirculationDashboard
         last_updated={last_updated}
@@ -24,7 +26,7 @@ const CurrencyInCirculation: Page = ({
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled
@@ -42,7 +44,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "financial-sector",
           agency: "BNM",
         },
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         bar: data.bar_chart,
         timeseries: data.timeseries,
         timeseries_callouts: data.statistics,

@@ -1,5 +1,7 @@
-import { FunctionComponent, useRef } from "react";
-import dynamic from "next/dynamic";
+import ElectionAnalysis from "./analysis";
+import BallotSeat from "./ballot-seat";
+import ElectionLayout from "../layout";
+import { Party, PartyResult, OverallSeat, ElectionEnum } from "../types";
 import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
 import {
@@ -14,19 +16,19 @@ import {
 import Label from "@components/Label";
 import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
-import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
+import { useData } from "@hooks/useData";
+import { useScrollIntersect } from "@hooks/useScrollIntersect";
+import { useTranslation } from "@hooks/useTranslation";
+import { BREAKPOINTS, CountryAndStates, PoliticalPartyColours } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import { useScrollIntersect } from "@hooks/useScrollIntersect";
-import { useRouter } from "next/router";
-import { Party, PartyResult, Seat } from "../types";
-import BallotSeat from "./ballot-seat";
-import ElectionAnalysis from "./analysis";
 import { generateSchema } from "@lib/schema/election-explorer";
-import ElectionLayout from "../layout";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 
 /**
  * Election Explorer Dashboard
@@ -38,29 +40,40 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
 });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
+
 interface ElectionExplorerProps {
-  seats: Seat[];
-  table: PartyResult;
   params: {
     state: string;
     election: string;
   };
+  seats: OverallSeat[];
+  selection: Record<string, any>;
+  table: PartyResult;
 }
 
-const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, params, table }) => {
+const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
+  params,
+  seats,
+  selection,
+  table,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { push } = useRouter();
 
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
 
+  const { scroll } = useContext(WindowContext);
+  const show = useMemo(() => scroll.y > 500, [scroll.y]);
+  const { breakpoint } = useContext(WindowContext);
+
   const PANELS = [
     {
-      name: t("election.parliament"),
+      name: t("parlimen"),
       icon: <BuildingLibraryIcon className="mr-1 h-5 w-5" />,
     },
     {
-      name: t("election.state"),
+      name: t("state"),
       icon: <FlagIcon className="mr-1 h-5 w-5" />,
     },
   ];
@@ -94,33 +107,63 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
   ];
   const waffleColours = ["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"];
 
+  const ELECTION_ACRONYM = params.election.slice(-5);
+  const ELECTION_FULLNAME = params.election;
+  const CURRENT_STATE = params.state;
+
   const { data, setData } = useData({
-    list_index: params.election.startsWith("G") ? 0 : 1, // 0 - parlimen; 1 - dun
-    election: params.election,
-    state: params.state,
+    toggle_index: ELECTION_ACRONYM.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
+    tab_index: 0,
+    election: ELECTION_ACRONYM,
+    state: CURRENT_STATE,
+    showFullTable: false,
   });
 
-  const ELECTION_OPTIONS: Array<OptionType> = Array(16)
-    .fill(null)
-    .map((n, index: number) => ({
-      label: t((data.list_index === 0 ? "GE" : "SE") + `-${String(index).padStart(2, "0")}`),
-      value: (data.list_index === 0 ? "GE" : "SE") + `-${String(index).padStart(2, "0")}`,
+  const TOGGLE_IS_DUN = data.toggle_index === ElectionEnum.Dun;
+  const TOGGLE_IS_PARLIMEN = data.toggle_index === ElectionEnum.Parlimen;
+  const NON_SE_STATE = ["mys", "kul", "lbn", "pjy"];
+  const TABLE_LENGTH = breakpoint < BREAKPOINTS.LG ? 5 : 10;
+
+  const GE_OPTIONS: Array<OptionType> = selection["mys"]
+    .map((election: Record<string, any>) => ({
+      label: t(election.name) + ` (${election.year})`,
+      value: election.name,
     }))
     .reverse();
 
-  const navigateToElection = (election?: string, state?: string) => {
+  const SE_OPTIONS = useMemo<Array<OptionType>>(() => {
+    let _options: Array<OptionType> = [];
+    if (data.state !== null && NON_SE_STATE.includes(data.state) === false)
+      _options = selection[data.state]
+        .map((election: Record<string, any>) => ({
+          label: t(election.name) + ` (${election.year})`,
+          value: election.name,
+        }))
+        .reverse();
+    return _options;
+  }, [data.state]);
+
+  const navigateToElection = (election: string, state?: string) => {
     if (!election) return;
     setData("loading", true);
     setData("election", election);
 
-    const route = state
-      ? `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}/${state}`
-      : `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}`;
+    const route = `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}/${state}`;
 
     push(route, undefined, {
       scroll: false,
       locale: i18n.language,
     }).then(() => setData("loading", false));
+  };
+
+  const handleElectionTab = (index: number) => {
+    if (index === ElectionEnum.Dun) {
+      setData("state", !NON_SE_STATE.includes(CURRENT_STATE) ? data.state || CURRENT_STATE : null);
+      setData("election", null);
+    } else {
+      setData("state", data.state || CURRENT_STATE);
+    }
+    setData("toggle_index", index);
   };
 
   return (
@@ -129,80 +172,76 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
         <Container className="min-h-fit">
           {/* Explore any election from Merdeka to the present! */}
           <Section>
-            <h4 className="text-center">{t("election.section_1")}</h4>
-            <div className={clx("fixed right-0 top-16 z-20 lg:hidden")}>
+            <h4 className="text-center">{t("header_1")}</h4>
+
+            {/* Mobile */}
+            <div className={clx(show ? "fixed right-3 top-[116px] z-20 lg:hidden" : "hidden")}>
               <Modal
                 trigger={open => (
                   <Button
+                    variant="dropdown"
                     onClick={open}
-                    className="border-outline bg-background dark:border-outlineHover-dark dark:bg-washed-dark dark:shadow-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-lg"
+                    className="shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
                   >
                     <span>{t("filter")}:</span>
-                    <span className="bg-primary dark:bg-primary-dark rounded-md px-1 py-0.5 text-xs text-white">
-                      {3}
-                    </span>
+                    <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
+                      <p className="text-center text-white">3</p>
+                    </div>
+                    <ChevronDownIcon
+                      className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5"
+                      aria-hidden="true"
+                    />
                   </Button>
                 )}
-                title={
-                  <Label
-                    label={t("filter") + ":"}
-                    className="block text-sm font-bold text-black dark:text-white"
-                  />
-                }
+                title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
               >
                 {close => (
-                  <div className="flex-grow space-y-4 overflow-y-auto pb-36 pt-4">
-                    <Label
-                      label={t("election.election") + ":"}
-                      className="block text-sm font-medium text-black dark:text-white"
-                    />
+                  <div className="flex-grow space-y-4 overflow-y-auto pb-[100px] pt-4">
+                    <Label label={t("election") + ":"} className="text-sm" />
                     <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
                       <List
                         options={PANELS.map(item => item.name)}
                         icons={PANELS.map(item => item.icon)}
-                        current={data.list_index}
-                        onChange={index => {
-                          setData("list_index", index);
-                        }}
+                        current={data.toggle_index}
+                        onChange={handleElectionTab}
                       />
                     </div>
                     <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
-                      <Label
-                        label={t("election.state") + ":"}
-                        className="block text-sm font-medium text-black dark:text-white"
-                      />
-                      <Label
-                        label={t("election.election_year") + ":"}
-                        className="block text-sm font-medium text-black dark:text-white"
-                      />
+                      <Label label={t("state") + ":"} className="text-sm" />
+                      <Label label={t("election_year") + ":"} className="text-sm" />
                       <StateDropdown
                         currentState={data.state}
                         onChange={selected => {
+                          navigateToElection(data.election, selected.value);
                           setData("state", selected.value);
+                          TOGGLE_IS_DUN && setData("election", null);
                         }}
-                        exclude={data.list_index === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
+                        exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
                         width="w-full"
-                        anchor="left"
+                        anchor="left-0 bottom-10"
                       />
                       <Dropdown
                         width="w-full"
+                        anchor="right-0 bottom-10"
                         placeholder={t("select_election")}
-                        options={ELECTION_OPTIONS}
+                        options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
                         selected={
-                          data.election
-                            ? ELECTION_OPTIONS.find(e => e.value === data.election)
-                            : undefined
+                          TOGGLE_IS_PARLIMEN
+                            ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
+                            : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
                         }
-                        onChange={e => {
-                          setData("election", e.value);
+                        disabled={!data.state}
+                        onChange={selected => {
+                          setData("election", selected.value);
+                          navigateToElection(selected.value, data.state);
                         }}
                       />
                     </div>
                     <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
-                      <Button className="btn btn-primary w-full justify-center" onClick={close}>
-                        {t("election.apply_filters")}
+                      <Button variant="primary" className="w-full justify-center" onClick={close}>
+                        {t("apply_filters")}
                       </Button>
-                      <Button className="btn btn-default w-full justify-center" onClick={close}>
+                      <Button className="btn w-full justify-center" onClick={close}>
                         {t("common:common.close")}
                       </Button>
                     </div>
@@ -211,6 +250,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
               </Modal>
             </div>
 
+            {/* Desktop */}
             <div
               ref={divRef}
               className="sticky top-16 z-20 mt-6 hidden items-center justify-center gap-2 transition-all duration-200 ease-in lg:flex lg:pl-2"
@@ -219,153 +259,182 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({ seats, par
                 <List
                   options={PANELS.map(item => item.name)}
                   icons={PANELS.map(item => item.icon)}
-                  current={data.list_index}
-                  onChange={index => {
-                    setData("election", "");
-                    setData("list_index", index);
-                  }}
+                  current={data.toggle_index}
+                  onChange={handleElectionTab}
                 />
               </div>
               <StateDropdown
                 currentState={data.state}
                 onChange={selected => {
-                  navigateToElection(data.election, selected.value);
+                  TOGGLE_IS_PARLIMEN
+                    ? navigateToElection(data.election, selected.value)
+                    : setData("election", null);
                   setData("state", selected.value);
                 }}
-                exclude={data.list_index === 0 ? [] : ["mys", "kul", "lbn", "pjy"]}
-                width="min-w-max"
+                exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
+                width="w-fit"
                 anchor="left"
               />
               <Dropdown
                 anchor="left"
-                width="max-w-fit"
                 placeholder={t("select_election")}
-                options={ELECTION_OPTIONS}
+                options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
                 selected={
-                  data.election ? ELECTION_OPTIONS.find(e => e.value === data.election) : undefined
+                  TOGGLE_IS_PARLIMEN
+                    ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
+                    : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
                 }
                 onChange={selected => {
-                  navigateToElection(selected.value, data.state);
                   setData("election", selected.value);
+                  navigateToElection(selected.value, data.state);
                 }}
+                disabled={!data.state}
               />
             </div>
-            <Tabs hidden current={data.list_index} onChange={index => setData("list_index", index)}>
-              {PANELS.map((panel, index) => (
-                <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
-                  <div className="py-12 lg:grid lg:grid-cols-12">
-                    <div className="space-y-6 lg:col-span-10 lg:col-start-2">
-                      <Tabs
-                        title={
-                          <div className="text-base font-bold">
-                            {t("election.parliament_of")}
-                            <span className="text-primary">
-                              {data.state ? CountryAndStates[data.state] : CountryAndStates["mys"]}
-                            </span>
+            <Section>
+              <Tabs
+                hidden
+                current={data.toggle_index}
+                onChange={index => setData("toggle_index", index)}
+              >
+                {PANELS.map((panel, index) => (
+                  <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
+                    <div className="grid grid-cols-12">
+                      <div className="col-span-full col-start-1 flex flex-col gap-y-3 lg:col-span-10 lg:col-start-2">
+                        <div className="flex flex-col items-baseline justify-between gap-y-3 sm:flex-row md:gap-y-0">
+                          <h5 className="w-fit">
+                            {t("election_of", {
+                              context: ELECTION_ACRONYM.startsWith("G") ? "parlimen" : "dun",
+                            })}
+                            <span className="text-primary">{CountryAndStates[CURRENT_STATE]}</span>
                             <span>: </span>
-                            <span className="text-primary">
-                              {ELECTION_OPTIONS.find(e => e.value === data.election)?.label}
-                            </span>
-                          </div>
-                        }
-                        current={data.s1_tabs}
-                        onChange={index => setData("s1_tabs", index)}
-                      >
-                        <Panel name={t("election.map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
-                          <Card className="border-outline dark:border-washed-dark bg-background dark:bg-background-dark static rounded-xl border xl:py-4">
-                            <Choropleth
-                              enableOutline={false}
-                              type={data.list_index === 1 ? "dun" : "parlimen"}
+                            <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
+                          </h5>
+                          <div className="flex w-full justify-start sm:w-auto">
+                            <List
+                              options={[t("table"), t("map"), t("summary")]}
+                              icons={[
+                                <TableCellsIcon key="table_cell_icon" className="mr-1 h-5 w-5" />,
+                                <MapIcon key="map_icon" className="mr-1 h-5 w-5" />,
+                              ]}
+                              current={data.tab_index}
+                              onChange={index => 0} //setData("tab_index", index)}
                             />
-                          </Card>
-                        </Panel>
-                        <Panel
-                          name={t("election.table")}
-                          icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
-                        >
-                          <ElectionTable
-                            isLoading={false}
-                            data={table}
-                            columns={generateSchema<Party>([
-                              {
-                                key: "party",
-                                id: "party",
-                                header: t("party_name"),
-                              },
-                              {
-                                key: "seats",
-                                id: "seats",
-                                header: t("seats_won"),
-                              },
-                              { key: "votes", id: "votes", header: t("votes_won") },
-                            ])}
-                          />
-                        </Panel>
-                        <Panel name={t("election.summary")}>
-                          <div className="space-y-6">
-                            <p className="text-center text-sm font-medium">
-                              {t("election.majority")}
-                            </p>
-                            <div className="relative h-12 w-full">
-                              <Waffle
-                                className="h-[50px] min-h-max w-full"
-                                fillDirection={"left"}
-                                data={waffleDummy}
-                                margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
-                                total={222}
-                                rows={3}
-                                cols={74}
-                                color={waffleColours}
-                              />
-                              <hr className="border-background-dark absolute inset-x-1/2 -top-3 h-[72px] w-0 border border-dashed dark:border-white"></hr>
-                            </div>
-                            <div className="text-dim flex flex-row flex-wrap items-center justify-center gap-6">
-                              {waffleDummy.map(({ label, value }) => (
-                                <div className="flex flex-row items-center gap-1" key={label}>
-                                  {label === "Others" ? (
-                                    <div className="bg-dim h-4 w-4 rounded-md"></div>
-                                  ) : (
-                                    <ImageWithFallback
-                                      className="border-outline dark:border-outlineHover-dark rounded border"
-                                      src={`/static/images/parties/${label}.png`}
-                                      width={32}
-                                      height={18}
-                                      alt={t(`${label}`)}
-                                    />
-                                  )}
-                                  <span
-                                    className="uppercase"
-                                    style={{ color: PoliticalPartyColours[label] }}
-                                  >
-                                    {label}
-                                  </span>
-                                  <span
-                                    className="font-bold"
-                                    style={{ color: PoliticalPartyColours[label] }}
-                                  >
-                                    {value}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                            <p className="text-dim whitespace-pre-line text-center text-sm ">
-                              {t("election.explore")}
-                            </p>
                           </div>
-                        </Panel>
-                      </Tabs>
+                        </div>
+                        <Tabs
+                          hidden
+                          current={data.tab_index}
+                          onChange={index => setData("tab_index", index)}
+                        >
+                          <Panel
+                            name={t("table")}
+                            icon={<TableCellsIcon className="mr-1 h-5 w-5" />}
+                          >
+                            <>
+                              <WindowProvider>
+                                <ElectionTable
+                                  isLoading={false}
+                                  data={data.showFullTable ? table : table.slice(0, TABLE_LENGTH)}
+                                  columns={generateSchema<Party>([
+                                    {
+                                      key: "party",
+                                      id: "party",
+                                      header: t("party_name"),
+                                    },
+                                    {
+                                      key: "seats",
+                                      id: "seats",
+                                      header: t("seats_won"),
+                                    },
+                                    { key: "votes", id: "votes", header: t("votes_won") },
+                                  ])}
+                                />
+                              </WindowProvider>
+                              {data.showFullTable !== true && (
+                                <Button
+                                  variant="default"
+                                  className="mx-auto mt-6"
+                                  onClick={() => setData("showFullTable", true)}
+                                >
+                                  {t("show_more")}
+                                </Button>
+                              )}
+                            </>
+                          </Panel>
+                          <Panel name={t("map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
+                            <Card className="bg-background dark:bg-background-dark static xl:py-4">
+                              <Choropleth
+                                className="h-[400px] w-auto lg:h-[500px]"
+                                type={ELECTION_ACRONYM.startsWith("S") ? "dun" : "parlimen"}
+                              />
+                            </Card>
+                          </Panel>
+                          <Panel name={t("summary")}>
+                            <div className="space-y-6">
+                              <p className="text-center text-sm font-medium">
+                                {t("simple_majority")}
+                              </p>
+                              <div className="relative h-12 w-full">
+                                <Waffle
+                                  className="h-[50px] min-h-max w-full"
+                                  fillDirection={"left"}
+                                  data={waffleDummy}
+                                  margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
+                                  total={222}
+                                  rows={3}
+                                  cols={74}
+                                  color={waffleColours}
+                                />
+                                <hr className="border-background-dark absolute inset-x-1/2 -top-3 h-[72px] w-0 border border-dashed dark:border-white"></hr>
+                              </div>
+                              <div className="text-dim flex flex-row flex-wrap items-center justify-center gap-6">
+                                {waffleDummy.map(({ label, value }) => (
+                                  <div className="flex flex-row items-center gap-1" key={label}>
+                                    {label === "Others" ? (
+                                      <div className="bg-dim h-4 w-4 rounded-md"></div>
+                                    ) : (
+                                      <ImageWithFallback
+                                        className="border-outline dark:border-outlineHover-dark rounded border"
+                                        src={`/static/images/parties/${label}.png`}
+                                        width={32}
+                                        height={18}
+                                        alt={t(`${label}`)}
+                                      />
+                                    )}
+                                    <span
+                                      className="uppercase"
+                                      style={{ color: PoliticalPartyColours[label] }}
+                                    >
+                                      {label}
+                                    </span>
+                                    <span
+                                      className="font-bold"
+                                      style={{ color: PoliticalPartyColours[label] }}
+                                    >
+                                      {value}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                              <p className="text-dim whitespace-pre-line text-center text-sm">
+                                {t("explore")}
+                              </p>
+                            </div>
+                          </Panel>
+                        </Tabs>
+                      </div>
                     </div>
-                  </div>
-                </Tabs.Panel>
-              ))}
-            </Tabs>
-
+                  </Tabs.Panel>
+                ))}
+              </Tabs>
+            </Section>
             {/* View the full ballot for a specific seat */}
-            <BallotSeat seats={seats} election={data.election} />
-          </Section>
+            <BallotSeat seats={seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
 
-          {/* Election analysis */}
-          <ElectionAnalysis />
+            {/* Election analysis */}
+            <ElectionAnalysis state={CURRENT_STATE} index={data.toggle_index} seats={seats} />
+          </Section>
         </Container>
       </ElectionLayout>
     </>

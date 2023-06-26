@@ -1,23 +1,23 @@
-import type { NextSeoProps } from 'next-seo'
-import { NextSeo } from 'next-seo'
-import { useTheme } from 'next-themes'
-import NextHead from 'next/head'
-import { useMounted } from 'nextra/hooks'
-import type { ReactElement } from 'react'
-import { useConfig } from '../contexts'
+import type { NextSeoProps } from "next-seo";
+import { NextSeo } from "next-seo";
+import { useTheme } from "next-themes";
+import NextHead from "next/head";
+import { useMounted } from "nextra/hooks";
+import type { ReactElement } from "react";
+import { useConfig } from "../contexts";
 
 export function Head(): ReactElement {
-  const config = useConfig()
-  const { resolvedTheme } = useTheme()
-  const mounted = useMounted()
+  const config = useConfig();
+  const { resolvedTheme } = useTheme();
+  const mounted = useMounted();
 
   // `head` can be either FC or ReactNode. We have to directly call it if it's an
   // FC because hooks like Next.js' `useRouter` aren't allowed inside NextHead.
-  const head = typeof config.head === 'function' ? config.head({}) : config.head
-  const hue = config.primaryHue
+  const head = typeof config.head === "function" ? config.head({}) : config.head;
+  const hue = config.primaryHue;
   const { dark: darkHue, light: lightHue } =
-    typeof hue === 'number' ? { dark: hue, light: hue } : hue
-  const frontMatter = config.frontMatter as NextSeoProps
+    typeof hue === "number" ? { dark: hue, light: hue } : hue;
+  const frontMatter = config.frontMatter as NextSeoProps;
 
   return (
     <>
@@ -36,28 +36,14 @@ export function Head(): ReactElement {
           />
         ) : null}
         {mounted ? (
-          <meta
-            name="theme-color"
-            content={resolvedTheme === 'dark' ? '#111' : '#fff'}
-          />
+          <meta name="theme-color" content={resolvedTheme === "dark" ? "#111" : "#fff"} />
         ) : (
           <>
-            <meta
-              name="theme-color"
-              content="#fff"
-              media="(prefers-color-scheme: light)"
-            />
-            <meta
-              name="theme-color"
-              content="#111"
-              media="(prefers-color-scheme: dark)"
-            />
+            <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)" />
+            <meta name="theme-color" content="#111" media="(prefers-color-scheme: dark)" />
           </>
         )}
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <style>{`
         :root {
           --nextra-primary-hue: ${lightHue}deg;
@@ -73,5 +59,5 @@ export function Head(): ReactElement {
         {head}
       </NextHead>
     </>
-  )
+  );
 }

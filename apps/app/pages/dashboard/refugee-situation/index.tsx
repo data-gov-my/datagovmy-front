@@ -6,8 +6,10 @@ import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const RefugeeSituation: Page = ({
+  meta,
   barmeter,
   choropleth,
   last_updated,
@@ -17,7 +19,7 @@ const RefugeeSituation: Page = ({
   const { t } = useTranslation(["dashboard-refugee-situation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <RefugeeSituationDashboard
         barmeter={barmeter}
@@ -26,7 +28,7 @@ const RefugeeSituation: Page = ({
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -44,7 +46,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-refugee-situat
       },
       barmeter: data.barmeter,
       choropleth: data.choropleth,
-      last_updated: Date.now(),
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
     },

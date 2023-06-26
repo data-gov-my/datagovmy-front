@@ -2,7 +2,7 @@ import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import { get } from "@lib/api";
 import type { Page } from "@lib/types";
-import { CountryAndStates, STATES } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { useTranslation } from "@hooks/useTranslation";
 import { routes } from "@lib/routes";
 import Fonts from "@config/font";
@@ -10,8 +10,10 @@ import OrganDonationDashboard from "@dashboards/healthcare/organ-donation";
 import { DateTime } from "luxon";
 import { clx } from "@lib/helpers";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const OrganDonationState: Page = ({
+  meta,
   last_updated,
   params,
   timeseries,
@@ -22,7 +24,7 @@ const OrganDonationState: Page = ({
   const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
@@ -36,7 +38,7 @@ const OrganDonationState: Page = ({
         barchart_age={barchart_age}
         barchart_time={barchart_time}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -94,7 +96,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "healthcare",
           agency: "NTRC",
         },
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         params: params,
         timeseries: data.timeseries,
         choropleth: data.choropleth_malaysia,

@@ -1,22 +1,23 @@
-import ElectionCard from "@components/Card/ElectionCard";
+import ElectionLayout from "./layout";
+import { ElectionEnum, ElectionResource, Party, PartyResult } from "./types";
+import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
 import { Container, Panel, Section, StateDropdown, Tabs } from "@components/index";
+import { toast } from "@components/Toast";
 import type { OptionType } from "@components/types";
+import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
+import { toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
-import type { ElectionResource, Party, PartyResult } from "./types";
-import ElectionLayout from "./layout";
-import { toast } from "@components/Toast";
-import { toDate } from "@lib/helpers";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
@@ -38,6 +39,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
   const { push } = useRouter();
+  const { cache } = useCache();
 
   const { data, setData } = useData({
     tab_index: 0, // parlimen = 0; dun = 1
@@ -120,6 +122,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     }
     setData("loading", true);
     setData("party", name);
+    setData("state", state);
 
     const route = state
       ? `${routes.ELECTION_EXPLORER}/parties/${encodeURIComponent(name)}/${state}`
@@ -128,40 +131,49 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     push(route, undefined, {
       scroll: false,
       locale: i18n.language,
-    }).then(() => setData("loading", false));
+    }).then(() => {
+      setData("loading", false);
+      cache.clear();
+    });
   };
 
-  const fetchResult = async (election: string, state: string) => {
-    return get("/explorer", {
-      explorer: "ELECTIONS",
-      chart: "full_result",
-      type: "party",
-      election,
-      state,
-    })
-      .then(({ data }: { data: PartyResult }) => {
-        return {
-          data: data.sort((a: PartyResult[number], b: PartyResult[number]) => {
-            if (a.seats.won === b.seats.won) {
-              return b.votes.abs - a.votes.abs;
-            } else {
-              return b.seats.won - a.seats.won;
-            }
-          }),
-        };
+  const fetchResult = async (election: string, state: string): Promise<Result<PartyResult>> => {
+    const identifier = `${election}_${state}`;
+    return new Promise(resolve => {
+      if (cache.has(identifier)) return resolve(cache.get(identifier));
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "full_result",
+        type: "party",
+        election,
+        state,
       })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      });
+        .then(({ data }: { data: PartyResult }) => {
+          const result: Result<PartyResult> = {
+            data: data.sort((a: PartyResult[number], b: PartyResult[number]) => {
+              if (a.seats.won === b.seats.won) {
+                return b.votes.abs - a.votes.abs;
+              } else {
+                return b.seats.won - a.seats.won;
+              }
+            }),
+          };
+          cache.set(identifier, result);
+          resolve(result);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
+    });
   };
 
   return (
     <ElectionLayout>
       <Container className="min-h-fit">
         <Section>
-          <div className="lg:grid lg:grid-cols-12">
-            <div className="lg:col-span-10 lg:col-start-2">
+          <div className="grid grid-cols-12">
+            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
               {/* Explore any party's entire electoral history */}
               <h4 className="text-center">{t("party.header")}</h4>
               <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
@@ -180,7 +192,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                   <Trans>
                     <span className="text-lg font-normal leading-9">
                       <ImageWithFallback
-                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block items-center rounded border"
+                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
                         src={`/static/images/parties/${params.party_name}.png`}
                         width={32}
                         height={18}
@@ -196,7 +208,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                           setData("state", selected.value);
                           navigateToParty(data.party, selected.value);
                         }}
-                        width="inline-block pl-1 min-w-max"
+                        width="inline-flex ml-0.5"
                         anchor="left"
                       />
                     </span>
@@ -206,7 +218,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 onChange={(index: number) => setData("tab_index", index)}
                 className="pb-6"
               >
-                <Panel name={t("parliament_elections")}>
+                <Panel name={t("parlimen")}>
                   <ElectionTable
                     data={elections.parlimen}
                     columns={party_schema}
@@ -215,15 +227,20 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                       <Trans>
                         {t("party.no_data", {
                           party: `$t(dashboard-election-explorer:${params.party_name})`,
-                          context: "parliament",
+                          state: CountryAndStates[data.state],
+                          context: "parlimen",
                         })}
                       </Trans>
                     }
                   />
                 </Panel>
-                <Panel name={t("state_elections")}>
+                <Panel name={t("dun")}>
                   <ElectionTable
-                    data={elections.dun} // TODO: Replace with DUN later
+                    data={
+                      data.tab_index === ElectionEnum.Dun && params.state === "mys"
+                        ? []
+                        : elections.dun
+                    }
                     columns={party_schema}
                     isLoading={data.loading}
                     empty={
@@ -231,7 +248,11 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                         {t("party.no_data", {
                           party: `$t(dashboard-election-explorer:${params.party_name})`,
                           state: CountryAndStates[data.state],
-                          context: data.state === "mys" ? "dun_mys" : "dun",
+                          context: ["kul", "lbn", "pjy"].includes(data.state)
+                            ? "dun_wp"
+                            : data.state === "mys"
+                            ? "dun_mys"
+                            : "dun",
                         })}
                       </Trans>
                     }

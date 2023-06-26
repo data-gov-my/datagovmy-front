@@ -1,10 +1,9 @@
-/** @type {import('tailwindcss').Config} */
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
   content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -31,7 +30,7 @@ module.exports = {
         "black": "#18181B", // Zinc 900
         "primary": "#2563EB",
         "primary-dark": "#3E7AFF",
-        "success": "#22C55E", // Green 500
+        "success": "#10B981", // Emerald 500
         "danger": "#DC2626", // Red 600
         "warning": "#FBBF24", // Amber 400
         "dim": "#71717A", // Zinc 500
@@ -54,6 +53,15 @@ module.exports = {
       },
       aspectRatio: {
         "4/3": "4 / 3",
+      },
+      keyframes: {
+        slide: {
+          from: { width: "var(--from-width)" },
+          to: { width: "var(--to-width)" },
+        },
+      },
+      animation: {
+        slide: "slide 1.5s ease-out",
       },
     },
   },

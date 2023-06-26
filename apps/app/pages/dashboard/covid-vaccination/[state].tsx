@@ -12,9 +12,11 @@ import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 import { withi18n } from "@lib/decorators";
 import { Page } from "@lib/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CovidVaccinationState: Page = ({
-  lastUpdated,
+  meta,
+  last_updated,
   params,
   waffle,
   barmeter,
@@ -23,21 +25,21 @@ const CovidVaccinationState: Page = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("page_title"))}
         description={t("description")}
         keywords=""
       />
       <CovidVaccinationDashboard
-        lastUpdated={lastUpdated}
+        last_updated={last_updated}
         params={params}
         waffle={waffle}
         barmeter={barmeter}
         timeseries={timeseries}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -94,7 +96,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "KKM",
         },
         params: params,
-        lastUpdated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         waffle: data.waffle,
         barmeter: data.bar_chart,
         timeseries: data.timeseries,

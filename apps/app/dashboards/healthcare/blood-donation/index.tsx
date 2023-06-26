@@ -21,18 +21,12 @@ const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
 
 interface BloodDonationDashboardProps {
-  last_updated: number;
+  last_updated: string;
   params: { state: string };
   timeseries_all: any;
-  timeseries_bloodstock: any;
-  timeseries_facility: any;
-  heatmap_bloodstock: any;
-  heatmap_donorrate: any;
-  heatmap_retention: any;
   barchart_age: any;
   barchart_time: any;
   barchart_variables: any;
-  map_facility: any;
   choropleth_malaysia_blood_donation: any;
 }
 
@@ -40,15 +34,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   last_updated,
   params,
   timeseries_all,
-  timeseries_bloodstock,
-  timeseries_facility,
-  heatmap_bloodstock,
-  heatmap_donorrate,
-  heatmap_retention,
   barchart_age,
   barchart_time,
   barchart_variables,
-  map_facility,
   choropleth_malaysia_blood_donation,
 }) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
@@ -91,14 +79,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         background="red"
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim"}>{t("description")}</p>
-            <div className="pt-6">
-              <StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />
-            </div>
-          </>
-        }
+        description={[t("description"), "text-dim"]}
+        action={<StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />}
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge

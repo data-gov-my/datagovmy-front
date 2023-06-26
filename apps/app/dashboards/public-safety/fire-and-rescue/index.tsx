@@ -32,7 +32,7 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 
 interface FireandRescueProps {
   choropleth: any;
-  last_updated: any;
+  last_updated: string;
   params: { state: string };
   timeseries: any;
   timeseries_callout: any;
@@ -70,19 +70,17 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         description={
           <Trans>
             <p className={"text-dim whitespace-pre-line xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />
-            </div>
           </Trans>
         }
+        action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.BOMBA")}
+            agency={t("agencies:bomba.full")}
             link="https://www.bomba.gov.my/"
             icon={<BOMBAIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">

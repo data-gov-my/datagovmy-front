@@ -6,26 +6,38 @@ import { useTranslation } from "@hooks/useTranslation";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer/elections";
 import { withi18n } from "@lib/decorators";
 import { Party } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ElectionExplorerIndex: Page = ({
-  seats,
+  meta,
   params,
+  seats,
+  selection,
   table,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard params={params} seats={seats} table={table} />
-    </>
+      <ElectionExplorerDashboard
+        params={params}
+        seats={seats}
+        selection={selection}
+        table={table}
+      />
+    </AnalyticsProvider>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
   try {
     const [election, state] = ["GE-15", "mys"];
-    const [seats, table] = await Promise.all([
+    const [dropdown, seats, table] = await Promise.all([
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        dropdown: "election_list",
+      }),
       get("/explorer", {
         explorer: "ELECTIONS",
         chart: "overall_seat",
@@ -53,6 +65,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         },
         params: { election, state },
         seats: seats.data,
+        selection: dropdown.data ?? [],
         table: table.data.sort((a: Party, b: Party) => {
           if (a.seats.won === b.seats.won) {
             return b.votes.perc - a.votes.perc;

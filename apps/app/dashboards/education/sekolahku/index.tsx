@@ -25,6 +25,7 @@ import { toast } from "@components/Toast";
 
 interface SekolahkuProps {
   dropdown_data: Record<string, string>[];
+  last_updated: string;
   total_schools: number;
   sekolahku_info: any;
   sekolahku_barmeter: any;
@@ -38,6 +39,7 @@ const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false 
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   dropdown_data,
+  last_updated,
   total_schools,
   sekolahku_info,
   sekolahku_barmeter,
@@ -143,6 +145,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
             icon={<MOEIcon />}
           />
         }
+        last_updated={last_updated}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen">
@@ -247,16 +250,22 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                     sort={"desc"}
                     formatX={key => t(`section_2.${k}.${key}`)}
                     formatY={(value, key) => (
-                      <>
-                        <Tooltip
-                          tip={`${t("section_2.tooltip_count", {
-                            count: sekolahku_barmeter.tooltip[k].find(
-                              (object: { x: string; y: number }) => object.x === key
-                            ).y,
-                          })}`}
-                        />
-                        <span className="pl-1">{value.toFixed(1)}</span>
-                      </>
+                      <Tooltip
+                        tip={`${t("section_2.tooltip_count", {
+                          count: sekolahku_barmeter.tooltip[k].find(
+                            (object: { x: string; y: number }) => object.x === key
+                          ).y,
+                        })}`}
+                      >
+                        {open => (
+                          <p
+                            className="underline decoration-dashed underline-offset-2"
+                            onClick={open}
+                          >
+                            {numFormat(value, "standard", [1, 1])}
+                          </p>
+                        )}
+                      </Tooltip>
                     )}
                   />
                 </div>

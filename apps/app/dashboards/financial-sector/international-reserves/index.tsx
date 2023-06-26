@@ -21,7 +21,7 @@ import { SliderProvider } from "@components/Chart/Slider/context";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface InternationalReservesDashboardProps {
-  last_updated: number;
+  last_updated: string;
   timeseries: any;
   timeseries_callouts: any;
 }
@@ -75,7 +75,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.bnm")}
+            agency={t("agencies:bnm.full")}
             link="https://www.bnm.gov.my/publications/mhs"
             icon={<BNMIcon />}
           />

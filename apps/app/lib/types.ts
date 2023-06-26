@@ -5,7 +5,6 @@ import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
-import { routes } from "./routes";
 
 export type AppPropsLayout = AppProps & {
   Component: Page;
@@ -71,6 +70,7 @@ export type DCChartKeys =
   | "GEOJSON"
   | "BAR"
   | "HBAR"
+  | "LINE"
   | "PYRAMID"
   | "HEATTABLE"
   | "SCATTER"
@@ -104,6 +104,7 @@ export type DCConfig = {
   freeze?: string[];
   color?: Color;
   geojson?: Geotype | null;
+  line_variables?: Record<string, any>;
 };
 
 /*************************** MIXPANEL ***************************** */
@@ -124,7 +125,7 @@ export type MixpanelBase = {
 export type MetaPage = Record<string, any> & {
   meta: {
     id: string;
-    type: "misc" | "dashboard" | "catalogue";
+    type: "misc" | "dashboard" | "data-catalogue";
     category:
       | "democracy"
       | "demography"

@@ -31,11 +31,10 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 
 interface COVID19Props {
   params: Record<string, any>;
-  last_updated: number;
+  last_updated: string;
   snapshot_bar: any;
   snapshot_graphic: any;
   timeseries: any;
-  util_chart: any;
   statistics: any;
 }
 
@@ -45,7 +44,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  util_chart,
   statistics,
 }) => {
   const currentState = params.state;
@@ -106,14 +104,9 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         background="red"
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.COVID_19} currentState={currentState} />
-            </div>
-          </>
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={"Ministry of Health (MoH)"}
@@ -121,7 +114,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             icon={<MOHIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">

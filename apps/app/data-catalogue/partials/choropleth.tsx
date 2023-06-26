@@ -1,8 +1,7 @@
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import type { Color } from "@hooks/useColor";
 import { useTranslation } from "@hooks/useTranslation";
 import { download, exportAs } from "@lib/helpers";
-import type { DownloadOptions, Geotype } from "@lib/types";
+import type { DownloadOptions } from "@lib/types";
 import { track } from "@lib/mixpanel";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
@@ -108,7 +107,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   return (
     <Choropleth
       _ref={_ref => setCtx(_ref)}
-      className="h-[350px] w-full lg:h-[400px]"
+      className="h-[350px] w-full lg:h-[450px]"
       data={{
         labels: dataset.chart.x,
         values: dataset.chart.y,

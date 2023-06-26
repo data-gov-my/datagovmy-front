@@ -9,8 +9,10 @@ import { get } from "@lib/api";
 import Metadata from "@components/Metadata";
 import DataCatalogueShow from "@data-catalogue/show";
 import { useMemo } from "react";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CatalogueShow: Page = ({
+  meta,
   params,
   config,
   dataset,
@@ -39,7 +41,7 @@ const CatalogueShow: Page = ({
   }, [dataset.type]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={dataset.meta.title}
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
@@ -55,7 +57,7 @@ const CatalogueShow: Page = ({
         urls={urls}
         translations={translations}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -75,6 +77,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       freeze: data.API.freeze ?? null,
       color: data.API.colour ?? "blues",
       geojson: data.API.file_json ?? null,
+      line_variables: data.API.line_variables ?? null,
     };
 
     const hasTranslations = data.translations && Object.keys(data.translations).length;
@@ -113,7 +116,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       props: {
         meta: {
           id: data.chart_details.intro.unique_id,
-          type: "catalogue",
+          type: "data-catalogue",
           category: null,
           agency: Array.isArray(data.metadata.data_source)
             ? data.metadata.data_source.join(",")
@@ -149,4 +152,3 @@ export const getServerSideProps: GetServerSideProps = withi18n(
 );
 
 export default CatalogueShow;
-/** ------------------------------------------------------------------------------------------------------------- */
