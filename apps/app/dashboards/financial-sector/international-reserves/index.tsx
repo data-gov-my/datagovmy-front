@@ -21,7 +21,7 @@ import { SliderProvider } from "@components/Chart/Slider/context";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface InternationalReservesDashboardProps {
-  last_updated: number;
+  last_updated: string;
   timeseries: any;
   timeseries_callouts: any;
 }

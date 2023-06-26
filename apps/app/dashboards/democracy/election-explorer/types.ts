@@ -45,6 +45,25 @@ export type Seat = {
   type: ElectionType;
 };
 
+export type OverallSeat = {
+  seat: string;
+  date: string;
+  party: string;
+  name: string;
+  majority: {
+    abs: number;
+    perc: number;
+  };
+  voter_turnout: {
+    abs: number;
+    perc: number;
+  };
+  votes_rejected: {
+    abs: number;
+    perc: number;
+  };
+};
+
 export type BaseResult = {
   name: string;
   type: ElectionType;

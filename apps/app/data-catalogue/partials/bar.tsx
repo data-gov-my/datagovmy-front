@@ -6,11 +6,11 @@ import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import { track } from "@lib/mixpanel";
-import { WindowContext } from "@hooks/useWindow";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { toast } from "@components/Toast";
+import { useAnalytics } from "@hooks/useAnalytics";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 interface CatalogueBarProps {
@@ -33,14 +33,15 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
   const { breakpoint } = useContext(WindowContext);
+  const { track } = useAnalytics(dataset);
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
     if (dataset.type === "HBAR" || breakpoint < BREAKPOINTS.MD) return "horizontal";
 
     return "vertical";
   }, [dataset.type, breakpoint]);
 
-  const availableDownloads = useMemo<DownloadOptions>(
-    () => ({
+  const availableDownloads = useMemo<DownloadOptions>(() => {
+    return {
       chart: [
         {
           id: "png",
@@ -50,13 +51,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name: dataset.meta.title,
-              ext: "png",
-            });
+            track("png");
           },
         },
         {
@@ -68,15 +63,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name: dataset.meta.title,
-                  ext: "svg",
-                })
-              )
+              .then(() => track("svg"))
               .catch(e => {
                 toast.error(
                   t("common:error.toast.image_download_failure"),
@@ -94,7 +81,10 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
           title: t("csv.title"),
           description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.csv,
+          href: () => {
+            download(urls.csv, dataset.meta.unique_id.concat(".csv"));
+            track("csv");
+          },
         },
         {
           id: "parquet",
@@ -102,12 +92,14 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
           title: t("parquet.title"),
           description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.parquet,
+          href: () => {
+            download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+            track("parquet");
+          },
         },
       ],
-    }),
-    [ctx]
-  );
+    };
+  }, [ctx]);
 
   const _datasets = useMemo<ChartDataset<"bar", any[]>[]>(() => {
     const sets = Object.entries(dataset.chart).filter(([key, _]) => key !== "x");
@@ -132,29 +124,31 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   }, [dataset.chart.x, ctx]);
 
   return (
-    <Bar
-      _ref={ref => setCtx(ref)}
-      className={
-        bar_layout === "vertical"
-          ? "h-[350px] w-full lg:h-[450px]"
-          : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
-      }
-      type="category"
-      enableStack={dataset.type === "STACKED_BAR"}
-      layout={bar_layout}
-      enableGridX={bar_layout !== "vertical"}
-      enableGridY={bar_layout === "vertical"}
-      enableLegend={_datasets.length > 1}
-      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-      // formatX={value => {
-      //   if (t(`catalogue.show_filters.${value}`).includes(".show_filters")) return value;
-      //   return t(`catalogue.show_filters.${value}`);
-      // }}
-      data={{
-        labels: dataset.chart.x,
-        datasets: _datasets,
-      }}
-    />
+    <WindowProvider>
+      <Bar
+        _ref={ref => setCtx(ref)}
+        className={
+          bar_layout === "vertical"
+            ? "h-[350px] w-full lg:h-[450px]"
+            : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
+        }
+        type="category"
+        enableStack={dataset.type === "STACKED_BAR"}
+        layout={bar_layout}
+        enableGridX={bar_layout !== "vertical"}
+        enableGridY={bar_layout === "vertical"}
+        enableLegend={_datasets.length > 1}
+        precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+        // formatX={value => {
+        //   if (t(`catalogue.show_filters.${value}`).includes(".show_filters")) return value;
+        //   return t(`catalogue.show_filters.${value}`);
+        // }}
+        data={{
+          labels: dataset.chart.x,
+          datasets: _datasets,
+        }}
+      />
+    </WindowProvider>
   );
 };
 

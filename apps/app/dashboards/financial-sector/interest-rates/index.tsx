@@ -29,7 +29,7 @@ interface TimeseriesChartData {
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface InterestRatesDashboardProps {
-  last_updated: number;
+  last_updated: string;
   timeseries: any;
   timeseries_opr: any;
   timeseries_callouts: any;

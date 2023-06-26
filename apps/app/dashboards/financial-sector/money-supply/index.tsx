@@ -49,7 +49,7 @@ interface TableSummary {
 }
 
 interface MoneySupplyDashboardProps {
-  last_updated: number;
+  last_updated: string;
   table_summary: TableSummary;
   timeseries: any;
   timeseries_callouts: any;

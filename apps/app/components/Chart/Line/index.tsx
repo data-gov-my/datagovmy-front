@@ -117,6 +117,7 @@ const Line: FunctionComponent<LineProps> = ({
         : false,
       tooltip: {
         enabled: enableTooltip,
+        intersect: false,
         callbacks: {
           label: item =>
             `${item.dataset.label as string}: ${

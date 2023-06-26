@@ -4,10 +4,10 @@ import { default as dynamic } from "next/dynamic";
 import { useTranslation } from "@hooks/useTranslation";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
-import { track } from "@lib/mixpanel";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import type { HeatmapData, HeatmapDatum } from "@components/Chart/Heatmap";
 import { toast } from "@components/Toast";
+import { useAnalytics } from "@hooks/useAnalytics";
 
 const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), {
   ssr: false,
@@ -32,12 +32,14 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"matrix", any[], unknown> | null>(null);
+  const { track } = useAnalytics(dataset);
+
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);
   }, [ctx]);
 
-  const availableDownloads = useMemo<DownloadOptions>(
-    () => ({
+  const availableDownloads = useMemo<DownloadOptions>(() => {
+    return {
       chart: [
         {
           id: "png",
@@ -47,13 +49,7 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name: dataset.meta.title,
-              ext: "png",
-            });
+            track("png");
           },
         },
         {
@@ -65,15 +61,7 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name: dataset.meta.title,
-                  ext: "svg",
-                })
-              )
+              .then(() => track("svg"))
               .catch(e => {
                 toast.error(
                   t("common:error.toast.image_download_failure"),
@@ -91,7 +79,10 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
           title: t("csv.title"),
           description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.csv,
+          href: () => {
+            download(urls.csv, dataset.meta.unique_id.concat(".csv"));
+            track("csv");
+          },
         },
         {
           id: "parquet",
@@ -99,12 +90,14 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
           title: t("parquet.title"),
           description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.parquet,
+          href: () => {
+            download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+            track("parquet");
+          },
         },
       ],
-    }),
-    [ctx]
-  );
+    };
+  }, [ctx]);
 
   const _datasets = useMemo<HeatmapData>(() => {
     return dataset.chart.map((item: HeatmapDatum) => ({

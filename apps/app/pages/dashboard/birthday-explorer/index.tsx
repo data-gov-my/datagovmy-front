@@ -11,13 +11,14 @@ const BirthdayExplorer = ({ meta, timeseries }: InferGetStaticPropsType<typeof g
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <BirthdayExplorerDashboard timeseries={timeseries} />
+      {/* <BirthdayExplorerDashboard timeseries={timeseries} /> */}
+      <BirthdayExplorerDashboard />
     </AnalyticsProvider>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-birthday-explorer", async () => {
-  const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
+  // const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
   return {
     props: {
       meta: {
@@ -26,12 +27,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-birthday-explo
         category: "demography",
         agency: "JPN",
       },
-      timeseries: {
-        data: {
-          x: data.x,
-          y: data.y,
-        },
-      },
+      // timeseries: {
+      //   data: {
+      //     x: data.x,
+      //     y: data.y,
+      //   },
+      // },
     },
   };
 });

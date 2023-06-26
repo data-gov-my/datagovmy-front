@@ -16,6 +16,7 @@ import { AnalyticsProvider } from "@hooks/useAnalytics";
 const CovidVaccination: Page = ({
   meta,
   params,
+  last_updated,
   timeseries,
   statistics,
   barmeter,
@@ -28,7 +29,7 @@ const CovidVaccination: Page = ({
       <Metadata title={t("page_title")} description={t("description")} keywords={""} />
       <COVIDVaccinationDashboard
         params={params}
-        lastUpdated={Date.now()}
+        last_updated={last_updated}
         timeseries={timeseries}
         statistics={statistics}
         barmeter={barmeter}
@@ -68,6 +69,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccinat
         agency: "KKM",
       },
       params: { state: "mys" },
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       statistics: data.statistics,
       barmeter: data.bar_chart,

@@ -19,6 +19,7 @@ const At: FunctionComponent<AtProps> = ({
   enableIcon = false,
   onClick,
   external,
+  prefetch,
 }) => {
   const content = (
     <>
@@ -33,7 +34,13 @@ const At: FunctionComponent<AtProps> = ({
     </>
   );
   return !external ? (
-    <Link href={href} scroll={scrollTop} className={className} onClick={onClick}>
+    <Link
+      href={href}
+      scroll={scrollTop}
+      className={className}
+      onClick={onClick}
+      prefetch={prefetch}
+    >
       {content}
     </Link>
   ) : (

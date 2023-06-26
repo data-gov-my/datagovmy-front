@@ -63,7 +63,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async ()
         agency: "EPU",
       },
       choropleth: data.choropleth,
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       params: { state: "mys" },
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout.data,

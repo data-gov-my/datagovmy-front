@@ -3,6 +3,7 @@ import Container from "@components/Container";
 import { clx, numFormat, toDate } from "@lib/helpers";
 import { useTranslation } from "next-i18next";
 import { AnalyticsContext } from "@hooks/useAnalytics";
+import { EyeIcon } from "@heroicons/react/20/solid";
 
 type ConditionalHeroProps =
   | {
@@ -97,8 +98,11 @@ const Hero: FunctionComponent<HeroProps> = ({
                     description
                   )}
                   {result?.all_time_view && (
-                    <p className="text-dim text-sm">
-                      {numFormat(result.all_time_view, "standard")} {t("common:common.views")}
+                    <p className="text-dim flex gap-2 text-sm">
+                      <EyeIcon className="w-4.5 h-4.5 self-center" />
+                      {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
+                        count: result.all_time_view,
+                      })}`}
                     </p>
                   )}
                 </div>
@@ -110,7 +114,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                   {last_updated && (
                     <p className="text-dim text-sm">
                       {t("common:common.last_updated", {
-                        date: toDate(last_updated, "dd MMM yyyy, HH:mm a", i18n.language),
+                        date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
                       })}
                     </p>
                   )}

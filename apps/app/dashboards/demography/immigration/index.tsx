@@ -37,7 +37,7 @@ interface ImmigrationProps {
   countries: any;
   country: any;
   country_callout: any;
-  last_updated: any;
+  last_updated: string;
   params: any;
   timeseries: any;
   timeseries_callout: any;
