@@ -38,9 +38,8 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
 
   // query data
   const { data: query, setData: setQuery } = useData({
-    manufacturer: { label: Object.keys(queryOptions)[0], value: Object.keys(queryOptions)[0] },
+    maker: { label: Object.keys(queryOptions)[0], value: Object.keys(queryOptions)[0] },
     model: null,
-    colour: null,
     params: {},
     loading: false,
   });
@@ -73,43 +72,30 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
     topModels: tableData.top_models.data[yearOptions.at(-1)?.value || -1],
   });
 
-  const filterManufacturers = useMemo<Array<OptionType>>(() => {
-    const _manufacturers = Object.keys(queryOptions).map(manufacturer => {
-      return { label: manufacturer, value: manufacturer };
+  const filterMakers = useMemo<Array<OptionType>>(() => {
+    const _makers = Object.keys(queryOptions).map(maker => {
+      return { label: maker, value: maker };
     });
-    return _manufacturers;
+    return _makers;
   }, []);
 
   const filterModels = useMemo<Array<OptionType>>(() => {
     let _models: Array<OptionType> = [];
-    if (query.manufacturer) {
-      _models = Object.keys(queryOptions[query.manufacturer.value]).map(model => {
+    if (query.maker) {
+      _models = queryOptions[query.maker.value].map((model: string) => {
         return { label: model, value: model };
       });
       setQuery("model", _models[0]);
     }
-
     return _models;
-  }, [query.manufacturer]);
-
-  const filterColours = useMemo<Array<OptionType>>(() => {
-    let _colours = [];
-    if (query.manufacturer && query.model) {
-      _colours = queryOptions[query.manufacturer.value][query.model.value].map((colour: string) => {
-        return { label: colour, value: colour };
-      });
-      setQuery("colour", _colours[0]);
-    }
-    return _colours;
-  }, [query.model]);
+  }, [query.maker]);
 
   const searchHandler = () => {
     setQuery("loading", true);
 
     const params = {
-      manufacturer: query.manufacturer.value,
+      maker: query.maker.value,
       model: query.model.value,
-      colour: query.colour.value,
     };
 
     get("chart/", {
@@ -241,11 +227,11 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
             <div className="w-full lg:w-fit">
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex w-full flex-col justify-items-start gap-6	rounded-xl border p-6 shadow lg:w-96">
                 <Dropdown
-                  label={t("label_manufacturer")}
+                  label={t("label_maker")}
                   width="w-full"
-                  options={filterManufacturers}
-                  selected={query.manufacturer}
-                  onChange={selected => setQuery("manufacturer", selected)}
+                  options={filterMakers}
+                  selected={query.maker}
+                  onChange={selected => setQuery("maker", selected)}
                   enableSearch
                 />
                 <Dropdown
@@ -255,14 +241,6 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                   selected={query.model}
                   onChange={selected => setQuery("model", selected)}
                   enableSearch
-                  virtualise={true}
-                />
-                <Dropdown
-                  label={t("label_colour")}
-                  width="w-full"
-                  options={filterColours}
-                  selected={query.colour}
-                  onChange={selected => setQuery("colour", selected)}
                 />
                 <div>
                   <Button
@@ -293,8 +271,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                             <span className="capitalize">
                               {t("timeseries_car_description", {
                                 car: data.params.model,
-                                manufacturer: data.params.manufacturer,
-                                colour: data.params.colour,
+                                maker: data.params.maker,
                               })}
                             </span>
                             <span>{t("timeseries_title")}</span>
