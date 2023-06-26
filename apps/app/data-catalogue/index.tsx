@@ -150,6 +150,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
                           <At
                             href={`/data-catalogue/${item.id}`}
                             className="text-primary dark:text-primary-dark no-underline hover:underline"
+                            prefetch={false}
                           >
                             {item.catalog_name}
                           </At>
