@@ -56,26 +56,18 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
   });
   const village_info = village.village_data.data[0];
   const choropleth = village[`choropleth_${data.area}`].data;
-  const barmeter = village.village_barmeter.data;
   const pyramid = village.pyramid_data.data;
-  [barmeter.age[0], barmeter.age[1], barmeter.age[2], barmeter.age[3]] = [
-    barmeter.age[2],
-    barmeter.age[0],
-    barmeter.age[1],
-    barmeter.age[3],
-  ];
-  [
-    barmeter.marital_status[0],
-    barmeter.marital_status[1],
-    barmeter.marital_status[2],
-    barmeter.marital_status[3],
-  ] = [
-    barmeter.marital_status[2],
-    barmeter.marital_status[1],
-    barmeter.marital_status[0],
-    barmeter.marital_status[3],
-  ];
-
+  const barmeter = village.village_barmeter.data;
+  const _barmeter = {
+    ...barmeter,
+    age: [barmeter.age[2], barmeter.age[0], barmeter.age[1], barmeter.age[3]],
+    marital_status: [
+      barmeter.marital_status[2],
+      barmeter.marital_status[1],
+      barmeter.marital_status[0],
+      barmeter.marital_status[3],
+    ],
+  };
   const topIndices = getTopIndices(choropleth.y[data.filter], choropleth.y.length, true);
 
   const AREA_OPTIONS: Array<OptionType> = ["state", "district"].map((key: string) => ({
@@ -259,16 +251,16 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                   labels: pyramid.x,
                   datasets: [
                     {
-                      label: t("male"),
-                      data: pyramid.male,
-                      backgroundColor: "#16A34A",
+                      label: t("female"),
+                      data: pyramid.female,
+                      backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                       barThickness: 12,
                       borderRadius: 12,
                     },
                     {
-                      label: t("female"),
-                      data: pyramid.female,
-                      backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                      label: t("male"),
+                      data: pyramid.male,
+                      backgroundColor: "#16A34A",
                       barThickness: 12,
                       borderRadius: 12,
                     },
@@ -285,7 +277,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                       title={t(k)}
                       layout="horizontal"
                       unit="%"
-                      data={barmeter[k]}
+                      data={_barmeter[k]}
                       sort={["marital_status", "age"].includes(k) ? undefined : "desc"}
                       formatX={key => t(key)}
                     />
