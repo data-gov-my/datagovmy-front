@@ -58,7 +58,23 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
   const choropleth = village[`choropleth_${data.area}`].data;
   const barmeter = village.village_barmeter.data;
   const pyramid = village.pyramid_data.data;
-
+  [barmeter.age[0], barmeter.age[1], barmeter.age[2], barmeter.age[3]] = [
+    barmeter.age[1],
+    barmeter.age[2],
+    barmeter.age[0],
+    barmeter.age[3],
+  ];
+  [
+    barmeter.marital_status[0],
+    barmeter.marital_status[1],
+    barmeter.marital_status[2],
+    barmeter.marital_status[3],
+  ] = [
+    barmeter.marital_status[2],
+    barmeter.marital_status[1],
+    barmeter.marital_status[0],
+    barmeter.marital_status[3],
+  ];
   const topIndices = getTopIndices(choropleth.y[data.filter], choropleth.y.length, true);
 
   const AREA_OPTIONS: Array<OptionType> = ["state", "district"].map((key: string) => ({
@@ -227,6 +243,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
               <div className="lg:w-2/3">
                 <MapPlot
                   className="h-[400px] rounded-xl shadow lg:w-full"
+                  tileTheme="terrain"
                   position={[village_info.lat, village_info.lon]}
                   zoom={13}
                   markers={[
@@ -282,7 +299,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                       layout="horizontal"
                       unit="%"
                       data={barmeter[k]}
-                      sort={"desc"}
+                      sort={["marital_status", "age"].includes(k) ? undefined : "desc"}
                       formatX={key => t(key)}
                     />
                   </div>
