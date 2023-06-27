@@ -10,8 +10,8 @@ import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
 import Nexti18NextConfig from "../next-i18next.config";
 import { clx } from "@lib/helpers";
-import { WindowProvider } from "@hooks/useWindow";
-import { Toast, toast } from "@components/Toast";
+import { Toast } from "@components/Toast";
+import Progress from "@components/Progress";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
@@ -50,6 +50,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
 
   return (
     <div className={clx(Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black")}>
+      <Progress />
       <ThemeProvider attribute="class" enableSystem={false}>
         {layout(<Component {...pageProps} />, pageProps)}
         <Toast />
