@@ -29,7 +29,7 @@ export const routes = {
   KTMB_EXPLORER: "/dashboard/ktmb-explorer",
   MONEY_SUPPLY: "/dashboard/money-supply",
   NAME_POPULARITY: "/dashboard/name-popularity",
-  ORANG_ASLI: "dashboard/orang-asli",
+  ORANG_ASLI: "/dashboard/orang-asli",
   ORGAN_DONATION: "/dashboard/organ-donation",
   PEKA_B40: "/dashboard/peka-b40",
   POVERTY: "/dashboard/poverty",
