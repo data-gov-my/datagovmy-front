@@ -27,7 +27,6 @@ import { FunctionComponent, useMemo } from "react";
  */
 
 type Dashboard = {
-  route: string;
   name: string;
   agency: string;
   views: number;
