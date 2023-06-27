@@ -1,6 +1,5 @@
 {
   "quickstart": "Cepat Mula",
   "authentication": "Pengesahan",
-  "request-query": "Pertanyaan Permintaan",
-  "response-format": "Format Respons"
+  "rate-limit": "Rate Limit"
 }

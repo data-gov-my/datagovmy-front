@@ -1,6 +1,5 @@
 {
     "quickstart": "Quickstart Guide",
-    "authentication": "Authentication",
-    "request-query": "Request Query",
-    "response-format": "Response Format"
+    "rate-limit": "Rate Limit",
+    "authentication": "Authentication"
 }

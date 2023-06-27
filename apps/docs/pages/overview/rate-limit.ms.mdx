@@ -1,0 +1,10 @@
+## Throttling rate
+
+If too many requests are sent and exceeds the limit, subsequent requests will fail and you will start receiving 429 errors in your requests.
+The following table shows what the throttling rate is for OpenAPI:
+| API | API Key | Throttling limit |
+|----------------|---------|------------------------|
+| Data Catalogue | No | 4 requests per minute |
+| Data Catalogue | Yes | 10 requests per minute |
+| GTFS-Static | No | 4 requests per minute |
+| GTFS-Static | Yes | 10 requests per minute |

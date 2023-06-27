@@ -1,5 +1,21 @@
-# Authentication
+## Token Authentication
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae iusto quam natus eum molestias
-impedit, magnam error harum quos vitae illum quidem, quod modi doloremque iste adipisci nam corrupti
-quo?
+### Requesting a Token
+
+While users can access the OpenAPI without an API token, if you anticipate reaching the rate limits or require increased usage, you have the option to request an API token. Tokens are granted on a case-by-case basis to prevent abuse. To request an API token, please reach out to us at [Contact Us](TODO: update contact link). Our team will assist you in obtaining a token based on your application requirements.
+
+### Using Your Token
+
+Once you have obtained a token, you need to include it in your API requests. Follow the steps below to include the token in your HTTP requests:
+
+1. Add the following header to your request:
+
+   ```
+   Authorization: Bearer YOUR_TOKEN_HERE
+   ```
+
+   Make sure to replace `YOUR_TOKEN_HERE` with the actual token you received.
+
+2. Send your HTTP request with the added `Authorization` header.
+
+By including the token in the `Authorization` header, you authenticate your requests and gain access to increased usage limits.
