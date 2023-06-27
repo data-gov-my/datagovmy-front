@@ -5,7 +5,7 @@ import { SHORT_LANG } from "@lib/constants";
 import { OptionType } from "@components/types";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
-
+import Progress from "@components/Progress";
 import Metadata from "@components/Metadata";
 import DataCatalogueShow from "@data-catalogue/show";
 import { useMemo } from "react";
@@ -42,6 +42,7 @@ const CatalogueShow: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
+      <Progress />
       <Metadata
         title={dataset.meta.title}
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}

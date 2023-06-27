@@ -50,7 +50,7 @@ const Progress: FunctionComponent = () => {
     <div className="fixed left-0 top-0 z-50 h-[3px] w-full bg-transparent">
       {progress > 0 && (
         <div
-          className="bg-primary dark:bg-primary-dark transition-[width] duration-150 ease-out"
+          className="bg-primary dark:bg-primary-dark h-full transition-[width] duration-150 ease-out"
           style={{
             width: `${progress}%`,
           }}

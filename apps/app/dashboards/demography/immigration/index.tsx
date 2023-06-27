@@ -38,7 +38,9 @@ interface ImmigrationProps {
   country: any;
   country_callout: any;
   last_updated: string;
-  params: any;
+  params: {
+    country?: string;
+  };
   timeseries: any;
   timeseries_callout: any;
 }
@@ -78,7 +80,6 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
     country_minmax: [0, country.data.day.x.length - 1],
     period: "day",
     country_period: "day",
-    query: params.country,
     filter: "absolute",
     loading: false,
   });
@@ -206,7 +207,9 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                     fallback={<GlobeAltIcon className="w-4.5 h-4.5 mx-auto text-black" />}
                     placeholder={t("search_country")}
                     options={COUNTRY_OPTIONS}
-                    selected={data.query ? COUNTRY_OPTIONS.find(e => e.value === data.query) : null}
+                    selected={
+                      params?.country ? COUNTRY_OPTIONS.find(e => e.value === params.country) : null
+                    }
                     onChange={selected => {
                       navigateToCountry(selected?.value);
                     }}
