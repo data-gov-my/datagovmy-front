@@ -11,13 +11,20 @@ const DashboardIndex: Page = ({
   sources,
   dashboards,
   agency,
+  dashboards_route,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
-      <Dashboard agency={agency} sources={sources} analytics={analytics} dashboards={dashboards} />
+      <Dashboard
+        agency={agency}
+        sources={sources}
+        analytics={analytics}
+        dashboards={dashboards}
+        dashboards_route={dashboards_route}
+      />
     </>
   );
 };
@@ -47,6 +54,7 @@ export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"
         all_time: data.dashboards_top.data.all_time,
       },
       dashboards: data.dashboards_all.data,
+      dashboards_route: data.dashboards_route.data,
     },
   };
 });
