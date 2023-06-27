@@ -1,4 +1,4 @@
-// import { Icon } from "@components/Icon/agency";
+import { JAKOAIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   ComboBox,
@@ -7,16 +7,17 @@ import {
   Hero,
   LeftRightCard,
   Section,
-  StateDropdown,
-  Tooltip,
+  Tabs,
 } from "@components/index";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
+import { routes } from "@lib/routes";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 
 /**
@@ -30,39 +31,68 @@ const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false 
 const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
 
 interface OrangAsliProps {
-  barmeter: any;
-  choropleth: any;
-  last_updated: any;
-  pyramid: any;
+  dropdown: any;
+  params: any;
+  village: any;
 }
 
-const OrangAsli: FunctionComponent<OrangAsliProps> = ({
-  barmeter,
-  choropleth,
-  last_updated,
-  pyramid,
-}) => {
+type Kampung = {
+  village: string;
+  district: string;
+  state: string;
+  slug: string;
+};
+
+const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, village }) => {
   const { t, i18n } = useTranslation(["dashboard-orang-asli", "common"]);
-  const FILTER_OPTIONS: Array<OptionType> = ["absolute"].map((key: string) => ({
+  const { push } = useRouter();
+  const { theme } = useTheme();
+  const { data, setData } = useData({
+    area: "state",
+    filter: "population",
+    index: 0,
+    loading: false,
+    kampung: params.kampung,
+  });
+  const village_info = village.village_data.data[0];
+  const choropleth = village[`choropleth_${data.area}`].data;
+  const barmeter = village.village_barmeter.data;
+  const pyramid = village.pyramid_data.data;
+
+  const topIndices = getTopIndices(choropleth.y[data.filter], choropleth.y.length, true);
+
+  const AREA_OPTIONS: Array<OptionType> = ["state", "district"].map((key: string) => ({
     label: t(key),
     value: key,
   }));
-  const { data, setData } = useData({
-    filter: FILTER_OPTIONS[0].value,
-    loading: false,
-  });
 
-  const barmeter_data = Object.entries(barmeter.data.bar);
-  // [barmeter_data[0], barmeter_data[1]] = [barmeter_data[1], barmeter_data[0]];
-  const topStateIndices = getTopIndices(
-    choropleth.data[data.filter].y.value,
-    choropleth.data[data.filter].y.length,
-    true
+  const FILTER_OPTIONS: Array<OptionType> = ["population", "population_prop"].map(
+    (key: string) => ({
+      label: t(key),
+      value: key,
+    })
   );
-  const KAMPUNG_OPTIONS: Array<OptionType> = [].map((key: string) => ({
-    label: key,
-    value: key,
+
+  const KAMPUNG_OPTIONS: Array<OptionType> = dropdown.map((k: Kampung) => ({
+    label: `${k.village}, ${k.district}, ${k.state}`,
+    value: k.slug,
   }));
+
+  const navigateToKampung = (kampung?: string) => {
+    if (!kampung) {
+      setData("kampung", null);
+      return;
+    }
+    setData("loading", true);
+    setData("kampung", kampung);
+    const route = `${routes.ORANG_ASLI}/${kampung}`;
+
+    push(route, undefined, {
+      scroll: false,
+      locale: i18n.language,
+    }).then(() => setData("loading", false));
+  };
+
   return (
     <>
       <Hero
@@ -70,20 +100,19 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
         category={[t("common:categories.demography"), "text-green-600"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={village.data_last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("common:agency.JAKOA")}
+            agency={t("agencies:jakoa.full")}
             link="https://www.jakoa.gov.my/"
-            // icon={<Icon />}
+            icon={<JAKOAIcon />}
           />
         }
-        last_updated={last_updated}
       />
 
       <Container className="min-h-screen">
         {/* How are the indigenous peoples distributed across Malaysia? */}
         <Section>
-          {/* How is the refugee population distributed across states? */}
           <LeftRightCard
             left={
               <div className="flex h-[600px] w-full flex-col space-y-3 overflow-hidden p-6 lg:p-8">
@@ -92,16 +121,30 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
                     <h4>{t("choro_header")}</h4>
                     <span className="text-dim text-sm">
                       {t("common:common.data_of", {
-                        date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                        date: toDate(
+                          village[`choropleth_${data.area}`].data_as_of,
+                          "dd MMM yyyy, HH:mm",
+                          i18n.language
+                        ),
                       })}
                     </span>
                   </div>
                   <p className="text-dim">{t("choro_description")}</p>
                   <div className="flex space-x-3">
-                    <StateDropdown width="w-full md:w-fit lg:w-full" anchor="left" />
                     <Dropdown
+                      width="w-full"
                       anchor="left"
-                      width="w-full md:w-fit lg:w-full"
+                      placeholder={t("common:common.select")}
+                      options={AREA_OPTIONS}
+                      selected={AREA_OPTIONS.find(e => e.value === data.area)}
+                      onChange={e => {
+                        setData("area", e.value);
+                        setData("index", e === "state" ? 0 : 1);
+                      }}
+                    />
+                    <Dropdown
+                      width="w-full"
+                      anchor="left"
                       placeholder={t("common:common.select")}
                       options={FILTER_OPTIONS}
                       selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
@@ -109,27 +152,25 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
                     />
                   </div>
                   <p className="border-outline dark:border-dim border-t pt-6 font-bold">
-                    {t("choro_ranking", { count: choropleth.data[data.filter].x.length })}
+                    {t("choro_ranking", { count: choropleth.x.length })}
                   </p>
                 </div>
                 <div className="space-y-3 overflow-auto">
-                  {topStateIndices.map((pos: number, i: number) => {
+                  {topIndices.map((pos: number, i: number) => {
                     return (
                       <div className="pr-4.5 flex space-x-3" key={pos}>
-                        <div className="text-dim font-medium">#{i + 1}</div>
-                        <div className="grow">
-                          {CountryAndStates[choropleth.data[data.filter].x[pos]]}
-                        </div>
-                        <div className="font-bold text-green-600">
-                          {data.filter === "absolute"
-                            ? numFormat(choropleth.data[data.filter].y.value[pos], "standard")
-                            : numFormat(
-                                choropleth.data[data.filter].y.value[pos],
-                                "standard",
-                                [1, 1]
-                              )}
-                          {data.filter === "perc" ? "%" : ""}
-                        </div>
+                        <span className="text-dim font-medium">#{i + 1}</span>
+                        <span className="grow">
+                          {data.area === "state"
+                            ? CountryAndStates[choropleth.x[pos]]
+                            : choropleth.x[pos]}
+                        </span>
+                        <span className="font-bold text-green-600">
+                          {data.filter === "population"
+                            ? numFormat(choropleth.y[data.filter][pos], "standard")
+                            : numFormat(choropleth.y[data.filter][pos], "standard", [1, 1])}
+                          {data.filter === "population_prop" ? "%" : ""}
+                        </span>
                       </div>
                     );
                   })}
@@ -137,18 +178,32 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
               </div>
             }
             right={
-              <Choropleth
-                className="h-[400px] w-auto rounded-b lg:h-[600px]"
-                data={{
-                  labels: choropleth.data[data.filter].x.map(
-                    (state: string) => CountryAndStates[state]
-                  ),
-                  values: choropleth.data[data.filter].y.value,
-                }}
-                type="state"
-                // unit={data.filter === "perc" ? "%" : ""}
-                color="greens"
-              />
+              <Tabs hidden current={data.index} onChange={index => setData("index", index)}>
+                <Tabs.Panel name={"state"}>
+                  <Choropleth
+                    className="h-[400px] w-auto lg:h-[600px]"
+                    data={{
+                      labels: choropleth.x.map((area: string) => CountryAndStates[area]),
+                      values: choropleth.y[data.filter],
+                    }}
+                    type="state"
+                    unit={data.filter === "population_prop" ? "%" : ""}
+                    color="greens"
+                  />
+                </Tabs.Panel>
+                <Tabs.Panel name={"district"}>
+                  <Choropleth
+                    className="h-[400px] w-auto lg:h-[600px]"
+                    data={{
+                      labels: choropleth.x,
+                      values: choropleth.y[data.filter],
+                    }}
+                    type="district"
+                    unit={data.filter === "population_prop" ? "%" : ""}
+                    color="greens"
+                  />
+                </Tabs.Panel>
+              </Tabs>
             }
           />
         </Section>
@@ -156,55 +211,69 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
         <Section>
           <div className="space-y-12 lg:grid lg:grid-cols-12">
             <div className="flex flex-col gap-6 lg:col-span-10 lg:col-start-2 lg:flex-row">
-              <div className="flex flex-col justify-center space-y-6 lg:basis-1/3">
+              <div className="flex flex-col justify-center space-y-6 lg:w-1/3">
                 <h4 className="text-center lg:text-start">{t("title")}</h4>
                 <div className="mx-auto w-full md:w-96">
                   <ComboBox
                     placeholder={t("search_kampung")}
                     options={KAMPUNG_OPTIONS}
-                    selected={data.query ? KAMPUNG_OPTIONS.find(e => e.value === data.query) : null}
-                    onChange={selected => {
-                      if (selected !== undefined) {
-                        setData("loading", true);
-                        get("/dashboard", {
-                          dashboard: "orang_asli",
-                        })
-                          .then(({ data }) => {
-                            setData("loading", false);
-                          })
-                          .catch(e => {
-                            console.error(e);
-                          });
-                      } else {
-                        setData("query", undefined);
-                      }
-                    }}
+                    selected={
+                      data.kampung ? KAMPUNG_OPTIONS.find(e => e.value === data.kampung) : null
+                    }
+                    onChange={selected => navigateToKampung(selected?.value)}
                   />
                 </div>
               </div>
-              <div className="lg:basis-2/3">
+              <div className="lg:w-2/3">
                 <MapPlot
                   className="h-[400px] rounded-xl shadow lg:w-full"
-                  // position={[info.lat, info.lon]}
-                  zoom={10}
-                  // markers={[
-                  //   {
-                  //     position: [info.lat, info.lon],
-                  //     school: info.school,
-                  //   },
-                  // ]}
+                  position={[village_info.lat, village_info.lon]}
+                  zoom={13}
+                  markers={[
+                    {
+                      position: [village_info.lat, village_info.lon],
+                      Village: village_info.village,
+                    },
+                  ]}
                 />
                 <p className="text-dim pt-3 text-center text-sm">{t("map_description")}</p>
               </div>
             </div>
           </div>
-          <h4 className="pb-8 pt-12">{t("pyramid_title")}</h4>
+          <h4 className="pb-8 pt-12">
+            {t("pyramid_title", {
+              selected: village_info.village,
+              count: village_info.population,
+            })}
+          </h4>
           <div className="flex flex-col items-stretch gap-6 lg:flex-row">
-            <div className="h-[650px] basis-1/3">
-              <Pyramid title={t("header")} />
+            <div className="lg:w-1/2 xl:w-1/3">
+              <Pyramid
+                title={t("header")}
+                className="h-[550px] pb-6 lg:h-[600px]"
+                data={{
+                  labels: pyramid.x,
+                  datasets: [
+                    {
+                      label: t("male"),
+                      data: pyramid.male,
+                      backgroundColor: "#16A34A",
+                      barThickness: 12,
+                      borderRadius: 12,
+                    },
+                    {
+                      label: t("female"),
+                      data: pyramid.female,
+                      backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                      barThickness: 12,
+                      borderRadius: 12,
+                    },
+                  ],
+                }}
+              />
             </div>
-            <div className="grid basis-2/3 grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-              {[...barmeter_data, ...barmeter_data].map(([k, v]: [string, any]) => {
+            <div className="grid grid-cols-1 gap-12 lg:w-1/2 lg:grid-cols-2 xl:w-2/3 xl:grid-cols-3">
+              {["marital_status", "age", "sex", "ethnicity", "religion"].map((k: string) => {
                 return (
                   <div className="flex flex-col space-y-6" key={k}>
                     <BarMeter
@@ -212,21 +281,9 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({
                       title={t(k)}
                       layout="horizontal"
                       unit="%"
-                      data={v}
+                      data={barmeter[k]}
                       sort={"desc"}
                       formatX={key => t(key)}
-                      formatY={(value, key) => (
-                        <>
-                          <Tooltip
-                            tip={`${t("tooltip", {
-                              count: barmeter.data.tooltip[k].find(
-                                (object: { x: string; y: number }) => object.x === key
-                              ).y,
-                            })}`}
-                          />
-                          <span className="pl-1">{numFormat(value, "compact", [1, 1])}</span>
-                        </>
-                      )}
                     />
                   </div>
                 );
