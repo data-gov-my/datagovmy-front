@@ -59,9 +59,9 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
   const barmeter = village.village_barmeter.data;
   const pyramid = village.pyramid_data.data;
   [barmeter.age[0], barmeter.age[1], barmeter.age[2], barmeter.age[3]] = [
-    barmeter.age[1],
     barmeter.age[2],
     barmeter.age[0],
+    barmeter.age[1],
     barmeter.age[3],
   ];
   [
@@ -75,6 +75,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
     barmeter.marital_status[0],
     barmeter.marital_status[3],
   ];
+
   const topIndices = getTopIndices(choropleth.y[data.filter], choropleth.y.length, true);
 
   const AREA_OPTIONS: Array<OptionType> = ["state", "district"].map((key: string) => ({
