@@ -126,7 +126,8 @@ export const MYR_COLOR = {
 export const AKSARA_COLOR = {
   BLACK: "#18181B",
   BLACK_H: "#18181B1A",
-  WHITE: "FFFFFF",
+  WHITE: "#FFFFFF",
+  WHITE_H: "#FFFFFF1A",
   DANGER: "#DC2626",
   DANGER_H: "#DC26261A",
   PRIMARY: "#2563EB",

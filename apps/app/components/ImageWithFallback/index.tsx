@@ -10,11 +10,11 @@ const Fallback: FunctionComponent<FallbackProps> = ({ children, inline = false }
   return (
     <div
       className={clx(
-        "border-outline dark:border-outlineHover-dark h-4.5 w-[32px] rounded border bg-white",
+        "border-outline dark:border-outlineHover-dark h-5 w-[32px] rounded border bg-white",
         inline && "mr-2 inline-block"
       )}
     >
-      {children ?? <div className="text-center font-black leading-4 text-black">?</div>}
+      {children ?? <div className="text-center font-black leading-[18px] text-black">?</div>}
     </div>
   );
 };
