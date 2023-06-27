@@ -194,32 +194,18 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
               </div>
             }
             right={
-              <Tabs hidden current={data.index} onChange={index => setData("index", index)}>
-                <Tabs.Panel name={"state"}>
-                  <Choropleth
-                    className="h-[400px] w-auto lg:h-[600px]"
-                    data={{
-                      labels: choropleth.x.map((area: string) => CountryAndStates[area]),
-                      values: choropleth.y[data.filter],
-                    }}
-                    type="state"
-                    unit={data.filter === "population_prop" ? "%" : ""}
-                    color="greens"
-                  />
-                </Tabs.Panel>
-                <Tabs.Panel name={"district"}>
-                  <Choropleth
-                    className="h-[400px] w-auto lg:h-[600px]"
-                    data={{
-                      labels: choropleth.x,
-                      values: choropleth.y[data.filter],
-                    }}
-                    type="district"
-                    unit={data.filter === "population_prop" ? "%" : ""}
-                    color="greens"
-                  />
-                </Tabs.Panel>
-              </Tabs>
+              <Choropleth
+                className="h-[400px] w-auto lg:h-[600px]"
+                data={{
+                  labels: choropleth.x.map((area: string) =>
+                    data.area === "state" ? CountryAndStates[area] : area
+                  ),
+                  values: choropleth.y[data.filter],
+                }}
+                type={data.area === "state" ? "state" : "district"}
+                unit={data.filter === "population_prop" ? "%" : ""}
+                color="greens"
+              />
             }
           />
         </Section>
