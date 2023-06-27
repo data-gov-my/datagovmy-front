@@ -1,17 +1,15 @@
 import AgencyBadge from "@components/Badge/agency";
 import Hero from "@components/Hero";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
+import Progress from "@components/Progress";
 import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { WindowContext } from "@hooks/useWindow";
-import { BREAKPOINTS } from "@lib/constants";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import { FunctionComponent, ReactNode, useContext } from "react";
 
-const At = dynamic(() => import("@components/At"), { ssr: false });
+import { useRouter } from "next/router";
+import { FunctionComponent, ReactNode } from "react";
+import At from "@components/At";
 
 interface ElectionLayoutProps {
   children: ReactNode;
@@ -51,6 +49,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
 
   return (
     <div>
+      <Progress />
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}

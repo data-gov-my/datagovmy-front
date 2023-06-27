@@ -10,8 +10,7 @@ import Fonts from "@config/font";
 import { ThemeProvider } from "next-themes";
 import Nexti18NextConfig from "../next-i18next.config";
 import { clx } from "@lib/helpers";
-import { WindowProvider } from "@hooks/useWindow";
-import { Toast, toast } from "@components/Toast";
+import { Toast } from "@components/Toast";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
