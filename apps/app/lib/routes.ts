@@ -21,6 +21,7 @@ export const routes = {
   FLOOD_WARNING: "/dashboard/flood-warning",
   GDP: "/dashboard/gdp",
   GOVERNMENT_SITE_TRACKER: "/dashboard/government-site-tracker",
+  HIGH_FREQUENCY_LABOUR_DATA: "/dashboard/high-frequency-labour-data",
   HOSPITAL_BED_UTILISATION: "/dashboard/hospital-bed-utilisation",
   IMMIGRATION: "/dashboard/immigration",
   INCOME_TAXATION: "/dashboard/income-taxation",
@@ -42,7 +43,6 @@ export const routes = {
   RESERVE_MONEY: "/dashboard/reserve-money",
   RETIREMENT_READINESS: "/dashboard/retirement-readiness",
   SEKOLAHKU: "/dashboard/sekolahku",
-  SOCIAL_SECURITY: "/dashboard/social-security",
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
 };
 

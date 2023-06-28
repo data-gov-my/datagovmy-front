@@ -8,7 +8,6 @@ import {
   Hero,
   LeftRightCard,
   Section,
-  Tabs,
 } from "@components/index";
 import { OptionType } from "@components/types";
 import { useData } from "@hooks/useData";
