@@ -134,10 +134,6 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
         enableGridY={bar_layout === "vertical"}
         enableLegend={_datasets.length > 1}
         precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-        // formatX={value => {
-        //   if (t(`catalogue.show_filters.${value}`).includes(".show_filters")) return value;
-        //   return t(`catalogue.show_filters.${value}`);
-        // }}
         data={{
           labels: dataset.chart.x,
           datasets: _datasets,

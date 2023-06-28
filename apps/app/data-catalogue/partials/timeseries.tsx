@@ -110,13 +110,14 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
 
   const _datasets = useMemo<ChartDataset<keyof ChartTypeRegistry, any[]>[]>(() => {
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
+    const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fde8e8", "#fff8ec"]; // [blue, gray, red, yellow]
 
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
       label: translations[key] ?? key,
       borderColor: CATALOGUE_COLORS[index],
-      backgroundColor: CATALOGUE_COLORS[index].concat("1A"),
+      backgroundColor: NON_OVERLAPPING_BGCOLOR[index],
       borderWidth: 1,
       fill: dataset.type === "STACKED_AREA" || sets.length <= 1,
     }));
@@ -145,6 +146,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               labels: coordinate.x,
               datasets: _datasets,
             }}
+            beginZero={dataset.type === "STACKED_AREA"}
           />
           <Slider
             type="range"
