@@ -1,0 +1,32 @@
+## Response Code
+
+After sending an API request, you will receive a response with the following codes and headers, which indicate the status of your request:
+
+| Code |      Status       |                                                     Description                                                      |
+| :--: | :---------------: | :------------------------------------------------------------------------------------------------------------------: |
+| 200  |        OK         |                                                 Successful Request.                                                  |
+| 400  |    Bad Request    |                              Invalid request. Check error message for more information.                              |
+| 401  |   Unauthorized    |                    Authentication failed. Check [Authentication](...) guide for more information.                    |
+| 403  |     Forbidden     |                                           Restricted access this resource.                                           |
+| 404  |     Not Found     |                                        The resource requested doesn’t exist.                                         |
+| 429  | Too Many Requests | Your client is currently being rate limited. Request an API token at [Authentication](...) to increase usage limits. |
+| 500  |   Server Error    |               Something went wrong with OpenAPI! Please [contact us](...) if you encounter this error.               |
+
+## Response format
+
+All API responses from the Data Catalogue API are returned in JSON format. Below is an example of the structure of the response format:
+
+```JSON
+{
+    meta: {...},
+    data: {...}
+}
+```
+
+The response consists of two main elements:
+
+- `meta` - This element contains lightweight meta information, providing details about the requested resource.
+- `data` - This element represents the requested resource, which may include additional information based on the provided query parameters.
+  It's important to note that while the meta element provides essential information about the resource, there is also a separate endpoint available to retrieve more detailed information. You can access this endpoint [here](TODO: add link here).
+
+We provide the OpenAPI in JSON format to ensure ease of use and compatibility with a wide range of programming languages and applications. If you have any questions or encounter any issues, please feel free to contact us.

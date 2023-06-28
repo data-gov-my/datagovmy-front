@@ -1,0 +1,19 @@
+## Query Parameters
+
+The Data Catalogue API supports several query parameters.
+The following table shows the available query parameters, their data types, and whether they are required:
+
+- `id` - Indicates the specific resource requested
+- `filter` - Indicates filter(s) of the data
+- `limit` - Indicates response limit
+- `sort` - Indicates order of the response, in ascending or descending order
+- `include` - indicates keys to include
+- `exclude` - indicates keys to exclude
+- `start` - indicates date start range (only if date is available)
+- `end` - indicates date end range (only if date is available)
+
+Note: `filter` and `include`/`exclude` are different, such that `filter` is done on the row level, `include`/`exclude` on the column level.
+
+Reserve characters are used as part of the query paramater.
+
+- `filter:x@y` filters to include `x` values within column `y`
