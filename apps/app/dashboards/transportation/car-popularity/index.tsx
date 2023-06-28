@@ -269,6 +269,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
               <WindowProvider>
                 {data.x?.length > 0 ? (
                   <Timeseries
+                    className="h-[300px]"
                     isLoading={query.loading}
                     precision={0}
                     suggestedMaxY={2}
