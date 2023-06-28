@@ -1,7 +1,7 @@
 import { OptionType } from "@components/types";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "@lib/constants";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "./utils";
 import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
 import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
 import type {
