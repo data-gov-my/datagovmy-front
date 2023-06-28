@@ -29,7 +29,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
   timeseries,
   timeseries_callout,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-public-transportation", "common"]);
+  const { t } = useTranslation(["dashboard-public-transportation", "common"]);
   const period: { [key: number]: "day" | "month" | "year" } = {
     0: "day",
     1: "month",
@@ -117,19 +117,23 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                     },
                     {
                       title: t("trend_weekly"),
-                      value: `${numFormat(
-                        timeseries_callout.data.overall.growth_wow.value,
-                        "standard",
-                        [1, 1]
-                      )}%`,
+                      value:
+                        (timeseries_callout.data.overall.growth_wow.value > 0 ? "+" : "") +
+                        `${numFormat(
+                          timeseries_callout.data.overall.growth_wow.value,
+                          "standard",
+                          [1, 1]
+                        )}%`,
                     },
                     {
                       title: t("trend_monthly"),
-                      value: `${numFormat(
-                        timeseries_callout.data.overall.growth_mom.value,
-                        "standard",
-                        [1, 1]
-                      )}%`,
+                      value:
+                        (timeseries_callout.data.overall.growth_mom.value > 0 ? "+" : "") +
+                        `${numFormat(
+                          timeseries_callout.data.overall.growth_mom.value,
+                          "standard",
+                          [1, 1]
+                        )}%`,
                     },
                   ]}
                 />
@@ -174,19 +178,23 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                           },
                           {
                             title: t("trend_weekly"),
-                            value: `${numFormat(
-                              timeseries_callout.data[key].growth_wow.value,
-                              "standard",
-                              [1, 1]
-                            )}%`,
+                            value:
+                              (timeseries_callout.data[key].growth_wow.value > 0 ? "+" : "") +
+                              `${numFormat(
+                                timeseries_callout.data[key].growth_wow.value,
+                                "standard",
+                                [1, 1]
+                              )}%`,
                           },
                           {
                             title: t("trend_monthly"),
-                            value: `${numFormat(
-                              timeseries_callout.data[key].growth_mom.value,
-                              "standard",
-                              [1, 1]
-                            )}%`,
+                            value:
+                              (timeseries_callout.data[key].growth_mom.value > 0 ? "+" : "") +
+                              `${numFormat(
+                                timeseries_callout.data[key].growth_mom.value,
+                                "standard",
+                                [1, 1]
+                              )}%`,
                           },
                         ]}
                       />
