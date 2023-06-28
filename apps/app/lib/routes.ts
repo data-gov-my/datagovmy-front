@@ -2,6 +2,8 @@ export const routes = {
   HOME: "/",
   DATA_CATALOGUE: "/data-catalogue",
   DASHBOARD: "/dashboard",
+  COMMUNITY: "/community",
+  HELPDESK: "/helpdesk",
   EMERGENCY_RESPONSE: "/dashboard/emergency-response",
   BIRTHDAY_EXPLORER: "/dashboard/birthday-explorer",
   BLOOD_DONATION: "/dashboard/blood-donation",
