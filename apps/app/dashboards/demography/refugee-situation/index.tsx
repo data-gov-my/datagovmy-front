@@ -58,8 +58,6 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
   const METRICS = ["arrivals", "registrations", "resettlements"];
-  const barmeter_data = Object.entries(barmeter.data.bar);
-  [barmeter_data[0], barmeter_data[1]] = [barmeter_data[1], barmeter_data[0]];
   const topStateIndices = getTopIndices(
     choropleth.data[data.filter].y.value,
     choropleth.data[data.filter].y.length,
@@ -177,7 +175,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
         {/* What does Malaysia’s refugee population look like? */}
         <Section title={t("barmeter_header")} date={barmeter.data_as_of ?? timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-            {barmeter_data.map(([k, v]: [string, any]) => {
+            {["country", "age", "sex"].map((k: string) => {
               return (
                 <div className="flex flex-col space-y-6" key={k}>
                   <BarMeter
@@ -185,8 +183,8 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
                     title={t(k)}
                     layout="horizontal"
                     unit="%"
-                    data={v}
-                    sort={"desc"}
+                    data={barmeter.data.bar[k]}
+                    sort={k === "age" ? undefined : "desc"}
                     formatX={key => t(key)}
                     formatY={(value, key) => (
                       <>
