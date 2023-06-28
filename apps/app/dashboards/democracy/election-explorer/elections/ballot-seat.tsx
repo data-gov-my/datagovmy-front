@@ -123,14 +123,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
     return (
       <div
         className={clx(
-          `border-outline dark:border-washed-dark focus:border-primary group-focus:dark:ring-primary-dark hover:border-outlineHover
-         dark:hover:border-outlineHover-dark active:bg-washed flex h-full w-full flex-col gap-2
-          rounded-xl border bg-white p-3 text-sm focus:outline-none focus:ring-2 dark:bg-black hover:dark:bg-black/50 active:dark:bg-black`,
-          data.seat &&
-            seat.seat === data.seat.label &&
-            "border-primary dark:border-primary-dark border"
+          `border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark active:bg-washed flex h-full w-full flex-col gap-2
+        rounded-xl border bg-white p-3 text-sm focus:outline-none dark:bg-black hover:dark:bg-black/50 active:dark:bg-black`,
+          data.seat && seat.seat === data.seat && "ring-primary dark:ring-primary-dark ring-1"
         )}
-        onClick={() => fetchSeatResult(seat.seat)}
+        onClick={() => {
+          setData("seat", seat.seat);
+          fetchSeatResult(seat.seat);
+        }}
       >
         <div className="flex justify-between">
           <div className="flex gap-2 truncate">
@@ -175,16 +175,20 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
               left={
                 <div
                   className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col overflow-hidden 
-                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:pb-6 xl:px-6"
+                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-bl-xl lg:rounded-tr-none lg:pb-6 xl:px-6"
                 >
                   <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
                       options={SEAT_OPTIONS}
-                      selected={data.seat ?? null}
+                      selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat) : null}
                       onChange={selected => {
-                        setData("seat", selected);
-                        if (selected) fetchSeatResult(selected.value);
+                        if (selected) {
+                          fetchSeatResult(selected.value);
+                          setData("seat", selected.value);
+                        } else {
+                          setData("seat", null);
+                        }
 
                         const index = SEAT_OPTIONS.findIndex(e => e === selected);
                         if (listRef && listRef.current)
@@ -210,7 +214,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                       >
                         {({ index, style }: { index: number; style: CSSProperties }) => {
                           return (
-                            <div style={style} key={index} className="group px-1.5 pt-3">
+                            <div style={style} key={index} className="px-1.5 pt-3">
                               <OverallResultCard seat={seats[index]} />
                             </div>
                           );
