@@ -31,8 +31,8 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
   timeseries_callout,
 }) => {
   const { t } = useTranslation(["dashboard-public-transportation", "common"]);
-  const period: { [key: number]: "day" | "month" | "year" } = {
-    0: "day",
+  const period: { [key: number]: "auto" | "month" | "year" } = {
+    0: "auto",
     1: "month",
     2: "year",
   };
@@ -44,7 +44,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
   const { data, setData } = useData({
     minmax: [0, timeseries.data.daily.x.length],
     index: 0,
-    period: "day",
+    period: "auto",
     periodly: "daily",
   });
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
@@ -95,7 +95,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                   className="h-[300px] w-full"
                   title={t("ridership_overall")}
                   enableAnimation={!play}
-                  interval={data.period === "year" ? "year" : "auto"}
+                  interval={data.period}
                   beginZero
                   data={{
                     labels: coordinate.x,
@@ -156,7 +156,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                         className="h-[300px] w-full"
                         title={t(`ridership_${key}`)}
                         enableAnimation={!play}
-                        interval={data.period === "year" ? "year" : "auto"}
+                        interval={data.period}
                         beginZero
                         data={{
                           labels: coordinate.x,
