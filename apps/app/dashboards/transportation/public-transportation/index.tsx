@@ -41,7 +41,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
     2: "yearly",
   };
   const { data, setData } = useData({
-    minmax: [0, 1],
+    minmax: [0, timeseries.data.daily.x.length],
     index: 0,
     period: "day",
     periodly: "daily",
