@@ -149,7 +149,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
               />
             </div>
 
-            <div className="flex flex-col gap-3 lg:grid lg:grid-cols-12">
+            <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12">
               <table className="lg:col-span-4 lg:col-start-3">
                 <thead className="border-b-2">
                   <tr>
