@@ -79,7 +79,7 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
         },
         callbacks: {
           label: function (item) {
-            return `${item.dataset.label} : ${
+            return `${item.dataset.label}: ${
               item.parsed.x ? display(Math.abs(item.parsed.x), "standard") : "-"
             }`;
           },
@@ -106,7 +106,8 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
             return display(Math.abs(value as number), "compact");
           },
         },
-        stacked: true,
+        beginAtZero: true,
+        stacked: false,
         min: minX ?? -1 * equimax,
         max: maxX ?? equimax,
       },
