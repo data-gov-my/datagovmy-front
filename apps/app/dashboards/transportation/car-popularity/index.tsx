@@ -233,9 +233,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
 
         {/* How popular is your car? */}
         <Section title={t("section_title")} date={data.data_as_of}>
-          <div className="flex flex-col gap-8 lg:flex-row">
-            <div className="w-full lg:w-fit">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex w-full flex-col justify-items-start gap-6	rounded-xl border p-6 shadow lg:w-96">
+          <div className="flex flex-col gap-8 lg:grid lg:grid-cols-3">
+            <div className="w-full lg:col-span-1">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex w-full flex-col justify-items-start gap-6	rounded-xl border p-6 shadow">
                 <Dropdown
                   label={t("label_maker")}
                   placeholder={t("option_maker")}
@@ -265,7 +265,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                 </div>
               </Card>
             </div>
-            <div className="w-full">
+            <div className="lg:col-span-2">
               <WindowProvider>
                 {data.x?.length > 0 ? (
                   query.loading ? (
@@ -316,7 +316,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                     />
                   )
                 ) : (
-                  <div className="relative hidden h-96 w-full items-center justify-center lg:flex">
+                  <div className="relative hidden h-96 items-center justify-center lg:flex">
                     <Timeseries
                       className="absolute left-0 top-0 h-full w-full opacity-30"
                       data={{

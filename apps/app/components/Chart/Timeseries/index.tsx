@@ -303,7 +303,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             round: round === "auto" ? autoRound : round,
             displayFormats: {
               quarter: "qQ yyyy",
-              month: "MMM yy",
+              month: "MMM",
               week: "dd MMM",
             },
             tooltipFormat: tooltipFormat

@@ -1,6 +1,6 @@
-import Metadata from "@components/Metadata";
-import { Layout, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
+import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
 import ElectionTriviaDashboard from "@dashboards/democracy/election-explorer/trivia";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
@@ -12,8 +12,9 @@ import type { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const ElectionTrivia: Page = ({
-  meta,
   dun_bar,
+  last_updated,
+  meta,
   params,
   parlimen_bar,
   table_top,
@@ -23,12 +24,14 @@ const ElectionTrivia: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionTriviaDashboard
-        dun_bar={dun_bar}
-        params={params}
-        parlimen_bar={parlimen_bar}
-        table_top={table_top}
-      />
+      <ElectionLayout last_updated={last_updated}>
+        <ElectionTriviaDashboard
+          dun_bar={dun_bar}
+          params={params}
+          parlimen_bar={parlimen_bar}
+          table_top={table_top}
+        />
+      </ElectionLayout>
     </AnalyticsProvider>
   );
 };
@@ -70,6 +73,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         agency: "SPR",
       },
       dun_bar: data.dun_bar,
+      last_updated: data.data_last_updated,
       params: { state: "mys" },
       parlimen_bar: data.parlimen_bar.data,
       table_top: data.table_top.data,

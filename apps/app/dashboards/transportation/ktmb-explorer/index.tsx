@@ -294,7 +294,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                             to: params.destination ?? "WOODLANDS CIQ",
                           })}
                           enableAnimation={!play}
-                          interval={data.period === "year" ? "year" : "auto"}
+                          interval={data.period === "day" ? "auto" : data.period}
                           data={{
                             labels: A_to_B_coords.x,
                             datasets: [
@@ -338,7 +338,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               to: params.origin ?? "JB SENTRAL",
                             })}
                             enableAnimation={!play}
-                            interval={data.period === "year" ? "year" : "auto"}
+                            interval={data.period === "day" ? "auto" : data.period}
                             data={{
                               labels: B_to_A_coords.x,
                               datasets: [

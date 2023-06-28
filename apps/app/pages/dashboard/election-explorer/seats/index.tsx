@@ -1,14 +1,16 @@
-import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Metadata from "@components/Metadata";
+import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
 import ElectionSeatsDashboard from "@dashboards/democracy/election-explorer/seats";
+import type { Seat } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
-import type { Seat } from "@dashboards/democracy/election-explorer/types";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const ElectionSeats: Page = ({
+  last_updated,
   meta,
   params,
   selection,
@@ -19,7 +21,9 @@ const ElectionSeats: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionSeatsDashboard params={params} selection={selection} elections={elections} />
+      <ElectionLayout last_updated={last_updated}>
+        <ElectionSeatsDashboard params={params} selection={selection} elections={elections} />
+      </ElectionLayout>
     </AnalyticsProvider>
   );
 };
@@ -46,6 +50,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
     return {
       notFound: false,
       props: {
+        last_updated: seat.data.data_last_update,
         meta: {
           id: "dashboard-election-explorer",
           type: "dashboard",
@@ -55,7 +60,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explo
         params: { seat_name: name, type: type },
         selection: dropdown.data,
         elections:
-          seat.data?.sort(
+          seat.data.data.sort(
             (a: Seat, b: Seat) => Number(new Date(b.date)) - Number(new Date(a.date))
           ) ?? [],
       },
