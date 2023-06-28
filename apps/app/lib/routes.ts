@@ -15,7 +15,7 @@ export const routes = {
   COVID_VACCINATION: "/dashboard/covid-vaccination",
   CRIME: "/dashboard/crime",
   CURRENCY_IN_CIRCULATION: "/dashboard/currency-in-circulation",
-  ELECTION_EXPLORER: "/dashboard/election-explorer/elections",
+  ELECTION_EXPLORER: "/dashboard/election-explorer",
   EXCHANGE_RATE: "/dashboard/exchange-rates",
   FIRE_RESCUE: "/dashboard/fire-and-rescue",
   FLOOD_WARNING: "/dashboard/flood-warning",
