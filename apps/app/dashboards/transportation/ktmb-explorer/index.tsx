@@ -3,6 +3,7 @@ import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { MOTIcon } from "@components/Icon/agency";
 import Label from "@components/Label";
+import Progress from "@components/Progress";
 import {
   AgencyBadge,
   Button,
@@ -119,6 +120,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
 
   return (
     <>
+      <Progress />
       <Hero
         background="blue"
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}

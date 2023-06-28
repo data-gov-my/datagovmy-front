@@ -18,6 +18,7 @@ import { get } from "@lib/api";
 import debounce from "lodash/debounce";
 import { numFormat } from "@lib/helpers";
 import { toast } from "@components/Toast";
+import Progress from "@components/Progress";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -133,6 +134,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   return (
     <>
+      <Progress />
       <Hero
         background="blue"
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}

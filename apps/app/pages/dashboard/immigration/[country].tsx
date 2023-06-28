@@ -1,15 +1,13 @@
 import Metadata from "@components/Metadata";
 import ImmigrationDashboard from "@dashboards/demography/immigration";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
 
 const Immigration: Page = ({
-  meta,
   choropleth,
   countries,
   country,
@@ -22,7 +20,7 @@ const Immigration: Page = ({
   const { t } = useTranslation(["dashboard-immigration", "common", "countries"]);
 
   return (
-    <AnalyticsProvider meta={meta}>
+    <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ImmigrationDashboard
         choropleth={choropleth}
@@ -34,15 +32,25 @@ const Immigration: Page = ({
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
-    </AnalyticsProvider>
+    </>
   );
+};
+
+/**
+ * Path: /{country}
+ * @required country e.g: my (2 letter lowercase country code)
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
   ["dashboard-immigration", "countries"],
-  async () => {
+  async ({ params }) => {
     try {
-      const country = "overall";
       const [{ data: dropdown }, { data }, { data: country_data }] = await Promise.all([
         get("/dropdown", { dashboard: "immigration_country" }),
         get("/dashboard", {
@@ -50,7 +58,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         }),
         get("/dashboard", {
           dashboard: "immigration_country",
-          country,
+          country: params?.country,
         }),
       ]).catch(e => {
         throw new Error("Invalid country. Message: " + e);
@@ -70,7 +78,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           country: country_data.timeseries_country,
           country_callout: country_data.timeseries_country_callout.data,
           last_updated: data.data_last_updated,
-          params: {},
+          params,
           timeseries: data.timeseries,
           timeseries_callout: data.timeseries_callout.data.data,
         },

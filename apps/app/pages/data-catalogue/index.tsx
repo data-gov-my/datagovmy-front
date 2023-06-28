@@ -7,6 +7,7 @@ import DataCatalogue, { Catalogue } from "@data-catalogue/index";
 import { SHORT_LANG } from "@lib/constants";
 import { sortAlpha } from "@lib/helpers";
 import { withi18n } from "@lib/decorators";
+import Progress from "@components/Progress";
 
 const CatalogueIndex: Page = ({
   query,
@@ -18,6 +19,7 @@ const CatalogueIndex: Page = ({
 
   return (
     <>
+      <Progress />
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
     </>
