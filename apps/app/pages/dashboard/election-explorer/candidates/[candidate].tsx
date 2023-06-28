@@ -1,14 +1,16 @@
-import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 import Metadata from "@components/Metadata";
 import ElectionCandidatesDashboard from "@dashboards/democracy/election-explorer/candidates";
+import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
+import type { Candidate } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
-import type { Candidate } from "@dashboards/democracy/election-explorer/types";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from "next";
 
 const ElectionCandidates: Page = ({
+  last_updated,
   meta,
   elections,
   selection,
@@ -18,8 +20,10 @@ const ElectionCandidates: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionCandidatesDashboard elections={elections} selection={selection} params={params} />
+      <ElectionLayout last_updated={last_updated}>
+        <Metadata title={t("header")} description={t("description")} keywords={""} />
+        <ElectionCandidatesDashboard elections={elections} selection={selection} params={params} />
+      </ElectionLayout>
     </AnalyticsProvider>
   );
 };
@@ -54,6 +58,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
       return {
         props: {
+          last_updated: candidate.data.data_last_update,
           meta: {
             id: "dashboard-election-explorer",
             type: "dashboard",
@@ -64,11 +69,11 @@ export const getStaticProps: GetStaticProps = withi18n(
           selection: dropdown.data ?? [],
           elections: {
             parlimen:
-              candidate.data.parlimen?.sort(
+              candidate.data.data.parlimen?.sort(
                 (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
               ) ?? [],
             dun:
-              candidate.data.dun?.sort(
+              candidate.data.data.dun?.sort(
                 (a: Candidate, b: Candidate) => Date.parse(b.date) - Date.parse(a.date)
               ) ?? [],
           },

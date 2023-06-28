@@ -164,123 +164,121 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
   ]);
 
   return (
-    <ElectionLayout>
-      <Container>
-        <div className="grid grid-cols-12 py-8 lg:py-12">
-          <div className="col-span-full col-start-1 space-y-12 lg:col-span-10 lg:col-start-2">
-            <div className="flex flex-col items-center gap-6">
-              <h4 className="text-center">
-                {t("trivia.header", { country: CountryAndStates[params.state] })}
-              </h4>
-              <StateDropdown
-                url={routes.ELECTION_EXPLORER.concat("/trivia")}
-                anchor="left"
-                width="w-fit"
-                currentState={params.state}
-              />
-            </div>
+    <Container>
+      <div className="grid grid-cols-12 py-8 lg:py-12">
+        <div className="col-span-full col-start-1 space-y-12 lg:col-span-10 lg:col-start-2">
+          <div className="flex flex-col items-center gap-6">
+            <h4 className="text-center">
+              {t("trivia.header", { country: CountryAndStates[params.state] })}
+            </h4>
+            <StateDropdown
+              url={routes.ELECTION_EXPLORER.concat("/trivia")}
+              anchor="left"
+              width="w-fit"
+              currentState={params.state}
+            />
+          </div>
 
-            <div className="space-y-12 lg:space-y-6">
-              <div className="border-outline dark:border-washed-dark w-full space-y-6 rounded-xl border-0 p-0 md:p-8 lg:border">
-                <div className="gap-3">
-                  <SPRIconSolid className="text-primary mx-auto h-16 w-16" />
-                  <h5 className="text-center">
-                    {t("trivia.majority", {
-                      country: CountryAndStates[params.state],
-                      context: data.filter,
-                    })}
-                  </h5>
-                </div>
-                <Tabs
-                  title={
-                    <Dropdown
-                      anchor="left"
-                      width="w-fit"
-                      options={FILTER_OPTIONS}
-                      selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
-                      onChange={e => setData("filter", e.value)}
-                    />
-                  }
-                  current={data.tab_index}
-                  onChange={(index: number) => setData("tab_index", index)}
-                >
-                  <Panel name={t("parlimen")}>
-                    <div className="max-h-[500px] overflow-auto lg:max-h-full">
-                      <ElectionTable
-                        data={table_top.parlimen[data.filter].sort(
-                          (a: Seat, b: Seat) =>
-                            data.filter === "big" && Number(b.majority) - Number(a.majority)
-                        )}
-                        columns={seat_schema}
-                        isLoading={data.loading}
-                        highlightedRows={[0, 1, 2]}
-                      />
-                    </div>
-                  </Panel>
-                  <Panel name={t("dun")}>
+          <div className="space-y-12 lg:space-y-6">
+            <div className="border-outline dark:border-washed-dark w-full space-y-6 rounded-xl border-0 p-0 md:p-8 lg:border">
+              <div className="gap-3">
+                <SPRIconSolid className="text-primary mx-auto h-16 w-16" />
+                <h5 className="text-center">
+                  {t("trivia.majority", {
+                    country: CountryAndStates[params.state],
+                    context: data.filter,
+                  })}
+                </h5>
+              </div>
+              <Tabs
+                title={
+                  <Dropdown
+                    anchor="left"
+                    width="w-fit"
+                    options={FILTER_OPTIONS}
+                    selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
+                    onChange={e => setData("filter", e.value)}
+                  />
+                }
+                current={data.tab_index}
+                onChange={(index: number) => setData("tab_index", index)}
+              >
+                <Panel name={t("parlimen")}>
+                  <div className="max-h-[500px] overflow-auto lg:max-h-full">
                     <ElectionTable
-                      data={
-                        table_top.dun
-                          ? table_top.dun[data.filter].sort(
-                              (a: Seat, b: Seat) =>
-                                data.filter === "big" && Number(b.majority) - Number(a.majority)
-                            )
-                          : {}
-                      }
+                      data={table_top.parlimen[data.filter].sort(
+                        (a: Seat, b: Seat) =>
+                          data.filter === "big" && Number(b.majority) - Number(a.majority)
+                      )}
                       columns={seat_schema}
                       isLoading={data.loading}
                       highlightedRows={[0, 1, 2]}
-                      empty={t("party.no_data_dun_wp", { state: CountryAndStates[params.state] })}
                     />
-                  </Panel>
-                </Tabs>
+                  </div>
+                </Panel>
+                <Panel name={t("dun")}>
+                  <ElectionTable
+                    data={
+                      table_top.dun
+                        ? table_top.dun[data.filter].sort(
+                            (a: Seat, b: Seat) =>
+                              data.filter === "big" && Number(b.majority) - Number(a.majority)
+                          )
+                        : {}
+                    }
+                    columns={seat_schema}
+                    isLoading={data.loading}
+                    highlightedRows={[0, 1, 2]}
+                    empty={t("party.no_data_dun_wp", { state: CountryAndStates[params.state] })}
+                  />
+                </Panel>
+              </Tabs>
+            </div>
+            <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:gap-6 xl:grid-cols-6">
+              <div className="border-outline dark:border-washed-dark space-y-6 rounded-xl border-0 p-0 lg:border lg:p-8 xl:col-span-2 xl:col-start-2">
+                <h5 className="text-center">{t("trivia.ge_veterans")}</h5>
+                <BarMeter
+                  layout="horizontal"
+                  data={parlimen_bar.competed}
+                  relative
+                  formatY={(y, x) => (
+                    <p className="whitespace-nowrap">{`${y} (${t("trivia.won")} ${
+                      parlimen_bar.won.find((e: Record<string, any>) => e.x === x)?.y
+                    })`}</p>
+                  )}
+                />
               </div>
-              <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:gap-6 xl:grid-cols-6">
-                <div className="border-outline dark:border-washed-dark space-y-6 rounded-xl border-0 p-0 lg:border lg:p-8 xl:col-span-2 xl:col-start-2">
-                  <h5 className="text-center">{t("trivia.ge_veterans")}</h5>
+              <div className="border-outline dark:border-washed-dark flex h-max flex-col gap-y-6 rounded-xl border-0 p-0 lg:border lg:p-8 xl:col-span-2 xl:col-start-4">
+                <h5 className="text-center">{t("trivia.se_veterans")}</h5>
+                {dun_bar.data ? (
                   <BarMeter
                     layout="horizontal"
-                    data={parlimen_bar.competed}
+                    data={dun_bar.data && dun_bar.data.competed}
                     relative
                     formatY={(y, x) => (
                       <p className="whitespace-nowrap">{`${y} (${t("trivia.won")} ${
-                        parlimen_bar.won.find((e: Record<string, any>) => e.x === x)?.y
+                        dun_bar.data.won.find((e: Record<string, any>) => e.x === x)?.y
                       })`}</p>
                     )}
                   />
-                </div>
-                <div className="border-outline dark:border-washed-dark flex h-max flex-col gap-y-6 rounded-xl border-0 p-0 lg:border lg:p-8 xl:col-span-2 xl:col-start-4">
-                  <h5 className="text-center">{t("trivia.se_veterans")}</h5>
-                  {dun_bar.data ? (
-                    <BarMeter
-                      layout="horizontal"
-                      data={dun_bar.data && dun_bar.data.competed}
-                      relative
-                      formatY={(y, x) => (
-                        <p className="whitespace-nowrap">{`${y} (${t("trivia.won")} ${
-                          dun_bar.data.won.find((e: Record<string, any>) => e.x === x)?.y
-                        })`}</p>
-                      )}
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <div className="bg-outline dark:bg-washed-dark flex h-auto w-[300px] rounded-md px-3 pb-2 pt-1">
-                        <p className="text-sm">
-                          <span className="inline-flex pr-1">
-                            <FaceFrownIcon className="h-5 w-5 translate-y-1" />
-                          </span>
-                          {t("party.no_data_dun_wp", { state: CountryAndStates[params.state] })}
-                        </p>
-                      </div>
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <div className="bg-outline dark:bg-washed-dark flex h-auto w-[300px] rounded-md px-3 pb-2 pt-1">
+                      <p className="text-sm">
+                        <span className="inline-flex pr-1">
+                          <FaceFrownIcon className="h-5 w-5 translate-y-1" />
+                        </span>
+                        {t("party.no_data_dun_wp", { state: CountryAndStates[params.state] })}
+                      </p>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
-      </Container>
-    </ElectionLayout>
+      </div>
+    </Container>
   );
 };
 

@@ -1,14 +1,16 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
 import ElectionPartiesDashboard from "@dashboards/democracy/election-explorer/parties";
-import { withi18n } from "@lib/decorators";
 import type { Party } from "@dashboards/democracy/election-explorer/types";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { useTranslation } from "@hooks/useTranslation";
+import { get } from "@lib/api";
+import { withi18n } from "@lib/decorators";
+import type { Page } from "@lib/types";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
 const ElectionParties: Page = ({
+  last_updated,
   meta,
   params,
   selection,
@@ -19,7 +21,9 @@ const ElectionParties: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionPartiesDashboard params={params} selection={selection} elections={elections} />
+      <ElectionLayout last_updated={last_updated}>
+        <ElectionPartiesDashboard params={params} selection={selection} elections={elections} />
+      </ElectionLayout>
     </AnalyticsProvider>
   );
 };
@@ -61,6 +65,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
       return {
         props: {
+          last_updated: party.data.data_last_update,
           meta: {
             id: "dashboard-election-explorer",
             type: "dashboard",
@@ -78,7 +83,7 @@ export const getStaticProps: GetStaticProps = withi18n(
                 (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
               ) ?? [],
             dun:
-              party.data.dun?.sort(
+              party.data.data.dun?.sort(
                 (a: Party, b: Party) => Date.parse(b.date) - Date.parse(a.date)
               ) ?? [],
           },

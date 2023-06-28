@@ -57,24 +57,25 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
         election,
         seat,
       })
-        .then(({ data }: { data: SeatResult }) => {
+        .then(({ data }: { data: { data: SeatResult } }) => {
+          const data2 = data.data;
           const result = {
-            data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+            data: data2.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
                 x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
+                abs: data2.votes.majority,
+                perc: data2.votes.majority_perc,
               },
               {
                 x: "voter_turnout",
-                abs: data.votes.voter_turnout,
-                perc: data.votes.voter_turnout_perc,
+                abs: data2.votes.voter_turnout,
+                perc: data2.votes.voter_turnout_perc,
               },
               {
                 x: "rejected_votes",
-                abs: data.votes.votes_rejected,
-                perc: data.votes.votes_rejected_perc,
+                abs: data2.votes.votes_rejected,
+                perc: data2.votes.votes_rejected_perc,
               },
             ],
           };

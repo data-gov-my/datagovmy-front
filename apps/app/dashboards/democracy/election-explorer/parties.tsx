@@ -148,9 +148,9 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
         election,
         state,
       })
-        .then(({ data }: { data: PartyResult }) => {
+        .then(({ data }: { data: { data: PartyResult } }) => {
           const result: Result<PartyResult> = {
-            data: data.sort((a: PartyResult[number], b: PartyResult[number]) => {
+            data: data.data.sort((a: PartyResult[number], b: PartyResult[number]) => {
               if (a.seats.won === b.seats.won) {
                 return b.votes.abs - a.votes.abs;
               } else {
@@ -169,101 +169,99 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
   };
 
   return (
-    <ElectionLayout>
-      <Container className="min-h-fit">
-        <Section>
-          <div className="grid grid-cols-12">
-            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
-              {/* Explore any party's entire electoral history */}
-              <h4 className="text-center">{t("party.header")}</h4>
-              <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
-                  <ComboBox
-                    placeholder={t("party.search_party")}
-                    options={PARTY_OPTIONS}
-                    selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party) : null}
-                    onChange={selected => navigateToParty(selected?.value, data.state)}
-                    enableFlag
-                  />
-                </div>
+    <Container className="min-h-fit">
+      <Section>
+        <div className="grid grid-cols-12">
+          <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
+            {/* Explore any party's entire electoral history */}
+            <h4 className="text-center">{t("party.header")}</h4>
+            <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
+              <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+                <ComboBox
+                  placeholder={t("party.search_party")}
+                  options={PARTY_OPTIONS}
+                  selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party) : null}
+                  onChange={selected => navigateToParty(selected?.value, data.state)}
+                  enableFlag
+                />
               </div>
-              <Tabs
-                title={
-                  <Trans>
-                    <span className="text-lg font-normal leading-9">
-                      <ImageWithFallback
-                        className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
-                        src={`/static/images/parties/${params.party_name}.png`}
-                        width={32}
-                        height={18}
-                        alt={t(`${params.party_name}`)}
-                        inline
-                      />
-                      {t("party.title", {
-                        party: `$t(dashboard-election-explorer:${params.party_name})`,
-                      })}
-                      <StateDropdown
-                        currentState={data.state}
-                        onChange={selected => {
-                          setData("state", selected.value);
-                          navigateToParty(data.party, selected.value);
-                        }}
-                        width="inline-flex ml-0.5"
-                        anchor="left"
-                      />
-                    </span>
-                  </Trans>
-                }
-                current={data.tab_index}
-                onChange={(index: number) => setData("tab_index", index)}
-                className="pb-6"
-              >
-                <Panel name={t("parlimen")}>
-                  <ElectionTable
-                    data={elections.parlimen}
-                    columns={party_schema}
-                    isLoading={data.loading}
-                    empty={
-                      <Trans>
-                        {t("party.no_data", {
-                          party: `$t(dashboard-election-explorer:${params.party_name})`,
-                          state: CountryAndStates[data.state],
-                          context: "parlimen",
-                        })}
-                      </Trans>
-                    }
-                  />
-                </Panel>
-                <Panel name={t("dun")}>
-                  <ElectionTable
-                    data={
-                      data.tab_index === ElectionEnum.Dun && params.state === "mys"
-                        ? []
-                        : elections.dun
-                    }
-                    columns={party_schema}
-                    isLoading={data.loading}
-                    empty={
-                      <Trans>
-                        {t("party.no_data", {
-                          party: `$t(dashboard-election-explorer:${params.party_name})`,
-                          state: CountryAndStates[data.state],
-                          context: ["kul", "lbn", "pjy"].includes(data.state)
-                            ? "dun_wp"
-                            : data.state === "mys"
-                            ? "dun_mys"
-                            : "dun",
-                        })}
-                      </Trans>
-                    }
-                  />
-                </Panel>
-              </Tabs>
             </div>
+            <Tabs
+              title={
+                <Trans>
+                  <span className="text-lg font-normal leading-9">
+                    <ImageWithFallback
+                      className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
+                      src={`/static/images/parties/${params.party_name}.png`}
+                      width={32}
+                      height={18}
+                      alt={t(`${params.party_name}`)}
+                      inline
+                    />
+                    {t("party.title", {
+                      party: `$t(dashboard-election-explorer:${params.party_name})`,
+                    })}
+                    <StateDropdown
+                      currentState={data.state}
+                      onChange={selected => {
+                        setData("state", selected.value);
+                        navigateToParty(data.party, selected.value);
+                      }}
+                      width="inline-flex ml-0.5"
+                      anchor="left"
+                    />
+                  </span>
+                </Trans>
+              }
+              current={data.tab_index}
+              onChange={(index: number) => setData("tab_index", index)}
+              className="pb-6"
+            >
+              <Panel name={t("parlimen")}>
+                <ElectionTable
+                  data={elections.parlimen}
+                  columns={party_schema}
+                  isLoading={data.loading}
+                  empty={
+                    <Trans>
+                      {t("party.no_data", {
+                        party: `$t(dashboard-election-explorer:${params.party_name})`,
+                        state: CountryAndStates[data.state],
+                        context: "parlimen",
+                      })}
+                    </Trans>
+                  }
+                />
+              </Panel>
+              <Panel name={t("dun")}>
+                <ElectionTable
+                  data={
+                    data.tab_index === ElectionEnum.Dun && params.state === "mys"
+                      ? []
+                      : elections.dun
+                  }
+                  columns={party_schema}
+                  isLoading={data.loading}
+                  empty={
+                    <Trans>
+                      {t("party.no_data", {
+                        party: `$t(dashboard-election-explorer:${params.party_name})`,
+                        state: CountryAndStates[data.state],
+                        context: ["kul", "lbn", "pjy"].includes(data.state)
+                          ? "dun_wp"
+                          : data.state === "mys"
+                          ? "dun_mys"
+                          : "dun",
+                      })}
+                    </Trans>
+                  }
+                />
+              </Panel>
+            </Tabs>
           </div>
-        </Section>
-      </Container>
-    </ElectionLayout>
+        </div>
+      </Section>
+    </Container>
   );
 };
 
