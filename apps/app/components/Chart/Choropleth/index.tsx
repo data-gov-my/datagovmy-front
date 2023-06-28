@@ -69,7 +69,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
     };
 
     fetchMaps();
-  }, []);
+  }, [type]);
 
   const options: ChartCrosshairOption<"choropleth"> = {
     elements: {

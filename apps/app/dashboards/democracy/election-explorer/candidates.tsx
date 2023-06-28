@@ -127,24 +127,25 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
         election,
         seat,
       })
-        .then(({ data }: { data: CandidateResult }) => {
+        .then(({ data }: { data: { data: CandidateResult } }) => {
+          const data2 = data.data;
           const result: Result<BaseResult[]> = {
-            data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+            data: data2.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
                 x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
+                abs: data2.votes.majority,
+                perc: data2.votes.majority_perc,
               },
               {
                 x: "voter_turnout",
-                abs: data.votes.voter_turnout,
-                perc: data.votes.voter_turnout_perc,
+                abs: data2.votes.voter_turnout,
+                perc: data2.votes.voter_turnout_perc,
               },
               {
                 x: "rejected_votes",
-                abs: data.votes.votes_rejected,
-                perc: data.votes.votes_rejected_perc,
+                abs: data2.votes.votes_rejected,
+                perc: data2.votes.votes_rejected_perc,
               },
             ],
           };
@@ -162,77 +163,71 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   });
 
   return (
-    <ElectionLayout>
-      <Container className="min-h-fit">
-        <Section>
-          <div className="grid grid-cols-12">
-            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
-              <h4 className="text-center">{t("candidate.header")}</h4>
-              <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
-                  <ComboBox
-                    placeholder={t("candidate.search_candidate")}
-                    options={CANDIDATE_OPTIONS}
-                    selected={
-                      data.candidate
-                        ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate)
-                        : null
-                    }
-                    onChange={selected => navigateToCandidate(selected?.value)}
-                  />
-                </div>
+    <Container className="min-h-fit">
+      <Section>
+        <div className="xl:grid xl:grid-cols-12">
+          <div className="xl:col-span-10 xl:col-start-2">
+            <h4 className="text-center">{t("candidate.header")}</h4>
+            <div className="py-6">
+              <div className="mx-auto w-full px-6 sm:w-[400px]">
+                <ComboBox
+                  placeholder={t("candidate.search_candidate")}
+                  options={CANDIDATE_OPTIONS}
+                  selected={
+                    data.candidate ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate) : null
+                  }
+                  onChange={selected => navigateToCandidate(selected?.value)}
+                />
               </div>
-              <Tabs
-                title={
-                  <h5>
-                    {t("candidate.title")}
-                    <span className="text-primary">
-                      {CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)?.label}
-                    </span>
-                  </h5>
-                }
-                current={data.tab_index}
-                onChange={index => setData("tab_index", index)}
-                className="pb-6"
-              >
-                <Panel name={t("parlimen")}>
-                  <ElectionTable
-                    data={elections.parlimen}
-                    columns={candidate_schema}
-                    isLoading={data.loading}
-                    empty={
-                      <>
-                        {t("candidate.no_data", {
-                          name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)
-                            ?.label,
-                          context: "parliament",
-                        })}
-                      </>
-                    }
-                  />
-                </Panel>
-                <Panel name={t("dun")}>
-                  <ElectionTable
-                    data={elections.dun}
-                    columns={candidate_schema}
-                    isLoading={data.loading}
-                    empty={
-                      <>
-                        {t("candidate.no_data", {
-                          name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)
-                            ?.label,
-                          context: "dun",
-                        })}
-                      </>
-                    }
-                  />
-                </Panel>
-              </Tabs>
             </div>
+            <Tabs
+              title={
+                <h5>
+                  {t("candidate.title")}
+                  <span className="text-primary">
+                    {CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)?.label}
+                  </span>
+                </h5>
+              }
+              current={data.tab_index}
+              onChange={index => setData("tab_index", index)}
+              className="py-6"
+            >
+              <Panel name={t("parlimen")}>
+                <ElectionTable
+                  data={elections.parlimen}
+                  columns={candidate_schema}
+                  isLoading={data.loading}
+                  empty={
+                    <>
+                      {t("candidate.no_data", {
+                        name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)?.label,
+                        context: "parliament",
+                      })}
+                    </>
+                  }
+                />
+              </Panel>
+              <Panel name={t("dun")}>
+                <ElectionTable
+                  data={elections.dun}
+                  columns={candidate_schema}
+                  isLoading={data.loading}
+                  empty={
+                    <>
+                      {t("candidate.no_data", {
+                        name: CANDIDATE_OPTIONS.find(e => e.value === params.candidate_name)?.label,
+                        context: "dun",
+                      })}
+                    </>
+                  }
+                />
+              </Panel>
+            </Tabs>
           </div>
-        </Section>
-      </Container>
-    </ElectionLayout>
+        </div>
+      </Section>
+    </Container>
   );
 };
 

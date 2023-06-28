@@ -57,24 +57,25 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
         election,
         seat,
       })
-        .then(({ data }: { data: SeatResult }) => {
+        .then(({ data }: { data: { data: SeatResult } }) => {
+          const data2 = data.data;
           const result = {
-            data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+            data: data2.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
                 x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
+                abs: data2.votes.majority,
+                perc: data2.votes.majority_perc,
               },
               {
                 x: "voter_turnout",
-                abs: data.votes.voter_turnout,
-                perc: data.votes.voter_turnout_perc,
+                abs: data2.votes.voter_turnout,
+                perc: data2.votes.voter_turnout_perc,
               },
               {
                 x: "rejected_votes",
-                abs: data.votes.votes_rejected,
-                perc: data.votes.votes_rejected_perc,
+                abs: data2.votes.votes_rejected,
+                perc: data2.votes.votes_rejected_perc,
               },
             ],
           };
@@ -123,14 +124,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
     return (
       <div
         className={clx(
-          `border-outline dark:border-washed-dark focus:border-primary group-focus:dark:ring-primary-dark hover:border-outlineHover
-         dark:hover:border-outlineHover-dark active:bg-washed flex h-full w-full flex-col gap-2
-          rounded-xl border bg-white p-3 text-sm focus:outline-none focus:ring-2 dark:bg-black hover:dark:bg-black/50 active:dark:bg-black`,
-          data.seat &&
-            seat.seat === data.seat.label &&
-            "border-primary dark:border-primary-dark border"
+          `border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark active:bg-washed flex h-full w-full flex-col gap-2
+        rounded-xl border bg-white p-3 text-sm focus:outline-none dark:bg-black hover:dark:bg-black/50 active:dark:bg-black`,
+          data.seat && seat.seat === data.seat && "ring-primary dark:ring-primary-dark ring-1"
         )}
-        onClick={() => fetchSeatResult(seat.seat)}
+        onClick={() => {
+          setData("seat", seat.seat);
+          fetchSeatResult(seat.seat);
+        }}
       >
         <div className="flex justify-between">
           <div className="flex gap-2 truncate">
@@ -138,13 +139,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
             <span>{seat.seat.slice(5)}</span>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex h-8 items-center gap-1.5">
           <ImageWithFallback
             className="border-outline dark:border-outlineHover-dark rounded border"
             src={`/static/images/parties/${seat.party}.png`}
             width={32}
             height={18}
             alt={t(`${seat.party}`)}
+            style={{ width: "auto", maxWidth: "32px", height: "auto", maxHeight: "32px" }}
           />
           <span className="truncate font-medium">{`${seat.name} `}</span>
           <span>{`(${seat.party})`}</span>
@@ -167,7 +169,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
   return (
     <Section>
       <div className="grid grid-cols-12">
-        <div className="col-span-full col-start-1 space-y-12 lg:col-span-10 lg:col-start-2">
+        <div className="col-span-full col-start-1 space-y-12 xl:col-span-10 xl:col-start-2">
           <div className="space-y-6">
             <h4 className="text-center">{t("header_2")}</h4>
 
@@ -175,16 +177,20 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
               left={
                 <div
                   className="bg-background dark:bg-washed-dark relative flex h-fit w-full flex-col overflow-hidden 
-                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-l-xl lg:pb-6 xl:px-6"
+                rounded-t-xl px-3 pb-3 md:overflow-y-auto lg:h-[600px] lg:rounded-bl-xl lg:rounded-tr-none lg:pb-6 xl:px-6"
                 >
                   <div className="bg-background dark:bg-washed-dark dark:border-outlineHover-dark sticky top-0 z-10 border-b pb-3 pt-6">
                     <ComboBox
                       placeholder={t("seat.search_seat")}
                       options={SEAT_OPTIONS}
-                      selected={data.seat ?? null}
+                      selected={data.seat ? SEAT_OPTIONS.find(e => e.value === data.seat) : null}
                       onChange={selected => {
-                        setData("seat", selected);
-                        if (selected) fetchSeatResult(selected.value);
+                        if (selected) {
+                          fetchSeatResult(selected.value);
+                          setData("seat", selected.value);
+                        } else {
+                          setData("seat", null);
+                        }
 
                         const index = SEAT_OPTIONS.findIndex(e => e === selected);
                         if (listRef && listRef.current)
@@ -204,19 +210,19 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                         height={489}
                         width={"100%"}
                         itemCount={seats.length}
-                        itemSize={114}
+                        itemSize={126}
                         layout="vertical"
                         className="hidden lg:flex"
                       >
                         {({ index, style }: { index: number; style: CSSProperties }) => {
                           return (
-                            <div style={style} key={index} className="group px-1.5 pt-3">
+                            <div style={style} key={index} className="px-1.5 pt-3">
                               <OverallResultCard seat={seats[index]} />
                             </div>
                           );
                         }}
                       </List>
-                      <div className="flex h-[244px] lg:hidden">
+                      <div className="flex h-[268px] lg:hidden">
                         <AutoSizer>
                           {({ height, width }: { height: number; width: number }) => (
                             <Grid
@@ -224,7 +230,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                               rowCount={2}
                               columnCount={Math.ceil(seats.length / 2)}
                               height={height}
-                              rowHeight={114}
+                              rowHeight={126}
                               width={width}
                               columnWidth={288}
                             >

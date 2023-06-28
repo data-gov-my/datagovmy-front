@@ -1,15 +1,17 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { Layout, Metadata } from "@components/index";
 import ElectionExplorerDashboard from "@dashboards/democracy/election-explorer/elections";
-import { withi18n } from "@lib/decorators";
+import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
 import { Party } from "@dashboards/democracy/election-explorer/types";
-import { CountryAndStates } from "@lib/constants";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { useTranslation } from "@hooks/useTranslation";
+import { get } from "@lib/api";
+import { CountryAndStates } from "@lib/constants";
+import { withi18n } from "@lib/decorators";
+import type { Page } from "@lib/types";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
 const ElectionExplorer: Page = ({
+  last_updated,
   meta,
   params,
   seats,
@@ -21,12 +23,14 @@ const ElectionExplorer: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectionExplorerDashboard
-        params={params}
-        seats={seats}
-        selection={selection}
-        table={table}
-      />
+      <ElectionLayout last_updated={last_updated}>
+        <ElectionExplorerDashboard
+          params={params}
+          seats={seats}
+          selection={selection}
+          table={table}
+        />
+      </ElectionLayout>
     </AnalyticsProvider>
   );
 };
@@ -78,6 +82,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
       return {
         props: {
+          last_updated: seats.data.data_last_update,
           meta: {
             id: "dashboard-election-explorer",
             type: "dashboard",
@@ -85,9 +90,9 @@ export const getStaticProps: GetStaticProps = withi18n(
             agency: "SPR",
           },
           params: { election: election_name, state: state ?? "mys" },
-          seats: seats.data,
+          seats: seats.data.data,
           selection: dropdown.data ?? [],
-          table: table.data.sort((a: Party, b: Party) => {
+          table: table.data.data.sort((a: Party, b: Party) => {
             if (a.seats.won === b.seats.won) {
               return b.votes.perc - a.votes.perc;
             } else {
