@@ -2,7 +2,8 @@ import type { DownloadOptions } from "@lib/types";
 import { FunctionComponent, useContext, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
 import { useWatch } from "@hooks/useWatch";
-import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
+import { CATALOGUE_COLORS } from "../utils";
+import { BREAKPOINTS } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -103,18 +104,12 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 
   const _datasets = useMemo<ChartDataset<"bar", any[]>[]>(() => {
     const sets = Object.entries(dataset.chart).filter(([key, _]) => key !== "x");
-    const colors = [
-      AKSARA_COLOR.PRIMARY,
-      AKSARA_COLOR.WARNING,
-      AKSARA_COLOR.DANGER,
-      AKSARA_COLOR.GREY,
-    ]; // [blue, red]
 
     return sets.map(([key, y], index) => ({
       data: y as number[],
       label: sets.length === 1 ? dataset.meta.title : translations[key] ?? key,
-      borderColor: colors[index],
-      backgroundColor: colors[index].concat("1A"),
+      borderColor: CATALOGUE_COLORS[index],
+      backgroundColor: CATALOGUE_COLORS[index].concat("1A"),
       borderWidth: 1,
     }));
   }, [dataset.chart]);

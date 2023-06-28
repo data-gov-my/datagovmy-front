@@ -5,7 +5,6 @@ import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useWatch } from "@hooks/useWatch";
-import { AKSARA_COLOR, SHORT_PERIOD } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -13,6 +12,7 @@ import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { toast } from "@components/Toast";
 import { useAnalytics } from "@hooks/useAnalytics";
+import { CATALOGUE_COLORS, SHORT_PERIOD } from "../utils";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
@@ -110,19 +110,13 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
 
   const _datasets = useMemo<ChartDataset<keyof ChartTypeRegistry, any[]>[]>(() => {
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
-    const colors = [
-      AKSARA_COLOR.PRIMARY,
-      AKSARA_COLOR.WARNING,
-      AKSARA_COLOR.DANGER,
-      AKSARA_COLOR.GREY,
-    ]; // [blue, yellow, red, grey]
 
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
       label: translations[key] ?? key,
-      borderColor: colors[index],
-      backgroundColor: colors[index].concat("1A"),
+      borderColor: CATALOGUE_COLORS[index],
+      backgroundColor: CATALOGUE_COLORS[index].concat("1A"),
       borderWidth: 1,
       fill: dataset.type === "STACKED_AREA" || sets.length <= 1,
     }));
