@@ -1,19 +1,52 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent } from "react";
-import Container from "@components/Container";
+import Slider from "@components/Chart/Slider";
+import { SliderProvider } from "@components/Chart/Slider/context";
 import { MOTIcon } from "@components/Icon/agency";
+import { List } from "@components/Tabs";
+import { AgencyBadge, Container, Hero, Section } from "@components/index";
+import { useData } from "@hooks/useData";
+import { useSlice } from "@hooks/useSlice";
+import { useTranslation } from "@hooks/useTranslation";
+import { AKSARA_COLOR } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 
 /**
  * PublicTransportation Dashboard
  * @overview Status: In-development
  */
 
-interface PublicTransportationProps {}
+const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
-const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) => {
+interface PublicTransportationProps {
+  last_updated: string;
+  timeseries: any;
+  timeseries_callout: any;
+}
+
+const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
+  last_updated,
+  timeseries,
+  timeseries_callout,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-public-transportation", "common"]);
+  const period: { [key: number]: "day" | "month" | "year" } = {
+    0: "day",
+    1: "month",
+    2: "year",
+  };
+  const periodly: { [key: number]: "daily" | "monthly" | "yearly" } = {
+    0: "daily",
+    1: "monthly",
+    2: "yearly",
+  };
+  const { data, setData } = useData({
+    minmax: [0, 1],
+    index: 0,
+    period: "day",
+    periodly: "daily",
+  });
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
 
   return (
     <>
@@ -22,6 +55,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) 
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:mot.full")}
@@ -30,8 +64,140 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({}) 
           />
         }
       />
-      {/* Rest of page goes here */}
-      <Container className="min-h-screen"></Container>
+
+      <Container className="min-h-screen">
+        {/* How is ridership of public transportation services trending? */}
+        <Section
+          title={t("title")}
+          description={t("timeseries_desc")}
+          date={timeseries.data_as_of}
+          menu={
+            <List
+              current={data.index}
+              onChange={index => {
+                setData("index", index);
+                setData("period", period[index]);
+                setData("periodly", periodly[index]);
+              }}
+              options={[t("daily"), t("monthly"), t("yearly")]}
+            />
+          }
+        >
+          <SliderProvider>
+            {play => (
+              <>
+                <Timeseries
+                  className="h-[300px] w-full"
+                  title={t("ridership_overall")}
+                  enableAnimation={!play}
+                  interval={data.period === "year" ? "year" : "auto"}
+                  beginZero
+                  data={{
+                    labels: coordinate.x,
+                    datasets: [
+                      {
+                        type: coordinate.x.length === 1 ? "bar" : "line",
+                        data: coordinate.overall,
+                        label: t(data.periodly),
+                        fill: true,
+                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                        borderColor: AKSARA_COLOR.PRIMARY,
+                        borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
+                        barThickness: 12,
+                      },
+                    ],
+                  }}
+                  stats={[
+                    {
+                      title: t("daily"),
+                      value: `+${numFormat(
+                        timeseries_callout.data.overall.daily.value,
+                        "standard"
+                      )}`,
+                    },
+                    {
+                      title: t("trend_weekly"),
+                      value: `${numFormat(
+                        timeseries_callout.data.overall.growth_wow.value,
+                        "standard",
+                        [1, 1]
+                      )}%`,
+                    },
+                    {
+                      title: t("trend_monthly"),
+                      value: `${numFormat(
+                        timeseries_callout.data.overall.growth_mom.value,
+                        "standard",
+                        [1, 1]
+                      )}%`,
+                    },
+                  ]}
+                />
+                <Slider
+                  type="range"
+                  period={data.period}
+                  value={data.minmax}
+                  onChange={e => setData("minmax", e)}
+                  data={timeseries.data[data.periodly].x}
+                />
+                <div className="grid grid-cols-1 gap-12 pt-12 lg:grid-cols-2 xl:grid-cols-3">
+                  {["rapid_rail", "rapid_bus", "tebrau", "ets", "intercity", "komuter"].map(
+                    (key: string) => (
+                      <Timeseries
+                        className="h-[300px] w-full"
+                        title={t(`ridership_${key}`)}
+                        enableAnimation={!play}
+                        interval={data.period === "year" ? "year" : "auto"}
+                        beginZero
+                        data={{
+                          labels: coordinate.x,
+                          datasets: [
+                            {
+                              type: coordinate.x.length === 1 ? "bar" : "line",
+                              data: coordinate[key],
+                              label: t(data.periodly),
+                              fill: true,
+                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                              borderColor: AKSARA_COLOR.PRIMARY,
+                              borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
+                              barThickness: 12,
+                            },
+                          ],
+                        }}
+                        stats={[
+                          {
+                            title: t("daily"),
+                            value: `+${numFormat(
+                              timeseries_callout.data[key].daily.value,
+                              "standard"
+                            )}`,
+                          },
+                          {
+                            title: t("trend_weekly"),
+                            value: `${numFormat(
+                              timeseries_callout.data[key].growth_wow.value,
+                              "standard",
+                              [1, 1]
+                            )}%`,
+                          },
+                          {
+                            title: t("trend_monthly"),
+                            value: `${numFormat(
+                              timeseries_callout.data[key].growth_mom.value,
+                              "standard",
+                              [1, 1]
+                            )}%`,
+                          },
+                        ]}
+                      />
+                    )
+                  )}
+                </div>
+              </>
+            )}
+          </SliderProvider>
+        </Section>
+      </Container>
     </>
   );
 };
