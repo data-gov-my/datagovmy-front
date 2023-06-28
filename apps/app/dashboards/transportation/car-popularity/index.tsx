@@ -268,53 +268,48 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
             <div className="w-full">
               <WindowProvider>
                 {data.x?.length > 0 ? (
-                  query.loading ? (
-                    <div className="flex h-96 items-center justify-center">
-                      <Spinner loading={query.loading} />
-                    </div>
-                  ) : (
-                    <Timeseries
-                      stepSize={1}
-                      suggestedMaxY={2}
-                      className="h-96 pt-2"
-                      title={
-                        <div className="flex flex-col gap-3">
-                          <p className="text-lg font-bold">
-                            <span className="capitalize">
-                              {t("timeseries_car_description", {
-                                car: data.params.model,
-                                maker: data.params.maker,
-                              })}
-                            </span>
-                            <span>{t("timeseries_title")}</span>
-                          </p>
-                          <p className="text-dim text-sm">
-                            <span>{t("timeseries_description")}</span>
-                          </p>
-                        </div>
-                      }
-                      interval={"year"}
-                      data={{
-                        labels: data.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            data: data.y,
-                            label: t("label"),
-                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                            borderColor: AKSARA_COLOR.PRIMARY,
-                            borderWidth:
-                              breakpoint <= BREAKPOINTS.MD
-                                ? 0.75
-                                : breakpoint <= BREAKPOINTS.LG
-                                ? 1.0
-                                : 1.5,
-                            fill: true,
-                          },
-                        ],
-                      }}
-                    />
-                  )
+                  <Timeseries
+                    isLoading={query.loading}
+                    precision={0}
+                    suggestedMaxY={2}
+                    className="h-96 pt-2"
+                    title={
+                      <div className="flex flex-col gap-3">
+                        <p className="text-lg font-bold">
+                          <span className="capitalize">
+                            {t("timeseries_car_description", {
+                              car: data.params.model,
+                              maker: data.params.maker,
+                            })}
+                          </span>
+                          <span>{t("timeseries_title")}</span>
+                        </p>
+                        <p className="text-dim text-sm">
+                          <span>{t("timeseries_description")}</span>
+                        </p>
+                      </div>
+                    }
+                    interval={"year"}
+                    data={{
+                      labels: data.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: data.y,
+                          label: t("label"),
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth:
+                            breakpoint <= BREAKPOINTS.MD
+                              ? 0.75
+                              : breakpoint <= BREAKPOINTS.LG
+                              ? 1.0
+                              : 1.5,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                  />
                 ) : (
                   <div className="relative hidden h-96 w-full items-center justify-center lg:flex">
                     <Timeseries
