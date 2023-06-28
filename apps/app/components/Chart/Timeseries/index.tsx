@@ -352,6 +352,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
           },
           ticks: {
+            precision: Array.isArray(precision) ? precision[1] : precision,
             stepSize: stepSize,
             padding: 6,
             callback: (value: string | number) => {
