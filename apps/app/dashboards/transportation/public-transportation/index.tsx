@@ -8,6 +8,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
+import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -54,7 +55,11 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         background="blue"
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
-        description={[t("description")]}
+        description={
+          <Trans>
+            <p className={"text-dim whitespace-pre-line xl:w-2/3"}>{t("description")}</p>
+          </Trans>
+        }
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
