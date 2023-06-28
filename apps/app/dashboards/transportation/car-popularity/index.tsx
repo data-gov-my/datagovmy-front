@@ -316,7 +316,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                     />
                   )
                 ) : (
-                  <div className="relative hidden h-96 w-full items-center justify-center lg:flex">
+                  <div className="relative hidden h-96 items-center justify-center lg:flex">
                     <Timeseries
                       className="absolute left-0 top-0 h-full w-full opacity-30"
                       data={{
