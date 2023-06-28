@@ -1,4 +1,5 @@
 import { JAKOAIcon } from "@components/Icon/agency";
+import Progress from "@components/Progress";
 import {
   AgencyBadge,
   ComboBox,
@@ -104,6 +105,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
 
   return (
     <>
+      <Progress />
       <Hero
         background="green"
         category={[t("common:categories.demography"), "text-green-600"]}
