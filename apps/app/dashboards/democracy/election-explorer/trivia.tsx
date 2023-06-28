@@ -165,8 +165,8 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
 
   return (
     <Container>
-      <div className="grid grid-cols-12 py-8 lg:py-12">
-        <div className="col-span-full col-start-1 space-y-12 lg:col-span-10 lg:col-start-2">
+      <div className="py-8 lg:py-12 xl:grid xl:grid-cols-12">
+        <div className="space-y-12 xl:col-span-10 xl:col-start-2">
           <div className="flex flex-col items-center gap-6">
             <h4 className="text-center">
               {t("trivia.header", { country: CountryAndStates[params.state] })}
@@ -180,7 +180,7 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
           </div>
 
           <div className="space-y-12 lg:space-y-6">
-            <div className="border-outline dark:border-washed-dark w-full space-y-6 rounded-xl border-0 p-0 md:p-8 lg:border">
+            <div className="border-outline dark:border-washed-dark w-full space-y-6 rounded-xl border-0 p-0 lg:border lg:p-8">
               <div className="gap-3">
                 <SPRIconSolid className="text-primary mx-auto h-16 w-16" />
                 <h5 className="text-center">

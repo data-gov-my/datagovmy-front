@@ -297,8 +297,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
-                <div className="grid grid-cols-12">
-                  <div className="col-span-full col-start-1 flex flex-col gap-y-3 lg:col-span-10 lg:col-start-2">
+                <div className="xl:grid xl:grid-cols-12">
+                  <div className="flex flex-col gap-y-3 xl:col-span-10 xl:col-start-2">
                     <div className="flex flex-col items-baseline justify-between gap-y-3 sm:flex-row md:gap-y-0">
                       <h5 className="w-fit">
                         {t("election_of", {

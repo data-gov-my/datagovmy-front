@@ -50,53 +50,46 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
       accessorKey: "seat",
       id: "constituency",
       header: t("constituency"),
-      className: "text-left w-auto lg:w-[150px]",
+      className: "text-left w-[200px]",
     },
     {
       accessorKey: "state",
       id: "state",
       header: t("state"),
-
-      className: "text-left w-auto lg:w-[150px]",
+      className: "text-left w-[150px]",
     },
     {
       accessorKey: "majority.abs",
       id: "majority.abs",
       header: t("majority"),
       sortingFn: "localeNumber",
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "majority.perc",
       id: "majority.perc",
       header: t("majority_%"),
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "voter_turnout.abs",
       id: "voter_turnout.abs",
       header: t("voter_turnout"),
       sortingFn: "localeNumber",
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "voter_turnout.perc",
       id: "voter_turnout.perc",
       header: t("voter_turnout_%"),
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "votes_rejected.abs",
       id: "votes_rejected.abs",
       header: t("rejected_votes"),
       sortingFn: "localeNumber",
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "votes_rejected.perc",
       id: "votes_rejected.perc",
       header: t("rejected_votes_%"),
-      className: "text-right w-auto lg:w-[150px]",
     },
   ];
 
@@ -128,7 +121,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
 
   return (
     <div className="grid grid-cols-12 py-8 lg:py-12">
-      <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
+      <div className="col-span-full col-start-1 xl:col-span-10 xl:col-start-2">
         <h4 className="py-4 text-center">{t("header_3")}</h4>
         <div className="flex justify-end pb-3 lg:pb-6">
           <List

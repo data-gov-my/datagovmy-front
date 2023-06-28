@@ -171,12 +171,12 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
   return (
     <Container className="min-h-fit">
       <Section>
-        <div className="grid grid-cols-12">
-          <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
+        <div className="xl:grid xl:grid-cols-12">
+          <div className="xl:col-span-10 xl:col-start-2">
             {/* Explore any party's entire electoral history */}
             <h4 className="text-center">{t("party.header")}</h4>
-            <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-              <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+            <div className="py-6">
+              <div className="mx-auto w-full px-6 sm:w-[400px]">
                 <ComboBox
                   placeholder={t("party.search_party")}
                   options={PARTY_OPTIONS}
@@ -215,7 +215,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
               }
               current={data.tab_index}
               onChange={(index: number) => setData("tab_index", index)}
-              className="pb-6"
+              className="py-6"
             >
               <Panel name={t("parlimen")}>
                 <ElectionTable

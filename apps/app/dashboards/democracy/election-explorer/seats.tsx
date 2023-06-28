@@ -174,11 +174,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   return (
     <Container className="min-h-fit">
       <Section>
-        <div className="grid grid-cols-12">
-          <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
+        <div className="xl:grid xl:grid-cols-12">
+          <div className="xl:col-span-10 xl:col-start-2">
             <h4 className="text-center">{t("seat.header")}</h4>
-            <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-              <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
+            <div className="py-6">
+              <div className="mx-auto w-full px-6 sm:w-[400px]">
                 <ComboBox
                   placeholder={t("seat.search_seat")}
                   options={SEAT_OPTIONS}
@@ -204,7 +204,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
             </div>
             <ElectionTable
               title={
-                <h5 className="pb-6">
+                <h5 className="py-6">
                   {t("seat.title")}
                   <span className="text-primary">{`${
                     SEAT_OPTIONS.find(e => e.value === `${params.type}_${params.seat_name}`)?.label

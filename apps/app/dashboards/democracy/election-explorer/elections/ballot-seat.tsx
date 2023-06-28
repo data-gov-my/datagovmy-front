@@ -139,13 +139,14 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
             <span>{seat.seat.slice(5)}</span>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex h-8 items-center gap-1.5">
           <ImageWithFallback
             className="border-outline dark:border-outlineHover-dark rounded border"
             src={`/static/images/parties/${seat.party}.png`}
             width={32}
             height={18}
             alt={t(`${seat.party}`)}
+            style={{ width: "auto", maxWidth: "32px", height: "auto", maxHeight: "32px" }}
           />
           <span className="truncate font-medium">{`${seat.name} `}</span>
           <span>{`(${seat.party})`}</span>
@@ -168,7 +169,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
   return (
     <Section>
       <div className="grid grid-cols-12">
-        <div className="col-span-full col-start-1 space-y-12 lg:col-span-10 lg:col-start-2">
+        <div className="col-span-full col-start-1 space-y-12 xl:col-span-10 xl:col-start-2">
           <div className="space-y-6">
             <h4 className="text-center">{t("header_2")}</h4>
 
@@ -209,7 +210,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                         height={489}
                         width={"100%"}
                         itemCount={seats.length}
-                        itemSize={114}
+                        itemSize={126}
                         layout="vertical"
                         className="hidden lg:flex"
                       >
@@ -221,7 +222,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                           );
                         }}
                       </List>
-                      <div className="flex h-[244px] lg:hidden">
+                      <div className="flex h-[268px] lg:hidden">
                         <AutoSizer>
                           {({ height, width }: { height: number; width: number }) => (
                             <Grid
@@ -229,7 +230,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                               rowCount={2}
                               columnCount={Math.ceil(seats.length / 2)}
                               height={height}
-                              rowHeight={114}
+                              rowHeight={126}
                               width={width}
                               columnWidth={288}
                             >
