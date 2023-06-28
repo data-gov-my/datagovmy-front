@@ -59,21 +59,32 @@ const LabourLayout: FunctionComponent<LabourLayoutProps> = ({ children, last_upd
           "border-b-outline dark:border-b-washed-dark hide-scrollbar sticky top-14 z-20 flex flex-row gap-2 overflow-x-auto border-b bg-white px-3 dark:bg-black sm:justify-center md:pl-0 lg:static"
         )}
       >
-        {labour_navs.map(nav => (
-          <At
-            className={clx(
-              "flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center text-base font-medium transition lg:p-4",
-              pathname.startsWith(nav.url)
-                ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
-                : "text-dim"
-            )}
-            key={nav.url}
-            href={nav.url}
-            scrollTop={false}
-          >
-            {nav.name}
-          </At>
-        ))}
+        {labour_navs.map(nav =>
+          nav.url.endsWith("/job-losses") ? (
+            <At
+              className={clx(
+                "flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center font-medium transition lg:p-4",
+                pathname.startsWith(nav.url)
+                  ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
+                  : "text-dim"
+              )}
+              key={nav.url}
+              href={nav.url}
+              scrollTop={false}
+            >
+              {nav.name}
+            </At>
+          ) : (
+            <div
+              className={clx(
+                "text-dim flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center font-medium transition lg:p-4"
+              )}
+              key={nav.url}
+            >
+              {nav.name}
+            </div>
+          )
+        )}
       </div>
 
       {/* Content */}

@@ -24,8 +24,8 @@ interface LabourLossesProps {
 
 const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timeseries_callout }) => {
   const { t } = useTranslation(["dashboard-high-frequency-labour-data", "common"]);
-  const period: { [key: number]: "day" | "month" | "year" } = {
-    0: "day",
+  const period: { [key: number]: "auto" | "month" | "year" } = {
+    0: "auto",
     1: "month",
     2: "year",
   };
@@ -37,7 +37,7 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
   const { data, setData } = useData({
     minmax: [0, timeseries.data.daily.x.length],
     index: 0,
-    period: "day",
+    period: "auto",
     periodly: "daily",
   });
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
@@ -66,7 +66,7 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
               <Timeseries
                 className="h-[300px] w-full"
                 enableAnimation={!play}
-                interval={data.period === "year" ? "year" : "auto"}
+                interval={data.period === "day" ? "auto" : data.period}
                 beginZero
                 data={{
                   labels: coordinate.x,
@@ -76,8 +76,8 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
                       data: coordinate.losses,
                       label: t(data.periodly),
                       fill: true,
-                      backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                      borderColor: AKSARA_COLOR.PRIMARY,
+                      backgroundColor: AKSARA_COLOR.DIM_H,
+                      borderColor: AKSARA_COLOR.DIM,
                       borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
                       barThickness: 12,
                     },
