@@ -272,7 +272,6 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                     isLoading={query.loading}
                     precision={0}
                     suggestedMaxY={2}
-                    className="h-96 pt-2"
                     title={
                       <div className="flex flex-col gap-3">
                         <p className="text-lg font-bold">
