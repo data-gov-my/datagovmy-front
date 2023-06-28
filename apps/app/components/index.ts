@@ -22,4 +22,5 @@ export { default as Radio } from "./Radio";
 export { default as CodeBlock } from "./CodeBlock";
 export { default as Carousel } from "./Carousel";
 export { default as Spinner } from "./Spinner";
+export { default as Progress } from "./Progress";
 /** Chart */

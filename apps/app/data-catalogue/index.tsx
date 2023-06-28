@@ -82,26 +82,24 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         background="blue"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
-        description={
-          <div className="space-y-6 xl:w-2/3">
-            <p className="text-dim">
-              {t("description", {
-                agency: query.source ?? "",
-                context: query.source ? "agency" : "",
-              })}
-            </p>
-            <Dropdown
-              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-              className="min-w-[250px]"
-              placeholder={t("placeholder.source")}
-              anchor="left"
-              options={sourceOptions}
-              selected={query.source ? { label: query.source, value: query.source } : undefined}
-              onChange={e => filterRef.current?.setFilter("source", e)}
-              enableSearch
-              enableClear
-            />
-          </div>
+        description={[
+          t("description", {
+            agency: query.source ?? "",
+            context: query.source ? "agency" : "",
+          }),
+        ]}
+        action={
+          <Dropdown
+            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+            className="min-w-[250px]"
+            placeholder={t("placeholder.source")}
+            anchor="left"
+            options={sourceOptions}
+            selected={query.source ? { label: query.source, value: query.source } : undefined}
+            onChange={e => filterRef.current?.setFilter("source", e)}
+            enableSearch
+            enableClear
+          />
         }
         agencyBadge={
           <AgencyBadge

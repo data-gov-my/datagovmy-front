@@ -8,13 +8,22 @@ import PublicTransportationDashboard from "@dashboards/transportation/public-tra
 import { withi18n } from "@lib/decorators";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 
-const PublicTransportation: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PublicTransportation: Page = ({
+  last_updated,
+  meta,
+  timeseries,
+  timeseries_callout,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-public-transportation", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <PublicTransportationDashboard />
+      <PublicTransportationDashboard
+        last_updated={last_updated}
+        timeseries={timeseries}
+        timeseries_callout={timeseries_callout}
+      />
     </AnalyticsProvider>
   );
 };
@@ -22,7 +31,7 @@ const PublicTransportation: Page = ({ meta }: InferGetStaticPropsType<typeof get
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-public-transportation",
   async () => {
-    //   const { data } = await get("/dashboard", { dashboard: "currency" });
+    const { data } = await get("/dashboard", { dashboard: "public_transport" });
 
     return {
       notFound: false,
@@ -33,6 +42,9 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "transportation",
           agency: "MoT",
         },
+        last_updated: data.data_last_updated,
+        timeseries: data.timeseries,
+        timeseries_callout: data.timeseries_callout,
       },
     };
   }

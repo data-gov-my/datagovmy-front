@@ -237,7 +237,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                     isLoading={data.loading}
                     enableAnimation={!play}
                     mode="grouped"
-                    interval={data.country_period === "year" ? "year" : "auto"}
+                    interval={data.country_period === "day" ? "auto" : data.period}
                     data={{
                       labels: country_coords.x,
                       datasets: [
@@ -322,7 +322,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                   className="h-[300px] w-full"
                   title={t("passport")}
                   enableAnimation={!play}
-                  interval={data.period === "year" ? "year" : "auto"}
+                  interval={data.period === "day" ? "auto" : data.period}
                   data={{
                     labels: coordinate.x,
                     datasets: [
@@ -333,7 +333,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                         fill: true,
                         backgroundColor: AKSARA_COLOR.PURPLE_H,
                         borderColor: AKSARA_COLOR.PURPLE,
-                        borderWidth: country_coords.x.length > 720 ? 1 : 1.5,
+                        borderWidth: coordinate.x.length > 720 ? 1 : 1.5,
                       },
                     ],
                   }}
@@ -366,7 +366,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                       title={t(key)}
                       className="h-[300px] w-full"
                       enableAnimation={!play}
-                      interval={data.period === "year" ? "year" : "auto"}
+                      interval={data.period === "day" ? "auto" : data.period}
                       data={{
                         labels: coordinate.x,
                         datasets: [

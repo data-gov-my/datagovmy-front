@@ -23,6 +23,7 @@ const namespace = [
   "dashboard-flood-warning",
   "dashboard-gdp",
   "dashboard-government-site-tracker",
+  "dashboard-high-frequency-labour-data",
   "dashboard-hospital-bed-utilisation",
   "dashboard-immigration",
   "dashboard-income-taxation",
@@ -44,7 +45,6 @@ const namespace = [
   "dashboard-reserve-money",
   "dashboard-retirement-readiness",
   "dashboard-sekolahku",
-  "dashboard-social-security",
   "dashboard-weather-and-climate",
   "helpdesk",
 ];

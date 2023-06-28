@@ -12,10 +12,11 @@ import { FunctionComponent, ReactNode } from "react";
 import At from "@components/At";
 
 interface ElectionLayoutProps {
+  last_updated: string;
   children: ReactNode;
 }
 
-const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) => {
+const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, children }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { pathname } = useRouter();
 
@@ -48,13 +49,14 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
   ];
 
   return (
-    <div>
+    <>
       <Progress />
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:spr.full")}
@@ -91,7 +93,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
 
       {/* Content */}
       {children}
-    </div>
+    </>
   );
 };
 
