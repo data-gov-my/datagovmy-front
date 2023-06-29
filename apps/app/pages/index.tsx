@@ -1,13 +1,7 @@
-import { AgencyBadge } from "@components/index";
-import At from "@components/At";
-import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import Container from "@components/Container";
-import Hero from "@components/Hero";
-import Metadata from "@components/Metadata";
-import Section from "@components/Section";
-import Tabs from "@components/Tabs";
+import AgencyIcon from "@components/Icon/agency";
+import { AgencyBadge, At, Card, Container, Hero, Metadata, Section, Tabs } from "@components/index";
 import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
@@ -24,7 +18,6 @@ import Image from "next/image";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 const Home: Page = ({
-  highlights,
   timeseries,
   timeseries_callouts,
   analytics,
@@ -257,7 +250,7 @@ const Ranking = ({ ranks }: RankingProps) => {
           <At href={item.id} key={item.id}>
             <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
               <div className="relative flex items-center gap-4">
-                <div className="bg-outline h-4 w-4 rounded-full" />
+                <AgencyIcon agency={item.agency_abbr} />
                 <p className="text-dim text-sm uppercase">{item.agency_abbr}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
