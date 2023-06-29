@@ -23,7 +23,13 @@ interface ImageWithFallbackProps extends ImageProps {
   inline?: boolean;
 }
 
-const ImageWithFallback = ({ fallback, alt, src, inline, ...props }: ImageWithFallbackProps) => {
+const ImageWithFallback: FunctionComponent<ImageWithFallbackProps> = ({
+  fallback,
+  alt,
+  src,
+  inline,
+  ...props
+}) => {
   const [error, setError] = useState<React.SyntheticEvent<HTMLImageElement, Event> | null>(null);
 
   useEffect(() => {
