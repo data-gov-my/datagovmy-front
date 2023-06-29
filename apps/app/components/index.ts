@@ -33,4 +33,4 @@ export { default as Tooltip } from "./Tooltip";
 
 /** Chart */
 export { default as Slider } from "./Chart/Slider";
-export { default as SliderProvider } from "./Chart/Slider";
+export { SliderProvider } from "./Chart/Slider/context";
