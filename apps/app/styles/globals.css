@@ -65,12 +65,25 @@
     @apply border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark dark:active:bg-washed-dark bg-white text-black dark:active:text-white;
   }
 
+  .bg-default {
+    @apply active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark
+    bg-white text-black dark:bg-black dark:text-white;
+  }
+
+  .btn-border {
+    @apply border-outline dark:border-washed-dark 
+    hover:border-outlineHover hover:dark:border-outlineHover-dark border;
+  }
+
+  .btn-disabled {
+    @apply disabled:bg-outline dark:disabled:bg-washed-dark 
+    disabled:border-outline dark:disabled:border-washed-dark 
+    disabled:text-outlineHover dark:disabled:text-outlineHover-dark 
+    disabled:pointer-events-none disabled:cursor-not-allowed;
+  }
+
   .btn-dropdown {
-    @apply active:bg-washed hover:dark:bg-washed-dark/50 disabled:bg-outline dark:disabled:bg-washed-dark 
-    border-outline hover:border-outlineHover dark:border-washed-dark hover:dark:border-outlineHover-dark 
-    disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark relative
-    flex gap-1.5 bg-white pl-3 pr-7 text-start text-sm text-black shadow-sm outline-none focus-visible:ring-0 
-    disabled:pointer-events-none disabled:cursor-not-allowed dark:bg-black dark:text-white;
+    @apply bg-default btn-border btn-disabled relative flex gap-1.5 pl-3 pr-7 text-sm shadow-sm outline-none;
   }
 
   .text-link {
