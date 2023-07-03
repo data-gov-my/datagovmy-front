@@ -91,6 +91,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   gridOffsetX?: boolean;
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
+  tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
   displayNumFormat?: (
     value: number,
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
@@ -129,6 +130,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableTooltip = true,
   gridOffsetX = true,
   tooltipCallback,
+  tooltipItemSort,
   tickXCallback,
   beginZero = false,
   minY,
@@ -191,6 +193,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
         },
         tooltip: {
           enabled: enableTooltip,
+          itemSort: tooltipItemSort,
           bodyFont: {
             family: "Inter",
           },
