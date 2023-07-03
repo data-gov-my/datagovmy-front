@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { AKSARA_COLOR } from "@lib/constants";
 import { useData } from "@hooks/useData";
 import { OptionType } from "@components/types";
-
+import { useTheme } from "next-themes";
 /**
  * Income Taxation Dashboard
  * @overview Status: In-development
@@ -19,6 +19,7 @@ interface IncomeTaxationProps {
 
 const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, last_updated }) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
+  const { theme } = useTheme();
 
   const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
@@ -36,7 +37,7 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
       type: "line",
       label: t("total"),
       data: stacked_bar.data[data.tab_type.value].direct_subtotal,
-      borderColor: AKSARA_COLOR.BLACK,
+      borderColor: theme === "dark" ? AKSARA_COLOR.WHITE : AKSARA_COLOR.BLACK,
       borderWidth: 1,
     },
     {
