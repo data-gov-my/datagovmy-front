@@ -70,10 +70,8 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
   return (
     <Container className="min-h-screen">
       <Section
-        title={t("What proportion of income taxes come from individuals?")}
-        description={t(
-          "Over the last 10 years, roughly 25% of income tax revenue has come from individuals. The chart below visualises the importance of individual taxes from 1970 to the present."
-        )}
+        title={t("section2.title")}
+        description={t("section2.description")}
         date={stacked_bar.data_as_of}
         menu={
           <Tabs.List
