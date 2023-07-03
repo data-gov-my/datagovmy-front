@@ -1,11 +1,8 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero, Section, Tabs } from "@components/index";
+import { Section, Tabs } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { LHDNIcon } from "@components/Icon/agency";
 import dynamic from "next/dynamic";
-import { ChartDataset } from "chart.js";
 import { AKSARA_COLOR } from "@lib/constants";
 import { useData } from "@hooks/useData";
 import { OptionType } from "@components/types";

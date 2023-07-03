@@ -6,7 +6,6 @@ import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode } from "react";
-import { useData } from "@hooks/useData";
 
 interface IncomeTaxationLayoutProps {
   children: ReactNode;
