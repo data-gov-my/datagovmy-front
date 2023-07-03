@@ -20,7 +20,7 @@ const IncomeTaxationLayout: FunctionComponent<IncomeTaxationLayoutProps> = ({
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
   const { pathname } = useRouter();
 
-  const labour_navs = [
+  const INCOME_TAXATION_NAVS = [
     {
       name: t("overview"),
       url: routes.INCOME_TAXATION.concat("/overview"),
@@ -59,7 +59,7 @@ const IncomeTaxationLayout: FunctionComponent<IncomeTaxationLayoutProps> = ({
           "border-b-outline dark:border-b-washed-dark hide-scrollbar sticky top-14 z-20 flex flex-row gap-2 overflow-x-auto border-b bg-white px-3 dark:bg-black sm:justify-center md:pl-0 lg:static"
         )}
       >
-        {labour_navs.map(nav =>
+        {INCOME_TAXATION_NAVS.map(nav =>
           nav.url.endsWith("/overview") ? (
             <At
               className={clx(
