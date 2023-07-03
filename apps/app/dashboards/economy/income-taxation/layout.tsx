@@ -47,7 +47,7 @@ const IncomeTaxationLayout: FunctionComponent<IncomeTaxationLayoutProps> = ({
           <AgencyBadge
             agency={t("agencies:lhdn.full")}
             link="https://www.hasil.gov.my"
-            icon={<LHDNIcon />}
+            icon={<LHDNIcon fillColor="#71717A" />}
           />
         }
       />
