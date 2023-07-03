@@ -303,7 +303,7 @@ export const getStaticProps: GetStaticProps = withi18n(null, async () => {
         },
         all_time: {
           dataset: data.table_summary.data.all_time.dataset_views,
-          dashboard: data.table_summary.data.all_time.dataset_views,
+          dashboard: data.table_summary.data.all_time.dashboard_views,
         },
         total: {
           catalogue: data.total_catalog,
