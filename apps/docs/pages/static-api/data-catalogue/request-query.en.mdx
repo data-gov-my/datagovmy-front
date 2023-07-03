@@ -1,19 +1,84 @@
 ## Query Parameters
 
-The Data Catalogue API supports several query parameters.
-The following table shows the available query parameters, their data types, and whether they are required:
+The Data Catalogue API supports several query parameters. The following table provides information about the available query parameters, their data types, and whether they are required:
 
-- `id` - Indicates the specific resource requested
-- `filter` - Indicates filter(s) of the data
-- `limit` - Indicates response limit
-- `sort` - Indicates order of the response, in ascending or descending order
-- `include` - indicates keys to include
-- `exclude` - indicates keys to exclude
-- `start` - indicates date start range (only if date is available)
-- `end` - indicates date end range (only if date is available)
+| Parameter | Type      | Required | Description                                                            |
+| --------- | --------- | -------- | ---------------------------------------------------------------------- |
+| id        | `string`  | Yes      | Indicates the specific resource requested.                             |
+| filter    | `string`  | No       | Indicates filter(s) of the data.                                       |
+| limit     | `integer` | No       | Indicates the maximum number of responses to return.                   |
+| sort      | `string`  | No       | Indicates the order of the response, in ascending or descending order. |
+| include   | `string`  | No       | Indicates the columns to include in the response.                      |
+| exclude   | `string`  | No       | Indicates the columns to exclude from the response.                    |
+| start     | `date`    | No       | Indicates the start date range (only if `date` is available).          |
+| end       | `date`    | No       | Indicates the end date range (only if `date` is available).            |
 
-Note: `filter` and `include`/`exclude` are different, such that `filter` is done on the row level, `include`/`exclude` on the column level.
+Please note that the `filter` parameter is used for row-level filtering, while `include`/`exclude` parameters are used for column-level filtering.
 
-Reserve characters are used as part of the query paramater.
+## Query Syntax
 
-- `filter:x@y` filters to include `x` values within column `y`
+When working with the OpenAPI, you can define query parameters by appending a question mark (`?`) after the base URL. Query parameters consist of a key-value pair, where the key and value are separated by an equal sign (`=`). If there are multiple parameters, they are separated by an ampersand (`&`).
+
+### `filter`
+
+The `filter` parameter allows you to refine your API request by applying specific filters to the data. There are 2 different supported formats:
+
+#### String Equal filter
+
+```
+value@column
+```
+
+- This format filters the data based on an exact string match.
+- The `value` represents the desired string value within the `column`.
+- The `column` denotes the column or field to be filtered.
+- `filter=John@name` retrieves data where the value of the "name" column is "John".
+
+#### Range Filter
+
+```
+column[begin:end]
+```
+
+- This format filters the data within a specified numeric range.
+- The `column` specifies the column or field to be filtered.
+- The `begin` and `end` values define the numeric range.
+- `filter=age[18:30]` retrieves data where the value of the `age` column falls between 18 and 30 (inclusive).
+
+### `sort`
+
+```
+sort=<sort_val>
+```
+
+- `<sort_val>` specifies the sorting criteria in the format `field@order`.
+- `field` represents the column or field by which to sort.
+- `order` can be either `asc` (ascending) or `desc` (descending).
+- `sort=name@asc` sorts the results by the "name" column in ascending order.
+
+### `include` and `exclude`
+
+The `include` and `exclude` parameters allow you to selectively include or exclude specific columns or fields from the returned results.
+
+```
+include=<column1,column2,...>
+exclude=<column1,column2,...>
+```
+
+- `<column1, column2, ...>` specifies the columns or fields to be included or excluded.
+- Multiple columns can be separated by commas.
+- `include=name,age` includes only the "name" and "age" columns in the results.
+
+### `start` and `end`
+
+The `start` and `end` parameters allow you to filter the data based on a specific date range.
+
+```
+start=<start_date>
+end=<end_date>
+```
+
+- `<start_date>` and `<end_date>` represent the start and end dates of the desired date range.
+- The dates must be in a format compatible with the data being queried.
+- The data will be filtered to include dates greater than or equal to `<start_date>` and less than or equal to `<end_date>`.
+- `start=2022-01-01&end=2022-12-31` filters the results to include data from January 1, 2022 to December 31, 2022.
