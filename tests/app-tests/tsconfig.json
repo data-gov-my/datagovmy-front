@@ -1,0 +1,4 @@
+{
+  "extends": "tsconfig/playwright.json",
+  "exclude": ["node_modules", ".turbo", "playwright-re[pr"]
+}

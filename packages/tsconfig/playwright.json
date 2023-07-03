@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Playwright",
+  "extends": "./base.json",
+  "exclude": ["node_modules", ".turbo", "playwright-report", "test-results"]
+}

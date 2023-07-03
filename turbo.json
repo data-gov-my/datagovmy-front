@@ -17,6 +17,10 @@
       ],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
+    "e2e:dev": {},
+    "e2e:prod": {
+      "dependsOn": ["^build"]
+    },
     "lint": {
       "outputs": []
     },
