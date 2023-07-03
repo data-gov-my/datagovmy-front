@@ -83,7 +83,7 @@
   }
 
   .btn-dropdown {
-    @apply bg-default btn-border btn-disabled relative flex gap-1.5 pl-3 pr-7 text-sm shadow-sm outline-none;
+    @apply bg-default btn-border btn-disabled relative flex gap-1.5 pl-3 pr-7 text-start text-sm shadow-sm outline-none;
   }
 
   .text-link {
