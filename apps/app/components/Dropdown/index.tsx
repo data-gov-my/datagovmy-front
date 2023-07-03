@@ -258,9 +258,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               {enableSearch && (
                 <Input
                   type="search"
-                  icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
+                  icon={<MagnifyingGlassIcon className="h-4 w-4" />}
                   value={search}
-                  className="border-outline dark:border-washed-dark w-full rounded-b-none border-0 border-b text-sm"
+                  className="border-outline dark:border-washed-dark w-full rounded-b-none border-0 border-b text-sm dark:text-white"
                   placeholder={t("common:placeholder.search") + " ..."}
                   onChange={value => setSearch(value)}
                 />
