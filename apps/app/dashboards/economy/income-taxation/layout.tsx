@@ -38,8 +38,8 @@ const IncomeTaxationLayout: FunctionComponent<IncomeTaxationLayoutProps> = ({
     <div>
       <Progress />
       <Hero
-        background="orange"
-        category={[t("common:categories.economy"), "text-[#FF820E]"]}
+        background="gray"
+        category={[t("common:categories.economy"), "text-dim"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
