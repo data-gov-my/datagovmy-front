@@ -34,13 +34,6 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
 
   const _datasets: any = [
     {
-      type: "line",
-      label: t("total"),
-      data: stacked_bar.data[data.tab_type.value].direct_subtotal,
-      borderColor: theme === "dark" ? AKSARA_COLOR.WHITE : AKSARA_COLOR.BLACK,
-      borderWidth: 1,
-    },
-    {
       type: "bar",
       label: t("iita"),
       data: stacked_bar.data[data.tab_type.value].direct_iita,
@@ -64,6 +57,17 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
       backgroundColor: AKSARA_COLOR.DANGER_H,
       borderWidth: 1,
     },
+    ...(data.tab_index === 0
+      ? [
+          {
+            type: "line",
+            label: t("total"),
+            data: stacked_bar.data[data.tab_type.value].direct_subtotal,
+            borderColor: theme === "dark" ? AKSARA_COLOR.WHITE : AKSARA_COLOR.BLACK,
+            borderWidth: 1,
+          },
+        ]
+      : []),
   ];
   return (
     <Container className="min-h-screen">
@@ -84,6 +88,7 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
       >
         <Timeseries
           className="h-96"
+          enableLegend={true}
           data={{
             labels: stacked_bar.data[data.tab_type.value].x,
             datasets: _datasets,
@@ -92,6 +97,9 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
           unitY={data.tab_index == 0 ? "bil" : "%"}
           maxY={data.tab_index == 0 ? undefined : 100}
           interval={"year"}
+          tooltipItemSort={(a, b) => {
+            return b.datasetIndex - a.datasetIndex;
+          }}
         />
       </Section>
     </Container>
