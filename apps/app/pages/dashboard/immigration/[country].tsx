@@ -21,7 +21,11 @@ const Immigration: Page = ({
 
   return (
     <>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={t(`countries:${params.country}`).concat(" - ", t("header"))}
+        description={t("description")}
+        keywords={""}
+      />
       <ImmigrationDashboard
         choropleth={choropleth}
         countries={countries}

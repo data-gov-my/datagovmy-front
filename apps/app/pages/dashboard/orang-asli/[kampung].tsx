@@ -18,7 +18,11 @@ const OrangAsliKampung: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={village.village_data.data[0].village.concat(" - ", t("header"))}
+        description={t("description")}
+        keywords={""}
+      />
       <OrangAsliDashboard dropdown={dropdown} params={params} village={village} />
     </AnalyticsProvider>
   );
