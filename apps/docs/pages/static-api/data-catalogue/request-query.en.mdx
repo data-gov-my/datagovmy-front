@@ -31,8 +31,8 @@ value@column
 
 - This format filters the data based on an exact string match.
 - The `value` represents the desired string value within the `column`.
-- The `column` denotes the column or field to be filtered.
-- `filter=John@name` retrieves data where the value of the "name" column is "John".
+- The `column` denotes the column to be filtered.
+- Example: `filter=John@name` retrieves data where the value of the "name" column is "John".
 
 #### Range Filter
 
@@ -41,20 +41,20 @@ column[begin:end]
 ```
 
 - This format filters the data within a specified numeric range.
-- The `column` specifies the column or field to be filtered.
+- The `column` specifies the column to be filtered.
 - The `begin` and `end` values define the numeric range.
-- `filter=age[18:30]` retrieves data where the value of the `age` column falls between 18 and 30 (inclusive).
+- Example: `filter=age[18:30]` retrieves data where the value of the `age` column falls between 18 and 30 (inclusive).
 
 ### `sort`
 
 ```
-sort=<sort_val>
+sort=column@order
 ```
 
-- `<sort_val>` specifies the sorting criteria in the format `field@order`.
-- `field` represents the column or field by which to sort.
+- `column` represents the column by which to sort.
 - `order` can be either `asc` (ascending) or `desc` (descending).
-- `sort=name@asc` sorts the results by the "name" column in ascending order.
+- Nested sorting is supported by using space-separated queries, e.g. <nobr>`sort=column1@asc column2@desc`</nobr>.
+- Example: `sort=name@asc` sorts the results by the "name" column in ascending order.
 
 ### `include` and `exclude`
 
@@ -63,9 +63,9 @@ include=<column1,column2,...>
 exclude=<column1,column2,...>
 ```
 
-- `<column1, column2, ...>` specifies the columns or fields to be included or excluded.
+- `<column1, column2, ...>` specifies the columns to be included or excluded.
 - Multiple columns can be separated by commas.
-- `include=name,age` includes only the "name" and "age" columns in the results.
+- Example: `include=name,age` includes only the "name" and "age" columns in the results.
 
 ### `start` and `end`
 
@@ -77,4 +77,4 @@ end=<end_date>
 - `<start_date>` and `<end_date>` represent the start and end dates of the desired date range.
 - The dates must be in a format compatible with the data being queried.
 - The data will be filtered to include dates greater than or equal to `<start_date>` and less than or equal to `<end_date>`.
-- `start=2022-01-01&end=2022-12-31` filters the results to include data from January 1, 2022 to December 31, 2022.
+- Example: `start=2022-01-01&end=2022-12-31` filters the results to include data from January 1, 2022 to December 31, 2022.
