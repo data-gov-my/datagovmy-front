@@ -94,8 +94,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
   tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
-  generateLabels?: (chart: ChartJS) => LegendItem[];
-  legendOnClick?: (e: ChartEvent, legendItem: LegendItem, legend: LegendElement<"line">) => void;
+  generateLabels?: (chart: ChartJS<"line">) => LegendItem[];
   displayNumFormat?: (
     value: number,
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
@@ -136,7 +135,6 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   tooltipCallback,
   tooltipItemSort,
   generateLabels,
-  legendOnClick,
   tickXCallback,
   beginZero = false,
   minY,
@@ -190,7 +188,17 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       plugins: {
         legend: {
           display: enableLegend,
-          // onClick: Chart.defaults.plugins.legend.onClick,
+          onClick: (e, legendItem, legend) => {
+            const index = legendItem.datasetIndex as number;
+            const ci = legend.chart;
+            if (ci.isDatasetVisible(index)) {
+              ci.hide(index);
+              legendItem.hidden = true;
+            } else {
+              ci.show(index);
+              legendItem.hidden = false;
+            }
+          },
           labels: {
             usePointStyle: true,
             pointStyle: "rect",

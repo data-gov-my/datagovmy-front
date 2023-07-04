@@ -96,7 +96,8 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
                 fillStyle: dataset.backgroundColor,
                 strokeStyle: dataset.borderColor,
                 pointStyle: dataset.type === "line" ? "line" : "rect",
-                hidden: false,
+                hidden: !chart.isDatasetVisible(i),
+                datasetIndex: i,
               };
             });
           }}
