@@ -27,6 +27,9 @@ import {
   Scale,
   Tick,
   TooltipItem,
+  LegendItem,
+  ChartEvent,
+  LegendElement,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
@@ -38,7 +41,6 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
-
 export type Periods =
   | false
   | "auto"
@@ -92,6 +94,8 @@ export interface TimeseriesProps extends ChartHeaderProps {
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
   tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
+  generateLabels?: (chart: ChartJS) => LegendItem[];
+  legendOnClick?: (e: ChartEvent, legendItem: LegendItem, legend: LegendElement<"line">) => void;
   displayNumFormat?: (
     value: number,
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
@@ -131,6 +135,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   gridOffsetX = true,
   tooltipCallback,
   tooltipItemSort,
+  generateLabels,
+  legendOnClick,
   tickXCallback,
   beginZero = false,
   minY,
@@ -184,9 +190,11 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       plugins: {
         legend: {
           display: enableLegend,
+          // onClick: Chart.defaults.plugins.legend.onClick,
           labels: {
             usePointStyle: true,
             pointStyle: "rect",
+            generateLabels: generateLabels,
           },
           position: "top",
           align: "start",

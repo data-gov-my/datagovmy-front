@@ -89,6 +89,17 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, l
         <Timeseries
           className="h-96"
           enableLegend={true}
+          generateLabels={chart => {
+            return chart.data.datasets.map((dataset: any, i: number) => {
+              return {
+                text: dataset.label,
+                fillStyle: dataset.backgroundColor,
+                strokeStyle: dataset.borderColor,
+                pointStyle: dataset.type === "line" ? "line" : "rect",
+                hidden: false,
+              };
+            });
+          }}
           data={{
             labels: stacked_bar.data[data.tab_type.value].x,
             datasets: _datasets,
