@@ -7,7 +7,7 @@ However, if you find yourself needing more functionality beyond the limitations 
 
 ## Sending a Request
 
-To retrieve data from the API, you need to send an HTTP GET request to a specific endpoint. Here's an example of a request:
+To access the OpenAPI, always use the base URL https://datagovmy.app to send a HTTP GET request. When making API requests, prepend this base URL to the specific API endpoints you want to access. Here's an example of a request that returns a maximum of 3 fuel price records, using the [Data Catalogue API](/static-api/data-catalogue/overview):
 
 ```http
 GET https://datagovmy.app/catalogue?id=fuelprice&limit=3
