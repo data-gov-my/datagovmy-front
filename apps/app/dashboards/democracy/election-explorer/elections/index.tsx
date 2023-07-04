@@ -1,6 +1,5 @@
 import ElectionAnalysis from "./analysis";
 import BallotSeat from "./ballot-seat";
-import ElectionLayout from "../layout";
 import { Party, PartyResult, OverallSeat, ElectionEnum } from "../types";
 import Card from "@components/Card";
 import ImageWithFallback from "@components/ImageWithFallback";
@@ -16,19 +15,18 @@ import {
 import Label from "@components/Label";
 import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
 import { useTranslation } from "@hooks/useTranslation";
-import { BREAKPOINTS, CountryAndStates, PoliticalPartyColours } from "@lib/constants";
-import { clx } from "@lib/helpers";
+import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useContext, useMemo, useRef } from "react";
-import { WindowContext, WindowProvider } from "@hooks/useWindow";
+import { FunctionComponent, useMemo, useRef } from "react";
+import { WindowProvider } from "@hooks/useWindow";
+import FilterButton from "./filter";
 
 /**
  * Election Explorer Dashboard
@@ -62,10 +60,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
 
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
-
-  const { scroll } = useContext(WindowContext);
-  const show = useMemo(() => scroll.y > 500, [scroll.y]);
-  const { breakpoint } = useContext(WindowContext);
 
   const PANELS = [
     {
@@ -122,7 +116,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   const TOGGLE_IS_DUN = data.toggle_index === ElectionEnum.Dun;
   const TOGGLE_IS_PARLIMEN = data.toggle_index === ElectionEnum.Parlimen;
   const NON_SE_STATE = ["mys", "kul", "lbn", "pjy"];
-  const TABLE_LENGTH = breakpoint < BREAKPOINTS.LG ? 5 : 10;
 
   const GE_OPTIONS: Array<OptionType> = selection["mys"]
     .map((election: Record<string, any>) => ({
@@ -173,80 +166,67 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
         <h4 className="text-center">{t("header_1")}</h4>
 
         {/* Mobile */}
-        <div className={clx(show ? "fixed right-3 top-[116px] z-20 lg:hidden" : "hidden")}>
-          <Modal
-            trigger={open => (
-              <Button
-                variant="dropdown"
-                onClick={open}
-                className="shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
-              >
-                <span>{t("filter")}:</span>
-                <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
-                  <p className="text-center text-white">3</p>
-                </div>
-                <ChevronDownIcon
-                  className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5"
-                  aria-hidden="true"
+        <Modal
+          trigger={open => (
+            <WindowProvider>
+              <FilterButton onClick={open} />
+            </WindowProvider>
+          )}
+          title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
+        >
+          {close => (
+            <div className="flex-grow space-y-4 overflow-y-auto px-3 pb-[100px] pt-4">
+              <Label label={t("election") + ":"} className="text-sm" />
+              <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
+                <List
+                  options={PANELS.map(item => item.name)}
+                  icons={PANELS.map(item => item.icon)}
+                  current={data.toggle_index}
+                  onChange={handleElectionTab}
                 />
-              </Button>
-            )}
-            title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
-          >
-            {close => (
-              <div className="flex-grow space-y-4 overflow-y-auto pb-[100px] pt-4">
-                <Label label={t("election") + ":"} className="text-sm" />
-                <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
-                  <List
-                    options={PANELS.map(item => item.name)}
-                    icons={PANELS.map(item => item.icon)}
-                    current={data.toggle_index}
-                    onChange={handleElectionTab}
-                  />
-                </div>
-                <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
-                  <Label label={t("state") + ":"} className="text-sm" />
-                  <Label label={t("election_year") + ":"} className="text-sm" />
-                  <StateDropdown
-                    currentState={data.state}
-                    onChange={selected => {
-                      navigateToElection(data.election, selected.value);
-                      setData("state", selected.value);
-                      TOGGLE_IS_DUN && setData("election", null);
-                    }}
-                    exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
-                    width="w-full"
-                    anchor="left-0 bottom-10"
-                  />
-                  <Dropdown
-                    width="w-full"
-                    anchor="right-0 bottom-10"
-                    placeholder={t("select_election")}
-                    options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
-                    selected={
-                      TOGGLE_IS_PARLIMEN
-                        ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
-                        : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
-                    }
-                    disabled={!data.state}
-                    onChange={selected => {
-                      setData("election", selected.value);
-                      navigateToElection(selected.value, data.state);
-                    }}
-                  />
-                </div>
-                <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
-                  <Button variant="primary" className="w-full justify-center" onClick={close}>
-                    {t("apply_filters")}
-                  </Button>
-                  <Button className="btn w-full justify-center" onClick={close}>
-                    {t("common:common.close")}
-                  </Button>
-                </div>
               </div>
-            )}
-          </Modal>
-        </div>
+              <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
+                <Label label={t("state") + ":"} className="text-sm" />
+                <Label label={t("election_year") + ":"} className="text-sm" />
+                <StateDropdown
+                  currentState={data.state}
+                  onChange={selected => {
+                    navigateToElection(data.election, selected.value);
+                    setData("state", selected.value);
+                    TOGGLE_IS_DUN && setData("election", null);
+                  }}
+                  exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
+                  width="w-full"
+                  anchor="left-0 bottom-10"
+                />
+                <Dropdown
+                  width="w-full"
+                  anchor="right-0 bottom-10"
+                  placeholder={t("select_election")}
+                  options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
+                  selected={
+                    TOGGLE_IS_PARLIMEN
+                      ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
+                      : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
+                  }
+                  disabled={!data.state}
+                  onChange={selected => {
+                    setData("election", selected.value);
+                    navigateToElection(selected.value, data.state);
+                  }}
+                />
+              </div>
+              <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
+                <Button className="btn-primary w-full justify-center" onClick={close}>
+                  {t("apply_filters")}
+                </Button>
+                <Button className="btn w-full justify-center" onClick={close}>
+                  {t("common:common.close")}
+                </Button>
+              </div>
+            </div>
+          )}
+        </Modal>
 
         {/* Desktop */}
         <div
@@ -327,29 +307,26 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                     >
                       <Panel name={t("table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
                         <>
-                          <WindowProvider>
-                            <ElectionTable
-                              isLoading={false}
-                              data={data.showFullTable ? table : table.slice(0, TABLE_LENGTH)}
-                              columns={generateSchema<Party>([
-                                {
-                                  key: "party",
-                                  id: "party",
-                                  header: t("party_name"),
-                                },
-                                {
-                                  key: "seats",
-                                  id: "seats",
-                                  header: t("seats_won"),
-                                },
-                                { key: "votes", id: "votes", header: t("votes_won") },
-                              ])}
-                            />
-                          </WindowProvider>
+                          <ElectionTable
+                            isLoading={false}
+                            data={data.showFullTable ? table : table.slice(0, 10)}
+                            columns={generateSchema<Party>([
+                              {
+                                key: "party",
+                                id: "party",
+                                header: t("party_name"),
+                              },
+                              {
+                                key: "seats",
+                                id: "seats",
+                                header: t("seats_won"),
+                              },
+                              { key: "votes", id: "votes", header: t("votes_won") },
+                            ])}
+                          />
                           {data.showFullTable !== true && (
                             <Button
-                              variant="default"
-                              className="mx-auto mt-6"
+                              className="btn-border btn-default mx-auto mt-6"
                               onClick={() => setData("showFullTable", true)}
                             >
                               {t("show_more")}

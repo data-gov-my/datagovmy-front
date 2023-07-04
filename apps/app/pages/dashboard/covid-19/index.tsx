@@ -1,14 +1,15 @@
-import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
 import COVID19Dashboard from "@dashboards/healthcare/covid-19";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { routes } from "@lib/routes";
-import type { Page } from "@lib/types";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { routes } from "@lib/routes";
+import type { Page } from "@lib/types";
+import { InferGetStaticPropsType, GetStaticProps } from "next";
 
 const COVID19: Page = ({
   meta,
@@ -37,13 +38,15 @@ const COVID19: Page = ({
 };
 
 COVID19.layout = page => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={<StateDropdown url={routes.COVID_19} currentState={"mys"} hideOnScroll />}
-  >
-    <StateModal state="mys" url={routes.COVID_19} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={<StateDropdown url={routes.COVID_19} currentState={"mys"} hideOnScroll />}
+    >
+      <StateModal state="mys" url={routes.COVID_19} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", async () => {

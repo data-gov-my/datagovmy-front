@@ -11,6 +11,7 @@ import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const BloodDonationState: Page = ({
   meta,
@@ -61,28 +62,30 @@ const BloodDonationState: Page = ({
 };
 
 BloodDonationState.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          url={routes.BLOOD_DONATION}
+          currentState={props.params.state}
+          exclude={["pjy", "pls", "lbn"]}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal
+        state={props.params.state}
         url={routes.BLOOD_DONATION}
-        currentState={props.params.state}
         exclude={["pjy", "pls", "lbn"]}
-        hideOnScroll
       />
-    }
-  >
-    <StateModal
-      state={props.params.state}
-      url={routes.BLOOD_DONATION}
-      exclude={["pjy", "pls", "lbn"]}
-    />
-    {page}
-  </Layout>
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 // Build at runtime
-export const getStaticPaths: GetStaticPaths = async ctx => {
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
     fallback: "blocking",

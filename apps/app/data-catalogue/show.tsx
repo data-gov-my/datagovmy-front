@@ -26,6 +26,7 @@ import Image from "next/image";
 import CatalogueCode from "./partials/code";
 import { useAnalytics } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
+import { WindowProvider } from "@hooks/useWindow";
 
 /**
  * Catalogue Show
@@ -169,13 +170,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "HBAR":
       case "STACKED_BAR":
         return (
-          <CatalogueBar
-            config={config}
-            dataset={dataset}
-            urls={urls}
-            translations={translations}
-            onDownload={prop => setDownloads(prop)}
-          />
+          <WindowProvider>
+            <CatalogueBar
+              config={config}
+              dataset={dataset}
+              urls={urls}
+              translations={translations}
+              onDownload={prop => setDownloads(prop)}
+            />
+          </WindowProvider>
         );
       case "PYRAMID":
         return (

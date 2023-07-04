@@ -1,11 +1,12 @@
-import Fonts from "@config/font";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import Fonts from "@config/font";
 import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
 import ElectionTriviaDashboard from "@dashboards/democracy/election-explorer/trivia";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { STATES } from "@lib/constants";
+import { CountryAndStates, STATES } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -24,7 +25,11 @@ const ElectionTriviaState: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
+        description={t("description")}
+        keywords={""}
+      />
       <ElectionLayout last_updated={last_updated}>
         <ElectionTriviaDashboard
           dun_bar={dun_bar}
@@ -38,38 +43,40 @@ const ElectionTriviaState: Page = ({
 };
 
 ElectionTriviaState.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown
-        url={routes.ELECTION_EXPLORER.concat("/trivia")}
-        currentState={props.params.state}
-        hideOnScroll
-      />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.ELECTION_EXPLORER.concat("/trivia")} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          url={routes.ELECTION_EXPLORER.concat("/trivia")}
+          currentState={props.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.ELECTION_EXPLORER.concat("/trivia")} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  let paths: Array<any> = [];
-  STATES.forEach(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
+  // let paths: Array<any> = [];
+  // STATES.forEach(state => {
+  //   paths = paths.concat([
+  //     {
+  //       params: {
+  //         state: state.key,
+  //       },
+  //     },
+  //     {
+  //       params: {
+  //         state: state.key,
+  //       },
+  //       locale: "ms-MY",
+  //     },
+  //   ]);
+  // });
   return {
     paths: [],
     fallback: "blocking",

@@ -10,6 +10,7 @@ import { useTranslation } from "next-i18next";
 import { withi18n } from "@lib/decorators";
 import Fonts from "@config/font";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const COVID19State: Page = ({
   meta,
@@ -41,18 +42,20 @@ const COVID19State: Page = ({
 };
 
 COVID19State.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown url={routes.COVID_19} currentState={props?.params.state} hideOnScroll />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.COVID_19} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown url={routes.COVID_19} currentState={props?.params.state} hideOnScroll />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.COVID_19} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async ctx => {
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
     fallback: "blocking",
