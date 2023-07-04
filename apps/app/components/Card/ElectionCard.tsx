@@ -1,17 +1,7 @@
-import { Fragment, ReactElement, useState } from "react";
 import { Button } from "..";
+import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
 import Font from "@config/font";
-import {
-  ArrowsPointingOutIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  XMarkIcon,
-} from "@heroicons/react/20/solid";
-import { useTranslation } from "@hooks/useTranslation";
-import { Dialog, Transition } from "@headlessui/react";
-import { clx, numFormat, slugify, toDate } from "@lib/helpers";
-import { useData } from "@hooks/useData";
 import type {
   BaseResult,
   Candidate,
@@ -19,7 +9,13 @@ import type {
   PartyResult,
   Seat,
 } from "@dashboards/democracy/election-explorer/types";
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
+import { Dialog, Transition } from "@headlessui/react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useData } from "@hooks/useData";
+import { useTranslation } from "@hooks/useTranslation";
+import { clx, numFormat, slugify, toDate } from "@lib/helpers";
+import { Fragment, ReactElement, useState } from "react";
 
 export type Result<T> = {
   data: T;
@@ -55,7 +51,6 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
   const { data, setData } = useData({
     index: page,
     result: [],
-
     loading: false,
   });
   const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
@@ -64,23 +59,21 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
 
   return (
     <>
-      <div className="flex items-center justify-center">
-        <button
-          className="text-dim flex flex-row items-center text-sm font-medium hover:text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 dark:hover:text-white"
-          onClick={() => {
-            setData("loading", true);
-            setShow(true);
-            onChange(defaultParams).then(item => {
-              if (!item) return;
-              setData("result", item);
-              setData("loading", false);
-            });
-          }}
-        >
-          <ArrowsPointingOutIcon className="h-4 w-4 " />
-          <p className="whitespace-nowrap pl-1.5 font-normal">{t("full_result")}</p>
-        </button>
-      </div>
+      <Button
+        className="btn text-dim hover:text-black dark:hover:text-white"
+        onClick={() => {
+          setData("loading", true);
+          setShow(true);
+          onChange(defaultParams).then(item => {
+            if (!item) return;
+            setData("result", item);
+            setData("loading", false);
+          });
+        }}
+      >
+        <ArrowsPointingOutIcon className="h-4.5 w-4.5" />
+        <p className="whitespace-nowrap font-normal">{t("full_result")}</p>
+      </Button>
 
       <Transition show={show} as={Fragment}>
         <Dialog as="div" className="relative z-30" onClose={() => setShow(false)}>
@@ -110,7 +103,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                 <Dialog.Panel
                   className={clx(
                     Font.body.variable,
-                    "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform rounded-xl border bg-white px-3 py-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black md:px-6"
+                    "border-outline dark:border-outlineHover-dark shadow-floating w-full max-w-4xl transform rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
                   )}
                 >
                   <Dialog.Title
@@ -119,7 +112,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                   >
                     {title && typeof title === "string" ? <h5>{title}</h5> : title}
                     <button
-                      className="hover:bg-washed dark:hover:bg-washed-dark md:top-6.5 group absolute right-3 top-5 h-8 w-8 rounded-full md:right-6"
+                      className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-6 top-6 h-8 w-8 rounded-full"
                       onClick={() => setShow(false)}
                     >
                       <XMarkIcon className="text-dim mx-auto h-6 w-6" />
@@ -192,12 +185,12 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                         </div>
                       </div>
                     )}
-                    {options && (
+                    {options.length > 1 && (
                       <div className="space-y-3">
                         {options && options?.length <= 10 && (
                           <div className="flex flex-row items-center justify-center gap-1.5">
                             {options?.map((option, index) => (
-                              <button
+                              <Button
                                 key={index}
                                 onClick={() =>
                                   onChange(option).then(item => {
@@ -219,8 +212,8 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                         )}
                         {options.length > 1 && (
                           <div className="flex items-center justify-center gap-4 text-sm font-medium">
-                            <button
-                              className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
+                            <Button
+                              className="btn-disabled btn-default"
                               onClick={() =>
                                 onChange(options[data.index - 1]).then(item => {
                                   if (!item) return;
@@ -230,23 +223,16 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                               }
                               disabled={data.index === 0}
                             >
-                              <ChevronLeftIcon
-                                className={clx(
-                                  "h-4.5 w-4.5",
-                                  data.index === 0
-                                    ? "text-outlineHover dark:text-outlineHover-dark"
-                                    : "text-black dark:text-white"
-                                )}
-                              />
+                              <ChevronLeftIcon className="h-4.5 w-4.5" />
                               {t("common:common.previous")}
-                            </button>
+                            </Button>
                             {options.length > 10 && (
                               <span className="flex items-center gap-1 text-center text-sm">
                                 {`${data.index + 1} / ${options.length}`}
                               </span>
                             )}
-                            <button
-                              className="disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark group flex flex-row items-center gap-2 rounded border px-3 py-1.5 disabled:pointer-events-none disabled:cursor-not-allowed dark:border-none"
+                            <Button
+                              className="btn-disabled btn-default"
                               onClick={() =>
                                 onChange(options[data.index + 1]).then(item => {
                                   if (!item) return;
@@ -257,15 +243,8 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                               disabled={data.index === options.length - 1}
                             >
                               {t("common:common.next")}
-                              <ChevronRightIcon
-                                className={clx(
-                                  "h-4.5 w-4.5",
-                                  data.index === options.length - 1
-                                    ? "text-outlineHover dark:text-outlineHover-dark"
-                                    : "text-black dark:text-white"
-                                )}
-                              />
-                            </button>
+                              <ChevronRightIcon className="h-4.5 w-4.5" />
+                            </Button>
                           </div>
                         )}
                       </div>

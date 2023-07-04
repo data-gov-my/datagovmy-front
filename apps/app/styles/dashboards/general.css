@@ -59,7 +59,7 @@
 }
 
 .tooltip .tooltip-left {
-  @apply invisible absolute bottom-[125%] z-10 hidden w-max max-w-[200px] transform rounded-md bg-black p-3 text-sm text-white shadow-[0_12px_24px_rgba(0,0,0,0.1)] md:inline-block;
+  @apply shadow-floating invisible absolute bottom-[125%] z-10 hidden w-max max-w-[200px] transform rounded-md bg-black p-3 text-sm text-white md:inline-block;
 }
 
 @media only screen and (min-width: 768px) {

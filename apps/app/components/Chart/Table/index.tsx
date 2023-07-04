@@ -165,6 +165,7 @@ const Table: FunctionComponent<TableProps> = ({
   );
 
   const calcStickyLeft = (cellId: string) => {
+    // FIXME: document.getElementById returns null when page is turned
     const ele = document.getElementById(cellId)?.previousElementSibling;
     return ele !== undefined && ele !== null ? ele.clientWidth : 0;
   };
@@ -321,18 +322,11 @@ const Table: FunctionComponent<TableProps> = ({
           className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium ${className}`}
         >
           <Button
-            variant="default"
+            className="btn-disabled btn-default"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <ChevronLeftIcon
-              className={clx(
-                "h-4 w-4",
-                !table.getCanPreviousPage()
-                  ? "text-outlineHover dark:text-outlineHover-dark"
-                  : "text-black dark:text-white"
-              )}
-            />
+            <ChevronLeftIcon className="h-4.5 w-4.5" />
             {t("common:common.previous")}
           </Button>
 
@@ -343,19 +337,12 @@ const Table: FunctionComponent<TableProps> = ({
             })}
           </span>
           <Button
-            variant="default"
+            className="btn-disabled btn-default"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             {t("common:common.next")}
-            <ChevronRightIcon
-              className={clx(
-                "h-4 w-4",
-                !table.getCanNextPage()
-                  ? "text-outlineHover dark:text-outlineHover-dark"
-                  : "text-black dark:text-white"
-              )}
-            />
+            <ChevronRightIcon className="h-4.5 w-4.5" />
           </Button>
         </div>
       )}

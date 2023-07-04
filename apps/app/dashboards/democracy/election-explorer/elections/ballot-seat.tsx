@@ -345,7 +345,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                 </div>
               }
               right={
-                <div className="hidden h-full w-full space-y-8 overflow-y-auto rounded-r-xl bg-white p-8 dark:bg-black lg:block">
+                <div className="hidden h-[600px] w-full space-y-8 overflow-y-auto rounded-r-xl bg-white p-8 dark:bg-black lg:block">
                   {data.seat_result.data.length > 0 && election ? <BallotCard /> : <></>}
                 </div>
               }

@@ -74,13 +74,22 @@ const Home: Page = ({
         description={[t("common:home.description"), "text-dim"]}
         action={
           <div className="flex flex-wrap gap-3">
-            <At className="btn btn-primary text-sm" href="/dashboard" enableIcon>
+            <At className="btn-primary shadow-button text-sm" href="/dashboard" enableIcon>
               {t("common:nav.dashboards")}
             </At>
-            <At className="btn btn-default text-sm" href="/data-catalogue" enableIcon>
+            <At
+              className="btn btn-border active:bg-washed shadow-button bg-white px-3 py-1.5 text-sm text-black"
+              href="/data-catalogue"
+              enableIcon
+            >
               {t("common:nav.catalogue")}
             </At>
-            <At className="btn text-sm" href="https://developer.data.gov.my" enableIcon external>
+            <At
+              className="btn px-3 py-1.5 text-sm"
+              href="https://developer.data.gov.my"
+              enableIcon
+              external
+            >
               {t("common:nav.api_docs")}
             </At>
           </div>

@@ -1,6 +1,17 @@
-import type { OptionType } from "@components/types";
-import { default as Image } from "next/image";
+import Input from "@components/Input";
 import { default as Label, LabelProps } from "@components/Label";
+import type { OptionType } from "@components/types";
+import { Listbox, Transition } from "@headlessui/react";
+import {
+  CheckCircleIcon,
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
+import { clx } from "@lib/helpers";
+import { matchSorter } from "match-sorter";
+import { useTranslation } from "next-i18next";
+import { default as Image } from "next/image";
 import {
   Fragment,
   FunctionComponent,
@@ -10,18 +21,7 @@ import {
   useRef,
   CSSProperties,
 } from "react";
-import { Listbox, Transition } from "@headlessui/react";
-import {
-  CheckCircleIcon,
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from "@heroicons/react/20/solid";
-import Input from "@components/Input";
-import { useTranslation } from "next-i18next";
-import { clx } from "@lib/helpers";
 import { FixedSizeList } from "react-window";
-import { matchSorter } from "match-sorter";
 
 type CommonProps = {
   className?: string;
@@ -58,7 +58,7 @@ type ConditionalProps =
 type DropdownProps = CommonProps & ConditionalProps & LabelProps;
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
-  className = "lg:flex-row",
+  className = "",
   disabled = false,
   multiple = false,
   icon,
@@ -189,7 +189,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         <div className="relative text-sm">
           <Listbox.Button
             className={clx(
-              "btn btn-dropdown flex items-center",
+              "btn-default btn-disabled",
               className,
               width,
               darkMode &&
@@ -218,23 +218,18 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* Label */}
-              <span className="block w-full truncate lg:w-auto">
+              <span className="flex flex-grow truncate">
                 {multiple ? title : (selected as OptionType)?.label || placeholder || "Select"}
               </span>
               {/* Label (multiple) */}
               {multiple && (selected as OptionType[])?.length > 0 && (
-                <span className="dark:bg-primary-dark rounded-md bg-black px-1 py-0.5 text-xs text-white ">
+                <span className="dark:bg-primary-dark bg-primary w-4.5 h-5 rounded-md text-center text-white">
                   {selected && (selected as OptionType[]).length}
                 </span>
               )}
 
               {/* ChevronDown Icon */}
-              <span className="absolute inset-y-0 right-3 flex items-center">
-                <ChevronDownIcon
-                  className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark -mx-[5px] h-5 w-5"
-                  aria-hidden="true"
-                />
-              </span>
+              <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
             </>
           </Listbox.Button>
           <Transition
@@ -246,7 +241,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
             <Listbox.Options
               ref={optionsRef}
               className={clx(
-                "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md text-black shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+                "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 min-w-full rounded-md text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
                 darkMode ? "border-washed-dark border bg-black" : "bg-white"
               )}

@@ -20,7 +20,7 @@ const Modal: FunctionComponent<ModalProps> = ({ trigger, title, children }) => {
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 pt-[15%]">
-          <div className={clx("block h-full lg:p-4")}>
+          <div className="block h-full">
             <Dialog.Panel
               className={clx(
                 Font.body.variable,
@@ -29,7 +29,7 @@ const Modal: FunctionComponent<ModalProps> = ({ trigger, title, children }) => {
             >
               <div className="relative">
                 <div className="dark:border-outlineHover-dark sticky top-0 flex w-full justify-between border-b p-3">
-                  <Dialog.Title as="p">{title}</Dialog.Title>
+                  <Dialog.Title as="h5">{title}</Dialog.Title>
                   <XMarkIcon
                     onClick={() => setOpen(false)}
                     className="text-dim h-5 w-5 self-center"

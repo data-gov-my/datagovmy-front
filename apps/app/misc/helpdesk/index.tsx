@@ -211,7 +211,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
                     </div>
                   </div>
                   <Button
-                    className="btn btn-primary w-full justify-center"
+                    className="btn-primary w-full justify-center"
                     onClick={() =>
                       validate()
                         .then((resp: any) => {
