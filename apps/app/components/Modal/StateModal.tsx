@@ -34,7 +34,7 @@ const StateModal: FunctionComponent<StateModalProps> = ({ state, exclude, url, t
       trigger={open => (
         <button
           className={clx(
-            "border-outline dark:border-outlineHover-dark fixed bottom-0 right-4 z-30 flex h-14 w-14 transform items-center justify-center rounded-full border bg-inherit shadow-2xl transition-all lg:hidden",
+            "border-outline dark:border-outlineHover-dark fixed bottom-0 right-4 z-30 flex h-14 w-14 transform items-center justify-center rounded-full border bg-white shadow-2xl transition-all dark:bg-black lg:hidden",
             show ? "-translate-y-4" : "translate-y-12"
           )}
           onClick={() => open()}
