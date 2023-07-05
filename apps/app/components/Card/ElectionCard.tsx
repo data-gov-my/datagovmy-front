@@ -1,4 +1,5 @@
 import { Button } from "..";
+import { ResultBadge } from "@components/Badge/election";
 import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
 import Font from "@config/font";
@@ -15,7 +16,7 @@ import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx, numFormat, slugify, toDate } from "@lib/helpers";
-import { Fragment, ReactElement, useState } from "react";
+import { Fragment, useState } from "react";
 
 export type Result<T> = {
   data: T;
@@ -31,8 +32,6 @@ interface ElectionCardProps<T extends Candidate | Party | Seat> {
   onChange: (option: T) => Promise<Result<BaseResult[] | PartyResult>>;
   options: Array<T>;
   columns?: any;
-  title?: string | ReactElement;
-  subtitle?: boolean;
   highlighted?: string;
   page: number;
 }
@@ -42,14 +41,17 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
   onChange,
   options,
   columns,
-  title,
-  subtitle = false,
   highlighted,
   page,
 }: ElectionCardProps<T>) => {
   const [show, setShow] = useState<boolean>(false);
   const { data, setData } = useData({
     index: page,
+    area: "",
+    badge: "",
+    date: "",
+    election_name: "",
+    state: "",
     result: [],
     loading: false,
   });
@@ -57,6 +59,21 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
 
   if (options.length <= 0) return <></>;
 
+  const isCandidate = typeof options[0] === "object" && "result" in options[0];
+  const isParty = typeof options[0] === "object" && "seats" in options[0] && "state" in options[0];
+
+  const getData = (obj: Candidate | Party | Seat) => {
+    setData("date", toDate(obj.date, "dd MMM yyyy", i18n.language));
+    setData("election_name", obj.election_name.slice(-5));
+    if ("seat" in obj) {
+      const matches = obj.seat.split(",");
+      setData("area", matches[0]);
+      setData("state", matches[1]);
+    }
+    if ("result" in obj) {
+      setData("badge", obj.result);
+    }
+  };
   return (
     <>
       <Button
@@ -64,6 +81,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
         onClick={() => {
           setData("loading", true);
           setShow(true);
+          getData(options[data.index]);
           onChange(defaultParams).then(item => {
             if (!item) return;
             setData("result", item);
@@ -106,29 +124,30 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                     "border-outline dark:border-outlineHover-dark shadow-floating w-full max-w-4xl transform rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
                   )}
                 >
+                  <button
+                    className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-4 top-[22px] h-8 w-8 rounded-full"
+                    onClick={() => setShow(false)}
+                  >
+                    <XMarkIcon className="text-dim mx-auto h-6 w-6" />
+                  </button>
+
                   <Dialog.Title
                     as="div"
-                    className="flex w-full flex-row items-center justify-between text-lg"
+                    className="flex w-full items-center justify-between pr-8 text-lg uppercase"
                   >
-                    {title && typeof title === "string" ? <h5>{title}</h5> : title}
-                    <button
-                      className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-6 top-6 h-8 w-8 rounded-full"
-                      onClick={() => setShow(false)}
-                    >
-                      <XMarkIcon className="text-dim mx-auto h-6 w-6" />
-                    </button>
+                    <div className="flex flex-wrap gap-x-2">
+                      <h5>{isParty ? t(data.election_name) : data.area}</h5>
+                      <span className="text-dim">{isParty ? data.date : data.state}</span>
+                    </div>
+                    {isCandidate && <ResultBadge value={data.badge} />}
                   </Dialog.Title>
 
                   <div className="space-y-6 text-base">
-                    <div className="space-x-3 pt-2">
-                      {subtitle && (
+                    <div className="space-x-3 pt-3">
+                      {!isParty && (
                         <>
-                          <span className="uppercase">
-                            {t(options[data.index]?.election_name.slice(-5))}
-                          </span>
-                          <span className="text-dim">
-                            {toDate(options[data.index]?.date, "dd MMM yyyy", i18n.language)}
-                          </span>
+                          <span className="uppercase">{t(data.election_name)}</span>
+                          <span className="text-dim">{data.date}</span>
                         </>
                       )}
                     </div>
@@ -197,6 +216,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                                     if (!item) return;
                                     setData("index", index);
                                     setData("result", item);
+                                    getData(options[index]);
                                   })
                                 }
                                 disabled={index === data.index}
@@ -218,6 +238,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                                 onChange(options[data.index - 1]).then(item => {
                                   if (!item) return;
                                   setData("index", data.index - 1);
+                                  getData(options[data.index - 1]);
                                   setData("result", item);
                                 })
                               }
@@ -238,6 +259,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                                   if (!item) return;
                                   setData("index", data.index + 1);
                                   setData("result", item);
+                                  getData(options[data.index + 1]);
                                 })
                               }
                               disabled={data.index === options.length - 1}
