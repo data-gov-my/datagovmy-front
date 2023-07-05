@@ -1,10 +1,14 @@
-## Throttling rate
+## Had Pengehadan
 
-If too many requests are sent and exceeds the limit, subsequent requests will fail and you will start receiving 429 errors in your requests.
-The following table shows what the throttling rate is for OpenAPI:
-| API | API Key | Throttling limit |
-|----------------|---------|------------------------|
-| Data Catalogue | No | 4 requests per minute |
-| Data Catalogue | Yes | 10 requests per minute |
-| GTFS-Static | No | 4 requests per minute |
-| GTFS-Static | Yes | 10 requests per minute |
+Untuk memastikan penggunaan yang adil dan menjaga prestasi sistem, OpenAPI memperkenalkan had pengehadan pada bilangan permintaan yang boleh dibuat dalam jangka masa tertentu. Jika had tersebut dilanggar, permintaan seterusnya akan gagal, dan anda akan menerima ralat `429 Too Many Requests` dalam respons anda.
+
+Jadual berikut menghuraikan had pengehadan untuk API yang berbeza dalam OpenAPI:
+
+| API            | API Token Diperlukan | Had Pengehadan                    |
+| -------------- | -------------------- | --------------------------------- |
+| Data Catalogue | Tidak                | 4 permintaan sebanyak satu minit  |
+| Data Catalogue | Ya                   | 10 permintaan sebanyak satu minit |
+| GTFS-Static    | Tidak                | 4 permintaan sebanyak satu minit  |
+| GTFS-Static    | Ya                   | 10 permintaan sebanyak satu minit |
+
+Sila ambil perhatian bahawa had pengehadan berbeza bergantung kepada sama ada anda menggunakan token API atau tidak. Jika anda merancang untuk melampaui had pengehadan tanpa menggunakan token API, kami mengesyorkan agar anda [meminta token API](/overview/authentication).

@@ -43,13 +43,16 @@ GET .../catalogue?id=fuelprice&filter=level@series_type
 ### Syntax
 ?filter=<column>[<begin>:<end>]
 
-### Example
+### Example - between 0 (inclusive) and 1 (inclusive)
 GET .../catalogue?id=fuelprice&filter=ron95[0:1]
+
+### Example - between lowest possible ron95 value and 1 (inclusive)
+GET .../catalogue?id=fuelprice&filter=ron95[:1]
 ```
 
 - This format filters the data within a specified numeric range.
-- The `<column>` specifies the column to be filtered.
-- The `<begin>` and `<end>` values define the numeric range.
+- `<column>` (required): Specifies the column to be filtered.
+- `<begin>` and `<end>` (optional): Define the numeric range. Both values are inclusive. If `<begin>` and `<end>` are not provided, the lowest or highest possible values will be used instead.
 
 ### `limit`
 

@@ -1,5 +1,31 @@
-# Authentication
+## Permintaan Token API
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae iusto quam natus eum molestias
-impedit, magnam error harum quos vitae illum quidem, quod modi doloremque iste adipisci nam corrupti
-quo?
+Walaupun akses kepada OpenAPI tidak memerlukan token API, kami menyediakan pilihan untuk meminta token jika anda merancang untuk mencapai had penggunaan atau memerlukan penggunaan yang lebih tinggi. Untuk meminta token API, sila ikuti langkah-langkah berikut:
+
+1. Hantar emel kepada [token@dtsa.gov.my](...) dengan butiran berikut:
+
+   - Nama anda
+   - Alamat emel anda
+   - Sebab untuk meminta had penggunaan yang ditingkatkan
+
+2. Pasukan kami akan meninjau permintaan anda dan menilainya secara individu.
+
+3. Jika permintaan anda diluluskan, anda akan menerima token API melalui emel.
+
+Meminta token API membolehkan kami memastikan penggunaan yang adil dan mencegah penyalahgunaan, sambil memberikan anda sumber yang diperlukan untuk memenuhi keperluan aplikasi anda.
+
+## Menggunakan Token API Anda
+
+Setelah anda memperoleh token API, anda perlu menyertakannya dalam permintaan API anda untuk mengesahkan dan mendapatkan akses kepada had penggunaan yang ditingkatkan. Ikuti langkah-langkah berikut untuk menyertakan token API anda dalam permintaan HTTP:
+
+1. Tambahkan tajuk berikut dalam permintaan anda:
+
+   ```
+   Authorization: Bearer <TOKEN_ANDA_DI_SINI>
+   ```
+
+   Gantikan `<TOKEN_ANDA_DI_SINI>` dengan token sebenar yang anda terima.
+
+2. Hantar permintaan HTTP anda dengan tajuk `Authorization` yang ditambahkan.
+
+Dengan menyertakan token API dalam tajuk `Authorization`, anda memastikan bahawa permintaan anda dikenal pasti dan mempunyai keistimewaan yang diperlukan untuk mengakses OpenAPI dengan had penggunaan yang ditingkatkan.
