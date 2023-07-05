@@ -75,7 +75,7 @@ const ComboBox: FunctionComponent<ComboBoxProps> = ({
         <div className="flex w-full items-center">
           {enableFlag ? (
             <div className="flex w-full flex-row gap-2">
-              <div className="flex h-auto max-h-8 w-8 justify-center self-center">
+              <div className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
                 <ImageWithFallback
                   className="border-outline dark:border-outlineHover-dark rounded border"
                   src={`${imageSource}${option.value}.png`}
