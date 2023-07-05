@@ -590,7 +590,7 @@ export const KWAPIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns LHDNIcon
  */
-export const LHDNIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const LHDNIcon: FunctionComponent<IconProps> = ({ className, fillColor }) => {
   return (
     <svg
       width="32"
@@ -601,7 +601,7 @@ export const LHDNIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1288_13737)">
-        <circle cx="16" cy="16" r="16" fill="#FF820E" />
+        <circle cx="16" cy="16" r="16" fill={fillColor ?? "#FF820E"} />
         <path
           fillRule="evenodd"
           clipRule="evenodd"
