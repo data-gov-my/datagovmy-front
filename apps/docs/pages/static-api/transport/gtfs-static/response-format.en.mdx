@@ -14,21 +14,19 @@ After sending an API request, you will receive a response with the following cod
 
 ### Valid Response
 
-When you make a successful request to the Data Catalogue API, you will receive a response with a status code of `200`. Here is the structure of the response format:
+When making a successful request to the GTFS Static API, you will receive a response with a status code of `200`. The response format depends on the specific API request query and can include the following formats:
 
-```JSON
-{
-    meta: {...},
-    data: {...}
-}
-```
+1. **GTFS ZIP Format**: If you request the complete GTFS static data without specifying a particular GTFS type, the API will return the full GTFS dataset in ZIP format. This ZIP file contains a collection of text files representing different aspects of transit information.
 
-- `meta` - This field indicates lightweight meta information about the requested resource.
-- `data` - This field represents the requested resource, which may include additional information based on the provided query parameters.
+2. **Individual .txt Files**: When querying a specific GTFS type, such as `/gtfs/<gtfs_type>?download=true`, the API will return the corresponding text file in the GTFS dataset. Each GTFS type has its own file, containing relevant information for that specific aspect of public transportation data.
+
+3. **JSON Format**: By default, or when specifying certain query parameters, the API can also return the GTFS data in JSON format. This provides a structured representation of the data, making it easier to parse and work with programmatically.
+
+Please refer to [Request Query](/static-api/transport/gtfs-static/request-query) section for more details on how to construct the API request for the desired return format.
 
 ### Error Response
 
-In case of an error, the Data Catalogue API will return an error response in JSON format. The error response will contain the following elements:
+In case of an error, the GTFS Static API will return an error response in JSON format. The error response will contain the following elements:
 
 ```json
 {
