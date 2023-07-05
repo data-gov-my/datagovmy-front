@@ -13,7 +13,11 @@ GET .../gtfs
 ### Available GTFS Static Types
 
 ```http
+### Syntax
 GET .../gtfs/<gtfs_type>
+
+### Example
+GET .../gtfs/agency
 ```
 
 The API supports the following GTFS data types:
@@ -28,35 +32,36 @@ The API supports the following GTFS data types:
 | stops       | Information about transit stops                  |
 | trips       | Specific trips with associated route information |
 
-For example, to retrieve information about transit agencies, you can use the following query:
-
-```http
-GET .../gtfs/agency
-```
-
 ## Query Parameters
+
+The following parameters are only applicable to the `/gtfs/<gtfs_type>` endpoint, please remember to specify the `<gtfs_type>` in your request.
 
 ### `download`
 
-To control the format of the returned data, you can include the `download` parameter in your query.
-
 ```http
-GET .../gtfs/<gtfs_type>?download=true
+### Syntax
+?download=<bool>
+
+### Example (.txt format)
+GET .../gtfs/agency?download=true
+
+### Example (JSON format)
+GET .../gtfs/agency?download=false
+GET .../gtfs/agency
 ```
 
-- This query will provide a download link for the GTFS data in its original .txt format.
-
-```http
-GET .../gtfs/<gtfs_type>?download=false
-GET .../gtfs/<gtfs_type>
-```
-
-- By default, or when `download` is set to false, the data will be returned in JSON format.
+- To control the format of the returned data, you can include the `download` parameter in your query.
+- if `download` is set to true, GTFS data is returned in its original .txt format.
+- By default, or when `download` is set to false, the GTFS data will be returned in JSON format.
 
 ### `area`
 
 ```http
-GET .../gtfs/<gtfs_type>?area=<state>
+### Syntax
+?area=<state>
+
+### Example
+GET .../gtfs/agency?area=jhr
 ```
 
 - To filter the GTFS data based on a specific state, you can include the `area` parameter in your query.
@@ -66,7 +71,11 @@ GET .../gtfs/<gtfs_type>?area=<state>
 ### Filtering by Fields
 
 ```http
-GET .../gtfs/<gtfs_type>?<field>=<value>
+### Example
+?<field>=<value>
+
+### Example
+GET .../gtfs/agency?agency_name=CWL
 ```
 
 Refer to the table below for the available fields for each GTFS type:

@@ -1,5 +1,3 @@
 {
-  "overview": "Overview",
-  "request-query": "Pertanyaan Permintaan",
-  "response-format": "Format Respons"
+  "gtfs-static": "GTFS Static API"
 }
