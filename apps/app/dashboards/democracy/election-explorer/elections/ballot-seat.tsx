@@ -194,9 +194,9 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
       <div className="space-y-8 overflow-y-auto">
         <div className="flex items-start gap-4 lg:items-center">
           <div className="space-y-3">
-            <div className="mr-6 flex flex-wrap gap-x-3">
+            <div className="mr-6 flex flex-wrap gap-x-3 uppercase">
               <h5>{seat_info.area}</h5>
-              <p className="text-dim text-lg uppercase">{seat_info.state}</p>
+              <p className="text-dim text-lg">{seat_info.state}</p>
             </div>
             <div className="flex flex-wrap items-center gap-x-3">
               <p>{t(`${seat_info.name.slice(-5)}`)}</p>
