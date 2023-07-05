@@ -57,23 +57,7 @@ OrganDonationState.layout = (page, props) => (
   </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  //   let paths: Array<any> = [];
-  //   STATES.forEach(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

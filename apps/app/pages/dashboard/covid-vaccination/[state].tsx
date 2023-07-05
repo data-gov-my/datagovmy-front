@@ -4,7 +4,7 @@ import CovidVaccinationDashboard from "@dashboards/healthcare/covid-vaccination"
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { WindowProvider } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { CountryAndStates, STATES } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -63,23 +63,7 @@ CovidVaccinationState.layout = (page, props) => (
   </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async ctx => {
-  //   let paths: Array<any> = [];
-  //   STATES.filter(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

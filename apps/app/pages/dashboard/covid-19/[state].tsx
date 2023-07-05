@@ -55,7 +55,7 @@ COVID19State.layout = (page, props) => (
   </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

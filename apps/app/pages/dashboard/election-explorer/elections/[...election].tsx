@@ -40,7 +40,7 @@ const ElectionExplorer: Page = ({
  * election - required - eg. GE-15, GE-14
  * state    - optional - eg. mlk,nsn,jhr
  */
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

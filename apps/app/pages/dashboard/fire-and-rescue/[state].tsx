@@ -5,7 +5,7 @@ import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
 import { WindowProvider } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { CountryAndStates, STATES } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -55,23 +55,7 @@ FireandRescueState.layout = (page, props) => (
   </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  // let paths: Array<any> = [];
-  // STATES.forEach(state => {
-  //   paths = paths.concat([
-  //     {
-  //       params: {
-  //         state: state.key,
-  //       },
-  //     },
-  //     {
-  //       params: {
-  //         state: state.key,
-  //       },
-  //       locale: "ms-MY",
-  //     },
-  //   ]);
-  // });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",
