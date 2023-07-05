@@ -285,7 +285,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               {enableClear && (
                 <button
                   onClick={() => (multiple ? onChange([]) : onChange(undefined))}
-                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-2 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark dark:border-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-2 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={Array.isArray(selected) && selected.length === 0}
                 >
                   <p>{t("common:common.clear")}</p>

@@ -74,14 +74,17 @@ const HelpdeskDashboard: FunctionComponent = () => {
 
   return (
     <>
-      <Container background="bg-gradient-radial from-[#E2E8F0] to-background dark:from-[#3F3F46] dark:to-black">
+      <Container
+        background="bg-gradient-radial from-outline to-background dark:from-washed-dark dark:to-black"
+        className="dark:border-outlineHover-dark border-b"
+      >
         <div className="mx-auto flex h-[170px] flex-col space-y-3 py-12">
           <h2 className="text-center text-black">{t("header")}</h2>
           <p className="text-dim text-center">{t("description")}</p>
         </div>
       </Container>
       <Container className="min-h-screen">
-        <Section title={<h4 className="mx-auto flex">{t("faq")}</h4>}>
+        <Section title={<h4 className="mx-auto flex text-center">{t("faq")}</h4>}>
           <div className="flex w-full flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-10">
             <div className="flex w-full flex-col gap-3 lg:col-span-4 lg:col-start-2">
               <h5 className="mx-auto flex text-center font-bold">{t("general")}</h5>

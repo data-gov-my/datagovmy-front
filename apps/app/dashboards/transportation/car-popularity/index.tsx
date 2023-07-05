@@ -151,7 +151,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
 
             <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12">
               <table className="lg:col-span-4 lg:col-start-3">
-                <thead className="border-b-2">
+                <thead className="dark:border-washed-dark border-b-2">
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
                     <th className="px-1 py-2 text-start text-sm font-medium">
@@ -167,7 +167,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                     (item: { maker: string; model: string; vehicles: number }, i: number) => (
                       <tr
                         key={i}
-                        className={"border-b".concat(
+                        className={"dark:border-washed-dark border-b".concat(
                           i < 3 ? " bg-background dark:bg-background-dark" : ""
                         )}
                       >
@@ -191,7 +191,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
               </table>
 
               <table className="lg:col-span-4 lg:col-start-7">
-                <thead className="border-b-2">
+                <thead className="dark:border-washed-dark border-b-2">
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
                     <th className="px-1 py-2 text-start text-sm font-medium">
@@ -206,7 +206,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                   {data.topMakers.map((item: { maker: string; vehicles: number }, i: number) => (
                     <tr
                       key={i}
-                      className={"border-b".concat(
+                      className={"dark:border-washed-dark border-b".concat(
                         i < 3 ? " bg-background dark:bg-background-dark" : ""
                       )}
                     >

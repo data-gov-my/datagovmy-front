@@ -28,7 +28,7 @@ const Modal: FunctionComponent<ModalProps> = ({ trigger, title, children }) => {
               )}
             >
               <div className="relative">
-                <div className="dark:border-outlineHover-dark sticky top-0 flex w-full justify-between border-b p-3">
+                <div className="dark:border-washed-dark sticky top-0 flex w-full justify-between border-b p-3">
                   <Dialog.Title as="h5">{title}</Dialog.Title>
                   <XMarkIcon
                     onClick={() => setOpen(false)}

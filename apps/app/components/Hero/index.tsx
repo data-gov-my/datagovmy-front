@@ -64,67 +64,65 @@ const Hero: FunctionComponent<HeroProps> = ({
   }, [background]);
 
   return (
-    <>
-      <Container
-        background={background_style.concat(" border-b dark:border-washed-dark")}
-        className={clx("relative", className)}
-      >
-        <div className="sticky inset-x-0 top-14 z-20 -ml-3 flex md:hidden">{agencyBadge}</div>
-        {children ? (
-          children
-        ) : (
-          <>
-            <div className="space-y-6 py-12 xl:w-full">
-              {(category || agencyBadge) && (
-                <div className="relative flex justify-between">
-                  <div className="hidden md:absolute md:right-0 md:top-0 md:block">
-                    {agencyBadge}
-                  </div>
-                  {category && (
-                    <span className={clx("text-base font-semibold uppercase", category[1])}>
-                      {t(category[0])}
-                    </span>
-                  )}
-                </div>
-              )}
+    <Container
+      background={clx(background_style, "border-b dark:border-washed-dark")}
+      className={clx("relative", className)}
+    >
+      {children ? (
+        children
+      ) : (
+        <div>
+          {agencyBadge && (
+            <div className="sticky inset-x-0 top-14 z-20 -ml-3 flex md:hidden">{agencyBadge}</div>
+          )}
+          <div className="space-y-6 py-12 xl:w-full">
+            {(category || agencyBadge) && (
+              <div className="relative flex justify-between">
+                <div className="hidden md:absolute md:right-0 md:top-0 md:block">{agencyBadge}</div>
+                {category && (
+                  <span className={clx("text-base font-semibold uppercase", category[1])}>
+                    {t(category[0])}
+                  </span>
+                )}
+              </div>
+            )}
 
-              {(header || description || result?.all_time_view) && (
-                <div className="space-y-3">
-                  {header && <h2 className={clx("text-black", header[1])}>{header[0]}</h2>}
+            {(header || description || result?.all_time_view) && (
+              <div className="space-y-3">
+                {header && <h2 className={clx("text-black", header[1])}>{header[0]}</h2>}
 
-                  {description && Array.isArray(description) ? (
-                    <p className={clx("text-dim xl:w-2/3", description[1])}>{description[0]}</p>
-                  ) : (
-                    description
-                  )}
-                  {result?.all_time_view && (
-                    <p className="text-dim flex gap-2 text-sm">
-                      <EyeIcon className="w-4.5 h-4.5 self-center" />
-                      {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
-                        count: result.all_time_view,
-                      })}`}
-                    </p>
-                  )}
-                </div>
-              )}
+                {description && Array.isArray(description) ? (
+                  <p className={clx("text-dim xl:w-2/3", description[1])}>{description[0]}</p>
+                ) : (
+                  description
+                )}
+                {result?.all_time_view && (
+                  <p className="text-dim flex gap-2 text-sm">
+                    <EyeIcon className="w-4.5 h-4.5 self-center" />
+                    {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
+                      count: result.all_time_view,
+                    })}`}
+                  </p>
+                )}
+              </div>
+            )}
 
-              {(action || last_updated) && (
-                <div className="space-y-3">
-                  {action}
-                  {last_updated && (
-                    <p className="text-dim text-sm">
-                      {t("common:common.last_updated", {
-                        date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-                      })}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </Container>
-    </>
+            {(action || last_updated) && (
+              <div className="space-y-3">
+                {action}
+                {last_updated && (
+                  <p className="text-dim text-sm">
+                    {t("common:common.last_updated", {
+                      date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
+                    })}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </Container>
   );
 };
 

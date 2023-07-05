@@ -160,7 +160,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   };
 
   return (
-    <Container className="min-h-fit">
+    <Container>
       {/* Explore any election from Merdeka to the present! */}
       <Section>
         <h4 className="text-center">{t("header_1")}</h4>
@@ -269,142 +269,142 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             disabled={!data.state}
           />
         </div>
-        <Section>
-          <Tabs
-            hidden
-            current={data.toggle_index}
-            onChange={index => setData("toggle_index", index)}
-          >
-            {PANELS.map((panel, index) => (
-              <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
-                <div className="xl:grid xl:grid-cols-12">
-                  <div className="flex flex-col gap-y-3 xl:col-span-10 xl:col-start-2">
-                    <div className="flex flex-col items-baseline justify-between gap-y-3 sm:flex-row md:gap-y-0">
-                      <h5 className="w-fit">
-                        {t("election_of", {
-                          context: ELECTION_ACRONYM.startsWith("G") ? "parlimen" : "dun",
-                        })}
-                        <span className="text-primary">{CountryAndStates[CURRENT_STATE]}</span>
-                        <span>: </span>
-                        <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
-                      </h5>
-                      <div className="flex w-full justify-start sm:w-auto">
-                        <List
-                          options={[t("table"), t("map"), t("summary")]}
-                          icons={[
-                            <TableCellsIcon key="table_cell_icon" className="mr-1 h-5 w-5" />,
-                            <MapIcon key="map_icon" className="mr-1 h-5 w-5" />,
-                          ]}
-                          current={data.tab_index}
-                          onChange={index => 0} //setData("tab_index", index)}
-                        />
-                      </div>
-                    </div>
-                    <Tabs
-                      hidden
-                      current={data.tab_index}
-                      onChange={index => setData("tab_index", index)}
-                    >
-                      <Panel name={t("table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
-                        <>
-                          <ElectionTable
-                            isLoading={false}
-                            data={data.showFullTable ? table : table.slice(0, 10)}
-                            columns={generateSchema<Party>([
-                              {
-                                key: "party",
-                                id: "party",
-                                header: t("party_name"),
-                              },
-                              {
-                                key: "seats",
-                                id: "seats",
-                                header: t("seats_won"),
-                              },
-                              { key: "votes", id: "votes", header: t("votes_won") },
-                            ])}
-                          />
-                          {data.showFullTable !== true && (
-                            <Button
-                              className="btn-border btn-default mx-auto mt-6"
-                              onClick={() => setData("showFullTable", true)}
-                            >
-                              {t("show_more")}
-                            </Button>
-                          )}
-                        </>
-                      </Panel>
-                      <Panel name={t("map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
-                        <Card className="bg-background dark:bg-background-dark static xl:py-4">
-                          <Choropleth
-                            className="h-[400px] w-auto lg:h-[500px]"
-                            type={ELECTION_ACRONYM.startsWith("S") ? "dun" : "parlimen"}
-                          />
-                        </Card>
-                      </Panel>
-                      <Panel name={t("summary")}>
-                        <div className="space-y-6">
-                          <p className="text-center text-sm font-medium">{t("simple_majority")}</p>
-                          <div className="relative h-12 w-full">
-                            <Waffle
-                              className="h-[50px] min-h-max w-full"
-                              fillDirection={"left"}
-                              data={waffleDummy}
-                              margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
-                              total={222}
-                              rows={3}
-                              cols={74}
-                              color={waffleColours}
-                            />
-                            <hr className="border-background-dark absolute inset-x-1/2 -top-3 h-[72px] w-0 border border-dashed dark:border-white"></hr>
-                          </div>
-                          <div className="text-dim flex flex-row flex-wrap items-center justify-center gap-6">
-                            {waffleDummy.map(({ label, value }) => (
-                              <div className="flex flex-row items-center gap-1" key={label}>
-                                {label === "Others" ? (
-                                  <div className="bg-dim h-4 w-4 rounded-md"></div>
-                                ) : (
-                                  <ImageWithFallback
-                                    className="border-outline dark:border-outlineHover-dark rounded border"
-                                    src={`/static/images/parties/${label}.png`}
-                                    width={32}
-                                    height={18}
-                                    alt={t(`${label}`)}
-                                  />
-                                )}
-                                <span
-                                  className="uppercase"
-                                  style={{ color: PoliticalPartyColours[label] }}
-                                >
-                                  {label}
-                                </span>
-                                <span
-                                  className="font-bold"
-                                  style={{ color: PoliticalPartyColours[label] }}
-                                >
-                                  {value}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                          <p className="text-dim whitespace-pre-line text-center text-sm">
-                            {t("explore")}
-                          </p>
-                        </div>
-                      </Panel>
-                    </Tabs>
-                  </div>
-                </div>
-              </Tabs.Panel>
-            ))}
-          </Tabs>
-        </Section>
-        {/* View the full ballot for a specific seat */}
-        <BallotSeat seats={seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
 
-        {/* Election analysis */}
-        <ElectionAnalysis state={CURRENT_STATE} index={data.toggle_index} seats={seats} />
+        <Tabs
+          className="mt-8 lg:mt-12"
+          hidden
+          current={data.toggle_index}
+          onChange={index => setData("toggle_index", index)}
+        >
+          {PANELS.map((panel, index) => (
+            <Tabs.Panel name={panel.name as string} icon={panel.icon} key={index}>
+              <div className="xl:grid xl:grid-cols-12">
+                <div className="flex flex-col gap-y-3 xl:col-span-10 xl:col-start-2">
+                  <div className="flex flex-col items-baseline justify-between gap-y-3 sm:flex-row md:gap-y-0">
+                    <h5 className="w-fit">
+                      {t("election_of", {
+                        context: ELECTION_ACRONYM.startsWith("G") ? "parlimen" : "dun",
+                      })}
+                      <span className="text-primary">{CountryAndStates[CURRENT_STATE]}</span>
+                      <span>: </span>
+                      <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
+                    </h5>
+                    <div className="flex w-full justify-start sm:w-auto">
+                      <List
+                        options={[t("table"), t("map"), t("summary")]}
+                        icons={[
+                          <TableCellsIcon key="table_cell_icon" className="mr-1 h-5 w-5" />,
+                          <MapIcon key="map_icon" className="mr-1 h-5 w-5" />,
+                        ]}
+                        current={data.tab_index}
+                        onChange={index => 0} //setData("tab_index", index)}
+                      />
+                    </div>
+                  </div>
+                  <Tabs
+                    hidden
+                    current={data.tab_index}
+                    onChange={index => setData("tab_index", index)}
+                  >
+                    <Panel name={t("table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
+                      <>
+                        <ElectionTable
+                          isLoading={false}
+                          data={data.showFullTable ? table : table.slice(0, 10)}
+                          columns={generateSchema<Party>([
+                            {
+                              key: "party",
+                              id: "party",
+                              header: t("party_name"),
+                            },
+                            {
+                              key: "seats",
+                              id: "seats",
+                              header: t("seats_won"),
+                            },
+                            { key: "votes", id: "votes", header: t("votes_won") },
+                          ])}
+                        />
+                        {data.showFullTable !== true && (
+                          <Button
+                            className="btn-border btn-default mx-auto mt-6"
+                            onClick={() => setData("showFullTable", true)}
+                          >
+                            {t("show_more")}
+                          </Button>
+                        )}
+                      </>
+                    </Panel>
+                    <Panel name={t("map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>
+                      <Card className="bg-background dark:bg-background-dark static xl:py-4">
+                        <Choropleth
+                          className="h-[400px] w-auto lg:h-[500px]"
+                          type={ELECTION_ACRONYM.startsWith("S") ? "dun" : "parlimen"}
+                        />
+                      </Card>
+                    </Panel>
+                    <Panel name={t("summary")}>
+                      <div className="space-y-6">
+                        <p className="text-center text-sm font-medium">{t("simple_majority")}</p>
+                        <div className="relative h-12 w-full">
+                          <Waffle
+                            className="h-[50px] min-h-max w-full"
+                            fillDirection={"left"}
+                            data={waffleDummy}
+                            margin={{ top: 0, right: 0, bottom: 0, left: 2 }}
+                            total={222}
+                            rows={3}
+                            cols={74}
+                            color={waffleColours}
+                          />
+                          <hr className="border-background-dark absolute inset-x-1/2 -top-3 h-[72px] w-0 border border-dashed dark:border-white"></hr>
+                        </div>
+                        <div className="text-dim flex flex-row flex-wrap items-center justify-center gap-6">
+                          {waffleDummy.map(({ label, value }) => (
+                            <div className="flex flex-row items-center gap-1" key={label}>
+                              {label === "Others" ? (
+                                <div className="bg-dim h-4 w-4 rounded-md"></div>
+                              ) : (
+                                <ImageWithFallback
+                                  className="border-outline dark:border-outlineHover-dark rounded border"
+                                  src={`/static/images/parties/${label}.png`}
+                                  width={32}
+                                  height={18}
+                                  alt={t(`${label}`)}
+                                />
+                              )}
+                              <span
+                                className="uppercase"
+                                style={{ color: PoliticalPartyColours[label] }}
+                              >
+                                {label}
+                              </span>
+                              <span
+                                className="font-bold"
+                                style={{ color: PoliticalPartyColours[label] }}
+                              >
+                                {value}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-dim whitespace-pre-line text-center text-sm">
+                          {t("explore")}
+                        </p>
+                      </div>
+                    </Panel>
+                  </Tabs>
+                </div>
+              </div>
+            </Tabs.Panel>
+          ))}
+        </Tabs>
       </Section>
+      {/* View the full ballot for a specific seat */}
+      <BallotSeat seats={seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
+
+      {/* Election analysis */}
+      <ElectionAnalysis state={CURRENT_STATE} index={data.toggle_index} seats={seats} />
     </Container>
   );
 };
