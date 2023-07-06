@@ -200,7 +200,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                         <div className="grow">
                           {CountryAndStates[choropleth.data[data.filter].x[pos]]}
                         </div>
-                        <div className="font-bold text-green-500">
+                        <div className="font-bold">
                           {data.filter.startsWith("absolute")
                             ? `${numFormat(choropleth.data[data.filter].y.value[pos], "standard")}`
                             : `${numFormat(
@@ -218,7 +218,7 @@ const IPR: FunctionComponent<IPRProps> = ({
             right={
               <Choropleth
                 className="h-[400px] w-auto rounded-b lg:h-[600px]"
-                color="greens"
+                color="greys"
                 data={{
                   labels: choropleth.data[data.filter].x.map(
                     (state: string) => CountryAndStates[state]

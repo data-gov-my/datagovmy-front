@@ -67,8 +67,8 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
       case "name":
         return highlightedRows.includes(+cell.row.id) ? (
           <>
-            {value}
-            <span className="inline-flex translate-y-0.5 pl-1">
+            <span className="pr-1">{value}</span>
+            <span className="inline-flex translate-y-0.5">
               <ResultBadge hidden value={cell.row.original.result} />
             </span>
           </>

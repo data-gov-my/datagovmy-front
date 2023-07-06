@@ -1,10 +1,12 @@
-import Fonts from "@config/font";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import Fonts from "@config/font";
 import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
 import ElectionTriviaDashboard from "@dashboards/democracy/election-explorer/trivia";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
 import { get } from "@lib/api";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
@@ -37,24 +39,26 @@ const ElectionTrivia: Page = ({
 };
 
 ElectionTrivia.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          url={routes.ELECTION_EXPLORER.concat("/trivia")}
+          currentState={props.params.state}
+          exclude={["kul", "lbn", "pjy"]}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal
+        state={props.params.state}
         url={routes.ELECTION_EXPLORER.concat("/trivia")}
-        currentState={props.params.state}
         exclude={["kul", "lbn", "pjy"]}
-        hideOnScroll
       />
-    }
-  >
-    <StateModal
-      state={props.params.state}
-      url={routes.ELECTION_EXPLORER.concat("/trivia")}
-      exclude={["kul", "lbn", "pjy"]}
-    />
-    {page}
-  </Layout>
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {

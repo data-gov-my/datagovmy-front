@@ -33,7 +33,7 @@ const ElectionParties: Page = ({
  * party - required - Barisan Nasional
  * state - optional - eg. mlk,nsn,jhr
  */
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

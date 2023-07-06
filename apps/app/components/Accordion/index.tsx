@@ -24,9 +24,8 @@ const Accordion: FunctionComponent<AccordionProps> = ({
           <Disclosure.Button as="div">
             <div
               className={clx(
-                open ? "rounded-none" : "rounded-b-xl",
-                "hover:bg-washed dark:hover:bg-washed-dark cursor-pointer rounded-t-xl p-4 shadow",
-                "border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark border",
+                open ? "rounded-none" : "shadow-button rounded-b-xl",
+                "btn-default btn-border cursor-pointer rounded-t-xl p-4",
                 width,
                 className
               )}
@@ -49,7 +48,7 @@ const Accordion: FunctionComponent<AccordionProps> = ({
             <Disclosure.Panel>
               <div
                 className={clx(
-                  "text-dim border-outline dark:border-washed-dark rounded-b-xl border border-t-0 p-4 font-normal shadow",
+                  "text-dim border-outline dark:border-washed-dark shadow-button rounded-b-xl border border-t-0 p-4 font-normal",
                   width
                 )}
               >

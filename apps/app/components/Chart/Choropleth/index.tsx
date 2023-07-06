@@ -1,15 +1,15 @@
-import { ChartHeaderProps, default as ChartHeader } from "@components/Chart/ChartHeader";
 import { Chart as ChartJS } from "chart.js";
 import { ChoroplethController, GeoFeature, ColorScale, ProjectionScale } from "chartjs-chart-geo";
-import { ForwardedRef, FunctionComponent, useEffect, useState } from "react";
-import { Chart } from "react-chartjs-2";
-
+import { ChartHeaderProps, default as ChartHeader } from "@components/Chart/ChartHeader";
 // import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import { clx, numFormat } from "@lib/helpers";
-import type { ChartCrosshairOption, Geotype } from "@lib/types";
 import type { FeatureCollection } from "geojson";
 import type { Color } from "@hooks/useColor";
+import { clx, numFormat } from "@lib/helpers";
+import type { ChartCrosshairOption, Geotype } from "@lib/types";
+import { useTheme } from "next-themes";
+import { Chart } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { ForwardedRef, FunctionComponent, useEffect, useState } from "react";
 
 /**
  *Choropleth component
@@ -70,11 +70,11 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
 
     fetchMaps();
   }, [type]);
-
+  const { theme } = useTheme();
   const options: ChartCrosshairOption<"choropleth"> = {
     elements: {
       geoFeature: {
-        outlineBorderColor: "black",
+        outlineBorderColor: theme === "light" ? "black" : "white",
       },
     },
     maintainAspectRatio: false,

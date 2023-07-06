@@ -222,7 +222,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
               </div>
               <div className="lg:w-2/3">
                 <MapPlot
-                  className="h-[400px] rounded-xl shadow lg:w-full"
+                  className="shadow-button h-[400px] rounded-xl lg:w-full"
                   tileTheme="terrain"
                   position={[village_info.lat, village_info.lon]}
                   zoom={13}

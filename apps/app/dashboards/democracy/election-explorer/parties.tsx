@@ -71,7 +71,6 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
       cell: ({ row, getValue }) => {
         const selection = data.tab_index === 0 ? elections.parlimen : elections.dun;
         const item = getValue() as Party;
-
         return (
           <ElectionCard
             defaultParams={item}
@@ -93,14 +92,6 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 header: t("votes_won"),
               },
             ])}
-            title={
-              <div className="flex flex-row gap-2 uppercase">
-                <h5>{t(item.election_name)}</h5>
-                <h5 className="text-dim font-normal">
-                  {toDate(item.date, "dd MMM yyyy", i18n.language)}
-                </h5>
-              </div>
-            }
             options={selection}
             highlighted={params.party_name}
             page={row.index}
@@ -169,14 +160,14 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
   };
 
   return (
-    <Container className="min-h-fit">
+    <Container>
       <Section>
         <div className="xl:grid xl:grid-cols-12">
           <div className="xl:col-span-10 xl:col-start-2">
             {/* Explore any party's entire electoral history */}
             <h4 className="text-center">{t("party.header")}</h4>
             <div className="py-6">
-              <div className="mx-auto w-full px-6 sm:w-[400px]">
+              <div className="mx-auto w-full px-6 sm:w-[500px]">
                 <ComboBox
                   placeholder={t("party.search_party")}
                   options={PARTY_OPTIONS}

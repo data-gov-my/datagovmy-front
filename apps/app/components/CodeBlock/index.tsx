@@ -1,4 +1,3 @@
-import Button from "@components/Button";
 import Dropdown from "@components/Dropdown";
 import { DocumentDuplicateIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
 import { FunctionComponent, useState } from "react";
@@ -51,13 +50,10 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, event }) => {
           onChange={e => setLanguage(e)}
           width="w-min"
         />
-        <Button
-          className="text-dim hover:bg-washed/10 text-sm"
-          icon={<DocumentDuplicateIcon className="h-4 w-4" />}
-          onClick={handleCopy}
-        >
+        <button className="btn text-dim hover:bg-washed/10 px-3 py-1.5" onClick={handleCopy}>
+          <DocumentDuplicateIcon className="h-4 w-4" />
           {copyText}
-        </Button>
+        </button>
       </div>
       <div className="p-4.5 text-xs">
         <code

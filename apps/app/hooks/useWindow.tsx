@@ -2,7 +2,7 @@ import throttle from "lodash/throttle";
 import { FunctionComponent, ReactNode, createContext, useEffect, useState } from "react";
 
 interface WindowContextProps {
-  breakpoint: number;
+  windowWidth: number;
   scroll: {
     x: number;
     y: number;
@@ -14,20 +14,23 @@ interface WindowProviderProps {
 }
 
 export const WindowContext = createContext<WindowContextProps>({
-  breakpoint: 1536,
+  windowWidth: 1536,
   scroll: {
     x: 0,
     y: 0,
   },
 });
 
+/**
+ * Note: Re-renders Table on Scroll
+ */
 export const WindowProvider: FunctionComponent<WindowProviderProps> = ({ children }) => {
-  const [breakpoint, setBreakpoint] = useState<WindowContextProps["breakpoint"]>(1536);
+  const [windowWidth, setWindowWidth] = useState<WindowContextProps["windowWidth"]>(1536);
   const [scroll, setScroll] = useState<WindowContextProps["scroll"]>({ x: 0, y: 0 });
 
   useEffect(() => {
     function handleResize() {
-      setBreakpoint(window.innerWidth);
+      setWindowWidth(window.innerWidth);
     }
     const handleScroll = throttle(() => {
       setScroll({ x: window.scrollX, y: window.scrollY });
@@ -42,5 +45,7 @@ export const WindowProvider: FunctionComponent<WindowProviderProps> = ({ childre
     };
   }, []);
 
-  return <WindowContext.Provider value={{ breakpoint, scroll }}>{children}</WindowContext.Provider>;
+  return (
+    <WindowContext.Provider value={{ windowWidth, scroll }}>{children}</WindowContext.Provider>
+  );
 };

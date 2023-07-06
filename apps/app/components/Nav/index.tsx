@@ -101,7 +101,7 @@ const Nav: NavFunctionComponent = ({ children, stateSelector }) => {
       {/* Mobile - Menu */}
       <div
         className={clx(
-          "dark:divide-washed-dark fixed left-0 top-[57px] flex w-full flex-col gap-0 divide-y bg-white px-4 py-2 shadow-lg backdrop-blur-md dark:bg-black/80 lg:hidden lg:gap-1 lg:divide-y-0 lg:p-1",
+          "dark:divide-washed-dark shadow-floating fixed left-0 top-[57px] flex w-full flex-col gap-0 divide-y bg-white px-4 py-2 backdrop-blur-md dark:bg-black/80 lg:hidden lg:gap-1 lg:divide-y-0 lg:p-1",
           showMobile ? "flex" : "hidden"
         )}
       >

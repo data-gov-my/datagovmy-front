@@ -50,29 +50,27 @@
 
 @layer components {
   .btn {
-    @apply rounded-md border border-transparent px-3 py-1.5 font-medium transition;
+    @apply flex select-none items-center gap-1.5 rounded-md border border-transparent text-start text-sm font-medium outline-none transition;
   }
 
   .btn-primary {
-    @apply from-primary hover:to-primary bg-gradient-to-t to-[#3E7AFF] text-white hover:shadow;
+    @apply btn from-primary to-primary-dark shadow-button bg-gradient-to-t px-3 py-1.5 text-white hover:to-[#5B8EFF];
   }
 
   .btn-primary svg {
     @apply fill-white;
   }
 
-  .btn-default {
-    @apply border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark dark:active:bg-washed-dark bg-white text-black dark:active:text-white;
+  .btn-ghost {
+    @apply btn hover:bg-washed dark:hover:bg-washed-dark px-3 py-1.5;
   }
 
-  .bg-default {
-    @apply active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark
-    bg-white text-black dark:bg-black dark:text-white;
+  .btn-default {
+    @apply btn btn-border active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark bg-white px-3 py-1.5 dark:bg-black;
   }
 
   .btn-border {
-    @apply border-outline dark:border-washed-dark 
-    hover:border-outlineHover hover:dark:border-outlineHover-dark border;
+    @apply border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark;
   }
 
   .btn-disabled {
@@ -80,10 +78,6 @@
     disabled:border-outline dark:disabled:border-washed-dark 
     disabled:text-outlineHover dark:disabled:text-outlineHover-dark 
     disabled:pointer-events-none disabled:cursor-not-allowed;
-  }
-
-  .btn-dropdown {
-    @apply bg-default btn-border btn-disabled relative flex gap-1.5 pl-3 pr-7 text-sm shadow-sm outline-none;
   }
 
   .text-link {

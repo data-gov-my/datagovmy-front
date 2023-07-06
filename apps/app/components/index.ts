@@ -16,6 +16,7 @@ export { default as Error } from "./Error";
 export { default as Hero } from "./Hero";
 export { default as ImageWithFallback } from "./ImageWithFallback";
 export { default as Input } from "./Input";
+export { default as Label } from "./Label";
 export { default as Layout } from "./Layout";
 export { default as LeftRightCard } from "./LeftRightCard";
 export { default as MenuDropdown } from "./MenuDropdown";
