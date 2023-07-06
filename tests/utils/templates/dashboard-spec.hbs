@@ -1,0 +1,33 @@
+import { test, expect, Page as PlaywrightPage } from "utils/playwright";
+import { DashboardPage, HeroParameters } from "@model/dashboard.js";
+
+/**
+ * Please fill this in.
+ */
+const parameters: HeroParameters = {
+  _agency: "",
+  _category: "",
+};
+
+/**
+ * Main test suite for the dashboard.
+ * @param page Playwright page context
+ * @description Note: For dashboard with children dashboards (ie. states, sekolah etc),
+ *              DO NOT place any edge-test cases in here, as it will run at every child
+ *              dashboard.
+ *
+ *              Create a separate test suite function and pass it to 'board.execute(...)'
+ *              method
+ * @example function sectionATestSuite (page: PlaywrightPage) { ... }
+ *          await board.execute(sectionATestSuite)
+ */
+const mainTestSuite = (page: PlaywrightPage) => {};
+
+test("{{ dashCase test_name }}", async ({ page }) => {
+  const board = new DashboardPage(page, "/dashboard/{{ dashCase test_name }}");
+  await board.goto();
+  await board.validateHero(parameters);
+  await board.execute(mainTestSuite);
+});
+
+{{> states_tests}}

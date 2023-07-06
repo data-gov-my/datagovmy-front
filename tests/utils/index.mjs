@@ -1,5 +1,5 @@
-const http = require("http");
-const { exec } = require("child_process");
+import http from "http";
+import { exec } from "child_process";
 
 /**
  * Builds target project (caches after) and run E2E tests.
@@ -12,7 +12,7 @@ const { exec } = require("child_process");
  * @example yarn e2e:prod --filter=app=test
  */
 
-const testProduction = (project, port) => {
+export const testProduction = (project, port) => {
   function clog(text) {
     console.log(`[${project}] ${text}`);
   }
@@ -41,7 +41,7 @@ const testProduction = (project, port) => {
  * @example yarn e2e:dev --filter=app=test
  */
 
-const testDevelopment = (project, port) => {
+export const testDevelopment = (project, port) => {
   function clog(text) {
     console.log(`[${project}] ${text}`);
   }
@@ -84,8 +84,3 @@ async function checkUrlExists(port) {
       .end();
   });
 }
-
-module.exports = {
-  testDevelopment,
-  testProduction,
-};

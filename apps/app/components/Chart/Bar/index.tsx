@@ -19,6 +19,7 @@ import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 
 interface BarProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   layout?: "vertical" | "horizontal";
   data?: ChartData<"bar", any[], string | number>;
@@ -44,6 +45,7 @@ interface BarProps extends ChartHeaderProps {
 }
 
 const Bar: FunctionComponent<BarProps> = ({
+  id,
   className = "w-full h-full", // manage CSS here
   menu,
   title,
@@ -226,6 +228,8 @@ const Bar: FunctionComponent<BarProps> = ({
         <ChartHeader title={title} menu={menu} controls={controls} state={state} />
         <div className={className}>
           <BarCanvas
+            id={id}
+            data-testid={id || title}
             ref={_ref ?? ref}
             onClick={event => {
               if (ref?.current) {

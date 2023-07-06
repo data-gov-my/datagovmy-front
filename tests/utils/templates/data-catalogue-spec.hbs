@@ -1,0 +1,8 @@
+import { test, expect } from "utils/playwright";
+import { DashboardPage } from "@model/dashboard.js";
+
+test("{{ dashCase test_name }}", async ({ page }) => {
+  const board = new DashboardPage(page, "/dashboard/{{ dashCase test_name }}");
+  await board.goto();
+  await board.initialize();
+});

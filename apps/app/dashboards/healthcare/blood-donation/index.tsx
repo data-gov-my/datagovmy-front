@@ -10,7 +10,7 @@ import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices } from "@lib/helpers";
+import { getTopIndices, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
@@ -39,7 +39,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   barchart_variables,
   choropleth_malaysia_blood_donation,
 }) => {
-  const { t } = useTranslation(["dashboard-blood-donation", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-blood-donation", "common"]);
 
   const currentState = params.state;
 
@@ -103,6 +103,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
             {play => (
               <>
                 <Timeseries
+                  id="daily-donation"
                   className="h-[350px] w-full"
                   title={t("combine_title", {
                     state: CountryAndStates[currentState],
@@ -145,7 +146,11 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                   <h4>{t("choro_header")}</h4>
                   <span className="text-dim text-sm">
                     {t("common:common.data_of", {
-                      date: choropleth_malaysia_blood_donation.data_as_of,
+                      date: toDate(
+                        choropleth_malaysia_blood_donation.data_as_of,
+                        "dd MMM yyyy HH:mm",
+                        i18n.language
+                      ),
                     })}
                   </span>
                 </div>

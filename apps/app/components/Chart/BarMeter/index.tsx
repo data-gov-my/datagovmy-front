@@ -170,7 +170,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid={title}>
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
       <div className={clx(layout_style[layout], className)}>
         {_data?.map((item, index) => {

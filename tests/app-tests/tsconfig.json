@@ -1,4 +1,10 @@
 {
   "extends": "tsconfig/playwright.json",
-  "exclude": ["node_modules", ".turbo", "playwright-re[pr"]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@model/*": ["model/*"]
+    }
+  },
+  "exclude": ["node_modules", ".turbo", "playwright-report", "test-results"]
 }
