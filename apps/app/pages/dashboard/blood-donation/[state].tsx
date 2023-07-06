@@ -2,7 +2,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { CountryAndStates, STATES } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { get } from "@lib/api";
 import { DateTime } from "luxon";
@@ -21,7 +21,7 @@ const BloodDonationState: Page = ({
   barchart_age,
   barchart_time,
   barchart_variables,
-  choropleth_malaysia_blood_donation,
+  choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
   let vars: Record<string, any> = {};
@@ -55,7 +55,7 @@ const BloodDonationState: Page = ({
           data_as_of: barchart_variables.data_as_of,
           data: vars,
         }}
-        choropleth_malaysia_blood_donation={choropleth_malaysia_blood_donation}
+        choropleth={choropleth}
       />
     </AnalyticsProvider>
   );
@@ -118,7 +118,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         barchart_age: data.bar_chart_age,
         barchart_time: data.bar_chart_time,
         barchart_variables: data.barchart_key_variables,
-        choropleth_malaysia_blood_donation: data.choropleth_malaysia,
+        choropleth: data.choropleth_malaysia,
       },
     };
   }
