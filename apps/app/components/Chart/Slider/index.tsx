@@ -57,7 +57,6 @@ const Slider: FunctionComponent<SliderProps> = ({
   useWatch(() => {
     if (type === "single") return;
     if (timer.current) cancelTimer();
-    onChange([0, data.length - 1]);
   }, [data]);
 
   useWatch(() => {
@@ -67,35 +66,35 @@ const Slider: FunctionComponent<SliderProps> = ({
 
   if (type === "single")
     return (
-      <Root
-        className="group relative flex h-5 w-auto touch-none select-none items-center pt-10"
-        value={[minmax as number]}
-        max={data.length - 1}
-        step={step}
-        onValueChange={e => setMinmax(e)}
-        onValueCommit={(e: number[] & number) => onChange(e)}
-      >
-        <p className="text-dim w-fit pr-2 text-sm">
+      <div className={clx("flex w-full items-center gap-x-3", className)}>
+        <p className="text-dim text-sm">
           {parseAsDate ? toDate(data[0], "yyyy", i18n.language) : data[0]}
         </p>
-        <div className="group relative flex h-5 grow touch-none select-none items-center">
-          <Track className="dark:bg-washed-dark relative z-0 h-2 grow rounded-full bg-[#E2E8F0] px-3">
-            <Range className="group-focus-within:bg-primary group-hover:bg-primary dark:group-focus-within:bg-primary dark:group-hover:bg-primary absolute z-0 h-full rounded-xl bg-[#A1A1AA]" />
+        <Root
+          className="group relative flex h-5 w-full touch-none select-none items-center"
+          value={[minmax as number]}
+          max={data.length - 1}
+          step={step}
+          onValueChange={e => setMinmax(e)}
+          onValueCommit={(e: number[] & number) => onChange(e)}
+        >
+          <Track className="dark:bg-washed-dark bg-outline relative z-0 h-2 grow rounded-full">
+            <Range className="group-hover:bg-primary dark:group-hover:bg-primary absolute z-0 h-full rounded-xl bg-[#A1A1AA]" />
           </Track>
-          <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary mx-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
+          <Thumb className="group-hover:border-primary group-hover:ring-primary shadow-button block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white group-hover:ring-4">
             <SliderTooltip>
               {parseAsDate
                 ? toDate(data[minmax as number], dateFormat[period], i18n.language)
                 : data[minmax as number]}
             </SliderTooltip>
           </Thumb>
-        </div>
-        <p className="text-dim w-fit pl-2 text-sm">
+        </Root>
+        <p className="text-dim text-sm">
           {parseAsDate
             ? toDate(data[data.length - 1], "yyyy", i18n.language)
             : data[data.length - 1]}
         </p>
-      </Root>
+      </div>
     );
 
   const startTimer = () => {
@@ -119,13 +118,13 @@ const Slider: FunctionComponent<SliderProps> = ({
   };
 
   return (
-    <div className={clx("flex w-full items-center", className)}>
+    <div className={clx("flex w-full items-center gap-x-3", className)}>
       {enablePlayer && (
         <button
           type="button"
           aria-label="Play"
           title="Play"
-          className="w-fit px-2"
+          className="w-fit"
           onClick={togglePlayPause}
         >
           {play ? (
@@ -135,7 +134,9 @@ const Slider: FunctionComponent<SliderProps> = ({
           )}
         </button>
       )}
-
+      <p className="text-dim text-sm">
+        {parseAsDate ? toDate(data[0], "yyyy", i18n.language) : data[0]}
+      </p>
       <Root
         className="group relative flex h-5 w-full touch-none select-none items-center"
         value={minmax as number[]}
@@ -151,34 +152,27 @@ const Slider: FunctionComponent<SliderProps> = ({
         }}
         minStepsBetweenThumbs={1}
       >
-        <p className="text-dim w-fit text-sm">
-          {parseAsDate ? toDate(data[0], "yyyy", i18n.language) : data[0]}
-        </p>
-        <div className="group relative flex h-5 grow touch-none select-none items-center">
-          <Track className="dark:bg-washed-dark relative z-0 mx-3 h-2 grow rounded-full bg-[#E2E8F0]">
-            <Range className="group-focus-within:bg-primary group-hover:bg-primary dark:group-focus-within:bg-primary dark:group-hover:bg-primary absolute z-0 h-full rounded-xl bg-[#A1A1AA]" />
-          </Track>
-          <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary ml-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
-            <SliderTooltip play={play}>
-              {parseAsDate
-                ? toDate(data[(minmax as number[])[0]], dateFormat[period], i18n.language)
-                : data[(minmax as number[])[0]]}
-            </SliderTooltip>
-          </Thumb>
-          <Thumb className="group-focus-within:border-primary group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary mr-3 block h-5 w-5 cursor-pointer rounded-full border-2 border-[#A1A1AA] bg-white shadow-xl group-focus-within:ring-4 group-hover:ring-4">
-            <SliderTooltip play={play}>
-              {parseAsDate
-                ? toDate(data[(minmax as number[])[1]], dateFormat[period], i18n.language)
-                : data[(minmax as number[])[1]]}
-            </SliderTooltip>
-          </Thumb>
-        </div>
-        <p className="text-dim w-fit text-sm">
-          {parseAsDate
-            ? toDate(data[data.length - 1], "yyyy", i18n.language)
-            : data[data.length - 1]}
-        </p>
+        <Track className="dark:bg-washed-dark bg-outline relative z-0 h-2 grow rounded-full">
+          <Range className="group-hover:bg-primary dark:group-hover:bg-primary absolute z-0 h-full rounded-xl bg-[#A1A1AA]" />
+        </Track>
+        <Thumb className="group-hover:border-primary group-hover:ring-primary shadow-button block h-5 w-5 cursor-col-resize rounded-full border-2 border-[#A1A1AA] bg-white group-hover:ring-4">
+          <SliderTooltip play={play}>
+            {parseAsDate
+              ? toDate(data[(minmax as number[])[0]], dateFormat[period], i18n.language)
+              : data[(minmax as number[])[0]]}
+          </SliderTooltip>
+        </Thumb>
+        <Thumb className="group-hover:border-primary group-hover:ring-primary shadow-button block h-5 w-5 cursor-col-resize rounded-full border-2 border-[#A1A1AA] bg-white group-hover:ring-4">
+          <SliderTooltip play={play}>
+            {parseAsDate
+              ? toDate(data[(minmax as number[])[1]], dateFormat[period], i18n.language)
+              : data[(minmax as number[])[1]]}
+          </SliderTooltip>
+        </Thumb>
       </Root>
+      <p className="text-dim text-sm">
+        {parseAsDate ? toDate(data[data.length - 1], "yyyy", i18n.language) : data[data.length - 1]}
+      </p>
     </div>
   );
 };
@@ -190,11 +184,11 @@ interface SliderTooltipProps {
 
 const SliderTooltip: FunctionComponent<SliderTooltipProps> = ({ play, children }) => {
   return (
-    <div className="relative inline-block w-fit overflow-visible">
+    <div className="relative inline-block overflow-visible">
       <div
         className={clx(
-          "absolute -top-14 left-3 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black px-1.5 py-1 text-sm font-normal text-white transition-all before:absolute before:left-[38%] before:top-[26px] before:h-0 before:w-0 before:border-8 before:border-transparent before:border-t-black group-focus-within:visible group-hover:visible dark:bg-white dark:text-black dark:before:border-t-white",
-          !play && "invisible"
+          "absolute -top-14 left-3 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black px-1.5 py-1 text-sm text-white transition-all duration-300 ease-in-out before:absolute before:left-[38%] before:top-[26px] before:h-0 before:w-0 before:border-8 before:border-transparent before:border-t-black group-hover:opacity-100 dark:bg-white dark:text-black dark:before:border-t-white",
+          !play && "opacity-0"
         )}
       >
         {children}
