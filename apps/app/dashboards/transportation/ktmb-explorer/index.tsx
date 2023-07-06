@@ -59,7 +59,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const { data, setData } = useData({
     tab_index: 0,
     period: "day",
-    minmax: [0, A_to_B.day.x.length],
+    minmax: [0, A_to_B.day.x.length - 1],
     service: params.service,
     origin: params.origin,
     destination: params.destination,
