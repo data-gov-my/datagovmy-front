@@ -156,13 +156,6 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                 header: t("votes_won"),
               },
             ])}
-            title={
-              <div className="uppercase md:flex md:flex-row md:items-center md:gap-2">
-                <h5 className="text">{area}</h5>
-                <p className="text-dim font-normal">{state}</p>
-              </div>
-            }
-            subtitle
             options={elections}
             page={row.index}
           />
@@ -172,7 +165,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   ]);
 
   return (
-    <Container className="min-h-fit">
+    <Container>
       <Section>
         <div className="xl:grid xl:grid-cols-12">
           <div className="xl:col-span-10 xl:col-start-2">

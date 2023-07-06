@@ -10,6 +10,7 @@ import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const IPR: Page = ({
   meta,
@@ -36,15 +37,17 @@ const IPR: Page = ({
 };
 
 IPR.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown url={routes.IPR} currentState={props.params.state} hideOnScroll />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.IPR} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown url={routes.IPR} currentState={props.params.state} hideOnScroll />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.IPR} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async () => {

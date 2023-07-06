@@ -14,14 +14,7 @@ interface SectionProps {
 
 const Section: FunctionComponent<SectionProps> = forwardRef(
   (
-    {
-      title,
-      className = "border-b dark:border-b-outlineHover-dark py-8 lg:py-12",
-      description,
-      children,
-      date,
-      menu,
-    },
+    { title, className = "py-8 lg:py-12", description, children, date, menu },
     ref: LegacyRef<HTMLElement> | undefined
   ) => {
     const { t, i18n } = useTranslation();

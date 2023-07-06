@@ -3,7 +3,6 @@ import { default as Label, LabelProps } from "@components/Label";
 import { FunctionComponent, useRef } from "react";
 import { Transition, Popover } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon, ClockIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { Button } from "..";
 import { useTranslation } from "next-i18next";
 
 interface DaterangeProps extends LabelProps {
@@ -19,7 +18,7 @@ interface DaterangeProps extends LabelProps {
 }
 
 const Range: FunctionComponent<DaterangeProps> = ({
-  className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm",
+  className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-button",
   disabled = false,
   beginOptions,
   endOptions,
@@ -46,7 +45,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
       <Popover className="relative">
         <Popover.Button
           className={[
-            "dark:border-washed-dark relative flex w-full flex-row items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:bg-black lg:w-fit lg:items-center",
+            "dark:border-washed-dark shadow-button relative flex w-full flex-row items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left dark:bg-black lg:w-fit lg:items-center",
             className,
             disabled
               ? "bg-outline text-dim pointer-events-none"
@@ -71,7 +70,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
         >
           <Popover.Panel
             className={[
-              "max-h-100 dark:ring-washed-dark absolute z-20 mt-1 min-w-full overflow-clip rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
+              "max-h-100 dark:ring-washed-dark shadow-floating absolute z-20 mt-1 min-w-full overflow-clip rounded-md bg-white text-sm ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
               anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
             ].join(" ")}
           >
@@ -149,14 +148,14 @@ const Range: FunctionComponent<DaterangeProps> = ({
                 </ul>
               </div>
             </div>
-            <Button
-              className="text-dim px-4 py-3 transition hover:text-black dark:hover:text-white"
-              icon={<XMarkIcon className="h-4 w-4" />}
+            <button
+              className="btn text-dim px-4 py-3 hover:text-black dark:hover:text-white"
               onClick={onReset}
               disabled={selected?.every(item => item === undefined)}
             >
+              <XMarkIcon className="h-4 w-4" />
               {t("common:common.reset_default")}
-            </Button>
+            </button>
           </Popover.Panel>
         </Transition>
       </Popover>

@@ -21,7 +21,11 @@ const Immigration: Page = ({
 
   return (
     <>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={t(`countries:${params.country}`).concat(" - ", t("header"))}
+        description={t("description")}
+        keywords={""}
+      />
       <ImmigrationDashboard
         choropleth={choropleth}
         countries={countries}
@@ -40,7 +44,7 @@ const Immigration: Page = ({
  * Path: /{country}
  * @required country e.g: my (2 letter lowercase country code)
  */
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

@@ -41,8 +41,8 @@ const StateModal: FunctionComponent<StateModalProps> = ({ state, exclude, url, t
         >
           <Image
             src={"/static/images/states/".concat(currentState, ".jpeg")}
-            height={16}
-            width={32}
+            height={15}
+            width={27}
             alt={currentState}
           />
         </button>

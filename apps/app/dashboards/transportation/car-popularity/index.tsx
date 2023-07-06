@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { get } from "@lib/api";
 import { OptionType } from "@components/types";
-import { WindowContext, WindowProvider } from "@hooks/useWindow";
+import { WindowContext } from "@hooks/useWindow";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import Spinner from "@components/Spinner";
 import { toast } from "@components/Toast";
@@ -34,7 +34,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
   tableData,
 }) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
-  const { breakpoint } = useContext(WindowContext);
+  const { windowWidth } = useContext(WindowContext);
 
   // query data
   const { data: query, setData: setQuery } = useData({
@@ -151,7 +151,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
 
             <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12">
               <table className="lg:col-span-4 lg:col-start-3">
-                <thead className="border-b-2">
+                <thead className="dark:border-washed-dark border-b-2">
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
                     <th className="px-1 py-2 text-start text-sm font-medium">
@@ -167,7 +167,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                     (item: { maker: string; model: string; vehicles: number }, i: number) => (
                       <tr
                         key={i}
-                        className={"border-b".concat(
+                        className={"dark:border-washed-dark border-b".concat(
                           i < 3 ? " bg-background dark:bg-background-dark" : ""
                         )}
                       >
@@ -191,7 +191,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
               </table>
 
               <table className="lg:col-span-4 lg:col-start-7">
-                <thead className="border-b-2">
+                <thead className="dark:border-washed-dark border-b-2">
                   <tr>
                     <th className="px-1 py-2 text-center text-sm font-medium">#</th>
                     <th className="px-1 py-2 text-start text-sm font-medium">
@@ -206,7 +206,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                   {data.topMakers.map((item: { maker: string; vehicles: number }, i: number) => (
                     <tr
                       key={i}
-                      className={"border-b".concat(
+                      className={"dark:border-washed-dark border-b".concat(
                         i < 3 ? " bg-background dark:bg-background-dark" : ""
                       )}
                     >
@@ -235,7 +235,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
         <Section title={t("section_title")} date={data.data_as_of}>
           <div className="flex flex-col gap-8 lg:grid lg:grid-cols-3">
             <div className="w-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex w-full flex-col justify-items-start gap-6	rounded-xl border p-6 shadow">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex w-full flex-col justify-items-start	gap-6 rounded-xl border p-6">
                 <Dropdown
                   label={t("label_maker")}
                   placeholder={t("option_maker")}
@@ -257,7 +257,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                 <div>
                   <Button
                     icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                    className="btn btn-primary"
+                    className="btn-primary"
                     onClick={searchHandler}
                   >
                     {t("search_button")}
@@ -266,7 +266,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
               </Card>
             </div>
             <div className="lg:col-span-2">
-              <WindowProvider>
+              <>
                 {data.x?.length > 0 ? (
                   <Timeseries
                     className="h-[300px]"
@@ -300,9 +300,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                           backgroundColor: AKSARA_COLOR.PRIMARY_H,
                           borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth:
-                            breakpoint <= BREAKPOINTS.MD
+                            windowWidth <= BREAKPOINTS.MD
                               ? 0.75
-                              : breakpoint <= BREAKPOINTS.LG
+                              : windowWidth <= BREAKPOINTS.LG
                               ? 1.0
                               : 1.5,
                           fill: true,
@@ -323,9 +323,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                             backgroundColor: AKSARA_COLOR.PRIMARY_H,
                             borderColor: AKSARA_COLOR.PRIMARY,
                             borderWidth:
-                              breakpoint <= BREAKPOINTS.MD
+                              windowWidth <= BREAKPOINTS.MD
                                 ? 0.75
-                                : breakpoint <= BREAKPOINTS.LG
+                                : windowWidth <= BREAKPOINTS.LG
                                 ? 1.0
                                 : 1.5,
                             fill: true,
@@ -342,7 +342,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                     </Card>
                   </div>
                 )}
-              </WindowProvider>
+              </>
             </div>
           </div>
         </Section>

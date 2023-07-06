@@ -59,7 +59,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
-  const { breakpoint } = useContext(WindowContext);
+  const { windowWidth } = useContext(WindowContext);
   const sourceOptions = sources.map(source => ({
     label: source,
     value: source,
@@ -91,7 +91,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         action={
           <Dropdown
             icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-            className="min-w-[250px]"
+            width="w-64"
             placeholder={t("placeholder.source")}
             anchor="left"
             options={sourceOptions}
@@ -112,53 +112,51 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         }
       />
 
-      <Container className="min-h-screen lg:px-0">
-        <WindowProvider>
-          <Sidebar
-            categories={Object.entries(collection).map(([category, subcategory]) => [
-              category,
-              Object.keys(subcategory),
-            ])}
-            onSelect={selected =>
-              scrollRef.current[selected]?.scrollIntoView({
-                behavior: "smooth",
-                block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
-                inline: "end",
-              })
-            }
-          >
-            <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
+      <Container className="min-h-screen">
+        <Sidebar
+          categories={Object.entries(collection).map(([category, subcategory]) => [
+            category,
+            Object.keys(subcategory),
+          ])}
+          onSelect={selected =>
+            scrollRef.current[selected]?.scrollIntoView({
+              behavior: "smooth",
+              block: windowWidth <= BREAKPOINTS.LG ? "start" : "center",
+              inline: "end",
+            })
+          }
+        >
+          <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
-            {_collection.length > 0 ? (
-              _collection.map(([title, datasets]) => {
-                return (
-                  <Section
-                    title={<p className="text-lg font-bold">{title}</p>}
-                    key={title}
-                    ref={ref => (scrollRef.current[title] = ref)}
-                    className="p-2 pb-8 pt-14 lg:p-8"
-                  >
-                    <ul className="columns-1 space-y-3 lg:columns-2 xl:columns-3">
-                      {datasets.map((item: Catalogue, index: number) => (
-                        <li key={index}>
-                          <At
-                            href={`/data-catalogue/${item.id}`}
-                            className="text-primary dark:text-primary-dark no-underline hover:underline"
-                            prefetch={false}
-                          >
-                            {item.catalog_name}
-                          </At>
-                        </li>
-                      ))}
-                    </ul>
-                  </Section>
-                );
-              })
-            ) : (
-              <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
-            )}
-          </Sidebar>
-        </WindowProvider>
+          {_collection.length > 0 ? (
+            _collection.map(([title, datasets]) => {
+              return (
+                <Section
+                  title={title}
+                  key={title}
+                  ref={ref => (scrollRef.current[title] = ref)}
+                  className="p-2 pb-8 pt-14 lg:p-8"
+                >
+                  <ul className="columns-1 space-y-3 sm:columns-3">
+                    {datasets.map((item: Catalogue, index: number) => (
+                      <li key={index}>
+                        <At
+                          href={`/data-catalogue/${item.id}`}
+                          className="text-primary dark:text-primary-dark no-underline hover:underline"
+                          prefetch={false}
+                        >
+                          {item.catalog_name}
+                        </At>
+                      </li>
+                    ))}
+                  </ul>
+                </Section>
+              );
+            })
+          ) : (
+            <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
+          )}
+        </Sidebar>
       </Container>
     </div>
   );
@@ -245,9 +243,9 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
 
     return (
       <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
-        <div className="flex-grow">
+        <div className="flex-1">
           <Search
-            className="border-0"
+            className="border-none"
             placeholder={t("placeholder.search")}
             query={filter.search}
             onChange={e => setFilter("search", e)}
@@ -257,49 +255,49 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         <div className="block xl:hidden">
           <Modal
             trigger={open => (
-              <button
-                onClick={open}
-                className="btn btn-dropdown shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
-              >
+              <button onClick={open} className="btn-default btn-disabled shadow-floating">
                 <span>{t("filter")}</span>
-                <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
-                  <p className="text-center text-white">{actives.length}</p>
-                </div>
-                <ChevronDownIcon className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5" />
+                <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
+                  {actives.length}
+                </span>
+                <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
               </button>
             )}
             title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="px-4.5 pb-4.5 mb-[107px] flex h-[400px] flex-col overflow-y-auto pt-3">
-                <Radio
-                  label={t("period")}
-                  name="period"
-                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
-                  options={periods}
-                  value={filter.period}
-                  onChange={e => setFilter("period", e)}
-                />
-                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
-                <Checkbox
-                  label={t("geography")}
-                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
-                  name="geography"
-                  options={geographies}
-                  value={filter.geography}
-                  onChange={e => setFilter("geography", e)}
-                />
-                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
-                <Checkbox
-                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
-                  name="demographic"
-                  label={t("demography")}
-                  options={demographies}
-                  value={filter.demographic}
-                  onChange={e => setFilter("demographic", e)}
-                />
-                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[107px] flex h-[400px] flex-col divide-y overflow-y-auto">
+                <div className="py-3">
+                  <Label label={t("period")} />
+                  <Radio
+                    name="period"
+                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    options={periods}
+                    value={filter.period}
+                    onChange={e => setFilter("period", e)}
+                  />
+                </div>
+                <div className="py-3">
+                  <Label label={t("geography")} />
+                  <Checkbox
+                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    name="geography"
+                    options={geographies}
+                    value={filter.geography}
+                    onChange={e => setFilter("geography", e)}
+                  />
+                </div>
+                <div className="py-3">
+                  <Label label={t("demography")} />
+                  <Checkbox
+                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    name="demographic"
+                    options={demographies}
+                    value={filter.demographic}
+                    onChange={e => setFilter("demographic", e)}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3 pt-3">
                   <Dropdown
                     width="w-full"
                     label={t("begin")}
@@ -318,15 +316,15 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                     onChange={e => setFilter("end", e)}
                   />
                 </div>
-                <div className="dark:border-outlineHover-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
+                <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
                   <Button
-                    className="btn btn-primary w-full justify-center"
+                    className="btn-primary w-full justify-center"
                     disabled={!actives.length}
                     onClick={reset}
                   >
                     {t("common:common.reset")}
                   </Button>
-                  <Button className="btn w-full justify-center" onClick={close}>
+                  <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
                     <XMarkIcon className="h-5 w-5" />
                     {t("common:common.close")}
                   </Button>
@@ -341,10 +339,11 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
           {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
             <div>
               <Button
-                icon={<XMarkIcon className="h-4 w-4" />}
+                className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
                 disabled={!actives.length}
                 onClick={reset}
               >
+                <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
                 {t("common:common.clear_all")}
               </Button>
             </div>

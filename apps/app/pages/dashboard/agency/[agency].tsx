@@ -29,7 +29,7 @@ const DashboardAgency: Page = ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",
@@ -72,8 +72,8 @@ export const getStaticProps: GetStaticProps = withi18n(
           dashboards_route: data.dashboards_route.data,
         },
       };
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.error(e);
       return { notFound: true };
     }
   }

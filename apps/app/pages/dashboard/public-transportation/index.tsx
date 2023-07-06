@@ -27,7 +27,7 @@ const PublicTransportation: Page = ({
     </AnalyticsProvider>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-public-transportation",
   async () => {

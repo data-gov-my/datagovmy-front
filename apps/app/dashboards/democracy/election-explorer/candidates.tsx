@@ -51,7 +51,6 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       cell: ({ row, getValue }) => {
         const selection = data.tab_index === 0 ? elections.parlimen : elections.dun;
         const item = getValue() as Candidate;
-        const [area, state] = item.seat.split(",");
 
         return (
           <ElectionCard
@@ -74,16 +73,6 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 header: t("votes_won"),
               },
             ])}
-            title={
-              <div className="flex w-full items-start justify-between pr-12">
-                <div className="flex flex-col uppercase md:flex-row md:gap-2">
-                  <h5>{area}</h5>
-                  <span className="text-dim text-lg font-normal">{state}</span>
-                </div>
-                <ResultBadge value={item.result} />
-              </div>
-            }
-            subtitle
             highlighted={params.candidate_name}
             options={selection}
             page={row.index}
