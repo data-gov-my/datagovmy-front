@@ -170,30 +170,28 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
         <div className="xl:grid xl:grid-cols-12">
           <div className="xl:col-span-10 xl:col-start-2">
             <h4 className="text-center">{t("seat.header")}</h4>
-            <div className="py-6">
-              <div className="mx-auto w-full px-6 sm:w-[400px]">
-                <ComboBox
-                  placeholder={t("seat.search_seat")}
-                  options={SEAT_OPTIONS}
-                  config={{
-                    baseSort: (a, b) => {
-                      if (a.item.seat_name === b.item.seat_name) {
-                        return a.item.type === "parlimen" ? -1 : 1;
-                      } else {
-                        return String(a.item.seat_name).localeCompare(String(b.item.seat_name));
-                      }
-                    },
-                    keys: ["seat_name", "seat_area", "type"],
-                  }}
-                  selected={
-                    data.seat
-                      ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
-                      : null
-                  }
-                  onChange={selected => navigateToSeat(selected?.value)}
-                  styleElectionType={true}
-                />
-              </div>
+            <div className="mx-auto w-full p-6 sm:w-[500px]">
+              <ComboBox
+                placeholder={t("seat.search_seat")}
+                options={SEAT_OPTIONS}
+                config={{
+                  baseSort: (a, b) => {
+                    if (a.item.seat_name === b.item.seat_name) {
+                      return a.item.type === "parlimen" ? -1 : 1;
+                    } else {
+                      return String(a.item.seat_name).localeCompare(String(b.item.seat_name));
+                    }
+                  },
+                  keys: ["seat_name", "seat_area", "type"],
+                }}
+                selected={
+                  data.seat
+                    ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
+                    : null
+                }
+                onChange={selected => navigateToSeat(selected?.value)}
+                styleElectionType={true}
+              />
             </div>
             <ElectionTable
               title={
