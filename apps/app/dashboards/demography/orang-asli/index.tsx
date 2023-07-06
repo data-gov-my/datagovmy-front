@@ -40,7 +40,6 @@ type Kampung = {
   village: string;
   district: string;
   state: string;
-  slug: string;
 };
 
 const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, village }) => {
@@ -82,10 +81,15 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
     })
   );
 
-  const KAMPUNG_OPTIONS: Array<OptionType> = dropdown.map((k: Kampung) => ({
-    label: `${k.village}, ${k.district}, ${k.state}`,
-    value: k.slug,
-  }));
+  const KAMPUNG_OPTIONS: Array<OptionType & Kampung> = dropdown.map(
+    (k: Kampung & { slug: string }) => ({
+      village: k.village,
+      district: k.district,
+      state: k.state,
+      label: `${k.village}, ${k.district}, ${k.state}`,
+      value: k.slug,
+    })
+  );
 
   const navigateToKampung = (kampung?: string) => {
     if (!kampung) {
@@ -125,7 +129,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-[600px] w-full flex-col space-y-3 overflow-hidden p-6 lg:p-8">
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
                 <div className="space-y-6">
                   <div className="flex flex-col gap-2">
                     <h4>{t("choro_header")}</h4>
@@ -161,7 +165,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                       onChange={e => setData("filter", e.value)}
                     />
                   </div>
-                  <p className="border-outline dark:border-dim border-t pt-6 font-bold">
+                  <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
                     {t("choro_ranking", { count: choropleth.x.length })}
                   </p>
                 </div>
@@ -205,18 +209,19 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
         </Section>
 
         <Section>
-          <div className="space-y-12 lg:grid lg:grid-cols-12">
-            <div className="flex flex-col gap-6 lg:col-span-10 lg:col-start-2 lg:flex-row">
+          <div className="space-y-12 xl:grid xl:grid-cols-12">
+            <div className="flex flex-col gap-6 lg:flex-row xl:col-span-10 xl:col-start-2">
               <div className="flex flex-col justify-center space-y-6 lg:w-1/3">
                 <h4 className="text-center lg:text-start">{t("title")}</h4>
-                <div className="mx-auto w-full md:w-96">
-                  <ComboBox
+                <div className="mx-auto w-full">
+                  <ComboBox<Kampung>
                     placeholder={t("search_kampung")}
                     options={KAMPUNG_OPTIONS}
                     selected={
                       data.kampung ? KAMPUNG_OPTIONS.find(e => e.value === data.kampung) : null
                     }
                     onChange={selected => navigateToKampung(selected?.value)}
+                    config={{ keys: ["village", "district", "state"] }}
                   />
                 </div>
               </div>
