@@ -5,13 +5,13 @@ The Data Catalogue API supports several query parameters. The following table pr
 | Parameter | Type      | Required | Description                                                            |
 | --------- | --------- | -------- | ---------------------------------------------------------------------- |
 | id        | `string`  | Yes      | Indicates the specific resource requested.                             |
-| filter    | `string`  | No       | Indicates filter(s) of the data.                                       |
-| limit     | `integer` | No       | Indicates the maximum number of responses to return.                   |
-| sort      | `string`  | No       | Indicates the order of the response, in ascending or descending order. |
-| include   | `string`  | No       | Indicates the columns to include in the response.                      |
-| exclude   | `string`  | No       | Indicates the columns to exclude from the response.                    |
-| start     | `date`    | No       | Indicates the start date range (only if `date` is available).          |
-| end       | `date`    | No       | Indicates the end date range (only if `date` is available).            |
+| filter    | `string`  | Optional | Indicates filter(s) of the data.                                       |
+| limit     | `integer` | Optional | Indicates the maximum number of responses to return.                   |
+| sort      | `string`  | Optional | Indicates the order of the response, in ascending or descending order. |
+| include   | `string`  | Optional | Indicates the columns to include in the response.                      |
+| exclude   | `string`  | Optional | Indicates the columns to exclude from the response.                    |
+| start     | `date`    | Optional | Indicates the start date range (only if `date` is available).          |
+| end       | `date`    | Optional | Indicates the end date range (only if `date` is available).            |
 
 Please note that the `filter` parameter is used for row-level filtering, while `include`/`exclude` parameters are used for column-level filtering.
 
@@ -19,7 +19,7 @@ Please note that the `filter` parameter is used for row-level filtering, while `
 
 When working with the OpenAPI, you can define query parameters by appending a question mark (`?`) after the base URL. Query parameters consist of a key-value pair, where the key and value are separated by an equal sign (`=`). If there are multiple parameters, they are separated by an ampersand (`&`).
 
-### `filter`
+### The `filter` Parameter
 
 The `filter` parameter allows you to refine your API request by applying specific filters to the data. There are 2 different supported formats:
 
@@ -54,7 +54,7 @@ GET .../catalogue?id=fuelprice&filter=ron95[:1]
 - `<column>` (required): Specifies the column to be filtered.
 - `<begin>` and `<end>` (optional): Define the numeric range. Both values are inclusive. If `<begin>` and `<end>` are not provided, the lowest or highest possible values will be used instead.
 
-### `limit`
+### The `limit` Parameter
 
 ```http
 ### Syntax
@@ -68,7 +68,7 @@ GET .../catalogue?id=fuelprice&limit=10
 - The API will return up to `<value>` responses based on the specified limit.
 - If the total number of available responses is less than the specified limit, all available responses will be returned.
 
-### `sort`
+### The `sort` Parameter
 
 ```http
 ### Syntax
@@ -82,7 +82,7 @@ GET .../catalogue?id=fuelprice&sort=ron95@asc
 - `<order>` can be either `asc` (ascending) or `desc` (descending).
 - Nested sorting is supported by using space-separated queries, e.g. <nobr>`sort=ron95@asc date@desc`</nobr>.
 
-### `include` and `exclude`
+### Using `include` and `exclude` Parameters
 
 ```http
 ### Syntax
@@ -98,7 +98,7 @@ GET .../catalogue?id=fuelprice&exclude=diesel
 - Multiple columns can be separated by commas.
 - When both `include` and `exclude` parameters are provided, `include` takes precedence over `exclude`, such that only fields specified in `include` will be shown.
 
-### `start` and `end`
+### Using `start` and `end` Parameters
 
 ```http
 ### Syntax

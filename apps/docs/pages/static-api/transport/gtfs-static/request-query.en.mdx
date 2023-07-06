@@ -36,7 +36,7 @@ The API supports the following GTFS data types:
 
 The following parameters are only applicable to the `/gtfs/<gtfs_type>` endpoint, please remember to specify the `<gtfs_type>` in your request.
 
-### `download`
+### The `download` Parameter
 
 ```http
 ### Syntax
@@ -50,11 +50,9 @@ GET .../gtfs/agency?download=false
 GET .../gtfs/agency
 ```
 
-- To control the format of the returned data, you can include the `download` parameter in your query.
-- if `download` is set to true, GTFS data is returned in its original .txt format.
-- By default, or when `download` is set to false, the GTFS data will be returned in JSON format.
+To control the format of the returned data, you can include the `download` parameter in your query. By default, or when `download` is set to false, GTFS data will be returned in JSON format. Setting `download` to true, however returns GTFS data in its original .txt format.
 
-### `area`
+### The `area` Parameter
 
 ```http
 ### Syntax
@@ -64,8 +62,8 @@ GET .../gtfs/agency
 GET .../gtfs/agency?area=jhr
 ```
 
-- To filter the GTFS data based on a specific state, you can include the `area` parameter in your query.
-- Use the three-letter abbreviation for the state.
+To filter the GTFS data based on a specific state, you can include the `area` parameter in your query. A few notes:
+- Use the three-letter abbreviation for the state (eg. `jhr` for Johor and `kul` for WP Kuala Lumpur).
 - Currently, only the state of Johor (`jhr`) is supported.
 
 ### Filtering by Fields
