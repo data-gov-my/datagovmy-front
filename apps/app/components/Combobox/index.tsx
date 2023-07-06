@@ -50,12 +50,13 @@ const ComboBox = <T extends unknown>({
   const [query, setQuery] = useState("");
 
   const filteredOptions = matchSorter(options, query, config).slice(0, 100);
+
   // const ComboboxOption = ({
   //   option,
   //   index,
   //   style,
   // }: {
-  //   option: ComboBoxOption;
+  //   option: ComboBoxOption<T>;
   //   index: number;
   //   style: any;
   // }) => {
@@ -96,20 +97,20 @@ const ComboBox = <T extends unknown>({
   //               {option.label}
   //             </span>
   //           </div>
-  // ) : styleElectionType && option.type ? ( // Elections Seat specific
-  //   <span
-  //     className={clx("flex gap-x-1 truncate", SELECTED ? "font-medium" : "font-normal")}
-  //   >
-  //     <>{`${option.seat_name}, ${option.seat_area} `}</>
-  //     <p className="text-dim">
-  //       {"(" + t(`dashboard-election-explorer:${option.type}`) + ")"}
-  //     </p>
-  //   </span>
-  // ) : (
-  //   <span className={clx("flex truncate", SELECTED ? "font-medium" : "font-normal")}>
-  //     {option.label}
-  //   </span>
-  // )}
+  //         ) : styleElectionType && option.type ? ( // Elections Seat specific
+  //           <span
+  //             className={clx("flex gap-x-1 truncate", SELECTED ? "font-medium" : "font-normal")}
+  //           >
+  //             <>{`${option.seat_name}, ${option.seat_area} `}</>
+  //             <p className="text-dim">
+  //               {"(" + t(`dashboard-election-explorer:${option.type}`) + ")"}
+  //             </p>
+  //           </span>
+  //         ) : (
+  //           <span className={clx("flex truncate", SELECTED ? "font-medium" : "font-normal")}>
+  //             {option.label}
+  //           </span>
+  //         )}
 
   //         {/* Checkmark */}
   //         {SELECTED && (
@@ -132,7 +133,7 @@ const ComboBox = <T extends unknown>({
           <Combobox.Button as={"div"} className="w-full">
             <Combobox.Input
               placeholder={placeholder}
-              className="w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
+              className="w-full truncate border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
               displayValue={(option: OptionType) => option?.label}
               onChange={event => {
                 setQuery(event.target.value);
