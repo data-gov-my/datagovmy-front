@@ -1,14 +1,14 @@
-## Throttling Rate
+## Rate Limits
 
-To ensure fair usage and maintain system performance, OpenAPI enforces throttling limits on the number of requests that can be made within a specific timeframe. If the limit is exceeded, subsequent requests will fail, and you will receive a `429 Too Many Requests` error in your responses.
+To ensure fair usage and consistent performance, we enforce rate limits on the number of requests that can be made within a specific timeframe. This also ensures as many API users as possible have the opportunity of using the API without slowdowns. 
 
-The following table outlines the throttling limits for different APIs within OpenAPI:
+If the limit is exceeded, subsequent requests will fail and you will receive a `429 Too Many Requests` error in your responses.
 
-| API            | API Token Required | Throttling Limit       |
-| -------------- | ------------------ | ---------------------- |
-| Data Catalogue | No                 | 4 requests per minute  |
-| Data Catalogue | Yes                | 10 requests per minute |
-| GTFS-Static    | No                 | 4 requests per minute  |
-| GTFS-Static    | Yes                | 10 requests per minute |
+The following table outlines the rate limits for different APIs:
 
-Please note that the throttling limits vary based on whether you are using an API token or not. If you anticipate exceeding the throttling limits without an API token, we recommend [requesting an API token](/overview/authentication).
+| API            | Rate Limits without Token | Rate Limits with Token |
+| -------------- | ------------------------- | ---------------------- |
+| Data Catalogue | 4 requests per minute     | 10 requests per minute |
+| GTFS-Static    | 4 requests per minute     | 10 requests per minute |
+
+Please note that the rate limits vary based on whether you are using an API token or not. If you anticipate exceeding the rate limits without an API token, we recommend [requesting an API token](/overview/authentication).
