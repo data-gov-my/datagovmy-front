@@ -31,7 +31,7 @@ type SingleProps = BaseProps & {
 type SliderProps = RangeProps | SingleProps;
 
 const Slider: FunctionComponent<SliderProps> = ({
-  className = "pt-10",
+  className = "pt-8",
   type,
   onChange,
   step,

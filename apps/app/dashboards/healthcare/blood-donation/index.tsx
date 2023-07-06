@@ -123,14 +123,12 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                     ],
                   }}
                 />
-                <div className="pt-5">
-                  <Slider
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries_all.data.x}
-                    onChange={e => setData("minmax", e)}
-                  />
-                </div>
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries_all.data.x}
+                  onChange={e => setData("minmax", e)}
+                />
               </>
             )}
           </SliderProvider>
