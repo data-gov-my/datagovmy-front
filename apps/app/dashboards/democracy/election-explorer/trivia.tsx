@@ -1,4 +1,3 @@
-import ElectionLayout from "./layout";
 import { BaseResult, ElectionEnum, Seat, SeatResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import { SPRIconSolid } from "@components/Icon/agency";
@@ -124,7 +123,6 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
       header: "",
       cell: ({ row, getValue }) => {
         const item = getValue() as Seat;
-        const [area, state] = item.seat.split(",");
 
         return (
           <ElectionCard
@@ -143,13 +141,6 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                 header: t("votes_won"),
               },
             ])}
-            title={
-              <div className="uppercase md:flex md:flex-row md:items-center md:gap-2">
-                <h5 className="text">{area}</h5>
-                <p className="text-dim font-normal">{state}</p>
-              </div>
-            }
-            subtitle
             options={
               table_top.dun
                 ? table_top[data.tab_index === ElectionEnum.Parlimen ? "parlimen" : "dun"][
@@ -205,7 +196,7 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
                 onChange={(index: number) => setData("tab_index", index)}
               >
                 <Panel name={t("parlimen")}>
-                  <div className="max-h-[500px] overflow-auto lg:max-h-full">
+                  <div className="max-h-[500px] overflow-auto md:max-h-full">
                     <ElectionTable
                       data={table_top.parlimen[data.filter].sort(
                         (a: Seat, b: Seat) =>

@@ -27,6 +27,9 @@ import {
   Scale,
   Tick,
   TooltipItem,
+  LegendItem,
+  ChartEvent,
+  LegendElement,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
@@ -38,7 +41,6 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
-
 export type Periods =
   | false
   | "auto"
@@ -92,6 +94,8 @@ export interface TimeseriesProps extends ChartHeaderProps {
   gridOffsetX?: boolean;
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
+  tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
+  generateLabels?: (chart: ChartJS<"line">) => LegendItem[];
   displayNumFormat?: (
     value: number,
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
@@ -131,6 +135,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableTooltip = true,
   gridOffsetX = true,
   tooltipCallback,
+  tooltipItemSort,
+  generateLabels,
   tickXCallback,
   beginZero = false,
   minY,
@@ -184,15 +190,28 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       plugins: {
         legend: {
           display: enableLegend,
+          onClick: (e, legendItem, legend) => {
+            const index = legendItem.datasetIndex as number;
+            const ci = legend.chart;
+            if (ci.isDatasetVisible(index)) {
+              ci.hide(index);
+              legendItem.hidden = true;
+            } else {
+              ci.show(index);
+              legendItem.hidden = false;
+            }
+          },
           labels: {
             usePointStyle: true,
             pointStyle: "rect",
+            generateLabels: generateLabels,
           },
           position: "top",
           align: "start",
         },
         tooltip: {
           enabled: enableTooltip,
+          itemSort: tooltipItemSort,
           bodyFont: {
             family: "Inter",
           },

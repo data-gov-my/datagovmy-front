@@ -5,14 +5,17 @@ import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const BirthdayExplorer = ({ meta, timeseries }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      {/* <BirthdayExplorerDashboard timeseries={timeseries} /> */}
-      <BirthdayExplorerDashboard />
+      <WindowProvider>
+        {/* <BirthdayExplorerDashboard timeseries={timeseries} /> */}
+        <BirthdayExplorerDashboard />
+      </WindowProvider>
     </AnalyticsProvider>
   );
 };

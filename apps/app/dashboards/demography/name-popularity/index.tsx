@@ -28,9 +28,9 @@ interface NamePopularityDashboardProps {}
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
   const { t, i18n } = useTranslation(["dashboard-name-popularity", "common"]);
-  // const { breakpoint } = useContext(WindowContext);
+  // const { windowWidth } = useContext(WindowContext);
 
-  // const showPlaceholder = breakpoint >= BREAKPOINTS.LG;
+  // const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },
@@ -203,7 +203,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         {/* <Section title={t("section1_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow-button">
                 <div className="flex flex-row gap-4">
                   <span className="text-sm font-medium">{t("search_radio_label")}</span>
                   <Radio
@@ -242,7 +242,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 <div className="">
                   <Button
                     icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                    className="btn btn-primary"
+                    className="btn-primary"
                     onClick={searchHandler}
                   >
                     {t("search_button")}
@@ -340,7 +340,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         <Section title={t("section2_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow-button">
                 <div className="flex flex-col justify-start gap-3">
                   <div className="flex flex-col gap-4">
                     <span className="text-sm font-medium">{t("compare_radio")}</span>
@@ -402,7 +402,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 <div>
                   <Button
                     icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                    className="btn btn-primary"
+                    className="btn-primary"
                     onClick={compareHandler}
                   >
                     {t("compare_button")}

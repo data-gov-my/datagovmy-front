@@ -33,13 +33,13 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
-  const { breakpoint } = useContext(WindowContext);
+  const { windowWidth } = useContext(WindowContext);
   const { track } = useAnalytics(dataset);
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
-    if (dataset.type === "HBAR" || breakpoint < BREAKPOINTS.MD) return "horizontal";
+    if (dataset.type === "HBAR" || windowWidth < BREAKPOINTS.MD) return "horizontal";
 
     return "vertical";
-  }, [dataset.type, breakpoint]);
+  }, [dataset.type, windowWidth]);
 
   const availableDownloads = useMemo<DownloadOptions>(() => {
     return {
@@ -119,27 +119,25 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   }, [dataset.chart.x, ctx]);
 
   return (
-    <WindowProvider>
-      <Bar
-        _ref={ref => setCtx(ref)}
-        className={
-          bar_layout === "vertical"
-            ? "h-[350px] w-full lg:h-[450px]"
-            : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
-        }
-        type="category"
-        enableStack={dataset.type === "STACKED_BAR"}
-        layout={bar_layout}
-        enableGridX={bar_layout !== "vertical"}
-        enableGridY={bar_layout === "vertical"}
-        enableLegend={_datasets.length > 1}
-        precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
-        data={{
-          labels: dataset.chart.x,
-          datasets: _datasets,
-        }}
-      />
-    </WindowProvider>
+    <Bar
+      _ref={ref => setCtx(ref)}
+      className={
+        bar_layout === "vertical"
+          ? "h-[350px] w-full lg:h-[450px]"
+          : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
+      }
+      type="category"
+      enableStack={dataset.type === "STACKED_BAR"}
+      layout={bar_layout}
+      enableGridX={bar_layout !== "vertical"}
+      enableGridY={bar_layout === "vertical"}
+      enableLegend={_datasets.length > 1}
+      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+      data={{
+        labels: dataset.chart.x,
+        datasets: _datasets,
+      }}
+    />
   );
 };
 
