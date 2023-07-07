@@ -1,4 +1,3 @@
-import ElectionLayout from "./layout";
 import { ElectionEnum, ElectionResource, Party, PartyResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
@@ -11,7 +10,6 @@ import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
-import { toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { Trans } from "next-i18next";
@@ -166,16 +164,15 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
           <div className="xl:col-span-10 xl:col-start-2">
             {/* Explore any party's entire electoral history */}
             <h4 className="text-center">{t("party.header")}</h4>
-            <div className="py-6">
-              <div className="mx-auto w-full px-6 sm:w-[500px]">
-                <ComboBox
-                  placeholder={t("party.search_party")}
-                  options={PARTY_OPTIONS}
-                  selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party) : null}
-                  onChange={selected => navigateToParty(selected?.value, data.state)}
-                  enableFlag
-                />
-              </div>
+            <div className="mx-auto w-full p-6 sm:w-[500px]">
+              <ComboBox
+                placeholder={t("party.search_party")}
+                imageSource="/static/images/parties/"
+                options={PARTY_OPTIONS}
+                selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party) : null}
+                onChange={selected => navigateToParty(selected?.value, data.state)}
+                enableFlag
+              />
             </div>
             <Tabs
               title={

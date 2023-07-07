@@ -169,7 +169,7 @@ const IPR: FunctionComponent<IPRProps> = ({
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-[600px] w-full flex-col space-y-3 overflow-hidden p-6 lg:p-8">
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
                 <div className="space-y-6">
                   <div className="flex flex-col gap-2">
                     <h4>{t("choro_header")}</h4>
@@ -188,9 +188,9 @@ const IPR: FunctionComponent<IPRProps> = ({
                     onChange={e => setData("filter", e.value)}
                   />
                   <p className="text-dim whitespace-pre-line">{t("choro_description")}</p>
-                  <div className="border-outline dark:border-dim border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-                  </div>
+                  <p className="border-outline dark:border-dim border-t pb-3 pt-6 font-bold">
+                    {t("choro_ranking")}
+                  </p>
                 </div>
                 <div className="space-y-3 overflow-auto">
                   {topStateIndices.map((pos, i) => {

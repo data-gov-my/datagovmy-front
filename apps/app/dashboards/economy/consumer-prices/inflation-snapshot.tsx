@@ -194,7 +194,6 @@ const InflationSnapshot: FunctionComponent = ({}) => {
         titleY={data.y_axis.label}
       />
       <Slider
-        className="pt-7"
         type="single"
         value={data.snapshot_index}
         data={data.snapshot_x}

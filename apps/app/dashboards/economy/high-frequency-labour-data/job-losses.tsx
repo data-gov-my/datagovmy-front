@@ -35,7 +35,7 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
     2: "yearly",
   };
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.daily.x.length],
+    minmax: [0, timeseries.data.daily.x.length - 1],
     index: 0,
     period: "auto",
     periodly: "daily",

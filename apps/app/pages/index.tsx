@@ -258,7 +258,7 @@ const Ranking = ({ ranks }: RankingProps) => {
         {ranks.map((item: RankItem) => (
           <At href={item.id} key={item.id}>
             <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
-              <div className="relative flex items-center gap-4">
+              <div className="relative flex items-center gap-3">
                 <AgencyIcon agency={item.agency_abbr} />
                 <p className="text-dim text-sm uppercase">{item.agency_abbr}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
