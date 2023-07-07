@@ -5,12 +5,12 @@ import { SliderProvider } from "@components/Chart/Slider/context";
 import { PDNIcon } from "@components/Icon/agency";
 import { Container, Panel, Section, StateDropdown, Tabs, Hero } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import RankList from "@components/LeftRightCard/partials/RankList";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, toDate } from "@lib/helpers";
+import { numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
@@ -40,15 +40,12 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   choropleth_malaysia_blood_donation,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-blood-donation", "common"]);
-
-  const currentState = params.state;
-
   const { data, setData } = useData({
     absolute_donation_type: false,
     absolute_blood_group: false,
     absolute_donor_type: false,
     absolute_location: false,
-    zoom_state: currentState === "mys" ? undefined : currentState,
+    zoom_state: params.state === "mys" ? undefined : params.state,
     zoom_facility: undefined,
     minmax: [timeseries_all.data.x.length - 182, timeseries_all.data.x.length - 1],
     tabs_section_3: 0,
@@ -56,7 +53,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 
   const { coordinate } = useSlice(timeseries_all.data, data.minmax);
   const { theme } = useTheme();
-  const topStateIndices = getTopIndices(choropleth_malaysia_blood_donation.data.y.perc, 3, true);
 
   const KEY_VARIABLES_SCHEMA = [
     {
@@ -80,7 +76,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description"), "text-dim"]}
-        action={<StateDropdown url={routes.BLOOD_DONATION} currentState={currentState} />}
+        action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
@@ -94,7 +90,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         {/* What are the latest blood donation trends in Malaysia? */}
         <Section
           title={t("combine_header", {
-            state: CountryAndStates[currentState],
+            state: CountryAndStates[params.state],
           })}
           description={t("combine_description")}
           date={timeseries_all.date_as_of}
@@ -103,10 +99,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
             {play => (
               <>
                 <Timeseries
-                  id="daily-donation"
+                  id="timeseries-daily-donation"
                   className="h-[350px] w-full"
                   title={t("combine_title", {
-                    state: CountryAndStates[currentState],
+                    state: CountryAndStates[params.state],
                   })}
                   enableAnimation={!play}
                   interval="day"
@@ -156,28 +152,30 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 </div>
                 <div className="flex grow flex-col justify-between space-y-6">
                   <p className="text-dim">{t("choro_description")}</p>
-                  <div className="space-y-3 border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-                    {topStateIndices.map((pos, i) => {
-                      return (
-                        <div className="flex space-x-3" key={pos}>
-                          <div className="text-dim font-medium">#{i + 1}</div>
-                          <div className="grow">
-                            {CountryAndStates[choropleth_malaysia_blood_donation.data.x[pos]]}
-                          </div>
-                          <div className="font-bold text-[#DC2626]">
-                            {`${choropleth_malaysia_blood_donation.data.y.perc[pos].toFixed(2)}%`}
-                          </div>
-                          <ArrowRightIcon className="text-dim h-4 w-4 self-center stroke-[1.5px]" />
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <RankList
+                    id="blood-donation-by-state"
+                    title={t("choro_ranking")}
+                    data={choropleth_malaysia_blood_donation.data.y.perc}
+                    color="text-danger"
+                    threshold={3}
+                    format={(position: number) => {
+                      return {
+                        label:
+                          CountryAndStates[choropleth_malaysia_blood_donation.data.x[position]],
+                        value: `${numFormat(
+                          choropleth_malaysia_blood_donation.data.y.perc[position],
+                          "compact",
+                          [1, 1]
+                        )}%`,
+                      };
+                    }}
+                  />
                 </div>
               </div>
             }
             right={
               <Choropleth
+                id="choropleth-donor-rate"
                 className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
                 color="reds"
                 data={{
@@ -196,7 +194,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         {/* A breakdown of donations by key variables */}
         <Section
           title={t("barmeter_header", {
-            state: CountryAndStates[currentState],
+            state: CountryAndStates[params.state],
           })}
           menu={
             <Tabs.List
@@ -266,7 +264,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         {/* How strong is new donor recruitment in Malaysia? */}
         <Section
           title={t("bar1_header", {
-            state: CountryAndStates[currentState],
+            state: CountryAndStates[params.state],
           })}
           description={t("bar1_description")}
           date={barchart_time.date_as_of}
@@ -276,6 +274,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               <Tabs title={t("bar1_title")}>
                 <Panel name={t("annual")}>
                   <Bar
+                    id="bar-newdonor-total-annual"
                     className="h-[250px]"
                     data={{
                       labels: barchart_time.data.annual.x,
@@ -294,6 +293,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 </Panel>
                 <Panel name={t("monthly")}>
                   <Bar
+                    id="bar-newdonor-total-monthly"
                     className="h-[250px]"
                     data={{
                       labels: barchart_time.data.monthly.x,
@@ -316,6 +316,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               <Tabs title={t("bar2_title")}>
                 <Panel name={t("year")}>
                   <Bar
+                    id="bar-newdonor-age-annual"
                     className="h-[250px]"
                     data={{
                       labels: barchart_age.data.past_year.x,
@@ -334,6 +335,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 </Panel>
                 <Panel name={t("month")}>
                   <Bar
+                    id="bar-newdonor-age-month"
                     className="h-[250px]"
                     data={{
                       labels: barchart_age.data.past_month.x,

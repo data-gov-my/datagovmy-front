@@ -224,6 +224,8 @@ const Bar: FunctionComponent<BarProps> = ({
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
       <div className={className}>
         <BarCanvas
+          id={id}
+          data-testid={id}
           ref={_ref ?? ref}
           onClick={event => {
             if (ref?.current) {
