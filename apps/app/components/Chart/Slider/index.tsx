@@ -31,7 +31,7 @@ type SingleProps = BaseProps & {
 type SliderProps = RangeProps | SingleProps;
 
 const Slider: FunctionComponent<SliderProps> = ({
-  className = "pt-10",
+  className = "pt-8",
   type,
   onChange,
   step,
@@ -118,7 +118,7 @@ const Slider: FunctionComponent<SliderProps> = ({
   };
 
   return (
-    <div className={clx("flex w-full items-center gap-x-3", className)}>
+    <div className={clx("group flex w-full items-center gap-x-3", className)}>
       {enablePlayer && (
         <button
           type="button"
@@ -165,7 +165,11 @@ const Slider: FunctionComponent<SliderProps> = ({
         <Thumb className="max-lg:group-focus-within:border-primary max-lg:group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary shadow-button block h-5 w-5 cursor-col-resize rounded-full border-2 border-[#A1A1AA] bg-white group-hover:ring-4 max-lg:group-focus-within:ring-4">
           <SliderTooltip play={play}>
             {parseAsDate
-              ? toDate(data[(minmax as number[])[1]], dateFormat[period], i18n.language)
+              ? toDate(
+                  data[Math.min((minmax as number[])[1], data.length - 1)],
+                  dateFormat[period],
+                  i18n.language
+                )
               : data[(minmax as number[])[1]]}
           </SliderTooltip>
         </Thumb>
@@ -187,8 +191,8 @@ const SliderTooltip: FunctionComponent<SliderTooltipProps> = ({ play, children }
     <div className="relative inline-block overflow-visible">
       <div
         className={clx(
-          "absolute -top-14 left-3 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black px-1.5 py-1 text-sm text-white opacity-0 transition-all delay-300 duration-300 ease-in-out before:absolute before:left-[38%] before:top-[26px] before:h-0 before:w-0 before:border-8 before:border-transparent before:border-t-black group-hover:opacity-100 group-hover:delay-0 dark:bg-white dark:text-black dark:before:border-t-white max-lg:group-focus-within:opacity-100",
-          !play && "opacity-0"
+          "absolute -top-14 left-3 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 -translate-y-1 transform rounded-md bg-black px-1.5 py-1 text-sm text-white opacity-0 transition-all delay-300 duration-300 ease-in-out before:absolute before:left-[38%] before:top-[26px] before:h-0 before:w-0 before:border-8 before:border-transparent before:border-t-black group-hover:opacity-100 group-hover:delay-0 dark:bg-white dark:text-black dark:before:border-t-white max-lg:group-focus-within:opacity-100",
+          play ? "opacity-100" : "opacity-0"
         )}
       >
         {children}
