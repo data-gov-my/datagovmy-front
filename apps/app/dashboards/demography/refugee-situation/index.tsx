@@ -52,7 +52,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
   );
   const { data, setData } = useData({
     tab_index: 0,
-    minmax: [0, timeseries.data.x.length],
+    minmax: [0, timeseries.data.x.length - 1],
     filter: FILTER_OPTIONS[0].value,
     loading: false,
   });

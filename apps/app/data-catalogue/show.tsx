@@ -395,7 +395,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Date Slider (optional) */}
           {config.dates !== null && (
             <Slider
-              className="pt-8"
               type="single"
               value={config.dates?.options.indexOf(
                 filter[config.dates.key].value ?? config.dates.default

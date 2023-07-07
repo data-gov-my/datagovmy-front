@@ -216,30 +216,13 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
 
   const reset = () => onSearch("");
 
-  const renderClear = (className: string) => {
-    return (
-      data.search && (
-        <div className={className}>
-          <Button
-            className="text-dim hover:bg-washed dark:hover:bg-washed-dark w-max text-sm"
-            icon={<XMarkIcon className="h-4 w-4" />}
-            onClick={reset}
-          >
-            {t("common:common.clear_all")}
-          </Button>
-        </div>
-      )
-    );
-  };
-
   return (
     <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
       <Container>
-        <div className="flex flex-row flex-wrap-reverse items-center gap-3 lg:flex-nowrap">
-          {renderClear("block lg:hidden")}
+        <div className="flex flex-row items-center gap-x-3">
           <Dropdown
             icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-            className="w-fit min-w-fit"
+            width="w-fit"
             placeholder={t("source_placeholder")}
             anchor="left"
             options={filterSources}
@@ -257,7 +240,15 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
             query={data.search}
             onChange={e => typeof e === "string" && onSearch(e)}
           />
-          {renderClear("hidden lg:block")}
+          {data.search && (
+            <Button
+              className="btn-ghost text-dim max-md:rounded-full max-md:p-2"
+              icon={<XMarkIcon className="h-5 w-5" />}
+              onClick={reset}
+            >
+              <p className="hidden md:block">{t("common:common.clear")}</p>
+            </Button>
+          )}
         </div>
       </Container>
     </div>

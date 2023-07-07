@@ -13,7 +13,6 @@ import { BOMBAIcon } from "@components/Icon/agency";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { OptionType } from "@components/types";
-import ArrowRightIcon from "@heroicons/react/20/solid/ArrowRightIcon";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
@@ -54,12 +53,16 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
     })
   );
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length],
+    minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
     filter: FILTER_OPTIONS[0],
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
   const OPERATION = ["fire", "rescue", "others"];
-  const topStateIndices = getTopIndices(choropleth.data[data.filter.value].y.value, 3, true);
+  const topStateIndices = getTopIndices(
+    choropleth.data[data.filter.value].y.value,
+    choropleth.data[data.filter.value].y.length,
+    true
+  );
 
   return (
     <>
@@ -95,7 +98,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                     state: CountryAndStates[currentState],
                   })}
                   enableAnimation={!play}
-                  interval="day"
+                  interval="auto"
                   data={{
                     labels: coordinate.x,
                     datasets: [
@@ -140,7 +143,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                       title={t(key)}
                       className="h-[300px] w-full"
                       enableAnimation={!play}
-                      interval={"day"}
+                      interval="auto"
                       data={{
                         labels: coordinate.x,
                         datasets: [
@@ -182,51 +185,52 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-full w-full flex-col space-y-6 p-8">
-                <div className="flex flex-col gap-2">
-                  <h4>{t("choro_header")}</h4>
-                  <span className="text-dim text-sm">
-                    {t("common:common.data_of", {
-                      date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
-                    })}
-                  </span>
-                </div>
-                <Dropdown
-                  anchor="left"
-                  width="w-fit"
-                  placeholder={t("common:common.select")}
-                  options={FILTER_OPTIONS}
-                  selected={FILTER_OPTIONS.find(e => e.value === data.filter.value)}
-                  onChange={e => setData("filter", e)}
-                />
-                <div className="flex grow flex-col justify-between space-y-6">
-                  <p className="text-dim whitespace-pre-line">{t("choro_description")}</p>
-                  <div className="space-y-3 border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-                    {topStateIndices.map((pos, i) => {
-                      return (
-                        <div className="flex space-x-3" key={pos}>
-                          <div className="text-dim font-medium">#{i + 1}</div>
-                          <div className="grow">
-                            {CountryAndStates[choropleth.data[data.filter.value].x[pos]]}
-                          </div>
-                          <div className="text-danger font-bold">
-                            {`${numFormat(
-                              choropleth.data[data.filter.value].y.value[pos],
-                              "standard"
-                            )}`}
-                          </div>
-                          <ArrowRightIcon className="text-dim h-4 w-4 self-center stroke-[1.5px]" />
-                        </div>
-                      );
-                    })}
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
+                <div className="space-y-6">
+                  <div className="flex flex-col gap-2">
+                    <h4>{t("choro_header")}</h4>
+                    <span className="text-dim text-sm">
+                      {t("common:common.data_of", {
+                        date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                      })}
+                    </span>
                   </div>
+                  <Dropdown
+                    anchor="left"
+                    width="w-full lg:w-fit"
+                    placeholder={t("common:common.select")}
+                    options={FILTER_OPTIONS}
+                    selected={FILTER_OPTIONS.find(e => e.value === data.filter.value)}
+                    onChange={e => setData("filter", e)}
+                  />
+                  <p className="text-dim whitespace-pre-line">{t("choro_description")}</p>
+                  <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
+                    {t("choro_ranking")}
+                  </p>
+                </div>
+                <div className="space-y-3 overflow-auto">
+                  {topStateIndices.map((pos, i) => {
+                    return (
+                      <div className="mr-4.5 flex space-x-3" key={pos}>
+                        <div className="text-dim font-medium">#{i + 1}</div>
+                        <div className="grow">
+                          {CountryAndStates[choropleth.data[data.filter.value].x[pos]]}
+                        </div>
+                        <div className="text-danger font-bold">
+                          {`${numFormat(
+                            choropleth.data[data.filter.value].y.value[pos],
+                            "standard"
+                          )}`}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             }
             right={
               <Choropleth
-                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
                 color="reds"
                 data={{
                   labels: choropleth.data[data.filter.value].x.map(

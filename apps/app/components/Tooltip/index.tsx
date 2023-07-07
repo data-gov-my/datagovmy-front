@@ -7,14 +7,15 @@ import { Fragment, FunctionComponent, ReactNode, useState } from "react";
 type TooltipProps = {
   children?: (open: () => void) => ReactNode;
   tip: ReactNode;
-  className?: string;
+  size?: "small" | "large";
+  anchor?: "left" | "right";
 };
 
-const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) => {
+const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, size = "small", anchor }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="tooltip w-fit">
+    <div className="group relative">
       {children ? (
         children(() => setIsOpen(true))
       ) : (
@@ -30,8 +31,28 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) 
           )}
         </>
       )}
-
-      <div className={className ? className : "tooltip-content"}>{tip}</div>
+      <div
+        className={clx(
+          "invisible absolute bottom-7 left-1/2 z-10 flex w-max max-w-[200px] -translate-x-1/2 transform flex-col items-center group-hover:visible group-hover:flex"
+        )}
+      >
+        <span
+          className={clx(
+            "shadow-floating relative rounded-lg bg-black text-xs font-normal text-white dark:bg-white dark:text-black",
+            size == "small" && "whitespace-nowrap px-1.5 py-1",
+            size == "large" && "px-3 py-2"
+          )}
+        >
+          {tip}
+        </span>
+        <div
+          className={clx(
+            "absolute -bottom-1 h-2 w-2 rotate-45 bg-black dark:bg-white",
+            anchor === "left" && "left-[10%]",
+            anchor === "right" && "right-[10%]"
+          )}
+        ></div>
+      </div>
 
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog
