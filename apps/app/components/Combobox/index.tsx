@@ -1,35 +1,23 @@
-import ImageWithFallback from "@components/ImageWithFallback";
+import ComboOption, { ComboOptionProp, ComboOptionProps } from "./option";
 import { OptionType } from "@components/types";
-import { ElectionType } from "@dashboards/democracy/election-explorer/types";
 import { Combobox, Transition } from "@headlessui/react";
-import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { clx } from "@lib/helpers";
 import { matchSorter, MatchSorterOptions } from "match-sorter";
-import { CSSProperties, Fragment, FunctionComponent, ReactNode, useState } from "react";
-import { FixedSizeList } from "react-window";
+import { CSSProperties, Fragment, useMemo, useState } from "react";
+
 import { Spinner } from "..";
+// import { FixedSizeList } from "react-window";
+import { clx } from "@lib/helpers";
 
-export type ComboBoxOption<T> = OptionType &
-  T & {
-    seat_area?: string;
-    seat_name?: string;
-    type?: ElectionType;
-  };
-
-type ComboBoxProps<T> = {
-  options: ComboBoxOption<T>[];
-  selected?: ComboBoxOption<T> | null;
-  onChange: (option?: ComboBoxOption<T>) => void;
+type ComboBoxProps<T> = Omit<ComboOptionProps<T>, "option" | "style"> & {
+  options: ComboOptionProp<T>[];
+  selected?: ComboOptionProp<T> | null;
+  onChange: (option?: ComboOptionProp<T>) => void;
   onSearch?: (query: string) => void;
   placeholder?: string;
-  enableFlag?: boolean;
-  imageSource?: string;
-  fallback?: ReactNode;
-  styleElectionType?: boolean;
   loading?: boolean;
-  config?: MatchSorterOptions<ComboBoxOption<T>>;
-  // virtualise?: boolean;
+  config?: MatchSorterOptions<ComboOptionProp<T>>;
 };
 
 const ComboBox = <T extends unknown>({
@@ -37,91 +25,21 @@ const ComboBox = <T extends unknown>({
   selected,
   onChange,
   onSearch,
+  format,
   placeholder,
   enableFlag = false,
   imageSource,
   fallback,
-  styleElectionType = false,
   loading = false,
-  // virtualise = false,
   config = { keys: ["label"] },
 }: ComboBoxProps<T>) => {
   const { t } = useTranslation();
-  const [query, setQuery] = useState("");
-
-  const filteredOptions = matchSorter(options, query, config).slice(0, 100);
-
-  // const ComboboxOption = ({
-  //   option,
-  //   index,
-  //   style,
-  // }: {
-  //   option: ComboBoxOption<T>;
-  //   index: number;
-  //   style: any;
-  // }) => {
-  //   const SELECTED = selected && (selected as OptionType).value === option.value;
-
-  //   return (
-  //     <Combobox.Option
-  //       key={index}
-  //       style={style}
-  //       className={({ active }) =>
-  //         clx(
-  //           "relative flex w-full cursor-pointer select-none flex-row gap-2 px-4 py-2",
-  //           (SELECTED || active) && "bg-washed dark:bg-washed-dark"
-  //         )
-  //       }
-  //       value={option}
-  //     >
-  //       <div className="flex w-full items-center">
-  //         {enableFlag ? (
-  //           <div className="flex w-full flex-row gap-2">
-  //             <div className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
-  //               <ImageWithFallback
-  //                 className="border-outline dark:border-outlineHover-dark rounded border"
-  //                 src={`${imageSource}${option.value}.png`}
-  //                 fallback={fallback}
-  //                 width={32}
-  //                 height={18}
-  //                 alt={option.value as string}
-  //                 style={{ width: "auto", maxWidth: "32px", height: "auto", maxHeight: "32px" }}
-  //               />
-  //             </div>
-  //             <span
-  //               className={clx(
-  //                 "block self-center",
-  //                 SELECTED ? "w-[85%] font-medium" : "w-full font-normal"
-  //               )}
-  //             >
-  //               {option.label}
-  //             </span>
-  //           </div>
-  //         ) : styleElectionType && option.type ? ( // Elections Seat specific
-  //           <span
-  //             className={clx("flex gap-x-1 truncate", SELECTED ? "font-medium" : "font-normal")}
-  //           >
-  //             <>{`${option.seat_name}, ${option.seat_area} `}</>
-  //             <p className="text-dim">
-  //               {"(" + t(`dashboard-election-explorer:${option.type}`) + ")"}
-  //             </p>
-  //           </span>
-  //         ) : (
-  //           <span className={clx("flex truncate", SELECTED ? "font-medium" : "font-normal")}>
-  //             {option.label}
-  //           </span>
-  //         )}
-
-  //         {/* Checkmark */}
-  //         {SELECTED && (
-  //           <span className="absolute inset-y-0 right-3 flex items-center">
-  //             <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
-  //           </span>
-  //         )}
-  //       </div>
-  //     </Combobox.Option>
-  //   );
-  // };
+  const [query, setQuery] = useState<string>("");
+  // const threshold = 100;
+  const filteredOptions = useMemo<ComboOptionProp<T>[]>(
+    () => matchSorter(options, query, config).slice(0, 150),
+    [options, query, config]
+  );
 
   return (
     <Combobox value={selected} onChange={onChange}>
@@ -170,7 +88,12 @@ const ComboBox = <T extends unknown>({
           leaveTo="opacity-0"
           afterLeave={() => setQuery("")}
         >
-          <Combobox.Options className="border-outline dark:border-washed-dark shadow-floating absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-white text-sm focus:outline-none dark:bg-black sm:text-sm">
+          <Combobox.Options
+            className={clx(
+              "border-outline dark:border-washed-dark shadow-floating absolute z-20 mt-1 max-h-60 w-full rounded-md border bg-white text-sm focus:outline-none dark:bg-black sm:text-sm",
+              "overflow-auto"
+            )}
+          >
             {loading ? (
               <div className="text-dim cursor-deault relative flex select-none flex-row items-center gap-2 px-4 py-2	">
                 <Spinner loading={loading} /> {t("common:placeholder.loading")}
@@ -180,93 +103,37 @@ const ComboBox = <T extends unknown>({
                 {t("common:placeholder.no_results")}
               </div>
             ) : (
-              // ) : virtualise ? (
+              // TODO: Fix weird scrolling issue later
+              // : filteredOptions.length > threshold ? (
               //   <FixedSizeList
               //     height={240}
               //     width={"100%"}
               //     itemCount={filteredOptions.length}
-              //     itemSize={36}
+              //     itemSize={32}
               //     layout="vertical"
               //   >
-              //     {({ index, style }: { index: number; style: CSSProperties }) => {
-              //       const option = filteredOptions[index];
-              //       return <ComboboxOption option={option} index={index} style={style} />;
-              //     }}
+              //     {({ index, style }: { index: number; style: CSSProperties }) => (
+              //       <ComboOption
+              //         option={filteredOptions[index]}
+              //         key={index}
+              //         style={style}
+              //         format={format}
+              //         enableFlag={enableFlag}
+              //         imageSource={imageSource}
+              //         fallback={fallback}
+              //       />
+              //     )}
               //   </FixedSizeList>
-              // ) : (
-              //   <div className="max-h-60 overflow-auto">
-              //     {filteredOptions.map((option, index) => (
-              //       <ComboboxOption key={index} option={option} index={index} style={null} />
-              //     ))}
-              //   </div>
               // )
               filteredOptions.map((option, index) => (
-                <Combobox.Option
-                  key={index}
-                  className={({ active }) =>
-                    clx(
-                      "relative flex w-full cursor-pointer select-none flex-row gap-2 px-4 py-2",
-                      active && "bg-washed dark:bg-washed-dark"
-                    )
-                  }
-                  value={option}
-                >
-                  {({ selected }) => (
-                    <div className="flex w-full items-center gap-2">
-                      {enableFlag ? (
-                        <div className="flex w-full flex-row gap-2">
-                          <div className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
-                            <ImageWithFallback
-                              className="border-outline dark:border-outlineHover-dark rounded border"
-                              src={`${imageSource}${option.value}.png`}
-                              fallback={fallback}
-                              width={32}
-                              height={18}
-                              alt={option.value as string}
-                              style={{
-                                width: "auto",
-                                maxWidth: "32px",
-                                height: "auto",
-                                maxHeight: "32px",
-                              }}
-                            />
-                          </div>
-                          <span
-                            className={clx(
-                              "block self-center",
-                              selected ? "w-[85%] font-medium" : "w-full font-normal"
-                            )}
-                          >
-                            {option.label}
-                          </span>
-                        </div>
-                      ) : styleElectionType && option.type ? ( // Elections Seat specific
-                        <span
-                          className={clx(
-                            "flex gap-x-1 truncate",
-                            selected ? "font-medium" : "font-normal"
-                          )}
-                        >
-                          <>{`${option.seat_name}, ${option.seat_area} `}</>
-                          <p className="text-dim">
-                            {"(" + t(`dashboard-election-explorer:${option.type}`) + ")"}
-                          </p>
-                        </span>
-                      ) : (
-                        <span
-                          className={clx("flex truncate", selected ? "font-medium" : "font-normal")}
-                        >
-                          {option.label}
-                        </span>
-                      )}
-                      {selected && (
-                        <span className="absolute inset-y-0 right-3 flex items-center">
-                          <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </Combobox.Option>
+                <ComboOption
+                  key={option.value}
+                  option={option}
+                  format={format}
+                  enableFlag={enableFlag}
+                  imageSource={imageSource}
+                  fallback={fallback}
+                />
               ))
             )}
           </Combobox.Options>

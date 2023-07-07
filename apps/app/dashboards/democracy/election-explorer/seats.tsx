@@ -1,5 +1,12 @@
 import ElectionLayout from "./layout";
-import type { BaseResult, ElectionResource, Seat, SeatOptions, SeatResult } from "./types";
+import type {
+  BaseResult,
+  ElectionResource,
+  ElectionType,
+  Seat,
+  SeatOptions,
+  SeatResult,
+} from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { Container, Section } from "@components/index";
@@ -28,6 +35,12 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
 interface ElectionSeatsProps extends ElectionResource<Seat> {
   selection: Array<SeatOptions>;
 }
+
+type SeatOption = {
+  seat_area: string;
+  seat_name: string;
+  type: ElectionType;
+};
 
 const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   params,
@@ -171,7 +184,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
           <div className="xl:col-span-10 xl:col-start-2">
             <h4 className="text-center">{t("seat.header")}</h4>
             <div className="mx-auto w-full p-6 sm:w-[500px]">
-              <ComboBox
+              <ComboBox<SeatOption>
                 placeholder={t("seat.search_seat")}
                 options={SEAT_OPTIONS}
                 config={{
@@ -184,13 +197,20 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                   },
                   keys: ["seat_name", "seat_area", "type"],
                 }}
+                format={option => (
+                  <>
+                    <span>{`${option.seat_name}, ${option.seat_area} `}</span>
+                    <span className="text-dim">
+                      {"(" + t(`dashboard-election-explorer:${option.type}`) + ")"}
+                    </span>
+                  </>
+                )}
                 selected={
                   data.seat
                     ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
                     : null
                 }
                 onChange={selected => navigateToSeat(selected?.value)}
-                styleElectionType={true}
               />
             </div>
             <ElectionTable
