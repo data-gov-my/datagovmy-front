@@ -14,7 +14,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="tooltip w-fit">
+    <div className="group relative">
       {children ? (
         children(() => setIsOpen(true))
       ) : (
@@ -30,8 +30,29 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) 
           )}
         </>
       )}
+      <div
+        className={clx(
+          "invisible absolute bottom-7 left-1/2 z-10 flex w-max max-w-[200px] -translate-x-1/2 transform flex-col items-center group-hover:visible group-hover:flex"
+        )}
+      >
+        <span
+          className={clx(
+            "shadow-floating relative whitespace-nowrap rounded-lg bg-black text-sm text-white dark:bg-white dark:text-black",
+            "px-1.5 py-1"
+          )}
+        >
+          {tip}
+        </span>
+        <div
+          className={clx(
+            "absolute top-6 h-2 w-2 rotate-45 bg-black dark:bg-white"
+            // anchor === "left" && "left-[10%]",
+            // anchor === "right" && "right-[10%]"
+          )}
+        ></div>
+      </div>
 
-      <div className={className ? className : "tooltip-content"}>{tip}</div>
+      {/* <div className={className ? className : "tooltip-content"}>{tip}</div> */}
 
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog

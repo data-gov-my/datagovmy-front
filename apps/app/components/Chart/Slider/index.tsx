@@ -41,7 +41,7 @@ const Slider: FunctionComponent<SliderProps> = ({
   parseAsDate = true,
   enablePlayer = true,
 }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("common");
   const { play, setPlaying } = useContext(SliderContext);
   const timer = useRef<NodeJS.Timeout | null>(null);
   const [minmax, setMinmax] = useState(value);
@@ -122,8 +122,8 @@ const Slider: FunctionComponent<SliderProps> = ({
       {enablePlayer && (
         <button
           type="button"
-          aria-label="Play"
-          title="Play"
+          aria-label={play ? t("common:common.pause") : t("common:common.play")}
+          title={play ? t("common:common.pause") : t("common:common.play")}
           className="w-fit"
           onClick={togglePlayPause}
         >
@@ -188,15 +188,17 @@ interface SliderTooltipProps {
 
 const SliderTooltip: FunctionComponent<SliderTooltipProps> = ({ play, children }) => {
   return (
-    <div className="relative inline-block overflow-visible">
-      <div
-        className={clx(
-          "absolute -top-14 left-3 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 -translate-y-1 transform rounded-md bg-black px-1.5 py-1 text-sm text-white opacity-0 transition-all delay-300 duration-300 ease-in-out before:absolute before:left-[38%] before:top-[26px] before:h-0 before:w-0 before:border-8 before:border-transparent before:border-t-black group-hover:opacity-100 group-hover:delay-0 dark:bg-white dark:text-black dark:before:border-t-white max-lg:group-focus-within:opacity-100",
-          play ? "opacity-100" : "opacity-0"
-        )}
-      >
+    <div
+      className={clx(
+        "absolute bottom-8 left-1/2 flex -translate-x-1/2 transform flex-col items-center opacity-0 group-hover:flex group-hover:opacity-100",
+        "transition-opacity delay-300 duration-300 group-hover:delay-0 max-lg:group-focus-within:opacity-100",
+        play ? "opacity-100" : "opacity-0"
+      )}
+    >
+      <span className="shadow-floating relative z-10 whitespace-nowrap rounded-lg bg-black px-1.5 py-1 text-sm text-white dark:bg-white dark:text-black">
         {children}
-      </div>
+      </span>
+      <div className="absolute top-6 h-2 w-2 rotate-45 bg-black dark:bg-white"></div>
     </div>
   );
 };
