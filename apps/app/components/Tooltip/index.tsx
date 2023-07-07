@@ -7,10 +7,11 @@ import { Fragment, FunctionComponent, ReactNode, useState } from "react";
 type TooltipProps = {
   children?: (open: () => void) => ReactNode;
   tip: ReactNode;
-  className?: string;
+  size?: "small" | "large";
+  anchor?: "left" | "right";
 };
 
-const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) => {
+const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, size = "small", anchor }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -37,22 +38,21 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, className }) 
       >
         <span
           className={clx(
-            "shadow-floating relative whitespace-nowrap rounded-lg bg-black text-sm text-white dark:bg-white dark:text-black",
-            "px-1.5 py-1"
+            "shadow-floating relative rounded-lg bg-black text-xs font-normal text-white dark:bg-white dark:text-black",
+            size == "small" && "whitespace-nowrap px-1.5 py-1",
+            size == "large" && "px-3 py-2"
           )}
         >
           {tip}
         </span>
         <div
           className={clx(
-            "absolute top-6 h-2 w-2 rotate-45 bg-black dark:bg-white"
-            // anchor === "left" && "left-[10%]",
-            // anchor === "right" && "right-[10%]"
+            "absolute -bottom-1 h-2 w-2 rotate-45 bg-black dark:bg-white",
+            anchor === "left" && "left-[10%]",
+            anchor === "right" && "right-[10%]"
           )}
         ></div>
       </div>
-
-      {/* <div className={className ? className : "tooltip-content"}>{tip}</div> */}
 
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog
