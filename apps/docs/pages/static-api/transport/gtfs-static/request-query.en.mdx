@@ -13,10 +13,10 @@ GET .../gtfs
 ### Available GTFS Static Types
 
 ```http
-### Syntax
+# Syntax
 GET .../gtfs/<gtfs_type>
 
-### Example
+# Example
 GET .../gtfs/agency
 ```
 
@@ -39,13 +39,13 @@ The following parameters are only applicable to the `/gtfs/<gtfs_type>` endpoint
 ### The `download` Parameter
 
 ```http
-### Syntax
+# Syntax
 ?download=<bool>
 
-### Example (.txt format)
+# Example (.txt format)
 GET .../gtfs/agency?download=true
 
-### Example (JSON format)
+# Example (JSON format)
 GET .../gtfs/agency?download=false
 GET .../gtfs/agency
 ```
@@ -55,10 +55,10 @@ To control the format of the returned data, you can include the `download` param
 ### The `area` Parameter
 
 ```http
-### Syntax
+# Syntax
 ?area=<state>
 
-### Example
+# Example
 GET .../gtfs/agency?area=jhr
 ```
 
@@ -69,10 +69,10 @@ To filter the GTFS data based on a specific state, you can include the `area` pa
 ### Filtering by Fields
 
 ```http
-### Example
+# Example
 ?<field>=<value>
 
-### Example
+# Example
 GET .../gtfs/agency?agency_name=CWL
 ```
 

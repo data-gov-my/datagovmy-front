@@ -26,10 +26,10 @@ The `filter` parameter allows you to refine your API request by applying specifi
 #### String Equal filter
 
 ```http
-### Syntax
+# Syntax
 ?filter=<value>@<column>
 
-### Example
+# Example
 GET .../catalogue?id=fuelprice&filter=level@series_type
 ```
 
@@ -40,13 +40,13 @@ GET .../catalogue?id=fuelprice&filter=level@series_type
 #### Range Filter
 
 ```http
-### Syntax
+# Syntax
 ?filter=<column>[<begin>:<end>]
 
-### Example - between 0 (inclusive) and 1 (inclusive)
+# Example - between 0 (inclusive) and 1 (inclusive)
 GET .../catalogue?id=fuelprice&filter=ron95[0:1]
 
-### Example - between lowest possible ron95 value and 1 (inclusive)
+# Example - between lowest possible ron95 value and 1 (inclusive)
 GET .../catalogue?id=fuelprice&filter=ron95[:1]
 ```
 
@@ -57,10 +57,10 @@ GET .../catalogue?id=fuelprice&filter=ron95[:1]
 ### The `limit` Parameter
 
 ```http
-### Syntax
+# Syntax
 ?limit=<value>
 
-### Example
+# Example
 GET .../catalogue?id=fuelprice&limit=10
 ```
 
@@ -71,10 +71,10 @@ GET .../catalogue?id=fuelprice&limit=10
 ### The `sort` Parameter
 
 ```http
-### Syntax
+# Syntax
 ?sort=<column>@<order>
 
-### Example
+# Example
 GET .../catalogue?id=fuelprice&sort=ron95@asc
 ```
 
@@ -85,11 +85,11 @@ GET .../catalogue?id=fuelprice&sort=ron95@asc
 ### Using `include` and `exclude` Parameters
 
 ```http
-### Syntax
+# Syntax
 ?include=<column1,column2,...>
 ?exclude=<column1,column2,...>
 
-### Example
+# Example
 GET .../catalogue?id=fuelprice&include=ron95,ron97
 GET .../catalogue?id=fuelprice&exclude=diesel
 ```
@@ -101,11 +101,11 @@ GET .../catalogue?id=fuelprice&exclude=diesel
 ### Using `start` and `end` Parameters
 
 ```http
-### Syntax
+# Syntax
 ?start=<start_date>
 ?end=<end_date>
 
-### Example
+# Example
 GET .../catalogue?id=fuelprice&start=2022-01-01&end=2022-12-31
 ```
 
