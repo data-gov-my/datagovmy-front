@@ -6,11 +6,12 @@
   "main-site": {
     "title": "Main Site",
     "type": "page",
-    "route": "https://staging.data.gov.my"
+    "route": "https://staging.data.gov.my",
+    "newWindow": true
   },
   "helpdesk": {
     "title": "Helpdesk",
     "type": "page",
-    "route": "https://staging.data.gov.my/helpdesk"
+    "route": "/helpdesk"
   }
 }

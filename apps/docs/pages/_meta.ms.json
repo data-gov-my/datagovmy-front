@@ -11,6 +11,6 @@
   "helpdesk": {
     "title": "Meja Bantuan",
     "type": "page",
-    "route": "https://staging.data.gov.my/ms-MY/helpdesk"
+    "route": "/helpdesk"
   }
 }
