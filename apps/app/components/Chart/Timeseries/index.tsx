@@ -136,7 +136,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   tooltipItemSort,
   generateLabels,
   tickXCallback,
-  beginZero = false,
+  beginZero = true,
   minY,
   maxY,
   stepSize,

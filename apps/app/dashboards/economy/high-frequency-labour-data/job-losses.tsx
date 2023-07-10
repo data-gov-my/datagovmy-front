@@ -67,7 +67,6 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
                 className="h-[300px] w-full"
                 enableAnimation={!play}
                 interval={data.period === "day" ? "auto" : data.period}
-                beginZero
                 data={{
                   labels: coordinate.x,
                   datasets: [

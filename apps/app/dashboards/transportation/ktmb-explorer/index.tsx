@@ -286,7 +286,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         })}
                         enableAnimation={!play}
                         interval={data.period === "day" ? "auto" : data.period}
-                        beginZero
                         data={{
                           labels: A_to_B_coords.x,
                           datasets: [
@@ -326,7 +325,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           })}
                           enableAnimation={!play}
                           interval={data.period === "day" ? "auto" : data.period}
-                          beginZero
                           data={{
                             labels: B_to_A_coords.x,
                             datasets: [
