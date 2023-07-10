@@ -3,12 +3,14 @@
   "overview": "Ikhtisar",
   "static-api": "API Statik",
   "realtime-api": "API 'Realtime'",
-  "resources": {
-    "title": "Sumber",
-    "type": "page"
+  "main-site": {
+    "title": "Tapak Utama",
+    "type": "page",
+    "route": "https://staging.data.gov.my/ms-MY"
   },
-  "contact": {
-    "title": "Hubungi kami",
-    "type": "page"
+  "helpdesk": {
+    "title": "Meja Bantuan",
+    "type": "page",
+    "route": "https://staging.data.gov.my/ms-MY/helpdesk"
   }
 }
