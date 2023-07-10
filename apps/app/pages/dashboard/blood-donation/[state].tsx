@@ -17,7 +17,7 @@ const BloodDonationState: Page = ({
   meta,
   last_updated,
   params,
-  timeseries_all,
+  timeseries,
   barchart_age,
   barchart_time,
   barchart_variables,
@@ -48,7 +48,7 @@ const BloodDonationState: Page = ({
       <BloodDonationDashboard
         last_updated={last_updated}
         params={params}
-        timeseries_all={timeseries_all}
+        timeseries={timeseries}
         barchart_age={barchart_age}
         barchart_time={barchart_time}
         barchart_variables={{
@@ -114,7 +114,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         last_updated: data.data_last_updated,
         params: params,
-        timeseries_all: data.timeseries_all,
+        timeseries: data.timeseries,
         barchart_age: data.bar_chart_age,
         barchart_time: data.bar_chart_time,
         barchart_variables: data.barchart_key_variables,
