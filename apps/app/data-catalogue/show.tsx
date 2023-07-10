@@ -494,12 +494,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     <ul className="text-dim ml-6 list-outside list-disc md:hidden">
                       {metadata.definitions?.map(item => (
                         <li key={item.title}>
-                          <span>
+                          <span className="flex gap-x-1">
                             {Boolean(item.unique_id) ? (
                               <At href={`/data-catalogue/${item.unique_id}`}>{item.title}</At>
                             ) : (
                               item.title
-                            )}{" "}
+                            )}
                             <Tooltip tip={interpolate(item.desc)} />
                           </span>
                         </li>
