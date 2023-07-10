@@ -3,12 +3,14 @@
   "overview": "Overview",
   "static-api": "Static APIs",
   "realtime-api": "Real-time APIs",
-  "resources": {
-    "title": "Resources",
-    "type": "page"
+  "main-site": {
+    "title": "Main Site",
+    "type": "page",
+    "route": "https://staging.data.gov.my"
   },
-  "contact": {
-    "title": "Contact us",
-    "type": "page"
+  "helpdesk": {
+    "title": "Helpdesk",
+    "type": "page",
+    "route": "https://staging.data.gov.my/helpdesk"
   }
 }
