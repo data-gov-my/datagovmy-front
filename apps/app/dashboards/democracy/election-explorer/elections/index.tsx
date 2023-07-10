@@ -175,15 +175,17 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
           title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
         >
           {close => (
-            <div className="space-y-4 bg-white px-3 py-4 dark:bg-black">
-              <Label label={t("election") + ":"} className="text-sm" />
-              <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
-                <List
-                  options={PANELS.map(item => item.name)}
-                  icons={PANELS.map(item => item.icon)}
-                  current={data.toggle_index}
-                  onChange={handleElectionTab}
-                />
+            <div className="space-y-4 bg-white p-3 dark:bg-black">
+              <div className="space-y-2">
+                <Label label={t("election") + ":"} className="text-sm" />
+                <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
+                  <List
+                    options={PANELS.map(item => item.name)}
+                    icons={PANELS.map(item => item.icon)}
+                    current={data.toggle_index}
+                    onChange={handleElectionTab}
+                  />
+                </div>
               </div>
               <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-2 border-y py-4">
                 <Label label={t("state") + ":"} className="text-sm" />
@@ -216,7 +218,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                   }}
                 />
               </div>
-              <div className="space-y-2 px-2">
+              <div className="space-y-2">
                 <Button className="btn-primary w-full justify-center" onClick={close}>
                   {t("apply_filters")}
                 </Button>
