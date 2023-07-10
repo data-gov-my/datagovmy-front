@@ -175,7 +175,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
           title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
         >
           {close => (
-            <div className="flex-grow space-y-4 overflow-y-auto px-3 pb-[100px] pt-4">
+            <div className="space-y-4 bg-white px-3 py-4 dark:bg-black">
               <Label label={t("election") + ":"} className="text-sm" />
               <div className="border-outline dark:border-washed-dark max-w-fit rounded-full border bg-white p-1 dark:bg-black">
                 <List
@@ -216,11 +216,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                   }}
                 />
               </div>
-              <div className="fixed bottom-0 left-0 flex w-full flex-col gap-2 bg-white px-2 py-3 dark:bg-black">
+              <div className="space-y-2 px-2">
                 <Button className="btn-primary w-full justify-center" onClick={close}>
                   {t("apply_filters")}
                 </Button>
-                <Button className="btn w-full justify-center" onClick={close}>
+                <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
                   {t("common:common.close")}
                 </Button>
               </div>
