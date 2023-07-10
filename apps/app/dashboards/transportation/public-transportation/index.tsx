@@ -33,19 +33,21 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
   const { t } = useTranslation(["dashboard-public-transportation", "common"]);
   const period: { [key: number]: "auto" | "month" | "year" } = {
     0: "auto",
-    1: "month",
-    2: "year",
+    1: "auto",
+    2: "month",
+    3: "year",
   };
-  const periodly: { [key: number]: "daily" | "monthly" | "yearly" } = {
-    0: "daily",
-    1: "monthly",
-    2: "yearly",
+  const periodly: { [key: number]: "daily_7d" | "daily" | "monthly" | "yearly" } = {
+    0: "daily_7d",
+    1: "daily",
+    2: "monthly",
+    3: "yearly",
   };
   const { data, setData } = useData({
     minmax: [0, timeseries.data.daily.x.length - 1],
     index: 0,
     period: "auto",
-    periodly: "daily",
+    periodly: "daily_7d",
   });
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
 
@@ -84,7 +86,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                 setData("period", period[index]);
                 setData("periodly", periodly[index]);
               }}
-              options={[t("daily"), t("monthly"), t("yearly")]}
+              options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
             />
           }
         >
@@ -96,7 +98,6 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                   title={t("ridership_overall")}
                   enableAnimation={!play}
                   interval={data.period}
-                  beginZero
                   data={{
                     labels: coordinate.x,
                     datasets: [
@@ -157,7 +158,6 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                         title={t(`ridership_${key}`)}
                         enableAnimation={!play}
                         interval={data.period}
-                        beginZero
                         data={{
                           labels: coordinate.x,
                           datasets: [
