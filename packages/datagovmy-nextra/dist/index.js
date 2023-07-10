@@ -53,7 +53,7 @@ var __async = (__this, __arguments, generator) => {
 import { useRouter as useRouter8 } from "next/router";
 import { useMemo as useMemo5 } from "react";
 import "focus-visible";
-import cn23 from "clsx";
+import cn22 from "clsx";
 import { useFSRoute as useFSRoute3, useMounted as useMounted7 } from "nextra/hooks";
 import { MDXProvider } from "nextra/mdx";
 
@@ -1330,160 +1330,102 @@ function Flexsearch({ className }) {
 }
 
 // src/components/footer.tsx
-import cn11 from "clsx";
-
-// src/components/locale-switch.tsx
-import { addBasePath } from "next/dist/client/add-base-path";
-import { useRouter as useRouter3 } from "next/router";
-import { GlobeIcon } from "nextra/icons";
-
-// src/components/select.tsx
-import { Listbox, Transition as Transition2 } from "@headlessui/react";
-import cn10 from "clsx";
-import { useMounted as useMounted2 } from "nextra/hooks";
-import { CheckIcon } from "nextra/icons";
-import { createPortal } from "react-dom";
+import Image from "next/image";
 import { jsx as jsx15, jsxs as jsxs10 } from "react/jsx-runtime";
-function Select({ options, selected, onChange, title, className }) {
-  const [trigger, container] = usePopper({
-    strategy: "fixed",
-    placement: "top-start",
-    modifiers: [
-      { name: "offset", options: { offset: [0, 10] } },
-      {
-        name: "sameWidth",
-        enabled: true,
-        fn({ state }) {
-          state.styles.popper.minWidth = `${state.rects.reference.width}px`;
-        },
-        phase: "beforeWrite",
-        requires: ["computeStyles"],
-      },
-    ],
-  });
-  return /* @__PURE__ */ jsx15(Listbox, {
-    value: selected,
-    onChange,
-    children: ({ open }) =>
-      /* @__PURE__ */ jsxs10(Listbox.Button, {
-        ref: trigger,
-        title,
-        className: cn10(
-          "h-7 rounded-md px-2 text-left text-xs font-medium text-gray-600 transition-colors dark:text-gray-400",
-          open
-            ? "dark:bg-primary-100/10 bg-gray-200 text-gray-900 dark:text-gray-50"
-            : "dark:hover:bg-primary-100/5 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-50",
-          className
-        ),
-        children: [
-          selected.name,
-          /* @__PURE__ */ jsx15(Portal, {
-            children: /* @__PURE__ */ jsx15(Transition2, {
-              ref: container,
-              show: open,
-              as: Listbox.Options,
-              className:
-                "z-20 max-h-64 overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/20",
-              leave: "transition-opacity",
-              leaveFrom: "opacity-100",
-              leaveTo: "opacity-0",
-              children: options.map(option =>
-                /* @__PURE__ */ jsxs10(
-                  Listbox.Option,
-                  {
-                    value: option,
-                    className: ({ active }) =>
-                      cn10(
-                        active
-                          ? "bg-primary-50 text-primary-600 dark:bg-primary-500/10"
-                          : "text-gray-800 dark:text-gray-100",
-                        "relative cursor-pointer whitespace-nowrap py-1.5",
-                        "transition-colors ltr:pl-3 ltr:pr-9 rtl:pl-9 rtl:pr-3"
-                      ),
-                    children: [
-                      option.name,
-                      option.key === selected.key &&
-                        /* @__PURE__ */ jsx15("span", {
-                          className: "absolute inset-y-0 flex items-center ltr:right-3 rtl:left-3",
-                          children: /* @__PURE__ */ jsx15(CheckIcon, {}),
-                        }),
-                    ],
-                  },
-                  option.key
-                )
-              ),
-            }),
-          }),
-        ],
-      }),
-  });
-}
-function Portal(props) {
-  const mounted = useMounted2();
-  if (!mounted) return null;
-  return createPortal(props.children, document.body);
-}
-
-// src/components/locale-switch.tsx
-import { jsx as jsx16, jsxs as jsxs11 } from "react/jsx-runtime";
-function LocaleSwitch({ options, lite, className }) {
-  const { locale, asPath } = useRouter3();
-  const selected = options.find(l => locale === l.locale);
-  return /* @__PURE__ */ jsx16(Select, {
-    title: "Change language",
-    className,
-    onChange: option => {
-      const date = new Date(Date.now() + 365 * 24 * 60 * 60 * 1e3);
-      document.cookie = `NEXT_LOCALE=${option.key}; expires=${date.toUTCString()}; path=/`;
-      location.href = addBasePath(asPath);
-    },
-    selected: {
-      key: (selected == null ? void 0 : selected.locale) || "",
-      name: /* @__PURE__ */ jsxs11("span", {
-        className: "flex items-center gap-2",
-        children: [
-          /* @__PURE__ */ jsx16(GlobeIcon, {}),
-          /* @__PURE__ */ jsx16("span", {
-            className: lite ? "hidden" : "",
-            children: selected == null ? void 0 : selected.text,
-          }),
-        ],
-      }),
-    },
-    options: options.map(l => ({
-      key: l.locale,
-      name: l.text,
-    })),
-  });
-}
-
-// src/components/footer.tsx
-import { jsx as jsx17, jsxs as jsxs12 } from "react/jsx-runtime";
 function Footer({ menu }) {
   const config = useConfig();
-  return /* @__PURE__ */ jsxs12("footer", {
+  return /* @__PURE__ */ jsx15("footer", {
     className:
-      "bg-gray-100 pb-[env(safe-area-inset-bottom)] dark:bg-neutral-900 print:bg-transparent",
-    children: [
-      /* @__PURE__ */ jsxs12("div", {
-        className: cn11(
-          "mx-auto flex max-w-[90rem] gap-2 px-4 py-2",
-          menu && (config.i18n.length > 0 || config.darkMode) ? "flex" : "hidden"
-        ),
+      "bg-washed border-outline dark:border-washed-dark z-10 flex h-full w-full justify-center border-t pb-16 pt-12 dark:bg-black",
+    children: /* @__PURE__ */ jsx15("div", {
+      className:
+        "md:px-4.5 dark:divide-washed-dark undefined h-full w-full max-w-screen-2xl divide-y px-3 lg:px-6",
+      children: /* @__PURE__ */ jsxs10("div", {
+        className: "flex w-full flex-col gap-6 text-sm md:flex-row md:justify-between md:gap-0",
         children: [
-          config.i18n.length > 0 && /* @__PURE__ */ jsx17(LocaleSwitch, { options: config.i18n }),
-          config.darkMode && renderComponent(config.themeSwitch.component),
+          /* @__PURE__ */ jsxs10("div", {
+            className: "flex flex-row gap-4",
+            children: [
+              /* @__PURE__ */ jsx15("div", {
+                className: "mt-1 w-12",
+                children: /* @__PURE__ */ jsx15(Image, {
+                  src: "/assets/jata_logo.png",
+                  width: 48,
+                  height: 36,
+                  alt: "jata negara",
+                }),
+              }),
+              /* @__PURE__ */ jsxs10("div", {
+                children: [
+                  /* @__PURE__ */ jsx15("div", {
+                    className: "mb-2 uppercase",
+                    children: /* @__PURE__ */ jsx15("p", {
+                      className: "text-base font-bold",
+                      children: "Government of Malaysia",
+                    }),
+                  }),
+                  /* @__PURE__ */ jsx15("p", {
+                    className: "text-dim",
+                    children: "\xA9 2023 Public Sector Open Data",
+                  }),
+                ],
+              }),
+            ],
+          }),
+          /* @__PURE__ */ jsxs10("div", {
+            className: "flex flex-row gap-8 md:gap-14",
+            children: [
+              /* @__PURE__ */ jsxs10("div", {
+                className: "flex w-full flex-col gap-2 md:w-auto",
+                children: [
+                  /* @__PURE__ */ jsx15("p", { className: "font-bold", children: "Open Source" }),
+                  /* @__PURE__ */ jsx15("a", {
+                    className:
+                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    href: "https://github.com/data-gov-my/datagovmy-front",
+                    target: "_blank",
+                    children: "Frontend Repo: NextJS",
+                  }),
+                  /* @__PURE__ */ jsx15("a", {
+                    className:
+                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    href: "https://github.com/data-gov-my/datagovmy-back",
+                    target: "_blank",
+                    children: "Backend Repo: Django",
+                  }),
+                  /* @__PURE__ */ jsx15("a", {
+                    className:
+                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    href: "#",
+                    target: "_blank",
+                    children: "UI + UX Design: Figma",
+                  }),
+                ],
+              }),
+              /* @__PURE__ */ jsxs10("div", {
+                className: "flex w-full flex-col gap-2 md:w-auto",
+                children: [
+                  /* @__PURE__ */ jsx15("p", { className: "font-bold", children: "Open Data" }),
+                  /* @__PURE__ */ jsx15("a", {
+                    className:
+                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    href: "#",
+                    target: "_blank",
+                    children: "Guiding Principles",
+                  }),
+                  /* @__PURE__ */ jsx15("a", {
+                    className:
+                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    href: "/dashboard/car-popularity#",
+                    children: "Terms of Use",
+                  }),
+                ],
+              }),
+            ],
+          }),
         ],
       }),
-      /* @__PURE__ */ jsx17("hr", { className: "dark:border-neutral-800" }),
-      /* @__PURE__ */ jsx17("div", {
-        className: cn11(
-          "mx-auto flex max-w-[90rem] justify-center py-12 text-gray-600 dark:text-gray-400 md:justify-start",
-          "pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]"
-        ),
-        children: renderComponent(config.footer.text),
-      }),
-    ],
+    }),
   });
 }
 
@@ -1491,21 +1433,21 @@ function Footer({ menu }) {
 import { NextSeo } from "next-seo";
 import { useTheme } from "next-themes";
 import NextHead from "next/head";
-import { useMounted as useMounted3 } from "nextra/hooks";
-import { Fragment as Fragment9, jsx as jsx18, jsxs as jsxs13 } from "react/jsx-runtime";
+import { useMounted as useMounted2 } from "nextra/hooks";
+import { Fragment as Fragment9, jsx as jsx16, jsxs as jsxs11 } from "react/jsx-runtime";
 function Head() {
   var _a;
   const config = useConfig();
   const { resolvedTheme } = useTheme();
-  const mounted = useMounted3();
+  const mounted = useMounted2();
   const head = typeof config.head === "function" ? config.head({}) : config.head;
   const hue = config.primaryHue;
   const { dark: darkHue, light: lightHue } =
     typeof hue === "number" ? { dark: hue, light: hue } : hue;
   const frontMatter = config.frontMatter;
-  return /* @__PURE__ */ jsxs13(Fragment9, {
+  return /* @__PURE__ */ jsxs11(Fragment9, {
     children: [
-      /* @__PURE__ */ jsx18(
+      /* @__PURE__ */ jsx16(
         NextSeo,
         __spreadValues(
           {
@@ -1517,38 +1459,38 @@ function Head() {
           (_a = config.useNextSeoProps) == null ? void 0 : _a.call(config)
         )
       ),
-      /* @__PURE__ */ jsxs13(NextHead, {
+      /* @__PURE__ */ jsxs11(NextHead, {
         children: [
           config.faviconGlyph
-            ? /* @__PURE__ */ jsx18("link", {
+            ? /* @__PURE__ */ jsx16("link", {
                 rel: "icon",
                 href: `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='.9em' font-size='90' text-anchor='middle'>${config.faviconGlyph}</text><style>text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";fill:black}@media(prefers-color-scheme:dark){text{fill:white}}</style></svg>`,
               })
             : null,
           mounted
-            ? /* @__PURE__ */ jsx18("meta", {
+            ? /* @__PURE__ */ jsx16("meta", {
                 name: "theme-color",
                 content: resolvedTheme === "dark" ? "#111" : "#fff",
               })
-            : /* @__PURE__ */ jsxs13(Fragment9, {
+            : /* @__PURE__ */ jsxs11(Fragment9, {
                 children: [
-                  /* @__PURE__ */ jsx18("meta", {
+                  /* @__PURE__ */ jsx16("meta", {
                     name: "theme-color",
                     content: "#fff",
                     media: "(prefers-color-scheme: light)",
                   }),
-                  /* @__PURE__ */ jsx18("meta", {
+                  /* @__PURE__ */ jsx16("meta", {
                     name: "theme-color",
                     content: "#111",
                     media: "(prefers-color-scheme: dark)",
                   }),
                 ],
               }),
-          /* @__PURE__ */ jsx18("meta", {
+          /* @__PURE__ */ jsx16("meta", {
             name: "viewport",
             content: "width=device-width, initial-scale=1.0, viewport-fit=cover",
           }),
-          /* @__PURE__ */ jsx18("style", {
+          /* @__PURE__ */ jsx16("style", {
             children: `
         :root {
           --nextra-primary-hue: ${lightHue}deg;
@@ -1569,12 +1511,137 @@ function Head() {
   });
 }
 
+// src/components/locale-switch.tsx
+import { addBasePath } from "next/dist/client/add-base-path";
+import { useRouter as useRouter3 } from "next/router";
+import { GlobeIcon } from "nextra/icons";
+
+// src/components/select.tsx
+import { Listbox, Transition as Transition2 } from "@headlessui/react";
+import cn10 from "clsx";
+import { useMounted as useMounted3 } from "nextra/hooks";
+import { CheckIcon } from "nextra/icons";
+import { createPortal } from "react-dom";
+import { jsx as jsx17, jsxs as jsxs12 } from "react/jsx-runtime";
+function Select({ options, selected, onChange, title, className }) {
+  const [trigger, container] = usePopper({
+    strategy: "fixed",
+    placement: "top-start",
+    modifiers: [
+      { name: "offset", options: { offset: [0, 10] } },
+      {
+        name: "sameWidth",
+        enabled: true,
+        fn({ state }) {
+          state.styles.popper.minWidth = `${state.rects.reference.width}px`;
+        },
+        phase: "beforeWrite",
+        requires: ["computeStyles"],
+      },
+    ],
+  });
+  return /* @__PURE__ */ jsx17(Listbox, {
+    value: selected,
+    onChange,
+    children: ({ open }) =>
+      /* @__PURE__ */ jsxs12(Listbox.Button, {
+        ref: trigger,
+        title,
+        className: cn10(
+          "h-7 rounded-md px-2 text-left text-xs font-medium text-gray-600 transition-colors dark:text-gray-400",
+          open
+            ? "dark:bg-primary-100/10 bg-gray-200 text-gray-900 dark:text-gray-50"
+            : "dark:hover:bg-primary-100/5 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-gray-50",
+          className
+        ),
+        children: [
+          selected.name,
+          /* @__PURE__ */ jsx17(Portal, {
+            children: /* @__PURE__ */ jsx17(Transition2, {
+              ref: container,
+              show: open,
+              as: Listbox.Options,
+              className:
+                "z-20 max-h-64 overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 dark:bg-neutral-800 dark:ring-white/20",
+              leave: "transition-opacity",
+              leaveFrom: "opacity-100",
+              leaveTo: "opacity-0",
+              children: options.map(option =>
+                /* @__PURE__ */ jsxs12(
+                  Listbox.Option,
+                  {
+                    value: option,
+                    className: ({ active }) =>
+                      cn10(
+                        active
+                          ? "bg-primary-50 text-primary-600 dark:bg-primary-500/10"
+                          : "text-gray-800 dark:text-gray-100",
+                        "relative cursor-pointer whitespace-nowrap py-1.5",
+                        "transition-colors ltr:pl-3 ltr:pr-9 rtl:pl-9 rtl:pr-3"
+                      ),
+                    children: [
+                      option.name,
+                      option.key === selected.key &&
+                        /* @__PURE__ */ jsx17("span", {
+                          className: "absolute inset-y-0 flex items-center ltr:right-3 rtl:left-3",
+                          children: /* @__PURE__ */ jsx17(CheckIcon, {}),
+                        }),
+                    ],
+                  },
+                  option.key
+                )
+              ),
+            }),
+          }),
+        ],
+      }),
+  });
+}
+function Portal(props) {
+  const mounted = useMounted3();
+  if (!mounted) return null;
+  return createPortal(props.children, document.body);
+}
+
+// src/components/locale-switch.tsx
+import { jsx as jsx18, jsxs as jsxs13 } from "react/jsx-runtime";
+function LocaleSwitch({ options, lite, className }) {
+  const { locale, asPath } = useRouter3();
+  const selected = options.find(l => locale === l.locale);
+  return /* @__PURE__ */ jsx18(Select, {
+    title: "Change language",
+    className,
+    onChange: option => {
+      const date = new Date(Date.now() + 365 * 24 * 60 * 60 * 1e3);
+      document.cookie = `NEXT_LOCALE=${option.key}; expires=${date.toUTCString()}; path=/`;
+      location.href = addBasePath(asPath);
+    },
+    selected: {
+      key: (selected == null ? void 0 : selected.locale) || "",
+      name: /* @__PURE__ */ jsxs13("span", {
+        className: "flex items-center gap-2",
+        children: [
+          /* @__PURE__ */ jsx18(GlobeIcon, {}),
+          /* @__PURE__ */ jsx18("span", {
+            className: lite ? "hidden" : "",
+            children: selected == null ? void 0 : selected.text,
+          }),
+        ],
+      }),
+    },
+    options: options.map(l => ({
+      key: l.locale,
+      name: l.text,
+    })),
+  });
+}
+
 // src/components/nav-links.tsx
-import cn13 from "clsx";
+import cn12 from "clsx";
 import { ArrowRightIcon as ArrowRightIcon2 } from "nextra/icons";
 
 // src/components/button.tsx
-import cn12 from "clsx";
+import cn11 from "clsx";
 import { Fragment as Fragment10, jsx as jsx19 } from "react/jsx-runtime";
 var Button = ({
   className = "",
@@ -1597,7 +1664,7 @@ var Button = ({
       onClick,
       disabled,
       type,
-      className: cn12(style.base, style[variant], className),
+      className: cn11(style.base, style[variant], className),
       children,
     }),
   });
@@ -1607,10 +1674,10 @@ var button_default = Button;
 // src/components/nav-links.tsx
 import { jsx as jsx20, jsxs as jsxs14 } from "react/jsx-runtime";
 var classes2 = {
-  link: cn13(
+  link: cn12(
     "flex max-w-[50%] items-center gap-1 py-4 text-base font-medium text-gray-600 transition-colors [word-break:break-word] hover:text-primary-600 dark:text-gray-300 text-sm"
   ),
-  icon: cn13("inline h-4 shrink-0"),
+  icon: cn12("inline h-4 shrink-0"),
 };
 var NavLinks = ({ flatDirectories, currentIndex }) => {
   const config = useConfig();
@@ -1622,7 +1689,7 @@ var NavLinks = ({ flatDirectories, currentIndex }) => {
   if (next2 && !next2.isUnderCurrentDocsTree) next2 = false;
   if (!prev && !next2) return null;
   return /* @__PURE__ */ jsxs14("div", {
-    className: cn13(
+    className: cn12(
       "mb-8 flex items-center border-t pt-8 dark:border-neutral-800",
       "contrast-more:border-neutral-400 dark:contrast-more:border-neutral-400",
       "print:hidden"
@@ -1632,12 +1699,12 @@ var NavLinks = ({ flatDirectories, currentIndex }) => {
         /* @__PURE__ */ jsx20(Anchor, {
           href: prev.route,
           title: prev.title,
-          className: cn13(classes2.link, "ltr:pr-4 rtl:pl-4"),
+          className: cn12(classes2.link, "ltr:pr-4 rtl:pl-4"),
           children: /* @__PURE__ */ jsxs14(button_default, {
             variant: "default",
             children: [
               /* @__PURE__ */ jsx20(ArrowRightIcon2, {
-                className: cn13(classes2.icon, "ltr:rotate-180"),
+                className: cn12(classes2.icon, "ltr:rotate-180"),
               }),
               prev.title,
             ],
@@ -1647,7 +1714,7 @@ var NavLinks = ({ flatDirectories, currentIndex }) => {
         /* @__PURE__ */ jsx20(Anchor, {
           href: next2.route,
           title: next2.title,
-          className: cn13(
+          className: cn12(
             classes2.link,
             "ltr:ml-auto ltr:pl-4 ltr:text-right rtl:mr-auto rtl:pr-4 rtl:text-left"
           ),
@@ -1656,7 +1723,7 @@ var NavLinks = ({ flatDirectories, currentIndex }) => {
             children: [
               next2.title,
               /* @__PURE__ */ jsx20(ArrowRightIcon2, {
-                className: cn13(classes2.icon, "rtl:rotate-180"),
+                className: cn12(classes2.icon, "rtl:rotate-180"),
               }),
             ],
           }),
@@ -1667,14 +1734,14 @@ var NavLinks = ({ flatDirectories, currentIndex }) => {
 
 // src/components/navbar.tsx
 import { Menu, Transition as Transition3 } from "@headlessui/react";
-import cn14 from "clsx";
+import cn13 from "clsx";
 import { useFSRoute } from "nextra/hooks";
 import { ArrowRightIcon as ArrowRightIcon3, MenuIcon } from "nextra/icons";
 import { jsx as jsx21, jsxs as jsxs15 } from "react/jsx-runtime";
 var classes3 = {
-  link: cn14("text-sm contrast-more:text-gray-700 contrast-more:dark:text-gray-100"),
-  active: cn14("font-medium subpixel-antialiased"),
-  inactive: cn14("text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"),
+  link: cn13("text-sm contrast-more:text-gray-700 contrast-more:dark:text-gray-100"),
+  active: cn13("font-medium subpixel-antialiased"),
+  inactive: cn13("text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"),
 };
 function NavbarMenu({ className, menu, children }) {
   const { items } = menu;
@@ -1684,7 +1751,7 @@ function NavbarMenu({ className, menu, children }) {
     children: /* @__PURE__ */ jsxs15(Menu, {
       children: [
         /* @__PURE__ */ jsx21(Menu.Button, {
-          className: cn14(
+          className: cn13(
             className,
             "-ml-2 hidden items-center whitespace-nowrap rounded p-2 md:inline-flex",
             classes3.inactive
@@ -1708,7 +1775,7 @@ function NavbarMenu({ className, menu, children }) {
                       item.href ||
                       ((_a = routes[key]) == null ? void 0 : _a.route) ||
                       menu.route + "/" + key,
-                    className: cn14(
+                    className: cn13(
                       "relative hidden w-full select-none whitespace-nowrap text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 md:inline-block",
                       "py-1.5 transition-colors ltr:pl-3 ltr:pr-9 rtl:pl-9 rtl:pr-3"
                     ),
@@ -1733,7 +1800,7 @@ function Navbar({ flatDirectories, items }) {
     className: "nextra-nav-container sticky top-0 z-20 w-full bg-transparent print:hidden",
     children: [
       /* @__PURE__ */ jsx21("div", {
-        className: cn14(
+        className: cn13(
           "nextra-nav-container-blur",
           "dark:bg-dark pointer-events-none absolute z-[-1] h-full w-full bg-white",
           "shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] dark:shadow-[0_-1px_0_rgba(255,255,255,.1)_inset]",
@@ -1775,7 +1842,7 @@ function Navbar({ flatDirectories, items }) {
                   return /* @__PURE__ */ jsxs15(
                     NavbarMenu,
                     {
-                      className: cn14(
+                      className: cn13(
                         classes3.link,
                         "flex gap-1",
                         isActive2 ? classes3.active : classes3.inactive
@@ -1803,7 +1870,7 @@ function Navbar({ flatDirectories, items }) {
                   Anchor,
                   {
                     href,
-                    "className": cn14(
+                    "className": cn13(
                       classes3.link,
                       "relative -ml-2 hidden whitespace-nowrap p-2 md:inline-block",
                       !isActive || page.newWindow ? classes3.inactive : classes3.active
@@ -1824,14 +1891,6 @@ function Navbar({ flatDirectories, items }) {
                   href
                 );
               }),
-              config.project.link
-                ? /* @__PURE__ */ jsx21(Anchor, {
-                    className: "p-2 text-current",
-                    href: config.project.link,
-                    newWindow: true,
-                    children: renderComponent(config.project.icon),
-                  })
-                : null,
               config.chat.link
                 ? /* @__PURE__ */ jsx21(Anchor, {
                     className: "p-2 text-current",
@@ -1846,7 +1905,7 @@ function Navbar({ flatDirectories, items }) {
                 "aria-label": "Menu",
                 "className": "nextra-hamburger -mr-2 rounded p-2 active:bg-gray-400/20 md:hidden",
                 "onClick": () => setMenu(!menu),
-                "children": /* @__PURE__ */ jsx21(MenuIcon, { className: cn14({ open: menu }) }),
+                "children": /* @__PURE__ */ jsx21(MenuIcon, { className: cn13({ open: menu }) }),
               }),
             ],
           }),
@@ -1913,7 +1972,7 @@ function ServerSideErrorPage() {
 }
 
 // src/components/sidebar.tsx
-import cn15 from "clsx";
+import cn14 from "clsx";
 import { useRouter as useRouter6 } from "next/router";
 import { useFSRoute as useFSRoute2 } from "nextra/hooks";
 import { ArrowRightIcon as ArrowRightIcon4, ExpandIcon } from "nextra/icons";
@@ -1940,22 +1999,22 @@ var Folder2 = memo3(function FolderInner(props) {
   });
 });
 var classes4 = {
-  link: cn15(
+  link: cn14(
     "flex rounded px-2 py-1.5 text-sm transition-colors [word-break:break-word]",
     "cursor-pointer [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] contrast-more:border"
   ),
-  inactive: cn15(
+  inactive: cn14(
     "text-gray-500 hover:bg-gray-100 hover:text-gray-900",
     "dark:text-neutral-400 dark:hover:bg-primary-100/5 dark:hover:text-gray-50",
     "contrast-more:text-gray-900 contrast-more:dark:text-gray-50",
     "contrast-more:border-transparent contrast-more:hover:border-gray-900 contrast-more:dark:hover:border-gray-50"
   ),
-  active: cn15(
+  active: cn14(
     "bg-primary-100 font-semibold text-primary-800 dark:bg-primary-400/10 dark:text-primary-600",
     "contrast-more:border-primary-500 contrast-more:dark:border-primary-500"
   ),
-  list: cn15("flex flex-col gap-1"),
-  border: cn15(
+  list: cn14("flex flex-col gap-1"),
+  border: cn14(
     "relative before:absolute before:inset-y-1",
     'before:w-px before:bg-gray-200 before:content-[""] dark:before:bg-neutral-800',
     "ltr:pl-3 ltr:before:left-0 rtl:pr-3 rtl:before:right-0"
@@ -2012,11 +2071,11 @@ function FolderImpl({ item, anchors }) {
   const isLink = "withIndexPage" in item && item.withIndexPage;
   const ComponentToUse = isLink ? Anchor : "button";
   return /* @__PURE__ */ jsxs16("li", {
-    className: cn15({ open, active }),
+    className: cn14({ open, active }),
     children: [
       /* @__PURE__ */ jsxs16(ComponentToUse, {
         href: isLink ? item.route : void 0,
-        className: cn15(
+        className: cn14(
           "items-center justify-between gap-2",
           !isLink && "w-full text-left",
           classes4.link,
@@ -2050,7 +2109,7 @@ function FolderImpl({ item, anchors }) {
           /* @__PURE__ */ jsx24(ArrowRightIcon4, {
             className:
               "h-[18px] min-w-[18px] rounded-sm p-0.5 hover:bg-gray-800/5 dark:hover:bg-gray-100/5",
-            pathClassName: cn15(
+            pathClassName: cn14(
               "origin-center transition-transform rtl:-rotate-180",
               open && "ltr:rotate-90 rtl:rotate-[-270deg]"
             ),
@@ -2062,7 +2121,7 @@ function FolderImpl({ item, anchors }) {
         isOpen: open,
         children: Array.isArray(item.children)
           ? /* @__PURE__ */ jsx24(Menu2, {
-              className: cn15(classes4.border, "ltr:ml-3 rtl:mr-3"),
+              className: cn14(classes4.border, "ltr:ml-3 rtl:mr-3"),
               directories: item.children,
               base: item.route,
               anchors,
@@ -2075,7 +2134,7 @@ function FolderImpl({ item, anchors }) {
 function Separator({ title }) {
   const config = useConfig();
   return /* @__PURE__ */ jsx24("li", {
-    className: cn15(
+    className: cn14(
       "[word-break:break-word]",
       title
         ? "mb-2 mt-5 px-2 py-1.5 text-sm font-semibold text-gray-900 first:mt-0 dark:text-gray-100"
@@ -2103,12 +2162,12 @@ function File2({ item, anchors }) {
     return /* @__PURE__ */ jsx24(Separator, { title: item.title });
   }
   return /* @__PURE__ */ jsxs16("li", {
-    className: cn15(classes4.list, { active }),
+    className: cn14(classes4.list, { active }),
     children: [
       /* @__PURE__ */ jsx24(Anchor, {
         href: item.href || item.route,
         newWindow: item.newWindow,
-        className: cn15(classes4.link, active ? classes4.active : classes4.inactive),
+        className: cn14(classes4.link, active ? classes4.active : classes4.inactive),
         onClick: () => {
           setMenu(false);
         },
@@ -2127,7 +2186,7 @@ function File2({ item, anchors }) {
       active &&
         anchors.length > 0 &&
         /* @__PURE__ */ jsx24("ul", {
-          className: cn15(classes4.list, classes4.border, "ltr:ml-3 rtl:mr-3"),
+          className: cn14(classes4.list, classes4.border, "ltr:ml-3 rtl:mr-3"),
           children: anchors.map(({ id, value }) => {
             var _a;
             return /* @__PURE__ */ jsx24(
@@ -2135,7 +2194,7 @@ function File2({ item, anchors }) {
               {
                 children: /* @__PURE__ */ jsx24("a", {
                   href: `#${id}`,
-                  className: cn15(
+                  className: cn14(
                     classes4.link,
                     'flex gap-2 before:opacity-25 before:content-["#"]',
                     ((_a = activeAnchor[id]) == null ? void 0 : _a.isActive)
@@ -2157,7 +2216,7 @@ function File2({ item, anchors }) {
 }
 function Menu2({ directories, anchors, className, onlyCurrentDocs }) {
   return /* @__PURE__ */ jsx24("ul", {
-    className: cn15(classes4.list, className),
+    className: cn14(classes4.list, className),
     children: directories.map(item =>
       !onlyCurrentDocs || item.isUnderCurrentDocsTree
         ? item.type === "menu" || (item.children && (item.children.length || !item.withIndexPage))
@@ -2222,14 +2281,14 @@ function Sidebar({
         ? /* @__PURE__ */ jsx24("div", { className: "h-0 w-64 shrink-0 max-xl:hidden" })
         : null,
       /* @__PURE__ */ jsx24("div", {
-        className: cn15(
+        className: cn14(
           "[transition:background-color_1.5s_ease] motion-reduce:transition-none",
           menu ? "fixed inset-0 z-10 bg-black/80 dark:bg-black/60" : "bg-transparent"
         ),
         onClick: () => setMenu(false),
       }),
       /* @__PURE__ */ jsxs16("aside", {
-        className: cn15(
+        className: cn14(
           "nextra-sidebar-container flex flex-col",
           "motion-reduce:transform-none md:top-16 md:shrink-0",
           "transform-gpu transition-all ease-in-out",
@@ -2255,7 +2314,7 @@ function Sidebar({
                 setFocused(item);
               },
               children: /* @__PURE__ */ jsxs16("div", {
-                className: cn15(
+                className: cn14(
                   "overflow-y-auto overflow-x-hidden",
                   "grow p-4 md:h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-menu-height))]",
                   showSidebar ? "nextra-scrollbar" : "no-scrollbar"
@@ -2284,7 +2343,7 @@ function Sidebar({
           }),
           hasMenu &&
             /* @__PURE__ */ jsxs16("div", {
-              "className": cn15(
+              "className": cn14(
                 "sticky bottom-0",
                 "dark:bg-dark bg-white",
                 // when banner is showed, sidebar links can be behind menu, set bg color as body bg color
@@ -2293,7 +2352,7 @@ function Sidebar({
                 "dark:border-neutral-800 dark:shadow-[0_-12px_16px_#111]",
                 "contrast-more:border-neutral-400 contrast-more:shadow-none contrast-more:dark:shadow-none",
                 showSidebar
-                  ? cn15(hasI18n && "justify-end", "border-t")
+                  ? cn14(hasI18n && "justify-end", "border-t")
                   : "flex-wrap justify-center py-4"
               ),
               "data-toggle-animation": showToggleAnimation
@@ -2306,7 +2365,7 @@ function Sidebar({
                   /* @__PURE__ */ jsx24(LocaleSwitch, {
                     options: config.i18n,
                     lite: !showSidebar,
-                    className: cn15(showSidebar ? "grow" : "max-md:grow"),
+                    className: cn14(showSidebar ? "grow" : "max-md:grow"),
                   }),
                 config.darkMode &&
                   /* @__PURE__ */ jsx24("div", {
@@ -2335,7 +2394,7 @@ function Sidebar({
 }
 
 // src/components/skip-nav.tsx
-import cn16 from "clsx";
+import cn15 from "clsx";
 import { forwardRef as forwardRef3 } from "react";
 import { jsx as jsx25 } from "react/jsx-runtime";
 var DEFAULT_ID = "reach-skip-nav";
@@ -2347,7 +2406,7 @@ var SkipNavLink = forwardRef3(function (_a, forwardedRef) {
   const className =
     providedClassName === void 0
       ? styled
-        ? cn16(
+        ? cn15(
             "sr-only",
             "focus:not-sr-only focus:fixed focus:z-50 focus:m-3 focus:ml-4 focus:h-[calc(var(--nextra-navbar-height)-1.5rem)] focus:rounded-lg focus:border focus:px-3 focus:py-2 focus:align-middle focus:text-sm focus:font-bold",
             "focus:text-gray-900 focus:dark:text-gray-100",
@@ -2380,7 +2439,7 @@ var SkipNavContent = forwardRef3(function (_a, forwardedRef) {
 SkipNavContent.displayName = "SkipNavContent";
 
 // src/components/steps.tsx
-import cn17 from "clsx";
+import cn16 from "clsx";
 import { jsx as jsx26 } from "react/jsx-runtime";
 function Steps(_a) {
   var _b = _a,
@@ -2391,7 +2450,7 @@ function Steps(_a) {
     __spreadProps(
       __spreadValues(
         {
-          className: cn17(
+          className: cn16(
             "nextra-steps mb-12 ml-4 border-l border-gray-200 pl-6",
             "[counter-reset:step] dark:border-neutral-800",
             className
@@ -2408,7 +2467,7 @@ function Steps(_a) {
 
 // src/components/tabs.tsx
 import { Tab as HeadlessTab } from "@headlessui/react";
-import cn18 from "clsx";
+import cn17 from "clsx";
 import { jsx as jsx27, jsxs as jsxs17 } from "react/jsx-runtime";
 function isTabItem(item) {
   if (item && typeof item === "object" && "label" in item) return true;
@@ -2443,7 +2502,7 @@ function Tabs({ items, selectedIndex, defaultIndex, onChange, children }) {
               {
                 disabled,
                 className: ({ selected }) =>
-                  cn18(
+                  cn17(
                     "mr-2 rounded-t p-2 font-medium leading-5 transition-colors",
                     "-mb-0.5 select-none border-b-2",
                     selected
@@ -2517,11 +2576,11 @@ function ThemeSwitch({ lite, className }) {
 }
 
 // src/components/toc.tsx
-import cn19 from "clsx";
+import cn18 from "clsx";
 import { useEffect as useEffect4, useMemo as useMemo3, useRef as useRef6 } from "react";
 import scrollIntoView2 from "scroll-into-view-if-needed";
 import { Fragment as Fragment12, jsx as jsx29, jsxs as jsxs19 } from "react/jsx-runtime";
-var linkClassName = cn19(
+var linkClassName = cn18(
   "text-xs font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100",
   "contrast-more:text-gray-800 contrast-more:dark:text-gray-50"
 );
@@ -2556,7 +2615,7 @@ function TOC({ headings, filePath }) {
   }, [activeSlug]);
   return /* @__PURE__ */ jsxs19("div", {
     ref: tocRef,
-    className: cn19(
+    className: cn18(
       "nextra-scrollbar sticky top-16 overflow-y-auto pr-4 pt-6 text-sm [hyphens:auto]",
       "max-h-[calc(100vh-var(--nextra-navbar-height)-env(safe-area-inset-bottom))] ltr:-mr-4 rtl:-ml-4"
     ),
@@ -2577,7 +2636,7 @@ function TOC({ headings, filePath }) {
                     className: "my-2 scroll-my-6 scroll-py-6",
                     children: /* @__PURE__ */ jsx29("a", {
                       href: `#${id}`,
-                      className: cn19(
+                      className: cn18(
                         {
                           2: "font-semibold",
                           3: "ltr:pl-4 rtl:pr-4",
@@ -2611,7 +2670,7 @@ function TOC({ headings, filePath }) {
         }),
       hasMetaInfo &&
         /* @__PURE__ */ jsxs19("div", {
-          className: cn19(
+          className: cn18(
             hasHeadings &&
               "dark:bg-dark mt-8 border-t bg-white pt-8 shadow-[0_-12px_16px_white] dark:shadow-[0_-12px_16px_#111]",
             "sticky bottom-0 flex flex-col items-start gap-2 pb-8 dark:border-neutral-800",
@@ -2813,7 +2872,7 @@ var DEFAULT_THEME = {
   },
   darkMode: true,
   direction: "ltr",
-  docsRepositoryBase: "https://github.com/shuding/nextra",
+  docsRepositoryBase: "https://github.com/data-gov-my/datagovmy-front/tree/main/apps/docs",
   editLink: {
     component: function EditLink({ className, filePath, children }) {
       const editUrl = useGitEditUrl(filePath);
@@ -2993,10 +3052,10 @@ if (IS_BROWSER) {
 import { normalizePages } from "nextra/normalize-pages";
 
 // src/mdx-components.tsx
-import cn22 from "clsx";
+import cn21 from "clsx";
 
 // src/components/code.tsx
-import cn20 from "clsx";
+import cn19 from "clsx";
 import { jsx as jsx32 } from "react/jsx-runtime";
 var Code = _a => {
   var _b = _a,
@@ -3008,7 +3067,7 @@ var Code = _a => {
     __spreadProps(
       __spreadValues(
         {
-          className: cn20(
+          className: cn19(
             "bg-outline break-words rounded-md border border-black border-opacity-[0.04] px-[.25em] py-0.5 text-[.9em]",
             "dark:border-white/10 dark:bg-white/10",
             hasLineNumbers && "[counter-reset:line]",
@@ -3026,7 +3085,7 @@ var Code = _a => {
 };
 
 // src/components/pre.tsx
-import cn21 from "clsx";
+import cn20 from "clsx";
 import { useCallback as useCallback6, useRef as useRef7 } from "react";
 
 // src/components/copy-to-clipboard.tsx
@@ -3109,7 +3168,7 @@ var Pre = _a => {
         __spreadProps(
           __spreadValues(
             {
-              className: cn21(
+              className: cn20(
                 "bg-primary-700/5 dark:bg-primary-300/10 mb-4 overflow-x-auto rounded-xl text-[.9em] font-medium subpixel-antialiased",
                 "contrast-more:border-primary-900/20 contrast-more:dark:border-primary-100/40 contrast-more:border contrast-more:contrast-150",
                 filename ? "pb-4 pt-12" : "py-4",
@@ -3125,7 +3184,7 @@ var Pre = _a => {
         )
       ),
       /* @__PURE__ */ jsxs21("div", {
-        className: cn21(
+        className: cn20(
           "opacity-0 transition focus-within:opacity-100 [div:hover>&]:opacity-100",
           "absolute right-0 m-[11px] flex gap-1",
           filename ? "top-8" : "top-0"
@@ -3260,7 +3319,7 @@ function HeadingLink(_a) {
     __spreadProps(
       __spreadValues(
         {
-          className: cn22(
+          className: cn21(
             "font-semibold tracking-tight text-slate-900 dark:text-slate-100",
             {
               h2: "dark:border-primary-100/10 mt-10 border-b border-neutral-200/70 pb-1 text-3xl contrast-more:border-neutral-400 contrast-more:dark:border-neutral-400",
@@ -3368,7 +3427,7 @@ var Summary = props => {
     __spreadProps(
       __spreadValues(
         {
-          className: cn22(
+          className: cn21(
             "flex cursor-pointer list-none items-center p-1 transition-colors hover:bg-gray-100 dark:hover:bg-neutral-800",
             "before:mr-1 before:inline-block before:transition-transform before:content-[''] dark:before:invert",
             "rtl:before:rotate-180 [[data-expanded]>&]:before:rotate-90"
@@ -3396,7 +3455,7 @@ var Link = _a => {
       {
         href,
         newWindow: EXTERNAL_HREF_REGEX.test(href),
-        className: cn22(
+        className: cn21(
           "text-primary-600 underline decoration-from-font [text-underline-position:from-font]",
           className
         ),
@@ -3458,7 +3517,7 @@ var getComponents = ({ isRawLayout, components }) => {
           "blockquote",
           __spreadValues(
             {
-              className: cn22(
+              className: cn21(
                 "mt-6 border-gray-300 italic text-gray-700 dark:border-gray-700 dark:text-gray-400",
                 "first:mt-0 ltr:border-l-2 ltr:pl-6 rtl:border-r-2 rtl:pr-6"
               ),
@@ -3500,8 +3559,8 @@ import { Callout } from "nextra/components";
 import { useTheme as useTheme3 } from "next-themes";
 import { Fragment as Fragment14, jsx as jsx40, jsxs as jsxs23 } from "react/jsx-runtime";
 var classes5 = {
-  toc: cn23("nextra-toc order-last hidden w-64 shrink-0 xl:block print:hidden"),
-  main: cn23("w-full break-words"),
+  toc: cn22("nextra-toc order-last hidden w-64 shrink-0 xl:block print:hidden"),
+  main: cn22("w-full break-words"),
 };
 var Body = ({ themeContext, breadcrumb, timestamp, navigation, children }) => {
   var _a;
@@ -3528,7 +3587,7 @@ var Body = ({ themeContext, breadcrumb, timestamp, navigation, children }) => {
     ((_a = config.main) == null ? void 0 : _a.call(config, { children: content })) || content;
   if (themeContext.layout === "full") {
     return /* @__PURE__ */ jsx40("article", {
-      className: cn23(
+      className: cn22(
         classes5.main,
         "nextra-content min-h-[calc(100vh-var(--nextra-navbar-height))] pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]"
       ),
@@ -3536,7 +3595,7 @@ var Body = ({ themeContext, breadcrumb, timestamp, navigation, children }) => {
     });
   }
   return /* @__PURE__ */ jsx40("article", {
-    className: cn23(
+    className: cn22(
       classes5.main,
       "nextra-content flex min-h-[calc(100vh-var(--nextra-navbar-height))] min-w-0 justify-center pb-8 pr-[calc(env(safe-area-inset-right)-1.5rem)]",
       themeContext.typesetting === "article" && "nextra-body-typesetting-article"
@@ -3583,7 +3642,7 @@ var InnerLayout = ({ filePath, pageMap, frontMatter, headings, timestamp, childr
           "aria-label": "table of contents",
         })
       : /* @__PURE__ */ jsx40("nav", {
-          "className": cn23(classes5.toc, "px-4"),
+          "className": cn22(classes5.toc, "px-4"),
           "aria-label": "table of contents",
           "children": renderComponent(config.toc.component, {
             headings: config.toc.float ? headings : [],
@@ -3613,7 +3672,7 @@ var InnerLayout = ({ filePath, pageMap, frontMatter, headings, timestamp, childr
             items: topLevelNavbarItems,
           }),
         /* @__PURE__ */ jsx40("div", {
-          className: cn23("mx-auto flex", themeContext.layout !== "raw" && "max-w-[90rem]"),
+          className: cn22("mx-auto flex", themeContext.layout !== "raw" && "max-w-[90rem]"),
           children: /* @__PURE__ */ jsxs23(ActiveAnchorProvider, {
             children: [
               /* @__PURE__ */ jsx40(Sidebar, {

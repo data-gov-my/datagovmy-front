@@ -27,38 +27,38 @@ declare const themeSchema: z.ZodObject<
       {
         dismissible: z.ZodBoolean;
         key: z.ZodString;
-        text: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+        text: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
       },
       "strict",
       z.ZodTypeAny,
       {
         dismissible: boolean;
         key: string;
-        text?: ReactNode | FC<{}>;
+        text?: ReactNode | FC;
       },
       {
         dismissible: boolean;
         key: string;
-        text?: ReactNode | FC<{}>;
+        text?: ReactNode | FC;
       }
     >;
     chat: z.ZodObject<
       {
-        icon: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        icon: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         link: z.ZodOptional<z.ZodString>;
       },
       "strict",
       z.ZodTypeAny,
       {
-        icon?: ReactNode | FC<{}>;
+        icon?: ReactNode | FC;
         link?: string | undefined;
       },
       {
-        icon?: ReactNode | FC<{}>;
+        icon?: ReactNode | FC;
         link?: string | undefined;
       }
     >;
-    components: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<FC<{}>, z.ZodTypeDef, FC<{}>>>>;
+    components: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<FC, z.ZodTypeDef, FC>>>;
     darkMode: z.ZodBoolean;
     direction: z.ZodEnum<["ltr", "rtl"]>;
     docsRepositoryBase: z.ZodString;
@@ -77,7 +77,7 @@ declare const themeSchema: z.ZodObject<
             filePath?: string | undefined;
           }>
         >;
-        text: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        text: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
       },
       "strict",
       z.ZodTypeAny,
@@ -87,7 +87,7 @@ declare const themeSchema: z.ZodObject<
           className?: string | undefined;
           filePath?: string | undefined;
         }>;
-        text?: ReactNode | FC<{}>;
+        text?: ReactNode | FC;
       },
       {
         component: FC<{
@@ -95,13 +95,13 @@ declare const themeSchema: z.ZodObject<
           className?: string | undefined;
           filePath?: string | undefined;
         }>;
-        text?: ReactNode | FC<{}>;
+        text?: ReactNode | FC;
       }
     >;
     faviconGlyph: z.ZodOptional<z.ZodString>;
     feedback: z.ZodObject<
       {
-        content: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        content: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         labels: z.ZodString;
         useLink: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
       },
@@ -110,12 +110,12 @@ declare const themeSchema: z.ZodObject<
       {
         labels: string;
         useLink: (...args: unknown[]) => string;
-        content?: ReactNode | FC<{}>;
+        content?: ReactNode | FC;
       },
       {
         labels: string;
         useLink: (...args: unknown[]) => string;
-        content?: ReactNode | FC<{}>;
+        content?: ReactNode | FC;
       }
     >;
     footer: z.ZodObject<
@@ -131,7 +131,7 @@ declare const themeSchema: z.ZodObject<
               menu: boolean;
             }>
         >;
-        text: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        text: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
       },
       "strict",
       z.ZodTypeAny,
@@ -141,7 +141,7 @@ declare const themeSchema: z.ZodObject<
           | FC<{
               menu: boolean;
             }>;
-        text?: ReactNode | FC<{}>;
+        text?: ReactNode | FC;
       },
       {
         component?:
@@ -149,7 +149,7 @@ declare const themeSchema: z.ZodObject<
           | FC<{
               menu: boolean;
             }>;
-        text?: ReactNode | FC<{}>;
+        text?: ReactNode | FC;
       }
     >;
     gitTimestamp: z.ZodType<
@@ -163,7 +163,7 @@ declare const themeSchema: z.ZodObject<
           timestamp: Date;
         }>
     >;
-    head: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+    head: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
     i18n: z.ZodArray<
       z.ZodObject<
         {
@@ -186,7 +186,7 @@ declare const themeSchema: z.ZodObject<
       >,
       "many"
     >;
-    logo: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+    logo: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
     logoLink: z.ZodUnion<[z.ZodBoolean, z.ZodString]>;
     main: z.ZodOptional<
       z.ZodType<
@@ -206,19 +206,17 @@ declare const themeSchema: z.ZodObject<
           z.ZodTypeDef,
           ReactNode | FC<NavBarProps>
         >;
-        extraContent: z.ZodOptional<
-          z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>
-        >;
+        extraContent: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
       },
       "strict",
       z.ZodTypeAny,
       {
         component?: ReactNode | FC<NavBarProps>;
-        extraContent?: ReactNode | FC<{}>;
+        extraContent?: ReactNode | FC;
       },
       {
         component?: ReactNode | FC<NavBarProps>;
-        extraContent?: ReactNode | FC<{}>;
+        extraContent?: ReactNode | FC;
       }
     >;
     navigation: z.ZodUnion<
@@ -263,18 +261,18 @@ declare const themeSchema: z.ZodObject<
     >;
     notFound: z.ZodObject<
       {
-        content: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        content: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         labels: z.ZodString;
       },
       "strict",
       z.ZodTypeAny,
       {
         labels: string;
-        content?: ReactNode | FC<{}>;
+        content?: ReactNode | FC;
       },
       {
         labels: string;
-        content?: ReactNode | FC<{}>;
+        content?: ReactNode | FC;
       }
     >;
     primaryHue: z.ZodUnion<
@@ -300,17 +298,17 @@ declare const themeSchema: z.ZodObject<
     >;
     project: z.ZodObject<
       {
-        icon: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        icon: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         link: z.ZodOptional<z.ZodString>;
       },
       "strict",
       z.ZodTypeAny,
       {
-        icon?: ReactNode | FC<{}>;
+        icon?: ReactNode | FC;
         link?: string | undefined;
       },
       {
-        icon?: ReactNode | FC<{}>;
+        icon?: ReactNode | FC;
         link?: string | undefined;
       }
     >;
@@ -329,9 +327,9 @@ declare const themeSchema: z.ZodObject<
               directories: Item[];
             }>
         >;
-        emptyResult: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        emptyResult: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         error: z.ZodUnion<[z.ZodString, z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>]>;
-        loading: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        loading: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         placeholder: z.ZodUnion<
           [z.ZodString, z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>]
         >;
@@ -349,8 +347,8 @@ declare const themeSchema: z.ZodObject<
               className?: string | undefined;
               directories: Item[];
             }>;
-        emptyResult?: ReactNode | FC<{}>;
-        loading?: ReactNode | FC<{}>;
+        emptyResult?: ReactNode | FC;
+        loading?: ReactNode | FC;
       },
       {
         error: (string | ((...args: unknown[]) => string)) &
@@ -363,24 +361,24 @@ declare const themeSchema: z.ZodObject<
               className?: string | undefined;
               directories: Item[];
             }>;
-        emptyResult?: ReactNode | FC<{}>;
-        loading?: ReactNode | FC<{}>;
+        emptyResult?: ReactNode | FC;
+        loading?: ReactNode | FC;
       }
     >;
     serverSideError: z.ZodObject<
       {
-        content: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        content: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         labels: z.ZodString;
       },
       "strict",
       z.ZodTypeAny,
       {
         labels: string;
-        content?: ReactNode | FC<{}>;
+        content?: ReactNode | FC;
       },
       {
         labels: string;
-        content?: ReactNode | FC<{}>;
+        content?: ReactNode | FC;
       }
     >;
     sidebar: z.ZodObject<
@@ -561,7 +559,7 @@ declare const themeSchema: z.ZodObject<
     toc: z.ZodObject<
       {
         component: z.ZodType<ReactNode | FC<TOCProps>, z.ZodTypeDef, ReactNode | FC<TOCProps>>;
-        extraContent: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        extraContent: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
         float: z.ZodBoolean;
         headingComponent: z.ZodOptional<
           z.ZodType<
@@ -576,33 +574,33 @@ declare const themeSchema: z.ZodObject<
             }>
           >
         >;
-        title: z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>;
+        title: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
       },
       "strict",
       z.ZodTypeAny,
       {
         float: boolean;
         component?: ReactNode | FC<TOCProps>;
-        extraContent?: ReactNode | FC<{}>;
+        extraContent?: ReactNode | FC;
         headingComponent?:
           | FC<{
               id: string;
               children: string;
             }>
           | undefined;
-        title?: ReactNode | FC<{}>;
+        title?: ReactNode | FC;
       },
       {
         float: boolean;
         component?: ReactNode | FC<TOCProps>;
-        extraContent?: ReactNode | FC<{}>;
+        extraContent?: ReactNode | FC;
         headingComponent?:
           | FC<{
               id: string;
               children: string;
             }>
           | undefined;
-        title?: ReactNode | FC<{}>;
+        title?: ReactNode | FC;
       }
     >;
     useNextSeoProps: z.ZodType<() => NextSeoProps | void, z.ZodTypeDef, () => NextSeoProps | void>;
@@ -628,10 +626,10 @@ declare const themeSchema: z.ZodObject<
     banner: {
       dismissible: boolean;
       key: string;
-      text?: ReactNode | FC<{}>;
+      text?: ReactNode | FC;
     };
     chat: {
-      icon?: ReactNode | FC<{}>;
+      icon?: ReactNode | FC;
       link?: string | undefined;
     };
     darkMode: boolean;
@@ -643,12 +641,12 @@ declare const themeSchema: z.ZodObject<
         className?: string | undefined;
         filePath?: string | undefined;
       }>;
-      text?: ReactNode | FC<{}>;
+      text?: ReactNode | FC;
     };
     feedback: {
       labels: string;
       useLink: (...args: unknown[]) => string;
-      content?: ReactNode | FC<{}>;
+      content?: ReactNode | FC;
     };
     footer: {
       component?:
@@ -656,7 +654,7 @@ declare const themeSchema: z.ZodObject<
         | FC<{
             menu: boolean;
           }>;
-      text?: ReactNode | FC<{}>;
+      text?: ReactNode | FC;
     };
     i18n: {
       text: string;
@@ -666,7 +664,7 @@ declare const themeSchema: z.ZodObject<
     logoLink: string | boolean;
     navbar: {
       component?: ReactNode | FC<NavBarProps>;
-      extraContent?: ReactNode | FC<{}>;
+      extraContent?: ReactNode | FC;
     };
     nextThemes: {
       defaultTheme: string;
@@ -675,7 +673,7 @@ declare const themeSchema: z.ZodObject<
     };
     notFound: {
       labels: string;
-      content?: ReactNode | FC<{}>;
+      content?: ReactNode | FC;
     };
     primaryHue: (
       | number
@@ -693,7 +691,7 @@ declare const themeSchema: z.ZodObject<
         | undefined
       );
     project: {
-      icon?: ReactNode | FC<{}>;
+      icon?: ReactNode | FC;
       link?: string | undefined;
     };
     search: {
@@ -707,12 +705,12 @@ declare const themeSchema: z.ZodObject<
             className?: string | undefined;
             directories: Item[];
           }>;
-      emptyResult?: ReactNode | FC<{}>;
-      loading?: ReactNode | FC<{}>;
+      emptyResult?: ReactNode | FC;
+      loading?: ReactNode | FC;
     };
     serverSideError: {
       labels: string;
-      content?: ReactNode | FC<{}>;
+      content?: ReactNode | FC;
     };
     sidebar: {
       defaultMenuCollapseLevel: number;
@@ -761,25 +759,25 @@ declare const themeSchema: z.ZodObject<
     toc: {
       float: boolean;
       component?: ReactNode | FC<TOCProps>;
-      extraContent?: ReactNode | FC<{}>;
+      extraContent?: ReactNode | FC;
       headingComponent?:
         | FC<{
             id: string;
             children: string;
           }>
         | undefined;
-      title?: ReactNode | FC<{}>;
+      title?: ReactNode | FC;
     };
     useNextSeoProps: () => NextSeoProps | void;
-    components?: Record<string, FC<{}>> | undefined;
+    components?: Record<string, FC> | undefined;
     faviconGlyph?: string | undefined;
     gitTimestamp?:
       | ReactNode
       | FC<{
           timestamp: Date;
         }>;
-    head?: ReactNode | FC<{}>;
-    logo?: ReactNode | FC<{}>;
+    head?: ReactNode | FC;
+    logo?: ReactNode | FC;
     main?:
       | FC<{
           children: ReactNode;
@@ -805,10 +803,10 @@ declare const themeSchema: z.ZodObject<
     banner: {
       dismissible: boolean;
       key: string;
-      text?: ReactNode | FC<{}>;
+      text?: ReactNode | FC;
     };
     chat: {
-      icon?: ReactNode | FC<{}>;
+      icon?: ReactNode | FC;
       link?: string | undefined;
     };
     darkMode: boolean;
@@ -820,12 +818,12 @@ declare const themeSchema: z.ZodObject<
         className?: string | undefined;
         filePath?: string | undefined;
       }>;
-      text?: ReactNode | FC<{}>;
+      text?: ReactNode | FC;
     };
     feedback: {
       labels: string;
       useLink: (...args: unknown[]) => string;
-      content?: ReactNode | FC<{}>;
+      content?: ReactNode | FC;
     };
     footer: {
       component?:
@@ -833,7 +831,7 @@ declare const themeSchema: z.ZodObject<
         | FC<{
             menu: boolean;
           }>;
-      text?: ReactNode | FC<{}>;
+      text?: ReactNode | FC;
     };
     i18n: {
       text: string;
@@ -843,7 +841,7 @@ declare const themeSchema: z.ZodObject<
     logoLink: string | boolean;
     navbar: {
       component?: ReactNode | FC<NavBarProps>;
-      extraContent?: ReactNode | FC<{}>;
+      extraContent?: ReactNode | FC;
     };
     nextThemes: {
       defaultTheme: string;
@@ -852,7 +850,7 @@ declare const themeSchema: z.ZodObject<
     };
     notFound: {
       labels: string;
-      content?: ReactNode | FC<{}>;
+      content?: ReactNode | FC;
     };
     primaryHue: (
       | number
@@ -870,7 +868,7 @@ declare const themeSchema: z.ZodObject<
         | undefined
       );
     project: {
-      icon?: ReactNode | FC<{}>;
+      icon?: ReactNode | FC;
       link?: string | undefined;
     };
     search: {
@@ -884,12 +882,12 @@ declare const themeSchema: z.ZodObject<
             className?: string | undefined;
             directories: Item[];
           }>;
-      emptyResult?: ReactNode | FC<{}>;
-      loading?: ReactNode | FC<{}>;
+      emptyResult?: ReactNode | FC;
+      loading?: ReactNode | FC;
     };
     serverSideError: {
       labels: string;
-      content?: ReactNode | FC<{}>;
+      content?: ReactNode | FC;
     };
     sidebar: {
       defaultMenuCollapseLevel: number;
@@ -938,25 +936,25 @@ declare const themeSchema: z.ZodObject<
     toc: {
       float: boolean;
       component?: ReactNode | FC<TOCProps>;
-      extraContent?: ReactNode | FC<{}>;
+      extraContent?: ReactNode | FC;
       headingComponent?:
         | FC<{
             id: string;
             children: string;
           }>
         | undefined;
-      title?: ReactNode | FC<{}>;
+      title?: ReactNode | FC;
     };
     useNextSeoProps: () => NextSeoProps | void;
-    components?: Record<string, FC<{}>> | undefined;
+    components?: Record<string, FC> | undefined;
     faviconGlyph?: string | undefined;
     gitTimestamp?:
       | ReactNode
       | FC<{
           timestamp: Date;
         }>;
-    head?: ReactNode | FC<{}>;
-    logo?: ReactNode | FC<{}>;
+    head?: ReactNode | FC;
+    logo?: ReactNode | FC;
     main?:
       | FC<{
           children: ReactNode;
@@ -995,7 +993,7 @@ declare const publicThemeSchema: z.ZodObject<
           dismissible: z.ZodOptional<z.ZodBoolean>;
           key: z.ZodOptional<z.ZodString>;
           text: z.ZodOptional<
-            z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>
+            z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>
           >;
         },
         "strict",
@@ -1003,35 +1001,35 @@ declare const publicThemeSchema: z.ZodObject<
         {
           dismissible?: boolean | undefined;
           key?: string | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         },
         {
           dismissible?: boolean | undefined;
           key?: string | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       >
     >;
     chat: z.ZodOptional<
       z.ZodObject<
         {
-          icon: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          icon: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           link: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         },
         "strict",
         z.ZodTypeAny,
         {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         },
         {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         }
       >
     >;
     components: z.ZodOptional<
-      z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<FC<{}>, z.ZodTypeDef, FC<{}>>>>
+      z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodType<FC, z.ZodTypeDef, FC>>>
     >;
     darkMode: z.ZodOptional<z.ZodBoolean>;
     direction: z.ZodOptional<z.ZodEnum<["ltr", "rtl"]>>;
@@ -1054,7 +1052,7 @@ declare const publicThemeSchema: z.ZodObject<
               }>
             >
           >;
-          text: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          text: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
         },
         "strict",
         z.ZodTypeAny,
@@ -1066,7 +1064,7 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         },
         {
           component?:
@@ -1076,7 +1074,7 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       >
     >;
@@ -1084,19 +1082,19 @@ declare const publicThemeSchema: z.ZodObject<
     feedback: z.ZodOptional<
       z.ZodObject<
         {
-          content: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          content: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           labels: z.ZodOptional<z.ZodString>;
           useLink: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
         },
         "strict",
         z.ZodTypeAny,
         {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         },
         {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         }
@@ -1118,7 +1116,7 @@ declare const publicThemeSchema: z.ZodObject<
                 }>
             >
           >;
-          text: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          text: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
         },
         "strict",
         z.ZodTypeAny,
@@ -1128,7 +1126,7 @@ declare const publicThemeSchema: z.ZodObject<
             | FC<{
                 menu: boolean;
               }>;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         },
         {
           component?:
@@ -1136,7 +1134,7 @@ declare const publicThemeSchema: z.ZodObject<
             | FC<{
                 menu: boolean;
               }>;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       >
     >;
@@ -1153,8 +1151,8 @@ declare const publicThemeSchema: z.ZodObject<
           }>
       >
     >;
-    head: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
-    logo: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+    head: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
+    logo: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
     logoLink: z.ZodOptional<z.ZodUnion<[z.ZodBoolean, z.ZodString]>>;
     main: z.ZodOptional<
       z.ZodOptional<
@@ -1176,18 +1174,18 @@ declare const publicThemeSchema: z.ZodObject<
             z.ZodType<ReactNode | FC<NavBarProps>, z.ZodTypeDef, ReactNode | FC<NavBarProps>>
           >;
           extraContent: z.ZodOptional<
-            z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>
+            z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>
           >;
         },
         "strict",
         z.ZodTypeAny,
         {
           component?: ReactNode | FC<NavBarProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
         },
         {
           component?: ReactNode | FC<NavBarProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
         }
       >
     >;
@@ -1215,17 +1213,17 @@ declare const publicThemeSchema: z.ZodObject<
     notFound: z.ZodOptional<
       z.ZodObject<
         {
-          content: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          content: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           labels: z.ZodOptional<z.ZodString>;
         },
         "strict",
         z.ZodTypeAny,
         {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         },
         {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         }
       >
@@ -1256,17 +1254,17 @@ declare const publicThemeSchema: z.ZodObject<
     project: z.ZodOptional<
       z.ZodObject<
         {
-          icon: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          icon: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           link: z.ZodOptional<z.ZodOptional<z.ZodString>>;
         },
         "strict",
         z.ZodTypeAny,
         {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         },
         {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         }
       >
@@ -1289,13 +1287,11 @@ declare const publicThemeSchema: z.ZodObject<
                 }>
             >
           >;
-          emptyResult: z.ZodOptional<
-            z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>
-          >;
+          emptyResult: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           error: z.ZodOptional<
             z.ZodUnion<[z.ZodString, z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>]>
           >;
-          loading: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          loading: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           placeholder: z.ZodOptional<
             z.ZodUnion<[z.ZodString, z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>]>
           >;
@@ -1309,9 +1305,9 @@ declare const publicThemeSchema: z.ZodObject<
                 className?: string | undefined;
                 directories: Item[];
               }>;
-          emptyResult?: ReactNode | FC<{}>;
+          emptyResult?: ReactNode | FC;
           error?: string | ((...args: unknown[]) => string) | undefined;
-          loading?: ReactNode | FC<{}>;
+          loading?: ReactNode | FC;
           placeholder?: string | ((...args: unknown[]) => string) | undefined;
         },
         {
@@ -1321,9 +1317,9 @@ declare const publicThemeSchema: z.ZodObject<
                 className?: string | undefined;
                 directories: Item[];
               }>;
-          emptyResult?: ReactNode | FC<{}>;
+          emptyResult?: ReactNode | FC;
           error?: string | ((...args: unknown[]) => string) | undefined;
-          loading?: ReactNode | FC<{}>;
+          loading?: ReactNode | FC;
           placeholder?: string | ((...args: unknown[]) => string) | undefined;
         }
       >
@@ -1331,17 +1327,17 @@ declare const publicThemeSchema: z.ZodObject<
     serverSideError: z.ZodOptional<
       z.ZodObject<
         {
-          content: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          content: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           labels: z.ZodOptional<z.ZodString>;
         },
         "strict",
         z.ZodTypeAny,
         {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         },
         {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         }
       >
@@ -1511,9 +1507,7 @@ declare const publicThemeSchema: z.ZodObject<
           component: z.ZodOptional<
             z.ZodType<ReactNode | FC<TOCProps>, z.ZodTypeDef, ReactNode | FC<TOCProps>>
           >;
-          extraContent: z.ZodOptional<
-            z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>
-          >;
+          extraContent: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
           float: z.ZodOptional<z.ZodBoolean>;
           headingComponent: z.ZodOptional<
             z.ZodOptional<
@@ -1530,13 +1524,13 @@ declare const publicThemeSchema: z.ZodObject<
               >
             >
           >;
-          title: z.ZodOptional<z.ZodType<ReactNode | FC<{}>, z.ZodTypeDef, ReactNode | FC<{}>>>;
+          title: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
         },
         "strict",
         z.ZodTypeAny,
         {
           component?: ReactNode | FC<TOCProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
           float?: boolean | undefined;
           headingComponent?:
             | FC<{
@@ -1544,11 +1538,11 @@ declare const publicThemeSchema: z.ZodObject<
                 children: string;
               }>
             | undefined;
-          title?: ReactNode | FC<{}>;
+          title?: ReactNode | FC;
         },
         {
           component?: ReactNode | FC<TOCProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
           float?: boolean | undefined;
           headingComponent?:
             | FC<{
@@ -1556,7 +1550,7 @@ declare const publicThemeSchema: z.ZodObject<
                 children: string;
               }>
             | undefined;
-          title?: ReactNode | FC<{}>;
+          title?: ReactNode | FC;
         }
       >
     >;
@@ -1602,16 +1596,16 @@ declare const publicThemeSchema: z.ZodObject<
       | {
           dismissible?: boolean | undefined;
           key?: string | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       | undefined;
     chat?:
       | {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         }
       | undefined;
-    components?: Record<string, FC<{}>> | undefined;
+    components?: Record<string, FC> | undefined;
     darkMode?: boolean | undefined;
     direction?: "ltr" | "rtl" | undefined;
     docsRepositoryBase?: string | undefined;
@@ -1624,13 +1618,13 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       | undefined;
     faviconGlyph?: string | undefined;
     feedback?:
       | {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         }
@@ -1642,7 +1636,7 @@ declare const publicThemeSchema: z.ZodObject<
             | FC<{
                 menu: boolean;
               }>;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       | undefined;
     gitTimestamp?:
@@ -1650,8 +1644,8 @@ declare const publicThemeSchema: z.ZodObject<
       | FC<{
           timestamp: Date;
         }>;
-    head?: ReactNode | FC<{}>;
-    logo?: ReactNode | FC<{}>;
+    head?: ReactNode | FC;
+    logo?: ReactNode | FC;
     logoLink?: string | boolean | undefined;
     main?:
       | FC<{
@@ -1661,7 +1655,7 @@ declare const publicThemeSchema: z.ZodObject<
     navbar?:
       | {
           component?: ReactNode | FC<NavBarProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
         }
       | undefined;
     nextThemes?:
@@ -1673,7 +1667,7 @@ declare const publicThemeSchema: z.ZodObject<
       | undefined;
     notFound?:
       | {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         }
       | undefined;
@@ -1686,7 +1680,7 @@ declare const publicThemeSchema: z.ZodObject<
       | undefined;
     project?:
       | {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         }
       | undefined;
@@ -1698,15 +1692,15 @@ declare const publicThemeSchema: z.ZodObject<
                 className?: string | undefined;
                 directories: Item[];
               }>;
-          emptyResult?: ReactNode | FC<{}>;
+          emptyResult?: ReactNode | FC;
           error?: string | ((...args: unknown[]) => string) | undefined;
-          loading?: ReactNode | FC<{}>;
+          loading?: ReactNode | FC;
           placeholder?: string | ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     serverSideError?:
       | {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         }
       | undefined;
@@ -1748,7 +1742,7 @@ declare const publicThemeSchema: z.ZodObject<
     toc?:
       | {
           component?: ReactNode | FC<TOCProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
           float?: boolean | undefined;
           headingComponent?:
             | FC<{
@@ -1756,7 +1750,7 @@ declare const publicThemeSchema: z.ZodObject<
                 children: string;
               }>
             | undefined;
-          title?: ReactNode | FC<{}>;
+          title?: ReactNode | FC;
         }
       | undefined;
     useNextSeoProps?: (() => NextSeoProps | void) | undefined;
@@ -1780,16 +1774,16 @@ declare const publicThemeSchema: z.ZodObject<
       | {
           dismissible?: boolean | undefined;
           key?: string | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       | undefined;
     chat?:
       | {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         }
       | undefined;
-    components?: Record<string, FC<{}>> | undefined;
+    components?: Record<string, FC> | undefined;
     darkMode?: boolean | undefined;
     direction?: "ltr" | "rtl" | undefined;
     docsRepositoryBase?: string | undefined;
@@ -1802,13 +1796,13 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       | undefined;
     faviconGlyph?: string | undefined;
     feedback?:
       | {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         }
@@ -1820,7 +1814,7 @@ declare const publicThemeSchema: z.ZodObject<
             | FC<{
                 menu: boolean;
               }>;
-          text?: ReactNode | FC<{}>;
+          text?: ReactNode | FC;
         }
       | undefined;
     gitTimestamp?:
@@ -1828,8 +1822,8 @@ declare const publicThemeSchema: z.ZodObject<
       | FC<{
           timestamp: Date;
         }>;
-    head?: ReactNode | FC<{}>;
-    logo?: ReactNode | FC<{}>;
+    head?: ReactNode | FC;
+    logo?: ReactNode | FC;
     logoLink?: string | boolean | undefined;
     main?:
       | FC<{
@@ -1839,7 +1833,7 @@ declare const publicThemeSchema: z.ZodObject<
     navbar?:
       | {
           component?: ReactNode | FC<NavBarProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
         }
       | undefined;
     nextThemes?:
@@ -1851,7 +1845,7 @@ declare const publicThemeSchema: z.ZodObject<
       | undefined;
     notFound?:
       | {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         }
       | undefined;
@@ -1864,7 +1858,7 @@ declare const publicThemeSchema: z.ZodObject<
       | undefined;
     project?:
       | {
-          icon?: ReactNode | FC<{}>;
+          icon?: ReactNode | FC;
           link?: string | undefined;
         }
       | undefined;
@@ -1876,15 +1870,15 @@ declare const publicThemeSchema: z.ZodObject<
                 className?: string | undefined;
                 directories: Item[];
               }>;
-          emptyResult?: ReactNode | FC<{}>;
+          emptyResult?: ReactNode | FC;
           error?: string | ((...args: unknown[]) => string) | undefined;
-          loading?: ReactNode | FC<{}>;
+          loading?: ReactNode | FC;
           placeholder?: string | ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     serverSideError?:
       | {
-          content?: ReactNode | FC<{}>;
+          content?: ReactNode | FC;
           labels?: string | undefined;
         }
       | undefined;
@@ -1926,7 +1920,7 @@ declare const publicThemeSchema: z.ZodObject<
     toc?:
       | {
           component?: ReactNode | FC<TOCProps>;
-          extraContent?: ReactNode | FC<{}>;
+          extraContent?: ReactNode | FC;
           float?: boolean | undefined;
           headingComponent?:
             | FC<{
@@ -1934,7 +1928,7 @@ declare const publicThemeSchema: z.ZodObject<
                 children: string;
               }>
             | undefined;
-          title?: ReactNode | FC<{}>;
+          title?: ReactNode | FC;
         }
       | undefined;
     useNextSeoProps?: (() => NextSeoProps | void) | undefined;
