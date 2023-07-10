@@ -8,6 +8,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
+import { TimeseriesOption } from "@lib/types";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -31,18 +32,25 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
   timeseries_callout,
 }) => {
   const { t } = useTranslation(["dashboard-public-transportation", "common"]);
-  const period: { [key: number]: "auto" | "month" | "year" } = {
-    0: "auto",
-    1: "auto",
-    2: "month",
-    3: "year",
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
   };
-  const periodly: { [key: number]: "daily_7d" | "daily" | "monthly" | "yearly" } = {
-    0: "daily_7d",
-    1: "daily",
-    2: "monthly",
-    3: "yearly",
-  };
+
   const { data, setData } = useData({
     minmax: [0, timeseries.data.daily.x.length - 1],
     index: 0,
@@ -83,8 +91,9 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
               current={data.index}
               onChange={index => {
                 setData("index", index);
-                setData("period", period[index]);
-                setData("periodly", periodly[index]);
+                setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
+                setData("period", config[index].period);
+                setData("periodly", config[index].periodly);
               }}
               options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
             />

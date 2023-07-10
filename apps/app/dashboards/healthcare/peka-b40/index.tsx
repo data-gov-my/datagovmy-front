@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
-import { AgencyBadge, Container, Hero, Section, StateDropdown } from "@components/index";
+import { AgencyBadge, Container, Hero, Section, StateDropdown, Tabs } from "@components/index";
 import { PHCorpIcon } from "@components/Icon/agency";
 import LeftRightCard from "@components/LeftRightCard";
 import Slider from "@components/Chart/Slider";
@@ -11,6 +11,7 @@ import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
 import { SliderProvider } from "@components/Chart/Slider/context";
+import { TimeseriesOption } from "@lib/types";
 
 /**
  * PekaB40 Dashboard
@@ -36,10 +37,32 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
   const { t, i18n } = useTranslation(["dashboard-peka-b40", "common"]);
   const currentState = params.state;
   const { data, setData } = useData({
-    minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    period: "auto",
+    periodly: "daily_7d",
+    tab_index: 0,
   });
 
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
+  };
+
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
   const topStateIndices = getTopIndices(choropleth.data.y.perc, choropleth.data.y.length, true);
 
   return (
@@ -68,42 +91,50 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
           })}
           description={t("screening_description")}
           date={timeseries.data_as_of}
+          menu={
+            <Tabs.List
+              options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+              current={data.tab_index}
+              onChange={index => {
+                setData("tab_index", index);
+                setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
+                setData("period", config[index].period);
+                setData("periodly", config[index].periodly);
+              }}
+            />
+          }
         >
           <SliderProvider>
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px] w-full"
+                  className="h-[300px]"
                   title={t("timeseries_title", {
                     state: CountryAndStates[currentState],
+                    context: data.periodly,
                   })}
-                  interval="auto"
+                  interval={data.period}
                   enableAnimation={!play}
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
                         type: "line",
-                        data: coordinate.line,
-                        label: t("tooltip1"),
+                        data: coordinate.y,
+                        label: t(data.periodly),
                         borderColor: AKSARA_COLOR.PURPLE,
                         borderWidth: 1.5,
                         backgroundColor: AKSARA_COLOR.PURPLE_H,
                         fill: true,
-                      },
-                      {
-                        label: t("tooltip2"),
-                        data: coordinate.daily,
-                        borderColor: "#00000000",
-                        backgroundColor: "#00000000",
                       },
                     ],
                   }}
                 />
                 <Slider
                   type="range"
+                  period={data.period}
                   value={data.minmax}
-                  data={timeseries.data.x}
+                  data={timeseries.data[data.periodly].x}
                   onChange={e => setData("minmax", e)}
                 />
               </>
@@ -125,7 +156,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
                       })}
                     </span>
                   </div>
-                  <p className="text-dim whitespace-pre-line">{t("choro_description")}</p>
+                  <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
                   <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
                     {t("choro_ranking")}
                   </p>
