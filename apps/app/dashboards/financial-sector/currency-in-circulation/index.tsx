@@ -207,8 +207,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
         </Section>
 
         {/* How is currency in circulation trending? */}
-        <Section title={t("section_2.title")} date={timeseries.data_as_of}>
-          <div className="space-y-8">
+        <Section
+          title={t("section_2.title")}
+          date={timeseries.data_as_of}
+          description={
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
                 anchor="left"
@@ -223,28 +225,77 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 onChange={e => setData("shade_type", e)}
               />
             </div>
-
-            <SliderProvider>
-              {play => (
-                <>
-                  <Slider
-                    className=""
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries.data[data.index_type.value].x}
-                    period="month"
-                    onChange={e => setData("minmax", e)}
-                  />
+          }
+        >
+          <SliderProvider>
+            {play => (
+              <>
+                <Timeseries
+                  title={t("keys.overall")}
+                  className="h-[350px] w-full"
+                  interval="month"
+                  enableAnimation={!play}
+                  displayNumFormat={(value, type, precision) =>
+                    smartNumFormat({ value, type, precision, locale: i18n.language })
+                  }
+                  unitY={configs("total").unit}
+                  prefixY={configs("total").prefix}
+                  axisY={{
+                    y2: {
+                      display: false,
+                      grid: {
+                        drawTicks: false,
+                        drawBorder: false,
+                        lineWidth: 0.5,
+                      },
+                      ticks: {
+                        display: false,
+                      },
+                    },
+                  }}
+                  data={{
+                    labels: coordinate.x,
+                    datasets: [
+                      {
+                        type: "line",
+                        data: coordinate.total,
+                        label: t("keys.overall"),
+                        borderColor: AKSARA_COLOR.PRIMARY,
+                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                        borderWidth: 1.5,
+                        fill: configs("total").fill,
+                      },
+                      shader(data.shade_type.value),
+                    ],
+                  }}
+                  stats={[
+                    {
+                      title: t("common:common.latest", {
+                        date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                      }),
+                      value: configs("total").callout,
+                    },
+                  ]}
+                />
+                <Slider
+                  className="pb-12 pt-8"
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data[data.index_type.value].x}
+                  period="month"
+                  onChange={e => setData("minmax", e)}
+                />
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                   <Timeseries
-                    title={t("keys.overall")}
+                    title={t("keys.rm1_notes")}
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
                     displayNumFormat={(value, type, precision) =>
                       smartNumFormat({ value, type, precision, locale: i18n.language })
                     }
-                    unitY={configs("total").unit}
-                    prefixY={configs("total").prefix}
+                    unitY={configs("note_1").unit}
+                    prefixY={configs("note_1").prefix}
                     axisY={{
                       y2: {
                         display: false,
@@ -263,12 +314,12 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                       datasets: [
                         {
                           type: "line",
-                          data: coordinate.total,
-                          label: t("keys.overall"),
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          label: t("keys.note_1"),
+                          data: coordinate.note_1,
+                          borderColor: MYR_COLOR.RM1,
+                          backgroundColor: MYR_COLOR.RM1_H,
+                          fill: configs("note_1").fill,
                           borderWidth: 1.5,
-                          fill: configs("total").fill,
                         },
                         shader(data.shade_type.value),
                       ],
@@ -278,440 +329,390 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                         title: t("common:common.latest", {
                           date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                         }),
-                        value: configs("total").callout,
+                        value: configs("note_1").callout,
                       },
                     ]}
                   />
-
-                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    <Timeseries
-                      title={t("keys.rm1_notes")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("note_1").unit}
-                      prefixY={configs("note_1").prefix}
-                      axisY={{
-                        y2: {
+                  <Timeseries
+                    title={t("keys.rm5_notes")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("note_5").unit}
+                    prefixY={configs("note_5").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.note_1"),
-                            data: coordinate.note_1,
-                            borderColor: MYR_COLOR.RM1,
-                            backgroundColor: MYR_COLOR.RM1_H,
-                            fill: configs("note_1").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("note_1").callout,
+                          type: "line",
+                          label: t("keys.note_5"),
+                          data: coordinate.note_5,
+                          borderColor: MYR_COLOR.RM5,
+                          backgroundColor: MYR_COLOR.RM5_H,
+                          fill: configs("note_5").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.rm5_notes")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("note_5").unit}
-                      prefixY={configs("note_5").prefix}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("note_5").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.rm10_notes")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("note_10").unit}
+                    prefixY={configs("note_10").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.note_5"),
-                            data: coordinate.note_5,
-                            borderColor: MYR_COLOR.RM5,
-                            backgroundColor: MYR_COLOR.RM5_H,
-                            fill: configs("note_5").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("note_5").callout,
+                          type: "line",
+                          label: t("keys.note_10"),
+                          data: coordinate.note_10,
+                          borderColor: MYR_COLOR.RM10,
+                          backgroundColor: MYR_COLOR.RM10_H,
+                          fill: configs("note_10").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.rm10_notes")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("note_10").unit}
-                      prefixY={configs("note_10").prefix}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("note_10").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.rm20_notes")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("note_20").unit}
+                    prefixY={configs("note_20").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.note_10"),
-                            data: coordinate.note_10,
-                            borderColor: MYR_COLOR.RM10,
-                            backgroundColor: MYR_COLOR.RM10_H,
-                            fill: configs("note_10").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("note_10").callout,
+                          type: "line",
+                          label: t("keys.note_20"),
+                          data: coordinate.note_20,
+                          borderColor: MYR_COLOR.RM20,
+                          backgroundColor: MYR_COLOR.RM20_H,
+                          fill: configs("note_20").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.rm20_notes")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("note_20").unit}
-                      prefixY={configs("note_20").prefix}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("note_20").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.rm50_notes")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("note_50").unit}
+                    prefixY={configs("note_50").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.note_20"),
-                            data: coordinate.note_20,
-                            borderColor: MYR_COLOR.RM20,
-                            backgroundColor: MYR_COLOR.RM20_H,
-                            fill: configs("note_20").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("note_20").callout,
+                          type: "line",
+                          label: t("keys.note_50"),
+                          data: coordinate.note_50,
+                          borderColor: MYR_COLOR.RM50,
+                          backgroundColor: MYR_COLOR.RM50_H,
+                          fill: configs("note_50").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.rm50_notes")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("note_50").unit}
-                      prefixY={configs("note_50").prefix}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("note_50").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.rm100_notes")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("note_100").unit}
+                    prefixY={configs("note_100").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.note_50"),
-                            data: coordinate.note_50,
-                            borderColor: MYR_COLOR.RM50,
-                            backgroundColor: MYR_COLOR.RM50_H,
-                            fill: configs("note_50").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("note_50").callout,
+                          type: "line",
+                          label: t("keys.note_100"),
+                          data: coordinate.note_100,
+                          borderColor: MYR_COLOR.RM100,
+                          backgroundColor: MYR_COLOR.RM100_H,
+                          fill: configs("note_100").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.rm100_notes")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("note_100").unit}
-                      prefixY={configs("note_100").prefix}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("note_100").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.10_sen_coins")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("coin_10").unit}
+                    prefixY={configs("coin_10").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.note_100"),
-                            data: coordinate.note_100,
-                            borderColor: MYR_COLOR.RM100,
-                            backgroundColor: MYR_COLOR.RM100_H,
-                            fill: configs("note_100").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("note_100").callout,
+                          type: "line",
+                          label: t("keys.coin_10"),
+                          data: coordinate.coin_10,
+                          borderColor: MYR_COLOR.SEN10,
+                          backgroundColor: MYR_COLOR.SEN10_H,
+                          fill: configs("coin_10").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.10_sen_coins")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("coin_10").unit}
-                      prefixY={configs("coin_10").prefix}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("coin_10").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.20_sen_coins")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("coin_20").unit}
+                    prefixY={configs("coin_20").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.coin_10"),
-                            data: coordinate.coin_10,
-                            borderColor: MYR_COLOR.SEN10,
-                            backgroundColor: MYR_COLOR.SEN10_H,
-                            fill: configs("coin_10").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("coin_10").callout,
+                          type: "line",
+                          label: t("keys.coin_20"),
+                          data: coordinate.coin_20,
+                          borderColor: MYR_COLOR.SEN20,
+                          backgroundColor: MYR_COLOR.SEN20_H,
+                          fill: configs("coin_20").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.20_sen_coins")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("coin_20").unit}
-                      prefixY={configs("coin_20").prefix}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("coin_20").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.50_sen_coins")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    displayNumFormat={(value, type, precision) =>
+                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                    }
+                    unitY={configs("coin_50").unit}
+                    prefixY={configs("coin_50").prefix}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.coin_20"),
-                            data: coordinate.coin_20,
-                            borderColor: MYR_COLOR.SEN20,
-                            backgroundColor: MYR_COLOR.SEN20_H,
-                            fill: configs("coin_20").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("coin_20").callout,
+                          type: "line",
+                          label: t("keys.coin_50"),
+                          data: coordinate.coin_50,
+                          borderColor: MYR_COLOR.SEN50,
+                          backgroundColor: MYR_COLOR.SEN50_H,
+                          fill: configs("coin_50").fill,
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.50_sen_coins")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={configs("coin_50").unit}
-                      prefixY={configs("coin_50").prefix}
-                      axisY={{
-                        y2: {
-                          display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
-                        },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.coin_50"),
-                            data: coordinate.coin_50,
-                            borderColor: MYR_COLOR.SEN50,
-                            backgroundColor: MYR_COLOR.SEN50_H,
-                            fill: configs("coin_50").fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
-                        {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                          }),
-                          value: configs("coin_50").callout,
-                        },
-                      ]}
-                    />
-                  </div>
-                </>
-              )}
-            </SliderProvider>
-          </div>
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("coin_50").callout,
+                      },
+                    ]}
+                  />
+                </div>
+              </>
+            )}
+          </SliderProvider>
         </Section>
       </Container>
     </>

@@ -27,7 +27,7 @@ interface BloodDonationDashboardProps {
   barchart_age: any;
   barchart_time: any;
   barchart_variables: any;
-  choropleth_malaysia_blood_donation: any;
+  choropleth: any;
 }
 
 const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = ({
@@ -37,7 +37,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   barchart_age,
   barchart_time,
   barchart_variables,
-  choropleth_malaysia_blood_donation,
+  choropleth,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-blood-donation", "common"]);
   const { data, setData } = useData({
@@ -121,14 +121,12 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                     ],
                   }}
                 />
-                <div className="pt-5">
-                  <Slider
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries_all.data.x}
-                    onChange={e => setData("minmax", e)}
-                  />
-                </div>
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries_all.data.x}
+                  onChange={e => setData("minmax", e)}
+                />
               </>
             )}
           </SliderProvider>
@@ -142,11 +140,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                   <h4>{t("choro_header")}</h4>
                   <span className="text-dim text-sm">
                     {t("common:common.data_of", {
-                      date: toDate(
-                        choropleth_malaysia_blood_donation.data_as_of,
-                        "dd MMM yyyy HH:mm",
-                        i18n.language
-                      ),
+                      date: toDate(choropleth.data_as_of, "dd MMM yyyy HH:mm", i18n.language),
                     })}
                   </span>
                 </div>
@@ -155,18 +149,13 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                   <RankList
                     id="blood-donation-by-state"
                     title={t("choro_ranking")}
-                    data={choropleth_malaysia_blood_donation.data.y.perc}
+                    data={choropleth.data.y.perc}
                     color="text-danger"
                     threshold={3}
                     format={(position: number) => {
                       return {
-                        label:
-                          CountryAndStates[choropleth_malaysia_blood_donation.data.x[position]],
-                        value: `${numFormat(
-                          choropleth_malaysia_blood_donation.data.y.perc[position],
-                          "compact",
-                          [1, 1]
-                        )}%`,
+                        label: CountryAndStates[choropleth.data.x[position]],
+                        value: `${numFormat(choropleth.data.y.perc[position], "compact", [1, 1])}%`,
                       };
                     }}
                   />
@@ -179,10 +168,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
                 color="reds"
                 data={{
-                  labels: choropleth_malaysia_blood_donation.data.x.map(
-                    (state: string) => CountryAndStates[state]
-                  ),
-                  values: choropleth_malaysia_blood_donation.data.y.perc,
+                  labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),
+                  values: choropleth.data.y.perc,
                 }}
                 unit="%"
                 type="state"

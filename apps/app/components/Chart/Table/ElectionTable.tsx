@@ -77,22 +77,24 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         );
       case "election_name":
         return (
-          <Tooltip
-            className="tooltip-left"
-            tip={
-              cell.row.original.date && toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
-            }
-          >
-            {open => (
-              <div
-                className="cursor-help whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
-                tabIndex={0}
-                onClick={open}
-              >
-                {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
-              </div>
-            )}
-          </Tooltip>
+          <div className="w-fit">
+            <Tooltip
+              tip={
+                cell.row.original.date &&
+                toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
+              }
+            >
+              {open => (
+                <div
+                  className="cursor-help whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
+                  tabIndex={0}
+                  onClick={open}
+                >
+                  {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
+                </div>
+              )}
+            </Tooltip>
+          </div>
         );
       case "party":
         return (

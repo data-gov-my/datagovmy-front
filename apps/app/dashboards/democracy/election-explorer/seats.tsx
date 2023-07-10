@@ -1,5 +1,12 @@
 import ElectionLayout from "./layout";
-import type { BaseResult, ElectionResource, Seat, SeatOptions, SeatResult } from "./types";
+import type {
+  BaseResult,
+  ElectionResource,
+  ElectionType,
+  Seat,
+  SeatOptions,
+  SeatResult,
+} from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { Container, Section } from "@components/index";
@@ -28,6 +35,12 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
 interface ElectionSeatsProps extends ElectionResource<Seat> {
   selection: Array<SeatOptions>;
 }
+
+type SeatOption = {
+  seat_area: string;
+  seat_name: string;
+  type: ElectionType;
+};
 
 const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   params,
@@ -170,30 +183,35 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
         <div className="xl:grid xl:grid-cols-12">
           <div className="xl:col-span-10 xl:col-start-2">
             <h4 className="text-center">{t("seat.header")}</h4>
-            <div className="py-6">
-              <div className="mx-auto w-full px-6 sm:w-[400px]">
-                <ComboBox
-                  placeholder={t("seat.search_seat")}
-                  options={SEAT_OPTIONS}
-                  config={{
-                    baseSort: (a, b) => {
-                      if (a.item.seat_name === b.item.seat_name) {
-                        return a.item.type === "parlimen" ? -1 : 1;
-                      } else {
-                        return String(a.item.seat_name).localeCompare(String(b.item.seat_name));
-                      }
-                    },
-                    keys: ["seat_name", "seat_area", "type"],
-                  }}
-                  selected={
-                    data.seat
-                      ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
-                      : null
-                  }
-                  onChange={selected => navigateToSeat(selected?.value)}
-                  styleElectionType={true}
-                />
-              </div>
+            <div className="mx-auto w-full p-6 sm:w-[500px]">
+              <ComboBox<SeatOption>
+                placeholder={t("seat.search_seat")}
+                options={SEAT_OPTIONS}
+                config={{
+                  baseSort: (a, b) => {
+                    if (a.item.seat_name === b.item.seat_name) {
+                      return a.item.type === "parlimen" ? -1 : 1;
+                    } else {
+                      return String(a.item.seat_name).localeCompare(String(b.item.seat_name));
+                    }
+                  },
+                  keys: ["seat_name", "seat_area", "type"],
+                }}
+                format={option => (
+                  <>
+                    <span>{`${option.seat_name}, ${option.seat_area} `}</span>
+                    <span className="text-dim">
+                      {"(" + t(`dashboard-election-explorer:${option.type}`) + ")"}
+                    </span>
+                  </>
+                )}
+                selected={
+                  data.seat
+                    ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
+                    : null
+                }
+                onChange={selected => navigateToSeat(selected?.value)}
+              />
             </div>
             <ElectionTable
               title={

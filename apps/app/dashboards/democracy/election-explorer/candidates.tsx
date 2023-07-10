@@ -1,6 +1,4 @@
-import ElectionLayout from "./layout";
 import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
-import { ResultBadge } from "@components/Badge/election";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { Container, Panel, Section, Tabs } from "@components/index";
@@ -147,6 +145,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
         });
     });
   };
+
   const CANDIDATE_OPTIONS: Array<OptionType> = selection.map((key: string) => {
     return { label: key, value: slugify(key) };
   });
@@ -157,17 +156,15 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
         <div className="xl:grid xl:grid-cols-12">
           <div className="xl:col-span-10 xl:col-start-2">
             <h4 className="text-center">{t("candidate.header")}</h4>
-            <div className="py-6">
-              <div className="mx-auto w-full px-6 sm:w-[400px]">
-                <ComboBox
-                  placeholder={t("candidate.search_candidate")}
-                  options={CANDIDATE_OPTIONS}
-                  selected={
-                    data.candidate ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate) : null
-                  }
-                  onChange={selected => navigateToCandidate(selected?.value)}
-                />
-              </div>
+            <div className="mx-auto w-full p-6 sm:w-[500px]">
+              <ComboBox
+                placeholder={t("candidate.search_candidate")}
+                options={CANDIDATE_OPTIONS}
+                selected={
+                  data.candidate ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate) : null
+                }
+                onChange={selected => navigateToCandidate(selected?.value)}
+              />
             </div>
             <Tabs
               title={

@@ -94,6 +94,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         grid: {
           display: false,
         },
+        position: "top",
       },
       y: {
         type: "category",
@@ -214,7 +215,6 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
               {
                 data: data,
                 borderWidth: 1,
-                borderColor: "rgba(0,0,0,0.5)",
                 backgroundColor(ctx: ScriptableContext<"matrix">) {
                   return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).z);
                 },
