@@ -8,19 +8,32 @@ export type HeroParameters = {
 };
 
 export class DashboardPage extends Page {
+  readonly name: string;
   readonly header: Locator;
   readonly description: Locator;
   readonly category: Locator;
   readonly agency: Locator;
   readonly last_updated: Locator;
 
-  constructor(page: PlaywrightPage, path: string) {
+  constructor(page: PlaywrightPage, name: string, path: string) {
     super(page, path);
+    this.name = name;
     this.header = page.getByTestId("hero_header");
     this.description = page.getByTestId("hero_description");
     this.category = page.getByTestId("hero_category");
     this.agency = page.getByTestId("hero_agency").first();
     this.last_updated = page.getByTestId("hero_last_updated");
+  }
+
+  async snapshot(id: string) {
+    return await this.page.getByTestId(id).screenshot();
+  }
+
+  async matchSnapshot(id: string) {
+    expect(await this.snapshot(id)).toMatchSnapshot(`${this.path}_${id}.png`, {
+      maxDiffPixels: 200,
+      threshold: 0.8,
+    });
   }
 
   async validateHero({ _category, _agency }: HeroParameters, containSelector?: boolean) {
@@ -39,7 +52,7 @@ export class DashboardPage extends Page {
       });
   }
 
-  async execute(testSuite: (_page: PlaywrightPage) => Promise<void>) {
-    await testSuite(this.page);
+  async execute(testSuite: (_page: DashboardPage) => Promise<void>) {
+    await testSuite(this);
   }
 }

@@ -335,7 +335,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 </Panel>
                 <Panel name={t("month")}>
                   <Bar
-                    id="bar-newdonor-age-month"
+                    id="bar-newdonor-age-monthly"
                     className="h-[250px]"
                     data={{
                       labels: barchart_age.data.past_month.x,

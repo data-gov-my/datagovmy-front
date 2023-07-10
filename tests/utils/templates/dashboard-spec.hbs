@@ -8,6 +8,9 @@ const parameters: HeroParameters = {
   _agency: "",
   _category: "",
 };
+const ID = enumify([
+  // eg. "timeseries-test-id"
+]);
 
 /**
  * Main test suite for the dashboard.
@@ -24,7 +27,7 @@ const parameters: HeroParameters = {
 const mainTestSuite = async (page: PlaywrightPage) => {};
 
 test("{{ dashCase test_name }}", async ({ page }) => {
-  const board = new DashboardPage(page, "/dashboard/{{ dashCase test_name }}");
+  const board = new DashboardPage(page, "{{ dashCase test_name }}", "/dashboard/{{ dashCase test_name }}");
   await board.goto();
   await board.validateHero(parameters);
   await board.execute(mainTestSuite);
