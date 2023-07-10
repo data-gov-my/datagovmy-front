@@ -48,13 +48,19 @@ ElectionTriviaState.layout = (page, props) => (
       className={clx(Fonts.body.variable, "font-sans")}
       stateSelector={
         <StateDropdown
+          width="w-max xl:w-64"
           url={routes.ELECTION_EXPLORER.concat("/trivia")}
+          exclude={["kul", "lbn", "pjy"]}
           currentState={props.params.state}
           hideOnScroll
         />
       }
     >
-      <StateModal state={props.params.state} url={routes.ELECTION_EXPLORER.concat("/trivia")} />
+      <StateModal
+        state={props.params.state}
+        url={routes.ELECTION_EXPLORER.concat("/trivia")}
+        exclude={["kul", "lbn", "pjy"]}
+      />
       {page}
     </Layout>
   </WindowProvider>

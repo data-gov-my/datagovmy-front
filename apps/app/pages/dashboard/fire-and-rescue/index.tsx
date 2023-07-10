@@ -40,7 +40,12 @@ FireandRescue.layout = (page, props) => (
     <Layout
       className={clx(Fonts.body.variable, "font-sans")}
       stateSelector={
-        <StateDropdown url={routes.FIRE_RESCUE} currentState={props.params.state} hideOnScroll />
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.FIRE_RESCUE}
+          currentState={props.params.state}
+          hideOnScroll
+        />
       }
     >
       <StateModal state={props.params.state} url={routes.FIRE_RESCUE} />

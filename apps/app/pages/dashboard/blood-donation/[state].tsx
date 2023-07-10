@@ -67,6 +67,7 @@ BloodDonationState.layout = (page, props) => (
       className={clx(Fonts.body.variable, "font-sans")}
       stateSelector={
         <StateDropdown
+          width="w-max xl:w-64"
           url={routes.BLOOD_DONATION}
           currentState={props.params.state}
           exclude={["pjy", "pls", "lbn"]}

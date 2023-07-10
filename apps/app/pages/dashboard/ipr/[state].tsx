@@ -46,7 +46,12 @@ IPRState.layout = (page, props) => (
     <Layout
       className={clx(Fonts.body.variable, "font-sans")}
       stateSelector={
-        <StateDropdown url={routes.IPR} currentState={props.params.state} hideOnScroll />
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.IPR}
+          currentState={props.params.state}
+          hideOnScroll
+        />
       }
     >
       <StateModal state={props.params.state} url={routes.IPR} />
