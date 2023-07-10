@@ -3,7 +3,8 @@
 }
 
 .table-responsive {
-  @apply relative snap-x snap-mandatory overflow-x-auto sm:snap-none;
+  @apply relative overflow-x-auto;
+  /* snap-x snap-mandatory sm:snap-none; */
 }
 
 .table th {
@@ -11,19 +12,7 @@
 }
 
 .table tbody tr {
-  @apply border-l-outline dark:border-b-washed-dark dark:border-l-outlineHover-dark border-b-[0.5px] border-l-[0.5px];
-}
-
-.table tbody tr:first-child {
-  @apply dark:border-t-outlineHover-dark border-t-[0.5px];
-}
-
-.table tbody tr:last-child {
-  @apply dark:border-outlineHover-dark border-b-[0.5px] border-b-black;
-}
-
-.table td {
-  @apply border-outline dark:border-washed-dark snap-end border-b px-2 py-2;
+  @apply bg-white dark:bg-black;
 }
 /* .table td:not(:first-child) {
   @apply whitespace-nowrap;
@@ -56,12 +45,8 @@
   @apply dark:border-t-washed-dark border-t-black;
 }
 
-.table-stripe tr:nth-child(even) {
-  @apply bg-outline dark:bg-washed-dark;
-}
-
-.table-stripe tbody tr:nth-child(odd) {
-  @apply bg-white dark:bg-black;
+.table-stripe tr {
+  @apply even:bg-outline even:dark:bg-washed-dark;
 }
 
 .table-default th:first-child {
