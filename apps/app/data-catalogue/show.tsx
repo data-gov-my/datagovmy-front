@@ -494,12 +494,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     <ul className="text-dim ml-6 list-outside list-disc md:hidden">
                       {metadata.definitions?.map(item => (
                         <li key={item.title}>
-                          <span>
+                          <span className="flex gap-x-1">
                             {Boolean(item.unique_id) ? (
                               <At href={`/data-catalogue/${item.unique_id}`}>{item.title}</At>
                             ) : (
                               item.title
-                            )}{" "}
+                            )}
                             <Tooltip tip={interpolate(item.desc)} />
                           </span>
                         </li>
@@ -562,7 +562,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       <li key={url as string}>
                         <a
                           href={url as string}
-                          className="text-primary dark:text-primary-dark break-all hover:underline"
+                          className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
                           onClick={() =>
                             track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
                           }
@@ -580,7 +580,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <p className="text-dim">
                   {t("license_text")}{" "}
                   <a
-                    className="text-primary dark:text-primary-dark lowercase hover:underline"
+                    className="text-primary dark:text-primary-dark lowercase [text-underline-position:from-font] hover:underline"
                     target="_blank"
                     rel="noopener"
                     href="https://creativecommons.org/licenses/by/4.0/"

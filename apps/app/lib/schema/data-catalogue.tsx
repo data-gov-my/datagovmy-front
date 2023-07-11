@@ -68,7 +68,10 @@ export const METADATA_TABLE_SCHEMA = (
         return (
           <>
             {Boolean(item.uid) ? (
-              <At href={`/data-catalogue/${item.uid}`} className="hover:underline dark:text-white">
+              <At
+                href={`/data-catalogue/${item.uid}`}
+                className="[text-underline-position:from-font] hover:underline dark:text-white"
+              >
                 {item.name}
               </At>
             ) : (

@@ -44,6 +44,7 @@ ElectionTrivia.layout = (page, props) => (
       className={clx(Fonts.body.variable, "font-sans")}
       stateSelector={
         <StateDropdown
+          width="w-max xl:w-64"
           url={routes.ELECTION_EXPLORER.concat("/trivia")}
           currentState={props.params.state}
           exclude={["kul", "lbn", "pjy"]}

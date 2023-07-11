@@ -29,13 +29,13 @@ const Footer = () => {
           <div className="flex w-full flex-col gap-2 md:w-auto">
             <p className="font-bold">{t("common:nav.open_source")}</p>
 
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.frontend")}
             </a>
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.backend")}
             </a>
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.uiux")}
             </a>
           </div>
@@ -43,10 +43,10 @@ const Footer = () => {
           <div className="flex w-full flex-col gap-2 md:w-auto">
             <p className="font-bold">{t("common:nav.open_data")}</p>
 
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.guiding_principles")}
             </a>
-            <At className="text-footer-link" href="#">
+            <At className="link-dim" href="#">
               {t("common:nav.terms_of_use")}
             </At>
           </div>

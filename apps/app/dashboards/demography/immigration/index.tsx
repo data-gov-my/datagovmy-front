@@ -220,12 +220,16 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
             </div>
             <SliderProvider>
               {play => (
-                <>
+                <div>
                   <Timeseries
                     title={t("country_title")}
                     menu={
                       <Tabs.List
-                        options={[t("day"), t("month"), t("year")]}
+                        options={[
+                          t("common:time.daily"),
+                          t("common:time.monthly"),
+                          t("common:time.yearly"),
+                        ]}
                         current={data.country_tab_index}
                         onChange={index => {
                           setData("country_tab_index", index);
@@ -233,7 +237,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                         }}
                       />
                     }
-                    className="h-[400px] w-full"
+                    className="h-[400px]"
                     isLoading={data.loading}
                     enableAnimation={!play}
                     mode="grouped"
@@ -294,7 +298,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                     data={country.data[data.country_period].x}
                     onChange={e => setData("country_minmax", e)}
                   />
-                </>
+                </div>
               )}
             </SliderProvider>
           </div>
@@ -306,7 +310,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
           description={t("timeseries_desc")}
           menu={
             <Tabs.List
-              options={[t("day"), t("month"), t("year")]}
+              options={[t("common:time.daily"), t("common:time.monthly"), t("common:time.yearly")]}
               current={data.tab_index}
               onChange={index => {
                 setData("tab_index", index);
@@ -339,7 +343,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("daily"),
+                      title: t("common:time.daily"),
                       value: `+${numFormat(timeseries_callout.passport.daily.value, "standard")}`,
                     },
                     {
@@ -383,7 +387,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                       }}
                       stats={[
                         {
-                          title: t("daily"),
+                          title: t("common:time.daily"),
                           value: `+${numFormat(timeseries_callout[key].daily.value, "standard")}`,
                         },
                         {

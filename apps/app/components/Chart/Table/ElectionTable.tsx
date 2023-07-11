@@ -83,10 +83,11 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
                 cell.row.original.date &&
                 toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
               }
+              className="max-xl:left-1/3"
             >
               {open => (
                 <div
-                  className="cursor-help whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
+                  className="cursor-help whitespace-nowrap underline decoration-dashed [text-underline-position:from-font]"
                   tabIndex={0}
                   onClick={open}
                 >

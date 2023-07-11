@@ -281,6 +281,7 @@ const Table: FunctionComponent<TableProps> = ({
                       const scale = cell.column.columnDef.scale ?? undefined;
 
                       const classNames = clx(
+                        "border-outline dark:border-washed-dark snap-end border-b p-2",
                         lastCellInGroup.id === cell.column.id && "text-sm",
                         relative ? relativeColor(value as number, inverse) : "bg-opacity-20",
                         scale && scaleColor(value as number),

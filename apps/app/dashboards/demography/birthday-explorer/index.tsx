@@ -418,7 +418,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               className="h-[350px] w-full"
               interval={data.groupBy}
               round={data.groupBy}
-              beginZero={true}
               enableGridX={false}
               enableGridY={true}
               gridOffsetX={data.groupBy === "day" ? false : true}

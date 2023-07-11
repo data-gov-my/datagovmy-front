@@ -211,9 +211,9 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
         <Section>
           <div className="space-y-12 xl:grid xl:grid-cols-12">
             <div className="flex flex-col gap-6 lg:flex-row xl:col-span-10 xl:col-start-2">
-              <div className="flex flex-col justify-center space-y-6 lg:w-5/12">
+              <div className="flex flex-col justify-center space-y-6 lg:w-1/3">
                 <h4 className="text-center lg:text-start">{t("title")}</h4>
-                <div className="mx-auto w-[500px]">
+                <div className="mx-auto w-full max-w-[400px]">
                   <ComboBox<Kampung>
                     placeholder={t("search_kampung")}
                     options={KAMPUNG_OPTIONS}
@@ -227,7 +227,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                   />
                 </div>
               </div>
-              <div className="lg:w-7/12">
+              <div className="lg:w-2/3">
                 <MapPlot
                   className="shadow-button h-[400px] rounded-xl lg:w-full"
                   tileTheme="terrain"

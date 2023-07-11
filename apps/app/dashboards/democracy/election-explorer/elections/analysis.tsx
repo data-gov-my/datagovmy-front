@@ -143,6 +143,7 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
         <Tabs hidden current={data.tab_index} onChange={index => setData("tab_index", index)}>
           <Panel name={t("table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
             <Table
+              className="table-sticky-header"
               data={analysisData}
               enablePagination={10}
               config={state !== "mys" ? config.filter(col => col.id !== "state") : config}
