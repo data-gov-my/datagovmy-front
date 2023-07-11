@@ -167,7 +167,11 @@ module.exports = plop => {
    */
 
   plop.setActionType("prepStateDashboard", (answer, config, plop) => {
-    if (!answer.test_dashboard_with_states) return;
+    if (!answer.test_dashboard_with_states) {
+      plop.setPartial("states_tests", "");
+      return;
+    }
+
     let states_tests = answer.test_dashboard_states.map(state => {
       return `test("${answer.test_name}/${state}", async ({ page }) => {
   const board = new DashboardPage(page, "/dashboard/${answer.test_name}/${state}");

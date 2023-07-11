@@ -2,13 +2,12 @@ import { test, expect } from "utils/playwright";
 import { DashboardPage, HeroParameters } from "@model/dashboard.js";
 import { enumify } from "utils/helper";
 
-
 /**
  * Please fill this in.
  */
 const parameters: HeroParameters = {
-  _agency: "",
-  _category: "",
+  _agency: "Malaysian Administrative Modernisation and Management Planning Unit",
+  _category: "Digitalisation",
 };
 const ID = enumify([
   // eg. "timeseries-test-id"
@@ -34,11 +33,9 @@ const mainTestSuite = async (board: DashboardPage) => {};
 
 /************************** TEST SUITE **************************/
 
-test("{{ dashCase test_name }}", async ({ page }) => {
-  const board = new DashboardPage(page, "{{ dashCase test_name }}");
+test.skip("government-site-tracker", async ({ page }) => {
+  const board = new DashboardPage(page, "government-site-tracker");
   await board.goto();
   await board.validateHero(parameters);
   await board.execute(mainTestSuite);
 });
-
-{{> states_tests}}

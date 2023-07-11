@@ -2,16 +2,23 @@ import { test, expect } from "utils/playwright";
 import { DashboardPage, HeroParameters } from "@model/dashboard.js";
 import { enumify } from "utils/helper";
 
-
 /**
  * Please fill this in.
  */
 const parameters: HeroParameters = {
-  _agency: "",
-  _category: "",
+  _agency: "Central Bank of Malaysia",
+  _category: "Financial Sector",
 };
 const ID = enumify([
-  // eg. "timeseries-test-id"
+  "timeseries-rm1-notes",
+  "timeseries-rm5-notes",
+  "timeseries-rm10-notes",
+  "timeseries-rm20-notes",
+  "timeseries-rm50-notes",
+  "timeseries-rm100-notes",
+  "timeseries-10sen-coins",
+  "timeseries-20sen-coins",
+  "timeseries-50sen-coins",
 ]);
 
 /************************** COMMON TEST **************************/
@@ -30,15 +37,17 @@ const ID = enumify([
  * @example // Inline function
  * await board.execute(async (board: DashboardPage) => { ... })
  */
-const mainTestSuite = async (board: DashboardPage) => {};
+const mainTestSuite = async (board: DashboardPage) => {
+  for (const id in Object.values(ID)) {
+    expect(board.page.getByTestId(id)).toBeVisible();
+  }
+};
 
 /************************** TEST SUITE **************************/
 
-test("{{ dashCase test_name }}", async ({ page }) => {
-  const board = new DashboardPage(page, "{{ dashCase test_name }}");
+test("currency-in-circulation", async ({ page }) => {
+  const board = new DashboardPage(page, "currency-in-circulation");
   await board.goto();
   await board.validateHero(parameters);
   await board.execute(mainTestSuite);
 });
-
-{{> states_tests}}

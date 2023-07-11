@@ -231,6 +231,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
             {play => (
               <>
                 <Timeseries
+                  id="timeseries-overall"
                   title={t("keys.overall")}
                   className="h-[350px] w-full"
                   interval="month"
@@ -287,6 +288,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                 />
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                   <Timeseries
+                    id="timeseries-rm1-notes"
                     title={t("keys.rm1_notes")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -334,6 +336,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-rm5-notes"
                     title={t("keys.rm5_notes")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -381,6 +384,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-rm10-notes"
                     title={t("keys.rm10_notes")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -428,6 +432,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-rm20-notes"
                     title={t("keys.rm20_notes")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -475,6 +480,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-rm50-notes"
                     title={t("keys.rm50_notes")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -522,6 +528,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-rm100-notes"
                     title={t("keys.rm100_notes")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -569,6 +576,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-10sen-coins"
                     title={t("keys.10_sen_coins")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -616,6 +624,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-20sen-coins"
                     title={t("keys.20_sen_coins")}
                     className="h-[350px] w-full"
                     interval="month"
@@ -663,6 +672,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     ]}
                   />
                   <Timeseries
+                    id="timeseries-50sen-coins"
                     title={t("keys.50_sen_coins")}
                     className="h-[350px] w-full"
                     interval="month"

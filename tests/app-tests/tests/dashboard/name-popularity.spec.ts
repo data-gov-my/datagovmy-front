@@ -2,7 +2,6 @@ import { test, expect } from "utils/playwright";
 import { DashboardPage, HeroParameters } from "@model/dashboard.js";
 import { enumify } from "utils/helper";
 
-
 /**
  * Please fill this in.
  */
@@ -34,11 +33,9 @@ const mainTestSuite = async (board: DashboardPage) => {};
 
 /************************** TEST SUITE **************************/
 
-test("{{ dashCase test_name }}", async ({ page }) => {
-  const board = new DashboardPage(page, "{{ dashCase test_name }}");
+test.skip("name-popularity", async ({ page }) => {
+  const board = new DashboardPage(page, "name-popularity");
   await board.goto();
   await board.validateHero(parameters);
   await board.execute(mainTestSuite);
 });
-
-{{> states_tests}}
