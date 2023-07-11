@@ -201,7 +201,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
                         {open => (
                           <>
                             <p
-                              className="pl-1 underline decoration-dashed decoration-1 underline-offset-4"
+                              className="pl-1 underline decoration-dashed decoration-1 [text-underline-position:from-font]"
                               onClick={() => open()}
                             >
                               {numFormat(value, "standard", 1)}%
