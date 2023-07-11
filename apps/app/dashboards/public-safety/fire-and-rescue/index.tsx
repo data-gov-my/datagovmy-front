@@ -112,22 +112,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
 
       <Container className="min-h-screen">
         {/* How are fire and rescue operations trending? */}
-        <Section
-          title={t("operation_header")}
-          date={timeseries.data_as_of}
-          menu={
-            <Tabs.List
-              options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
-              current={data.tab_index}
-              onChange={index => {
-                setData("tab_index", index);
-                setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
-                setData("period", config[index].period);
-                setData("periodly", config[index].periodly);
-              }}
-            />
-          }
-        >
+        <Section title={t("operation_header")} date={timeseries.data_as_of}>
           <SliderProvider>
             {play => (
               <>
@@ -137,6 +122,21 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                     state: CountryAndStates[currentState],
                     context: data.periodly,
                   })}
+                  menu={
+                    <Tabs.List
+                      options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+                      current={data.tab_index}
+                      onChange={index => {
+                        setData("tab_index", index);
+                        setData("minmax", [
+                          0,
+                          timeseries.data[config[index].periodly].x.length - 1,
+                        ]);
+                        setData("period", config[index].period);
+                        setData("periodly", config[index].periodly);
+                      }}
+                    />
+                  }
                   enableAnimation={!play}
                   interval={data.period}
                   data={{
