@@ -12,6 +12,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
+import { TimeseriesOption } from "@lib/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -23,7 +24,7 @@ const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: 
 interface BloodDonationDashboardProps {
   last_updated: string;
   params: { state: string };
-  timeseries_all: any;
+  timeseries: any;
   barchart_age: any;
   barchart_time: any;
   barchart_variables: any;
@@ -33,25 +34,42 @@ interface BloodDonationDashboardProps {
 const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = ({
   last_updated,
   params,
-  timeseries_all,
+  timeseries,
   barchart_age,
   barchart_time,
   barchart_variables,
   choropleth,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-blood-donation", "common"]);
+
   const { data, setData } = useData({
-    absolute_donation_type: false,
-    absolute_blood_group: false,
-    absolute_donor_type: false,
-    absolute_location: false,
-    zoom_state: params.state === "mys" ? undefined : params.state,
-    zoom_facility: undefined,
-    minmax: [timeseries_all.data.x.length - 182, timeseries_all.data.x.length - 1],
-    tabs_section_3: 0,
+    minmax: [timeseries.data.daily.x.length - 182, timeseries.data.daily.x.length - 1],
+    period: "auto",
+    periodly: "daily_7d",
+    tab1_index: 0,
+    tab3_index: 0,
   });
 
-  const { coordinate } = useSlice(timeseries_all.data, data.minmax);
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
+  };
+
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
   const { theme } = useTheme();
 
   const KEY_VARIABLES_SCHEMA = [
@@ -89,30 +107,31 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
       <Container className="min-h-screen">
         {/* What are the latest blood donation trends in Malaysia? */}
         <Section
-          title={t("combine_header", {
+          title={t("timeseries_header", {
             state: CountryAndStates[params.state],
           })}
-          description={t("combine_description")}
-          date={timeseries_all.date_as_of}
+          description={t("timeseries_desc")}
+          date={timeseries.date_as_of}
         >
           <SliderProvider>
             {play => (
               <>
                 <Timeseries
                   id="timeseries-daily-donation"
-                  className="h-[350px] w-full"
-                  title={t("combine_title", {
+                  className="h-[300px]"
+                  title={t("timeseries_title", {
                     state: CountryAndStates[params.state],
+                    context: data.periodly,
                   })}
                   enableAnimation={!play}
-                  interval="day"
+                  interval={data.period}
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
                         type: "line",
-                        data: coordinate.line_daily,
-                        label: t("combine_tooltip1"),
+                        data: coordinate.y,
+                        label: t(`common:time.${data.periodly}`),
                         borderColor: AKSARA_COLOR.DANGER,
                         borderWidth: 1.5,
                         backgroundColor: AKSARA_COLOR.DANGER_H,
@@ -120,11 +139,32 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       },
                     ],
                   }}
+                  menu={
+                    <Tabs.List
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
+                      current={data.tab1_index}
+                      onChange={index => {
+                        setData("tab1_index", index);
+                        setData("minmax", [
+                          0,
+                          timeseries.data[config[index].periodly].x.length - 1,
+                        ]);
+                        setData("period", config[index].period);
+                        setData("periodly", config[index].periodly);
+                      }}
+                    />
+                  }
                 />
                 <Slider
                   type="range"
                   value={data.minmax}
-                  data={timeseries_all.data.x}
+                  period={data.period}
+                  data={timeseries.data[data.periodly].x}
                   onChange={e => setData("minmax", e)}
                 />
               </>
@@ -135,14 +175,20 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-full w-full flex-col space-y-6 p-8">
-                <div className="flex flex-col gap-2">
-                  <h4>{t("choro_header")}</h4>
-                  <span className="text-dim text-sm">
-                    {t("common:common.data_of", {
-                      date: toDate(choropleth.data_as_of, "dd MMM yyyy HH:mm", i18n.language),
-                    })}
-                  </span>
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
+                <div className="space-y-6">
+                  <div className="flex flex-col gap-2">
+                    <h4>{t("choro_header")}</h4>
+                    <span className="text-dim text-sm">
+                      {t("common:common.data_of", {
+                        date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                      })}
+                    </span>
+                  </div>
+                  <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
+                  <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
+                    {t("choro_ranking")}
+                  </p>
                 </div>
                 <div className="flex grow flex-col justify-between space-y-6">
                   <p className="text-dim">{t("choro_description")}</p>
@@ -186,13 +232,13 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           menu={
             <Tabs.List
               options={KEY_VARIABLES_SCHEMA.map(item => item.name)}
-              current={data.tabs_section_3}
-              onChange={index => setData("tabs_section_3", index)}
+              current={data.tab3_index}
+              onChange={index => setData("tab3_index", index)}
             />
           }
           date={t(barchart_variables.date_as_of)}
         >
-          <Tabs hidden current={data.tabs_section_3}>
+          <Tabs hidden current={data.tab3_index}>
             {KEY_VARIABLES_SCHEMA.map(({ name, data }) => {
               return (
                 <Panel key={name} name={name}>
@@ -278,7 +324,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                     enableGridX={false}
                   />
                 </Panel>
-                <Panel name={t("monthly")}>
+                <Panel name={t("common:time.monthly")}>
                   <Bar
                     id="bar-newdonor-total-monthly"
                     className="h-[250px]"

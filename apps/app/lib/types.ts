@@ -37,6 +37,11 @@ export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptio
   };
 };
 
+export type TimeseriesOption = {
+  period: "auto" | "month" | "year";
+  periodly: "daily_7d" | "daily" | "monthly" | "yearly";
+};
+
 export type DownloadOption = {
   id: string;
   image: string | null | false | undefined;

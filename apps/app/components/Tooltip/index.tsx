@@ -1,17 +1,16 @@
 import Fonts from "@config/font";
 import { Transition, Dialog } from "@headlessui/react";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { clx } from "@lib/helpers";
 import { Fragment, FunctionComponent, ReactNode, useState } from "react";
 
 type TooltipProps = {
   children?: (open: () => void) => ReactNode;
+  className?: string;
   tip: ReactNode;
-  size?: "small" | "large";
-  anchor?: "left" | "right";
 };
 
-const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, size = "small", anchor }) => {
+const Tooltip: FunctionComponent<TooltipProps> = ({ children, className, tip }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -31,27 +30,16 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, size = "small
           )}
         </>
       )}
-      <div
-        className={clx(
-          "invisible absolute bottom-7 left-1/2 z-10 flex w-max max-w-[200px] -translate-x-1/2 transform flex-col items-center group-hover:visible group-hover:flex"
-        )}
-      >
+      <div className="invisible absolute bottom-7 left-1/2 z-10 hidden w-max max-w-[200px] -translate-x-1/2 transform flex-col items-center group-hover:visible group-hover:flex lg:flex">
         <span
           className={clx(
-            "shadow-floating relative rounded-lg bg-black text-xs font-normal text-white dark:bg-white dark:text-black",
-            size == "small" && "whitespace-nowrap px-1.5 py-1",
-            size == "large" && "px-3 py-2"
+            "shadow-floating relative rounded-lg bg-black px-3 py-2 text-sm font-normal text-white dark:bg-white dark:text-black",
+            className
           )}
         >
           {tip}
         </span>
-        <div
-          className={clx(
-            "absolute -bottom-1 h-2 w-2 rotate-45 bg-black dark:bg-white",
-            anchor === "left" && "left-[10%]",
-            anchor === "right" && "right-[10%]"
-          )}
-        ></div>
+        <div className="absolute -bottom-1 h-2 w-2 rotate-45 bg-black dark:bg-white"></div>
       </div>
 
       <Transition.Root show={isOpen} as={Fragment}>
@@ -69,7 +57,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, size = "small
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="bg-outlineHover fixed inset-0 bg-opacity-70 transition-opacity" />
+            <div className="fixed inset-0 bg-black bg-opacity-90 transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -83,7 +71,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, tip, size = "small
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative h-fit transform overflow-hidden rounded bg-black p-3 text-left text-sm text-white shadow-xl transition-all">
+                <Dialog.Panel className="shadow-floating relative h-fit w-max max-w-[200px] transform rounded-lg bg-black px-3 py-1.5 text-left text-sm text-white transition-all dark:bg-white dark:text-black">
                   {tip}
                 </Dialog.Panel>
               </Transition.Child>
