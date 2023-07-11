@@ -3,16 +3,7 @@ import { NextRequest } from "next/server";
 
 // Triggers on relevant pages. Middleware to be removed on launch
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/", "/:path*", "/ms/:path*"],
 };
 
 export function middleware(request: NextRequest) {
