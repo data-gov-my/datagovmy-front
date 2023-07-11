@@ -49,16 +49,10 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const currentState = params.state;
 
   const AGE_OPTIONS: Array<OptionType> = ["total", "child", "adolescent", "adult", "elderly"].map(
-    (key: string) => ({
-      label: t(`${key}`),
-      value: key,
-    })
+    (key: string) => ({ label: t(key), value: key })
   );
   const DOSE_OPTIONS: Array<OptionType> = ["dose1", "dose2", "booster1", "booster2"].map(
-    (key: string) => ({
-      label: t(`${key}`),
-      value: key,
-    })
+    (key: string) => ({ label: t(key), value: key })
   );
 
   const { data, setData } = useData({
@@ -72,7 +66,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose1",
       color: "#9FE8B1",
       dosePerc: (
-        <Tooltip size="large" tip={<span>{t("tooltips_dose1")}</span>}>
+        <Tooltip tip={<span>{t("tooltips_dose1")}</span>}>
           {open => (
             <>
               <p
@@ -90,7 +84,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose2",
       color: "#31C752",
       dosePerc: (
-        <Tooltip size="large" tip={<span>{t("tooltips_dose2")}</span>}>
+        <Tooltip tip={<span>{t("tooltips_dose2")}</span>}>
           {open => (
             <>
               <p
