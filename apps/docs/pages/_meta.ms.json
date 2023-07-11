@@ -8,6 +8,10 @@
     "type": "page",
     "route": "https://staging.data.gov.my/ms-MY"
   },
+  "ai-helper": {
+    "title": "Penolong AI",
+    "type": "page"
+  },
   "helpdesk": {
     "title": "Meja Bantuan",
     "type": "page",

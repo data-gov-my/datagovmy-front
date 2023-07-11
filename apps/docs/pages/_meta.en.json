@@ -9,6 +9,10 @@
     "route": "https://staging.data.gov.my",
     "newWindow": true
   },
+  "ai-helper": {
+    "title": "AI Helper",
+    "type": "page"
+  },
   "helpdesk": {
     "title": "Helpdesk",
     "type": "page",
