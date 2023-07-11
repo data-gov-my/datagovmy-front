@@ -1,4 +1,4 @@
 {
   "data-catalogue": "Data Catalogue API",
-  "transport": "Transport API"
+  "gtfs-static": "Transport API (GTFS)"
 }

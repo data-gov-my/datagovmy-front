@@ -1,4 +1,4 @@
 {
   "data-catalogue": "Katalog Data API",
-  "transport": "Transportasi API"
+  "gtfs-static": "Pengangkutan API (GTFS)"
 }
