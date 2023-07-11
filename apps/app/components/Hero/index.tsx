@@ -82,7 +82,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                 {category && (
                   <span
                     className={clx("text-base font-semibold uppercase", category[1])}
-                    data-testid="hero_category"
+                    data-testid="hero-category"
                   >
                     {t(category[0])}
                   </span>
@@ -93,7 +93,7 @@ const Hero: FunctionComponent<HeroProps> = ({
             {(header || description || result?.all_time_view) && (
               <div className="space-y-3">
                 {header && (
-                  <h2 className={clx("text-black", header[1])} data-testid="hero_header">
+                  <h2 className={clx("text-black", header[1])} data-testid="hero-header">
                     {header[0]}
                   </h2>
                 )}
@@ -101,7 +101,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                 {description && Array.isArray(description) ? (
                   <p
                     className={clx("text-dim xl:w-2/3", description[1])}
-                    data-testid="hero_description"
+                    data-testid="hero-description"
                   >
                     {description[0]}
                   </p>
@@ -109,7 +109,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                   description
                 )}
                 {result?.all_time_view && (
-                  <p className="text-dim flex gap-2 text-sm" data-testid="hero_views">
+                  <p className="text-dim flex gap-2 text-sm" data-testid="hero-views">
                     <EyeIcon className="w-4.5 h-4.5 self-center" />
                     {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
                       count: result.all_time_view,
@@ -123,7 +123,7 @@ const Hero: FunctionComponent<HeroProps> = ({
               <div className="space-y-3">
                 {action}
                 {last_updated && (
-                  <p className="text-dim text-sm" data-testid="hero_last_updated">
+                  <p className="text-dim text-sm" data-testid="hero-last-updated">
                     {t("common:common.last_updated", {
                       date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
                     })}

@@ -29,7 +29,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }
             </p>
 
             {/* Agency name */}
-            <p className="truncate text-sm font-medium dark:text-white" data-testid="hero_agency">
+            <p className="truncate text-sm font-medium dark:text-white" data-testid="hero-agency">
               {agency}
             </p>
           </div>

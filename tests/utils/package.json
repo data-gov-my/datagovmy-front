@@ -27,6 +27,7 @@
     }
   },
   "devDependencies": {
-    "@playwright/test": "^1.35.1"
+    "@playwright/test": "^1.35.1",
+    "luxon": "^3.0.3"
   }
 }

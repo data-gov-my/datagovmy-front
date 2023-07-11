@@ -203,10 +203,18 @@ module.exports = plop => {
         default: "dashboard",
       },
       {
+        when: answers => answers.test_category === "dashboard",
         type: "input",
         name: "test_name",
-        message: "Name of the test? (dash-case)",
+        message: "Dashboard identifier? (dash-case)",
         validate: value => value && value.length > 0,
+      },
+      {
+        when: answers => answers.test_category === "data-catalogue",
+        type: "input",
+        name: "test_name",
+        message: "Catalogue identifier?",
+        default: "dgmy-public-mwe_mwe_hbar_4_0",
       },
       {
         when: answers => answers.test_category === "dashboard",

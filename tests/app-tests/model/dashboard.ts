@@ -1,4 +1,4 @@
-import { expect, Locator, Page as PlaywrightPage } from "utils/playwright";
+import { expect, Locator, Locators, Page as PlaywrightPage } from "utils/playwright";
 import { Page } from "./page.js";
 import { PATTERN } from "utils/helper";
 
@@ -8,27 +8,27 @@ export type HeroParameters = {
 };
 
 export class DashboardPage extends Page {
-  readonly name: string;
-  readonly header: Locator;
-  readonly description: Locator;
-  readonly category: Locator;
-  readonly agency: Locator;
-  readonly last_updated: Locator;
+  readonly locators: Locators = new Map<string, Locator>();
 
-  constructor(page: PlaywrightPage, name: string, path: string) {
-    super(page, path);
-    this.name = name;
-    this.header = page.getByTestId("hero_header");
-    this.description = page.getByTestId("hero_description");
-    this.category = page.getByTestId("hero_category");
-    this.agency = page.getByTestId("hero_agency").first();
-    this.last_updated = page.getByTestId("hero_last_updated");
+  constructor(page: PlaywrightPage, name: string) {
+    super(page, `/dashboard/${name}`);
+    this.locators.set("header", page.getByTestId("hero-header"));
+    this.locators.set("description", page.getByTestId("hero-description"));
+    this.locators.set("category", page.getByTestId("hero-category"));
+    this.locators.set("agency", page.getByTestId("hero-agency").first());
+    this.locators.set("last_updated", page.getByTestId("hero-last-updated"));
   }
 
   async snapshot(id: string) {
     return await this.page.getByTestId(id).screenshot();
   }
 
+  /**
+   * @todo Issue with chart.js animation. Snapshot occurs while animation is ongoing,
+   *       leading to differences in expected and actual. Need to explore further.
+   *       findings: `waitForTimeout` is UI render-blocking. cannot be used
+   * @param id
+   */
   async matchSnapshot(id: string) {
     expect(await this.snapshot(id)).toMatchSnapshot(`${this.path}_${id}.png`, {
       maxDiffPixels: 200,
@@ -38,12 +38,12 @@ export class DashboardPage extends Page {
 
   async validateHero({ _category, _agency }: HeroParameters, containSelector?: boolean) {
     await Promise.all([
-      expect(this.header).not.toContainText(PATTERN.I18N_FAILURE),
-      expect(this.description).not.toContainText(PATTERN.I18N_FAILURE),
-      expect(this.category).toContainText(_category, { ignoreCase: true }),
-      expect(this.agency).toContainText(_agency, { ignoreCase: true }),
-      expect(this.last_updated).not.toContainText(PATTERN.I18N_FAILURE),
-      expect(this.last_updated).not.toContainText("N/A"),
+      expect(this.locators.get("header")!).not.toContainText(PATTERN.I18N_FAILURE),
+      expect(this.locators.get("description")!).not.toContainText(PATTERN.I18N_FAILURE),
+      expect(this.locators.get("category")!).toContainText(_category, { ignoreCase: true }),
+      expect(this.locators.get("agency")!).toContainText(_agency, { ignoreCase: true }),
+      expect(this.locators.get("last_updated")!).not.toContainText(PATTERN.I18N_FAILURE),
+      expect(this.locators.get("last_updated")!).not.toContainText("N/A"),
     ])
       .then(() => console.info(`[${this.path}] ✅ Hero validated`))
       .catch(e => {
