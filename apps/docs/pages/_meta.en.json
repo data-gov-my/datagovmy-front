@@ -1,5 +1,6 @@
 {
   "index": "Introduction",
+  "changelog": "Changelog",
   "overview": "Overview",
   "static-api": "Static APIs",
   "realtime-api": "Real-time APIs",

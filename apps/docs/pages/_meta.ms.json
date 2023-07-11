@@ -1,5 +1,6 @@
 {
   "index": "Pengenalan",
+  "changelog": "Log Peruhaban",
   "overview": "Ikhtisar",
   "static-api": "API Statik",
   "realtime-api": "API 'Realtime'",
