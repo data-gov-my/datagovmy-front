@@ -95,7 +95,12 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                 setData("period", config[index].period);
                 setData("periodly", config[index].periodly);
               }}
-              options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+              options={[
+                t("common:time.daily_7d"),
+                t("common:time.daily"),
+                t("common:time.monthly"),
+                t("common:time.yearly"),
+              ]}
             />
           }
         >
@@ -103,7 +108,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px] w-full"
+                  className="h-[300px]"
                   title={t("ridership_overall")}
                   enableAnimation={!play}
                   interval={data.period}
@@ -113,7 +118,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                       {
                         type: coordinate.x.length === 1 ? "bar" : "line",
                         data: coordinate.overall,
-                        label: t(data.periodly),
+                        label: t(`common:time.${data.periodly}`),
                         fill: true,
                         backgroundColor: AKSARA_COLOR.PRIMARY_H,
                         borderColor: AKSARA_COLOR.PRIMARY,
@@ -124,7 +129,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("daily"),
+                      title: t("common:time.daily"),
                       value: `+${numFormat(
                         timeseries_callout.data.overall.daily.value,
                         "standard"
@@ -184,7 +189,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                         }}
                         stats={[
                           {
-                            title: t("daily"),
+                            title: t("common:time.daily"),
                             value: `+${numFormat(
                               timeseries_callout.data[key].daily.value,
                               "standard"

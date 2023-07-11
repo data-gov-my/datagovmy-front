@@ -324,7 +324,12 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           date={timeseries.data_as_of}
           menu={
             <Tabs.List
-              options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+              options={[
+                t("common:time.daily_7d"),
+                t("common:time.daily"),
+                t("common:time.monthly"),
+                t("common:time.yearly"),
+              ]}
               current={data.tab_index}
               onChange={index => {
                 setData("tab_index", index);

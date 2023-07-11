@@ -68,7 +68,12 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
               setData("period", config[index].period);
               setData("periodly", config[index].periodly);
             }}
-            options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+            options={[
+              t("common:time.daily_7d"),
+              t("common:time.daily"),
+              t("common:time.monthly"),
+              t("common:time.yearly"),
+            ]}
           />
         }
       >
@@ -85,7 +90,7 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
                     {
                       type: coordinate.x.length === 1 ? "bar" : "line",
                       data: coordinate.losses,
-                      label: t(data.periodly),
+                      label: t(`common:time.${data.periodly}`),
                       fill: true,
                       backgroundColor: AKSARA_COLOR.DIM_H,
                       borderColor: AKSARA_COLOR.DIM,
@@ -96,7 +101,7 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
                 }}
                 stats={[
                   {
-                    title: t("daily"),
+                    title: t("common:time.daily"),
                     value: `+${numFormat(LABOUR_LOSSES.daily.value, "standard")}`,
                   },
                   {

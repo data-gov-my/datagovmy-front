@@ -194,7 +194,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                         </span>
                       </p>
                       <p>
-                        {`${t("daily")} - `}
+                        {`${t("common:time.daily")} - `}
                         <span className="font-medium">
                           {waffle.data[data.filter_age.value][doseType].daily}
                         </span>

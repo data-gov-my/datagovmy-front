@@ -137,7 +137,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       {
                         type: "line",
                         data: coordinate.y,
-                        label: t(data.periodly),
+                        label: t(`common:time.${data.periodly}`),
                         borderColor: AKSARA_COLOR.DANGER,
                         borderWidth: 1.5,
                         backgroundColor: AKSARA_COLOR.DANGER_H,
@@ -147,7 +147,12 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                   }}
                   menu={
                     <Tabs.List
-                      options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
                       current={data.tab1_index}
                       onChange={index => {
                         setData("tab1_index", index);
@@ -320,7 +325,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                     enableGridX={false}
                   />
                 </Panel>
-                <Panel name={t("monthly")}>
+                <Panel name={t("common:time.monthly")}>
                   <Bar
                     className="h-[250px]"
                     data={{

@@ -70,7 +70,12 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
               className="h-[300px]"
               menu={
                 <Tabs.List
-                  options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+                  options={[
+                    t("common:time.daily_7d"),
+                    t("common:time.daily"),
+                    t("common:time.monthly"),
+                    t("common:time.yearly"),
+                  ]}
                   current={data.tab_index}
                   onChange={index => {
                     setData("tab_index", index);
@@ -88,7 +93,7 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
                   {
                     type: "line",
                     data: coordinate.y,
-                    label: t(data.periodly),
+                    label: t(`common:time.${data.periodly}`),
                     borderColor: AKSARA_COLOR.GREEN,
                     borderWidth: 1.5,
                     backgroundColor: AKSARA_COLOR.GREEN_H,
@@ -142,7 +147,7 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
                       }}
                       stats={[
                         {
-                          title: t("daily"),
+                          title: t("common:time.daily"),
                           value: `+${numFormat(statistics.data[statistic_key].latest, "standard")}`,
                         },
                         {

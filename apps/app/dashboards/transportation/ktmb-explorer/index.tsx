@@ -259,7 +259,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
           menu={
             <Tabs.List
               className="grow"
-              options={[t("day"), t("month"), t("year")]}
+              options={[t("common:time.daily"), t("common:time.monthly"), t("common:time.yearly")]}
               current={data.tab_index}
               onChange={index => {
                 setData("tab_index", index);
@@ -303,7 +303,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         }}
                         stats={[
                           {
-                            title: t("daily"),
+                            title: t("common:time.daily"),
                             value: `+${numFormat(A_to_B_callout.day.passengers, "standard")}`,
                           },
                           {
@@ -342,7 +342,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           }}
                           stats={[
                             {
-                              title: t("daily"),
+                              title: t("common:time.daily"),
                               value: `+${numFormat(B_to_A_callout.day.passengers, "standard")}`,
                             },
                             {

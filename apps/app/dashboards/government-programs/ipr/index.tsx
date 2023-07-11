@@ -121,7 +121,12 @@ const IPR: FunctionComponent<IPRProps> = ({
                   })}
                   menu={
                     <Tabs.List
-                      options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
                       current={data.tab_index}
                       onChange={index => {
                         setData("tab_index", index);
@@ -135,14 +140,14 @@ const IPR: FunctionComponent<IPRProps> = ({
                     />
                   }
                   enableAnimation={!play}
-                  interval="day"
+                  interval={data.period}
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
                         type: coordinate.x.length === 1 ? "bar" : "line",
                         data: coordinate.overall,
-                        label: t("daily"),
+                        label: t(`common:time.${data.periodly}`),
                         fill: true,
                         backgroundColor: AKSARA_COLOR.DIM_H,
                         borderColor: AKSARA_COLOR.DIM,
@@ -153,7 +158,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("daily"),
+                      title: t("common:time.daily"),
                       value: `+${numFormat(timeseries_callout.overall.daily.value, "standard")}`,
                     },
                     {
@@ -183,7 +188,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                           {
                             type: "line",
                             data: coordinate[key],
-                            label: t("daily"),
+                            label: t(`common:time.${data.periodly}`),
                             fill: true,
                             backgroundColor: AKSARA_COLOR.DIM_H,
                             borderColor: AKSARA_COLOR.DIM,
@@ -193,7 +198,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                       }}
                       stats={[
                         {
-                          title: t("daily"),
+                          title: t("common:time.daily"),
                           value: `+${numFormat(timeseries_callout[key].daily.value, "standard")}`,
                         },
                         {

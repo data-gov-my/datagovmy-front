@@ -117,14 +117,19 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px] w-full"
+                  className="h-[300px]"
                   title={t("timeseries_title", {
                     state: CountryAndStates[currentState],
                     context: data.periodly,
                   })}
                   menu={
                     <Tabs.List
-                      options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
                       current={data.tab_index}
                       onChange={index => {
                         setData("tab_index", index);
@@ -145,7 +150,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                       {
                         type: "line",
                         data: coordinate.overall,
-                        label: t(data.periodly),
+                        label: t(`common:time.${data.periodly}`),
                         borderColor: AKSARA_COLOR.DANGER,
                         borderWidth: 1.5,
                         backgroundColor: AKSARA_COLOR.DANGER_H,
@@ -155,7 +160,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("daily"),
+                      title: t("common:time.daily"),
                       value: `+${numFormat(
                         timeseries_callout.data.data[currentState].overall.daily.value,
                         "standard"
@@ -182,7 +187,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                     <Timeseries
                       key={key}
                       title={t(key)}
-                      className="h-[300px] w-full"
+                      className="h-[300px]"
                       enableAnimation={!play}
                       interval={data.period}
                       data={{
@@ -191,7 +196,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                           {
                             type: "line",
                             data: coordinate[key],
-                            label: t(data.periodly),
+                            label: t(`common:time.${data.periodly}`),
                             borderColor: AKSARA_COLOR.DANGER,
                             borderWidth: 1.5,
                             backgroundColor: AKSARA_COLOR.DANGER_H,
@@ -201,7 +206,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                       }}
                       stats={[
                         {
-                          title: t("daily"),
+                          title: t("common:time.daily"),
                           value: `+${numFormat(
                             timeseries_callout.data.data[currentState][key].daily.value,
                             "standard"

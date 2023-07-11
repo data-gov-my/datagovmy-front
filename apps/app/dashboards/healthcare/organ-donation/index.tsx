@@ -112,7 +112,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px] w-full"
+                  className="h-[300px]"
                   title={t("timeseries_title", {
                     state: CountryAndStates[currentState],
                     context: data.periodly,
@@ -125,7 +125,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                       {
                         type: "line",
                         data: coordinate.y,
-                        label: t(data.periodly),
+                        label: t(`common:time.${data.periodly}`),
                         borderColor: "#16A34A",
                         borderWidth: 1.5,
                         backgroundColor: "#16A34A1A",
@@ -135,7 +135,12 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                   }}
                   menu={
                     <Tabs.List
-                      options={[t("daily_7d"), t("daily"), t("monthly"), t("yearly")]}
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
                       current={data.tab_index}
                       onChange={index => {
                         setData("tab_index", index);
@@ -238,9 +243,9 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                       ],
                     }}
                     enableGridX={false}
-                  />{" "}
+                  />
                 </Panel>
-                <Panel name={t("monthly")}>
+                <Panel name={t("common:time.monthly")}>
                   <Bar
                     className="h-[250px]"
                     data={{
