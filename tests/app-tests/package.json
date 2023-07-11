@@ -1,0 +1,20 @@
+{
+  "name": "app-tests",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "e2e:dev": "node script/e2e.development.js",
+    "e2e:prod": "node script/e2e.production.js"
+  },
+  "dependencies": {
+    "app": "*"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "tsconfig": "*",
+    "utils": "*"
+  }
+}

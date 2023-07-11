@@ -115,7 +115,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         last_updated: data.data_last_updated,
         params: params,
-        timeseries: data.timeseries,
+        timeseries: data.timeseries_all,
         barchart_age: data.bar_chart_age,
         barchart_time: data.bar_chart_time,
         barchart_variables: data.barchart_key_variables,

@@ -54,6 +54,7 @@ export type Periods =
   | "quarter"
   | "year";
 export interface TimeseriesProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   description?: string;
   type?: keyof ChartTypeRegistry;
@@ -104,6 +105,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
 }
 
 const Timeseries: FunctionComponent<TimeseriesProps> = ({
+  id,
   className = "w-full h-[450px]", // manage CSS here
   menu,
   title,
@@ -440,6 +442,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           )}
           <div className={className}>
             <Chart
+              data-testid={id || title}
               ref={_ref}
               data={data}
               options={options()}

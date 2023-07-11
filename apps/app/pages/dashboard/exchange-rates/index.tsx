@@ -4,7 +4,7 @@ import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
-import ExchangeRatesDashboard from "@dashboards/economy/exchange-rates";
+import ExchangeRatesDashboard from "@dashboards/financial-sector/exchange-rates";
 import { withi18n } from "@lib/decorators";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 

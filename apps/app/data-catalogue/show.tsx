@@ -291,13 +291,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
         {/* Chart & Table */}
         <Section
-          title={dataset.meta.title}
-          className=""
+          title={<h4 data-testid="catalogue-title">{dataset.meta.title}</h4>}
           description={
-            <p className="text-dim whitespace-pre-line text-base">
+            <p
+              className="text-dim whitespace-pre-line text-base"
+              data-testid="catalogue-description"
+            >
               {interpolate(dataset.meta.desc.substring(dataset.meta.desc.indexOf("]") + 1))}
             </p>
           }
+          className=""
           date={metadata.data_as_of}
           menu={
             <>
@@ -443,7 +446,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_1")}
             className=""
             description={
-              <p className="text-dim whitespace-pre-line leading-relaxed ">
+              <p
+                className="text-dim whitespace-pre-line leading-relaxed"
+                data-testid="catalogue-methodology"
+              >
                 {interpolate(explanation.methodology)}
               </p>
             }
@@ -454,7 +460,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_2")}
             className=""
             description={
-              <p className="text-dim whitespace-pre-line leading-relaxed">
+              <p
+                className="text-dim whitespace-pre-line leading-relaxed"
+                data-testid="catalogue-caveat"
+              >
                 {interpolate(explanation.caveat)}
               </p>
             }
@@ -466,7 +475,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               title={t("header_3")}
               className=""
               description={
-                <p className="text-dim whitespace-pre-line leading-relaxed">
+                <p
+                  className="text-dim whitespace-pre-line leading-relaxed"
+                  data-testid="catalogue-publication"
+                >
                   {interpolate(explanation.publication ?? "")}
                 </p>
               }
@@ -533,14 +545,14 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               {/* Last updated */}
               <div className="space-y-3">
                 <h5>{t("common:common.last_updated", { date: "" })}</h5>
-                <p className="text-dim whitespace-pre-line">
+                <p className="text-dim whitespace-pre-line" data-testid="catalogue-last-updated">
                   {toDate(metadata.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
                 </p>
               </div>
               {/* Next update */}
               <div className="space-y-3">
                 <h5>{t("common:common.next_update", { date: "" })}</h5>
-                <p className="text-dim">
+                <p className="text-dim" data-testid="catalogue-next-update">
                   {toDate(metadata.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
                 </p>
               </div>
