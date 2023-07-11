@@ -70,7 +70,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           {open => (
             <>
               <p
-                className="pl-1 underline decoration-dashed decoration-1 [text-underline-position:from-font]"
+                className="pl-1 underline decoration-dashed [text-underline-position:from-font]"
                 onClick={() => open()}
               >
                 {numFormat(waffle.data[data.filter_age.value].dose1.perc, "standard", 1)}%
@@ -88,7 +88,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           {open => (
             <>
               <p
-                className="pl-1 underline decoration-dashed decoration-1 [text-underline-position:from-font]"
+                className="pl-1 underline decoration-dashed [text-underline-position:from-font]"
                 onClick={() => open()}
               >
                 {numFormat(waffle.data[data.filter_age.value].dose2.perc, "standard", 1)}%

@@ -80,12 +80,12 @@
     disabled:pointer-events-none disabled:cursor-not-allowed;
   }
 
-  .text-link {
-    @apply text-primary cursor-pointer font-medium hover:underline;
+  .link-primary {
+    @apply text-primary cursor-pointer font-medium [text-underline-position:from-font] hover:underline;
   }
 
-  .text-footer-link {
-    @apply text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white;
+  .link-dim {
+    @apply text-dim cursor-pointer text-sm [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white;
   }
 
   .number {

@@ -269,7 +269,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                       >
                         {open => (
                           <p
-                            className="underline decoration-dashed decoration-1 underline-offset-4"
+                            className="underline decoration-dashed [text-underline-position:from-font]"
                             onClick={open}
                           >
                             {numFormat(value, "standard", [1, 1])}%
