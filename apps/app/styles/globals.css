@@ -85,7 +85,7 @@
   }
 
   .text-footer-link {
-    @apply text-dim cursor-pointer text-sm hover:text-black hover:underline;
+    @apply text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white;
   }
 
   .number {
