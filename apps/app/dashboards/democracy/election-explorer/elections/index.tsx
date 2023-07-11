@@ -329,7 +329,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                         />
                         {data.showFullTable !== true && (
                           <Button
-                            className="btn-border btn-default mx-auto mt-6"
+                            className="btn-default mx-auto mt-6"
                             onClick={() => setData("showFullTable", true)}
                           >
                             {t("show_more")}
