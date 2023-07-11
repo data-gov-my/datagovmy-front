@@ -72,7 +72,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose1",
       color: "#9FE8B1",
       dosePerc: (
-        <Tooltip tip={<span>{t("tooltips_dose1")}</span>}>
+        <Tooltip size="large" tip={<span>{t("tooltips_dose1")}</span>}>
           {open => (
             <>
               <p
@@ -90,7 +90,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose2",
       color: "#31C752",
       dosePerc: (
-        <Tooltip tip={<span>{t("tooltips_dose2")}</span>}>
+        <Tooltip size="large" tip={<span>{t("tooltips_dose2")}</span>}>
           {open => (
             <>
               <p

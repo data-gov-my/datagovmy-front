@@ -112,7 +112,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px]"
+                  className="h-[300px] w-full"
                   title={t("timeseries_title", {
                     state: CountryAndStates[currentState],
                     context: data.periodly,
