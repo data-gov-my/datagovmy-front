@@ -38,7 +38,7 @@ const ID = enumify([
  * await board.execute(async (board: DashboardPage) => { ... })
  */
 const mainTestSuite = async (board: DashboardPage) => {
-  for (const id in Object.values(ID)) {
+  for (const id of Object.values(ID)) {
     expect(board.page.getByTestId(id)).toBeVisible();
   }
 };

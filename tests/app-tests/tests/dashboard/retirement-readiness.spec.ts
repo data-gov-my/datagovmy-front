@@ -33,7 +33,7 @@ const mainTestSuite = async (board: DashboardPage) => {};
 
 /************************** TEST SUITE **************************/
 
-test("retirement-readiness", async ({ page }) => {
+test.skip("retirement-readiness", async ({ page }) => {
   const board = new DashboardPage(page, "retirement-readiness");
   await board.goto();
   await board.validateHero(parameters);

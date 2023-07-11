@@ -61,6 +61,7 @@ export class DataCataloguePage extends Page {
     if (!this.schema) return;
 
     for (const [key, value] of this.locators.entries()) {
+      console.log([key, await value.innerText()]); // Need an await statement. Issue with premature session closing again
       expect(value).toContainText(this.schema[key as keyof CatalogueSchema]);
     }
   }

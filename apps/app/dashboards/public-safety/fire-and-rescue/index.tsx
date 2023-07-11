@@ -96,7 +96,9 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         header={[t("header")]}
         description={
           <Trans>
-            <p className={"text-dim whitespace-pre-line xl:w-2/3"}>{t("description")}</p>
+            <p className={"text-dim whitespace-pre-line xl:w-2/3"} data-testid="hero-description">
+              {t("description")}
+            </p>
           </Trans>
         }
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}

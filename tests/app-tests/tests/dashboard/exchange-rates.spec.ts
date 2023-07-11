@@ -7,7 +7,7 @@ import { enumify } from "utils/helper";
  */
 const parameters: HeroParameters = {
   _agency: "Malaysian Administrative Modernisation and Management Planning Unit",
-  _category: "Economy",
+  _category: "Financial Sector",
 };
 const ID = enumify([
   // eg. "timeseries-test-id"

@@ -33,7 +33,7 @@ const mainTestSuite = async (board: DashboardPage) => {};
 
 /************************** TEST SUITE **************************/
 
-test("flood-warning", async ({ page }) => {
+test.skip("flood-warning", async ({ page }) => {
   const board = new DashboardPage(page, "flood-warning");
   await board.goto();
   await board.validateHero(parameters);

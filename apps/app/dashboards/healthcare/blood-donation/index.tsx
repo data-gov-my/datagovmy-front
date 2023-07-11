@@ -355,7 +355,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       labels: barchart_age.data.past_year.x,
                       datasets: [
                         {
-                          label: `${t("bar2_tooltip1")}`,
+                          label: t("bar2_tooltip1"),
                           data: barchart_age.data.past_year.y,
                           borderRadius: 12,
                           barThickness: 12,
@@ -374,7 +374,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                       labels: barchart_age.data.past_month.x,
                       datasets: [
                         {
-                          label: `${t("bar2_tooltip1")}`,
+                          label: t("bar2_tooltip1"),
                           data: barchart_age.data.past_month.y,
                           borderRadius: 12,
                           barThickness: 12,

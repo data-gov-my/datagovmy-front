@@ -38,8 +38,8 @@ export class DashboardPage extends Page {
 
   async validateHero({ _category, _agency }: HeroParameters, containSelector?: boolean) {
     await Promise.all([
-      expect(this.locators.get("header")!).not.toContainText(PATTERN.I18N_FAILURE),
-      expect(this.locators.get("description")!).not.toContainText(PATTERN.I18N_FAILURE),
+      expect(await this.locators.get("header")!.innerText()).not.toMatch("header"),
+      expect(await this.locators.get("description")!.innerText()).not.toMatch("description"),
       expect(this.locators.get("category")!).toContainText(_category, { ignoreCase: true }),
       expect(this.locators.get("agency")!).toContainText(_agency, { ignoreCase: true }),
       expect(this.locators.get("last_updated")!).not.toContainText(PATTERN.I18N_FAILURE),
@@ -54,5 +54,6 @@ export class DashboardPage extends Page {
 
   async execute(testSuite: (_page: DashboardPage) => Promise<void>) {
     await testSuite(this);
+    await this.page.evaluate(() => window.scrollTo(0, 0)); // To prevent playwright from closing prematurely
   }
 }
