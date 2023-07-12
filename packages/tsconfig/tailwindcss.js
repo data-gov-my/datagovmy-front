@@ -63,6 +63,10 @@ module.exports = {
           from: { width: "var(--from-width)" },
           to: { width: "var(--to-width)" },
         },
+        grow: {
+          from: { height: "var(--from-height)" },
+          to: { height: "var(--to-height)" },
+        },
       },
       animation: {
         slide: "slide 1.5s ease-out",
