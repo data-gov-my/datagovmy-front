@@ -15,11 +15,16 @@
         "NEXT_PUBLIC_AUTHORIZATION_TOKEN",
         "NEXT_PUBLIC_TILESERVER_URL"
       ],
+      "outputMode": "new-only",
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "e2e:dev": {},
     "e2e:prod": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": ["playwright-report/**", "test-results/**"]
+    },
+    "e2e:vercel": {
+      "outputs": ["playwright-report/**", "test-results/**"]
     },
     "lint": {
       "outputs": []

@@ -7,7 +7,8 @@
   "scripts": {
     "test": "playwright test",
     "e2e:dev": "node script/e2e.development.js",
-    "e2e:prod": "node script/e2e.production.js"
+    "e2e:prod": "node script/e2e.production.js",
+    "e2e:vercel": "playwright test"
   },
   "dependencies": {
     "app": "*"
