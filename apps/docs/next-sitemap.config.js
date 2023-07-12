@@ -6,5 +6,5 @@ module.exports = {
   priority: 0.7,
   autoLastmod: true,
   outDir: "public",
-  exclude: ["/404", "/ms-MY/404", "500", "/ms-MY/500"],
+  exclude: ["/404", "/ms/404", "500", "/ms/500"],
 };
