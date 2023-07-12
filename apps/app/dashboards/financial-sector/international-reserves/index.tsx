@@ -273,7 +273,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
               {t("section_2.description_part_1")}
               {
                 <a
-                  className="cursor-pointer underline hover:text-black hover:underline"
+                  className="cursor-pointer underline [text-underline-position:from-font] hover:text-black dark:hover:text-white"
                   href={t("section_2.ir_explainer_url")}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -284,7 +284,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
               {t("section_2.description_part_2")}
               {
                 <a
-                  className="cursor-pointer underline hover:text-black hover:underline"
+                  className="cursor-pointer underline [text-underline-position:from-font] hover:text-black dark:hover:text-white"
                   href="https://www.bnm.gov.my/international-reserves-and-foreign-currency-liquidity"
                   target="_blank"
                   rel="noopener noreferrer"

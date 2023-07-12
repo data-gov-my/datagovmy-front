@@ -318,7 +318,8 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
       "a",
       {
         href: url,
-        className: "text-primary dark:text-primary-dark hover:underline inline",
+        className:
+          "text-primary dark:text-primary-dark hover:underline inline [text-underline-position:from-font]",
         target: "_blank",
       },
       text

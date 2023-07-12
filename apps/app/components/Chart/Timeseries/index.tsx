@@ -54,6 +54,7 @@ export type Periods =
   | "quarter"
   | "year";
 export interface TimeseriesProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   description?: string;
   type?: keyof ChartTypeRegistry;
@@ -104,6 +105,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
 }
 
 const Timeseries: FunctionComponent<TimeseriesProps> = ({
+  id,
   className = "w-full h-[450px]", // manage CSS here
   menu,
   title,
@@ -136,7 +138,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   tooltipItemSort,
   generateLabels,
   tickXCallback,
-  beginZero = false,
+  beginZero = true,
   minY,
   maxY,
   stepSize,
@@ -440,6 +442,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           )}
           <div className={className}>
             <Chart
+              data-testid={id || title}
               ref={_ref}
               data={data}
               options={options()}
@@ -521,7 +524,7 @@ export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
               {open => (
                 <>
                   <p
-                    className="font-medium underline decoration-dashed underline-offset-4"
+                    className="font-medium underline decoration-dashed [text-underline-position:from-font]"
                     onClick={() => open()}
                   >
                     {value}

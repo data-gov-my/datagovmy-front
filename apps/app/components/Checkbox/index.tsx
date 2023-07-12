@@ -48,7 +48,7 @@ const Checkbox: FunctionComponent<CheckboxProps> = ({
                 type="checkbox"
                 name={name}
                 checked={value.some(item => item.value === option.value)}
-                className="border-outline rounded border-2 text-black focus:ring-0 focus:ring-transparent"
+                className="border-outline accent-primary dark:accent-primary-dark rounded border-2 focus:ring-0 focus:ring-transparent"
                 onChange={() => onChange && handleChange(option)}
               />
               <span className="block text-sm">{option.label}</span>

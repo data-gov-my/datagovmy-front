@@ -154,8 +154,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
                 >
                   {close => (
-                    <div className="flex flex-col px-3 pb-[100px]">
-                      <div className="flex flex-col gap-2 py-3">
+                    <div className="space-y-4 p-3">
+                      <div className="space-y-2">
                         <Label label={t("service")} className="text-sm" />
                         <Dropdown
                           anchor="left"
@@ -169,7 +169,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           }}
                         />
                       </div>
-                      <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-x-3 gap-y-2 border-t pb-6 pt-3">
+                      <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-x-3 gap-y-2 border-y py-4">
                         <Label label={t("origin")} className="text-sm" />
                         <Label label={t("destination")} className="text-sm" />
                         <Dropdown
@@ -196,7 +196,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
                         />
                       </div>
-                      <div className="dark:border-outlineHover-dark fixed bottom-0 left-0 flex w-full flex-col gap-2 border-t p-3">
+                      <div className="space-y-2">
                         <Button
                           className="btn-primary w-full justify-center"
                           onClick={() =>
@@ -205,7 +205,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         >
                           {t("apply_filter")}
                         </Button>
-                        <Button className="btn w-full justify-center" onClick={close}>
+                        <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
                           <XMarkIcon className="h-5 w-5" />
                           {t("common:common.close")}
                         </Button>
@@ -259,7 +259,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
           menu={
             <Tabs.List
               className="grow"
-              options={[t("day"), t("month"), t("year")]}
+              options={[t("common:time.daily"), t("common:time.monthly"), t("common:time.yearly")]}
               current={data.tab_index}
               onChange={index => {
                 setData("tab_index", index);
@@ -286,7 +286,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         })}
                         enableAnimation={!play}
                         interval={data.period === "day" ? "auto" : data.period}
-                        beginZero
                         data={{
                           labels: A_to_B_coords.x,
                           datasets: [
@@ -304,7 +303,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         }}
                         stats={[
                           {
-                            title: t("daily"),
+                            title: t("common:time.daily"),
                             value: `+${numFormat(A_to_B_callout.day.passengers, "standard")}`,
                           },
                           {
@@ -326,7 +325,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           })}
                           enableAnimation={!play}
                           interval={data.period === "day" ? "auto" : data.period}
-                          beginZero
                           data={{
                             labels: B_to_A_coords.x,
                             datasets: [
@@ -344,7 +342,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           }}
                           stats={[
                             {
-                              title: t("daily"),
+                              title: t("common:time.daily"),
                               value: `+${numFormat(B_to_A_callout.day.passengers, "standard")}`,
                             },
                             {

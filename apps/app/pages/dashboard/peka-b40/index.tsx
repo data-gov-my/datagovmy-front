@@ -38,7 +38,12 @@ PekaB40.layout = (page, props) => (
     <Layout
       className={clx(Fonts.body.variable, "font-sans")}
       stateSelector={
-        <StateDropdown url={routes.PEKA_B40} currentState={props.params.state} hideOnScroll />
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.PEKA_B40}
+          currentState={props.params.state}
+          hideOnScroll
+        />
       }
     >
       <StateModal state={props.params.state} url={routes.PEKA_B40} />

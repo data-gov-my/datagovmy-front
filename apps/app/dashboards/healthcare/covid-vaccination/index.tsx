@@ -1,18 +1,24 @@
 import AgencyBadge from "@components/Badge/agency";
-import { Dropdown, Hero, Panel, Section, StateDropdown, Tabs, Tooltip } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, ReactNode } from "react";
-import Container from "@components/Container";
 import { MOHIcon } from "@components/Icon/agency";
-import { routes } from "@lib/routes";
-
-import dynamic from "next/dynamic";
-import { CountryAndStates } from "@lib/constants";
-
-import { useData } from "@hooks/useData";
+import {
+  Container,
+  Dropdown,
+  Hero,
+  Panel,
+  Section,
+  StateDropdown,
+  Tabs,
+  Tooltip,
+} from "@components/index";
 import { OptionType } from "@components/types";
-import { numFormat } from "@lib/helpers";
 import COVIDVaccinationTrends from "./vaccine-trends";
+import { useData } from "@hooks/useData";
+import { useTranslation } from "@hooks/useTranslation";
+import { CountryAndStates } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
+import { routes } from "@lib/routes";
+import dynamic from "next/dynamic";
+import { FunctionComponent, ReactNode } from "react";
 
 /**
  * COVID Vaccination Dashboard
@@ -43,16 +49,10 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const currentState = params.state;
 
   const AGE_OPTIONS: Array<OptionType> = ["total", "child", "adolescent", "adult", "elderly"].map(
-    (key: string) => ({
-      label: t(`${key}`),
-      value: key,
-    })
+    (key: string) => ({ label: t(key), value: key })
   );
   const DOSE_OPTIONS: Array<OptionType> = ["dose1", "dose2", "booster1", "booster2"].map(
-    (key: string) => ({
-      label: t(`${key}`),
-      value: key,
-    })
+    (key: string) => ({ label: t(key), value: key })
   );
 
   const { data, setData } = useData({
@@ -66,11 +66,11 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose1",
       color: "#9FE8B1",
       dosePerc: (
-        <Tooltip size="large" tip={<span>{t("tooltips_dose1")}</span>}>
+        <Tooltip tip={<span>{t("tooltips_dose1")}</span>}>
           {open => (
             <>
               <p
-                className="pl-1 underline decoration-dashed underline-offset-4"
+                className="pl-1 underline decoration-dashed [text-underline-position:from-font]"
                 onClick={() => open()}
               >
                 {numFormat(waffle.data[data.filter_age.value].dose1.perc, "standard", 1)}%
@@ -84,11 +84,11 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       doseType: "dose2",
       color: "#31C752",
       dosePerc: (
-        <Tooltip size="large" tip={<span>{t("tooltips_dose2")}</span>}>
+        <Tooltip tip={<span>{t("tooltips_dose2")}</span>}>
           {open => (
             <>
               <p
-                className="pl-1 underline decoration-dashed underline-offset-4"
+                className="pl-1 underline decoration-dashed [text-underline-position:from-font]"
                 onClick={() => open()}
               >
                 {numFormat(waffle.data[data.filter_age.value].dose2.perc, "standard", 1)}%
@@ -194,7 +194,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                         </span>
                       </p>
                       <p>
-                        {`${t("daily")} - `}
+                        {`${t("common:time.daily")} - `}
                         <span className="font-medium">
                           {waffle.data[data.filter_age.value][doseType].daily}
                         </span>

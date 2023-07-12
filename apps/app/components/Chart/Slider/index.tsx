@@ -158,7 +158,11 @@ const Slider: FunctionComponent<SliderProps> = ({
         <Thumb className="max-lg:group-focus-within:border-primary max-lg:group-focus-within:ring-primary group-hover:border-primary group-hover:ring-primary shadow-button block h-5 w-5 cursor-col-resize rounded-full border-2 border-[#A1A1AA] bg-white group-hover:ring-4 max-lg:group-focus-within:ring-4">
           <SliderTooltip play={play}>
             {parseAsDate
-              ? toDate(data[(minmax as number[])[0]], dateFormat[period], i18n.language)
+              ? toDate(
+                  data[Math.max(0, (minmax as number[])[0])],
+                  dateFormat[period],
+                  i18n.language
+                )
               : data[(minmax as number[])[0]]}
           </SliderTooltip>
         </Thumb>
@@ -195,10 +199,10 @@ const SliderTooltip: FunctionComponent<SliderTooltipProps> = ({ play, children }
         play ? "opacity-100" : "opacity-0"
       )}
     >
-      <span className="shadow-floating relative z-10 whitespace-nowrap rounded-lg bg-black px-1.5 py-1 text-sm text-white dark:bg-white dark:text-black">
+      <span className="shadow-floating relative z-10 whitespace-nowrap rounded-lg bg-black px-3 py-1.5 text-sm text-white dark:bg-white dark:text-black">
         {children}
       </span>
-      <div className="absolute top-6 h-2 w-2 rotate-45 bg-black dark:bg-white"></div>
+      <div className="absolute -bottom-1 h-2 w-2 rotate-45 bg-black dark:bg-white"></div>
     </div>
   );
 };

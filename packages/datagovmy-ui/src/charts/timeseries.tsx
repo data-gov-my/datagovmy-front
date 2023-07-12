@@ -492,7 +492,7 @@ export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
               {open => (
                 <>
                   <p
-                    className="font-medium underline decoration-dashed underline-offset-4"
+                    className="font-medium underline decoration-dashed [text-underline-position:from-font]"
                     onClick={() => open()}
                   >
                     {value}

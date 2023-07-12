@@ -8,6 +8,7 @@ import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
+import { TimeseriesOption } from "@lib/types";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -31,21 +32,30 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
   timeseries_callout,
 }) => {
   const { t } = useTranslation(["dashboard-public-transportation", "common"]);
-  const period: { [key: number]: "auto" | "month" | "year" } = {
-    0: "auto",
-    1: "month",
-    2: "year",
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
   };
-  const periodly: { [key: number]: "daily" | "monthly" | "yearly" } = {
-    0: "daily",
-    1: "monthly",
-    2: "yearly",
-  };
+
   const { data, setData } = useData({
     minmax: [0, timeseries.data.daily.x.length - 1],
     index: 0,
     period: "auto",
-    periodly: "daily",
+    periodly: "daily_7d",
   });
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
 
@@ -57,7 +67,9 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         header={[t("header")]}
         description={
           <Trans>
-            <p className={"text-dim whitespace-pre-line xl:w-2/3"}>{t("description")}</p>
+            <p className={"text-dim whitespace-pre-line xl:w-2/3"} data-testid="hero-description">
+              {t("description")}
+            </p>
           </Trans>
         }
         last_updated={last_updated}
@@ -81,10 +93,16 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
               current={data.index}
               onChange={index => {
                 setData("index", index);
-                setData("period", period[index]);
-                setData("periodly", periodly[index]);
+                setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
+                setData("period", config[index].period);
+                setData("periodly", config[index].periodly);
               }}
-              options={[t("daily"), t("monthly"), t("yearly")]}
+              options={[
+                t("common:time.daily_7d"),
+                t("common:time.daily"),
+                t("common:time.monthly"),
+                t("common:time.yearly"),
+              ]}
             />
           }
         >
@@ -92,18 +110,17 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px] w-full"
+                  className="h-[300px]"
                   title={t("ridership_overall")}
                   enableAnimation={!play}
                   interval={data.period}
-                  beginZero
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
                         type: coordinate.x.length === 1 ? "bar" : "line",
                         data: coordinate.overall,
-                        label: t(data.periodly),
+                        label: t(`common:time.${data.periodly}`),
                         fill: true,
                         backgroundColor: AKSARA_COLOR.PRIMARY_H,
                         borderColor: AKSARA_COLOR.PRIMARY,
@@ -114,7 +131,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("daily"),
+                      title: t("common:time.daily"),
                       value: `+${numFormat(
                         timeseries_callout.data.overall.daily.value,
                         "standard"
@@ -157,7 +174,6 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                         title={t(`ridership_${key}`)}
                         enableAnimation={!play}
                         interval={data.period}
-                        beginZero
                         data={{
                           labels: coordinate.x,
                           datasets: [
@@ -175,7 +191,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                         }}
                         stats={[
                           {
-                            title: t("daily"),
+                            title: t("common:time.daily"),
                             value: `+${numFormat(
                               timeseries_callout.data[key].daily.value,
                               "standard"

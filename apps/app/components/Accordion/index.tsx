@@ -25,7 +25,7 @@ const Accordion: FunctionComponent<AccordionProps> = ({
             <div
               className={clx(
                 open ? "rounded-none" : "shadow-button rounded-b-xl",
-                "btn-default btn-border cursor-pointer rounded-t-xl p-4",
+                "btn-default cursor-pointer rounded-t-xl p-4",
                 width,
                 className
               )}

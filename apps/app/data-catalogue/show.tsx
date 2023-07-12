@@ -291,13 +291,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
         {/* Chart & Table */}
         <Section
-          title={dataset.meta.title}
-          className=""
+          title={<h4 data-testid="catalogue-title">{dataset.meta.title}</h4>}
           description={
-            <p className="text-dim whitespace-pre-line text-base">
+            <p
+              className="text-dim whitespace-pre-line text-base"
+              data-testid="catalogue-description"
+            >
               {interpolate(dataset.meta.desc.substring(dataset.meta.desc.indexOf("]") + 1))}
             </p>
           }
+          className=""
           date={metadata.data_as_of}
           menu={
             <>
@@ -443,7 +446,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_1")}
             className=""
             description={
-              <p className="text-dim whitespace-pre-line leading-relaxed ">
+              <p
+                className="text-dim whitespace-pre-line leading-relaxed"
+                data-testid="catalogue-methodology"
+              >
                 {interpolate(explanation.methodology)}
               </p>
             }
@@ -454,7 +460,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_2")}
             className=""
             description={
-              <p className="text-dim whitespace-pre-line leading-relaxed">
+              <p
+                className="text-dim whitespace-pre-line leading-relaxed"
+                data-testid="catalogue-caveat"
+              >
                 {interpolate(explanation.caveat)}
               </p>
             }
@@ -466,7 +475,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               title={t("header_3")}
               className=""
               description={
-                <p className="text-dim whitespace-pre-line leading-relaxed">
+                <p
+                  className="text-dim whitespace-pre-line leading-relaxed"
+                  data-testid="catalogue-publication"
+                >
                   {interpolate(explanation.publication ?? "")}
                 </p>
               }
@@ -494,12 +506,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     <ul className="text-dim ml-6 list-outside list-disc md:hidden">
                       {metadata.definitions?.map(item => (
                         <li key={item.title}>
-                          <span>
+                          <span className="flex gap-x-1">
                             {Boolean(item.unique_id) ? (
                               <At href={`/data-catalogue/${item.unique_id}`}>{item.title}</At>
                             ) : (
                               item.title
-                            )}{" "}
+                            )}
                             <Tooltip tip={interpolate(item.desc)} />
                           </span>
                         </li>
@@ -533,14 +545,14 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               {/* Last updated */}
               <div className="space-y-3">
                 <h5>{t("common:common.last_updated", { date: "" })}</h5>
-                <p className="text-dim whitespace-pre-line">
+                <p className="text-dim whitespace-pre-line" data-testid="catalogue-last-updated">
                   {toDate(metadata.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
                 </p>
               </div>
               {/* Next update */}
               <div className="space-y-3">
                 <h5>{t("common:common.next_update", { date: "" })}</h5>
-                <p className="text-dim">
+                <p className="text-dim" data-testid="catalogue-next-update">
                   {toDate(metadata.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
                 </p>
               </div>
@@ -562,7 +574,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       <li key={url as string}>
                         <a
                           href={url as string}
-                          className="text-primary dark:text-primary-dark break-all hover:underline"
+                          className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
                           onClick={() =>
                             track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
                           }
@@ -580,7 +592,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <p className="text-dim">
                   {t("license_text")}{" "}
                   <a
-                    className="text-primary dark:text-primary-dark lowercase hover:underline"
+                    className="text-primary dark:text-primary-dark lowercase [text-underline-position:from-font] hover:underline"
                     target="_blank"
                     rel="noopener"
                     href="https://creativecommons.org/licenses/by/4.0/"
