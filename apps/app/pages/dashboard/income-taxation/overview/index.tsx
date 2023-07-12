@@ -20,12 +20,12 @@ const IncomeTaxation: Page = ({
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IncomeTaxationLayout last_updated={last_updated}>
-        <IncomeTaxationDashboard stacked_bar={stacked_bar} last_updated={last_updated} />
+        <IncomeTaxationDashboard stacked_bar={stacked_bar} />
       </IncomeTaxationLayout>
     </AnalyticsProvider>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxation", async () => {
   const { data } = await get("/dashboard", { dashboard: "income_tax" });
   return {
