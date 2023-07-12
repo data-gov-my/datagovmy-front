@@ -14,7 +14,9 @@ jobs:
         id: waitForDeploy
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 300
+          max_timeout: 600
+          allow_inactive: true
+          environment: Preview - datagovmy-front
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:

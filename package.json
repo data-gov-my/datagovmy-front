@@ -13,6 +13,7 @@
     "lint": "turbo run lint",
     "e2e:dev": "turbo run e2e:dev",
     "e2e:prod": "turbo run e2e:prod",
+    "e2e:vercel": "turbo run e2e:vercel",
     "prepare": "husky install",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
