@@ -153,15 +153,11 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         background="blue"
         category={[t("common:categories.demography"), "text-primary"]}
         header={[t("header")]}
-        description={
-          <p className={"text-dim dark:text-outline xl:w-2/3"}>
-            <Trans>
-              {t("description", {
-                quote: t("quote"),
-              })}
-            </Trans>
-          </p>
-        }
+        description={[
+          t("description", {
+            quote: t("quote"),
+          }),
+        ]}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:jpn.full")}

@@ -65,13 +65,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         background="blue"
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
-        description={
-          <Trans>
-            <p className={"text-dim whitespace-pre-line xl:w-2/3"} data-testid="hero-description">
-              {t("description")}
-            </p>
-          </Trans>
-        }
+        description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge

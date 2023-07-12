@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactNode, useContext, useMemo } from "react";
 import Container from "@components/Container";
 import { clx, numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
 import { AnalyticsContext } from "@hooks/useAnalytics";
 import { EyeIcon } from "@heroicons/react/20/solid";
 
@@ -99,12 +99,17 @@ const Hero: FunctionComponent<HeroProps> = ({
                 )}
 
                 {description && Array.isArray(description) ? (
-                  <p
-                    className={clx("text-dim xl:w-2/3", description[1])}
-                    data-testid="hero-description"
-                  >
-                    {description[0]}
-                  </p>
+                  <Trans>
+                    <p
+                      className={clx(
+                        "text-dim whitespace-pre-line max-xl:max-w-prose xl:w-2/3",
+                        description[1]
+                      )}
+                      data-testid="hero-description"
+                    >
+                      {description[0]}
+                    </p>
+                  </Trans>
                 ) : (
                   description
                 )}
