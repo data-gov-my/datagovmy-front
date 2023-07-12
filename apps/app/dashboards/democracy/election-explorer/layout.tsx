@@ -70,7 +70,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
       <div
         className={clx(
           "border-b-outline dark:border-b-washed-dark hide-scrollbar sticky top-14 z-20 flex flex-row gap-2 overflow-x-auto border-b bg-white px-3 dark:bg-black sm:justify-center md:pl-0 lg:static",
-          pathname.endsWith("/trivia") ? "justify-end" : "justify-start"
+          pathname.endsWith("/trivia") ? "max-sm:justify-end" : "max-sm:justify-start"
         )}
       >
         {election_navs.map(nav => (
