@@ -7,7 +7,7 @@ import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 dotenv.config();
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://127.0.0.1:3000";
 const CI_MODE = process.env.CI;
 /**
  * See https://playwright.dev/docs/test-configuration.
