@@ -8,7 +8,7 @@ on:
     branches: [main, staging]
 jobs:
   preparation:
-    runs-on: ${{ vars.RUNNER }}
+    runs-on: ubuntu-latest
     steps:
       - name: Set environment variable
         run: echo "ENVIRONMENT=${{ github.event.deployment.environment }}"
