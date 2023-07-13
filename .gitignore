@@ -12,6 +12,7 @@ playwright-report/
 playwright/.cache/
 tests/playground/
 *-snapshots/
+*.secrets
 
 # next.js
 .next/

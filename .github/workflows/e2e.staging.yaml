@@ -14,7 +14,7 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-      # Environment
+      # Environment-specific variables
       AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
       REVALIDATE_TOKEN: ${{ secrets.REVALIDATE_TOKEN }}
       NEXT_PUBLIC_APP_ENV: ${{ vars.NEXT_PUBLIC_APP_ENV }}
