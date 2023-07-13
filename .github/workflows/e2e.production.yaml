@@ -2,15 +2,15 @@ name: "E2E - Production"
 
 on:
   push:
-    branches: [staging, feat/e2e-ci]
+    branches: [main]
   pull_request:
-    branches: [staging]
+    branches: [main]
 
 jobs:
   e2e-test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    environment: Preview – datagovmy-front
+    environment: Production – datagovmy-front
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
@@ -37,8 +37,8 @@ jobs:
       - name: Install Playwright & Chromium
         run: npx playwright install chromium
 
-      - name: Run Playwright tests
-        run: yarn e2e:prod
+      - name: Run E2E tests
+        run: yarn e2e:test
 
       - name: Publish E2E results
         uses: actions/upload-artifact@v3

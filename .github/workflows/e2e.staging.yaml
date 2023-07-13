@@ -38,7 +38,7 @@ jobs:
         run: npx playwright install chromium
 
       - name: Run Playwright tests
-        run: yarn e2e:prod
+        run: yarn e2e:test
 
       - name: Publish E2E results
         uses: actions/upload-artifact@v3

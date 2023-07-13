@@ -18,12 +18,8 @@
       "outputMode": "new-only",
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
-    "e2e:dev": {},
-    "e2e:prod": {
+    "e2e:test": {
       "dependsOn": ["^build"],
-      "outputs": ["playwright-report/**", "test-results/**"]
-    },
-    "e2e:vercel": {
       "outputs": ["playwright-report/**", "test-results/**"]
     },
     "lint": {
