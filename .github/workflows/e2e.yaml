@@ -23,6 +23,16 @@ jobs:
         run: npx playwright install chromium
       - name: Run Playwright tests
         run: yarn e2e:prod
+        env:
+          AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+          REVALIDATE_TOKEN: ${{ secrets.REVALIDATE_TOKEN }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_APP_ENV: ${{ vars.NEXT_PUBLIC_APP_ENV }}
+          NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+          NEXT_PUBLIC_AUTHORIZATION_TOKEN: ${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN }}
+          NEXT_PUBLIC_GA_TAG: ${{ secrets.NEXT_PUBLIC_GA_TAG }}
+          NEXT_PUBLIC_MIXPANEL_TOKEN: ${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}
+          NEXT_PUBLIC_TILESERVER_URL: ${{ secrets.NEXT_PUBLIC_TILESERVER_URL }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
