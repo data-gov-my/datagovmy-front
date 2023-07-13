@@ -1,4 +1,4 @@
-name: "E2E - Staging"
+name: "E2E - Production"
 
 on:
   push:
