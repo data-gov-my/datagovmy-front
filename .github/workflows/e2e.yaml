@@ -1,53 +1,62 @@
 name: E2E CI Checks
+
 on:
+  workflow_dispatch:
   push:
     branches: [main, staging, feat/e2e-ci]
   pull_request:
     branches: [main, staging]
 jobs:
-  test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-      # Environment
-      AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
-      REVALIDATE_TOKEN: ${{ secrets.REVALIDATE_TOKEN }}
-      NEXT_PUBLIC_APP_ENV: ${{ vars.NEXT_PUBLIC_APP_ENV }}
-      NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
-      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-      NEXT_PUBLIC_AUTHORIZATION_TOKEN: ${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN }}
-      NEXT_PUBLIC_GA_TAG: ${{ secrets.NEXT_PUBLIC_GA_TAG }}
-      NEXT_PUBLIC_MIXPANEL_TOKEN: ${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}
-      NEXT_PUBLIC_TILESERVER_URL: ${{ secrets.NEXT_PUBLIC_TILESERVER_URL }}
+  preparation:
+    runs-on: ${{ vars.RUNNER }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "yarn"
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Install Playwright & Chromium
-        run: npx playwright install chromium
-      - name: "[debug]"
-        run: |
-          echo "AUTH_TOKEN : $AUTH_TOKEN"
-          echo "REVALIDATE_TOKEN : $REVALIDATE_TOKEN"
-          echo "NEXT_PUBLIC_APP_ENV : $NEXT_PUBLIC_APP_ENV"
-          echo "NEXT_PUBLIC_APP_URL : $NEXT_PUBLIC_APP_URL"
-          echo "NEXT_PUBLIC_API_URL : $NEXT_PUBLIC_API_URL"
-          echo "NEXT_PUBLIC_AUTHORIZATION_TOKEN : $NEXT_PUBLIC_AUTHORIZATION_TOKEN"
-          echo "NEXT_PUBLIC_GA_TAG : $NEXT_PUBLIC_GA_TAG"
-          echo "NEXT_PUBLIC_MIXPANEL_TOKEN : $NEXT_PUBLIC_MIXPANEL_TOKEN"
-          echo "NEXT_PUBLIC_TILESERVER_URL : $NEXT_PUBLIC_TILESERVER_URL"
-      - name: Run Playwright tests
-        run: yarn e2e:prod
+      - name: Set environment variable
+        run: echo "ENVIRONMENT=${{ github.event.deployment.environment }}"
 
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
+  # e2e-test:
+  #   timeout-minutes: 60
+  #   runs-on: ubuntu-latest
+  #   environment: Preview - datagovmy-front
+  #   env:
+  #     TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  #     TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  #     # Environment
+  #     AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+  #     REVALIDATE_TOKEN: ${{ secrets.REVALIDATE_TOKEN }}
+  #     NEXT_PUBLIC_APP_ENV: ${{ vars.NEXT_PUBLIC_APP_ENV }}
+  #     NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+  #     NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+  #     NEXT_PUBLIC_AUTHORIZATION_TOKEN: ${{ secrets.NEXT_PUBLIC_AUTHORIZATION_TOKEN }}
+  #     NEXT_PUBLIC_GA_TAG: ${{ secrets.NEXT_PUBLIC_GA_TAG }}
+  #     NEXT_PUBLIC_MIXPANEL_TOKEN: ${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}
+  #     NEXT_PUBLIC_TILESERVER_URL: ${{ secrets.NEXT_PUBLIC_TILESERVER_URL }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
+  #         cache: "yarn"
+  #     - name: Install dependencies
+  #       run: yarn install --frozen-lockfile
+  #     - name: Install Playwright & Chromium
+  #       run: npx playwright install chromium
+  #     - name: "[debug]"
+  #       run: |
+  #         echo "AUTH_TOKEN : $AUTH_TOKEN"
+  #         echo "REVALIDATE_TOKEN : $REVALIDATE_TOKEN"
+  #         echo "NEXT_PUBLIC_APP_ENV : $NEXT_PUBLIC_APP_ENV"
+  #         echo "NEXT_PUBLIC_APP_URL : $NEXT_PUBLIC_APP_URL"
+  #         echo "NEXT_PUBLIC_API_URL : $NEXT_PUBLIC_API_URL"
+  #         echo "NEXT_PUBLIC_AUTHORIZATION_TOKEN : $NEXT_PUBLIC_AUTHORIZATION_TOKEN"
+  #         echo "NEXT_PUBLIC_GA_TAG : $NEXT_PUBLIC_GA_TAG"
+  #         echo "NEXT_PUBLIC_MIXPANEL_TOKEN : $NEXT_PUBLIC_MIXPANEL_TOKEN"
+  #         echo "NEXT_PUBLIC_TILESERVER_URL : $NEXT_PUBLIC_TILESERVER_URL"
+  #     - name: Run Playwright tests
+  #       run: yarn e2e:prod
+
+  #     - uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: playwright-report
+  #         path: playwright-report/
+  #         retention-days: 30
