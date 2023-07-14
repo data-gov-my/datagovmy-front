@@ -18,7 +18,7 @@ export const testProduction = (project, port) => {
   }
   try {
     if (!project && !port) throw new Error("Missing or invalid project / workspace argument");
-    const command = `start-server-and-test "(cd ../../apps/${project}/ && yarn start)" http://localhost:${port} "playwright test"`;
+    const command = `start-server-and-test "(cd ../../apps/${project} && yarn start)" http://localhost:${port} "playwright test"`;
 
     exec(command, (error, stdout, stderr) => {
       clog(stdout);

@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.35.1",
-    "luxon": "^3.0.3"
+    "luxon": "^3.0.3",
+    "start-server-and-test": "^2.0.0"
   }
 }

@@ -32,9 +32,12 @@ export class DataCataloguePage extends Page {
   }
 
   async loadSchema(language: "en" | "bm" = "en"): Promise<CatalogueSchema | undefined> {
-    return fetch(`${process.env.API_URL}/data-variable/?id=${this.id}&lang=${language}`, {
-      headers: { Authorization: process.env.AUTHORIZATION_TOKEN as string },
-    })
+    return fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/data-variable/?id=${this.id}&lang=${language}`,
+      {
+        headers: { Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN as string },
+      }
+    )
       .then(response => response.json())
       .then(result => {
         this.schema = {
