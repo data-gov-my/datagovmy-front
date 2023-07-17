@@ -96,6 +96,11 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         grid: {
           display: false,
         },
+        ticks: {
+          font: {
+            size: 14,
+          },
+        },
         position: "top",
       },
       y: {
@@ -104,6 +109,11 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         offset: true,
         grid: {
           display: false,
+        },
+        ticks: {
+          font: {
+            size: 14,
+          },
         },
       },
     };
@@ -177,6 +187,11 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
           if ([null, 0].includes(data[context.dataIndex].z)) return "#71717A";
           const n_value = normalize(data[context.dataIndex].z!, min, max);
           return n_value > 0.7 ? "#fff" : "#000";
+        },
+        labels: {
+          title: {
+            size: 14,
+          },
         },
         font: {
           size: 16,
