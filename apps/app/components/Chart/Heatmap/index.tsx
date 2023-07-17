@@ -174,9 +174,13 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
       datalabels: {
         display: true,
         color(context: { dataIndex: number }) {
-          if (data[context.dataIndex].z === null) return "#000";
+          if ([null, 0].includes(data[context.dataIndex].z)) return "#71717A";
           const n_value = normalize(data[context.dataIndex].z!, min, max);
           return n_value > 0.7 ? "#fff" : "#000";
+        },
+        font: {
+          size: 16,
+          lineHeight: 24,
         },
         formatter(v: HeatmapDatum) {
           return display(v.z!, "standard", precision);
