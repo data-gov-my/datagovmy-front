@@ -26,6 +26,7 @@ interface HeatmapProps extends ChartHeaderProps {
   color?: Color;
   prefix?: string;
   unit?: string;
+  precision?: [number, number] | number;
 
   _ref?: ForwardedRef<ChartJSOrUndefined<"matrix", any[], unknown>>;
 }
@@ -49,6 +50,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   prefix,
   unit,
   controls,
+  precision = [1, 1],
   _ref,
 }) => {
   ChartJS.register(
@@ -176,8 +178,8 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
           const n_value = normalize(data[context.dataIndex].z!, min, max);
           return n_value > 0.7 ? "#fff" : "#000";
         },
-        formatter(value: HeatmapDatum) {
-          return value.z;
+        formatter(v: HeatmapDatum) {
+          return display(v.z!, "standard", precision);
         },
       },
       tooltip: {
@@ -191,7 +193,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
           label(context) {
             const v = data[context.dataIndex];
             return `${v.y}, ${v.x}: ${
-              v.z === null ? "No data" : display(v.z!, "standard", [1, 1])
+              v.z === null ? "No data" : display(v.z!, "standard", precision)
             }`;
           },
         },
@@ -214,7 +216,6 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
             datasets: [
               {
                 data: data,
-                borderWidth: 1,
                 backgroundColor(ctx: ScriptableContext<"matrix">) {
                   return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).z);
                 },
