@@ -3,36 +3,56 @@ import { DocumentDuplicateIcon, GlobeAltIcon } from "@heroicons/react/24/outline
 import { FunctionComponent, useState } from "react";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
+import javscript from "highlight.js/lib/languages/javascript";
+// import kotlin from "highlight.js/lib/languages/kotlin";
 // import julia from "highlight.js/lib/languages/julia";
 // import r from "highlight.js/lib/languages/r";
 import "highlight.js/styles/shades-of-purple.css";
-import { OptionType } from "@components/types";
 import { copyClipboard } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { track } from "@lib/mixpanel";
 
+const LANGUAGE_OPTIONS = [
+  {
+    label: "Python",
+    value: "python",
+  },
+  {
+    label: "JavaScript",
+    value: "javascript",
+  },
+  {
+    label: "Kotlin",
+    value: "kotlin",
+  },
+] as const;
+
+export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
+
 interface CodeBlockProps {
-  children: string;
+  children: Partial<Record<Language, string>>;
   event?: Record<string, any>;
 }
 
 const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, event }) => {
   const { t } = useTranslation();
   hljs.registerLanguage("python", python);
+  hljs.registerLanguage("javascript", javscript);
+  // hljs.registerLanguage("kotlin", kotlin);
+
   //   hljs.registerLanguage("julia", julia);
   //   hljs.registerLanguage("r", r);
-  const languageOptions: OptionType[] = [
-    {
-      label: "Python",
-      value: "python",
-    },
-  ];
-  const [language, setLanguage] = useState<OptionType>(languageOptions[0]);
+
+  const languageOptions = LANGUAGE_OPTIONS.filter(({ value }) => {
+    return Object.keys(children).includes(value);
+  });
+
+  const [language, setLanguage] = useState<(typeof LANGUAGE_OPTIONS)[number]>(languageOptions[0]);
   const [copyText, setCopyText] = useState<string>(t("common.copy"));
 
   const handleCopy = () => {
     track("code_copy", { language: language.value, ...event });
-    copyClipboard(children);
+    copyClipboard(children[language.value] ?? "");
     setCopyText(t("common.copied"));
     setTimeout(() => {
       setCopyText(t("common.copy"));
@@ -59,7 +79,8 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, event }) => {
         <code
           className="whitespace-pre-wrap break-all text-white"
           dangerouslySetInnerHTML={{
-            __html: hljs.highlight(children, { language: language.value }).value,
+            __html: hljs.highlight(children[language.value] ?? "", { language: language.value })
+              .value,
           }}
         />
       </div>
