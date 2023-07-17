@@ -23,7 +23,8 @@ import Tooltip from "@components/Tooltip";
 import { useFilter } from "@hooks/useFilter";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import CatalogueCode from "./partials/code";
+import CatalogueCode, { APIQuery } from "./partials/code";
+import { SampleCode } from "./partials/code";
 import { useAnalytics } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
 import { WindowProvider } from "@hooks/useWindow";
@@ -103,6 +104,7 @@ interface CatalogueShowProps {
   translations: {
     [key: string]: string;
   };
+  queries?: APIQuery[];
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -114,6 +116,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   metadata,
   urls,
   translations,
+  queries,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
@@ -646,9 +649,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           </div>
         </Section>
 
-        {/* Code */}
+        {/* Dataset Source Code */}
         <Section title={t("code")} description={t("code_desc")} className="mx-auto w-full py-12">
           <CatalogueCode type={dataset.type} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
+        </Section>
+
+        {/* API Request Code */}
+        <Section
+          title={t("sample_query.section_title")}
+          description={t("sample_query.description")}
+          className="mx-auto w-full py-12"
+        >
+          <SampleCode queries={queries} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
         </Section>
       </Container>
     </div>
