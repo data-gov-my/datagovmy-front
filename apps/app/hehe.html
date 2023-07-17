@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Embed Playground</title>
+    <style>
+      body {
+        background-color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      src="http://localhost:3000/data-catalogue/embed/dgmy-public-mwe_mwe_hbar_4_0"
+      width="100%"
+      onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));'
+      style="height: 500px; width: 100%; border: none; overflow: hidden; background: white"
+    />
+  </body>
+</html>

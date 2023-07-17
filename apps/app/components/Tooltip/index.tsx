@@ -1,6 +1,6 @@
 import Fonts from "@config/font";
 import { Transition, Dialog } from "@headlessui/react";
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { clx } from "@lib/helpers";
 import { Fragment, FunctionComponent, ReactNode, useState } from "react";
 
@@ -21,9 +21,11 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, className, tip }) 
         <>
           {Boolean(tip) && (
             <>
-              <InformationCircleIcon className="text-outlineHover mb-1 hidden h-4 w-4 md:inline-block" />
               <InformationCircleIcon
-                className="text-outlineHover mb-1 inline-block h-4 w-4 md:hidden"
+                className={clx("text-outlineHover mb-1 hidden h-4 w-4 md:inline-block", className)}
+              />
+              <InformationCircleIcon
+                className={clx("text-outlineHover mb-1 inline-block h-4 w-4 md:hidden", className)}
                 onClick={() => setIsOpen(true)}
               />
             </>
