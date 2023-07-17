@@ -16,7 +16,7 @@ import Daterange from "@components/Dropdown/Daterange";
 import { Trans } from "next-i18next";
 import { useWatch } from "@hooks/useWatch";
 import Spinner from "@components/Spinner";
-import { clx } from "@lib/helpers";
+import { clx, toDate } from "@lib/helpers";
 import { toast } from "@components/Toast";
 
 /**
@@ -27,14 +27,12 @@ import { toast } from "@components/Toast";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface BirthdayExplorerDashboardProps {
-  // timeseries: any;
+  timeseries: any;
 }
 
-const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProps> = (
-  {
-    // timeseries,
-  }
-) => {
+const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProps> = ({
+  timeseries,
+}) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common"]);
   const { windowWidth } = useContext(WindowContext);
 
@@ -57,9 +55,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   };
 
   const { data, setData } = useData({
-    // consumed data
-    // x: timeseries.data.x,
-    // y: timeseries.data.y,
     state_total: 0,
     nationwide_total: 0,
     popularity: {
@@ -155,11 +150,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         header={[t("header")]}
         description={
           <p className={"text-dim dark:text-outline xl:w-2/3"}>
-            <Trans>
-              {t("description", {
-                quote: t("quote"),
-              })}
-            </Trans>
+            <Trans>{t("description", { quote: t("quote") })}</Trans>
           </p>
         }
         agencyBadge={
@@ -171,8 +162,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         }
       />
       <Container className="min-h-screen">
-        {/* 
-        <>
         <Section title={t("section_1.title")} description={t("section_1.description")}>
           <div className="flex flex-col gap-8 rounded-xl lg:flex-row">
             <Card className="border-outline dark:border-washed-dark flex flex-shrink-0 basis-1/3 flex-col justify-between rounded-xl border p-6">
@@ -226,39 +215,21 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                     <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 my-0 flex h-auto w-full basis-1/3 flex-col self-center rounded-t-xl border px-4 py-8 lg:rounded-xl lg:py-16">
                       <CakeIcon className="text-primary mx-auto h-10 w-10" />
                       <div className="mx-auto mt-4 text-center text-lg font-bold text-black dark:text-white">
-                        {DateTime.fromISO(data.birthday)
-                          .setLocale(i18n.language)
-                          .toLocaleString(DateTime.DATE_FULL)}
+                        {toDate(data.birthday, "dd MMMM yyyy", i18n.language)}
                       </div>
                       <div className="text-dim mx-auto mt-3 text-center text-sm">
-                        <span>
-                          {t("section_1.year", {
-                            count: years,
-                          })}
-                        </span>
-                        <span>
-                          {t("section_1.month", {
-                            count: months,
-                          })}
-                        </span>
-                        <span>
-                          {t("section_1.day", {
-                            count: Math.floor(days!),
-                          })}
-                        </span>
+                        <span>{t("section_1.year", { count: years })}</span>
+                        <span>{t("section_1.month", { count: months })}</span>
+                        <span>{t("section_1.day", { count: Math.floor(days!) })}</span>
                       </div>
                     </Card>
                     <div className="flex h-auto basis-2/3 flex-col gap-3 self-center px-4 pb-4 text-lg font-bold lg:pl-0 lg:pr-8 lg:pt-4">
                       <div className="space-y-3 text-black dark:text-white">
                         <p>
-                          {t("section_1.info1", {
-                            count: data.state_total,
-                          })}
+                          {t("section_1.info1", { count: data.state_total })}
 
                           <span className="text-primary dark:text-primary-dark">
-                            {t("section_1.count", {
-                              count: data.state_total,
-                            })}
+                            {t("section_1.count", { count: data.state_total })}
                           </span>
                           {t("section_1.info2", {
                             count: data.state_total,
@@ -274,15 +245,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                             <>
                               <span>{t("section_1.and")}</span>
                               <span className="text-primary dark:text-primary-dark">
-                                {t("section_1.count", {
-                                  count: data.nationwide_total,
-                                })}
+                                {t("section_1.count", { count: data.nationwide_total })}
                               </span>
-                              <span>
-                                {t("section_1.info3", {
-                                  count: data.nationwide_total,
-                                })}
-                              </span>
+                              <span>{t("section_1.info3", { count: data.nationwide_total })}</span>
                             </>
                           ) : (
                             "."
@@ -299,9 +264,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                                 : data.rank === 366 ||
                                   (!isLeap(+data.birthday.slice(0, 4)) && data.rank === 365)
                                 ? t("section_1.most_rare")
-                                : t("section_1.count", {
-                                    count: data.rank,
-                                  })}
+                                : t("section_1.count", { count: data.rank })}
                             </span>
                             {t("section_1.rank", {
                               count: data.rank,
@@ -368,10 +331,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
               )}
             </div>
           </div>
-        </Section> */}
+        </Section>
 
         {/* Number of babies born on each date */}
-        {/* <Section
+        <Section
           className="py-12"
           title={t("section_2.title", {
             start_year: data.start,
@@ -453,9 +416,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 <Spinner loading={data.loading} />
               </div>
             </div>
-          </div>
-        )}
-        </Section> */}
+          )}
+        </Section>
       </Container>
     </>
   );
