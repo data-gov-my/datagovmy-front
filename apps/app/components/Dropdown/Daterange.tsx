@@ -4,6 +4,7 @@ import { FunctionComponent, useRef } from "react";
 import { Transition, Popover } from "@headlessui/react";
 import { CheckCircleIcon, ChevronDownIcon, ClockIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useTranslation } from "next-i18next";
+import { clx } from "@lib/helpers";
 
 interface DaterangeProps extends LabelProps {
   className?: string;
@@ -44,13 +45,13 @@ const Range: FunctionComponent<DaterangeProps> = ({
       {label && <Label label={label} />}
       <Popover className="relative">
         <Popover.Button
-          className={[
+          className={clx(
             "dark:border-washed-dark shadow-button relative flex w-full flex-row items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left dark:bg-black lg:w-fit lg:items-center",
             className,
             disabled
               ? "bg-outline text-dim pointer-events-none"
-              : "hover:border-outlineHover focus:outline-none focus-visible:ring-0",
-          ].join(" ")}
+              : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+          )}
         >
           <ClockIcon className="h-4 w-4 text-black dark:text-white" />
           <p className="text-sm">
@@ -69,10 +70,10 @@ const Range: FunctionComponent<DaterangeProps> = ({
           leaveTo="opacity-0"
         >
           <Popover.Panel
-            className={[
+            className={clx(
               "max-h-100 dark:ring-washed-dark shadow-floating absolute z-20 mt-1 min-w-full overflow-clip rounded-md bg-white text-sm ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
-              anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-            ].join(" ")}
+              anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
+            )}
           >
             <div className="relative">
               <div className="dark:border-washed-dark sticky top-0 z-20 grid w-[250px] grid-cols-2 border-b bg-white px-4 py-3 dark:bg-black">
