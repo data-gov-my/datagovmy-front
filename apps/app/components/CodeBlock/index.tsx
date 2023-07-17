@@ -21,10 +21,10 @@ const LANGUAGE_OPTIONS = [
     label: "JavaScript",
     value: "javascript",
   },
-  {
-    label: "Kotlin",
-    value: "kotlin",
-  },
+  // {
+  //   label: "Kotlin",
+  //   value: "kotlin",
+  // },
 ] as const;
 
 export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
