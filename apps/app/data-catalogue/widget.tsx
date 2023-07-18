@@ -1,30 +1,19 @@
-import { OptionType } from "@components/types";
-import {
-  DocumentArrowDownIcon,
-  ArrowTopRightOnSquareIcon as ExternalLinkIcon,
-} from "@heroicons/react/24/solid";
+import { OptionType, isOptionType } from "@components/types";
+import { ArrowTopRightOnSquareIcon as ExternalLinkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
-import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "./utils";
-import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
-import type {
-  DCChartKeys,
-  DCConfig,
-  DownloadOption,
-  DownloadOptions,
-  FilterDefault,
-} from "@lib/types";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
-import Card from "@components/Card";
+import { SHORT_PERIOD } from "./utils";
+import { clx, toDate } from "@lib/helpers";
+import type { DCChartKeys, DCConfig } from "@lib/types";
+import { FunctionComponent, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import Slider from "@components/Chart/Slider";
-import Container from "@components/Container";
 import { useFilter } from "@hooks/useFilter";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useAnalytics } from "@hooks/useAnalytics";
-import sum from "lodash/sum";
-import { WindowProvider } from "@hooks/useWindow";
-import Section from "@components/Section";
+import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import Tooltip from "@components/Tooltip";
+import { UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
+import { BREAKPOINTS } from "@lib/constants";
+import Chips from "@components/Chips";
 
 /**
  * Catalogue Show
@@ -63,10 +52,11 @@ const CatalogueLine = dynamic(() => import("@data-catalogue/partials/line"), {
   ssr: false,
 });
 
-interface CatalogueShowProps {
+interface CatalogueWidgetProps {
   options: OptionType[];
   params: {
     id: string;
+    theme: string;
   };
   config: DCConfig;
   dataset: {
@@ -75,7 +65,6 @@ interface CatalogueShowProps {
     table: Record<string, any>[];
     meta: { title: string; desc: string; unique_id: string };
   };
-  explanation: { caveat: string; methodology: string; publication?: string };
   metadata: {
     data_as_of: string;
     url: {
@@ -103,21 +92,39 @@ interface CatalogueShowProps {
   };
 }
 
-const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
-  options,
+const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   params,
   config,
   dataset,
-  explanation,
   metadata,
   urls,
   translations,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const [show, setShow] = useState<OptionType>(options[0]);
-  const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
-  const { filter, setFilter } = useFilter(config.context, { id: params.id });
-  const { result, track } = useAnalytics(dataset);
+  const { filter, setFilter } = useFilter(config.context, { id: params.id, theme: params.theme });
+  const { size } = useContext(WindowContext);
+  const chips = useMemo<OptionType[]>(
+    () =>
+      Object.entries(filter)
+        .filter(([key, _]: [string, unknown]) => {
+          return key !== "date_slider";
+        })
+        .map(([_, value]) => value as OptionType),
+    [filter]
+  );
+  const [rows, setRows] = useState<number>(10);
+  const ROW_HEIGHT = 40;
+
+  useEffect(
+    () =>
+      setRows(
+        Math.floor(
+          (size.height - (size.width > BREAKPOINTS.MD ? ROW_HEIGHT * 4 : ROW_HEIGHT * 6)) /
+            ROW_HEIGHT
+        )
+      ),
+    [size.height, size.width]
+  );
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -125,44 +132,47 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "STACKED_AREA":
         return (
           <CatalogueTimeseries
-            className="h-full w-full"
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={config}
             dataset={dataset}
             filter={filter}
             urls={urls}
             translations={translations}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "CHOROPLETH":
         return (
           <CatalogueChoropleth
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             dataset={dataset}
             urls={urls}
             config={config}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "GEOCHOROPLETH":
         return (
           <CatalogueGeoChoropleth
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             dataset={dataset}
             urls={urls}
             config={config}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "GEOPOINT":
         return (
-          <CatalogueMapPlot dataset={dataset} urls={urls} onDownload={prop => setDownloads(prop)} />
+          <CatalogueMapPlot
+            className={clx(chips.length ? "h-[80vh]" : "h-[85vh]", "w-full")}
+            dataset={dataset}
+            urls={urls}
+          />
         );
       case "GEOJSON":
         return (
           <CatalogueGeojson
+            className={clx(chips.length ? "h-[80vh]" : "h-[85vh]", "w-full")}
             config={config}
             dataset={dataset}
             urls={urls}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "BAR":
@@ -171,153 +181,136 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         return (
           <WindowProvider>
             <CatalogueBar
-              className="h-[75vh] w-[100vw]"
+              className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
               config={config}
               dataset={dataset}
               urls={urls}
               translations={translations}
-              onDownload={prop => setDownloads(prop)}
             />
           </WindowProvider>
         );
       case "PYRAMID":
         return (
           <CataloguePyramid
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={config}
             dataset={dataset}
             urls={urls}
             translations={translations}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "HEATTABLE":
         return (
           <CatalogueHeatmap
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={config}
             dataset={dataset}
             urls={urls}
             translations={translations}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "SCATTER":
         return (
           <CatalogueScatter
-            className="mx-auto aspect-square w-full lg:h-[512px] lg:w-1/2"
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "mx-auto aspect-square")}
             dataset={dataset}
             urls={urls}
             translations={translations}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "LINE":
         return (
           <CatalogueLine
+            className={clx(chips.length ? "h-[75vh]" : "h-[80vh]", "w-full")}
             config={config}
             dataset={dataset}
             urls={urls}
             translations={translations}
-            onDownload={prop => setDownloads(prop)}
           />
         );
-      default:
-        break;
+      case "TABLE":
+        return (
+          <div className="flex h-full w-full flex-col">
+            <Table
+              className="table-stripe table-default table-sticky-header grow"
+              responsive={true}
+              data={dataset.table}
+              freeze={config.freeze}
+              config={UNIVERSAL_TABLE_SCHEMA(
+                Object.keys(dataset.table[0]),
+                translations,
+                config.freeze,
+                (item, key) => item[key]
+              )}
+              enablePagination={rows}
+            />
+          </div>
+        );
     }
     return;
   };
 
-  useEffect(() => {
-    if (dataset.type === "TABLE") {
-      setDownloads({
-        chart: [],
-        data: [
-          {
-            id: "csv",
-            image: "/static/images/icons/csv.png",
-            title: t("csv.title"),
-            description: t("csv.desc"),
-            icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-            href() {
-              download(urls.csv, dataset.meta.unique_id.concat(".csv"));
-              track("csv");
-            },
-          },
-          {
-            id: "parquet",
-            image: "/static/images/icons/parquet.png",
-            title: t("parquet.title"),
-            description: t("parquet.desc"),
-            icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-            href() {
-              download(urls.csv, dataset.meta.unique_id.concat(".parquet"));
-              track("parquet");
-            },
-          },
-        ],
-      });
-    }
-  }, []);
-
   return (
-    <div>
-      <div className="flex flex-col gap-y-3">
+    <div className="flex h-[100vh] flex-col gap-3">
+      <div className="space-y-1">
         <div className="flex flex-row items-center justify-start gap-2 md:justify-between">
           <h4 className="inline-block truncate" data-testid="catalogue-title">
             {dataset.meta.title}
           </h4>
 
-          <Tooltip
-            className="block md:hidden"
-            tip={t("common:common.data_of", {
-              date: toDate(metadata.data_as_of, "dd MMM yyyy", i18n.language),
-            })}
-          />
-          <span className="text-dim hidden text-right text-sm md:block">
-            {t("common:common.data_of", {
-              date: toDate(metadata.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </span>
+          <>
+            <Tooltip
+              className="block md:hidden"
+              tip={t("common:common.data_of", {
+                date: toDate(metadata.data_as_of, "dd MMM yyyy", i18n.language),
+              })}
+            />
+            <span className="text-dim hidden text-right text-sm md:block">
+              {t("common:common.data_of", {
+                date: toDate(metadata.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+              })}
+            </span>
+          </>
         </div>
-
-        {/* Chart */}
-        {renderChart()}
+        <Chips data={chips} onRemove={null} />
       </div>
-      {/* Date Slider (optional) */}
-      {config.dates !== null && (
-        <Slider
-          className="pt-4"
-          type="single"
-          value={config.dates?.options.indexOf(
-            filter[config.dates.key].value ?? config.dates.default
-          )}
-          data={config.dates.options}
-          period={SHORT_PERIOD[config.dates.interval]}
-          onChange={e =>
-            config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
-          }
-        />
-      )}
-      {/* </Section> */}
 
-      <div className="bg-washed absolute bottom-0 flex w-full gap-2 px-3 py-1">
+      {/* Chart */}
+      <div className="grow">
+        {renderChart()}
+        {config.dates !== null && (
+          <Slider
+            className="pt-4"
+            type="single"
+            value={config.dates?.options.indexOf(
+              filter[config.dates.key].value ?? config.dates.default
+            )}
+            data={config.dates.options}
+            period={SHORT_PERIOD[config.dates.interval]}
+            onChange={e =>
+              config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
+            }
+          />
+        )}
+      </div>
+
+      <div className="bg-washed flex w-full gap-2 px-3 py-1">
         <Image src="/static/images/logo.png" width={16} height={14} alt="datagovmy logo" />
         <small className="text-dim space-x-2 ">
-          {/* <a
+          <a
             href={`https://data.gov.my/data-catalogue/${dataset.meta.unique_id}`}
             target="_blank"
             className="space-x-1 hover:underline"
           >
-            <span>{dataset.meta.title}</span>
+            <span>View full chart</span>
             <ExternalLinkIcon className="inline-block h-3 w-3" />
           </a>
 
-          <span>|</span> */}
-          <span>
-            Data widget by{" "}
-            <a href="https://data.gov.my" className="text-primary">
-              data.gov.my
-            </a>
-          </span>
+          <span>|</span>
+
+          <a href="https://data.gov.my" className="text-primary">
+            data.gov.my
+          </a>
         </small>
       </div>
     </div>

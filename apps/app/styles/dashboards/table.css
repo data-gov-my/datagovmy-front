@@ -31,7 +31,7 @@
 }
 
 .sticky-col {
-  @apply border-outline dark:border-washed-dark sticky z-10 max-w-fit whitespace-normal border-r-2 bg-inherit lg:border-r-0;
+  @apply border-outline dark:border-washed-dark sticky z-10 max-w-[120px] truncate whitespace-nowrap border-r-2 bg-inherit md:max-w-fit lg:border-r-0;
 }
 
 /* .table tr > td:first-child {

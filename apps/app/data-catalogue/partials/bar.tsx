@@ -35,13 +35,13 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const { track } = useAnalytics(dataset);
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
-    if (dataset.type === "HBAR" || windowWidth < BREAKPOINTS.MD) return "horizontal";
+    if (dataset.type === "HBAR" || size.width < BREAKPOINTS.MD) return "horizontal";
 
     return "vertical";
-  }, [dataset.type, windowWidth]);
+  }, [dataset.type, size.width]);
 
   const availableDownloads = useMemo<DownloadOptions>(() => {
     return {

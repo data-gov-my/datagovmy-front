@@ -14,6 +14,7 @@ const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), {
 });
 
 interface CatalogueHeatmapProps {
+  className?: string;
   config: any;
   dataset: any;
   urls: {
@@ -24,6 +25,7 @@ interface CatalogueHeatmapProps {
 }
 
 const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
+  className,
   dataset,
   config,
   urls,
@@ -107,7 +109,14 @@ const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
     }));
   }, [dataset.chart]);
 
-  return <Heatmap _ref={ref => setCtx(ref)} data={_datasets} color={config.color} />;
+  return (
+    <Heatmap
+      className={className}
+      _ref={ref => setCtx(ref)}
+      data={_datasets}
+      color={config.color}
+    />
+  );
 };
 
 export default CatalogueHeatmap;

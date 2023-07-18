@@ -9,13 +9,13 @@ import Metadata from "@components/Metadata";
 import DataCatalogueWidget from "@data-catalogue/widget";
 import { useMemo } from "react";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const CatalogueEmbed: Page = ({
   meta,
   params,
   config,
   dataset,
-  explanation,
   metadata,
   urls,
   translations,
@@ -46,29 +46,32 @@ const CatalogueEmbed: Page = ({
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
-      <DataCatalogueWidget
-        options={availableOptions}
-        params={params}
-        config={config}
-        dataset={dataset}
-        explanation={explanation}
-        metadata={metadata}
-        urls={urls}
-        translations={translations}
-      />
+      <WindowProvider>
+        <DataCatalogueWidget
+          options={availableOptions}
+          params={params}
+          config={config}
+          dataset={dataset}
+          metadata={metadata}
+          urls={urls}
+          translations={translations}
+        />
+      </WindowProvider>
     </AnalyticsProvider>
   );
 };
 
 CatalogueEmbed.layout = page => <>{page}</>;
+CatalogueEmbed.theme = "light";
 
 export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query, params }) => {
+    const { theme, ...qs } = query;
     const { data } = await get("/data-variable/", {
-      id: params?.id,
+      id: params!.id,
       lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
-      ...query,
+      ...qs,
     });
     const config: DCConfig = {
       context: {},
@@ -124,14 +127,16 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             : "",
         },
         config,
-        params,
+        params: {
+          id: params?.id ?? null,
+          theme: theme ?? "light",
+        },
         dataset: {
           type: data.API.chart_type,
           chart: data.chart_details.chart_data ?? {},
           table: data.chart_details.table_data ?? null,
           meta: data.chart_details.intro,
         },
-        explanation: data.explanation,
         metadata: {
           url: {
             csv: data.metadata.url.csv ?? null,

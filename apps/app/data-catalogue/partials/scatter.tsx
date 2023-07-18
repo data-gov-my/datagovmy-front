@@ -24,7 +24,7 @@ interface CatalogueScatterProps {
 }
 
 const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
-  className = "h-[450px] lg:h-[400px] max-w-lg mx-auto",
+  className = "mx-auto aspect-square w-full lg:h-[512px] lg:w-1/2",
   translations,
   dataset,
   urls,

@@ -39,7 +39,7 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, event }) => {
     }, 1000);
   };
   return (
-    <div className="dark:border-outlineHover-dark dark:bg-background-dark rounded-xl border bg-black">
+    <div className="dark:border-outlineHover-dark dark:bg-background-dark h-fit rounded-xl border bg-black">
       <div className="border-outline flex justify-between border-b border-opacity-20 p-2.5 text-white">
         <Dropdown
           darkMode
