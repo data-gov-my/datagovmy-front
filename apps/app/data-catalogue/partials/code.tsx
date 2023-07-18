@@ -56,7 +56,77 @@ print(df)`;
     }
   }, [type]);
 
-  return <CodeBlock event={{ url }}>{template}</CodeBlock>;
+  return <CodeBlock event={{ url }}>{{ python: template }}</CodeBlock>;
 };
+
+const generalQuery: APIQuery[] = [
+  { param: "id", value: "<catalogue_id>", comment: "ID of data catalogue" },
+  {
+    param: "filter",
+    value: "<value>@<column>",
+    comment: "filter(s) of the response",
+  },
+  { param: "limit", value: "<int>", comment: "response limit (length of data)" },
+  { param: "sort", value: "<column>@<order>", comment: "order of response (asc/desc)" },
+  {
+    param: "exclude",
+    value: "<column1>,<column2>",
+    comment: "columns to exclude (comma-separated)",
+  },
+  { param: "include", value: "<column1>,<column2>", comment: "alternative to exclude" },
+  { param: "start", value: "<date>", comment: "data start date range (YYY-MM-DD)" },
+  { param: "end", value: "<date>", comment: "data end date range (YYY-MM-DD)" },
+];
+
+interface SampelCodeProps {
+  url: string;
+  queries?: APIQuery[];
+}
+
+export type APIQuery = {
+  param: string;
+  value: string;
+  comment?: string;
+};
+
+const SampleCode: FunctionComponent<SampelCodeProps> = ({ url, queries = [] }) => {
+  const { t } = useTranslation(["catalogue", "common"]);
+
+  const generateQueryString = (queries: APIQuery[], commentSymbol: string) => {
+    return `{\n${queries
+      .map(q => `\t"${q.param}": "${q.value}" ${q.comment ? `${commentSymbol} ${q.comment}` : ""}`)
+      .join("\n")}\n}`;
+  };
+
+  if (queries.length === 0) {
+    queries = generalQuery;
+  }
+
+  const children = {
+    javascript: `
+import fetch from "node-fetch";
+
+const ENDPOINT = "https://api.data.gov.my/data-catalogue";
+const params = new URLSearchParams(${generateQueryString(queries, "//")});
+const response = fetch()
+    .then((response) => response.json())
+    .then((json) => console.log(json))
+    .catch((err) => console.log(err));
+    `,
+    python: `import requests
+import pprint
+
+ENDPOINT = "https://api.data.gov.my/data-catalogue" 
+
+query_params = ${generateQueryString(queries, "#")}
+
+response_json = requests.get(url=ENDPOINT, params=query_params).json()
+pprint.pprint(response_json)`,
+  };
+
+  return <CodeBlock event={{ url }}>{children}</CodeBlock>;
+};
+
+export { SampleCode };
 
 export default CatalogueCode;
