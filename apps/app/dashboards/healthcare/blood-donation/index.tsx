@@ -189,7 +189,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                 </div>
                 <RankList
                   id="blood-donation-by-state"
-                  title={t("choro_ranking")}
+                  title={t("common:common.ranking", { count: choropleth.data.x.length })}
                   data={choropleth.data.y.perc}
                   color="text-danger"
                   threshold={choropleth.data.x.length}
