@@ -176,7 +176,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
           <LeftRightCard
             left={
               <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
-                <div className="space-y-6">
+                <div className="space-y-6 pb-6">
                   <div className="flex flex-col gap-2">
                     <h4>{t("choro_header")}</h4>
                     <span className="text-dim text-sm">
@@ -186,26 +186,20 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                     </span>
                   </div>
                   <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
-                  <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
-                    {t("choro_ranking")}
-                  </p>
                 </div>
-                <div className="flex grow flex-col justify-between space-y-6">
-                  <p className="text-dim">{t("choro_description")}</p>
-                  <RankList
-                    id="blood-donation-by-state"
-                    title={t("choro_ranking")}
-                    data={choropleth.data.y.perc}
-                    color="text-danger"
-                    threshold={3}
-                    format={(position: number) => {
-                      return {
-                        label: CountryAndStates[choropleth.data.x[position]],
-                        value: `${numFormat(choropleth.data.y.perc[position], "compact", [1, 1])}%`,
-                      };
-                    }}
-                  />
-                </div>
+                <RankList
+                  id="blood-donation-by-state"
+                  title={t("common:common.ranking", { count: choropleth.data.x.length })}
+                  data={choropleth.data.y.perc}
+                  color="text-danger"
+                  threshold={choropleth.data.x.length}
+                  format={(position: number) => {
+                    return {
+                      label: CountryAndStates[choropleth.data.x[position]],
+                      value: `${numFormat(choropleth.data.y.perc[position], "compact", [1, 1])}%`,
+                    };
+                  }}
+                />
               </div>
             }
             right={
