@@ -413,7 +413,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             />
           )}
 
-          <p className="text-dim mt-6 flex justify-end gap-2 text-sm">
+          <p className="text-dim my-6 flex justify-end gap-2 text-sm">
             <span>
               {`${numFormat(result?.all_time_view ?? 0, "compact", 1)} ${t("common:common.views", {
                 count: result?.all_time_view ?? 0,
@@ -443,7 +443,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           </p>
         </Section>
 
-        <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-12">
+        <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-8 lg:py-12">
           {/* How is this data produced? */}
           <Section
             title={t("header_1")}
@@ -492,7 +492,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         {/* Metadata */}
         <Section
           title={"Metadata"}
-          className="dark:border-b-outlineHover-dark mx-auto border-b py-12"
+          className="dark:border-b-outlineHover-dark mx-auto border-b py-8 lg:py-12"
         >
           <Card className="bg-background dark:border-outlineHover-dark dark:bg-washed-dark p-6">
             <div className="space-y-6">
