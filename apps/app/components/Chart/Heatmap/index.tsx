@@ -188,11 +188,6 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
           const n_value = normalize(data[context.dataIndex].z!, min, max);
           return n_value > 0.7 ? "#fff" : "#000";
         },
-        labels: {
-          title: {
-            size: 14,
-          },
-        },
         font: {
           size: 16,
           lineHeight: 24,
