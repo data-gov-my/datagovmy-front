@@ -278,12 +278,14 @@ const Poverty: FunctionComponent<PovertyProps> = ({
             />
           }
         >
-          <Heatmap
-            className="mx-auto h-[600px] w-[900px]"
-            color="reds"
-            data={_data}
-            precision={data.tab_index === 0 ? [1, 1] : [0, 0]}
-          />
+          <div className="overflow-x-auto">
+            <Heatmap
+              className="mx-auto h-[600px] w-[600px] lg:w-[900px]"
+              color="reds"
+              data={_data}
+              precision={data.tab_index === 0 ? [1, 1] : [0, 0]}
+            />
+          </div>
         </Section>
       </Container>
     </>
