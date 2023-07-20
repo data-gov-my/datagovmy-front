@@ -49,7 +49,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
       <Modal ref={modalRef} title="Embed" className="lg:max-w-screen-xl">
         {() => (
           <div className="grid w-full grid-cols-1 lg:grid-cols-3 ">
-            <div className="dark:bg-outlineHover-dark col-span-2 hidden bg-slate-50 px-6 py-3 lg:block lg:rounded-s-xl">
+            <div className="col-span-2 hidden bg-slate-50 px-6 py-3 dark:bg-black lg:block lg:rounded-bl-xl">
               <Tabs className="h-fit">
                 <Panel name={"Desktop"}>
                   <div className="flex flex-col items-start">
@@ -78,7 +78,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
               </Tabs>
             </div>
 
-            <div className="flex flex-col justify-between p-3">
+            <div className="flex flex-col gap-6 p-3">
               {!!options?.length && (
                 <div>
                   <h5>Configuration</h5>
@@ -103,21 +103,12 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                 </div>
               )}
 
-              <div>
+              <div className="space-y-2">
                 <h5>Embed Code</h5>
-                <CodeBlock>
-                  {`<iframe
-    src="${EMBED_URL}"
-    width="100%"
-    className="mx-auto mt-2 rounded border"
-    style={{
-    height: "500px",
-    width: "320px",
-    overflow: "hidden",
-    background: "white",
-    }}
-/>
-                `}
+                <CodeBlock hidden>
+                  {{
+                    html: `<iframe src="${EMBED_URL}" width="100%" height="400px" />`,
+                  }}
                 </CodeBlock>
               </div>
             </div>

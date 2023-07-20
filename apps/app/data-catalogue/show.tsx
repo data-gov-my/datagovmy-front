@@ -23,7 +23,8 @@ import Tooltip from "@components/Tooltip";
 import { useFilter } from "@hooks/useFilter";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import CatalogueCode from "./partials/code";
+import CatalogueCode, { APIQuery } from "./partials/code";
+import { SampleCode } from "./partials/code";
 import { useAnalytics } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
 import { WindowProvider } from "@hooks/useWindow";
@@ -104,6 +105,7 @@ interface CatalogueShowProps {
   translations: {
     [key: string]: string;
   };
+  queries?: APIQuery[];
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -115,6 +117,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   metadata,
   urls,
   translations,
+  queries,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
@@ -455,7 +458,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           </p>
         </Section>
 
-        <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-12">
+        <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-8 lg:py-12">
           {/* How is this data produced? */}
           <Section
             title={t("header_1")}
@@ -504,7 +507,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         {/* Metadata */}
         <Section
           title={"Metadata"}
-          className="dark:border-b-outlineHover-dark mx-auto border-b py-12"
+          className="dark:border-b-outlineHover-dark mx-auto border-b py-8 lg:py-12"
         >
           <Card className="bg-background dark:border-outlineHover-dark dark:bg-washed-dark p-6">
             <div className="space-y-6">
@@ -661,9 +664,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           </div>
         </Section>
 
-        {/* Code */}
+        {/* Dataset Source Code */}
         <Section title={t("code")} description={t("code_desc")} className="mx-auto w-full py-12">
           <CatalogueCode type={dataset.type} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
+        </Section>
+
+        {/* API Request Code */}
+        <Section
+          title={t("sample_query.section_title")}
+          description={t("sample_query.description")}
+          className="mx-auto w-full py-12"
+        >
+          <SampleCode queries={queries} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
         </Section>
       </Container>
     </div>
