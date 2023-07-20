@@ -98,6 +98,11 @@ export type FilterDate = BaseFilter & {
 
 export type DCFilter = FilterDefault | FilterDate;
 
+export type Precision = {
+  default: number;
+  columns?: Record<string, number>;
+};
+
 // Usage
 export type DCConfig = {
   context: {
@@ -105,7 +110,7 @@ export type DCConfig = {
   };
   dates: FilterDate | null;
   options: FilterDefault[] | null;
-  precision: number;
+  precision: Precision;
   freeze?: string[];
   color?: Color;
   geojson?: Geotype | null;

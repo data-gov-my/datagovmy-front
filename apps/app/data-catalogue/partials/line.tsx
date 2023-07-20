@@ -1,4 +1,4 @@
-import type { DownloadOptions } from "@lib/types";
+import type { DownloadOptions, Precision } from "@lib/types";
 import { FunctionComponent, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
 import { useWatch } from "@hooks/useWatch";
@@ -15,7 +15,7 @@ const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
 interface CatalogueLineProps {
   config: {
     line_variables?: Record<string, any>;
-    precision: number;
+    precision: Precision;
   };
   dataset: any;
   urls: {
@@ -124,7 +124,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
     <Line
       className="h-[350px] w-full lg:h-[450px]"
       _ref={ref => setCtx(ref)}
-      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+      precision={config.precision.default}
       data={{
         labels: dataset.chart.x,
         datasets: _datasets,
