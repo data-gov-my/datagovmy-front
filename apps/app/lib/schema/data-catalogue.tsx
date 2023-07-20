@@ -48,7 +48,7 @@ export const METADATA_TABLE_SCHEMA = (
       cell: value => {
         const [variable, data_type] = value.getValue().split("$$");
         return (
-          <p className="font-mono text-sm">
+          <p className="whitespace-normal font-mono text-sm">
             {variable} {data_type}
           </p>
         );
@@ -60,7 +60,7 @@ export const METADATA_TABLE_SCHEMA = (
       id: "variable_name",
       header: t("meta_variable"),
       accessorFn: (item: any) => JSON.stringify({ uid: item.uid, name: item.variable_name }),
-      className: "text-left min-w-[140px]",
+      className: "text-left min-w-[140px] whitespace-normal",
       enableSorting: false,
       cell: value => {
         const [item, index] = [JSON.parse(value.getValue()), value.row.index];
@@ -89,7 +89,7 @@ export const METADATA_TABLE_SCHEMA = (
       id: "definition",
       header: t("meta_definition"),
       accessorKey: "definition",
-      className: "text-left leading-relaxed",
+      className: "text-left leading-relaxed whitespace-normal",
       cell: value => <p>{value.getValue()}</p>,
       enableSorting: false,
     },
