@@ -34,7 +34,6 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   sublabel,
   disabled = false,
   hideOnScroll = false,
-  darkMode = false,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -61,7 +60,6 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
         placeholder={t("common:placeholder.state")}
         enableFlag
         anchor={anchor}
-        darkMode={darkMode}
         width={width}
         sublabel={sublabel}
       />
