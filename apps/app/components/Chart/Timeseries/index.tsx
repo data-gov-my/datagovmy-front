@@ -96,6 +96,11 @@ export interface TimeseriesProps extends ChartHeaderProps {
   stats?: Array<StatProps> | null;
   tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
   generateLabels?: (chart: ChartJS<"line">) => LegendItem[];
+  displayNumFormat?: (
+    value: number,
+    type: "compact" | "standard" | "scientific" | "engineering" | undefined,
+    precision: number | [min: number, max: number]
+  ) => string;
   _ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
 }
 
@@ -138,6 +143,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   maxY,
   stepSize,
   suggestedMaxY,
+  displayNumFormat = numFormat,
   _ref,
 }) => {
   ChartJS.register(
@@ -164,7 +170,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     type: "compact" | "standard",
     precision: number | [min: number, max: number]
   ): string => {
-    return (prefixY ?? "") + numFormat(value, type, precision) + (unitY ?? "");
+    return (prefixY ?? "") + displayNumFormat(value, type, precision) + (unitY ?? "");
   };
   const options = useCallback((): ChartCrosshairOption<"line"> => {
     return {
