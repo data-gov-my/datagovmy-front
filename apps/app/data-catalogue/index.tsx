@@ -251,6 +251,15 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             onChange={e => setFilter("search", e)}
           />
         </div>
+        {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
+          <Button
+            className="btn hover:bg-washed dark:hover:bg-washed-dark text-dim group rounded-full p-1 hover:text-black dark:hover:text-white"
+            disabled={!actives.length}
+            onClick={reset}
+          >
+            <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+          </Button>
+        )}
         {/* Mobile */}
         <div className="block xl:hidden">
           <Modal
@@ -337,16 +346,14 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         {/* Desktop */}
         <div className="hidden gap-2 pr-6 xl:flex">
           {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
-            <div>
-              <Button
-                className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
-                disabled={!actives.length}
-                onClick={reset}
-              >
-                <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
-                {t("common:common.clear_all")}
-              </Button>
-            </div>
+            <Button
+              className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
+              disabled={!actives.length}
+              onClick={reset}
+            >
+              <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+              {t("common:common.clear_all")}
+            </Button>
           )}
           <Dropdown
             options={periods}
