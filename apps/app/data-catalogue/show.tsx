@@ -311,7 +311,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           menu={
             <>
               <Dropdown
-                className="flex-row items-center"
+                className="w-fit"
                 sublabel={<EyeIcon className="h-4 w-4" />}
                 selected={show}
                 options={options}

@@ -251,7 +251,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   };
 
   return (
-    <div className="flex h-[100vh] flex-col gap-3">
+    <div className="flex h-[100vh] flex-col gap-3 p-2 lg:p-3">
       <div className="space-y-1">
         <div className="flex flex-row items-center justify-start gap-2 md:justify-between">
           <h4 className="inline-block truncate" data-testid="catalogue-title">
@@ -294,7 +294,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
         )}
       </div>
 
-      <div className="bg-washed flex w-full gap-2 px-3 py-1">
+      <div className="bg-washed fixed bottom-0 left-0 flex w-full gap-2 px-3 py-1">
         <Image src="/static/images/logo.png" width={16} height={14} alt="datagovmy logo" />
         <small className="text-dim space-x-2 ">
           <a

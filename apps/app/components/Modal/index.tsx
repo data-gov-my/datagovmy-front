@@ -50,7 +50,7 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
               <div className="fixed inset-0 bg-black bg-opacity-25" />
             </Transition.Child>
 
-            <div className="fixed inset-0 flex items-center justify-center">
+            <div className="fixed inset-0 flex items-end justify-center lg:items-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -63,7 +63,7 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
                 <Dialog.Panel
                   className={clx(
                     Font.body.variable,
-                    "grow rounded-t-xl bg-white font-sans dark:bg-black lg:rounded-xl",
+                    "h-fit grow rounded-t-xl bg-white font-sans dark:bg-black lg:rounded-xl",
                     className
                   )}
                 >
@@ -71,7 +71,7 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
                     <Dialog.Title as="h5">{title}</Dialog.Title>
                     <XMarkIcon onClick={close} className="text-dim h-5 w-5 self-center" />
                   </div>
-                  {children(close)}
+                  <div className="max-h-[85vh] overflow-auto">{children(close)}</div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

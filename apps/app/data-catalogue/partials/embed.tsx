@@ -48,8 +48,8 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
     return (
       <Modal ref={modalRef} title="Embed" className="lg:max-w-screen-xl">
         {() => (
-          <div className="grid w-full grid-cols-3 gap-3 ">
-            <div className="dark:bg-outlineHover-dark col-span-2 bg-slate-50 px-6 py-3 lg:rounded-s-xl">
+          <div className="grid w-full grid-cols-1 lg:grid-cols-3 ">
+            <div className="dark:bg-outlineHover-dark col-span-2 hidden bg-slate-50 px-6 py-3 lg:block lg:rounded-s-xl">
               <Tabs className="h-fit">
                 <Panel name={"Desktop"}>
                   <div className="flex flex-col items-start">
@@ -79,27 +79,29 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
             </div>
 
             <div className="flex flex-col justify-between p-3">
-              <div>
-                <h5>Configuration</h5>
-                <div className="flex w-full flex-col gap-2">
-                  {options?.map((item: FilterDefault, index: number) => (
-                    <div className="flex w-full items-center justify-between">
-                      <p className="font-mono text-sm">{item.key}</p>
-                      <Dropdown
-                        key={item.key}
-                        width="w-fit"
-                        anchor={"right"}
-                        options={item.options.map(option => ({
-                          label: translations[option] ?? option,
-                          value: option,
-                        }))}
-                        selected={data[item.key]}
-                        onChange={e => setData(item.key, e)}
-                      />
-                    </div>
-                  ))}
+              {!!options?.length && (
+                <div>
+                  <h5>Configuration</h5>
+                  <div className="flex w-full flex-col gap-2">
+                    {options.map((item: FilterDefault, index: number) => (
+                      <div className="flex w-full items-center justify-between">
+                        <p className="font-mono text-sm">{item.key}</p>
+                        <Dropdown
+                          key={item.key}
+                          width="w-fit"
+                          anchor={"right"}
+                          options={item.options.map(option => ({
+                            label: translations[option] ?? option,
+                            value: option,
+                          }))}
+                          selected={data[item.key]}
+                          onChange={e => setData(item.key, e)}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div>
                 <h5>Embed Code</h5>
