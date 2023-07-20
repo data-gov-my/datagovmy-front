@@ -1,6 +1,5 @@
-import type { TableConfig } from "@components/Chart/Table";
-import { numFormat } from "@lib/helpers";
 import At from "@components/At";
+import type { TableConfig } from "@components/Chart/Table";
 
 /**
  * Table schema for data catalogue
@@ -106,15 +105,8 @@ const generateSchema = (
     id: key,
     header: value,
     // Filter bug, cannot have number type in table: https://github.com/TanStack/table/issues/4280
-    accessorFn: accessorFn
-      ? (item: any) => accessorFn(item, key)
-      : (item: any) => {
-          if (typeof item[key] === "string") return item[key];
-          if (typeof item[key] === "number") return numFormat(item[key], "standard");
-          return "";
-        },
-    className: "text-left",
-    sortingFn: "localeNumber",
+    accessorKey: key,
+    accessorFn: accessorFn ? (item: any) => accessorFn(item, key) : (item: any) => item[key],
   };
 };
 
