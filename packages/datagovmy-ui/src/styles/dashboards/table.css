@@ -41,7 +41,8 @@
 }
 
 .sticky-col {
-  @apply sticky z-10 max-w-fit whitespace-normal bg-white dark:bg-black md:whitespace-nowrap;
+  @apply sticky z-10 w-[100px] truncate bg-white dark:bg-black;
+  /* md:w-full md:whitespace-nowrap; */
 }
 
 /* .table tr > td:first-child {

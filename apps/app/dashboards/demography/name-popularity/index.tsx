@@ -27,9 +27,9 @@ interface NamePopularityDashboardProps {}
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
   const { t } = useTranslation(["dashboard-name-popularity", "common"]);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
 
-  const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
+  const showPlaceholder = size.width >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },

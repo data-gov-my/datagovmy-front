@@ -59,7 +59,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const sourceOptions = sources.map(source => ({
     label: source,
     value: source,
@@ -121,7 +121,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: windowWidth <= BREAKPOINTS.LG ? "start" : "center",
+              block: size.width <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }

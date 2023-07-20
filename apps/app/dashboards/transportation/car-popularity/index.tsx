@@ -34,7 +34,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
   tableData,
 }) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
 
   // query data
   const { data: query, setData: setQuery } = useData({
@@ -300,9 +300,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                           backgroundColor: AKSARA_COLOR.PRIMARY_H,
                           borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth:
-                            windowWidth <= BREAKPOINTS.MD
+                            size.width <= BREAKPOINTS.MD
                               ? 0.75
-                              : windowWidth <= BREAKPOINTS.LG
+                              : size.width <= BREAKPOINTS.LG
                               ? 1.0
                               : 1.5,
                           fill: true,
@@ -323,9 +323,9 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                             backgroundColor: AKSARA_COLOR.PRIMARY_H,
                             borderColor: AKSARA_COLOR.PRIMARY,
                             borderWidth:
-                              windowWidth <= BREAKPOINTS.MD
+                              size.width <= BREAKPOINTS.MD
                                 ? 0.75
-                                : windowWidth <= BREAKPOINTS.LG
+                                : size.width <= BREAKPOINTS.LG
                                 ? 1.0
                                 : 1.5,
                             fill: true,
