@@ -1,4 +1,4 @@
-import { OptionType, isOptionType } from "@components/types";
+import { OptionType } from "@components/types";
 import { ArrowTopRightOnSquareIcon as ExternalLinkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
 import { SHORT_PERIOD } from "./utils";
@@ -302,7 +302,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
             target="_blank"
             className="space-x-1 hover:underline"
           >
-            <span>View full chart</span>
+            <span>{t("view_full_chart")}</span>
             <ExternalLinkIcon className="inline-block h-3 w-3" />
           </a>
 
