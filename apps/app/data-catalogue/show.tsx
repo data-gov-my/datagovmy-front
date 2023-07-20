@@ -330,7 +330,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     label: item.title as string,
                     value: item.id,
                   }))
-                  .concat({ label: "Embed", value: "embed" })}
+                  .concat({ label: t("embed"), value: "embed" })}
                 onChange={e => {
                   // embed
                   if (e.value === "embed") {
