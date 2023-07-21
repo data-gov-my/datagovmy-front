@@ -28,7 +28,6 @@ interface NamePopularityDashboardProps {}
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
   const { t } = useTranslation(["dashboard-name-popularity", "common"]);
   const { size } = useContext(WindowContext);
-
   const showPlaceholder = size.width >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
