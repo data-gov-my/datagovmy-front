@@ -16,8 +16,9 @@ import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
 import { get } from "@lib/api";
 import debounce from "lodash/debounce";
-import { numFormat } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import { toast } from "@components/Toast";
+import Progress from "@components/Progress";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -133,6 +134,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   return (
     <>
+      <Progress />
       <Hero
         background="blue"
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}
@@ -140,7 +142,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Education (MoE)"}
+            agency={t("agencies:moe.full")}
             link="https://www.moe.gov.my/"
             icon={<MOEIcon />}
           />
@@ -238,14 +240,13 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
         <Section title={t("section_2.title", { school: sekolahku_info.school })} date={Date.now()}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-            {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any]) => {
+            {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any], i) => {
               return (
                 <div className="flex flex-col space-y-6" key={k}>
                   <BarMeter
                     key={k}
                     title={t(`section_2.${k}.title`)}
                     layout="horizontal"
-                    unit="%"
                     data={v}
                     sort={"desc"}
                     formatX={key => t(`section_2.${k}.${key}`)}
@@ -256,13 +257,22 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                             (object: { x: string; y: number }) => object.x === key
                           ).y,
                         })}`}
+                        className={clx(
+                          i === 5
+                            ? "right-1/3"
+                            : i === 2
+                            ? "max-lg:right-1/3 xl:right-1/3"
+                            : i % 2 === 1 // 1, 3
+                            ? "max-xl:right-1/3"
+                            : "max-lg:right-1/3"
+                        )}
                       >
                         {open => (
                           <p
-                            className="underline decoration-dashed underline-offset-2"
+                            className="underline decoration-dashed [text-underline-position:from-font]"
                             onClick={open}
                           >
-                            {numFormat(value, "standard", [1, 1])}
+                            {numFormat(value, "standard", [1, 1])}%
                           </p>
                         )}
                       </Tooltip>

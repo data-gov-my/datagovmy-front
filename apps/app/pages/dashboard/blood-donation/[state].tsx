@@ -2,7 +2,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { CountryAndStates, STATES } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { get } from "@lib/api";
 import { DateTime } from "luxon";
@@ -11,16 +11,17 @@ import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
 import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const BloodDonationState: Page = ({
   meta,
   last_updated,
   params,
-  timeseries_all,
+  timeseries,
   barchart_age,
   barchart_time,
   barchart_variables,
-  choropleth_malaysia_blood_donation,
+  choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
   let vars: Record<string, any> = {};
@@ -47,42 +48,45 @@ const BloodDonationState: Page = ({
       <BloodDonationDashboard
         last_updated={last_updated}
         params={params}
-        timeseries_all={timeseries_all}
+        timeseries={timeseries}
         barchart_age={barchart_age}
         barchart_time={barchart_time}
         barchart_variables={{
           data_as_of: barchart_variables.data_as_of,
           data: vars,
         }}
-        choropleth_malaysia_blood_donation={choropleth_malaysia_blood_donation}
+        choropleth={choropleth}
       />
     </AnalyticsProvider>
   );
 };
 
 BloodDonationState.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.BLOOD_DONATION}
+          currentState={props.params.state}
+          exclude={["pjy", "pls", "lbn"]}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal
+        state={props.params.state}
         url={routes.BLOOD_DONATION}
-        currentState={props.params.state}
         exclude={["pjy", "pls", "lbn"]}
-        hideOnScroll
       />
-    }
-  >
-    <StateModal
-      state={props.params.state}
-      url={routes.BLOOD_DONATION}
-      exclude={["pjy", "pls", "lbn"]}
-    />
-    {page}
-  </Layout>
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 // Build at runtime
-export const getStaticPaths: GetStaticPaths = async ctx => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",
@@ -111,11 +115,11 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         last_updated: data.data_last_updated,
         params: params,
-        timeseries_all: data.timeseries_all,
+        timeseries: data.timeseries_all,
         barchart_age: data.bar_chart_age,
         barchart_time: data.bar_chart_time,
         barchart_variables: data.barchart_key_variables,
-        choropleth_malaysia_blood_donation: data.choropleth_malaysia,
+        choropleth: data.choropleth_malaysia,
       },
     };
   }

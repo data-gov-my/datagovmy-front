@@ -1,5 +1,12 @@
 import ElectionLayout from "./layout";
-import type { BaseResult, ElectionResource, Seat, SeatOptions, SeatResult } from "./types";
+import type {
+  BaseResult,
+  ElectionResource,
+  ElectionType,
+  Seat,
+  SeatOptions,
+  SeatResult,
+} from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import { Container, Section } from "@components/index";
@@ -28,6 +35,12 @@ const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTabl
 interface ElectionSeatsProps extends ElectionResource<Seat> {
   selection: Array<SeatOptions>;
 }
+
+type SeatOption = {
+  seat_area: string;
+  seat_name: string;
+  type: ElectionType;
+};
 
 const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   params,
@@ -85,24 +98,25 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
         election,
         seat,
       })
-        .then(({ data }: { data: SeatResult }) => {
+        .then(({ data }: { data: { data: SeatResult } }) => {
+          const data2 = data.data;
           const result: Result<BaseResult[]> = {
-            data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+            data: data2.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
                 x: "majority",
-                abs: data.votes.majority,
-                perc: data.votes.majority_perc,
+                abs: data2.votes.majority,
+                perc: data2.votes.majority_perc,
               },
               {
                 x: "voter_turnout",
-                abs: data.votes.voter_turnout,
-                perc: data.votes.voter_turnout_perc,
+                abs: data2.votes.voter_turnout,
+                perc: data2.votes.voter_turnout_perc,
               },
               {
                 x: "rejected_votes",
-                abs: data.votes.votes_rejected,
-                perc: data.votes.votes_rejected_perc,
+                abs: data2.votes.votes_rejected,
+                perc: data2.votes.votes_rejected_perc,
               },
             ],
           };
@@ -155,13 +169,6 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                 header: t("votes_won"),
               },
             ])}
-            title={
-              <div className="uppercase md:flex md:flex-row md:items-center md:gap-2">
-                <h5 className="text">{area}</h5>
-                <p className="text-dim font-normal">{state}</p>
-              </div>
-            }
-            subtitle
             options={elections}
             page={row.index}
           />
@@ -171,56 +178,58 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   ]);
 
   return (
-    <ElectionLayout>
-      <Container className="min-h-fit">
-        <Section>
-          <div className="grid grid-cols-12">
-            <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
-              <h4 className="text-center">{t("seat.header")}</h4>
-              <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
-                  <ComboBox
-                    placeholder={t("seat.search_seat")}
-                    options={SEAT_OPTIONS}
-                    config={{
-                      baseSort: (a, b) => {
-                        if (a.item.seat_name === b.item.seat_name) {
-                          return a.item.type === "parlimen" ? -1 : 1;
-                        } else {
-                          return String(a.item.seat_name).localeCompare(String(b.item.seat_name));
-                        }
-                      },
-                      keys: ["seat_name", "seat_area", "type"],
-                    }}
-                    selected={
-                      data.seat
-                        ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
-                        : null
+    <Container>
+      <Section>
+        <div className="xl:grid xl:grid-cols-12">
+          <div className="xl:col-span-10 xl:col-start-2">
+            <h4 className="text-center">{t("seat.header")}</h4>
+            <div className="mx-auto w-full p-6 sm:w-[500px]">
+              <ComboBox<SeatOption>
+                placeholder={t("seat.search_seat")}
+                options={SEAT_OPTIONS}
+                config={{
+                  baseSort: (a, b) => {
+                    if (a.item.seat_name === b.item.seat_name) {
+                      return a.item.type === "parlimen" ? -1 : 1;
+                    } else {
+                      return String(a.item.seat_name).localeCompare(String(b.item.seat_name));
                     }
-                    onChange={selected => navigateToSeat(selected?.value)}
-                    styleElectionType={true}
-                  />
-                </div>
-              </div>
-              <ElectionTable
-                title={
-                  <h5 className="pb-6">
-                    {t("seat.title")}
-                    <span className="text-primary">{`${
-                      SEAT_OPTIONS.find(e => e.value === `${params.type}_${params.seat_name}`)
-                        ?.label
-                    }`}</span>
-                  </h5>
+                  },
+                  keys: ["seat_name", "seat_area", "type"],
+                }}
+                format={option => (
+                  <>
+                    <span>{`${option.seat_name}, ${option.seat_area} `}</span>
+                    <span className="text-dim">
+                      {"(" + t(`dashboard-election-explorer:${option.type}`) + ")"}
+                    </span>
+                  </>
+                )}
+                selected={
+                  data.seat
+                    ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
+                    : null
                 }
-                data={elections}
-                columns={seat_schema}
-                isLoading={data.loading}
+                onChange={selected => navigateToSeat(selected?.value)}
               />
             </div>
+            <ElectionTable
+              title={
+                <h5 className="py-6">
+                  {t("seat.title")}
+                  <span className="text-primary">{`${
+                    SEAT_OPTIONS.find(e => e.value === `${params.type}_${params.seat_name}`)?.label
+                  }`}</span>
+                </h5>
+              }
+              data={elections}
+              columns={seat_schema}
+              isLoading={data.loading}
+            />
           </div>
-        </Section>
-      </Container>
-    </ElectionLayout>
+        </div>
+      </Section>
+    </Container>
   );
 };
 

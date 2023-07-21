@@ -29,7 +29,9 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }
             </p>
 
             {/* Agency name */}
-            <p className="truncate text-sm font-medium dark:text-white">{agency}</p>
+            <p className="truncate text-sm font-medium dark:text-white" data-testid="hero-agency">
+              {agency}
+            </p>
           </div>
         </div>
         <ArrowUpRightIcon className="text-dim right-4.5 absolute h-4 w-4 opacity-100 transition duration-200 group-hover:translate-x-1 md:opacity-0 md:group-hover:opacity-100 " />

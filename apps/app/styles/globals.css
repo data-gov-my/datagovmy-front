@@ -50,35 +50,42 @@
 
 @layer components {
   .btn {
-    @apply rounded-md border border-transparent px-3 py-1.5 font-medium transition;
+    @apply flex select-none items-center gap-1.5 rounded-md border border-transparent text-start text-sm font-medium outline-none transition;
   }
 
   .btn-primary {
-    @apply from-primary hover:to-primary bg-gradient-to-t to-[#3E7AFF] text-white hover:shadow;
+    @apply btn from-primary to-primary-dark shadow-button bg-gradient-to-t px-3 py-1.5 text-white hover:to-[#5B8EFF];
   }
 
   .btn-primary svg {
     @apply fill-white;
   }
 
+  .btn-ghost {
+    @apply btn hover:bg-washed dark:hover:bg-washed-dark px-3 py-1.5;
+  }
+
   .btn-default {
-    @apply border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark dark:active:bg-washed-dark bg-white text-black dark:active:text-white;
+    @apply btn btn-border active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark bg-white px-3 py-1.5 dark:bg-black;
   }
 
-  .btn-dropdown {
-    @apply active:bg-washed hover:dark:bg-washed-dark/50 disabled:bg-outline dark:disabled:bg-washed-dark 
-    border-outline hover:border-outlineHover dark:border-washed-dark hover:dark:border-outlineHover-dark 
-    disabled:border-outline disabled:text-outlineHover dark:disabled:text-outlineHover-dark relative
-    flex gap-1.5 bg-white pl-3 pr-7 text-start text-sm text-black shadow-sm outline-none focus-visible:ring-0 
-    disabled:pointer-events-none disabled:cursor-not-allowed dark:bg-black dark:text-white;
+  .btn-border {
+    @apply border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark;
   }
 
-  .text-link {
-    @apply text-primary cursor-pointer font-medium hover:underline;
+  .btn-disabled {
+    @apply disabled:bg-outline dark:disabled:bg-washed-dark 
+    disabled:border-outline dark:disabled:border-washed-dark 
+    disabled:text-outlineHover dark:disabled:text-outlineHover-dark 
+    disabled:pointer-events-none disabled:cursor-not-allowed;
   }
 
-  .text-footer-link {
-    @apply text-dim cursor-pointer text-sm hover:text-black hover:underline;
+  .link-primary {
+    @apply text-primary cursor-pointer font-medium [text-underline-position:from-font] hover:underline;
+  }
+
+  .link-dim {
+    @apply text-dim cursor-pointer text-sm [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white;
   }
 
   .number {

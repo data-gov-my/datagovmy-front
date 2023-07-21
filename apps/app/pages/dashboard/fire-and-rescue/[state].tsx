@@ -1,16 +1,17 @@
-import { GetStaticPaths, GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
 import FireandRescueDashboard from "@dashboards/public-safety/fire-and-rescue";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { STATES } from "@lib/constants";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import type { InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 
 const FireandRescueState: Page = ({
   meta,
@@ -24,7 +25,11 @@ const FireandRescueState: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
+        description={t("description")}
+        keywords={""}
+      />
       <FireandRescueDashboard
         choropleth={choropleth}
         last_updated={last_updated}
@@ -35,38 +40,30 @@ const FireandRescueState: Page = ({
     </AnalyticsProvider>
   );
 };
+
 FireandRescueState.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown url={routes.FIRE_RESCUE} currentState={props.params.state} hideOnScroll />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.FIRE_RESCUE} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.FIRE_RESCUE}
+          currentState={props.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.FIRE_RESCUE} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  let paths: Array<any> = [];
-  STATES.forEach(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
-    fallback: "blocking", // can also be true or 'blocking'
+    fallback: "blocking",
   };
 };
 

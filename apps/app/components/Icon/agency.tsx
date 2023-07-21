@@ -325,7 +325,7 @@ export const JAKOAIcon: FunctionComponent<IconProps> = ({ className }) => {
       fill="none"
       className={className}
     >
-      <g clip-path="url(#clip0_4392_26542)">
+      <g clipPath="url(#clip0_4392_26542)">
         <circle cx="16" cy="16" r="16" fill="#16A34A" />
         <path
           d="M10 5.50008C9.6 5.50008 9.5 5.16675 9.5 5.00008C8.5 4.31162 8.5 5.00008 8.5 5.50008C8.5 6.00008 9.5 7.00008 9.5 8.00008V11.0001C9.5 12.5001 10 12.0001 10.5 12.5001C11 13.0001 10.5 13.0001 10.5 14.5001C10.5 15.7001 11.8333 17.0001 12.5 17.5001C13.1667 18.1667 14.4 19.7001 14 20.5001C13.5 21.5001 15.5 21.5001 16 22.0001C16.5 22.5001 18 22.5001 18.5 23.5001C18.9 24.3001 20.3333 24.8334 21 25.0001L22.5 26.5001C22.5 26.5001 24.5 25.0001 25 26.0001C25.4 26.8001 25.8333 26.3334 26 26.0001C25.6667 25.3334 24.9 23.7001 24.5 22.5001C24 21.0001 24 21.5001 22.5 20.5001C21.3 19.7001 22 18.1667 22.5 17.5001C22.1667 17.6667 21.6 17.6001 22 16.0001C22.5 14.0001 22 10.5001 21 10.0001C20 9.50008 19 8.50008 18 7.50008C17.2 6.70008 16.6667 6.50008 16.5 6.50008C16.3333 6.83341 15.9 7.60008 15.5 8.00008C15 8.50008 15 7.50008 14.5 7.50008C14 7.50008 13 9.50008 12.5 9.00008C12 8.50008 12.5 8.50008 12.5 7.50008C12.5 6.70008 11.8333 6.50008 11.5 6.50008C11.5 6.50008 10.5 5.50008 10 5.50008Z"
@@ -590,7 +590,7 @@ export const KWAPIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns LHDNIcon
  */
-export const LHDNIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const LHDNIcon: FunctionComponent<IconProps> = ({ className, fillColor }) => {
   return (
     <svg
       width="32"
@@ -601,7 +601,7 @@ export const LHDNIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1288_13737)">
-        <circle cx="16" cy="16" r="16" fill="#FF820E" />
+        <circle cx="16" cy="16" r="16" fill={fillColor ?? "#FF820E"} />
         <path
           fillRule="evenodd"
           clipRule="evenodd"

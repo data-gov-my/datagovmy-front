@@ -28,6 +28,10 @@ const nextConfig = {
         destination: "/dashboard/election-explorer/elections",
       },
       {
+        source: "/dashboard/income-taxation",
+        destination: "/dashboard/income-taxation/overview",
+      },
+      {
         source: "/mp/lib.min.js",
         destination: "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js",
       },

@@ -14,14 +14,7 @@ interface SectionProps {
 
 const Section: FunctionComponent<SectionProps> = forwardRef(
   (
-    {
-      title,
-      className = "border-b dark:border-b-outlineHover-dark py-8 lg:py-12",
-      description,
-      children,
-      date,
-      menu,
-    },
+    { title, className = "py-8 lg:py-12", description, children, date, menu },
     ref: LegacyRef<HTMLElement> | undefined
   ) => {
     const { t, i18n } = useTranslation();
@@ -52,7 +45,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
               {(description || menu) && (
                 <div
                   className={clx(
-                    "text-dim flex w-full flex-wrap justify-between gap-y-3 md:flex-nowrap md:items-end",
+                    "text-dim flex w-full flex-wrap justify-between gap-y-3 md:flex-nowrap md:items-start",
                     description && menu && "gap-x-6"
                   )}
                 >
@@ -68,7 +61,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                   ) : (
                     <div>{description}</div>
                   )}
-                  {menu && <div className="flex justify-end gap-3 md:w-auto">{menu}</div>}
+                  {menu && <div className="flex w-full gap-3 md:w-auto md:justify-end">{menu}</div>}
                 </div>
               )}
             </div>

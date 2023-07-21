@@ -1,18 +1,20 @@
+import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import Fonts from "@config/font";
+import CovidVaccinationDashboard from "@dashboards/healthcare/covid-vaccination";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
+import { get } from "@lib/api";
+import { CountryAndStates } from "@lib/constants";
+import { withi18n } from "@lib/decorators";
+import { clx } from "@lib/helpers";
+import { routes } from "@lib/routes";
+import { Page } from "@lib/types";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
+import { useTranslation } from "next-i18next";
+
 /**
  * Covid Vaccination Page <State>
  */
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import CovidVaccinationDashboard from "@dashboards/healthcare/covid-vaccination";
-import { CountryAndStates, STATES } from "@lib/constants";
-import { get } from "@lib/api";
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { useTranslation } from "next-i18next";
-import { routes } from "@lib/routes";
-import Fonts from "@config/font";
-import { clx } from "@lib/helpers";
-import { withi18n } from "@lib/decorators";
-import { Page } from "@lib/types";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CovidVaccinationState: Page = ({
   meta,
@@ -23,7 +25,7 @@ const CovidVaccinationState: Page = ({
   timeseries,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
@@ -44,38 +46,25 @@ const CovidVaccinationState: Page = ({
 };
 
 CovidVaccinationState.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown
-        url={routes.COVID_VACCINATION}
-        currentState={props?.params.state}
-        hideOnScroll
-      />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.COVID_VACCINATION} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.COVID_VACCINATION}
+          currentState={props?.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.COVID_VACCINATION} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async ctx => {
-  //   let paths: Array<any> = [];
-  //   STATES.filter(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

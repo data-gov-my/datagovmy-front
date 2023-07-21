@@ -5,20 +5,22 @@ import { get } from "@lib/api";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const BirthdayExplorer = ({ meta, timeseries }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      {/* <BirthdayExplorerDashboard timeseries={timeseries} /> */}
-      <BirthdayExplorerDashboard />
+      <WindowProvider>
+        <BirthdayExplorerDashboard timeseries={timeseries} />
+      </WindowProvider>
     </AnalyticsProvider>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-birthday-explorer", async () => {
-  // const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
+  const { data } = await get("/dashboard", { dashboard: "birthday_popularity", state: "mys" });
   return {
     props: {
       meta: {
@@ -27,12 +29,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-birthday-explo
         category: "demography",
         agency: "JPN",
       },
-      // timeseries: {
-      //   data: {
-      //     x: data.x,
-      //     y: data.y,
-      //   },
-      // },
+      timeseries: data.timeseries,
     },
   };
 });

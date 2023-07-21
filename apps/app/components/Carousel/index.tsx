@@ -1,6 +1,6 @@
 import Spinner from "@components/Spinner";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import React, { ForwardedRef, ReactNode } from "react";
+import React, { ForwardedRef, FunctionComponent, ReactNode } from "react";
 import Slider from "react-slick";
 
 type CarouselProps = {
@@ -11,7 +11,7 @@ type CarouselProps = {
   _ref?: ForwardedRef<Slider>;
 };
 
-const Carousel = ({ isLoading, items, config, title, _ref }: CarouselProps) => {
+const Carousel: FunctionComponent<CarouselProps> = ({ isLoading, items, config, title, _ref }) => {
   const PrevArrow = ({ ...props }) => {
     const { onClick } = props;
     return (

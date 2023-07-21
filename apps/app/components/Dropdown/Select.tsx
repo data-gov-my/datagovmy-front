@@ -32,7 +32,7 @@ type ConditionalProps =
 type SelectProps<L, V> = CommonProps<L, V> & ConditionalProps & LabelProps;
 
 const Select = <L extends string | number | ReactElement = string, V = string>({
-  className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm",
+  className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-button",
   disabled = false,
   multiple = false,
   options = dummy,
@@ -126,7 +126,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
             <div className={["relative text-sm", disabled ? "cursor-not-allowed" : ""].join(" ")}>
               <Listbox.Button
                 className={[
-                  "dark:border-washed-dark relative flex w-full flex-col items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:bg-black lg:w-fit lg:flex-row lg:items-center",
+                  "dark:border-washed-dark shadow-button relative flex w-full flex-col items-start gap-1.5 rounded-md border py-1.5 pl-3 pr-8 text-left dark:bg-black lg:w-fit lg:flex-row lg:items-center",
                   className,
                   disabled
                     ? "bg-outline text-dim pointer-events-none"
@@ -155,7 +155,7 @@ const Select = <L extends string | number | ReactElement = string, V = string>({
               >
                 <Listbox.Options
                   className={[
-                    "absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none lg:w-auto",
+                    "shadow-floating absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none lg:w-auto",
                     anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
                   ].join(" ")}
                   static={!disabled}

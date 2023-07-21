@@ -41,7 +41,7 @@ const KTMBExplorer: Page = ({
  * origin - required - JB SENTRAL
  * destination - required - WOODLANDS CIQ
  */
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

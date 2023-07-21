@@ -13,16 +13,17 @@ import Fonts from "@config/font";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const BloodDonation: Page = ({
   meta,
   last_updated,
   params,
-  timeseries_all,
+  timeseries,
   barchart_age,
   barchart_time,
   barchart_variables,
-  choropleth_malaysia_blood_donation,
+  choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-blood-donation", "common"]);
 
@@ -46,38 +47,41 @@ const BloodDonation: Page = ({
       <BloodDonationDashboard
         last_updated={last_updated}
         params={params}
-        timeseries_all={timeseries_all}
+        timeseries={timeseries}
         barchart_age={barchart_age}
         barchart_time={barchart_time}
         barchart_variables={{
           data_as_of: barchart_variables.data_as_of,
           data: vars,
         }}
-        choropleth_malaysia_blood_donation={choropleth_malaysia_blood_donation}
+        choropleth={choropleth}
       />
     </AnalyticsProvider>
   );
 };
 
 BloodDonation.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.BLOOD_DONATION}
+          currentState={props.params.state}
+          exclude={["pjy", "pls", "lbn"]}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal
+        state={props.params.state}
         url={routes.BLOOD_DONATION}
-        currentState={props.params.state}
         exclude={["pjy", "pls", "lbn"]}
-        hideOnScroll
       />
-    }
-  >
-    <StateModal
-      state={props.params.state}
-      url={routes.BLOOD_DONATION}
-      exclude={["pjy", "pls", "lbn"]}
-    />
-    {page}
-  </Layout>
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-blood-donation", async () => {
@@ -100,11 +104,11 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-blood-donation
       },
       last_updated: data.data_last_updated,
       params: { state: "mys" },
-      timeseries_all: data.timeseries_all,
+      timeseries: data.timeseries_all,
       barchart_age: data.bar_chart_age,
       barchart_time: data.bar_chart_time,
       barchart_variables: data.barchart_key_variables,
-      choropleth_malaysia_blood_donation: data.choropleth_malaysia,
+      choropleth: data.choropleth_malaysia,
     },
   };
 });

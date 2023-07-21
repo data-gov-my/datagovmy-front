@@ -85,6 +85,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
       <ChartHeader title={title} menu={menu} controls={controls} />
       <MapContainer
         id={id}
+        data-testid={id || title}
         className={className}
         center={position as LatLngTuple}
         zoom={zoom}

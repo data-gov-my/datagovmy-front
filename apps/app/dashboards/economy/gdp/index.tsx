@@ -12,6 +12,7 @@ import Slider from "@components/Chart/Slider";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/Badge/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
+import { DOSMIcon } from "@components/Icon/agency";
 
 /**
  * GDP Dashboard
@@ -160,14 +161,22 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="DOSM" link="https://open.dosm.gov.my/" />}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:dosm.full")}
+            link="https://open.dosm.gov.my/"
+            icon={<DOSMIcon />}
+          />
+        }
       />
       <SliderProvider>
         {play => (
           <Container className="min-h-screen">
             {/* How is GDP trending? */}
-            <Section title={t("section_1.title")} date={timeseries.data_as_of}>
-              <div className="space-y-8">
+            <Section
+              title={t("section_1.title")}
+              date={timeseries.data_as_of}
+              description={
                 <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                   <Dropdown
                     anchor="left"
@@ -182,69 +191,68 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                     onChange={e => setData("shade_type", e)}
                   />
                 </div>
-
-                <Slider
-                  className=""
-                  type="range"
-                  value={data.minmax}
-                  data={timeseries.data[data.index_type.value].x}
-                  period="quarter"
-                  onChange={e => setData("minmax", e)}
-                />
-                <Timeseries
-                  title={t("keys.overall")}
-                  className="h-[350px] w-full"
-                  interval="quarter"
-                  enableAnimation={!play}
-                  displayNumFormat={value =>
-                    smartNumFormat({
-                      value,
-                      type: "compact",
-                      precision: [1, 1],
-                      locale: i18n.language,
-                    })
-                  }
-                  prefixY={configs("overall").prefix}
-                  unitY={configs("overall").unit}
-                  lang={i18n.language}
-                  axisY={{
-                    y2: {
+              }
+            >
+              <Timeseries
+                title={t("keys.overall")}
+                className="h-[350px] w-full"
+                interval="quarter"
+                enableAnimation={!play}
+                displayNumFormat={value =>
+                  smartNumFormat({
+                    value,
+                    type: "compact",
+                    precision: [1, 1],
+                    locale: i18n.language,
+                  })
+                }
+                prefixY={configs("overall").prefix}
+                unitY={configs("overall").unit}
+                lang={i18n.language}
+                axisY={{
+                  y2: {
+                    display: false,
+                    grid: {
+                      drawTicks: false,
+                      drawBorder: false,
+                      lineWidth: 0.5,
+                    },
+                    ticks: {
                       display: false,
-                      grid: {
-                        drawTicks: false,
-                        drawBorder: false,
-                        lineWidth: 0.5,
-                      },
-                      ticks: {
-                        display: false,
-                      },
                     },
-                  }}
-                  data={{
-                    labels: coordinate.x,
-                    datasets: [
-                      {
-                        type: "line",
-                        data: coordinate.overall,
-                        label: t("keys.overall"),
-                        borderColor: AKSARA_COLOR.PRIMARY,
-                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                        borderWidth: 1.5,
-                        fill: configs("overall").fill,
-                      },
-                      shader(data.shade_type.value),
-                    ],
-                  }}
-                  stats={[
+                  },
+                }}
+                data={{
+                  labels: coordinate.x,
+                  datasets: [
                     {
-                      title: t("common:common.latest", {
-                        date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
-                      }),
-                      value: configs("overall").callout,
+                      type: "line",
+                      data: coordinate.overall,
+                      label: t("keys.overall"),
+                      borderColor: AKSARA_COLOR.PRIMARY,
+                      backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                      borderWidth: 1.5,
+                      fill: configs("overall").fill,
                     },
-                  ]}
-                />
-              </div>
+                    shader(data.shade_type.value),
+                  ],
+                }}
+                stats={[
+                  {
+                    title: t("common:common.latest", {
+                      date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                    }),
+                    value: configs("overall").callout,
+                  },
+                ]}
+              />
+              <Slider
+                type="range"
+                value={data.minmax}
+                data={timeseries.data[data.index_type.value].x}
+                period="quarter"
+                onChange={e => setData("minmax", e)}
+              />
             </Section>
             {/* A deeper look at GDP by economic sector */}
             <Section title={t("section_2.title")} date={timeseries.data_as_of}>

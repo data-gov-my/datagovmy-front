@@ -8,6 +8,7 @@ import {
   LeftRightCard,
   Section,
   StateDropdown,
+  Tabs,
 } from "@components/index";
 import { IPREPUIcon } from "@components/Icon/agency";
 import Slider from "@components/Chart/Slider";
@@ -19,6 +20,7 @@ import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
+import { TimeseriesOption } from "@lib/types";
 
 /**
  * IPR (Inisiatif Pendapatan Rakyat) Dashboard
@@ -54,10 +56,33 @@ const IPR: FunctionComponent<IPRProps> = ({
     value: key,
   }));
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
     filter: "absolute",
+    minmax: [0, timeseries.data.daily.x.length - 1],
+    period: "auto",
+    periodly: "daily_7d",
+    tab_index: 0,
   });
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
+
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
+  };
+
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
   const topStateIndices = getTopIndices(
     choropleth.data[data.filter].y.value,
     choropleth.data[data.filter].y.length,
@@ -89,29 +114,51 @@ const IPR: FunctionComponent<IPRProps> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px] w-full"
+                  className="h-[300px]"
                   title={t("timeseries_title", {
                     state: CountryAndStates[params.state],
+                    context: data.periodly,
                   })}
+                  menu={
+                    <Tabs.List
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
+                      current={data.tab_index}
+                      onChange={index => {
+                        setData("tab_index", index);
+                        setData("minmax", [
+                          0,
+                          timeseries.data[config[index].periodly].x.length - 1,
+                        ]);
+                        setData("period", config[index].period);
+                        setData("periodly", config[index].periodly);
+                      }}
+                    />
+                  }
                   enableAnimation={!play}
-                  interval="day"
+                  interval={data.period}
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
-                        type: "line",
+                        type: coordinate.x.length === 1 ? "bar" : "line",
                         data: coordinate.overall,
-                        label: t("daily"),
+                        label: t(`common:time.${data.periodly}`),
                         fill: true,
                         backgroundColor: AKSARA_COLOR.DIM_H,
                         borderColor: AKSARA_COLOR.DIM,
                         borderWidth: 1.5,
+                        barThickness: 12,
                       },
                     ],
                   }}
                   stats={[
                     {
-                      title: t("daily"),
+                      title: t("common:time.daily"),
                       value: `+${numFormat(timeseries_callout.overall.daily.value, "standard")}`,
                     },
                     {
@@ -122,8 +169,9 @@ const IPR: FunctionComponent<IPRProps> = ({
                 />
                 <Slider
                   type="range"
+                  period={data.period}
                   value={data.minmax}
-                  data={timeseries.data.x}
+                  data={timeseries.data[data.periodly].x}
                   onChange={e => setData("minmax", e)}
                 />
                 <div className="grid grid-cols-1 gap-6 pt-12 lg:grid-cols-3 lg:gap-12">
@@ -131,7 +179,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                     <Timeseries
                       key={key}
                       title={t(key)}
-                      className="h-[300px] w-full"
+                      className="h-[300px]"
                       enableAnimation={!play}
                       interval={"day"}
                       data={{
@@ -140,7 +188,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                           {
                             type: "line",
                             data: coordinate[key],
-                            label: t("daily"),
+                            label: t(`common:time.${data.periodly}`),
                             fill: true,
                             backgroundColor: AKSARA_COLOR.DIM_H,
                             borderColor: AKSARA_COLOR.DIM,
@@ -150,7 +198,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                       }}
                       stats={[
                         {
-                          title: t("daily"),
+                          title: t("common:time.daily"),
                           value: `+${numFormat(timeseries_callout[key].daily.value, "standard")}`,
                         },
                         {
@@ -169,7 +217,7 @@ const IPR: FunctionComponent<IPRProps> = ({
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-[600px] w-full flex-col space-y-3 overflow-hidden p-6 lg:p-8">
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
                 <div className="space-y-6">
                   <div className="flex flex-col gap-2">
                     <h4>{t("choro_header")}</h4>
@@ -187,10 +235,10 @@ const IPR: FunctionComponent<IPRProps> = ({
                     selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
                     onChange={e => setData("filter", e.value)}
                   />
-                  <p className="text-dim whitespace-pre-line">{t("choro_description")}</p>
-                  <div className="border-outline dark:border-dim border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-                  </div>
+                  <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
+                  <p className="border-outline dark:border-dim border-t pb-3 pt-6 font-bold">
+                    {t("choro_ranking")}
+                  </p>
                 </div>
                 <div className="space-y-3 overflow-auto">
                   {topStateIndices.map((pos, i) => {
@@ -200,7 +248,7 @@ const IPR: FunctionComponent<IPRProps> = ({
                         <div className="grow">
                           {CountryAndStates[choropleth.data[data.filter].x[pos]]}
                         </div>
-                        <div className="font-bold text-green-500">
+                        <div className="font-bold">
                           {data.filter.startsWith("absolute")
                             ? `${numFormat(choropleth.data[data.filter].y.value[pos], "standard")}`
                             : `${numFormat(
@@ -218,7 +266,7 @@ const IPR: FunctionComponent<IPRProps> = ({
             right={
               <Choropleth
                 className="h-[400px] w-auto rounded-b lg:h-[600px]"
-                color="greens"
+                color="greys"
                 data={{
                   labels: choropleth.data[data.filter].x.map(
                     (state: string) => CountryAndStates[state]

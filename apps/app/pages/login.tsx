@@ -47,7 +47,7 @@ const Login: Page = () => {
               validation={error}
             />
 
-            <Button type="submit" className="btn btn-primary ml-auto">
+            <Button type="submit" className="btn-primary ml-auto">
               <span>Sign in</span>
             </Button>
           </div>

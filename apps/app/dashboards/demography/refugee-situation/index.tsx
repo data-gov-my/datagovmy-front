@@ -16,7 +16,7 @@ import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
+import { clx, getTopIndices, numFormat, toDate } from "@lib/helpers";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -52,14 +52,12 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
   );
   const { data, setData } = useData({
     tab_index: 0,
-    minmax: [0, timeseries.data.x.length],
+    minmax: [0, timeseries.data.x.length - 1],
     filter: FILTER_OPTIONS[0].value,
     loading: false,
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
   const METRICS = ["arrivals", "registrations", "resettlements"];
-  const barmeter_data = Object.entries(barmeter.data.bar);
-  [barmeter_data[0], barmeter_data[1]] = [barmeter_data[1], barmeter_data[0]];
   const topStateIndices = getTopIndices(
     choropleth.data[data.filter].y.value,
     choropleth.data[data.filter].y.length,
@@ -74,7 +72,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency="UNHCR Malaysia"
+            agency={t("agencies:unhcr.full")}
             link="https://www.unhcr.org/my/"
             icon={<UNHCRIcon />}
           />
@@ -110,7 +108,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("this_month", {
+                      title: t("common:common.latest", {
                         date: toDate(timeseries.data_as_of, "MMM yyyy", i18n.language),
                       }),
                       value: `${numFormat(
@@ -150,7 +148,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
                       }}
                       stats={[
                         {
-                          title: t("this_month", {
+                          title: t("common:common.latest", {
                             date: toDate(timeseries.data_as_of, "MMM yyyy", i18n.language),
                           }),
                           value: `+${numFormat(
@@ -177,28 +175,40 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
         {/* What does Malaysia’s refugee population look like? */}
         <Section title={t("barmeter_header")} date={barmeter.data_as_of ?? timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-            {barmeter_data.map(([k, v]: [string, any]) => {
+            {["country", "age", "sex"].map((k: string) => {
               return (
                 <div className="flex flex-col space-y-6" key={k}>
                   <BarMeter
                     key={k}
                     title={t(k)}
                     layout="horizontal"
-                    unit="%"
-                    data={v}
-                    sort={"desc"}
+                    data={barmeter.data.bar[k]}
+                    sort={k === "age" ? undefined : "desc"}
                     formatX={key => t(key)}
                     formatY={(value, key) => (
-                      <>
-                        <Tooltip
-                          tip={`${t("tooltip", {
-                            count: barmeter.data.tooltip[k].find(
-                              (object: { x: string; y: number }) => object.x === key
-                            ).y,
-                          })}`}
-                        />
-                        <span className="pl-1">{numFormat(value, "compact", [1, 1])}</span>
-                      </>
+                      <Tooltip
+                        tip={`${t("tooltip", {
+                          count: barmeter.data.tooltip[k].find(
+                            (object: { x: string; y: number }) => object.x === key
+                          ).y,
+                        })}`}
+                        className={clx(
+                          k === "country" && "max-md:right-1/3",
+                          k === "age" && "max-xl:right-1/3",
+                          k === "sex" && "max-lg:right-1/3 xl:right-1/3"
+                        )}
+                      >
+                        {open => (
+                          <>
+                            <p
+                              className="pl-1 underline decoration-dashed [text-underline-position:from-font]"
+                              onClick={() => open()}
+                            >
+                              {numFormat(value, "standard", 1)}%
+                            </p>
+                          </>
+                        )}
+                      </Tooltip>
                     )}
                   />
                 </div>

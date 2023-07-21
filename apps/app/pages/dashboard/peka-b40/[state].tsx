@@ -1,15 +1,16 @@
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import { CountryAndStates, STATES } from "@lib/constants";
-import { useTranslation } from "@hooks/useTranslation";
-import { routes } from "@lib/routes";
 import Fonts from "@config/font";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
+import { get } from "@lib/api";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { routes } from "@lib/routes";
+import type { Page } from "@lib/types";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 
 const PekaB40State: Page = ({
   meta,
@@ -38,34 +39,25 @@ const PekaB40State: Page = ({
 };
 
 PekaB40State.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown url={routes.PEKA_B40} currentState={props?.params.state} hideOnScroll />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.PEKA_B40} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.PEKA_B40}
+          currentState={props?.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.PEKA_B40} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  //   let paths: Array<any> = [];
-  //   STATES.forEach(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

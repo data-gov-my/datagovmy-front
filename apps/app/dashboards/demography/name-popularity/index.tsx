@@ -9,7 +9,6 @@ import { OptionType } from "@components/types";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWatch } from "@hooks/useWatch";
 import { WindowContext } from "@hooks/useWindow";
 import { get } from "@lib/api";
 import { BREAKPOINTS } from "@lib/constants";
@@ -27,10 +26,9 @@ const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 interface NamePopularityDashboardProps {}
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
-  const { t, i18n } = useTranslation(["dashboard-name-popularity", "common"]);
-  // const { breakpoint } = useContext(WindowContext);
-
-  // const showPlaceholder = breakpoint >= BREAKPOINTS.LG;
+  const { t } = useTranslation(["dashboard-name-popularity", "common"]);
+  const { size } = useContext(WindowContext);
+  const showPlaceholder = size.width >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },
@@ -54,33 +52,6 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
 
   const { theme } = useTheme();
 
-  // trigger API calls when parameters (user inputs) are updated
-  // useWatch(() => {
-  //   setSearchData("loading", true);
-  //   get("/explorer", searchData.params)
-  //     .then(({ data }) => {
-  //       setSearchData("data", data);
-  //       setSearchData("loading", false);
-  //     })
-  //     .catch(e => {
-  //       toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-  //       console.error(e);
-  //     });
-  // }, [searchData.params]);
-
-  // useWatch(() => {
-  //   setCompareData("loading", true);
-  //   get("/explorer", compareData.params)
-  //     .then(({ data }) => {
-  //       setCompareData("data", data);
-  //       setCompareData("loading", false);
-  //     })
-  //     .catch(e => {
-  //       toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-  //       console.error(e);
-  //     });
-  // }, [compareData.params]);
-
   const filterTypes: Array<OptionType> = [
     { label: t("first_name"), value: "first" },
     { label: t("last_name"), value: "last" },
@@ -99,22 +70,32 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   };
 
   const searchHandler = () => {
-    const name: string = processName(searchData.name);
-    if (name.length > 0) {
-      setSearchData("params", {
-        explorer: "NAME_POPULARITY",
-        name: name,
-        type: searchData.type.value,
-        compare_name: "false",
-      });
-    } else {
+    const params = {
+      explorer: "NAME_POPULARITY",
+      name: processName(searchData.name),
+      type: searchData.type.value,
+      compare_name: "false",
+    };
+    if (!params.name.length) {
       setSearchData(
         "validation",
         searchData.type.value === "first"
           ? t("search_validation_first")
           : t("search_validation_last")
       );
+      return;
     }
+
+    setSearchData("params", params);
+    get("/explorer", params)
+      .then(({ data }) => {
+        setSearchData("data", data.data);
+        setSearchData("loading", false);
+      })
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      });
   };
 
   const compareHandler = () => {
@@ -139,14 +120,25 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     }
 
     if (compareData.names.length > 1) {
-      setCompareData("params", {
+      const params = {
         explorer: "NAME_POPULARITY",
         type: compareData.type.value === "compare_first" ? "first" : "last",
         name: compareData.names
           .map((name: { label: string; value: string }) => name.value)
           .join(","),
         compare_name: "true",
-      });
+      };
+      setCompareData("loading", true);
+      setCompareData("params", params);
+      get("/explorer", params)
+        .then(({ data }) => {
+          setCompareData("data", data.data);
+          setCompareData("loading", false);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
     } else {
       setCompareData("validation", t("compare_validation"));
     }
@@ -193,17 +185,17 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         description={[t("description")]}
         agencyBadge={
           <AgencyBadge
-            agency="Jabatan Pendaftaran Negara"
+            agency={t("agencies:jpn.full")}
             link="https://www.jpn.gov.my/en/"
             icon={<JPNIcon />}
           />
         }
       />
       <Container className="min-h-screen">
-        {/* <Section title={t("section1_title")}>
+        <Section title={t("section1_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col	justify-start gap-6 rounded-xl border p-6">
                 <div className="flex flex-row gap-4">
                   <span className="text-sm font-medium">{t("search_radio_label")}</span>
                   <Radio
@@ -239,15 +231,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   }}
                   validation={searchData.validation}
                 />
-                <div className="">
-                  <Button
-                    icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                    className="btn btn-primary"
-                    onClick={searchHandler}
-                  >
-                    {t("search_button")}
-                  </Button>
-                </div>
+
+                <Button
+                  icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
+                  className="btn-primary w-fit"
+                  onClick={searchHandler}
+                >
+                  {t("search_button")}
+                </Button>
+
                 <p className="text-dim text-sm">{t("search_details")}</p>
                 <p className="text-dim text-sm">{t("search_disclaimer")}</p>
               </Card>
@@ -340,7 +332,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         <Section title={t("section2_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col	justify-start gap-6 rounded-xl border p-6">
                 <div className="flex flex-col justify-start gap-3">
                   <div className="flex flex-col gap-4">
                     <span className="text-sm font-medium">{t("compare_radio")}</span>
@@ -402,7 +394,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 <div>
                   <Button
                     icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                    className="btn btn-primary"
+                    className="btn-primary"
                     onClick={compareHandler}
                   >
                     {t("compare_button")}
@@ -507,7 +499,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               </div>
             )}
           </div>
-        </Section> */}
+        </Section>
       </Container>
     </>
   );

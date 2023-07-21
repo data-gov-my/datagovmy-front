@@ -67,8 +67,8 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
       case "name":
         return highlightedRows.includes(+cell.row.id) ? (
           <>
-            {value}
-            <span className="inline-flex translate-y-0.5 pl-1">
+            <span className="pr-1">{value}</span>
+            <span className="inline-flex translate-y-0.5">
               <ResultBadge hidden value={cell.row.original.result} />
             </span>
           </>
@@ -77,22 +77,25 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         );
       case "election_name":
         return (
-          <Tooltip
-            className="tooltip-left"
-            tip={
-              cell.row.original.date && toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
-            }
-          >
-            {open => (
-              <div
-                className="cursor-help whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
-                tabIndex={0}
-                onClick={open}
-              >
-                {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
-              </div>
-            )}
-          </Tooltip>
+          <div className="w-fit">
+            <Tooltip
+              tip={
+                cell.row.original.date &&
+                toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
+              }
+              className="max-xl:left-1/3"
+            >
+              {open => (
+                <div
+                  className="cursor-help whitespace-nowrap underline decoration-dashed [text-underline-position:from-font]"
+                  tabIndex={0}
+                  onClick={open}
+                >
+                  {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
+                </div>
+              )}
+            </Tooltip>
+          </div>
         );
       case "party":
         return (

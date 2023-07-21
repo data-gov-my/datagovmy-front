@@ -1,29 +1,19 @@
 .table {
-  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 md:w-fit md:max-w-full;
+  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit;
 }
 
 .table-responsive {
-  @apply relative snap-x snap-mandatory overflow-x-auto sm:snap-none;
+  @apply relative overflow-x-auto;
+  /* max-sm:snap-x max-sm:snap-mandatory; */
 }
 
 .table th {
-  @apply text-dim w-auto snap-end py-3 font-normal dark:text-white md:whitespace-nowrap;
+  @apply text-dim w-auto py-3 font-normal dark:text-white;
+  /* max-sm:snap-end; */
 }
 
 .table tbody tr {
-  @apply border-l-outline dark:border-b-washed-dark dark:border-l-outlineHover-dark border-b-[0.5px] border-l-[0.5px];
-}
-
-.table tbody tr:first-child {
-  @apply dark:border-t-outlineHover-dark border-t-[0.5px];
-}
-
-.table tbody tr:last-child {
-  @apply dark:border-outlineHover-dark border-b-[0.5px] border-b-black;
-}
-
-.table td {
-  @apply border-outline dark:border-washed-dark snap-end border-b px-2 py-2;
+  @apply bg-white dark:bg-black;
 }
 /* .table td:not(:first-child) {
   @apply whitespace-nowrap;
@@ -42,7 +32,7 @@
 }
 
 .sticky-col {
-  @apply border-outline dark:border-washed-dark sticky z-10 max-w-fit whitespace-normal border-r-2 bg-white dark:bg-black lg:border-r-0;
+  @apply border-outline dark:border-washed-dark sticky z-10 bg-inherit max-lg:border-r-2;
 }
 
 /* .table tr > td:first-child {
@@ -56,12 +46,8 @@
   @apply dark:border-t-washed-dark border-t-black;
 }
 
-.table-stripe tr:nth-child(even) {
-  @apply bg-outline dark:bg-washed-dark;
-}
-
-.table-stripe tbody tr:nth-child(odd) {
-  @apply bg-white dark:bg-black;
+.table-stripe tr {
+  @apply even:bg-background even:dark:bg-washed-dark;
 }
 
 .table-default th:first-child {

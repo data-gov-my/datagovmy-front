@@ -26,6 +26,7 @@ interface HeatmapProps extends ChartHeaderProps {
   color?: Color;
   prefix?: string;
   unit?: string;
+  precision?: [number, number] | number;
 
   _ref?: ForwardedRef<ChartJSOrUndefined<"matrix", any[], unknown>>;
 }
@@ -49,6 +50,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   prefix,
   unit,
   controls,
+  precision = [1, 1],
   _ref,
 }) => {
   ChartJS.register(
@@ -94,6 +96,12 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         grid: {
           display: false,
         },
+        ticks: {
+          font: {
+            size: 14,
+          },
+        },
+        position: "top",
       },
       y: {
         type: "category",
@@ -101,6 +109,11 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         offset: true,
         grid: {
           display: false,
+        },
+        ticks: {
+          font: {
+            size: 14,
+          },
         },
       },
     };
@@ -171,12 +184,16 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
       datalabels: {
         display: true,
         color(context: { dataIndex: number }) {
-          if (data[context.dataIndex].z === null) return "#000";
+          if ([null, 0].includes(data[context.dataIndex].z)) return "#71717A";
           const n_value = normalize(data[context.dataIndex].z!, min, max);
           return n_value > 0.7 ? "#fff" : "#000";
         },
-        formatter(value: HeatmapDatum) {
-          return value.z;
+        font: {
+          size: 16,
+          lineHeight: 24,
+        },
+        formatter(v: HeatmapDatum) {
+          return display(v.z!, "standard", precision);
         },
       },
       tooltip: {
@@ -190,7 +207,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
           label(context) {
             const v = data[context.dataIndex];
             return `${v.y}, ${v.x}: ${
-              v.z === null ? "No data" : display(v.z!, "standard", [1, 1])
+              v.z === null ? "No data" : display(v.z!, "standard", precision)
             }`;
           },
         },
@@ -213,8 +230,6 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
             datasets: [
               {
                 data: data,
-                borderWidth: 1,
-                borderColor: "rgba(0,0,0,0.5)",
                 backgroundColor(ctx: ScriptableContext<"matrix">) {
                   return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).z);
                 },

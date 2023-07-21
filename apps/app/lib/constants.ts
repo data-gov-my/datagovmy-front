@@ -126,7 +126,8 @@ export const MYR_COLOR = {
 export const AKSARA_COLOR = {
   BLACK: "#18181B",
   BLACK_H: "#18181B1A",
-  WHITE: "FFFFFF",
+  WHITE: "#FFFFFF",
+  WHITE_H: "#FFFFFF1A",
   DANGER: "#DC2626",
   DANGER_H: "#DC26261A",
   PRIMARY: "#2563EB",
@@ -166,30 +167,6 @@ export const AKSARA_COLOR = {
 export const SHORT_LANG = {
   "ms-MY": "bm",
   "en-GB": "en",
-} as const;
-
-/**
- * Convert AKSARA API's periods to the designated timeseries interval.
- * @example SHORT_PERIOD["WEEKLY"] -> "weekly"
- */
-export const SHORT_PERIOD = {
-  DAILY: "auto",
-  WEEKLY: "day",
-  MONTHLY: "month",
-  QUARTERLY: "quarter",
-  YEARLY: "year",
-} as const;
-
-/**
- * Convert AKSARA API's periods to the designated timeseries interval.
- * @example SHORT_PERIOD["WEEKLY"] -> "weekly"
- */
-export const SHORT_PERIOD_FORMAT = {
-  DAILY: "dd MMM yyyy",
-  WEEKLY: "dd MMM yyyy",
-  MONTHLY: "MMM yyyy",
-  QUARTERLY: "qQ yyyy",
-  YEARLY: "yyyy",
 } as const;
 
 /**
