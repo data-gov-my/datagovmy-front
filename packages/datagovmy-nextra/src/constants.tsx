@@ -436,7 +436,7 @@ export const DEFAULT_THEME: DocsThemeConfig = {
     float: true,
     title: "On This Page",
   },
-  useNextSeoProps: () => ({ titleTemplate: "%s – Nextra" }),
+  useNextSeoProps: () => ({ titleTemplate: "%s – OpenAPI" }),
 };
 
 export const DEEP_OBJECT_KEYS = Object.entries(DEFAULT_THEME)
