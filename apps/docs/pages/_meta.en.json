@@ -6,7 +6,8 @@
   "authentication": "Authentication",
   "data-catalogue": "Data Catalogue API",
   "gtfs-static": "Transport API (GTFS)",
-  "realtime-api": "Real-time APIs",
+  "gtfs-realtime": "Transport API (GTFS-R)",
+  "weather": "Weather API",
   "main-site": {
     "title": "Main Site",
     "type": "page",

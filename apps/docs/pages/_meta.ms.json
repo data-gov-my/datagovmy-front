@@ -6,7 +6,8 @@
   "authentication": "Pengesahan",
   "data-catalogue": "Katalog Data API",
   "gtfs-static": "Pengangkutan API (GTFS)",
-  "realtime-api": "API 'Realtime'",
+  "transport": "Pengangkutan API (GTFS-R)",
+  "weather": "Cuaca API",
   "main-site": {
     "title": "Tapak Utama",
     "type": "page",
