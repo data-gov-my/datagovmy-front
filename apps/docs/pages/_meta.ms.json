@@ -4,7 +4,8 @@
   "quickstart": "Cepat Mula",
   "rate-limit": "Had",
   "authentication": "Pengesahan",
-  "static-api": "API Statik",
+  "data-catalogue": "Katalog Data API",
+  "gtfs-static": "Pengangkutan API (GTFS)",
   "realtime-api": "API 'Realtime'",
   "main-site": {
     "title": "Tapak Utama",

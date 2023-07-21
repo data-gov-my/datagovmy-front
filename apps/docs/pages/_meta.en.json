@@ -4,7 +4,8 @@
   "quickstart": "Quickstart Guide",
   "rate-limit": "Rate Limit",
   "authentication": "Authentication",
-  "static-api": "Static APIs",
+  "data-catalogue": "Data Catalogue API",
+  "gtfs-static": "Transport API (GTFS)",
   "realtime-api": "Real-time APIs",
   "main-site": {
     "title": "Main Site",
