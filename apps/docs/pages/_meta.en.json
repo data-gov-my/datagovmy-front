@@ -14,9 +14,9 @@
     "title": "AI Helper",
     "type": "page"
   },
-  "helpdesk": {
-    "title": "Helpdesk",
+  "faq": {
+    "title": "FAQ",
     "type": "page",
-    "route": "/helpdesk"
+    "route": "/faq"
   }
 }

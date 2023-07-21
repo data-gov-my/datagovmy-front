@@ -13,7 +13,7 @@ import type { TOCProps } from "./components/toc";
 import { useConfig } from "./contexts";
 import { getGitIssueUrl, useGitEditUrl } from "./utils";
 
-export const DEFAULT_LOCALE = "en-US";
+export const DEFAULT_LOCALE = "en";
 
 export const IS_BROWSER = typeof window !== "undefined";
 
@@ -62,17 +62,25 @@ export const themeSchema = z.strictObject({
         filePath?: string;
       }>
     >(...fc),
-    text: z.custom<ReactNode | FC>(...reactNode),
+    text: z.function().returns(z.string()),
   }),
   faviconGlyph: z.string().optional(),
   feedback: z.strictObject({
-    content: z.custom<ReactNode | FC>(...reactNode),
+    content: z.function().returns(z.string()),
     labels: z.string(),
     useLink: z.function().returns(z.string()),
   }),
   footer: z.strictObject({
-    component: z.custom<ReactNode | FC<{ menu: boolean }>>(...reactNode),
-    text: z.custom<ReactNode | FC>(...reactNode),
+    component: z.custom<ReactNode | FC>(...reactNode),
+    govMy: z.function().returns(z.string()),
+    dtsa: z.function().returns(z.string()),
+    openSource: z.function().returns(z.string()),
+    fe: z.function().returns(z.string()),
+    be: z.function().returns(z.string()),
+    uiux: z.function().returns(z.string()),
+    openData: z.function().returns(z.string()),
+    guide: z.function().returns(z.string()),
+    tos: z.function().returns(z.string()),
   }),
   gitTimestamp: z.custom<ReactNode | FC<{ timestamp: Date }>>(...reactNode),
   head: z.custom<ReactNode | FC>(...reactNode),
@@ -151,17 +159,71 @@ export type DocsThemeConfig = z.infer<typeof themeSchema>;
 export type PartialDocsThemeConfig = z.infer<typeof publicThemeSchema>;
 
 const LOADING_LOCALES: Record<string, string> = {
-  "en-US": "Loading",
+  "en": "Loading",
+  "ms": "Memuatkan",
   "fr": "Сhargement",
   "ru": "Загрузка",
   "zh-CN": "正在加载",
 };
 
 const PLACEHOLDER_LOCALES: Record<string, string> = {
-  "en-US": "Search documentation",
+  "en": "Search documentation",
+  "ms": "Cari dokumentasi",
   "fr": "Rechercher documents",
   "ru": "Поиск документации",
   "zh-CN": "搜索文档",
+};
+
+const FEEDBACK_LOCALES: Record<string, string> = {
+  en: "Question? Give us feedback →",
+  ms: "Ada soalan? Berikan maklum balas kepada kami →",
+};
+
+const EDIT_LOCALES: Record<string, string> = {
+  en: "Edit this page on GitHub →",
+  ms: "Sunting laman ini di GitHub →",
+};
+
+const UPDATED_LOCALES: Record<string, string> = {
+  en: "Last updated on",
+  ms: "Kemaskini terakhir pada",
+};
+
+type FooterProps = {
+  govMy: string;
+  dtsa: string;
+  openSource: string;
+  fe: string;
+  be: string;
+  uiux: string;
+  openData: string;
+  guide: string;
+  tos: string;
+};
+
+const FOOTER_LOCALES: Record<string, FooterProps> = {
+  en: {
+    govMy: "Government of Malaysia",
+    dtsa: "© 2023 Public Sector Open Data",
+    openSource: "Open Source",
+    fe: "Frontend Repo: NextJS",
+    be: "Backend Repo: Django",
+    uiux: "UI + UX Design: Figma",
+    openData: "Open Data",
+    guide: "Guiding Principles",
+    tos: "Terms of Use",
+  },
+  ms: {
+    govMy: "Kerajaan Malaysia",
+    dtsa: "© 2023 Data Terbuka Sektor Awam",
+    openSource: "Sumber Terbuka",
+    fe: "Repo 'Frontend': NextJS",
+    be: "Repo 'Backend': Django",
+    uiux: "Reka Bentuk UI + UX: Figma",
+    openData: "Data Terbuka",
+    guide: "Prinsip Panduan",
+    tos: "Syarat Penggunaan",
+  },
 };
 
 export const DEFAULT_THEME: DocsThemeConfig = {
@@ -192,10 +254,18 @@ export const DEFAULT_THEME: DocsThemeConfig = {
         </Anchor>
       );
     },
-    text: "Edit this page",
+    text() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const edit = (locale && EDIT_LOCALES[locale]) || EDIT_LOCALES[defaultLocale];
+      return edit;
+    },
   },
   feedback: {
-    content: "Question? Give us feedback →",
+    content() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const feedback = (locale && FEEDBACK_LOCALES[locale]) || FEEDBACK_LOCALES[defaultLocale];
+      return feedback;
+    },
     labels: "feedback",
     useLink() {
       const config = useConfig();
@@ -208,13 +278,59 @@ export const DEFAULT_THEME: DocsThemeConfig = {
   },
   footer: {
     component: Footer,
-    text: `MIT ${new Date().getFullYear()} © Nextra.`,
+    govMy() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const govMy = (locale && FOOTER_LOCALES[locale].govMy) || FOOTER_LOCALES[defaultLocale].govMy;
+      return govMy;
+    },
+    dtsa() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const dtsa = (locale && FOOTER_LOCALES[locale].dtsa) || FOOTER_LOCALES[defaultLocale].dtsa;
+      return dtsa;
+    },
+    openSource() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const openSource =
+        (locale && FOOTER_LOCALES[locale].openSource) || FOOTER_LOCALES[defaultLocale].openSource;
+      return openSource;
+    },
+    fe() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const fe = (locale && FOOTER_LOCALES[locale].fe) || FOOTER_LOCALES[defaultLocale].fe;
+      return fe;
+    },
+    be() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const be = (locale && FOOTER_LOCALES[locale].be) || FOOTER_LOCALES[defaultLocale].be;
+      return be;
+    },
+    uiux() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const uiux = (locale && FOOTER_LOCALES[locale].uiux) || FOOTER_LOCALES[defaultLocale].uiux;
+      return uiux;
+    },
+    openData() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const openData =
+        (locale && FOOTER_LOCALES[locale].openData) || FOOTER_LOCALES[defaultLocale].openData;
+      return openData;
+    },
+    guide() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const guide = (locale && FOOTER_LOCALES[locale].guide) || FOOTER_LOCALES[defaultLocale].guide;
+      return guide;
+    },
+    tos() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
+      const tos = (locale && FOOTER_LOCALES[locale].tos) || FOOTER_LOCALES[defaultLocale].tos;
+      return tos;
+    },
   },
   gitTimestamp: function GitTimestamp({ timestamp }) {
-    const { locale = DEFAULT_LOCALE } = useRouter();
+    const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
     return (
       <>
-        Last updated on{" "}
+        {(locale && UPDATED_LOCALES[locale]) || UPDATED_LOCALES[defaultLocale]}{" "}
         <time dateTime={timestamp.toISOString()}>
           {timestamp.toLocaleDateString(locale, {
             day: "numeric",

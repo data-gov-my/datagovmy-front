@@ -7,15 +7,16 @@
   "main-site": {
     "title": "Tapak Utama",
     "type": "page",
-    "route": "https://staging.data.gov.my/ms-MY"
+    "route": "https://staging.data.gov.my/ms-MY",
+    "newWindow": true
   },
   "ai-helper": {
     "title": "Penolong AI",
     "type": "page"
   },
-  "helpdesk": {
-    "title": "Meja Bantuan",
+  "faq": {
+    "title": "FAQ",
     "type": "page",
-    "route": "/helpdesk"
+    "route": "/faq"
   }
 }
