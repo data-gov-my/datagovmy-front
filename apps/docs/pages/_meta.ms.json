@@ -1,7 +1,9 @@
 {
   "index": "Pengenalan",
   "changelog": "Log Perubahan",
-  "overview": "Ikhtisar",
+  "quickstart": "Cepat Mula",
+  "rate-limit": "Had",
+  "authentication": "Pengesahan",
   "static-api": "API Statik",
   "realtime-api": "API 'Realtime'",
   "main-site": {
