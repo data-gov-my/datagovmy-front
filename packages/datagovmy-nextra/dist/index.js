@@ -1332,92 +1332,91 @@ function Flexsearch({ className }) {
 // src/components/footer.tsx
 import Image from "next/image";
 import { jsx as jsx15, jsxs as jsxs10 } from "react/jsx-runtime";
-function Footer({ menu }) {
+function Footer() {
   const config = useConfig();
+  const classes6 = {
+    link: "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+  };
   return /* @__PURE__ */ jsx15("footer", {
     className:
-      "bg-washed border-outline dark:border-washed-dark z-10 flex h-full w-full justify-center border-t pb-16 pt-12 dark:bg-black",
+      "bg-background border-outline dark:border-washed-dark z-10 flex h-full w-full border-t pb-16 pt-12 dark:bg-black",
     children: /* @__PURE__ */ jsx15("div", {
-      className:
-        "md:px-4.5 dark:divide-washed-dark undefined h-full w-full max-w-screen-2xl divide-y px-3 lg:px-6",
+      className: "md:px-4.5 h-full w-full max-w-screen-2xl px-3 lg:px-6",
       children: /* @__PURE__ */ jsxs10("div", {
-        className: "flex w-full flex-col gap-6 text-sm md:flex-row md:justify-between md:gap-0",
+        className: "flex gap-y-6 max-md:flex-col md:justify-between",
         children: [
           /* @__PURE__ */ jsxs10("div", {
-            className: "flex flex-row gap-4",
+            className: "flex items-start gap-x-4",
             children: [
-              /* @__PURE__ */ jsx15("div", {
-                className: "mt-1 w-12",
-                children: /* @__PURE__ */ jsx15(Image, {
-                  src: "/assets/jata_logo.png",
-                  width: 48,
-                  height: 36,
-                  alt: "jata negara",
-                }),
+              /* @__PURE__ */ jsx15(Image, {
+                src: "/assets/jata_logo.png",
+                width: 48,
+                height: 36,
+                alt: "jata negara",
               }),
               /* @__PURE__ */ jsxs10("div", {
+                className: "space-y-2",
                 children: [
-                  /* @__PURE__ */ jsx15("div", {
-                    className: "mb-2 uppercase",
-                    children: /* @__PURE__ */ jsx15("p", {
-                      className: "text-base font-bold",
-                      children: "Government of Malaysia",
-                    }),
+                  /* @__PURE__ */ jsx15("p", {
+                    className: "font-bold uppercase",
+                    children: renderString(config.footer.govMy),
                   }),
                   /* @__PURE__ */ jsx15("p", {
-                    className: "text-dim",
-                    children: "\xA9 2023 Public Sector Open Data",
+                    className: "text-dim text-sm",
+                    children: renderString(config.footer.dtsa),
                   }),
                 ],
               }),
             ],
           }),
           /* @__PURE__ */ jsxs10("div", {
-            className: "flex flex-row gap-8 md:gap-14",
+            className: "flex gap-x-3 text-sm lg:gap-x-6",
             children: [
               /* @__PURE__ */ jsxs10("div", {
-                className: "flex w-full flex-col gap-2 md:w-auto",
+                className: "flex w-[200px] flex-col gap-y-2",
                 children: [
-                  /* @__PURE__ */ jsx15("p", { className: "font-bold", children: "Open Source" }),
+                  /* @__PURE__ */ jsx15("p", {
+                    className: "font-bold",
+                    children: renderString(config.footer.openSource),
+                  }),
                   /* @__PURE__ */ jsx15("a", {
-                    className:
-                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    className: classes6.link,
                     href: "https://github.com/data-gov-my/datagovmy-front",
                     target: "_blank",
-                    children: "Frontend Repo: NextJS",
+                    children: renderString(config.footer.fe),
                   }),
                   /* @__PURE__ */ jsx15("a", {
-                    className:
-                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    className: classes6.link,
                     href: "https://github.com/data-gov-my/datagovmy-back",
                     target: "_blank",
-                    children: "Backend Repo: Django",
+                    children: renderString(config.footer.be),
                   }),
                   /* @__PURE__ */ jsx15("a", {
-                    className:
-                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+                    className: classes6.link,
                     href: "#",
                     target: "_blank",
-                    children: "UI + UX Design: Figma",
+                    children: renderString(config.footer.uiux),
                   }),
                 ],
               }),
               /* @__PURE__ */ jsxs10("div", {
-                className: "flex w-full flex-col gap-2 md:w-auto",
+                className: "flex w-[200px] flex-col gap-y-2",
                 children: [
-                  /* @__PURE__ */ jsx15("p", { className: "font-bold", children: "Open Data" }),
-                  /* @__PURE__ */ jsx15("a", {
-                    className:
-                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
-                    href: "#",
-                    target: "_blank",
-                    children: "Guiding Principles",
+                  /* @__PURE__ */ jsx15("p", {
+                    className: "font-bold",
+                    children: renderString(config.footer.openData),
                   }),
                   /* @__PURE__ */ jsx15("a", {
-                    className:
-                      "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
-                    href: "/dashboard/car-popularity#",
-                    children: "Terms of Use",
+                    className: classes6.link,
+                    href: "#",
+                    target: "_blank",
+                    children: renderString(config.footer.guide),
+                  }),
+                  /* @__PURE__ */ jsx15("a", {
+                    className: classes6.link,
+                    href: "#",
+                    target: "_blank",
+                    children: renderString(config.footer.tos),
                   }),
                 ],
               }),
@@ -2728,7 +2727,7 @@ function MatchSorterSearch({ className, directories }) {
 
 // src/constants.tsx
 import { Fragment as Fragment13, jsx as jsx31, jsxs as jsxs20 } from "react/jsx-runtime";
-var DEFAULT_LOCALE = "en-US";
+var DEFAULT_LOCALE = "en";
 var IS_BROWSER = typeof window !== "undefined";
 function isReactNode(value) {
   return value == null || isString(value) || isFunction(value) || isValidElement(value);
@@ -2764,17 +2763,25 @@ var themeSchema = z2.strictObject({
   docsRepositoryBase: z2.string().startsWith("https://"),
   editLink: z2.strictObject({
     component: z2.custom(...fc),
-    text: z2.custom(...reactNode),
+    text: z2.function().returns(z2.string()),
   }),
   faviconGlyph: z2.string().optional(),
   feedback: z2.strictObject({
-    content: z2.custom(...reactNode),
+    content: z2.function().returns(z2.string()),
     labels: z2.string(),
     useLink: z2.function().returns(z2.string()),
   }),
   footer: z2.strictObject({
     component: z2.custom(...reactNode),
-    text: z2.custom(...reactNode),
+    govMy: z2.function().returns(z2.string()),
+    dtsa: z2.function().returns(z2.string()),
+    openSource: z2.function().returns(z2.string()),
+    fe: z2.function().returns(z2.string()),
+    be: z2.function().returns(z2.string()),
+    uiux: z2.function().returns(z2.string()),
+    openData: z2.function().returns(z2.string()),
+    guide: z2.function().returns(z2.string()),
+    tos: z2.function().returns(z2.string()),
   }),
   gitTimestamp: z2.custom(...reactNode),
   head: z2.custom(...reactNode),
@@ -2846,16 +2853,54 @@ var publicThemeSchema = themeSchema.deepPartial().extend({
   i18n: i18nSchema.optional(),
 });
 var LOADING_LOCALES = {
-  "en-US": "Loading",
+  "en": "Loading",
+  "ms": "Memuatkan",
   "fr": "\u0421hargement",
   "ru": "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430",
   "zh-CN": "\u6B63\u5728\u52A0\u8F7D",
 };
 var PLACEHOLDER_LOCALES = {
-  "en-US": "Search documentation",
+  "en": "Search documentation",
+  "ms": "Cari dokumentasi",
   "fr": "Rechercher documents",
   "ru": "\u041F\u043E\u0438\u0441\u043A \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u0438",
   "zh-CN": "\u641C\u7D22\u6587\u6863",
+};
+var FEEDBACK_LOCALES = {
+  en: "Question? Give us feedback \u2192",
+  ms: "Ada soalan? Berikan maklum balas kepada kami \u2192",
+};
+var EDIT_LOCALES = {
+  en: "Edit this page on GitHub \u2192",
+  ms: "Sunting laman ini di GitHub \u2192",
+};
+var UPDATED_LOCALES = {
+  en: "Last updated on",
+  ms: "Kemaskini terakhir pada",
+};
+var FOOTER_LOCALES = {
+  en: {
+    govMy: "Government of Malaysia",
+    dtsa: "\xA9 2023 Public Sector Open Data",
+    openSource: "Open Source",
+    fe: "Frontend Repo: NextJS",
+    be: "Backend Repo: Django",
+    uiux: "UI + UX Design: Figma",
+    openData: "Open Data",
+    guide: "Guiding Principles",
+    tos: "Terms of Use",
+  },
+  ms: {
+    govMy: "Kerajaan Malaysia",
+    dtsa: "\xA9 2023 Data Terbuka Sektor Awam",
+    openSource: "Sumber Terbuka",
+    fe: "Repo 'Frontend': NextJS",
+    be: "Repo 'Backend': Django",
+    uiux: "Reka Bentuk UI + UX: Figma",
+    openData: "Data Terbuka",
+    guide: "Prinsip Panduan",
+    tos: "Syarat Penggunaan",
+  },
 };
 var DEFAULT_THEME = {
   banner: {
@@ -2881,10 +2926,18 @@ var DEFAULT_THEME = {
       }
       return /* @__PURE__ */ jsx31(Anchor, { className, href: editUrl, children });
     },
-    text: "Edit this page",
+    text() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const edit = (locale && EDIT_LOCALES[locale]) || EDIT_LOCALES[defaultLocale];
+      return edit;
+    },
   },
   feedback: {
-    content: "Question? Give us feedback \u2192",
+    content() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const feedback = (locale && FEEDBACK_LOCALES[locale]) || FEEDBACK_LOCALES[defaultLocale];
+      return feedback;
+    },
     labels: "feedback",
     useLink() {
       const config = useConfig();
@@ -2897,13 +2950,59 @@ var DEFAULT_THEME = {
   },
   footer: {
     component: Footer,
-    text: `MIT ${/* @__PURE__ */ new Date().getFullYear()} \xA9 Nextra.`,
+    govMy() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const govMy = (locale && FOOTER_LOCALES[locale].govMy) || FOOTER_LOCALES[defaultLocale].govMy;
+      return govMy;
+    },
+    dtsa() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const dtsa = (locale && FOOTER_LOCALES[locale].dtsa) || FOOTER_LOCALES[defaultLocale].dtsa;
+      return dtsa;
+    },
+    openSource() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const openSource =
+        (locale && FOOTER_LOCALES[locale].openSource) || FOOTER_LOCALES[defaultLocale].openSource;
+      return openSource;
+    },
+    fe() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const fe = (locale && FOOTER_LOCALES[locale].fe) || FOOTER_LOCALES[defaultLocale].fe;
+      return fe;
+    },
+    be() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const be = (locale && FOOTER_LOCALES[locale].be) || FOOTER_LOCALES[defaultLocale].be;
+      return be;
+    },
+    uiux() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const uiux = (locale && FOOTER_LOCALES[locale].uiux) || FOOTER_LOCALES[defaultLocale].uiux;
+      return uiux;
+    },
+    openData() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const openData =
+        (locale && FOOTER_LOCALES[locale].openData) || FOOTER_LOCALES[defaultLocale].openData;
+      return openData;
+    },
+    guide() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const guide = (locale && FOOTER_LOCALES[locale].guide) || FOOTER_LOCALES[defaultLocale].guide;
+      return guide;
+    },
+    tos() {
+      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
+      const tos = (locale && FOOTER_LOCALES[locale].tos) || FOOTER_LOCALES[defaultLocale].tos;
+      return tos;
+    },
   },
   gitTimestamp: function GitTimestamp({ timestamp }) {
-    const { locale = DEFAULT_LOCALE } = useRouter7();
+    const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter7();
     return /* @__PURE__ */ jsxs20(Fragment13, {
       children: [
-        "Last updated on",
+        (locale && UPDATED_LOCALES[locale]) || UPDATED_LOCALES[defaultLocale],
         " ",
         /* @__PURE__ */ jsx31("time", {
           dateTime: timestamp.toISOString(),

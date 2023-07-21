@@ -77,79 +77,85 @@ declare const themeSchema: z.ZodObject<
             filePath?: string | undefined;
           }>
         >;
-        text: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
+        text: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
       },
       "strict",
       z.ZodTypeAny,
       {
+        text: (...args: unknown[]) => string;
         component: FC<{
           children: ReactNode;
           className?: string | undefined;
           filePath?: string | undefined;
         }>;
-        text?: ReactNode | FC;
       },
       {
+        text: (...args: unknown[]) => string;
         component: FC<{
           children: ReactNode;
           className?: string | undefined;
           filePath?: string | undefined;
         }>;
-        text?: ReactNode | FC;
       }
     >;
     faviconGlyph: z.ZodOptional<z.ZodString>;
     feedback: z.ZodObject<
       {
-        content: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
+        content: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
         labels: z.ZodString;
         useLink: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
       },
       "strict",
       z.ZodTypeAny,
       {
+        content: (...args: unknown[]) => string;
         labels: string;
         useLink: (...args: unknown[]) => string;
-        content?: ReactNode | FC;
       },
       {
+        content: (...args: unknown[]) => string;
         labels: string;
         useLink: (...args: unknown[]) => string;
-        content?: ReactNode | FC;
       }
     >;
     footer: z.ZodObject<
       {
-        component: z.ZodType<
-          | ReactNode
-          | FC<{
-              menu: boolean;
-            }>,
-          z.ZodTypeDef,
-          | ReactNode
-          | FC<{
-              menu: boolean;
-            }>
-        >;
-        text: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
+        component: z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>;
+        govMy: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        dtsa: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        openSource: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        fe: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        be: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        uiux: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        openData: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        guide: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
+        tos: z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>;
       },
       "strict",
       z.ZodTypeAny,
       {
-        component?:
-          | ReactNode
-          | FC<{
-              menu: boolean;
-            }>;
-        text?: ReactNode | FC;
+        govMy: (...args: unknown[]) => string;
+        dtsa: (...args: unknown[]) => string;
+        openSource: (...args: unknown[]) => string;
+        fe: (...args: unknown[]) => string;
+        be: (...args: unknown[]) => string;
+        uiux: (...args: unknown[]) => string;
+        openData: (...args: unknown[]) => string;
+        guide: (...args: unknown[]) => string;
+        tos: (...args: unknown[]) => string;
+        component?: ReactNode | FC;
       },
       {
-        component?:
-          | ReactNode
-          | FC<{
-              menu: boolean;
-            }>;
-        text?: ReactNode | FC;
+        govMy: (...args: unknown[]) => string;
+        dtsa: (...args: unknown[]) => string;
+        openSource: (...args: unknown[]) => string;
+        fe: (...args: unknown[]) => string;
+        be: (...args: unknown[]) => string;
+        uiux: (...args: unknown[]) => string;
+        openData: (...args: unknown[]) => string;
+        guide: (...args: unknown[]) => string;
+        tos: (...args: unknown[]) => string;
+        component?: ReactNode | FC;
       }
     >;
     gitTimestamp: z.ZodType<
@@ -636,25 +642,29 @@ declare const themeSchema: z.ZodObject<
     direction: "ltr" | "rtl";
     docsRepositoryBase: string;
     editLink: {
+      text: (...args: unknown[]) => string;
       component: FC<{
         children: ReactNode;
         className?: string | undefined;
         filePath?: string | undefined;
       }>;
-      text?: ReactNode | FC;
     };
     feedback: {
+      content: (...args: unknown[]) => string;
       labels: string;
       useLink: (...args: unknown[]) => string;
-      content?: ReactNode | FC;
     };
     footer: {
-      component?:
-        | ReactNode
-        | FC<{
-            menu: boolean;
-          }>;
-      text?: ReactNode | FC;
+      govMy: (...args: unknown[]) => string;
+      dtsa: (...args: unknown[]) => string;
+      openSource: (...args: unknown[]) => string;
+      fe: (...args: unknown[]) => string;
+      be: (...args: unknown[]) => string;
+      uiux: (...args: unknown[]) => string;
+      openData: (...args: unknown[]) => string;
+      guide: (...args: unknown[]) => string;
+      tos: (...args: unknown[]) => string;
+      component?: ReactNode | FC;
     };
     i18n: {
       text: string;
@@ -813,25 +823,29 @@ declare const themeSchema: z.ZodObject<
     direction: "ltr" | "rtl";
     docsRepositoryBase: string;
     editLink: {
+      text: (...args: unknown[]) => string;
       component: FC<{
         children: ReactNode;
         className?: string | undefined;
         filePath?: string | undefined;
       }>;
-      text?: ReactNode | FC;
     };
     feedback: {
+      content: (...args: unknown[]) => string;
       labels: string;
       useLink: (...args: unknown[]) => string;
-      content?: ReactNode | FC;
     };
     footer: {
-      component?:
-        | ReactNode
-        | FC<{
-            menu: boolean;
-          }>;
-      text?: ReactNode | FC;
+      govMy: (...args: unknown[]) => string;
+      dtsa: (...args: unknown[]) => string;
+      openSource: (...args: unknown[]) => string;
+      fe: (...args: unknown[]) => string;
+      be: (...args: unknown[]) => string;
+      uiux: (...args: unknown[]) => string;
+      openData: (...args: unknown[]) => string;
+      guide: (...args: unknown[]) => string;
+      tos: (...args: unknown[]) => string;
+      component?: ReactNode | FC;
     };
     i18n: {
       text: string;
@@ -1052,7 +1066,7 @@ declare const publicThemeSchema: z.ZodObject<
               }>
             >
           >;
-          text: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
+          text: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
         },
         "strict",
         z.ZodTypeAny,
@@ -1064,7 +1078,7 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC;
+          text?: ((...args: unknown[]) => string) | undefined;
         },
         {
           component?:
@@ -1074,7 +1088,7 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC;
+          text?: ((...args: unknown[]) => string) | undefined;
         }
       >
     >;
@@ -1082,19 +1096,19 @@ declare const publicThemeSchema: z.ZodObject<
     feedback: z.ZodOptional<
       z.ZodObject<
         {
-          content: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
+          content: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
           labels: z.ZodOptional<z.ZodString>;
           useLink: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
         },
         "strict",
         z.ZodTypeAny,
         {
-          content?: ReactNode | FC;
+          content?: ((...args: unknown[]) => string) | undefined;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         },
         {
-          content?: ReactNode | FC;
+          content?: ((...args: unknown[]) => string) | undefined;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         }
@@ -1103,38 +1117,42 @@ declare const publicThemeSchema: z.ZodObject<
     footer: z.ZodOptional<
       z.ZodObject<
         {
-          component: z.ZodOptional<
-            z.ZodType<
-              | ReactNode
-              | FC<{
-                  menu: boolean;
-                }>,
-              z.ZodTypeDef,
-              | ReactNode
-              | FC<{
-                  menu: boolean;
-                }>
-            >
-          >;
-          text: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
+          component: z.ZodOptional<z.ZodType<ReactNode | FC, z.ZodTypeDef, ReactNode | FC>>;
+          govMy: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          dtsa: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          openSource: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          fe: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          be: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          uiux: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          openData: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          guide: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
+          tos: z.ZodOptional<z.ZodFunction<z.ZodTuple<[], z.ZodUnknown>, z.ZodString>>;
         },
         "strict",
         z.ZodTypeAny,
         {
-          component?:
-            | ReactNode
-            | FC<{
-                menu: boolean;
-              }>;
-          text?: ReactNode | FC;
+          component?: ReactNode | FC;
+          govMy?: ((...args: unknown[]) => string) | undefined;
+          dtsa?: ((...args: unknown[]) => string) | undefined;
+          openSource?: ((...args: unknown[]) => string) | undefined;
+          fe?: ((...args: unknown[]) => string) | undefined;
+          be?: ((...args: unknown[]) => string) | undefined;
+          uiux?: ((...args: unknown[]) => string) | undefined;
+          openData?: ((...args: unknown[]) => string) | undefined;
+          guide?: ((...args: unknown[]) => string) | undefined;
+          tos?: ((...args: unknown[]) => string) | undefined;
         },
         {
-          component?:
-            | ReactNode
-            | FC<{
-                menu: boolean;
-              }>;
-          text?: ReactNode | FC;
+          component?: ReactNode | FC;
+          govMy?: ((...args: unknown[]) => string) | undefined;
+          dtsa?: ((...args: unknown[]) => string) | undefined;
+          openSource?: ((...args: unknown[]) => string) | undefined;
+          fe?: ((...args: unknown[]) => string) | undefined;
+          be?: ((...args: unknown[]) => string) | undefined;
+          uiux?: ((...args: unknown[]) => string) | undefined;
+          openData?: ((...args: unknown[]) => string) | undefined;
+          guide?: ((...args: unknown[]) => string) | undefined;
+          tos?: ((...args: unknown[]) => string) | undefined;
         }
       >
     >;
@@ -1618,25 +1636,29 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC;
+          text?: ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     faviconGlyph?: string | undefined;
     feedback?:
       | {
-          content?: ReactNode | FC;
+          content?: ((...args: unknown[]) => string) | undefined;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     footer?:
       | {
-          component?:
-            | ReactNode
-            | FC<{
-                menu: boolean;
-              }>;
-          text?: ReactNode | FC;
+          component?: ReactNode | FC;
+          govMy?: ((...args: unknown[]) => string) | undefined;
+          dtsa?: ((...args: unknown[]) => string) | undefined;
+          openSource?: ((...args: unknown[]) => string) | undefined;
+          fe?: ((...args: unknown[]) => string) | undefined;
+          be?: ((...args: unknown[]) => string) | undefined;
+          uiux?: ((...args: unknown[]) => string) | undefined;
+          openData?: ((...args: unknown[]) => string) | undefined;
+          guide?: ((...args: unknown[]) => string) | undefined;
+          tos?: ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     gitTimestamp?:
@@ -1796,25 +1818,29 @@ declare const publicThemeSchema: z.ZodObject<
                 filePath?: string | undefined;
               }>
             | undefined;
-          text?: ReactNode | FC;
+          text?: ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     faviconGlyph?: string | undefined;
     feedback?:
       | {
-          content?: ReactNode | FC;
+          content?: ((...args: unknown[]) => string) | undefined;
           labels?: string | undefined;
           useLink?: ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     footer?:
       | {
-          component?:
-            | ReactNode
-            | FC<{
-                menu: boolean;
-              }>;
-          text?: ReactNode | FC;
+          component?: ReactNode | FC;
+          govMy?: ((...args: unknown[]) => string) | undefined;
+          dtsa?: ((...args: unknown[]) => string) | undefined;
+          openSource?: ((...args: unknown[]) => string) | undefined;
+          fe?: ((...args: unknown[]) => string) | undefined;
+          be?: ((...args: unknown[]) => string) | undefined;
+          uiux?: ((...args: unknown[]) => string) | undefined;
+          openData?: ((...args: unknown[]) => string) | undefined;
+          guide?: ((...args: unknown[]) => string) | undefined;
+          tos?: ((...args: unknown[]) => string) | undefined;
         }
       | undefined;
     gitTimestamp?:
