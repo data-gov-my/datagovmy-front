@@ -1,14 +1,15 @@
 .table {
-  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 md:w-fit md:max-w-full;
+  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit;
 }
 
 .table-responsive {
   @apply relative overflow-x-auto;
-  /* snap-x snap-mandatory sm:snap-none; */
+  /* max-sm:snap-x max-sm:snap-mandatory; */
 }
 
 .table th {
-  @apply text-dim w-auto snap-end py-3 font-normal dark:text-white md:whitespace-nowrap;
+  @apply text-dim w-auto py-3 font-normal dark:text-white;
+  /* max-sm:snap-end; */
 }
 
 .table tbody tr {
@@ -31,7 +32,7 @@
 }
 
 .sticky-col {
-  @apply border-outline dark:border-washed-dark sticky z-10 max-w-[120px] truncate whitespace-nowrap border-r-2 bg-inherit md:max-w-fit lg:border-r-0;
+  @apply border-outline dark:border-washed-dark sticky z-10 bg-inherit max-lg:border-r-2;
 }
 
 /* .table tr > td:first-child {
@@ -46,7 +47,7 @@
 }
 
 .table-stripe tr {
-  @apply even:bg-outline even:dark:bg-washed-dark;
+  @apply even:bg-background even:dark:bg-washed-dark;
 }
 
 .table-default th:first-child {

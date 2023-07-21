@@ -8,6 +8,7 @@ import { numFormat } from "@lib/helpers";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 import { OverallSeat } from "../types";
+import { TableConfig } from "@components/Chart/Table";
 /**
  * Election Explorer - Election Analysis
  * @overview Status: In-development
@@ -23,16 +24,16 @@ type Analysis = {
   state?: string;
   party: string;
   majority: {
-    abs: string;
-    perc: string;
+    abs: number;
+    perc: number;
   };
   voter_turnout: {
-    abs: string;
-    perc: string;
+    abs: number;
+    perc: number;
   };
   votes_rejected: {
-    abs: string;
-    perc: string;
+    abs: number;
+    perc: number;
   };
 };
 
@@ -45,57 +46,48 @@ interface ElectionAnalysisProps {
 const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, seats, state }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
-  const config = [
+  const config: TableConfig[] = [
     {
       accessorKey: "seat",
       id: "constituency",
       header: t("constituency"),
-      className: "text-left w-auto lg:w-[200px]",
+      className: "w-[150px] max-sm:truncate sm:w-[200px]",
     },
     {
       accessorKey: "state",
       id: "state",
       header: t("state"),
-      className: "text-left w-auto lg:w-[150px]",
+      className: "w-[150px]",
     },
     {
       accessorKey: "majority.abs",
       id: "majority.abs",
       header: t("majority"),
-      className: "w-auto",
-      sortingFn: "localeNumber",
     },
     {
       accessorKey: "majority.perc",
       id: "majority.perc",
       header: t("majority_%"),
-      className: "w-auto",
     },
     {
       accessorKey: "voter_turnout.abs",
       id: "voter_turnout.abs",
       header: t("voter_turnout"),
-      className: "w-auto",
-      sortingFn: "localeNumber",
     },
     {
       accessorKey: "voter_turnout.perc",
       id: "voter_turnout.perc",
       header: t("voter_turnout_%"),
-      className: "w-auto",
     },
     {
       accessorKey: "votes_rejected.abs",
       id: "votes_rejected.abs",
       header: t("rejected_votes"),
-      className: "w-auto",
-      sortingFn: "localeNumber",
     },
     {
       accessorKey: "votes_rejected.perc",
       id: "votes_rejected.perc",
       header: t("rejected_votes_%"),
-      className: "w-auto",
     },
   ];
 
@@ -106,16 +98,16 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
       state: matches[1],
       party: seat.party,
       majority: {
-        abs: numFormat(seat.majority.abs, "standard"),
-        perc: numFormat(seat.majority.perc, "standard", [1, 1]),
+        abs: seat.majority.abs,
+        perc: seat.majority.perc,
       },
       voter_turnout: {
-        abs: numFormat(seat.voter_turnout.abs, "standard"),
-        perc: numFormat(seat.voter_turnout.perc, "standard", [1, 1]),
+        abs: seat.voter_turnout.abs,
+        perc: seat.voter_turnout.perc,
       },
       votes_rejected: {
-        abs: numFormat(seat.votes_rejected.abs, "standard"),
-        perc: numFormat(seat.votes_rejected.perc, "standard", [1, 1]),
+        abs: seat.votes_rejected.abs,
+        perc: seat.votes_rejected.perc,
       },
     };
   });
@@ -148,6 +140,14 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
               enablePagination={10}
               config={state !== "mys" ? config.filter(col => col.id !== "state") : config}
               freeze={["constituency"]}
+              precision={{
+                default: 0,
+                columns: {
+                  "majority.perc": 1,
+                  "voter_turnout.perc": 1,
+                  "votes_rejected.perc": 1,
+                },
+              }}
             />
           </Panel>
           <Panel name={t("map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>

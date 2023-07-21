@@ -77,12 +77,12 @@ export const minMax = (values: Array<number | null>): [min: number, max: number]
 export const numFormat = (
   value: number,
   type: "compact" | "standard" | "scientific" | "engineering" | undefined = "compact",
-  precision: number | [min: number, max: number] = 1,
+  precision: number | [min: number, max: number] = 0,
   compactDisplay: "short" | "long" = "short",
   locale: string = "en",
   smart: boolean = false
 ): string => {
-  const [max, min] = Array.isArray(precision) ? precision : [precision, 0];
+  const [max, min] = Array.isArray(precision) ? precision : [precision, precision];
 
   if (smart === true) {
     let formatter: Intl.NumberFormat;

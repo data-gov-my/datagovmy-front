@@ -279,8 +279,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
               i18n.language
             );
-          else if (typeof item[key] === "string") return item[key];
-          else if (typeof item[key] === "number") return numFormat(item[key], "standard");
+          else return item[key];
         });
       case "GEOPOINT":
       case "TABLE":
@@ -388,6 +387,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 responsive={dataset.type === "TABLE"}
                 data={dataset.table}
                 freeze={config.freeze}
+                precision={config.precision}
                 search={
                   dataset.type === "TABLE"
                     ? onSearch => (
@@ -430,7 +430,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Views / download count*/}
           <p className="text-dim flex justify-end gap-2 py-6 text-sm">
             <span>
-              {`${numFormat(result?.all_time_view ?? 0, "compact", 1)} ${t("common:common.views", {
+              {`${numFormat(result?.all_time_view ?? 0, "compact")} ${t("common:common.views", {
                 count: result?.all_time_view ?? 0,
               })}`}
             </span>
@@ -443,8 +443,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   result?.download_png,
                   result?.download_svg,
                 ]) ?? 0,
-                "compact",
-                1
+                "compact"
               )} ${t("common:common.downloads", {
                 count:
                   sum([
