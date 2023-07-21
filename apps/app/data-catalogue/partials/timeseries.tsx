@@ -1,4 +1,4 @@
-import type { DownloadOptions } from "@lib/types";
+import type { DownloadOptions, Precision } from "@lib/types";
 import { FunctionComponent, useMemo } from "react";
 import { default as Slider } from "@components/Chart/Slider";
 import { default as dynamic } from "next/dynamic";
@@ -17,7 +17,7 @@ import { CATALOGUE_COLORS, SHORT_PERIOD } from "../utils";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
   config: {
-    precision: number;
+    precision: Precision;
   };
   className?: string;
   dataset: any;
@@ -136,9 +136,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             className={className}
             _ref={ref => setData("ctx", ref)}
             interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
-            precision={
-              config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]
-            }
+            precision={config.precision.default}
             enableAnimation={!play}
             enableLegend={_datasets.length > 1}
             mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}

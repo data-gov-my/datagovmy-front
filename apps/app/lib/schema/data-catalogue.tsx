@@ -1,6 +1,5 @@
-import type { TableConfig } from "@components/Chart/Table";
-import { numFormat } from "@lib/helpers";
 import At from "@components/At";
+import type { TableConfig } from "@components/Chart/Table";
 
 /**
  * Table schema for data catalogue
@@ -49,7 +48,7 @@ export const METADATA_TABLE_SCHEMA = (
       cell: value => {
         const [variable, data_type] = value.getValue().split("$$");
         return (
-          <p className="font-mono text-sm">
+          <p className="whitespace-normal font-mono text-sm">
             {variable} {data_type}
           </p>
         );
@@ -61,7 +60,7 @@ export const METADATA_TABLE_SCHEMA = (
       id: "variable_name",
       header: t("meta_variable"),
       accessorFn: (item: any) => JSON.stringify({ uid: item.uid, name: item.variable_name }),
-      className: "text-left min-w-[140px]",
+      className: "text-left min-w-[140px] whitespace-normal",
       enableSorting: false,
       cell: value => {
         const [item, index] = [JSON.parse(value.getValue()), value.row.index];
@@ -90,7 +89,7 @@ export const METADATA_TABLE_SCHEMA = (
       id: "definition",
       header: t("meta_definition"),
       accessorKey: "definition",
-      className: "text-left leading-relaxed",
+      className: "text-left leading-relaxed whitespace-normal",
       cell: value => <p>{value.getValue()}</p>,
       enableSorting: false,
     },
@@ -106,15 +105,8 @@ const generateSchema = (
     id: key,
     header: value,
     // Filter bug, cannot have number type in table: https://github.com/TanStack/table/issues/4280
-    accessorFn: accessorFn
-      ? (item: any) => accessorFn(item, key)
-      : (item: any) => {
-          if (typeof item[key] === "string") return item[key];
-          if (typeof item[key] === "number") return numFormat(item[key], "standard");
-          return "";
-        },
-    className: "text-left",
-    sortingFn: "localeNumber",
+    accessorKey: key,
+    accessorFn: accessorFn ? (item: any) => accessorFn(item, key) : (item: any) => item[key],
   };
 };
 
