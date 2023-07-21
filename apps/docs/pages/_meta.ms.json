@@ -7,7 +7,7 @@
   "main-site": {
     "title": "Tapak Utama",
     "type": "page",
-    "route": "https://staging.data.gov.my/ms-MY",
+    "href": "https://staging.data.gov.my/ms-MY",
     "newWindow": true
   },
   "ai-helper": {
@@ -17,6 +17,6 @@
   "faq": {
     "title": "FAQ",
     "type": "page",
-    "route": "/faq"
+    "href": "/faq"
   }
 }

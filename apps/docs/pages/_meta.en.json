@@ -7,7 +7,7 @@
   "main-site": {
     "title": "Main Site",
     "type": "page",
-    "route": "https://staging.data.gov.my",
+    "href": "https://staging.data.gov.my",
     "newWindow": true
   },
   "ai-helper": {
@@ -17,6 +17,6 @@
   "faq": {
     "title": "FAQ",
     "type": "page",
-    "route": "/faq"
+    "href": "/faq"
   }
 }
