@@ -14,9 +14,5 @@
     "title": "AI Helper",
     "type": "page"
   },
-  "faq": {
-    "title": "FAQ",
-    "type": "page",
-    "href": "/faq"
-  }
+  "faq": "FAQ"
 }

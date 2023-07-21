@@ -14,9 +14,5 @@
     "title": "Penolong AI",
     "type": "page"
   },
-  "faq": {
-    "title": "FAQ",
-    "type": "page",
-    "href": "/faq"
-  }
+  "faq": "FAQ"
 }
