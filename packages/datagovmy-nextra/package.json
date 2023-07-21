@@ -26,11 +26,11 @@
   "scripts": {
     "build": "tsup",
     "build:all": "yarn build && yarn build:tailwind",
-    "build:tailwind": "yarn postcss css/styles.css -o dist/style.css --verbose",
+    "build:tailwind": "yarn postcss css/styles.css -o style.css --verbose",
     "clean": "rimraf ./dist ./style.css",
     "dev": "concurrently \"yarn dev:layout\" \"yarn dev:tailwind\"",
     "dev:layout": "tsup --watch",
-    "dev:tailwind": "TAILWIND_MODE=watch yarn postcss css/styles.css -o dist/style.css --watch",
+    "dev:tailwind": "TAILWIND_MODE=watch yarn postcss css/styles.css -o style.css --watch",
     "prepublishOnly": "yarn build:all",
     "test": "vitest --run",
     "types": "tsup --dts-only",
