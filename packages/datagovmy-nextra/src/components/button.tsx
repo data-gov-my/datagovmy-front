@@ -12,7 +12,7 @@ interface ButtonProps {
   title?: string;
 }
 
-const Button: FunctionComponent<ButtonProps> = ({
+export const Button: FunctionComponent<ButtonProps> = ({
   className = "",
   variant,
   title,
@@ -41,5 +41,3 @@ const Button: FunctionComponent<ButtonProps> = ({
     </>
   );
 };
-
-export default Button;

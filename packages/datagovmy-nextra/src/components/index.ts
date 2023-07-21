@@ -2,6 +2,7 @@ export { Anchor } from "./anchor";
 export { Banner } from "./banner";
 export { Bleed } from "./bleed";
 export { Breadcrumb } from "./breadcrumb";
+export { Button } from "./button";
 export { Cards, Card } from "./cards";
 export { Collapse } from "./collapse";
 export { FileTree } from "./file-tree";
