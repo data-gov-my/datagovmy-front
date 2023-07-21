@@ -1,65 +1,58 @@
-import type { ReactElement } from "react";
-import { useConfig } from "../contexts";
 import Image from "next/image";
+import { ReactElement } from "react";
+import { useConfig } from "../contexts";
+import { renderString } from "../utils";
 
-export function Footer({ menu }: { menu?: boolean }): ReactElement {
+export function Footer(): ReactElement {
   const config = useConfig();
-  // TODO: i18n
+  const classes = {
+    link: "text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white",
+  };
+
   return (
-    <footer className="bg-washed border-outline dark:border-washed-dark z-10 flex h-full w-full justify-center border-t pb-16 pt-12 dark:bg-black">
-      <div className="md:px-4.5 dark:divide-washed-dark undefined h-full w-full max-w-screen-2xl divide-y px-3 lg:px-6">
-        <div className="flex w-full flex-col gap-6 text-sm md:flex-row md:justify-between md:gap-0">
-          <div className="flex flex-row gap-4">
-            <div className="mt-1 w-12">
-              <Image src="/assets/jata_logo.png" width={48} height={36} alt="jata negara" />
-            </div>
-            <div>
-              <div className="mb-2 uppercase">
-                <p className="text-base font-bold">Government of Malaysia</p>
-              </div>
-              <p className="text-dim">© 2023 Public Sector Open Data</p>
+    <footer className="bg-background border-outline dark:border-washed-dark z-10 flex h-full w-full border-t pb-16 pt-12 dark:bg-black">
+      <div className="md:px-4.5 h-full w-full max-w-screen-2xl px-3 lg:px-6">
+        <div className="flex gap-y-6 max-md:flex-col md:justify-between">
+          <div className="flex items-start gap-x-4">
+            <Image src="/assets/jata_logo.png" width={48} height={36} alt="jata negara" />
+            <div className="space-y-2">
+              <p className="font-bold uppercase">{renderString(config.footer.govMy)}</p>
+              <p className="text-dim text-sm">{renderString(config.footer.dtsa)}</p>
             </div>
           </div>
-          <div className="flex flex-row gap-8 md:gap-14">
-            <div className="flex w-full flex-col gap-2 md:w-auto">
-              <p className="font-bold">Open Source</p>
+          <div className="flex gap-x-3 text-sm lg:gap-x-6">
+            <div className="flex w-[200px] flex-col gap-y-2">
+              <p className="font-bold">{renderString(config.footer.openSource)}</p>
               <a
-                className="text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white"
+                className={classes.link}
                 href="https://github.com/data-gov-my/datagovmy-front"
                 target="_blank"
               >
-                Frontend Repo: NextJS
+                {renderString(config.footer.fe)}
               </a>
               <a
-                className="text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white"
+                className={classes.link}
                 href="https://github.com/data-gov-my/datagovmy-back"
                 target="_blank"
               >
-                Backend Repo: Django
+                {renderString(config.footer.be)}
               </a>
               <a
-                className="text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white"
+                className={classes.link}
                 href="#"
                 //  TODO: add figma link (and open data links below)
                 target="_blank"
               >
-                UI + UX Design: Figma
+                {renderString(config.footer.uiux)}
               </a>
             </div>
-            <div className="flex w-full flex-col gap-2 md:w-auto">
-              <p className="font-bold">Open Data</p>
-              <a
-                className="text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white"
-                href="#"
-                target="_blank"
-              >
-                Guiding Principles
+            <div className="flex w-[200px] flex-col gap-y-2">
+              <p className="font-bold">{renderString(config.footer.openData)}</p>
+              <a className={classes.link} href="#" target="_blank">
+                {renderString(config.footer.guide)}
               </a>
-              <a
-                className="text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white"
-                href="/dashboard/car-popularity#"
-              >
-                Terms of Use
+              <a className={classes.link} href="#" target="_blank">
+                {renderString(config.footer.tos)}
               </a>
             </div>
           </div>
