@@ -24,27 +24,6 @@ const LANGUAGE_OPTIONS = [
     label: "HTML",
     value: "html",
   },
-  // {
-  //   label: "Kotlin",
-  //   value: "kotlin",
-  // },
-] as const;
-
-export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
-
-const LANGUAGE_OPTIONS = [
-  {
-    label: "Python",
-    value: "python",
-  },
-  {
-    label: "JavaScript",
-    value: "javascript",
-  },
-  // {
-  //   label: "Kotlin",
-  //   value: "kotlin",
-  // },
 ] as const;
 
 export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
