@@ -1,14 +1,12 @@
-## Had Pengehadan
+## Had Kadar
 
-Untuk memastikan penggunaan yang adil dan menjaga prestasi sistem, OpenAPI memperkenalkan had pengehadan pada bilangan permintaan yang boleh dibuat dalam jangka masa tertentu. Jika had tersebut dilanggar, permintaan seterusnya akan gagal, dan anda akan menerima ralat `429 Too Many Requests` dalam respons anda.
+Untuk memastikan penggunaan yang adil dan menjaga prestasi sistem, OpenAPI memperkenalkan had kadar pada bilangan permintaan yang boleh dibuat dalam jangka masa tertentu. Jika had tersebut dilanggar, permintaan seterusnya akan gagal, dan anda akan menerima ralat `429 Too Many Requests` dalam respons anda.
 
-Jadual berikut menghuraikan had pengehadan untuk API yang berbeza dalam OpenAPI:
+Jadual berikut menghuraikan had kadar untuk API yang berbeza dalam OpenAPI:
 
-| API            | API Token Diperlukan | Had Pengehadan                    |
-| -------------- | -------------------- | --------------------------------- |
-| Data Catalogue | Tidak                | 4 permintaan sebanyak satu minit  |
-| Data Catalogue | Ya                   | 10 permintaan sebanyak satu minit |
-| GTFS-Static    | Tidak                | 4 permintaan sebanyak satu minit  |
-| GTFS-Static    | Ya                   | 10 permintaan sebanyak satu minit |
+| API            | Tanpa Token               | Dengan Token           |
+| -------------- | ------------------------- | ---------------------- |
+| Data Katalog   | 4 permintaan seminit      | 10 permintaan seminit  |
+| GTFS-Static    | 4 permintaan seminit      | 10 permintaan seminit  |
 
-Sila ambil perhatian bahawa had pengehadan berbeza bergantung kepada sama ada anda menggunakan token API atau tidak. Jika anda merancang untuk melampaui had pengehadan tanpa menggunakan token API, kami mengesyorkan agar anda [meminta token API](/overview/authentication).
+Sila ambil perhatian bahawa had kadar berbeza bergantung kepada sama ada anda menggunakan token API atau tidak. Jika anda merancang untuk melampaui had kadar tanpa menggunakan token API, kami mengesyorkan agar anda [meminta token API](/overview/authentication).
