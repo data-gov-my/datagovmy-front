@@ -11,7 +11,7 @@ import type {
   DownloadOptions,
   FilterDefault,
 } from "@lib/types";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import At from "@components/At";
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
@@ -28,6 +28,7 @@ import { SampleCode } from "./partials/code";
 import { useAnalytics } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
 import { WindowProvider } from "@hooks/useWindow";
+import CatalogueEmbed, { EmbedInterface } from "./partials/embed";
 
 /**
  * Catalogue Show
@@ -121,8 +122,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
+  const embedRef = useRef<EmbedInterface>(null);
   const { filter, setFilter } = useFilter(config.context, { id: params.id });
   const { result, track } = useAnalytics(dataset);
+  const availableDownloads = useMemo<DownloadOption[]>(
+    () => Object.values(downloads).flatMap(option => option),
+    [downloads]
+  );
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -308,7 +314,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           menu={
             <>
               <Dropdown
-                className="flex-row items-center"
+                className="w-fit"
                 sublabel={<EyeIcon className="h-4 w-4" />}
                 selected={show}
                 options={options}
@@ -319,21 +325,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
-                options={
-                  downloads
-                    ? downloads.chart.concat(downloads.data).map(item => ({
-                        label: item.title as string,
-                        value: item.id,
-                      }))
-                    : []
-                }
-                onChange={async e => {
-                  const action = downloads.chart
-                    .concat(downloads.data)
-                    .find(({ id }) => e.value === id);
-
+                options={availableDownloads
+                  .map(item => ({
+                    label: item.title as string,
+                    value: item.id,
+                  }))
+                  .concat({ label: t("embed"), value: "embed" })}
+                onChange={e => {
+                  // embed
+                  if (e.value === "embed") {
+                    embedRef.current?.open();
+                    return;
+                  }
+                  // downloads
+                  const action = availableDownloads.find(({ id }) => e.value === id);
                   if (!action) return;
-
                   return action.href();
                 }}
               />
@@ -413,7 +419,16 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             />
           )}
 
-          <p className="text-dim my-6 flex justify-end gap-2 text-sm">
+          <CatalogueEmbed
+            uid={dataset.meta.unique_id}
+            ref={embedRef}
+            options={config.options}
+            defaultOption={filter}
+            translations={translations}
+          />
+
+          {/* Views / download count*/}
+          <p className="text-dim flex justify-end gap-2 py-6 text-sm">
             <span>
               {`${numFormat(result?.all_time_view ?? 0, "compact", 1)} ${t("common:common.views", {
                 count: result?.all_time_view ?? 0,
@@ -458,7 +473,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             }
           />
 
-          {/* Are there any pitfalls I should bear in mind when using this data? */}
+          {/* What caveats I should bear in mind when using this data? */}
           <Section
             title={t("header_2")}
             className=""
@@ -472,7 +487,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             }
           />
 
-          {/* Publication using this Data */}
+          {/* Publication(s) using this data */}
           {Boolean(explanation.publication) && (
             <Section
               title={t("header_3")}
@@ -614,7 +629,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           className="dark:border-b-outlineHover-dark mx-auto border-b py-12 "
         >
           <div className="space-y-5">
-            {downloads!.chart?.length > 0 && (
+            {downloads?.chart.length > 0 && (
               <>
                 <h5>{t("chart")}</h5>
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
@@ -630,7 +645,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 </div>
               </>
             )}
-            {downloads!.data?.length > 0 && (
+            {downloads?.data.length > 0 && (
               <>
                 <h5>Data</h5>
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">

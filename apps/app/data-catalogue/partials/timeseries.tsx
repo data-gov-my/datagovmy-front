@@ -149,6 +149,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             beginZero={dataset.type === "STACKED_AREA"}
           />
           <Slider
+            className="pt-4"
             type="range"
             data={dataset.chart.x}
             value={data.minmax}

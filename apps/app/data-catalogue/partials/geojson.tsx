@@ -13,6 +13,7 @@ const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochor
 });
 
 interface CatalogueGeojsonProps {
+  className?: string;
   config: any;
   dataset: any;
   urls: {
@@ -22,6 +23,7 @@ interface CatalogueGeojsonProps {
 }
 
 const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
+  className = "h-[450px] w-full",
   dataset,
   config,
   urls,
@@ -73,7 +75,7 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
     <GeoChoropleth
       _ref={ctx}
       id={dataset.meta.unique_id}
-      className="h-[450px] w-full"
+      className={className}
       type={config.geojson}
       color={config.color}
       enableFill={false}

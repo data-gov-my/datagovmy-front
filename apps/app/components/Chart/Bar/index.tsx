@@ -74,7 +74,7 @@ const Bar: FunctionComponent<BarProps> = ({
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
   const isVertical = useMemo(() => layout === "vertical", [layout]);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
   const { theme } = useTheme();
 
@@ -88,7 +88,7 @@ const Bar: FunctionComponent<BarProps> = ({
 
   const displayLabel = (value: string) => {
     const label = formatX ? formatX(value) : value;
-    if (label.length > 25 && windowWidth < BREAKPOINTS.SM) return label.slice(0, 25).concat("..");
+    if (label.length > 25 && size.width < BREAKPOINTS.SM) return label.slice(0, 25).concat("..");
     return label;
   };
 

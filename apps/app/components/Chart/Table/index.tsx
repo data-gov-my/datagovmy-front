@@ -154,8 +154,8 @@ const Table: FunctionComponent<TableProps> = ({
   const table = useReactTable(ReactTableProps);
 
   useEffect(() => {
-    enablePagination && table.setPageSize(enablePagination);
-  }, []);
+    if (enablePagination) table.setPageSize(enablePagination);
+  }, [enablePagination]);
 
   const onSearch = useCallback(
     debounce((query: string) => {
@@ -319,9 +319,7 @@ const Table: FunctionComponent<TableProps> = ({
         </table>
       </div>
       {enablePagination && (
-        <div
-          className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium ${className}`}
-        >
+        <div className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium`}>
           <Button
             className="btn-disabled btn-default"
             onClick={() => table.previousPage()}
