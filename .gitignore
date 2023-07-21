@@ -57,4 +57,4 @@ analyze
 
 # app
 apps/app/public/locales
-dist
+dist/
