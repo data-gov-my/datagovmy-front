@@ -13,6 +13,7 @@ const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochor
 });
 
 interface CatalogueChoroplethProps {
+  className?: string;
   config: any;
   dataset: any;
   urls: {
@@ -22,6 +23,7 @@ interface CatalogueChoroplethProps {
 }
 
 const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
+  className = "h-[350px] w-full lg:h-[450px]",
   dataset,
   config,
   urls,
@@ -83,7 +85,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
     <GeoChoropleth
       _ref={ctx}
       id={dataset.meta.unique_id}
-      className="h-[350px] w-full lg:h-[450px]"
+      className={className}
       data={{
         labels: dataset.chart.x,
         values: dataset.chart.y,

@@ -5,7 +5,7 @@ import { useWatch } from "@hooks/useWatch";
 import { CATALOGUE_COLORS } from "../utils";
 import { BREAKPOINTS } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download, exportAs } from "@lib/helpers";
+import { clx, download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
 import { WindowContext, WindowProvider } from "@hooks/useWindow";
 import type { ChartDataset } from "chart.js";
@@ -15,6 +15,7 @@ import { useAnalytics } from "@hooks/useAnalytics";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 interface CatalogueBarProps {
+  className?: string;
   config: any;
   dataset: any;
   urls: {
@@ -25,6 +26,7 @@ interface CatalogueBarProps {
 }
 
 const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
+  className,
   config,
   dataset,
   urls,
@@ -33,13 +35,13 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const { track } = useAnalytics(dataset);
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
-    if (dataset.type === "HBAR" || windowWidth < BREAKPOINTS.MD) return "horizontal";
+    if (dataset.type === "HBAR" || size.width < BREAKPOINTS.MD) return "horizontal";
 
     return "vertical";
-  }, [dataset.type, windowWidth]);
+  }, [dataset.type, size.width]);
 
   const availableDownloads = useMemo<DownloadOptions>(() => {
     return {
@@ -121,11 +123,13 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   return (
     <Bar
       _ref={ref => setCtx(ref)}
-      className={
-        bar_layout === "vertical"
+      className={clx(
+        className
+          ? className
+          : bar_layout === "vertical"
           ? "h-[350px] w-full lg:h-[450px]"
           : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
-      }
+      )}
       type="category"
       enableStack={dataset.type === "STACKED_BAR"}
       layout={bar_layout}

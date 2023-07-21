@@ -13,6 +13,7 @@ import { CATALOGUE_COLORS } from "../utils";
 
 const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
 interface CatalogueLineProps {
+  className?: string;
   config: {
     line_variables?: Record<string, any>;
     precision: Precision;
@@ -26,6 +27,7 @@ interface CatalogueLineProps {
 }
 
 const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
+  className = "h-[350px] w-full lg:h-[450px]",
   config,
   dataset,
   urls,
@@ -122,7 +124,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
 
   return (
     <Line
-      className="h-[350px] w-full lg:h-[450px]"
+      className={className}
       _ref={ref => setCtx(ref)}
       precision={config.precision.default}
       data={{

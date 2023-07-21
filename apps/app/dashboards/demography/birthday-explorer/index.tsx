@@ -34,7 +34,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   timeseries,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common"]);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
 
   const filterPeriods: Array<OptionType> = [
     { label: t("section_2.by_date"), value: "day" },
@@ -400,9 +400,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     borderColor: AKSARA_COLOR.PRIMARY,
                     borderWidth:
-                      windowWidth <= BREAKPOINTS.MD
+                      size.width <= BREAKPOINTS.MD
                         ? 0.75
-                        : windowWidth <= BREAKPOINTS.LG
+                        : size.width <= BREAKPOINTS.LG
                         ? 1.0
                         : 1.5,
                     fill: true,
