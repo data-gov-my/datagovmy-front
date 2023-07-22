@@ -12,6 +12,7 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "axios": "^0.27.2",
     "datagovmy-nextra": "*",
     "next": "^13.4.3",
     "nextra": "^2.6.2",

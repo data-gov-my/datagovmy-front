@@ -1,0 +1,41 @@
+## Response Code
+
+After sending an API request, you will receive a response with the following codes and headers, which indicate the status of your request:
+
+| Code |      Status       | Description                                                                                                                               |
+| :--: | :---------------: | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| 200  |        OK         | Successful Request.                                                                                                                       |
+| 400  |    Bad Request    | Invalid request. Check error message for more information.                                                                                |
+| 404  |     Not Found     | The resource requested doesn’t exist.                                                                                                     |
+| 429  | Too Many Requests | Your client is currently being rate limited. Request an API token at [Authentication](/overview/authentication) to increase usage limits. |
+| 500  |   Server Error    | Something went wrong with OpenAPI! Please [contact us](TODO:add_contact) if you encounter this error.                                     |
+
+## Response Format
+
+### Valid Response
+
+When making a successful request to the GTFS Static API, you will receive a response with a status code of `200`. The response format depends on the specific API request query and can include the following formats:
+
+1. **GTFS ZIP Format**: If you request the complete GTFS static data without specifying a particular GTFS type, the API will return the full GTFS dataset in ZIP format. This ZIP file contains a collection of text files representing different aspects of transit information.
+
+2. **Individual .txt Files**: When querying a specific GTFS type, such as `/gtfs/<gtfs_type>?download=true`, the API will return the corresponding text file in the GTFS dataset. Each GTFS type has its own file, containing relevant information for that specific aspect of public transportation data.
+
+3. **JSON Format**: By default, or when specifying certain query parameters, the API can also return the GTFS data in JSON format. This provides a structured representation of the data, making it easier to parse and work with programmatically.
+
+Please refer to [Request Query](/static-api/transport/gtfs-static/request-query) section for more details on how to construct the API request for the desired return format.
+
+### Error Response
+
+In case of an error, the GTFS Static API will return an error response in JSON format. The error response will contain the following elements:
+
+```json
+{
+    status: <int>,
+    errors: [...],
+}
+```
+
+- `status` - This field indicates the response code corresponding to the error.
+- `errors` - This field provides an array of error messages or descriptions.
+
+The error response is designed to help you identify and troubleshoot the issue you encountered with your API requests.

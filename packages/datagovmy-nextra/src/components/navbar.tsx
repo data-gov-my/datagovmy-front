@@ -158,11 +158,11 @@ export function Navbar({ flatDirectories, items }: NavBarProps): ReactElement {
             );
           })}
 
-          {config.project.link ? (
+          {/* {config.project.link ? (
             <Anchor className="p-2 text-current" href={config.project.link} newWindow>
               {renderComponent(config.project.icon)}
             </Anchor>
-          ) : null}
+          ) : null} */}
 
           {config.chat.link ? (
             <Anchor className="p-2 text-current" href={config.chat.link} newWindow>

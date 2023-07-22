@@ -70,6 +70,7 @@ export function Collapse({
         className={cn(
           "transition-opacity duration-500 ease-in-out motion-reduce:transition-none",
           isOpen ? "opacity-100" : "opacity-0",
+          "px-3 py-2",
           className
         )}
       >
