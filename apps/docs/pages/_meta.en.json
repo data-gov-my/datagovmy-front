@@ -1,14 +1,22 @@
 {
   "index": "Introduction",
-  "overview": "Overview",
-  "static-api": "Static APIs",
-  "realtime-api": "Real-time APIs",
-  "resources": {
-    "title": "Resources",
+  "changelog": "Changelog",
+  "quickstart": "Quickstart Guide",
+  "rate-limit": "Rate Limit",
+  "authentication": "Authentication",
+  "data-catalogue": "Data Catalogue API",
+  "gtfs-static": "Transport API (GTFS)",
+  "gtfs-realtime": "Transport API (GTFS-R)",
+  "weather": "Weather API",
+  "main-site": {
+    "title": "Main Site",
+    "type": "page",
+    "href": "https://staging.data.gov.my",
+    "newWindow": true
+  },
+  "ai-helper": {
+    "title": "AI Helper",
     "type": "page"
   },
-  "contact": {
-    "title": "Contact us",
-    "type": "page"
-  }
+  "faq": "FAQ"
 }
