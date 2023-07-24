@@ -294,6 +294,36 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     }
   };
 
+  const sampleDescription = (
+    <>
+      {t("sample_query.desc1")}
+      <At
+        external={true}
+        className="link-dim text-base underline"
+        href={
+          i18n.language == "en-GB"
+            ? "https://developer.data.gov.my/data-catalogue/request-query"
+            : "https://developer.data.gov.my/ms/data-catalogue/request-query"
+        }
+      >
+        {t("sample_query.link1")}
+      </At>
+      <span>{`. ${t("sample_query.desc2")}`}</span>
+      <At
+        external={true}
+        className="link-dim text-base underline"
+        href={
+          i18n.language == "en-GB"
+            ? `https://developer.data.gov.my/data-catalogue/example-requests?id=${catalogueId}`
+            : `https://developer.data.gov.my/ms/data-catalogue/example-requests?id=${catalogueId}`
+        }
+      >
+        {t("sample_query.link2")}
+      </At>
+      .
+    </>
+  );
+
   return (
     <div>
       <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
@@ -671,7 +701,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         {/* API Request Code */}
         <Section
           title={t("sample_query.section_title")}
-          description={t("sample_query.description")}
+          description={sampleDescription}
           className="mx-auto w-full py-12"
         >
           <SampleCode catalogueId={catalogueId} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
