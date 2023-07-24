@@ -10,7 +10,7 @@ export function Footer(): ReactElement {
   };
 
   return (
-    <footer className="bg-background border-outline dark:border-washed-dark z-10 flex h-full w-full justify-center border-t pb-16 pt-12 dark:bg-black">
+    <footer className="bg-background border-outline dark:border-washed-dark dark:bg-dark z-10 flex h-full w-full justify-center border-t pb-16 pt-12">
       <div className="md:px-4.5 h-full w-full max-w-screen-2xl px-3 lg:px-6">
         <div className="flex gap-y-6 max-md:flex-col md:justify-between">
           <div className="flex items-start gap-x-4">
