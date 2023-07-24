@@ -1,4 +1,4 @@
-import CodeBlock from "@components/CodeBlock";
+import CodeBlock, { Language } from "@components/CodeBlock";
 import type { DCChartKeys } from "@lib/types";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, useMemo } from "react";
@@ -59,56 +59,25 @@ print(df)`;
   return <CodeBlock event={{ url }}>{{ python: template }}</CodeBlock>;
 };
 
-const generalQuery: APIQuery[] = [
-  { param: "id", value: "<catalogue_id>", comment: "ID of data catalogue" },
-  {
-    param: "filter",
-    value: "<value>@<column>",
-    comment: "filter(s) of the response",
-  },
-  { param: "limit", value: "<int>", comment: "response limit (length of data)" },
-  { param: "sort", value: "<column>@<order>", comment: "order of response (asc/desc)" },
-  {
-    param: "exclude",
-    value: "<column1>,<column2>",
-    comment: "columns to exclude (comma-separated)",
-  },
-  { param: "include", value: "<column1>,<column2>", comment: "alternative to exclude" },
-  { param: "start", value: "<date>", comment: "data start date range (YYY-MM-DD)" },
-  { param: "end", value: "<date>", comment: "data end date range (YYY-MM-DD)" },
-];
-
 interface SampelCodeProps {
   url: string;
-  queries?: APIQuery[];
+  catalogueId?: string;
 }
-
-export type APIQuery = {
-  param: string;
-  value: string;
-  comment?: string;
-};
-
-const SampleCode: FunctionComponent<SampelCodeProps> = ({ url, queries = [] }) => {
+const SampleCode: FunctionComponent<SampelCodeProps> = ({
+  catalogueId = "<catalogue_id>",
+  url,
+}) => {
   const { t } = useTranslation(["catalogue", "common"]);
 
-  const generateQueryString = (queries: APIQuery[], commentSymbol: string) => {
-    return `{\n${queries
-      .map(q => `\t"${q.param}": "${q.value}" ${q.comment ? `${commentSymbol} ${q.comment}` : ""}`)
-      .join("\n")}\n}`;
-  };
+  const sampleUrl = `https://api.data.gov.my/data-catalogue?id=${catalogueId}&limit=3`;
 
-  if (queries.length === 0) {
-    queries = generalQuery;
-  }
-
-  const children = {
+  const children: Partial<Record<Language, string>> = {
     javascript: `
 import fetch from "node-fetch";
 
-const ENDPOINT = "https://api.data.gov.my/data-catalogue";
-const params = new URLSearchParams(${generateQueryString(queries, "//")});
-const response = fetch()
+const url = "${sampleUrl}";
+
+const response = fetch(url)
     .then((response) => response.json())
     .then((json) => console.log(json))
     .catch((err) => console.log(err));
@@ -116,12 +85,68 @@ const response = fetch()
     python: `import requests
 import pprint
 
-ENDPOINT = "https://api.data.gov.my/data-catalogue" 
+url = "${sampleUrl}" 
 
-query_params = ${generateQueryString(queries, "#")}
-
-response_json = requests.get(url=ENDPOINT, params=query_params).json()
+response_json = requests.get(url=url).json()
 pprint.pprint(response_json)`,
+    dart: `var request = http.Request('GET', Uri.parse("${sampleUrl}"));
+
+http.StreamedResponse response = await request.send();
+
+if (response.statusCode == 200) {
+  print(await response.stream.bytesToString());
+}
+else {
+  print(response.reasonPhrase);
+}
+    `,
+    swift: `import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
+var request = URLRequest(url: URL(string: "${sampleUrl}")!,
+  timeoutInterval: Double.infinity)
+request.httpMethod = "GET"
+
+let task = URLSession.shared.dataTask(with: request) { data, response, error in 
+  guard let data = data else {
+    print(String(describing: error))
+    exit(EXIT_SUCCESS)
+  }
+  print(String(data: data, encoding: .utf8)!)
+  exit(EXIT_SUCCESS)
+}
+
+task.resume()
+dispatchMain()
+    `,
+    kotlin: `import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import java.util.concurrent.TimeUnit
+
+val client = OkHttpClient()
+val request = Request.Builder()
+  .url("${sampleUrl}")
+  .build()
+val response = client.newCall(request).execute()
+
+println(response.body!!.string())
+    `,
+    java: `OkHttpClient client = new OkHttpClient().newBuilder()
+  .build();
+MediaType mediaType = MediaType.parse("text/plain");
+RequestBody body = RequestBody.create(mediaType, "");
+Request request = new Request.Builder()
+  .url("https://api.data.gov.my/data-catalogue?id=<id>&limit=3")
+  .method("GET", body)
+  .build();
+Response response = client.newCall(request).execute();`,
   };
 
   return <CodeBlock event={{ url }}>{children}</CodeBlock>;

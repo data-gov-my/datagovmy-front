@@ -23,7 +23,7 @@ import Tooltip from "@components/Tooltip";
 import { useFilter } from "@hooks/useFilter";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import CatalogueCode, { APIQuery } from "./partials/code";
+import CatalogueCode from "./partials/code";
 import { SampleCode } from "./partials/code";
 import { useAnalytics } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
@@ -105,7 +105,7 @@ interface CatalogueShowProps {
   translations: {
     [key: string]: string;
   };
-  queries?: APIQuery[];
+  catalogueId?: string;
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -117,7 +117,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   metadata,
   urls,
   translations,
-  queries,
+  catalogueId,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
@@ -674,7 +674,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           description={t("sample_query.description")}
           className="mx-auto w-full py-12"
         >
-          <SampleCode queries={queries} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
+          <SampleCode catalogueId={catalogueId} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
         </Section>
       </Container>
     </div>
