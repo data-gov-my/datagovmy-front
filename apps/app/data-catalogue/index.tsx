@@ -251,7 +251,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             onChange={e => setFilter("search", e)}
           />
         </div>
-        {filter.search.length > 0 && (
+        {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
           <Button
             className="btn hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
             disabled={!actives.length}
@@ -345,7 +345,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
 
         {/* Desktop */}
         <div className="hidden gap-2 pr-6 xl:flex">
-          {filter.search.length > 0 && (
+          {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
             <Button
               className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
               disabled={!actives.length}
