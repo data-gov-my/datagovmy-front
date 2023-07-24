@@ -137,7 +137,7 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
                           {
                             type: "line",
                             data: coordinate[item],
-                            label: t(data.periodly),
+                            label: t(`common:time.${data.periodly}`),
                             borderColor: AKSARA_COLOR.GREEN,
                             borderWidth: 1.5,
                             backgroundColor: AKSARA_COLOR.GREEN_H,
