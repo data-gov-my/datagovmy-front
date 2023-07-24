@@ -1,23 +1,22 @@
-import { FunctionComponent, useContext, useMemo } from "react";
-import { Container, Hero, Section, StateDropdown, Button, Dropdown } from "@components/index";
 import dynamic from "next/dynamic";
-import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
+import AgencyBadge from "@components/Badge/agency";
+import Card from "@components/Card";
+import Daterange from "@components/Dropdown/Daterange";
+import Spinner from "@components/Spinner";
+import { JPNIcon } from "@components/Icon/agency";
+import { toast } from "@components/Toast";
+import { FunctionComponent, useContext, useEffect, useMemo } from "react";
+import { Button, Container, Dropdown, Hero, Section, StateDropdown } from "@components/index";
+import { OptionType } from "@components/types";
+import { CakeIcon, MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { WindowContext } from "@hooks/useWindow";
-import AgencyBadge from "@components/Badge/agency";
-import { CakeIcon, MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
-import { JPNIcon } from "@components/Icon/agency";
-import Card from "@components/Card";
-import { DateTime } from "luxon";
 import { get } from "@lib/api";
-import { OptionType } from "@components/types";
-import Daterange from "@components/Dropdown/Daterange";
-import { Trans } from "next-i18next";
-import { useWatch } from "@hooks/useWatch";
-import Spinner from "@components/Spinner";
+import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
 import { clx, toDate } from "@lib/helpers";
-import { toast } from "@components/Toast";
+import { DateTime } from "luxon";
+import { Trans } from "next-i18next";
 
 /**
  * Birthday Explorer Dashboard
@@ -55,6 +54,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   };
 
   const { data, setData } = useData({
+    x: [],
+    y: [],
     state_total: 0,
     nationwide_total: 0,
     popularity: {
@@ -106,7 +107,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       });
   };
 
-  useWatch(() => {
+  useEffect(() => {
     fetchData(yieldParams(data.birthday, data.state));
   }, [data.groupBy, data.start, data.end]);
 
