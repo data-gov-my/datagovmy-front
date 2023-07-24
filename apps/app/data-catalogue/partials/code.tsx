@@ -72,15 +72,19 @@ const SampleCode: FunctionComponent<SampelCodeProps> = ({
   const sampleUrl = `https://api.data.gov.my/data-catalogue?id=${catalogueId}&limit=3`;
 
   const children: Partial<Record<Language, string>> = {
-    javascript: `
-import fetch from "node-fetch";
+    javascript: `var requestOptions = {
+  method: "GET",
+  redirect: "follow",
+};
 
-const url = "${sampleUrl}";
+fetch(
+  "${sampleUrl}",
+  requestOptions
+)
+  .then((response) => response.json())
+  .then((result) => console.log(result))
+  .catch((error) => console.log("error", error));
 
-const response = fetch(url)
-    .then((response) => response.json())
-    .then((json) => console.log(json))
-    .catch((err) => console.log(err));
     `,
     python: `import requests
 import pprint
@@ -89,15 +93,22 @@ url = "${sampleUrl}"
 
 response_json = requests.get(url=url).json()
 pprint.pprint(response_json)`,
-    dart: `var request = http.Request('GET', Uri.parse("${sampleUrl}"));
+    dart: `import 'package:http/http.dart' as http;
 
-http.StreamedResponse response = await request.send();
-
-if (response.statusCode == 200) {
-  print(await response.stream.bytesToString());
-}
-else {
-  print(response.reasonPhrase);
+void main() async {
+  var request = http.Request('GET', Uri.parse('${sampleUrl}'));
+  
+  request.followRedirects = false;
+  
+  http.StreamedResponse response = await request.send();
+  
+  if (response.statusCode == 200) {
+    print(await response.stream.bytesToString());
+  }
+  else {
+    print(response.reasonPhrase);
+  }
+  
 }
     `,
     swift: `import Foundation
@@ -105,8 +116,7 @@ else {
 import FoundationNetworking
 #endif
 
-var request = URLRequest(url: URL(string: "${sampleUrl}")!,
-  timeoutInterval: Double.infinity)
+var request = URLRequest(url: URL(string: "${sampleUrl}")!,timeoutInterval: Double.infinity)
 request.httpMethod = "GET"
 
 let task = URLSession.shared.dataTask(with: request) { data, response, error in 
@@ -120,6 +130,7 @@ let task = URLSession.shared.dataTask(with: request) { data, response, error in
 
 task.resume()
 dispatchMain()
+    
     `,
     kotlin: `import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -138,15 +149,24 @@ val response = client.newCall(request).execute()
 
 println(response.body!!.string())
     `,
-    java: `OkHttpClient client = new OkHttpClient().newBuilder()
-  .build();
-MediaType mediaType = MediaType.parse("text/plain");
-RequestBody body = RequestBody.create(mediaType, "");
-Request request = new Request.Builder()
-  .url("https://api.data.gov.my/data-catalogue?id=<id>&limit=3")
-  .method("GET", body)
-  .build();
-Response response = client.newCall(request).execute();`,
+    java: `import java.io.*;
+import okhttp3.*;
+public class Main {
+  public static void main(String []args) throws IOException{
+    OkHttpClient client = new OkHttpClient().newBuilder()
+      .followRedirects(false)
+      .build();
+    MediaType mediaType = MediaType.parse("text/plain");
+    RequestBody body = RequestBody.create(mediaType, "");
+    Request request = new Request.Builder()
+      .url("${sampleUrl}")
+      .method("GET", body)
+      .build();
+    Response response = client.newCall(request).execute();
+    System.out.println(response.body().string());
+  }
+}
+    `,
   };
 
   return <CodeBlock event={{ url }}>{children}</CodeBlock>;
