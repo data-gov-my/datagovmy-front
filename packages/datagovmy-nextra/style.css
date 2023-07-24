@@ -1323,11 +1323,6 @@ input[type="search"]::-webkit-search-results-decoration {
   --tw-border-opacity: 0.04;
 }
 
-.bg-background {
-  --tw-bg-opacity: 1;
-  background-color: rgba(248, 250, 252, var(--tw-bg-opacity));
-}
-
 .bg-black\/80 {
   background-color: rgba(24, 24, 27, 0.8);
 }
@@ -1401,6 +1396,11 @@ input[type="search"]::-webkit-search-results-decoration {
 .bg-yellow-50 {
   --tw-bg-opacity: 1;
   background-color: rgba(254, 252, 232, var(--tw-bg-opacity));
+}
+
+.bg-background {
+  --tw-bg-opacity: 1;
+  background-color: rgba(248, 250, 252, var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-t {
@@ -1510,6 +1510,11 @@ input[type="search"]::-webkit-search-results-decoration {
   padding-bottom: 1rem;
 }
 
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
 .pb-1 {
   padding-bottom: 0.25rem;
 }
@@ -1572,6 +1577,10 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pb-\[env\(safe-area-inset-bottom\)\] {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .text-left {
@@ -3491,11 +3500,6 @@ input[type="search"]::-webkit-search-results-decoration {
   border-color: rgba(254, 240, 138, 0.3);
 }
 
-:is(html[class~="dark"] .dark\:bg-black) {
-  --tw-bg-opacity: 1;
-  background-color: rgba(24, 24, 27, var(--tw-bg-opacity));
-}
-
 :is(html[class~="dark"] .dark\:bg-black\/60) {
   background-color: rgba(24, 24, 27, 0.6);
 }
@@ -3557,6 +3561,11 @@ input[type="search"]::-webkit-search-results-decoration {
 
 :is(html[class~="dark"] .dark\:bg-yellow-700\/30) {
   background-color: rgba(161, 98, 7, 0.3);
+}
+
+:is(html[class~="dark"] .dark\:bg-black) {
+  --tw-bg-opacity: 1;
+  background-color: rgba(24, 24, 27, var(--tw-bg-opacity));
 }
 
 :is(html[class~="dark"] .dark\:bg-\[linear-gradient\(1deg\,\#383838\,\#212121\)\]) {
@@ -3862,6 +3871,10 @@ input[type="search"]::-webkit-search-results-decoration {
   .print\:hidden {
     display: none;
   }
+
+  .print\:bg-transparent {
+    background-color: transparent;
+  }
 }
 
 @media not all and (min-width: 1280px) {
@@ -3951,6 +3964,10 @@ input[type="search"]::-webkit-search-results-decoration {
 
   .md\:shrink-0 {
     flex-shrink: 0;
+  }
+
+  .md\:justify-start {
+    justify-content: flex-start;
   }
 
   .md\:justify-between {
