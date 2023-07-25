@@ -19,19 +19,22 @@ const BirthdayExplorer = ({ meta, timeseries }: InferGetStaticPropsType<typeof g
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-birthday-explorer", async () => {
-  const { data } = await get("/dashboard", { dashboard: "birthday_popularity", state: "mys" });
-  return {
-    props: {
-      meta: {
-        id: "dashboard-birthday-explorer",
-        type: "dashboard",
-        category: "demography",
-        agency: "JPN",
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-birthday-explorer", "catalogue"],
+  async () => {
+    const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
+    return {
+      props: {
+        meta: {
+          id: "dashboard-birthday-explorer",
+          type: "dashboard",
+          category: "demography",
+          agency: "JPN",
+        },
+        timeseries: data,
       },
-      timeseries: data.timeseries,
-    },
-  };
-});
+    };
+  }
+);
 
 export default BirthdayExplorer;
