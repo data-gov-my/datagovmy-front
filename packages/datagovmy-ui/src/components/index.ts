@@ -15,6 +15,7 @@ export { default as Input } from "./Input";
 export { default as Label } from "./Label";
 export { default as Layout } from "./Layout";
 export { default as LeftRightCard } from "./LeftRightCard";
+export { default as RankList } from "./LeftRightCard/partials/RankList";
 export { default as MenuDropdown } from "./MenuDropdown";
 export { default as Metadata } from "./Metadata";
 export { default as Modal } from "./Modal";

@@ -1,16 +1,19 @@
-import AgencyBadge from "@components/Badge/agency";
-import BarMeter from "@components/Chart/BarMeter";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { PDNIcon } from "@components/Icon/agency";
-import { Container, Panel, Section, StateDropdown, Tabs, Hero } from "@components/index";
-import LeftRightCard from "@components/LeftRightCard";
-import RankList from "@components/LeftRightCard/partials/RankList";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
+import Hero from "@components/Hero";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import {
+  Container,
+  Panel,
+  Section,
+  StateDropdown,
+  Tabs,
+  Slider,
+  LeftRightCard,
+  RankList,
+} from "datagovmy-ui/components";
+
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { numFormat, toDate } from "@lib/helpers";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import { TimeseriesOption } from "@lib/types";
 import { useTheme } from "next-themes";
@@ -19,6 +22,7 @@ import { FunctionComponent } from "react";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
 const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 interface BloodDonationDashboardProps {
@@ -41,7 +45,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   choropleth,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-blood-donation", "common"]);
-
+  const { theme = "light" } = useTheme();
   const { data, setData } = useData({
     minmax: [timeseries.data.daily.x.length - 182, timeseries.data.daily.x.length - 1],
     period: "auto",
@@ -70,7 +74,6 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   };
 
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
-  const { theme } = useTheme();
 
   const KEY_VARIABLES_SCHEMA = [
     {
@@ -90,8 +93,8 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   return (
     <>
       <Hero
-        background="red"
-        category={[t("common:categories.healthcare"), "text-danger"]}
+        background="blood-banner"
+        // category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description"), "text-dim"]}
         action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
@@ -99,7 +102,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
       />
       <Container className="min-h-screen">
         {/* What are the latest blood donation trends in Malaysia? */}
-        {/* <Section
+        <Section
           title={t("timeseries_header", {
             state: CountryAndStates[params.state],
           })}
@@ -163,9 +166,9 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               </>
             )}
           </SliderProvider>
-        </Section> */}
+        </Section>
 
-        {/* <Section>
+        <Section>
           <LeftRightCard
             left={
               <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
@@ -209,10 +212,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               />
             }
           />
-        </Section> */}
+        </Section>
 
         {/* A breakdown of donations by key variables */}
-        {/* <Section
+        <Section
           title={t("barmeter_header", {
             state: CountryAndStates[params.state],
           })}
@@ -279,10 +282,10 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               );
             })}
           </Tabs>
-        </Section> */}
+        </Section>
 
         {/* How strong is new donor recruitment in Malaysia? */}
-        {/* <Section
+        <Section
           title={t("bar1_header", {
             state: CountryAndStates[params.state],
           })}
@@ -375,7 +378,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               </Tabs>
             </div>
           </div>
-        </Section> */}
+        </Section>
       </Container>
     </>
   );
