@@ -4,6 +4,10 @@ import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
 import javascript from "highlight.js/lib/languages/javascript";
+import swift from "highlight.js/lib/languages/swift";
+import dart from "highlight.js/lib/languages/dart";
+import kotlin from "highlight.js/lib/languages/kotlin";
+import java from "highlight.js/lib/languages/java";
 import html_xml from "highlight.js/lib/languages/xml";
 import { GithubThemes } from "./theme";
 import { clx, copyClipboard } from "@lib/helpers";
@@ -24,6 +28,22 @@ const LANGUAGE_OPTIONS = [
     label: "HTML",
     value: "html",
   },
+  {
+    label: "Swift",
+    value: "swift",
+  },
+  {
+    label: "Dart",
+    value: "dart",
+  },
+  {
+    label: "Kotlin",
+    value: "kotlin",
+  },
+  {
+    label: "Java",
+    value: "java",
+  },
 ] as const;
 
 export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
@@ -39,6 +59,10 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
   const { theme = "light" } = useTheme();
   hljs.registerLanguage("python", python);
   hljs.registerLanguage("javascript", javascript);
+  hljs.registerLanguage("swift", swift);
+  hljs.registerLanguage("dart", dart);
+  hljs.registerLanguage("kotlin", kotlin);
+  hljs.registerLanguage("java", java);
   hljs.registerLanguage("html", html_xml);
 
   const languageOptions = LANGUAGE_OPTIONS.filter(({ value }) => {

@@ -28,7 +28,7 @@ import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { OptionType } from "@components/types";
 import Sidebar from "@components/Sidebar";
-import { WindowContext, WindowProvider } from "@hooks/useWindow";
+import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import Daterange from "@components/Dropdown/Daterange";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
@@ -215,7 +215,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       geography: query.geography
         ? geographies.filter(item => query.geography.split(",").includes(item.value))
         : [],
-      demographic: query.demography
+      demography: query.demography
         ? demographies.filter(item => query.demography.split(",").includes(item.value))
         : [],
       begin: query.begin
@@ -232,7 +232,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       setFilter("search", "");
       setFilter("period", undefined);
       setFilter("geography", []);
-      setFilter("demographic", []);
+      setFilter("demography", []);
       setFilter("begin", undefined);
       setFilter("end", undefined);
     };
@@ -253,7 +253,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         </div>
         {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
           <Button
-            className="btn hover:bg-washed dark:hover:bg-washed-dark text-dim group rounded-full p-1 hover:text-black dark:hover:text-white"
+            className="btn hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
             disabled={!actives.length}
             onClick={reset}
           >
@@ -300,10 +300,10 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   <Label label={t("demography")} />
                   <Checkbox
                     className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
-                    name="demographic"
+                    name="demography"
                     options={demographies}
-                    value={filter.demographic}
-                    onChange={e => setFilter("demographic", e)}
+                    value={filter.demography}
+                    onChange={e => setFilter("demography", e)}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3 pt-3">
@@ -375,8 +375,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             title={t("demography")}
             description={t("placeholder.demography") + ":"}
             options={demographies}
-            selected={filter.demographic}
-            onChange={e => setFilter("demographic", e)}
+            selected={filter.demography}
+            onChange={e => setFilter("demography", e)}
           />
 
           <Daterange

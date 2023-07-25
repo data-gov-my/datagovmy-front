@@ -41,8 +41,13 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                   link="/data-catalogue"
                   onClick={close}
                 />
-
-                <Nav.Item title={t("common:nav.api_docs")} link="#" onClick={close} external />
+                <Nav.Item
+                  title={t("common:nav.api_docs")}
+                  key="api_docs"
+                  link="https://developer.data.gov.my"
+                  onClick={close}
+                  external
+                />
                 <Nav.Item
                   title={t("common:nav.community")}
                   key="/community"
