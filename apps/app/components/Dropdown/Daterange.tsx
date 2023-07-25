@@ -45,7 +45,10 @@ const Range: FunctionComponent<DaterangeProps> = ({
       {label && <Label label={label} />}
       <Popover className="relative">
         <Popover.Button
-          className={clx("btn-default shadow-button text-black dark:text-white", className)}
+          className={clx(
+            "btn-default btn-disabled shadow-button text-black dark:text-white",
+            className
+          )}
           disabled={disabled}
         >
           <ClockIcon className="h-4 w-4" />
