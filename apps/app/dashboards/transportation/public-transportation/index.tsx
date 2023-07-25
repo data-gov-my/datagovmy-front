@@ -180,7 +180,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                             {
                               type: coordinate.x.length === 1 ? "bar" : "line",
                               data: coordinate[key],
-                              label: t(data.periodly),
+                              label: t(`common:time.${data.periodly}`),
                               fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,

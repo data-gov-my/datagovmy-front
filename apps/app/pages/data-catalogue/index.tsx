@@ -19,7 +19,7 @@ const CatalogueIndex: Page = ({
 
   return (
     <>
-      <Progress />
+      <Progress disableOnSameRoute />
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
     </>

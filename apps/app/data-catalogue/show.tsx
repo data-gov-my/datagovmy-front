@@ -723,7 +723,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
 
         <div className="space-y-1">
           {icon}
-          <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact", 1)}</p>
+          <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact")}</p>
         </div>
       </div>
     </Card>

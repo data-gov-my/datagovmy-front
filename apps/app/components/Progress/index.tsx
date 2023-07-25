@@ -1,9 +1,13 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-const Progress: FunctionComponent = () => {
+type ProgressProps = {
+  disableOnSameRoute?: boolean;
+};
+
+const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = false }) => {
   const [progress, setProgress] = useState<number>(0);
-  const { events } = useRouter();
+  const { events, route } = useRouter();
 
   useEffect(() => {
     const gradualTimeout = (callback: (progress: number) => void) => {
@@ -22,17 +26,21 @@ const Progress: FunctionComponent = () => {
       }, 100);
     };
 
-    const startLoading = () => {
+    const startLoading = (url: string) => {
+      if (disableOnSameRoute && route === url.split("?")[0]) return;
+
       gradualTimeout(progress => {
         setProgress(progress);
       });
     };
-    const endLoading = () => {
-      setProgress(100);
 
+    const endLoading = (url: string) => {
+      if (disableOnSameRoute && route === url.split("?")[0]) return;
+
+      setProgress(100);
       setTimeout(() => {
         setProgress(0);
-      }, 500);
+      }, 150);
     };
 
     events.on("routeChangeStart", startLoading);
