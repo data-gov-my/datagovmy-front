@@ -115,6 +115,12 @@
       ]
     }
   },
+  "time": {
+    "daily_7d": "Daily (7d avg)",
+    "daily": "Daily",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
+  },
   "about": {
     "title": "Meet the team behind KKMNOW",
     "description": "Investing into good and kind people pays for itself tenfold. Here at DOSM, we know that the brilliant minds below are are our greatest asset.",

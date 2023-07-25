@@ -124,7 +124,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   subheader,
   type = "bar",
   axisY = undefined,
-  precision = 1,
+  precision = [1, 0],
   enableRightScale = false,
   enableCallout = false,
   enableCrosshair = true,
@@ -163,7 +163,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     AnnotationPlugin
   );
 
-  const { theme } = useTheme();
+  const { theme = "light" } = useTheme();
 
   const display = (
     value: number,

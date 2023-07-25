@@ -1,12 +1,13 @@
 import "../styles/globals.css";
 import { appWithTranslation } from "next-i18next";
-import { AppPropsLayout, ReactElement } from "@lib/types";
+import { AppPropsLayout } from "@lib/types";
 import { Layout } from "@components/index";
+import { ReactNode } from "react";
 
 function App({ Component, pageProps }: AppPropsLayout) {
-  const layout = Component.layout ?? ((page: ReactElement) => <Layout>{page}</Layout>);
+  const layout = Component.layout || ((page: ReactNode) => <Layout>{page}</Layout>);
 
-  return layout(<Component {...pageProps} />);
+  return layout(<Component {...pageProps} />, pageProps);
 }
 
 export default appWithTranslation(App);

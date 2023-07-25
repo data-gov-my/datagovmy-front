@@ -1,4 +1,5 @@
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import Hero from "@components/Hero";
 import {
   Container,
   Dropdown,
@@ -12,7 +13,7 @@ import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { routes } from "@lib/routes";
-// import { TimeseriesOption } from "@lib/types";
+import { TimeseriesOption } from "@lib/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent } from "react";
@@ -119,14 +120,14 @@ const COVID19: FunctionComponent<COVID19Props> = ({
 
   return (
     <>
-      {/* <Hero
-        background="red"
-        category={[t("common:categories.healthcare"), "text-danger"]}
+      <Hero
+        background="covid-banner"
+        // category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID} currentState={currentState} />}
         last_updated={last_updated}
-      /> */}
+      />
 
       <Container className="min-h-screen">
         {/* What does the latest data show? */}

@@ -22,11 +22,7 @@ const COVID19: Page = ({
 
   return (
     <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.covid_19")}
-        description={t("covid.title_description1")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVID19Dashboard
         params={params}
         last_updated={last_updated}
@@ -50,26 +46,29 @@ COVID19.layout = page => (
   </Layout>
 );
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", async () => {
-  const { data } = await get("/dashboard", { dashboard: "covid_epid", state: "mys" });
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-covid-19", "common"],
+  async () => {
+    const { data } = await get("/dashboard", { dashboard: "covid_epid", state: "mys" });
 
-  return {
-    notFound: false,
-    props: {
-      meta: {
-        id: "dashboard-covid-19",
-        type: "dashboard",
-        category: "healthcare",
-        agency: "KKM",
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-covid-19",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "KKM",
+        },
+        params: { state: "mys" },
+        last_updated: data.data_last_updated,
+        snapshot_bar: data.snapshot_bar,
+        snapshot_graphic: data.snapshot_graphic,
+        timeseries: data.timeseries,
+        statistics: data.statistics,
       },
-      params: { state: "mys" },
-      last_updated: data.data_last_updated,
-      snapshot_bar: data.snapshot_bar,
-      snapshot_graphic: data.snapshot_graphic,
-      timeseries: data.timeseries,
-      statistics: data.statistics,
-    },
-  };
-});
+    };
+  }
+);
 
 export default COVID19;

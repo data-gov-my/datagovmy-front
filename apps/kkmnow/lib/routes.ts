@@ -1,5 +1,5 @@
 export const routes = {
-  COVID: "/covid",
+  COVID: "/covid-19",
   COVID_VAX: "/covid-vaccination",
   BLOOD_DONATION: "/blood-donation",
   ORGAN_DONATION: "/organ-donation",

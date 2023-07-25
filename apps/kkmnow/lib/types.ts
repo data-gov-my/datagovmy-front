@@ -6,19 +6,22 @@ import {
 } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
-import type { ReactElement } from "react";
-
-export type { ReactElement, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export type AppPropsLayout = AppProps & {
   Component: Page;
 };
 
 export type Page = NextPage & {
-  layout?: (page: ReactElement) => ReactElement;
+  layout?: (page: ReactNode, props: Record<string, any>) => ReactNode;
 };
 
 // CHART INTERFACE
+
+export type TimeseriesOption = {
+  period: "auto" | "month" | "year";
+  periodly: "daily_7d" | "daily" | "monthly" | "yearly";
+};
 export interface IChart {
   id: string;
   keys: string[];

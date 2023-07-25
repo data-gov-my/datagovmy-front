@@ -115,6 +115,12 @@
       ]
     }
   },
+  "time": {
+    "daily_7d": "Purata 7 hari",
+    "daily": "Harian",
+    "monthly": "Bulanan",
+    "yearly": "Tahunan"
+  },
   "about": {
     "title": "Temui pasukan di belakang KKMNOW",
     "description": "Melabur kepada orang yang baik dan baik hati membawa pulangan sepuluh kali ganda. Di DOSM, minda cermerlang di bawah merupakan aset terbesar kami.",
