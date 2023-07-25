@@ -10,6 +10,7 @@
   "exports": {
     "./charts/*": "./src/charts/*.tsx",
     "./components": "./src/components/index.ts",
+    "./contexts/*": "./src/contexts/*.tsx",
     "./decorators": "./src/lib/decorators.ts",
     "./helpers": "./src/lib/helpers.ts",
     "./hooks": "./src/hooks/index.ts",
@@ -22,6 +23,9 @@
       ],
       "components": [
         "./types/components.d.ts"
+      ],
+      "contexts/*": [
+        "./src/contexts/*.tsx"
       ],
       "decorators": [
         "./types/decorators.d.ts"

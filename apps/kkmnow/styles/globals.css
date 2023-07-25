@@ -1,0 +1,113 @@
+/* TAILWIND CSS */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* MODULE CSS */
+@import "./dashboards/general.css";
+@import "./dashboards/table.css";
+@import "./dashboards/banner.css";
+
+@layer base {
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4 {
+    @apply text-xl font-bold;
+  }
+  h5 {
+    @apply text-xl font-normal tracking-normal text-gray-500;
+  }
+
+  h6 {
+    @apply text-base font-semibold uppercase tracking-wider text-gray-500;
+  }
+}
+
+@layer components {
+  .text-link {
+    @apply cursor-pointer font-medium text-primary hover:underline;
+  }
+
+  .text-footer-link {
+    @apply cursor-pointer text-sm text-dim hover:text-black hover:underline;
+  }
+
+  .number {
+    @apply font-medium;
+  }
+
+  /* HERO MESH GRADIENTS */
+  .hero-light-1 {
+    background-color: hsla(155, 0%, 100%, 1);
+    background-image: radial-gradient(at 94% 38%, hsla(190, 35%, 93%, 1) 0px, transparent 50%),
+      radial-gradient(at 47% 92%, hsla(329, 80%, 83%, 1) 0px, transparent 50%),
+      radial-gradient(at 5% 0%, hsla(220, 92%, 80%, 1) 0px, transparent 50%);
+  }
+
+  .hero-light-2 {
+    background-color: hsla(66, 100%, 97%, 1);
+    background-image: radial-gradient(at 94% 38%, hsla(43, 35%, 93%, 1) 0px, transparent 50%),
+      radial-gradient(at 47% 92%, hsla(182, 80%, 83%, 1) 0px, transparent 50%),
+      radial-gradient(at 5% 0%, hsla(73, 92%, 80%, 1) 0px, transparent 50%);
+  }
+
+  .hero-light-3 {
+    background-color: hsla(216, 100%, 97%, 1);
+    background-image: radial-gradient(at 94% 38%, hsla(239, 94%, 78%, 1) 0px, transparent 50%),
+      radial-gradient(at 47% 92%, hsla(279, 80%, 83%, 1) 0px, transparent 50%),
+      radial-gradient(at 5% 0%, hsla(158, 92%, 80%, 1) 0px, transparent 50%);
+  }
+
+  .hero-light-4 {
+    background-color: hsl(25, 100%, 94%);
+    background-image: radial-gradient(at 94% 100%, hsl(3, 100%, 93%), transparent 100%),
+      radial-gradient(at 47% 92%, hsl(20, 100%, 95%) 0px, transparent 50%),
+      radial-gradient(at 5% 0%, hsl(25, 100%, 94%) 0px, transparent 50%);
+  }
+
+  .hero-dark-1 {
+    background-color: hsla(239, 76%, 28%, 1);
+    background-image: radial-gradient(at 22% 0%, hsla(236, 45%, 31%, 1) 0px, transparent 50%),
+      radial-gradient(at 29% 84%, hsla(232, 65%, 58%, 1) 0px, transparent 50%),
+      radial-gradient(at 86% 2%, hsla(1, 77%, 64%, 1) 0px, transparent 50%),
+      radial-gradient(at 100% 95%, hsla(48, 61%, 59%, 1) 0px, transparent 50%);
+  }
+}
+
+.graphiql-container {
+  @apply min-h-screen;
+}
+
+input[type="range"] {
+  opacity: 0%;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  pointer-events: all;
+  -webkit-appearance: none;
+}
+
+/* button[role="tab"][aria-selected="true"] {
+  position: relative;
+}
+
+button[role="tab"][aria-selected="true"]::after {
+  content: "";
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #0f172a;
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+} */
