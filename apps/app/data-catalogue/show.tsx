@@ -23,7 +23,7 @@ import Tooltip from "@components/Tooltip";
 import { useFilter } from "@hooks/useFilter";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import CatalogueCode, { APIQuery } from "./partials/code";
+import CatalogueCode from "./partials/code";
 import { SampleCode } from "./partials/code";
 import { useAnalytics } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
@@ -105,7 +105,7 @@ interface CatalogueShowProps {
   translations: {
     [key: string]: string;
   };
-  queries?: APIQuery[];
+  catalogueId?: string;
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -117,7 +117,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   metadata,
   urls,
   translations,
-  queries,
+  catalogueId,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
@@ -293,6 +293,36 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze);
     }
   };
+
+  const sampleDescription = (
+    <>
+      {t("sample_query.desc1")}
+      <At
+        external={true}
+        className="link-dim text-base underline"
+        href={
+          i18n.language == "en-GB"
+            ? "https://developer.data.gov.my/data-catalogue/request-query"
+            : "https://developer.data.gov.my/ms/data-catalogue/request-query"
+        }
+      >
+        {t("sample_query.link1")}
+      </At>
+      <span>{`. ${t("sample_query.desc2")}`}</span>
+      <At
+        external={true}
+        className="link-dim text-base underline"
+        href={
+          i18n.language == "en-GB"
+            ? `https://developer.data.gov.my/data-catalogue/example-requests?id=${catalogueId}`
+            : `https://developer.data.gov.my/ms/data-catalogue/example-requests?id=${catalogueId}`
+        }
+      >
+        {t("sample_query.link2")}
+      </At>
+      .
+    </>
+  );
 
   return (
     <div>
@@ -671,10 +701,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         {/* API Request Code */}
         <Section
           title={t("sample_query.section_title")}
-          description={t("sample_query.description")}
+          description={sampleDescription}
           className="mx-auto w-full py-12"
         >
-          <SampleCode queries={queries} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
+          <SampleCode catalogueId={catalogueId} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
         </Section>
       </Container>
     </div>
