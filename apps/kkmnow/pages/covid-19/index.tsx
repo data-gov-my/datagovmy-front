@@ -1,10 +1,8 @@
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import COVID19Dashboard from "@dashboards/covid-19";
-
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
 import { withi18n } from "datagovmy-ui/decorators";
-import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";

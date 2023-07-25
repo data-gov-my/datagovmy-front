@@ -1,75 +1,78 @@
-/**
- * Covid Vaccination Page <Index>
- */
-import { InferGetStaticPropsType, GetStaticProps } from "next";
-import CovidVaccinationDashboard from "@dashboards/covid-vaccination";
-import { get } from "@lib/api";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { useTranslation } from "next-i18next";
-import { JSXElementConstructor, ReactElement } from "react";
+import COVIDVaccinationDashboard from "@dashboards/covid-vaccination";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "@lib/api";
+import { withi18n } from "datagovmy-ui/decorators";
+import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
-import { sortMsiaFirst } from "@lib/helpers";
+import type { Page } from "@lib/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
-const CovidVaccinationIndex = ({
+const CovidVaccination: Page = ({
+  meta,
+  params,
   last_updated,
-  waffle,
-  table,
-  barmeter,
   timeseries,
   statistics,
+  barmeter,
+  waffle,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.covid_19_vax")}
-        description={t("vaccination.title_description1")}
-        keywords={""}
-      />
-
-      <CovidVaccinationDashboard
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <COVIDVaccinationDashboard
+        params={params}
         last_updated={last_updated}
-        waffle={waffle}
-        table={table}
-        barmeter={barmeter}
         timeseries={timeseries}
         statistics={statistics}
+        barmeter={barmeter}
+        waffle={waffle}
       />
     </>
   );
 };
 
-CovidVaccinationIndex.layout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => (
+CovidVaccination.layout = (page, props) => (
   <Layout
     stateSelector={
-      <StateDropdown url={routes.COVID_VAX} exclude={["kvy"]} currentState={"mys"} hideOnScroll />
+      <StateDropdown
+        width="w-max xl:w-64"
+        url={routes.COVID_VAX}
+        currentState={props?.params.state}
+        hideOnScroll
+      />
     }
   >
-    <StateModal url={routes.COVID_VAX} exclude={["kvy"]} />
+    <StateModal url={routes.COVID_VAX} />
     {page}
   </Layout>
 );
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-covid-vaccination", "common"],
+  async () => {
+    const { data } = await get("/dashboard", { dashboard: "covid_vax", state: "mys" });
 
-  const { data } = await get("/kkmnow", { dashboard: "covid_vax", state: "mys" }); // fetch static data here
-  data.snapshot.data = sortMsiaFirst(data.snapshot.data, "state");
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-covid-vaccination",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "KKM",
+        },
+        params: { state: "mys" },
+        last_updated: data.data_last_updated,
+        timeseries: data.timeseries,
+        statistics: data.statistics,
+        barmeter: data.bar_chart,
+        waffle: data.waffle,
+      },
+    };
+  }
+);
 
-  return {
-    props: {
-      last_updated: new Date().valueOf(),
-      waffle: data.waffle,
-      barmeter: data.bar_chart,
-      table: data.snapshot,
-      timeseries: data.timeseries,
-      statistics: data.statistics,
-      ...i18n,
-    },
-    revalidate: 300,
-  };
-};
-
-export default CovidVaccinationIndex;
+export default CovidVaccination;

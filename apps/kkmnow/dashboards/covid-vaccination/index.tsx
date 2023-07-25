@@ -1,21 +1,17 @@
-import AgencyBadge from "@components/Badge/agency";
-import { MOHIcon } from "@components/Icon/agency";
+import Hero from "@components/Hero";
 import {
   Container,
   Dropdown,
-  Hero,
   Panel,
   Section,
   StateDropdown,
   Tabs,
   Tooltip,
-} from "@components/index";
-import { OptionType } from "@components/types";
+} from "datagovmy-ui/components";
 import COVIDVaccinationTrends from "./vaccine-trends";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import { numFormat } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
@@ -34,8 +30,8 @@ interface COVIDVaccinationProps {
   waffle: Record<string, any>;
 }
 
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
-const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
+const Waffle = dynamic(() => import("datagovmy-ui/charts/waffle"), { ssr: false });
 
 const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   params,
@@ -48,12 +44,14 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   const currentState = params.state;
 
-  const AGE_OPTIONS: Array<OptionType> = ["total", "child", "adolescent", "adult", "elderly"].map(
-    (key: string) => ({ label: t(key), value: key })
-  );
-  const DOSE_OPTIONS: Array<OptionType> = ["dose1", "dose2", "booster1", "booster2"].map(
-    (key: string) => ({ label: t(key), value: key })
-  );
+  const AGE_OPTIONS = ["total", "child", "adolescent", "adult", "elderly"].map((key: string) => ({
+    label: t(key),
+    value: key,
+  }));
+  const DOSE_OPTIONS = ["dose1", "dose2", "booster1", "booster2"].map((key: string) => ({
+    label: t(key),
+    value: key,
+  }));
 
   const { data, setData } = useData({
     vax_tab: 0,
@@ -121,19 +119,12 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   return (
     <>
       <Hero
-        background="green"
-        category={[t("common:categories.healthcare"), "text-green-600"]}
+        background="covidvax-banner"
+        // category={[t("common:categories.healthcare"), "text-green-600"]}
         header={[t("header")]}
         description={[t("description")]}
-        action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
+        action={<StateDropdown url={routes.COVID_VAX} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:moh.full")}
-            link="https://www.moh.gov.my"
-            icon={<MOHIcon fillColor="#16A34A" />} // green-600
-          />
-        }
       />
       <Container className="min-h-screen">
         {/* How vaccinated against COVID-19 are we? */}

@@ -42,6 +42,7 @@ COVID19.layout = (page, props) => (
   <Layout
     stateSelector={
       <StateDropdown
+        width="w-max xl:w-64"
         url={routes.COVID}
         currentState={props.params.state ?? "mys"}
         exclude={["kvy"]}

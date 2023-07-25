@@ -1,39 +1,38 @@
+import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import CovidVaccinationDashboard from "@dashboards/covid-vaccination";
+import { get } from "@lib/api";
+import { CountryAndStates } from "@lib/constants";
+import { withi18n } from "datagovmy-ui/decorators";
+import { routes } from "@lib/routes";
+import { Page } from "@lib/types";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
+import { useTranslation } from "next-i18next";
+
 /**
  * Covid Vaccination Page <State>
  */
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import CovidVaccinationDashboard from "@dashboards/covid-vaccination";
-import { CountryAndStates, STATES } from "@lib/constants";
-import { get } from "@lib/api";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { useTranslation } from "next-i18next";
-import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import { JSXElementConstructor, ReactElement } from "react";
-import { sortMsiaFirst } from "@lib/helpers";
 
-const CovidVaccinationState = ({
+const CovidVaccinationState: Page = ({
+  meta,
   last_updated,
+  params,
   waffle,
-  table,
   barmeter,
   timeseries,
   statistics,
-  state,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("nav.megamenu.dashboards.covid_19_vax"))}
-        description={t("vaccination.title_description1")}
-        keywords={""}
+        title={[t("header"), "·", CountryAndStates[params.state]].join(" ")}
+        description={t("description")}
+        keywords=""
       />
       <CovidVaccinationDashboard
         last_updated={last_updated}
+        params={params}
         waffle={waffle}
-        table={table}
         barmeter={barmeter}
         timeseries={timeseries}
         statistics={statistics}
@@ -42,64 +41,51 @@ const CovidVaccinationState = ({
   );
 };
 
-CovidVaccinationState.layout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => (
+CovidVaccinationState.layout = (page, props) => (
   <Layout
     stateSelector={
       <StateDropdown
+        width="w-max xl:w-64"
         url={routes.COVID_VAX}
-        currentState={(useRouter().query.state as string) ?? "mys"}
-        exclude={["kvy"]}
+        currentState={props?.params.state}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.COVID_VAX} exclude={["kvy"]} />
+    <StateModal url={routes.COVID} />
     {page}
   </Layout>
 );
 
-export const getStaticPaths: GetStaticPaths = async ctx => {
-  let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: paths,
-    fallback: false, // can also be true or 'blocking'
+    paths: [],
+    fallback: "blocking",
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-covid-vaccination", "common"],
+  async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "covid_vax", state: params?.state });
 
-  const { data } = await get("/kkmnow", { dashboard: "covid_vax", state: params?.state });
-  data.snapshot.data = sortMsiaFirst(data.snapshot.data, "state");
-
-  return {
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      waffle: data.waffle,
-      barmeter: data.bar_chart,
-      table: data.snapshot,
-      timeseries: data.timeseries,
-      statistics: data.statistics,
-      state: params?.state,
-    },
-    revalidate: 300,
-  };
-};
+    return {
+      props: {
+        meta: {
+          id: "dashboard-covid-vaccination",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "KKM",
+        },
+        params: params,
+        last_updated: data.data_last_updated,
+        waffle: data.waffle,
+        barmeter: data.bar_chart,
+        timeseries: data.timeseries,
+        statistics: data.statistics,
+      },
+    };
+  }
+);
 
 export default CovidVaccinationState;
