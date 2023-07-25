@@ -11,7 +11,7 @@ interface CatalogueCodeProps {
 const CatalogueCode: FunctionComponent<CatalogueCodeProps> = ({ type, url }) => {
   const { t } = useTranslation(["catalogue", "common"]);
 
-  const template = useMemo(() => {
+  const pythonTemplate = useMemo(() => {
     switch (type) {
       case "GEOJSON":
         return `# ${t("code_note")}: pip install pandas matplotlib geopandas
@@ -56,7 +56,40 @@ print(df)`;
     }
   }, [type]);
 
-  return <CodeBlock event={{ url }}>{{ python: template }}</CodeBlock>;
+  const juliaTemplate = useMemo(() => {
+    switch (type) {
+      case "GEOJSON":
+        return ``;
+
+      default: // TIMESERIES | CHOROPLETH | TABLE
+        return ``;
+    }
+  }, [type]);
+
+  const rTemplate = useMemo(() => {
+    switch (type) {
+      case "GEOJSON":
+        return `# ${t("code_note")}: install.packages("geojsonio"); install.packages("sp")
+library(geojsonio, sp)
+
+${t("code_comments.geojson_1")}
+URL_GEOJSON = "https://storage.googleapis.com/dosm-public-geodata/admin_2_district.geojson"
+URL_GEOJSON_LIGHT = gsub(".geojson", "_light.geojson", URL_GEOJSON)
+
+spdf <- geojson_read(URL_GEOJSON,  what = "sp")
+
+par(mar=c(0,0,0,0))
+plot(spdf, col="grey")
+`;
+
+      default: // TIMESERIES | CHOROPLETH | TABLE
+        return `# ${t("code_note")}: install.packages("arrow")
+library(arrow)
+read_parquet("${url}")`;
+    }
+  }, [type]);
+
+  return <CodeBlock event={{ url }}>{{ python: pythonTemplate, r: rTemplate }}</CodeBlock>;
 };
 
 interface SampelCodeProps {
