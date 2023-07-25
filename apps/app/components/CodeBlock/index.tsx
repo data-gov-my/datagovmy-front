@@ -8,6 +8,7 @@ import swift from "highlight.js/lib/languages/swift";
 import dart from "highlight.js/lib/languages/dart";
 import kotlin from "highlight.js/lib/languages/kotlin";
 import java from "highlight.js/lib/languages/java";
+import html_xml from "highlight.js/lib/languages/xml";
 import { GithubThemes } from "./theme";
 import { clx, copyClipboard } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -62,6 +63,7 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
   hljs.registerLanguage("dart", dart);
   hljs.registerLanguage("kotlin", kotlin);
   hljs.registerLanguage("java", java);
+  hljs.registerLanguage("html", html_xml);
 
   const languageOptions = LANGUAGE_OPTIONS.filter(({ value }) => {
     return Object.keys(children).includes(value);
