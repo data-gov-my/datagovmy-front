@@ -1,21 +1,17 @@
-import { NTRCIcon } from "@components/Icon/agency";
+import Hero from "@components/Hero";
 import {
-  AgencyBadge,
   Container,
-  Hero,
   LeftRightCard,
   Panel,
   Section,
   Slider,
-  SliderProvider,
   StateDropdown,
   Tabs,
-} from "@components/index";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
+} from "datagovmy-ui/components";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
+import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import { TimeseriesOption } from "@lib/types";
 import { useTheme } from "next-themes";
@@ -27,9 +23,9 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface OrganDonationProps {
   last_updated: string;
@@ -78,25 +74,18 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   };
 
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
-  const { theme } = useTheme();
+
   const topStateIndices = getTopIndices(choropleth.data.y.perc, choropleth.data.y.length, true);
 
   return (
     <>
       <Hero
-        background="green"
-        category={[t("common:categories.healthcare"), "text-[#16A34A]"]}
+        background="organ-banner"
+        // category={[t("common:categories.healthcare"), "text-[#16A34A]"]}
         header={[t("header")]}
         description={[t("description")]}
         action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:ntrc.full")}
-            link="https://www.dermaorgan.gov.my/ntrc"
-            icon={<NTRCIcon />}
-          />
-        }
       />
 
       <Container className="min-h-screen">
@@ -237,8 +226,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_time.data.annual.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor:
-                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
+                          backgroundColor: AKSARA_COLOR.BLACK,
                         },
                       ],
                     }}
@@ -256,8 +244,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_time.data.monthly.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor:
-                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
+                          backgroundColor: AKSARA_COLOR.BLACK,
                         },
                       ],
                     }}
@@ -279,8 +266,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_age.data.past_year.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor:
-                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
+                          backgroundColor: AKSARA_COLOR.BLACK,
                         },
                       ],
                     }}
@@ -298,8 +284,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                           data: barchart_age.data.past_month.y,
                           borderRadius: 12,
                           barThickness: 12,
-                          backgroundColor:
-                            theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
+                          backgroundColor: AKSARA_COLOR.BLACK,
                         },
                       ],
                     }}

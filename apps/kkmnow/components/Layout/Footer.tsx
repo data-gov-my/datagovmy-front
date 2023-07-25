@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "datagovmy-ui/hooks";
 
 import Container from "@components/Container";
 
@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="flex flex-row gap-4">
           {/* LOGO */}
           <div className="mt-1 w-12">
-            <Image src="/static/images/logo.png" width={48} height={36} />
+            <Image src="/static/images/logo.png" width={48} height={36} alt="logo" />
           </div>
           <div>
             <div className="mb-2 uppercase">

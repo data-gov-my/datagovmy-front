@@ -1,87 +1,85 @@
-/**
- * Organ Donation Page <Index>
- */
-import { InferGetStaticPropsType, GetStaticProps } from "next";
+import Layout from "@components/Layout";
 import OrganDonationDashboard from "@dashboards/organ-donation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { get } from "@lib/api";
-import { DateTime } from "luxon";
-import { useTranslation } from "next-i18next";
 import { routes } from "@lib/routes";
-import { ReactElement, JSXElementConstructor } from "react";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { DateTime } from "luxon";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
+import type { Page } from "@lib/types";
 
-const OrganDonationIndex = ({
+const OrganDonation: Page = ({
+  meta,
   last_updated,
-  timeseries_pledge,
-  bar_age,
-  bar_time,
-  bar_reasons,
-  heatmap_donorrate,
-  choropleth_malaysia_organ_donation,
+  params,
+  timeseries,
+  choropleth,
+  barchart_age,
+  barchart_time,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.organ_donation")}
-        description={t("organ.title_description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <OrganDonationDashboard
         last_updated={last_updated}
-        timeseries_pledge={timeseries_pledge}
-        bar_age={bar_age}
-        bar_time={bar_time}
-        bar_reasons={bar_reasons}
-        heatmap_donorrate={heatmap_donorrate}
-        choropleth_malaysia_organ_donation={choropleth_malaysia_organ_donation}
+        params={params}
+        timeseries={timeseries}
+        choropleth={choropleth}
+        barchart_age={barchart_age}
+        barchart_time={barchart_time}
       />
     </>
   );
 };
 
-OrganDonationIndex.layout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => (
+OrganDonation.layout = (page, props) => (
   <Layout
     stateSelector={
       <StateDropdown
+        width="w-max xl:w-64"
         url={routes.ORGAN_DONATION}
-        currentState={"mys"}
-        exclude={["kvy"]}
+        currentState={props.params.state}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.ORGAN_DONATION} exclude={["kvy"]} />
+    <StateModal state={props.params.state} url={routes.ORGAN_DONATION} />
     {page}
   </Layout>
 );
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-organ-donation", "common"],
+  async () => {
+    const { data } = await get("/dashboard", { dashboard: "organ_donation", state: "mys" });
 
-  const { data } = await get("/kkmnow", { dashboard: "organ_donation", state: "mys" });
+    // transform:
+    data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
+      const period = DateTime.fromFormat(item, "yyyy-MM-dd");
+      return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
+    });
 
-  // transform:
-  data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
-    const period = DateTime.fromFormat(item, "yyyy-MM-dd");
-    return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
-  });
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-organ-donation",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "NTRC",
+        },
+        last_updated: data.data_last_updated,
+        params: { state: "mys" },
+        timeseries: data.timeseries,
+        choropleth: data.choropleth_malaysia,
+        barchart_age: data.barchart_age,
+        barchart_time: data.barchart_time,
+      },
+    };
+  }
+);
 
-  return {
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries_pledge: data.timeseries,
-      bar_age: data.barchart_age,
-      bar_time: data.barchart_time,
-      bar_reasons: data.barchart_reasons,
-      heatmap_donorrate: data.heatmap_pledgerrate,
-      choropleth_malaysia_organ_donation: data.choropleth_malaysia,
-    },
-    revalidate: 300,
-  };
-};
-
-export default OrganDonationIndex;
+export default OrganDonation;

@@ -1,12 +1,10 @@
-import Link from "next/link";
 import { At } from "datagovmy-ui/components";
 import Image from "next/image";
-import { FunctionComponent, ReactElement, useMemo, useState } from "react";
+import { FunctionComponent, ReactElement, useState } from "react";
 import { useTranslation } from "next-i18next";
 import {
   HomeIcon,
   Bars3BottomRightIcon,
-  NewspaperIcon,
   RectangleGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
@@ -29,7 +27,7 @@ interface HeaderProps {
 }
 
 const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation();
   const { language, onLanguageChange } = useLanguage();
 
   const width = useWindowWidth();

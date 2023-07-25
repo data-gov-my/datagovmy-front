@@ -3,6 +3,7 @@ import { appWithTranslation } from "next-i18next";
 import { AppPropsLayout } from "@lib/types";
 import { Layout } from "@components/index";
 import { ReactNode } from "react";
+import nextI18nextConfig from "../next-i18next.config";
 
 function App({ Component, pageProps }: AppPropsLayout) {
   const layout = Component.layout || ((page: ReactNode) => <Layout>{page}</Layout>);
@@ -10,4 +11,4 @@ function App({ Component, pageProps }: AppPropsLayout) {
   return layout(<Component {...pageProps} />, pageProps);
 }
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, nextI18nextConfig);

@@ -1,15 +1,13 @@
-import { FunctionComponent, ReactNode, useContext, useMemo } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import Container from "@components/Container";
-import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
-import { useTranslation } from "next-i18next";
-import { EyeIcon } from "@heroicons/react/20/solid";
+import { clx, toDate } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
 
 type ConditionalHeroProps =
   | {
       children?: ReactNode;
       last_updated?: never;
       header?: never;
-      category?: never;
       description?: never;
       action?: never;
       agencyBadge?: never;
@@ -20,7 +18,6 @@ type HeroDefault = {
   children?: never;
   last_updated?: string | number;
   header?: [text: string, className?: string];
-  category?: [text: string, className?: string];
   description?: [text: string, className?: string] | ReactNode;
   action?: ReactNode;
   agencyBadge?: ReactNode;
@@ -35,14 +32,13 @@ const Hero: FunctionComponent<HeroProps> = ({
   background = "gray",
   className,
   children,
-  category,
   header,
   description,
   action,
   last_updated,
   agencyBadge,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["common"]);
 
   return (
     <Container
@@ -57,7 +53,7 @@ const Hero: FunctionComponent<HeroProps> = ({
             <div className="sticky inset-x-0 top-14 z-20 -ml-3 flex md:hidden">{agencyBadge}</div>
           )}
           <div className="space-y-6 py-12 xl:w-full">
-            {(category || agencyBadge) && (
+            {/* {(category || agencyBadge) && (
               <div className="relative flex justify-between">
                 <div className="hidden md:absolute md:right-0 md:top-0 md:block">{agencyBadge}</div>
                 {category && (
@@ -69,7 +65,7 @@ const Hero: FunctionComponent<HeroProps> = ({
                   </span>
                 )}
               </div>
-            )}
+            )} */}
 
             {(header || description) && (
               <div className="space-y-3">

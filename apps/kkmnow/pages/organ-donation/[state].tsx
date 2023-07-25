@@ -1,114 +1,96 @@
-/**
- * Organ Donation Page <Index>
- */
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
+import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import OrganDonationDashboard from "@dashboards/organ-donation";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
-import { DateTime } from "luxon";
-import { CountryAndStates, STATES } from "@lib/constants";
-import { useTranslation } from "next-i18next";
+import { CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import { ReactElement, JSXElementConstructor } from "react";
+import { withi18n } from "datagovmy-ui/decorators";
+import { DateTime } from "luxon";
+import type { Page } from "@lib/types";
+import type { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
-const OrganDonationState = ({
+const OrganDonationState: Page = ({
+  meta,
   last_updated,
-  timeseries_pledge,
-  bar_age,
-  bar_time,
-  bar_reasons,
-  heatmap_donorrate,
-  state,
-  choropleth_malaysia_organ_donation,
+  params,
+  timeseries,
+  choropleth,
+  barchart_age,
+  barchart_time,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("nav.megamenu.dashboards.organ_donation"))}
-        description={t("organ.title_description")}
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <OrganDonationDashboard
         last_updated={last_updated}
-        timeseries_pledge={timeseries_pledge}
-        bar_age={bar_age}
-        bar_time={bar_time}
-        bar_reasons={bar_reasons}
-        heatmap_donorrate={heatmap_donorrate}
-        choropleth_malaysia_organ_donation={choropleth_malaysia_organ_donation}
+        params={params}
+        timeseries={timeseries}
+        choropleth={choropleth}
+        barchart_age={barchart_age}
+        barchart_time={barchart_time}
       />
     </>
   );
 };
 
-OrganDonationState.layout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => (
+OrganDonationState.layout = (page, props) => (
   <Layout
     stateSelector={
       <StateDropdown
+        width="w-max xl:w-64"
         url={routes.ORGAN_DONATION}
-        currentState={(useRouter().query.state as string) ?? "mys"}
-        exclude={["kvy"]}
+        currentState={props.params.state}
         hideOnScroll
       />
     }
   >
-    <StateModal url={routes.ORGAN_DONATION} exclude={["kvy"]} />
+    <StateModal url={routes.ORGAN_DONATION} state={props.params.state} />
     {page}
   </Layout>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: paths,
-    fallback: false, // can also be true or 'blocking'
+    paths: [],
+    fallback: "blocking",
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-organ-donation", "common"],
+  async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "organ_donation", state: params?.state });
 
-  const { data } = await get("/kkmnow", { dashboard: "organ_donation", state: params?.state });
+    // transform:
+    data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
+      const period = DateTime.fromFormat(item, "yyyy-MM-dd");
+      return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
+    });
 
-  // transform:
-  data.barchart_time.data.monthly.x = data.barchart_time.data.monthly.x.map((item: any) => {
-    const period = DateTime.fromFormat(item, "yyyy-MM-dd");
-    return period.monthShort !== "Jan" ? period.monthShort : period.year.toString();
-  });
-
-  return {
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries_pledge: data.timeseries,
-      bar_age: data.barchart_age,
-      bar_time: data.barchart_time,
-      bar_reasons: data.barchart_reasons,
-      heatmap_donorrate: data.heatmap_pledgerrate,
-      state: params?.state,
-      choropleth_malaysia_organ_donation: data.choropleth_malaysia,
-    },
-    revalidate: 300,
-  };
-};
+    return {
+      props: {
+        meta: {
+          id: "dashboard-organ-donation",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "NTRC",
+        },
+        last_updated: data.data_last_updated,
+        params: params,
+        timeseries: data.timeseries,
+        choropleth: data.choropleth_malaysia,
+        barchart_age: data.barchart_age,
+        barchart_time: data.barchart_time,
+      },
+    };
+  }
+);
 
 export default OrganDonationState;
