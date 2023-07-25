@@ -19,8 +19,8 @@ interface DaterangeProps extends LabelProps {
 }
 
 const Range: FunctionComponent<DaterangeProps> = ({
-  className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-button",
-  disabled = false,
+  className,
+  disabled,
   beginOptions,
   endOptions,
   selected,
@@ -45,23 +45,15 @@ const Range: FunctionComponent<DaterangeProps> = ({
       {label && <Label label={label} />}
       <Popover className="relative">
         <Popover.Button
-          className={clx(
-            "dark:border-washed-dark shadow-button relative flex w-full flex-row items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left dark:bg-black lg:w-fit lg:items-center",
-            className,
-            disabled
-              ? "bg-outline text-dim pointer-events-none"
-              : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
-          )}
+          className={clx("btn-default shadow-button text-black dark:text-white", className)}
+          disabled={disabled}
         >
-          <ClockIcon className="h-4 w-4 text-black dark:text-white" />
+          <ClockIcon className="h-4 w-4" />
           <p className="text-sm">
             {(selected && selected[0] && selected[0].label) ?? t("begin")} -{" "}
             {(selected && selected[1] && selected[1].label) ?? t("end")}
           </p>
-
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
-            <ChevronDownIcon className="h-5 w-5 text-black dark:text-white" aria-hidden="true" />
-          </span>
+          <ChevronDownIcon className="-mx-[5px] h-5 w-5" aria-hidden="true" />
         </Popover.Button>
         <Transition
           as={"div"}
@@ -75,15 +67,15 @@ const Range: FunctionComponent<DaterangeProps> = ({
               anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
             )}
           >
-            <div className="relative">
+            <div>
               <div className="dark:border-washed-dark sticky top-0 z-20 grid w-[250px] grid-cols-2 border-b bg-white px-4 py-3 dark:bg-black">
-                <p className="text-dim whitespace-nowrap">
+                <p className="text-dim">
                   {t("begin")}:{" "}
                   <span className="text-black dark:text-white">
                     {selected && selected[0] && selected[0].label}
                   </span>
                 </p>
-                <p className="text-dim whitespace-nowrap">
+                <p className="text-dim">
                   {t("end")}:{" "}
                   <span className="text-black dark:text-white">
                     {selected && selected[1] && selected[1].label}
@@ -95,15 +87,15 @@ const Range: FunctionComponent<DaterangeProps> = ({
                   {beginOptions.map(option => (
                     <li
                       key={option.label}
-                      className={[
-                        "flex select-none items-center justify-between px-4 py-2",
+                      className={clx(
+                        "flex select-none items-center justify-between px-4 py-1.5",
                         selected && selected[0]?.value === option.value
                           ? "bg-washed dark:bg-washed-dark"
                           : "bg-inherit",
                         selected && isDisabled("begin", option.value, selected[1]?.value)
                           ? "text-outline dark:text-outlineHover-dark cursor-not-allowed hover:bg-white dark:hover:bg-black"
-                          : "hover:bg-washed dark:hover:bg-washed-dark cursor-pointer",
-                      ].join(" ")}
+                          : "hover:bg-washed dark:hover:bg-washed-dark cursor-pointer text-black dark:text-white"
+                      )}
                       onClick={() => {
                         if (selected && !isDisabled("begin", option.value, selected[1]?.value))
                           onChange([option, selected ? selected[1] : undefined]);
@@ -113,7 +105,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                       {selected && selected[0]?.value === option.value && (
                         <CheckCircleIcon
                           ref={beginRef}
-                          className="text-primary dark:text-primary-dark h-5 w-5"
+                          className="text-primary dark:text-primary-dark h-4 w-4"
                         />
                       )}
                     </li>
@@ -123,15 +115,15 @@ const Range: FunctionComponent<DaterangeProps> = ({
                   {endOptions.map(option => (
                     <li
                       key={option.label}
-                      className={[
-                        "flex select-none items-center justify-between px-4 py-2",
+                      className={clx(
+                        "flex select-none items-center justify-between px-4 py-1.5",
                         selected && selected[1]?.value === option.value
                           ? "bg-washed dark:bg-washed-dark"
                           : "bg-inherit",
                         selected && isDisabled("end", option.value, selected[0]?.value)
                           ? "text-outline dark:text-outlineHover-dark cursor-not-allowed hover:bg-white dark:hover:bg-black"
-                          : "hover:bg-washed dark:hover:bg-washed-dark cursor-pointer",
-                      ].join(" ")}
+                          : "hover:bg-washed dark:hover:bg-washed-dark cursor-pointer text-black dark:text-white"
+                      )}
                       onClick={() => {
                         if (selected && !isDisabled("end", option.value, selected[0]?.value))
                           onChange([selected ? selected[0] : undefined, option]);
@@ -141,7 +133,7 @@ const Range: FunctionComponent<DaterangeProps> = ({
                       {selected && selected[1]?.value === option.value && (
                         <CheckCircleIcon
                           ref={endRef}
-                          className="text-primary dark:text-primary-dark h-5 w-5"
+                          className="text-primary dark:text-primary-dark h-4 w-4"
                         />
                       )}
                     </li>
