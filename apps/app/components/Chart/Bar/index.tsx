@@ -207,7 +207,7 @@ const Bar: FunctionComponent<BarProps> = ({
           callback: function (value: string | number) {
             return displayLabel(
               isVertical
-                ? display(value as number, "compact", 1)
+                ? display(value as number, "compact", precision)
                 : this.getLabelForValue(value as number).concat(unitX ?? "")
             );
           },
