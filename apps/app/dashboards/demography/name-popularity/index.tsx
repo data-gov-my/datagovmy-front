@@ -37,7 +37,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
 
   const { data: tableData, setData: setTableData } = useData({
     selectedEthnicity: {
-      label: t(ethnicityDropdown.at(0) as string),
+      label: t(`ethnicity.${ethnicityDropdown.at(0)}`),
       value: ethnicityDropdown.at(0),
     },
     selectedYear: { label: `${yearDropdown.at(-1)}`, value: `${yearDropdown.at(-1)}` },
@@ -70,7 +70,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   }));
 
   const ethnicityOptions: OptionType[] = ethnicityDropdown.map(ethnicity => ({
-    label: t(ethnicity),
+    label: t(`ethnicity.${ethnicity}`),
     value: ethnicity,
   }));
   const { theme } = useTheme();
@@ -254,7 +254,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         <Section>
           <div className="space-y-6">
             <div className="flex flex-col place-content-center place-items-center gap-3 sm:flex-row">
-              <h4 className="text-center">{t("Most popular")}</h4>
+              <h4 className="text-center">{t("section1_title1")}</h4>
               <Dropdown
                 width="w-fit"
                 selected={tableData.selectedEthnicity}
@@ -263,7 +263,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 }}
                 options={ethnicityOptions}
               />
-              <h4 className="text-center">{t("baby names in")}</h4>
+              <h4 className="text-center">{t("section1_title2")}</h4>
               <Dropdown
                 width="w-fit"
                 selected={tableData.selectedYear}
@@ -357,7 +357,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
             </div>
           </div>
         </Section>
-        <Section title={t("section1_title")}>
+        <Section title={t("section2_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col	justify-start gap-6 rounded-xl border p-6">
@@ -437,7 +437,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                       </div>
                       {renderPlaceholderBar(
                         <LockClosedIcon className="h-4 w-4" />,
-                        t("To preserve privacy, timeseries data for this name is not displayed.")
+                        t("privacy_prompt")
                       )}
                     </div>
                   ) : (
@@ -493,7 +493,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
           </div>
         </Section>
 
-        <Section title={t("section2_title")}>
+        <Section title={t("section3_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
               <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col	justify-start gap-6 rounded-xl border p-6">
