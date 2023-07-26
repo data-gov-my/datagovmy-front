@@ -16,6 +16,7 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useContext } from "react";
 import { toast } from "@components/Toast";
+import { clx } from "@lib/helpers";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
@@ -398,99 +399,98 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               </Card>
             </div>
 
-            {!showPlaceholder && !compareData.data ? (
-              <></>
-            ) : (
-              <div className="col-span-full flex min-h-[460px] flex-col gap-3 lg:col-span-2">
-                <div className="flex flex-col gap-2 md:flex-row md:justify-between">
-                  <p className="text-lg font-bold">
-                    <span>{t("compare_title")}</span>
-                  </p>
-                  <Toggle
-                    enabled={false}
-                    onStateChanged={checked => setCompareData("order", checked)}
-                    label={t("compare_toggle")}
-                  />
-                </div>
-
-                <table className="w-full table-fixed border-collapse">
-                  <thead>
-                    <tr className="md:text-md border-b-outline dark:border-washed-dark max-w-full border-b-2 text-left text-sm [&>*]:p-2">
-                      <th className="w-5 md:w-[50px]">#</th>
-                      <th>
-                        {compareData.params.type === "last" ? t("last_name") : t("first_name")}
-                      </th>
-                      <th>{t("table_total")}</th>
-                      <th>{t("table_most_popular")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {compareData.data ? (
-                      compareData.data
-                        .sort((a: { total: number }, b: { total: number }) =>
-                          a.total == 0
-                            ? Number.MIN_VALUE
-                            : compareData.order
-                            ? b.total - a.total
-                            : a.total - b.total
-                        )
-                        .map(
-                          (
-                            item: { name: string; total: number; max: string; min: string },
-                            i: number
-                          ) => (
-                            <tr
-                              key={item.name}
-                              className={(i < Math.min(3, compareData.data.length - 1)
-                                ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
-                                : ""
-                              ).concat(" md:text-md text-sm")}
-                            >
-                              <td
-                                className={"border-b-outline dark:border-washed-dark border-b p-2".concat(
-                                  i < Math.min(3, compareData.data.length - 1)
-                                    ? " text-primary dark:text-primary-dark"
-                                    : ""
-                                )}
-                              >
-                                {i + 1}
-                              </td>
-                              <td className="border-b-outline dark:border-washed-dark truncate border-b p-2 capitalize">
-                                {`${item.name} `.concat(
-                                  i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
-                                )}
-                              </td>
-                              <td className="border-b-outline dark:border-washed-dark border-b p-2">
-                                {item.total.toLocaleString("en-US")}
-                              </td>
-                              <td className="border-b-outline dark:border-washed-dark border-b p-2">
-                                {item.total === 0 ? item.max : item.max.toString().concat("s")}
-                              </td>
-                            </tr>
-                          )
-                        )
-                    ) : compareData.isLoading ? (
-                      <tr>
-                        <td colSpan={5}>
-                          <div className="grid place-items-center py-3">
-                            <Spinner loading={compareData.isLoading} />
-                          </div>
-                        </td>
-                      </tr>
-                    ) : (
-                      <tr>
-                        <td colSpan={5}>
-                          <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark my-3 hidden w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto lg:flex">
-                            <MagnifyingGlassIcon className=" h-4 w-4" />
-                            <p>{t("compare_prompt")}</p>
-                          </Card>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+            <div
+              className={clx(
+                "col-span-full flex min-h-[460px] flex-col gap-3 lg:col-span-2",
+                compareData.data ?? "hidden lg:flex"
+              )}
+            >
+              <div className="flex flex-col gap-2 md:flex-row md:justify-between">
+                <p className="text-lg font-bold">
+                  <span>{t("compare_title")}</span>
+                </p>
+                <Toggle
+                  enabled={false}
+                  onStateChanged={checked => setCompareData("order", checked)}
+                  label={t("compare_toggle")}
+                />
               </div>
-            )}
+
+              <table className="w-full table-fixed border-collapse">
+                <thead>
+                  <tr className="md:text-md border-b-outline dark:border-washed-dark max-w-full border-b-2 text-left text-sm [&>*]:p-2">
+                    <th className="w-5 md:w-[50px]">#</th>
+                    <th>{compareData.params.type === "last" ? t("last_name") : t("first_name")}</th>
+                    <th>{t("table_total")}</th>
+                    <th>{t("table_most_popular")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {compareData.data ? (
+                    compareData.data
+                      .sort((a: { total: number }, b: { total: number }) =>
+                        a.total == 0
+                          ? Number.MIN_VALUE
+                          : compareData.order
+                          ? b.total - a.total
+                          : a.total - b.total
+                      )
+                      .map(
+                        (
+                          item: { name: string; total: number; max: string; min: string },
+                          i: number
+                        ) => (
+                          <tr
+                            key={item.name}
+                            className={(i < Math.min(3, compareData.data.length - 1)
+                              ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
+                              : ""
+                            ).concat(" md:text-md text-sm")}
+                          >
+                            <td
+                              className={"border-b-outline dark:border-washed-dark border-b p-2".concat(
+                                i < Math.min(3, compareData.data.length - 1)
+                                  ? " text-primary dark:text-primary-dark"
+                                  : ""
+                              )}
+                            >
+                              {i + 1}
+                            </td>
+                            <td className="border-b-outline dark:border-washed-dark truncate border-b p-2 capitalize">
+                              {`${item.name} `.concat(
+                                i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
+                              )}
+                            </td>
+                            <td className="border-b-outline dark:border-washed-dark border-b p-2">
+                              {item.total.toLocaleString("en-US")}
+                            </td>
+                            <td className="border-b-outline dark:border-washed-dark border-b p-2">
+                              {item.total === 0 ? item.max : item.max.toString().concat("s")}
+                            </td>
+                          </tr>
+                        )
+                      )
+                  ) : compareData.isLoading ? (
+                    <tr>
+                      <td colSpan={5}>
+                        <div className="grid place-items-center py-3">
+                          <Spinner loading={compareData.isLoading} />
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr>
+                      <td colSpan={5}>
+                        <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark my-3 hidden w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto lg:flex">
+                          <MagnifyingGlassIcon className=" h-4 w-4" />
+                          <p>{t("compare_prompt")}</p>
+                        </Card>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </Section>
       </Container>
