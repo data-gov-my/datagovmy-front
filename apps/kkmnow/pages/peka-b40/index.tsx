@@ -1,68 +1,72 @@
-import { InferGetStaticPropsType, GetStaticProps } from "next";
-import { get } from "@lib/api";
-import { Page, ReactElement } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import PekaB40Dashboard from "@dashboards/peka-b40";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "next-i18next";
-import { StateDropdown, StateModal } from "@components/index";
 import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import PekaB40Dashboard from "@dashboards/peka-b40";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "@lib/api";
+import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
-import { JSXElementConstructor } from "react";
+import type { Page } from "@lib/types";
+import { InferGetStaticPropsType, GetStaticProps } from "next";
 
-const PekaB40Index: Page = ({
+const PekaB40: Page = ({
+  meta,
   last_updated,
-  timeseries_screenrate,
-  heatmap_screenrate,
-  bar_age,
-  choropleth_malaysia_peka_b40,
+  params,
+  timeseries,
+  choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.peka_b40")}
-        description={t("peka.title_description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PekaB40Dashboard
+        params={params}
         last_updated={last_updated}
-        timeseries_screenrate={timeseries_screenrate}
-        heatmap_screenrate={heatmap_screenrate}
-        bar_age={bar_age}
-        choropleth_malaysia_peka_b40={choropleth_malaysia_peka_b40}
+        timeseries={timeseries}
+        choropleth={choropleth}
       />
     </>
   );
 };
 
-PekaB40Index.layout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => (
+PekaB40.layout = (page, props) => (
   <Layout
     stateSelector={
-      <StateDropdown url={routes.PEKA_B40} currentState={"mys"} exclude={["kvy"]} hideOnScroll />
+      <StateDropdown
+        width="w-max xl:w-64"
+        url={routes.PEKA_B40}
+        currentState={props.params.state}
+        hideOnScroll
+      />
     }
   >
-    <StateModal url={routes.PEKA_B40} exclude={["kvy"]} />
+    <StateModal state={props.params.state} url={routes.PEKA_B40} />
     {page}
   </Layout>
 );
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-peka-b40", "common"],
+  async () => {
+    const { data } = await get("/dashboard", { dashboard: "peka_b40", state: "mys" });
 
-  const { data } = await get("/kkmnow", { dashboard: "peka_b40", state: "mys" });
-  return {
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries_screenrate: data.timeseries,
-      heatmap_screenrate: data.heatmap_screenrate,
-      bar_age: data.barchart_ages,
-      choropleth_malaysia_peka_b40: data.choropleth_malaysia,
-    },
-    revalidate: 300,
-  };
-};
+    return {
+      notFound: false,
+      props: {
+        meta: {
+          id: "dashboard-peka-b40",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "PHCorp",
+        },
+        last_updated: data.data_last_updated,
+        params: { state: "mys" },
+        timeseries: data.timeseries,
+        choropleth: data.choropleth_malaysia,
+      },
+    };
+  }
+);
 
-export default PekaB40Index;
+export default PekaB40;

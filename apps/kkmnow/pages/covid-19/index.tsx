@@ -1,4 +1,6 @@
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 import COVID19Dashboard from "@dashboards/covid-19";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
@@ -33,15 +35,17 @@ const COVID19: Page = ({
   );
 };
 
-COVID19.layout = page => (
-  <Layout
-    stateSelector={
-      <StateDropdown url={routes.COVID} currentState={"mys"} exclude={["kvy"]} hideOnScroll />
-    }
-  >
-    <StateModal exclude={["kvy"]} url={routes.COVID} />
-    {page}
-  </Layout>
+COVID19.layout = (page, props) => (
+  <WindowProvider>
+    <Layout
+      stateSelector={
+        <StateDropdown url={routes.COVID} currentState={"mys"} exclude={["kvy"]} hideOnScroll />
+      }
+    >
+      <StateModal state={props.params.state} exclude={["kvy"]} url={routes.COVID} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n(

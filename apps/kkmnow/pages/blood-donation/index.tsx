@@ -1,15 +1,13 @@
-import Metadata from "@components/Metadata";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { get } from "@lib/api";
 import { useTranslation } from "datagovmy-ui/hooks";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import BloodDonationDashboard from "@dashboards/blood-donation";
 import { DateTime } from "luxon";
 import { Page } from "@lib/types";
 import Layout from "@components/Layout";
-import StateDropdown from "@components/Dropdown/StateDropdown";
-import StateModal from "@components/Modal/StateModal";
-import { clx } from "datagovmy-ui/helpers";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { routes } from "@lib/routes";
 
 const BloodDonation: Page = ({
@@ -58,20 +56,26 @@ const BloodDonation: Page = ({
 };
 
 BloodDonation.layout = (page, props) => (
-  <Layout
-    stateSelector={
-      <StateDropdown
-        width="w-max xl:w-64"
+  <WindowProvider>
+    <Layout
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.BLOOD_DONATION}
+          currentState={props.params.state}
+          exclude={["pjy", "pls", "lbn"]}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal
         url={routes.BLOOD_DONATION}
-        currentState={props.params.state}
+        state={props.params.state}
         exclude={["pjy", "pls", "lbn"]}
-        hideOnScroll
       />
-    }
-  >
-    <StateModal url={routes.BLOOD_DONATION} exclude={["pjy", "pls", "lbn"]} />
-    {page}
-  </Layout>
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n(

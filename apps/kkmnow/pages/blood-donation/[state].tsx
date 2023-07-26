@@ -9,6 +9,7 @@ import { get } from "@lib/api";
 import { DateTime } from "luxon";
 import { routes } from "@lib/routes";
 import BloodDonationDashboard from "@dashboards/blood-donation";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 
 const BloodDonationState: Page = ({
   meta,
@@ -59,24 +60,26 @@ const BloodDonationState: Page = ({
 };
 
 BloodDonationState.layout = (page, props) => (
-  <Layout
-    stateSelector={
-      <StateDropdown
-        width="w-max xl:w-64"
+  <WindowProvider>
+    <Layout
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.BLOOD_DONATION}
+          currentState={props.params.state}
+          exclude={["pjy", "pls", "lbn"]}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal
+        state={props.params.state}
         url={routes.BLOOD_DONATION}
-        currentState={props.params.state}
         exclude={["pjy", "pls", "lbn"]}
-        hideOnScroll
       />
-    }
-  >
-    <StateModal
-      state={props.params.state}
-      url={routes.BLOOD_DONATION}
-      exclude={["pjy", "pls", "lbn"]}
-    />
-    {page}
-  </Layout>
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 // Build at runtime

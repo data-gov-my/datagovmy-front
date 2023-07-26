@@ -31,7 +31,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   const { language, onLanguageChange } = useLanguage();
 
   const width = useWindowWidth();
-  const isTablet = width <= BREAKPOINTS.MD;
+  // const isTablet = width <= BREAKPOINTS.MD;
 
   const [isTabletNavOpen, setIsTabletNavOpen] = useState(false);
 
@@ -44,13 +44,13 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
         { title: t("nav.megamenu.dashboards.covid_19_vax"), link: routes.COVID_VAX },
       ],
     },
-    {
-      title: t("nav.megamenu.categories.healthcare_resources"),
-      list: [
-        { title: t("nav.megamenu.dashboards.healthcare_facilities"), link: routes.FACILITIES },
-        { title: t("nav.megamenu.dashboards.hospital_bed_utilisation"), link: routes.HOSPITAL_BED },
-      ],
-    },
+    // {
+    //   title: t("nav.megamenu.categories.healthcare_resources"),
+    //   list: [
+    //     { title: t("nav.megamenu.dashboards.healthcare_facilities"), link: routes.FACILITIES },
+    //     { title: t("nav.megamenu.dashboards.hospital_bed_utilisation"), link: routes.HOSPITAL_BED },
+    //   ],
+    // },
     {
       title: t("nav.megamenu.categories.healthcare_programs"),
       list: [
@@ -62,10 +62,10 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
         { title: t("nav.megamenu.dashboards.peka_b40"), link: routes.PEKA_B40 },
       ],
     },
-    {
-      title: t("nav.megamenu.categories.misc"),
-      list: [{ title: t("nav.megamenu.dashboards.covidnow_data"), link: routes.COVIDNOW_DATA }],
-    },
+    // {
+    //   title: t("nav.megamenu.categories.misc"),
+    //   list: [{ title: t("nav.megamenu.dashboards.covidnow_data"), link: routes.COVIDNOW_DATA }],
+    // },
   ];
 
   return (
@@ -126,12 +126,12 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
             {/* MOBILE NAV ICONS */}
             {isTabletNavOpen ? (
               <XMarkIcon
-                className="block h-4 w-4 text-black md:hidden"
+                className="block h-5 w-5 text-black md:hidden"
                 onClick={() => setIsTabletNavOpen(false)}
               />
             ) : (
               <Bars3BottomRightIcon
-                className="block h-4 w-4 text-black md:hidden"
+                className="block h-5 w-5 text-black md:hidden"
                 onClick={() => setIsTabletNavOpen(true)}
               />
             )}

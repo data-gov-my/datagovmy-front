@@ -35,7 +35,8 @@
     "clear_selection": "Kosongkan pilihan",
     "no_entries": "Tiada data ditemui",
     "check_out": "Lihat data",
-    "no_data": "Tiada data"
+    "no_data": "Tiada data",
+    "rank_count": "Kedudukan ({{ count }})"
   },
   "placeholder": {
     "all": "Semua",

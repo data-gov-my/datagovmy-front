@@ -1,5 +1,6 @@
 import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 import OrganDonationDashboard from "@dashboards/organ-donation";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "@lib/api";
@@ -41,19 +42,21 @@ const OrganDonationState: Page = ({
 };
 
 OrganDonationState.layout = (page, props) => (
-  <Layout
-    stateSelector={
-      <StateDropdown
-        width="w-max xl:w-64"
-        url={routes.ORGAN_DONATION}
-        currentState={props.params.state}
-        hideOnScroll
-      />
-    }
-  >
-    <StateModal url={routes.ORGAN_DONATION} state={props.params.state} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.ORGAN_DONATION}
+          currentState={props.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal url={routes.ORGAN_DONATION} state={props.params.state} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticPaths: GetStaticPaths = () => {

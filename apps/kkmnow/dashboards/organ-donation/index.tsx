@@ -14,7 +14,6 @@ import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import { TimeseriesOption } from "@lib/types";
-import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -171,7 +170,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                   </div>
                   <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
                   <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
-                    {t("choro_ranking")}
+                    {t("common:common.rank_count", { count: choropleth.data.x.length })}
                   </p>
                 </div>
                 <div className="space-y-3 overflow-auto">

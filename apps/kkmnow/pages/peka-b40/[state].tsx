@@ -1,101 +1,87 @@
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { get } from "@lib/api";
-import { Page, ReactElement } from "@lib/types";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import PekaB40Dashboard from "@dashboards/peka-b40";
-import { CountryAndStates, STATES } from "@lib/constants";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "next-i18next";
-import { StateDropdown, StateModal } from "@components/index";
 import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import PekaB40Dashboard from "@dashboards/peka-b40";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "@lib/api";
+import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import { JSXElementConstructor } from "react";
+import type { Page } from "@lib/types";
+import { CountryAndStates } from "@lib/constants";
+
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 
 const PekaB40State: Page = ({
+  meta,
   last_updated,
-  timeseries_screenrate,
-  heatmap_screenrate,
-  bar_age,
-  state,
-  choropleth_malaysia_peka_b40,
+  params,
+  timeseries,
+  choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
     <>
       <Metadata
-        title={CountryAndStates[state].concat(" - ", t("nav.megamenu.dashboards.peka_b40"))}
-        description={t("peka.title_description")}
+        title={CountryAndStates[params.state].concat(" - ", t("header"))}
+        description={t("description")}
         keywords={""}
       />
       <PekaB40Dashboard
+        params={params}
         last_updated={last_updated}
-        timeseries_screenrate={timeseries_screenrate}
-        heatmap_screenrate={heatmap_screenrate}
-        bar_age={bar_age}
-        choropleth_malaysia_peka_b40={choropleth_malaysia_peka_b40}
+        timeseries={timeseries}
+        choropleth={choropleth}
       />
     </>
   );
 };
 
-PekaB40State.layout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => (
-  <Layout
-    stateSelector={
-      <StateDropdown
-        url={routes.PEKA_B40}
-        currentState={(useRouter().query.state as string) ?? "mys"}
-        exclude={["kvy"]}
-        hideOnScroll
-      />
-    }
-  >
-    <StateModal url={routes.PEKA_B40} exclude={["kvy"]} />
-    {page}
-  </Layout>
+PekaB40State.layout = (page, props) => (
+  <WindowProvider>
+    <Layout
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.PEKA_B40}
+          currentState={props?.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.PEKA_B40} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  let paths: Array<any> = [];
-  STATES.filter(item => !["kvy"].includes(item.key)).forEach(state => {
-    paths = paths.concat([
-      {
-        params: {
-          state: state.key,
-        },
-      },
-      {
-        params: {
-          state: state.key,
-        },
-        locale: "ms-MY",
-      },
-    ]);
-  });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: paths,
-    fallback: false, // can also be true or 'blocking'
+    paths: [],
+    fallback: "blocking",
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboard-peka-b40", "common"],
+  async ({ params }) => {
+    const { data } = await get("/dashboard", { dashboard: "peka_b40", state: params?.state });
 
-  const { data } = await get("/kkmnow", { dashboard: "peka_b40", state: params?.state });
-
-  return {
-    props: {
-      ...i18n,
-      last_updated: new Date().valueOf(),
-      timeseries_screenrate: data.timeseries,
-      heatmap_screenrate: data.heatmap_screenrate,
-      bar_age: data.barchart_ages,
-      state: params?.state,
-      choropleth_malaysia_peka_b40: data.choropleth_malaysia,
-    },
-    revalidate: 300,
-  };
-};
+    return {
+      props: {
+        meta: {
+          id: "dashboard-peka-b40",
+          type: "dashboard",
+          category: "healthcare",
+          agency: "PHCorp",
+        },
+        last_updated: data.data_last_updated,
+        timeseries: data.timeseries,
+        params: params,
+        choropleth: data.choropleth_malaysia,
+      },
+    };
+  }
+);
 
 export default PekaB40State;

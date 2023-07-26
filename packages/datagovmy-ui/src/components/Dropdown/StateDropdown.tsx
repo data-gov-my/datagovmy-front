@@ -1,5 +1,5 @@
 import { OptionType } from "../types";
-import { WindowContext } from "../../hooks/useWindow";
+import { WindowContext } from "../../contexts/window";
 import { statesOptions } from "../../lib/options";
 import { useTranslation } from "../../hooks/useTranslation";
 import { useRouter } from "next/router";

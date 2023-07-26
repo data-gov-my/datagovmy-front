@@ -1,4 +1,5 @@
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import CovidVaccinationDashboard from "@dashboards/covid-vaccination";
 import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
@@ -6,7 +7,8 @@ import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
 import { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 
 /**
  * Covid Vaccination Page <State>
@@ -42,19 +44,21 @@ const CovidVaccinationState: Page = ({
 };
 
 CovidVaccinationState.layout = (page, props) => (
-  <Layout
-    stateSelector={
-      <StateDropdown
-        width="w-max xl:w-64"
-        url={routes.COVID_VAX}
-        currentState={props?.params.state}
-        hideOnScroll
-      />
-    }
-  >
-    <StateModal url={routes.COVID} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.COVID_VAX}
+          currentState={props?.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal url={routes.COVID_VAX} state={props.params.state} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticPaths: GetStaticPaths = () => {

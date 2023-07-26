@@ -35,7 +35,8 @@
     "clear_selection": "Clear selection",
     "no_entries": "No entries found",
     "check_out": "Check out",
-    "no_data": "No data"
+    "no_data": "No data",
+    "rank_count": "Ranking ({{ count }})"
   },
   "placeholder": {
     "all": "All",

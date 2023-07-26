@@ -10,5 +10,4 @@ export { useSlice } from "./useSlice";
 export { useTrace } from "./useTrace";
 export { useTranslation } from "./useTranslation";
 export { useWatch } from "./useWatch";
-export { WindowProvider, WindowContext } from "./useWindow";
 export { useZoom } from "./useZoom";

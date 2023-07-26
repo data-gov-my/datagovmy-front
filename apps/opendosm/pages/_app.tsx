@@ -9,7 +9,7 @@ import { ga_track, init_session } from "@lib/mixpanel";
 import { clx } from "datagovmy-ui/helpers";
 import { body, header } from "@config/font";
 import Nexti18NextConfig from "../next-i18next.config";
-import { WindowProvider } from "datagovmy-ui/hooks";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 
 // Global settings
 mixpanel.init(mixpanelConfig.token, { debug: process.env.NODE_ENV === "development" });

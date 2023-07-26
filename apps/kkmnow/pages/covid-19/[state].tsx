@@ -7,6 +7,7 @@ import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import type { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { CountryAndStates } from "@lib/constants";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 
 const COVID19: Page = ({
   meta,
@@ -39,20 +40,22 @@ const COVID19: Page = ({
 };
 
 COVID19.layout = (page, props) => (
-  <Layout
-    stateSelector={
-      <StateDropdown
-        width="w-max xl:w-64"
-        url={routes.COVID}
-        currentState={props.params.state ?? "mys"}
-        exclude={["kvy"]}
-        hideOnScroll
-      />
-    }
-  >
-    <StateModal exclude={["kvy"]} url={routes.COVID} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.COVID}
+          currentState={props.params.state ?? "mys"}
+          exclude={["kvy"]}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal exclude={["kvy"]} url={routes.COVID} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
