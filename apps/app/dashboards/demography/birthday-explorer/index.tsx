@@ -25,10 +25,12 @@ import { FunctionComponent, useContext, useEffect, useMemo } from "react";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface BirthdayExplorerDashboardProps {
-  timeseries: { x: number[]; y: number[] };
+  last_updated: string;
+  timeseries: { x: number[]; y: number[]; data_as_of: string };
 }
 
 const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProps> = ({
+  last_updated,
   timeseries,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common", "catalogue"]);
@@ -55,6 +57,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   const { data, setData } = useData({
     x: timeseries.x,
     y: timeseries.y,
+    rank: 0,
     state_total: 0,
     nationwide_total: 0,
     popularity: {
@@ -95,8 +98,13 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     setData("timeseries_loading", true);
     get("/explorer", query)
       .then(({ data }) => {
-        for (let key in data) {
-          setData(key, data[key]);
+        for (const key of ["x", "y"]) {
+          setData(key, data.timeseries[key]);
+        }
+        if (data.rank_table) {
+          for (const key of ["rank", "nationwide_total", "state_total", "popularity"]) {
+            setData(key, data.rank_table[key]);
+          }
         }
         setData("loading", false);
         setData("timeseries_loading", false);
@@ -150,6 +158,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description", { quote: t("quote") })]}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
             agency={t("agencies:jpn.full")}
@@ -327,7 +336,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 : CountryAndStates[data.state ? data.state : "mys"],
             context: data.start === data.end && "same_year",
           })}
-          // date={timeseries.data_as_of}
+          date={timeseries.data_as_of}
           description={
             <div className="flex justify-start gap-2">
               <Dropdown

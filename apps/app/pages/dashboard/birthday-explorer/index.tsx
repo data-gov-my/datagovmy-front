@@ -7,13 +7,17 @@ import { withi18n } from "@lib/decorators";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { WindowProvider } from "@hooks/useWindow";
 
-const BirthdayExplorer = ({ meta, timeseries }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const BirthdayExplorer = ({
+  meta,
+  last_updated,
+  timeseries,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WindowProvider>
-        <BirthdayExplorerDashboard timeseries={timeseries} />
+        <BirthdayExplorerDashboard last_updated={last_updated} timeseries={timeseries} />
       </WindowProvider>
     </AnalyticsProvider>
   );
@@ -26,13 +30,14 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
+        last_updated: data.data_last_updated,
         meta: {
           id: "dashboard-birthday-explorer",
           type: "dashboard",
           category: "demography",
           agency: "JPN",
         },
-        timeseries: data,
+        timeseries: data.timeseries,
       },
     };
   }
