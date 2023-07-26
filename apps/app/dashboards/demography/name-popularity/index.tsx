@@ -179,8 +179,17 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     count: [10004, 13409, 30904, 43434, 50694, 75443, 70530, 78667, 62537, 15519],
   };
 
-  const renderPlaceholderBar = (icon: ReactNode, prompt_key: string) => (
-    <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
+  const renderPlaceholderBar = (
+    icon: ReactNode,
+    prompt_key: string,
+    alwaysShow: boolean = true
+  ) => (
+    <div
+      className={clx(
+        "relative h-[460px] w-full items-center justify-center",
+        alwaysShow ? "flex" : "hidden lg:flex"
+      )}
+    >
       <Bar
         className="absolute top-0 h-[460px] w-full opacity-10"
         precision={0}
@@ -347,7 +356,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   )}
                 </div>
               ) : (
-                renderPlaceholderBar(<MagnifyingGlassIcon className="h-4 w-4" />, "search_prompt")
+                renderPlaceholderBar(
+                  <MagnifyingGlassIcon className="h-4 w-4" />,
+                  "search_prompt",
+                  false
+                )
               )}
             </div>
           </div>
