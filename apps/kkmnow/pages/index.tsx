@@ -4,8 +4,6 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import Hero from "@components/Hero";
-import { useWindowWidth } from "@hooks/useWindowWidth";
-import { BREAKPOINTS } from "@lib/constants";
 import type { Page } from "@lib/types";
 import { Container, Metadata } from "datagovmy-ui/components";
 // import Zoom from "react-medium-image-zoom";
@@ -13,8 +11,6 @@ import { Container, Metadata } from "datagovmy-ui/components";
 
 const Home: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation();
-  const windowWidth = useWindowWidth();
-  const isMobile = windowWidth < BREAKPOINTS.MD;
 
   // TODO: update last image after launch day
   // const imageArr = [

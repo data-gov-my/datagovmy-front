@@ -1,7 +1,6 @@
 import { At, Container, Dropdown } from "datagovmy-ui/components";
 import Image from "next/image";
 import { FunctionComponent, ReactElement, useState } from "react";
-import { useTranslation } from "next-i18next";
 import {
   HomeIcon,
   Bars3BottomRightIcon,
@@ -10,15 +9,13 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { languages } from "@lib/options";
-
-import { BREAKPOINTS } from "@lib/constants";
 import { routes } from "@lib/routes";
-import { useLanguage } from "@hooks/useLanguage";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { useLanguage, useTranslation } from "datagovmy-ui/hooks";
 
 import Nav from "@components/Nav";
 import NavItem from "@components/Nav/Item";
 import MegaMenu from "@components/Nav/MegaMenu";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 
 interface HeaderProps {
   stateSelector?: ReactElement;
@@ -27,9 +24,6 @@ interface HeaderProps {
 const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   const { t } = useTranslation();
   const { language, onLanguageChange } = useLanguage();
-
-  const width = useWindowWidth();
-  // const isTablet = width <= BREAKPOINTS.MD;
 
   const [isTabletNavOpen, setIsTabletNavOpen] = useState(false);
 
@@ -91,36 +85,42 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                 icon={<HomeIcon className="h-4 w-4 text-black" />}
               />
               {/* DASHBOARD MEGA MENU */}
-              <MegaMenu
-                title={t("nav.dashboards")}
-                icon={<RectangleGroupIcon className="h-4 w-4 text-black" />}
-              >
-                <Container className="relative grid gap-4 py-3 md:grid-cols-4 md:gap-6 md:py-6">
-                  {megaMenuItems.map((item, index) => (
-                    <div key={item.title} className="text-sm">
-                      <p className="mb-2 font-bold">{item.title}</p>
-                      <ul className="flex flex-col gap-2">
-                        {item.list.map((li, index) => (
-                          <li
-                            key={item.title.concat(index.toString())}
-                            className="text-footer-link"
-                          >
-                            <At href={li.link} onClick={() => setIsTabletNavOpen(false)}>
-                              {li.title}
-                            </At>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </Container>
-              </MegaMenu>
+              <WindowProvider>
+                <MegaMenu
+                  title={t("nav.dashboards")}
+                  icon={<RectangleGroupIcon className="h-4 w-4 text-black" />}
+                >
+                  <Container className="relative grid gap-4 py-3 md:grid-cols-4 md:gap-6 md:py-6">
+                    {megaMenuItems.map((item, index) => (
+                      <div key={item.title} className="text-sm">
+                        <p className="mb-2 font-bold">{item.title}</p>
+                        <ul className="flex flex-col gap-2">
+                          {item.list.map((li, index) => (
+                            <li
+                              key={item.title.concat(index.toString())}
+                              className="text-footer-link"
+                            >
+                              <At href={li.link} onClick={() => setIsTabletNavOpen(false)}>
+                                {li.title}
+                              </At>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </Container>
+                </MegaMenu>
+              </WindowProvider>
             </Nav>
           </div>
           <div className="flex items-center gap-4">
             {stateSelector}
             {/* LANGUAGE DROPDOWN */}
-            <Dropdown selected={language} onChange={onLanguageChange} options={languages} />
+            <Dropdown
+              selected={languages.find(lang => lang.value === language)}
+              onChange={onLanguageChange}
+              options={languages}
+            />
             {/* MOBILE NAV ICONS */}
             {isTabletNavOpen ? (
               <XMarkIcon

@@ -1,25 +1,23 @@
-import { Fragment, useState, ReactElement, SetStateAction, Dispatch } from "react";
+import { Fragment, useState, useContext, FunctionComponent, ReactNode } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 import { BREAKPOINTS } from "@lib/constants";
-import { useWindowWidth } from "@hooks/useWindowWidth";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 
-type MegaMenuProps = {
-  icon?: JSX.Element;
+interface MegaMenuProps {
+  icon?: ReactNode;
   title: string;
-  children: ReactElement[] | ReactElement;
-};
+  children: ReactNode;
+}
 
-const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
-  const windowWidth = useWindowWidth();
-  const isTablet = windowWidth >= BREAKPOINTS.MD;
-
+const MegaMenu: FunctionComponent<MegaMenuProps> = ({ icon, title, children }) => {
+  const { size } = useContext(WindowContext);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="w-full">
-      {!isTablet ? (
+      {size.width <= BREAKPOINTS.MD ? (
         <>
           <div
             onClick={() => setIsOpen(!isOpen)}
