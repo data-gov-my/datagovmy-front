@@ -44,7 +44,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   type = "state",
   data = dummyData,
   prefix,
-  precision = 1,
+  precision = [1, 0],
   unit,
   color,
   enableOutline = true,

@@ -61,7 +61,7 @@ const Bar: FunctionComponent<BarProps> = ({
   formatX,
   onClick,
   reverse = false,
-  precision = 1,
+  precision = [1, 0],
   enableLegend = false,
   enableStack = false,
   enableGridX = true,
@@ -169,11 +169,11 @@ const Bar: FunctionComponent<BarProps> = ({
             if (!formatX) {
               return isVertical
                 ? this.getLabelForValue(value as number).concat(unitX ?? "")
-                : display(value as number, "compact", 1);
+                : display(value as number, "compact", precision);
             }
             let text = isVertical
               ? formatX(this.getLabelForValue(value as number))
-              : display(value as number, "compact", 1);
+              : display(value as number, "compact", precision);
             if (text.length > 25) text = text.slice(0, 25).concat("..");
             return text;
           },
