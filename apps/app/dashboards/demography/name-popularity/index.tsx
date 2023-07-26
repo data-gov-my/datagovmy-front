@@ -495,7 +495,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                               {item.total.toLocaleString("en-US")}
                             </td>
                             <td className="border-b-outline dark:border-washed-dark border-b p-2">
-                              {item.total === 0 ? item.max : item.max.toString().concat("s")}
+                              {item.max ? item.max.toString().concat("s") : "N/A"}
                             </td>
                           </tr>
                         )
