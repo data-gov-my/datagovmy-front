@@ -2,7 +2,7 @@ import AgencyBadge from "@components/Badge/agency";
 import Card from "@components/Card";
 import Chips from "@components/Chips";
 import { JPNIcon } from "@components/Icon/agency";
-import { Button, Container, Hero, Input, Radio, Section } from "@components/index";
+import { Button, Container, Dropdown, Hero, Input, Radio, Section } from "@components/index";
 import Toggle from "@components/Toggle";
 import Spinner from "@components/Spinner";
 import { OptionType } from "@components/types";
@@ -24,12 +24,24 @@ const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
 interface NamePopularityDashboardProps {
   top_names: Record<string, any>;
+  yearDropdown: number[];
+  ethnicityDropdown: string[];
 }
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({
   top_names,
+  yearDropdown,
+  ethnicityDropdown,
 }) => {
   const { t } = useTranslation(["dashboard-name-popularity", "common"]);
+
+  const { data: tableData, setData: setTableData } = useData({
+    selectedEthnicity: {
+      label: t(ethnicityDropdown.at(0) as string),
+      value: ethnicityDropdown.at(0),
+    },
+    selectedYear: { label: `${yearDropdown.at(-1)}`, value: `${yearDropdown.at(-1)}` },
+  });
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },
@@ -52,6 +64,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     loading: false,
   });
 
+  const yearOptions: OptionType[] = yearDropdown.map(val => ({
+    label: val.toString(),
+    value: val.toString(),
+  }));
+
+  const ethnicityOptions: OptionType[] = ethnicityDropdown.map(ethnicity => ({
+    label: t(ethnicity),
+    value: ethnicity,
+  }));
   const { theme } = useTheme();
 
   const filterTypes: Array<OptionType> = [
@@ -230,6 +251,112 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         }
       />
       <Container className="min-h-screen">
+        <Section>
+          <div className="space-y-6">
+            <div className="flex flex-col place-content-center place-items-center gap-3 sm:flex-row">
+              <h4 className="text-center">{t("Most popular")}</h4>
+              <Dropdown
+                width="w-fit"
+                selected={tableData.selectedEthnicity}
+                onChange={e => {
+                  setTableData("selectedEthnicity", e);
+                }}
+                options={ethnicityOptions}
+              />
+              <h4 className="text-center">{t("baby names in")}</h4>
+              <Dropdown
+                width="w-fit"
+                selected={tableData.selectedYear}
+                onChange={e => {
+                  setTableData("selectedYear", e);
+                }}
+                options={yearOptions}
+              />
+            </div>
+            <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12">
+              <table className="lg:col-span-4 lg:col-start-3">
+                <thead className="dark:border-washed-dark border-b-2">
+                  <tr>
+                    <th className="px-1 py-2 text-center text-sm font-medium">#</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
+                      {t("column_male_name")}
+                    </th>
+                    <th className="px-1 py-2 text-end text-sm font-medium">{t("column_count")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {top_names[tableData.selectedYear.value][tableData.selectedEthnicity.value]
+                    .filter(({ sex }: { sex: string }) => {
+                      return sex === "male";
+                    })
+                    .map((item: { name_first: string; sex: string; count: number }, i: number) => (
+                      <tr
+                        key={i}
+                        className={"dark:border-washed-dark border-b".concat(
+                          i < 3 ? " bg-background dark:bg-background-dark" : ""
+                        )}
+                      >
+                        <td
+                          className={"px-1 py-2 text-center text-sm font-medium".concat(
+                            i < 3 ? " text-primary dark:text-primary-dark" : ""
+                          )}
+                        >
+                          {i + 1}
+                        </td>
+                        <td className="w-1/2 px-1 py-2 text-start text-sm font-medium capitalize">
+                          {`${item.name_first}`}
+                        </td>
+
+                        <td className="px-1 py-2 text-end text-sm font-medium">
+                          {item.count.toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+
+              <table className="lg:col-span-4 lg:col-start-7">
+                <thead className="dark:border-washed-dark border-b-2">
+                  <tr>
+                    <th className="px-1 py-2 text-center text-sm font-medium">#</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
+                      {t("column_female_name")}
+                    </th>
+                    <th className="px-1 py-2 text-end text-sm font-medium">{t("column_count")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {top_names[tableData.selectedYear.value][tableData.selectedEthnicity.value]
+                    .filter(({ sex }: { sex: string }) => {
+                      return sex === "female";
+                    })
+                    .map((item: { name_first: string; sex: string; count: number }, i: number) => (
+                      <tr
+                        key={i}
+                        className={"dark:border-washed-dark border-b".concat(
+                          i < 3 ? " bg-background dark:bg-background-dark" : ""
+                        )}
+                      >
+                        <td
+                          className={"px-1 py-2 text-center text-sm font-medium".concat(
+                            i < 3 ? " text-primary dark:text-primary-dark" : ""
+                          )}
+                        >
+                          {i + 1}
+                        </td>
+                        <td className="w-1/2 px-1 py-2 text-start text-sm font-medium capitalize">
+                          {`${item.name_first}`}
+                        </td>
+                        <td className="px-1 py-2 text-end text-sm font-medium">
+                          {item.count.toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Section>
         <Section title={t("section1_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
