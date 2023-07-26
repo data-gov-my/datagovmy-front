@@ -42,6 +42,10 @@ module.exports = {
         13: "repeat(13, minmax(0, 1fr))",
         14: "repeat(14, minmax(0, 1fr))",
       },
+      boxShadow: {
+        button: "0 1px 2px rgba(0, 0, 0, 0.1)",
+        floating: "0 6px 24px rgba(0, 0, 0, 0.1)",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

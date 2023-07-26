@@ -16,7 +16,7 @@ const BarPerc: FunctionComponent<BarPercProps> = ({
   label,
   value,
   className = "w-fit space-y-1",
-  precision = 1,
+  precision = [1, 0],
   hidden = false,
   total = 100,
   unit = "%",

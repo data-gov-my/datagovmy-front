@@ -9,6 +9,9 @@ import dart from "highlight.js/lib/languages/dart";
 import kotlin from "highlight.js/lib/languages/kotlin";
 import java from "highlight.js/lib/languages/java";
 import html_xml from "highlight.js/lib/languages/xml";
+import r from "highlight.js/lib/languages/r";
+import julia from "highlight.js/lib/languages/julia";
+
 import { GithubThemes } from "./theme";
 import { clx, copyClipboard } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
@@ -44,6 +47,14 @@ const LANGUAGE_OPTIONS = [
     label: "Java",
     value: "java",
   },
+  {
+    label: "R",
+    value: "r",
+  },
+  {
+    label: "Julia",
+    value: "julia",
+  },
 ] as const;
 
 export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
@@ -64,6 +75,8 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
   hljs.registerLanguage("kotlin", kotlin);
   hljs.registerLanguage("java", java);
   hljs.registerLanguage("html", html_xml);
+  hljs.registerLanguage("r", r);
+  hljs.registerLanguage("julia", julia);
 
   const languageOptions = LANGUAGE_OPTIONS.filter(({ value }) => {
     return Object.keys(children).includes(value);

@@ -29,7 +29,6 @@ const Error: FunctionComponent<ErrorProps> = ({ title, description, code, reason
           <div className="rounded-xl bg-black ">
             <div className="flex justify-between border-b border-outline border-opacity-20 p-2.5 text-white">
               <Dropdown
-                darkMode
                 sublabel={<GlobeAltIcon className="mr-2 h-4 w-4" />}
                 options={[{ label: "Bash", value: "bash" }]}
                 selected={{ label: "Bash", value: "bash" }}

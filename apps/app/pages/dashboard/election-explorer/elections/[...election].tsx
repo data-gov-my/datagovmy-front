@@ -82,7 +82,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
       return {
         props: {
-          last_updated: seats.data.data_last_update,
+          last_updated: seats.data.data_last_updated,
           meta: {
             id: "dashboard-election-explorer",
             type: "dashboard",

@@ -14,12 +14,13 @@ import {
   Slider,
 } from "datagovmy-ui/components";
 import Hero from "@components/Hero";
-import { useSlice, useData, useTranslation, WindowContext } from "datagovmy-ui/hooks";
+import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, BREAKPOINTS, SHORT_LANG } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { EyeIcon, DocumentArrowDownIcon } from "@heroicons/react/24/solid";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import { ReactNode, useContext, useEffect, useMemo } from "react";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 import { routes } from "@lib/routes";
 import {
   UsersIcon,
@@ -44,7 +45,7 @@ const Home: Page = ({
   timeseries_callouts,
   analytics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const { t, i18n } = useTranslation();
 
   // const { data, setData } = useData({

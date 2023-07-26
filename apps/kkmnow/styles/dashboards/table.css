@@ -1,0 +1,87 @@
+.table {
+  @apply relative table-auto border-collapse border-spacing-0 lg:w-full lg:max-w-full lg:table-fixed;
+}
+
+.table-responsive {
+  @apply overflow-auto lg:overflow-visible;
+}
+
+.table th {
+  @apply w-[30%] font-normal text-dim;
+}
+.table tbody tr {
+  @apply border-b-[0.5px] border-l-[0.5px] border-l-black;
+}
+
+.table tbody tr:first-child {
+  @apply border-t-[0.5px];
+}
+
+.table tbody tr:last-child {
+  @apply border-b-[0.5px] border-b-black;
+}
+
+.table td {
+  @apply border-r-[0.5px] p-0;
+}
+
+.table td > div {
+  @apply w-max px-2 py-1 text-sm lg:w-auto;
+}
+
+.table th:first-child {
+  @apply w-max text-left lg:w-44;
+}
+
+.table-sticky-first thead tr > th:first-child,
+.table-sticky-first tbody tr > td:first-child {
+  @apply sticky left-0 z-10 bg-white;
+}
+/* .table tr > td:first-child {
+    @apply w-44 text-left;
+} */
+.table th:not(:first-child) {
+  @apply w-[20%] lg:w-auto;
+}
+
+.table tr:first-child {
+  @apply border-t-black;
+}
+
+.table-stripe tr:nth-child(even) {
+  @apply bg-slate-100;
+}
+
+.table-default th:first-child {
+  @apply w-auto;
+}
+
+.table-facility th,
+.table-bed th,
+.table-default th {
+  @apply py-2;
+}
+
+.table-bed th:not(:first-child) {
+  @apply w-[200px] lg:w-auto;
+}
+
+.table-facility th:nth-last-child(2) {
+  @apply w-[500px] lg:w-[25%];
+}
+.table-facility th:first-child {
+  @apply w-[200px] lg:w-[20%];
+}
+.table-facility td,
+.table-bed td,
+.table-default td {
+  @apply border-r-outline;
+}
+.table-facility td:last-child,
+.table-bed td:last-child,
+.table-default td:last-child {
+  @apply border-r-black;
+}
+.table-bed th:nth-child(2) {
+  @apply w-[400px] lg:w-[30%];
+}

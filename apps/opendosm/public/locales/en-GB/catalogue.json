@@ -16,7 +16,7 @@
   "source": "Data Source",
   "placeholder": {
     "source": "Select agency",
-    "search": "Search for dataset",
+    "search": "Search dataset (Press '/' to focus)",
     "demography": "Data contains"
   },
   "filter_options": {

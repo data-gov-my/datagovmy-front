@@ -85,6 +85,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableTooltip?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  enableMajorTick?: boolean;
   tickXCallback?: (
     this: Scale,
     tickValue: number | string,
@@ -131,6 +132,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableLegend = false,
   enableGridX = false,
   enableGridY = true,
+  enableMajorTick = true,
   enableAnimation = true,
   enableTooltip = true,
   gridOffsetX = true,
@@ -344,7 +346,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ticks: {
             callback: tickXCallback,
             major: {
-              enabled: true,
+              enabled: enableMajorTick,
             },
             minRotation: 0,
             maxRotation: 0,

@@ -29,3 +29,9 @@ declare module "chartjs-plugin-crosshair" {
     interpolate: Function;
   }
 }
+
+// canvas2svg mock typings
+declare module "canvas2svg" {
+  export default (width: number, height: number) => any;
+  getSerializedSvg();
+}
