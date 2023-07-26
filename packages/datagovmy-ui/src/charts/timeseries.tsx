@@ -28,11 +28,10 @@ import {
   Tick,
   TooltipItem,
   LegendItem,
-  ChartEvent,
-  LegendElement,
+  TimeUnit,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
-import AnnotationPlugin from "chartjs-plugin-annotation";
+import AnnotationPlugin, { AnnotationOptions } from "chartjs-plugin-annotation";
 import { Chart } from "react-chartjs-2";
 import { clx, numFormat } from "../lib/helpers";
 import "chartjs-adapter-luxon";
@@ -41,18 +40,8 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "../lib/constants";
 import Spinner from "../components/Spinner";
-export type Periods =
-  | false
-  | "auto"
-  | "millisecond"
-  | "second"
-  | "minute"
-  | "hour"
-  | "day"
-  | "week"
-  | "month"
-  | "quarter"
-  | "year";
+
+export type Periods = TimeUnit | "auto" | false;
 export interface TimeseriesProps extends ChartHeaderProps {
   id?: string;
   className?: string;
@@ -85,6 +74,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableTooltip?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  enableMajorTick?: boolean;
   tickXCallback?: (
     this: Scale,
     tickValue: number | string,
@@ -131,6 +121,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableLegend = false,
   enableGridX = false,
   enableGridY = true,
+  enableMajorTick = true,
   enableAnimation = true,
   enableTooltip = true,
   gridOffsetX = true,
@@ -289,7 +280,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
                     return prev;
                   }, -1) as number,
                   yValue: set.data[yIndex],
-                };
+                } as AnnotationOptions;
               }),
             }
           : false,
@@ -344,7 +335,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ticks: {
             callback: tickXCallback,
             major: {
-              enabled: true,
+              enabled: enableMajorTick,
             },
             minRotation: 0,
             maxRotation: 0,
@@ -416,14 +407,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     };
   }, [data, interval, theme]);
 
-  const autoScale = useMemo(
-    () => data.labels && (data.labels.length > 200 ? "month" : "day"),
-    [data.labels]
-  );
-  const autoRound = useMemo(
-    () => data.labels && (data.labels.length > 720 ? "week" : "day"),
-    [data.labels]
-  );
+  const autoScale = useMemo(() => (data.labels!.length > 200 ? "month" : "day"), [data.labels]);
+  const autoRound = useMemo(() => (data.labels!.length > 720 ? "week" : "day"), [data.labels]);
 
   return (
     <div>

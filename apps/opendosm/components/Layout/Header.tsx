@@ -1,7 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
 import { FunctionComponent, ReactElement, useState } from "react";
-import { useTranslation } from "datagovmy-ui/hooks";
 import {
   HomeIcon,
   Bars3BottomRightIcon,
@@ -9,14 +7,12 @@ import {
   RectangleGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-
 import { languages } from "@lib/options";
-
 import { routes } from "@lib/routes";
-import { useLanguage } from "@hooks/useLanguage";
+import { useTranslation, useLanguage } from "datagovmy-ui/hooks";
+import { Dropdown, At } from "datagovmy-ui/components";
 import Nav from "@components/Nav";
 import NavItem from "@components/Nav/Item";
-import { Dropdown, Container } from "datagovmy-ui/components";
 import MegaMenu from "@components/Nav/MegaMenu";
 
 interface HeaderProps {
@@ -99,82 +95,81 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   ];
 
   return (
-    <div className="fixed left-0 top-0 z-30 w-full">
-      <Container background="bg-white" className="flex items-center gap-4 border-b py-[11px]">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <div className="flex cursor-pointer gap-2">
-                <div className="flex w-8 items-center justify-center">
-                  <Image src="/static/images/logo.png" width={48} height={36} alt="" />
-                </div>
-                <h4>OpenDOSM</h4>
+    <div className="fixed left-0 top-0 z-30 w-full bg-white">
+      <div className="container mx-auto flex w-full items-center justify-between gap-4 border-b px-3 py-[11px] lg:px-0">
+        <div className="flex items-center gap-4">
+          <At href="/">
+            <div className="flex cursor-pointer gap-2">
+              <div className="flex w-8 items-center justify-center">
+                <Image src="/static/images/logo.png" width={48} height={36} alt="logo" />
               </div>
-            </Link>
-            <Nav isTabletNavOpen={isTabletNavOpen}>
-              <NavItem
-                title={t("nav.home")}
-                link="/"
-                icon={<HomeIcon className="h-5 w-5 text-black" />}
-                onClick={() => setIsTabletNavOpen(false)}
-              />
-              <NavItem
-                title={t("nav.catalogue")}
-                link="/data-catalogue"
-                icon={<ChartBarSquareIcon className="h-5 w-5 text-black" />}
-                onClick={() => setIsTabletNavOpen(false)}
-              />
-              {/* DASHBOARD MEGA MENU */}
-              <MegaMenu
-                title={t("nav.dashboards")}
-                icon={<RectangleGroupIcon className="h-5 w-5 text-black" />}
-              >
-                <Container className="relative grid max-h-[70vh] grid-cols-2 gap-8 overflow-auto py-3 lg:grid-cols-3 lg:gap-12 lg:py-6">
-                  {megaMenuItems.map(item => (
-                    <div key={item.title} className="text-sm">
-                      <p className="mb-2 font-bold">{item.title}</p>
-                      <ul
-                        className={[
-                          "gap-4 space-y-2",
-                          item.list.length > 3 ? "columns-1 lg:columns-2" : "columns-1",
-                        ].join(" ")}
-                      >
-                        {item.list.map((li, index) => (
-                          <li
-                            key={item.title.concat(index.toString())}
-                            className="text-footer-link"
-                          >
-                            <Link href={li.link} onClick={() => setIsTabletNavOpen(false)}>
-                              {li.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </Container>
-              </MegaMenu>
-            </Nav>
-          </div>
-          <div className="flex items-center gap-4">
-            {stateSelector}
-            {/* LANGUAGE DROPDOWN */}
-            <Dropdown selected={language} onChange={onLanguageChange} options={languages} />
-            {/* MOBILE NAV ICONS */}
-            {isTabletNavOpen ? (
-              <XMarkIcon
-                className="block h-5 w-5 text-black md:hidden"
-                onClick={() => setIsTabletNavOpen(false)}
-              />
-            ) : (
-              <Bars3BottomRightIcon
-                className="block h-5 w-5 text-black md:hidden"
-                onClick={() => setIsTabletNavOpen(true)}
-              />
-            )}
-          </div>
+              <h4>OpenDOSM</h4>
+            </div>
+          </At>
+          <Nav isTabletNavOpen={isTabletNavOpen}>
+            <NavItem
+              title={t("nav.home")}
+              link="/"
+              icon={<HomeIcon className="h-5 w-5 text-black" />}
+              onClick={() => setIsTabletNavOpen(false)}
+            />
+            <NavItem
+              title={t("nav.catalogue")}
+              link="/data-catalogue"
+              icon={<ChartBarSquareIcon className="h-5 w-5 text-black" />}
+              onClick={() => setIsTabletNavOpen(false)}
+            />
+            {/* DASHBOARD MEGA MENU */}
+            <MegaMenu
+              title={t("nav.dashboards")}
+              icon={<RectangleGroupIcon className="h-5 w-5 text-black" />}
+            >
+              <div className="container relative mx-auto grid max-h-[70vh] grid-cols-2 gap-8 overflow-auto px-3 py-3 lg:grid-cols-3 lg:gap-12 lg:px-0 lg:py-6">
+                {megaMenuItems.map(item => (
+                  <div key={item.title} className="text-sm">
+                    <p className="mb-2 font-bold">{item.title}</p>
+                    <ul
+                      className={[
+                        "gap-3 space-y-2",
+                        item.list.length > 3 ? "columns-1 lg:columns-2" : "columns-1",
+                      ].join(" ")}
+                    >
+                      {item.list.map((li, index) => (
+                        <li key={item.title.concat(index.toString())} className="text-footer-link">
+                          <At href={li.link} onClick={() => setIsTabletNavOpen(false)}>
+                            {li.title}
+                          </At>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </MegaMenu>
+          </Nav>
         </div>
-      </Container>
+        <div className="flex items-center gap-4">
+          {stateSelector}
+          {/* LANGUAGE DROPDOWN */}
+          <Dropdown
+            selected={languages.find(lang => lang.value === language)}
+            onChange={onLanguageChange}
+            options={languages}
+          />
+          {/* MOBILE NAV ICONS */}
+          {isTabletNavOpen ? (
+            <XMarkIcon
+              className="block h-5 w-5 text-black md:hidden"
+              onClick={() => setIsTabletNavOpen(false)}
+            />
+          ) : (
+            <Bars3BottomRightIcon
+              className="block h-5 w-5 text-black md:hidden"
+              onClick={() => setIsTabletNavOpen(true)}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

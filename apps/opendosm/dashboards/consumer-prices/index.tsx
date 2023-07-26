@@ -1,5 +1,5 @@
 import Hero from "@components/Hero";
-import { numFormat, toDate } from "@lib/helpers";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 

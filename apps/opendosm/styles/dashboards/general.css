@@ -78,10 +78,6 @@
   @apply visible;
 }
 
-.nivo-tooltip {
-  @apply flex min-w-max origin-center items-center justify-center rounded bg-black px-[9px] py-[5px] text-sm text-white shadow;
-}
-
 .donut-meter::before {
   content: "";
   transform: translate(-50%, -50%);
