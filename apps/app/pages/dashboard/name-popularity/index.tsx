@@ -10,13 +10,19 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 const NamePopularity: Page = ({
   meta,
   top_names,
+  yearDropdown,
+  ethnicityDropdown,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-name-popularity", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <NamePopularityDashboard top_names={top_names} />
+      <NamePopularityDashboard
+        top_names={top_names}
+        yearDropdown={yearDropdown}
+        ethnicityDropdown={ethnicityDropdown}
+      />
     </AnalyticsProvider>
   );
 };
@@ -36,6 +42,8 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-name-popularit
         agency: "JPN",
       },
       top_names: data.top_names.data,
+      yearDropdown: data.year_dropdown.data.data,
+      ethnicityDropdown: data.ethnicity_dropdown.data.data,
     },
   };
 });
