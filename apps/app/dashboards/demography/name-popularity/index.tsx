@@ -6,7 +6,7 @@ import { Button, Container, Hero, Input, Radio, Section } from "@components/inde
 import Toggle from "@components/Toggle";
 import Spinner from "@components/Spinner";
 import { OptionType } from "@components/types";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { MagnifyingGlassIcon, LockClosedIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { WindowContext } from "@hooks/useWindow";
@@ -14,7 +14,7 @@ import { get } from "@lib/api";
 import { BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent, ReactNode, useContext } from "react";
 import { toast } from "@components/Toast";
 import { clx } from "@lib/helpers";
 /**
@@ -92,6 +92,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     get("/explorer", params)
       .then(({ data }) => {
         setSearchData("data", data.data);
+        setSearchData("private", data.data?.count === null);
         setSearchData("loading", false);
       })
       .catch(e => {
@@ -178,6 +179,32 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     count: [10004, 13409, 30904, 43434, 50694, 75443, 70530, 78667, 62537, 15519],
   };
 
+  const renderPlaceholderBar = (icon: ReactNode, prompt_key: string) => (
+    <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
+      <Bar
+        className="absolute top-0 h-[460px] w-full opacity-10"
+        precision={0}
+        data={{
+          labels: placeholderData.decade,
+          datasets: [
+            {
+              data: placeholderData.count,
+              borderRadius: 12,
+              barThickness: 12,
+              backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
+            },
+          ],
+        }}
+        enableGridX={false}
+        tooltipEnabled={false}
+      />
+      <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
+        {icon}
+        <p>{t(prompt_key)}</p>
+      </Card>
+    </div>
+  );
+
   return (
     <>
       <Hero
@@ -253,6 +280,30 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     <div className="flex h-[460px] items-center justify-center">
                       <Spinner loading={searchData.loading} />
                     </div>
+                  ) : searchData.private ? (
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-lg font-bold">
+                          <span>
+                            {t(`bar_title_${searchData.params.type}`, {
+                              count: searchData.data.total || 0,
+                            })}
+                          </span>
+                          <span>{`"${searchData.params.name}".`}</span>
+                        </p>
+                        <p className="text-dim text-sm">
+                          <span>
+                            {t("bar_description", {
+                              name: searchData.params.name,
+                            })}
+                          </span>
+                        </p>
+                      </div>
+                      {renderPlaceholderBar(
+                        <LockClosedIcon className="h-4 w-4" />,
+                        t("To preserve privacy, timeseries data for this name is not displayed.")
+                      )}
+                    </div>
                   ) : (
                     <Bar
                       precision={0}
@@ -284,7 +335,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         datasets: [
                           {
                             data: searchData.data.count,
-                            label: "Similar names",
+                            label: t("similar_names"),
                             borderRadius: 12,
                             barThickness: 12,
                             backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
@@ -296,28 +347,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   )}
                 </div>
               ) : (
-                <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
-                  <Bar
-                    className="absolute top-0 h-[460px] w-full opacity-30"
-                    data={{
-                      labels: placeholderData.decade,
-                      datasets: [
-                        {
-                          data: placeholderData.count,
-                          borderRadius: 12,
-                          barThickness: 12,
-                          backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                    tooltipEnabled={false}
-                  />
-                  <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
-                    <MagnifyingGlassIcon className=" h-4 w-4" />
-                    <p>{t("search_prompt")}</p>
-                  </Card>
-                </div>
+                renderPlaceholderBar(<MagnifyingGlassIcon className="h-4 w-4" />, "search_prompt")
               )}
             </div>
           </div>
