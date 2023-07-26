@@ -1,4 +1,5 @@
-import { Container, ErrorCode, Metadata } from "@components/index";
+import { Container, Metadata } from "datagovmy-ui/components";
+import ErrorCode from "@components/Error";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";

@@ -1,4 +1,4 @@
-import { At } from "datagovmy-ui/components";
+import { At, Container, Dropdown } from "datagovmy-ui/components";
 import Image from "next/image";
 import { FunctionComponent, ReactElement, useState } from "react";
 import { useTranslation } from "next-i18next";
@@ -18,8 +18,6 @@ import { useWindowWidth } from "@hooks/useWindowWidth";
 
 import Nav from "@components/Nav";
 import NavItem from "@components/Nav/Item";
-import Dropdown from "@components/Dropdown";
-import Container from "@components/Container";
 import MegaMenu from "@components/Nav/MegaMenu";
 
 interface HeaderProps {

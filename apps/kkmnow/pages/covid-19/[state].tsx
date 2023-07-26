@@ -1,4 +1,5 @@
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
+import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import COVID19Dashboard from "@dashboards/covid-19";
 import { useTranslation } from "next-i18next";
 import { get } from "@lib/api";
@@ -52,7 +53,7 @@ COVID19.layout = (page, props) => (
         />
       }
     >
-      <StateModal exclude={["kvy"]} url={routes.COVID} />
+      <StateModal state={props.params.state} exclude={["kvy"]} url={routes.COVID} />
       {page}
     </Layout>
   </WindowProvider>

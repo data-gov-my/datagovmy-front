@@ -1,8 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
+import { Container } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
-
-import Container from "@components/Container";
 
 const Footer = () => {
   const { t } = useTranslation();

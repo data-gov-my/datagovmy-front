@@ -1,14 +1,13 @@
-import Image from "next/image";
+import type { InferGetStaticPropsType } from "next";
 import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
-import type { InferGetStaticPropsType } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import type { Page } from "@lib/types";
-import { BREAKPOINTS } from "@lib/constants";
+import Hero from "@components/Hero";
 import { useWindowWidth } from "@hooks/useWindowWidth";
-
-import { Hero, Container, Metadata } from "@components/index";
+import { BREAKPOINTS } from "@lib/constants";
+import type { Page } from "@lib/types";
+import { Container, Metadata } from "datagovmy-ui/components";
 // import Zoom from "react-medium-image-zoom";
 // import "react-medium-image-zoom/dist/styles.css";
 

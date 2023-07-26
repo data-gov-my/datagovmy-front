@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import { appWithTranslation } from "next-i18next";
 import { AppPropsLayout } from "@lib/types";
-import { Layout } from "@components/index";
+import Layout from "@components/Layout";
 import { ReactNode } from "react";
 import nextI18nextConfig from "../next-i18next.config";
 

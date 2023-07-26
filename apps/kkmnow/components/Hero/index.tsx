@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactNode } from "react";
-import Container from "@components/Container";
+import { Container } from "datagovmy-ui/components";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 
