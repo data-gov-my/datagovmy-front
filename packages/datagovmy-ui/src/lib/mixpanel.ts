@@ -1,4 +1,4 @@
-import type { EventType } from "src/lib/types";
+import type { EventType } from "./types";
 
 /**
  * Mixpanel track events.

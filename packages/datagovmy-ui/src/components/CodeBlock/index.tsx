@@ -12,7 +12,6 @@ import html_xml from "highlight.js/lib/languages/xml";
 import { GithubThemes } from "./theme";
 import { clx, copyClipboard } from "../../lib/helpers";
 import { useTranslation } from "../../hooks/useTranslation";
-import { track } from "../../lib/mixpanel";
 import { useTheme } from "next-themes";
 
 const LANGUAGE_OPTIONS = [
@@ -90,7 +89,6 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
   );
 
   const handleCopy = () => {
-    track("code_copy", { language: language.value, ...event });
     copyClipboard(children[language.value] ?? "");
     setCopyText(t("common.copied"));
     setTimeout(() => {
