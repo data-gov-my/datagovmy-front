@@ -37,6 +37,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     params: {},
     data: null,
     loading: false,
+    private: false,
   });
 
   const { data: compareData, setData: setCompareData } = useData({
@@ -244,88 +245,80 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 <p className="text-dim text-sm">{t("search_disclaimer")}</p>
               </Card>
             </div>
-            {!showPlaceholder && !searchData.data ? (
-              <></>
-            ) : (
-              <div
-                className={
-                  "col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2"
-                }
-              >
-                {searchData.data ? (
-                  <div className="w-full">
-                    {searchData.loading ? (
-                      <div className="flex h-[460px] items-center justify-center">
-                        <Spinner loading={searchData.loading} />
-                      </div>
-                    ) : (
-                      <Bar
-                        precision={0}
-                        suggestedMaxY={5}
-                        className="h-[460px]"
-                        title={
-                          <>
-                            <p className="text-lg font-bold">
-                              <span>
-                                {t(`bar_title_${searchData.params.type}`, {
-                                  count: searchData.data.total || 0,
-                                })}
-                              </span>
-                              <span>{`"${searchData.params.name}".`}</span>
-                            </p>
-                            <p className="text-dim text-sm">
-                              <span>
-                                {t("bar_description", {
-                                  name: searchData.params.name,
-                                })}
-                              </span>
-                            </p>
-                          </>
-                        }
-                        data={{
-                          labels: searchData.data.decade
-                            ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
-                            : placeholderData.decade,
-                          datasets: [
-                            {
-                              data: searchData.data.count,
-                              label: "Similar names",
-                              borderRadius: 12,
-                              barThickness: 12,
-                              backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
-                            },
-                          ],
-                        }}
-                        enableGridX={false}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <div className="relative flex h-[460px] w-full items-center justify-center">
+            <div className="col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2">
+              {searchData.data ? (
+                <div className="w-full">
+                  {searchData.loading ? (
+                    <div className="flex h-[460px] items-center justify-center">
+                      <Spinner loading={searchData.loading} />
+                    </div>
+                  ) : (
                     <Bar
-                      className="absolute top-0 h-[460px] w-full opacity-30"
+                      precision={0}
+                      suggestedMaxY={5}
+                      className="h-[460px]"
+                      title={
+                        <>
+                          <p className="text-lg font-bold">
+                            <span>
+                              {t(`bar_title_${searchData.params.type}`, {
+                                count: searchData.data.total || 0,
+                              })}
+                            </span>
+                            <span>{`"${searchData.params.name}".`}</span>
+                          </p>
+                          <p className="text-dim text-sm">
+                            <span>
+                              {t("bar_description", {
+                                name: searchData.params.name,
+                              })}
+                            </span>
+                          </p>
+                        </>
+                      }
                       data={{
-                        labels: placeholderData.decade,
+                        labels: searchData.data.decade
+                          ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
+                          : placeholderData.decade,
                         datasets: [
                           {
-                            data: placeholderData.count,
+                            data: searchData.data.count,
+                            label: "Similar names",
                             borderRadius: 12,
                             barThickness: 12,
-                            backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
+                            backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                           },
                         ],
                       }}
                       enableGridX={false}
-                      tooltipEnabled={false}
                     />
-                    <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
-                      <MagnifyingGlassIcon className=" h-4 w-4" />
-                      <p>{t("search_prompt")}</p>
-                    </Card>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              ) : (
+                <div className="relative hidden h-[460px] w-full items-center justify-center lg:flex">
+                  <Bar
+                    className="absolute top-0 h-[460px] w-full opacity-30"
+                    data={{
+                      labels: placeholderData.decade,
+                      datasets: [
+                        {
+                          data: placeholderData.count,
+                          borderRadius: 12,
+                          barThickness: 12,
+                          backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                    tooltipEnabled={false}
+                  />
+                  <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
+                    <MagnifyingGlassIcon className=" h-4 w-4" />
+                    <p>{t("search_prompt")}</p>
+                  </Card>
+                </div>
+              )}
+            </div>
           </div>
         </Section>
 
