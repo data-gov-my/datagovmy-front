@@ -274,9 +274,10 @@ const Table: FunctionComponent<TableProps> = ({
                       const scale = cell.column.columnDef.scale ?? undefined;
 
                       const getPrecision = (precision: Precision): number => {
-                        if (precision.columns && cell.column.id in precision.columns)
+                        if (precision?.columns && cell.column.id in precision.columns)
                           return precision.columns[cell.column.id];
-                        else return precision.default;
+                        else if (precision?.default) return precision.default;
+                        else return 1;
                       };
 
                       const classNames = clx(
@@ -290,6 +291,13 @@ const Table: FunctionComponent<TableProps> = ({
                           ? cell.column.columnDef.className
                           : cellClass
                       );
+
+                      const displayValue = () => {
+                        if (typeof value === "number")
+                          return numFormat(value, "standard", getPrecision(precision!));
+                        if (value === "NaN") return "-";
+                        return flexRender(cell.column.columnDef.cell, cell.getContext());
+                      };
                       return (
                         <td
                           id={cell.id}
@@ -301,9 +309,7 @@ const Table: FunctionComponent<TableProps> = ({
                               : 0,
                           }}
                         >
-                          {typeof value === "number"
-                            ? numFormat(value, "standard", getPrecision(precision!))
-                            : flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {displayValue()}
                           {value !== null && unit}
                           {value === null && relative && "-"}
                         </td>

@@ -16,7 +16,7 @@
   "source": "Sumber Data",
   "placeholder": {
     "source": "Pilih agensi",
-    "search": "Cari dataset",
+    "search": "Cari dataset (Tekan '/' untuk fokus)",
     "demography": "Data mengikut"
   },
   "filter_options": {

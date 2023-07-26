@@ -284,11 +284,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
   return (
     <div>
-      <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
+      <Container className="mx-auto w-full md:max-w-screen-md lg:max-w-screen-lg">
         {/* Chart & Table */}
         <Section
           title={dataset.meta.title}
-          className=""
+          className="py-6"
           description={
             <p className="whitespace-pre-line text-base text-dim">
               {interpolate(dataset.meta.desc.substring(dataset.meta.desc.indexOf("]") + 1))}
@@ -397,7 +397,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Date Slider (optional) */}
           {config.dates !== null && (
             <Slider
-              className="pt-8"
               type="single"
               value={config.dates?.options.indexOf(
                 filter[config.dates.key].value ?? config.dates.default

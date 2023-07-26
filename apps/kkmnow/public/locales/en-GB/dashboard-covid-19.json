@@ -1,0 +1,77 @@
+{
+  "header": "COVID-19",
+  "description": "Building on the Ministry of Health's previous COVIDNOW dashboard, this page provides a summarised view of the pandemic in Malaysia, allowing you to track its evolution on a daily basis.",
+  "donut_header": "Healthcare facility utilisation",
+  "donut1": "Ventilators",
+  "donut1_tooltips": "Includes utilisation for non-COVID-19 cases, in order to reflect the overall state of the public healthcare system",
+  "donut2": "ICU beds",
+  "donut2_tooltips": "Includes utilisation for non-COVID-19 cases, in order to reflect the overall state of the public healthcare system",
+  "donut3": "Hospital Beds",
+  "donut3_tooltips": "Includes utilisation for non-COVID-19 cases, in order to reflect the overall state of the public healthcare system",
+  "donut4": "PKRC",
+  "donut4_tooltips": "COVID-19 Quarantine and Treatment Centre",
+  "diagram_header": "What does the latest data show in {{ state }}?",
+  "diagram_subheader": "{{ state }}: Active COVID-19 Cases",
+  "diagram_title": "Active Cases",
+  "total": "Total",
+  "col1_title1": "Local Cases",
+  "col1_title2": "Imported Cases",
+  "col2_title1": "Home Quarantine",
+  "col2_title2": "PKRC",
+  "col2_title3": "Hospitalised",
+  "col2_title4": "ICU (Unventilated)",
+  "col2_title5": "ICU (Ventilated)",
+  "col3_title1": "Recovered",
+  "col3_title2": "Death (Including BID)",
+  "col3_title3": "Brought in Dead",
+  "area_chart_header": "How are COVID-19 key indicators trending in {{ state }}?",
+  "area_chart_title1": "Deaths by Date of Death",
+  "area_chart_tooltip1": "7d avg",
+  "area_chart_tooltip2": "Inpatient",
+  "area_chart_tooltip3": "Brought in dead",
+  "area_chart_title2": "Patients Ventilated",
+  "area_chart2_tooltip1": "7d avg",
+  "area_chart2_tooltip2": "Patients ventilated",
+  "area_chart_title3": "Patients in ICU",
+  "area_chart3_tooltip1": "7d avg",
+  "area_chart3_tooltip2": "ICU admitted",
+  "area_chart_title4": "Hospital Admissions",
+  "area_chart4_tooltip1": "7d avg",
+  "area_chart4_tooltip2": "Patients admitted",
+  "area_chart_title5": "Confirmed Cases",
+  "area_chart5_tooltip1": "7d avg",
+  "area_chart5_tooltip2": "Cases",
+  "area_chart_title6": "Tests Conducted",
+  "area_chart6_tooltip1": "Positivity Rate (%)",
+  "area_chart6_tooltip2": "RTK",
+  "area_chart6_tooltip3": "PCR",
+  "deaths": {
+    "annot1": "Daily - Reported",
+    "annot2": "Total - Deaths"
+  },
+  "vent": {
+    "annot1": "Active - Ventilated",
+    "annot2": "Utilisation (%)"
+  },
+  "icu": {
+    "annot1": "Active - ICU",
+    "annot2": "Utilisation (%)"
+  },
+  "admitted": {
+    "annot1": "Daily - Admitted",
+    "annot2": "Utilisation (%)"
+  },
+  "cases": {
+    "annot1": "Daily - Cases",
+    "annot2": "Total - Cases"
+  },
+  "tests": {
+    "annot1": "Daily - Tests",
+    "annot2": "Positivity Rate (%)"
+  },
+  "utilisation_of": "{{ param }} Utilisation",
+  "tab_table2": "Deaths",
+  "tab_table4": "Cases",
+  "opt_cases": "Cases",
+  "opt_deaths": "Deaths"
+}

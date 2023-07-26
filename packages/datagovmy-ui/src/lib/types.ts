@@ -107,6 +107,11 @@ export type DCConfig = {
   line_variables?: Record<string, any>;
 };
 
+export type Precision = {
+  default: number;
+  columns?: Record<string, number>;
+};
+
 /*************************** MIXPANEL ***************************** */
 
 export type EventType =

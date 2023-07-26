@@ -27,9 +27,11 @@ import {
   Scale,
   Tick,
   TooltipItem,
+  LegendItem,
+  TimeUnit,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
-import AnnotationPlugin from "chartjs-plugin-annotation";
+import AnnotationPlugin, { AnnotationOptions } from "chartjs-plugin-annotation";
 import { Chart } from "react-chartjs-2";
 import { clx, numFormat } from "../lib/helpers";
 import "chartjs-adapter-luxon";
@@ -39,20 +41,9 @@ import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "../lib/constants";
 import Spinner from "../components/Spinner";
 
-export type Periods =
-  | false
-  | "auto"
-  | "millisecond"
-  | "second"
-  | "minute"
-  | "hour"
-  | "day"
-  | "week"
-  | "month"
-  | "quarter"
-  | "year";
-
-type TimeseriesProps = ChartHeaderProps & {
+export type Periods = TimeUnit | "auto" | false;
+export interface TimeseriesProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   description?: string;
   type?: keyof ChartTypeRegistry;
@@ -72,14 +63,18 @@ type TimeseriesProps = ChartHeaderProps & {
   gridYValues?: Array<number> | undefined;
   minY?: number;
   maxY?: number;
+  suggestedMaxY?: number;
+  stepSize?: number;
   precision?: number | [min: number, max: number];
   enableAnimation?: boolean;
   enableRightScale?: boolean;
   enableCallout?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  enableTooltip?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  enableMajorTick?: boolean;
   tickXCallback?: (
     this: Scale,
     tickValue: number | string,
@@ -89,15 +84,18 @@ type TimeseriesProps = ChartHeaderProps & {
   gridOffsetX?: boolean;
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
+  tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
+  generateLabels?: (chart: ChartJS<"line">) => LegendItem[];
   displayNumFormat?: (
     value: number,
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
     precision: number | [min: number, max: number]
   ) => string;
   _ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
-};
+}
 
 const Timeseries: FunctionComponent<TimeseriesProps> = ({
+  id,
   className = "w-full h-[450px]", // manage CSS here
   menu,
   title,
@@ -116,20 +114,26 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   subheader,
   type = "bar",
   axisY = undefined,
-  precision = 1,
+  precision = [1, 0],
   enableRightScale = false,
   enableCallout = false,
   enableCrosshair = true,
   enableLegend = false,
   enableGridX = false,
   enableGridY = true,
+  enableMajorTick = true,
   enableAnimation = true,
+  enableTooltip = true,
   gridOffsetX = true,
   tooltipCallback,
+  tooltipItemSort,
+  generateLabels,
   tickXCallback,
-  beginZero = false,
+  beginZero = true,
   minY,
   maxY,
+  stepSize,
+  suggestedMaxY,
   displayNumFormat = numFormat,
   _ref,
 }) => {
@@ -150,7 +154,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     AnnotationPlugin
   );
 
-  const { theme } = useTheme();
+  const { theme = "light" } = useTheme();
 
   const display = (
     value: number,
@@ -177,15 +181,28 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       plugins: {
         legend: {
           display: enableLegend,
+          onClick: (e, legendItem, legend) => {
+            const index = legendItem.datasetIndex as number;
+            const ci = legend.chart;
+            if (ci.isDatasetVisible(index)) {
+              ci.hide(index);
+              legendItem.hidden = true;
+            } else {
+              ci.show(index);
+              legendItem.hidden = false;
+            }
+          },
           labels: {
             usePointStyle: true,
             pointStyle: "rect",
+            generateLabels: generateLabels,
           },
           position: "top",
           align: "start",
         },
         tooltip: {
-          enabled: true,
+          enabled: enableTooltip,
+          itemSort: tooltipItemSort,
           bodyFont: {
             family: "Inter",
           },
@@ -216,68 +233,62 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
               common: {
                 drawTime: "afterDraw",
               },
-              annotations: Object.fromEntries(
-                data.datasets.map((set, i) => {
-                  const INDEXES = {
-                    year: data.labels!.length - 200,
-                    quarter: data.labels!.length - 45,
-                    month: data.labels!.length - 15,
-                    week: data.labels!.length - 4,
-                    millisecond: data.labels!.length - 1,
-                    second: data.labels!.length - 1,
-                    minute: data.labels!.length - 1,
-                    hour: data.labels!.length - 1,
-                    day: data.labels!.length - 1,
-                  };
-                  const xIndex =
-                    round && round !== "auto" ? INDEXES[round] : data.labels!.length - 1;
-                  const yIndex = data.labels!.length - 1;
+              annotations: data.datasets.map((set, index) => {
+                const INDEXES = {
+                  year: data.labels!.length - 200,
+                  quarter: data.labels!.length - 45,
+                  month: data.labels!.length - 15,
+                  week: data.labels!.length - 4,
+                  millisecond: data.labels!.length - 1,
+                  second: data.labels!.length - 1,
+                  minute: data.labels!.length - 1,
+                  hour: data.labels!.length - 1,
+                  day: data.labels!.length - 1,
+                };
+                const xIndex = round && round !== "auto" ? INDEXES[round] : data.labels!.length - 1;
+                const yIndex = data.labels!.length - 1;
 
-                  return [
-                    i,
-                    {
-                      type: "label",
-                      callout: {
-                        display: true,
-                      },
-                      content() {
-                        let text: string = set.label!;
-                        if (text.length > 25) text = text.slice(0, 25).concat("..");
-                        // if (text.length > 25) return chunkSplit(text, 25);
-                        return text;
-                      },
-                      font: {
-                        family: "Inter",
-                        style: "normal",
-                        lineHeight: 1,
-                        weight: "400",
-                        size: 12,
-                      },
-                      color: set.borderColor as string,
-                      position: {
-                        x: "start",
-                        y: "center",
-                      },
-                      xAdjust: 0,
-                      xValue: data.labels![xIndex] as string | number,
-                      yAdjust: (data.datasets as any[]).reduce((prev: any, current: any) => {
-                        if (Math.abs(current.data[yIndex] - set.data[yIndex]) < 3) {
-                          return prev + 1;
-                        }
-                        return prev;
-                      }, -1) as number,
-                      yValue: set.data[yIndex],
-                    },
-                  ];
-                })
-              ),
+                return {
+                  type: "label",
+                  callout: {
+                    display: true,
+                  },
+                  content() {
+                    let text: string = set.label!;
+                    if (text.length > 25) text = text.slice(0, 25).concat("..");
+                    // if (text.length > 25) return chunkSplit(text, 25);
+                    return text;
+                  },
+                  font: {
+                    family: "Inter",
+                    style: "normal",
+                    lineHeight: 1,
+                    weight: "400",
+                    size: 12,
+                  },
+                  color: set.borderColor as string,
+                  position: {
+                    x: "start",
+                    y: "center",
+                  },
+                  xAdjust: 0,
+                  xValue: data.labels![xIndex] as string | number,
+                  yAdjust: (data.datasets as any[]).reduce((prev: any, current: any) => {
+                    if (Math.abs(current.data[yIndex] - set.data[yIndex]) < 3) {
+                      return prev + 1;
+                    }
+                    return prev;
+                  }, -1) as number,
+                  yValue: set.data[yIndex],
+                } as AnnotationOptions;
+              }),
             }
           : false,
         crosshair: enableCrosshair
           ? {
               line: {
                 width: 0,
-                color: theme === "dark" ? "#FFF" : "#000",
+                color: theme === "light" ? "#000" : "#FFF",
                 dashPattern: [6, 4],
               },
               zoom: {
@@ -324,7 +335,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ticks: {
             callback: tickXCallback,
             major: {
-              enabled: true,
+              enabled: enableMajorTick,
             },
             minRotation: 0,
             maxRotation: 0,
@@ -335,6 +346,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           stacked: mode === "stacked",
         },
         y: {
+          suggestedMax: suggestedMaxY,
           grid: {
             display: enableGridY,
             borderWidth: 1,
@@ -344,7 +356,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
             drawTicks: false,
             drawBorder: false,
-            color: theme === "dark" ? AKSARA_COLOR.WASHED_DARK : AKSARA_COLOR.OUTLINE,
+            color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
             offset: false,
             lineWidth(ctx) {
               if (ctx.tick.value === 0) return 2;
@@ -352,6 +364,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
           },
           ticks: {
+            precision: Array.isArray(precision) ? precision[1] : precision,
+            stepSize: stepSize,
             padding: 6,
             callback: (value: string | number) => {
               return value && display(value as number, "compact", precision);
@@ -404,13 +418,16 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
         </div>
       ) : (
         <div className="flex flex-col gap-y-6">
-          <div className="flex flex-col gap-y-3">
-            <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-            {stats && <Stats data={stats} />}
-            {subheader && <div>{subheader}</div>}
-          </div>
+          {[menu, title, controls, state, stats, subheader].some(Boolean) && (
+            <div className="flex flex-col gap-y-3">
+              <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+              {stats && <Stats data={stats} />}
+              {subheader && <div>{subheader}</div>}
+            </div>
+          )}
           <div className={className}>
             <Chart
+              data-testid={id || title}
               ref={_ref}
               data={data}
               options={options()}

@@ -1,5 +1,12 @@
 import mixpanel from "mixpanel-browser";
-import type { EventType } from "@lib/types";
+
+type EventType =
+  | "image_download"
+  | "file_download"
+  | "page_view"
+  | "change_language"
+  | "select_dropdown"
+  | "code_copy";
 
 /**
  * Mixpanel track events.
