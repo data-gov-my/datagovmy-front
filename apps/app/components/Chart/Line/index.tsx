@@ -59,7 +59,7 @@ const Line: FunctionComponent<LineProps> = ({
   data = dummy,
   enableGridX = true,
   enableGridY = true,
-  precision = 1,
+  precision = [1, 0],
   minY,
   maxY,
   stats,
