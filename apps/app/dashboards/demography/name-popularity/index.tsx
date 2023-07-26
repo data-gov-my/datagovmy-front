@@ -635,7 +635,24 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                               {item.total.toLocaleString("en-US")}
                             </td>
                             <td className="border-b-outline dark:border-washed-dark border-b p-2">
-                              {item.max ? item.max.toString().concat("s") : "N/A"}
+                              {item.max ? (
+                                t("year_format", { year: item.max })
+                              ) : item.total === 0 ? (
+                                "N/A"
+                              ) : (
+                                <div className="flex">
+                                  <Tooltip tip={t("privacy_prompt2")} className="left-1/3">
+                                    {open => (
+                                      <div
+                                        className="cursor-help whitespace-nowrap underline decoration-dashed [text-underline-position:from-font]"
+                                        onClick={open}
+                                      >
+                                        <LockClosedIcon className="h-4 w-4" />
+                                      </div>
+                                    )}
+                                  </Tooltip>
+                                </div>
+                              )}
                             </td>
                           </tr>
                         )
