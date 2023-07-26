@@ -58,7 +58,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
       return {
         props: {
-          last_updated: candidate.data.data_last_update,
+          last_updated: candidate.data.data_last_updated,
           meta: {
             id: "dashboard-election-explorer",
             type: "dashboard",

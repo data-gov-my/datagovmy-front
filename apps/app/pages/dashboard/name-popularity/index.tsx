@@ -19,6 +19,7 @@ const NamePopularity: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-name-popularity", async () => {
   return {
+    notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
     props: {
       meta: {
         id: "dashboard-name-popularity",

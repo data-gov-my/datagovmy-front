@@ -19,7 +19,6 @@ import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { TimeseriesOption } from "@lib/types";
-import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -94,13 +93,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         background="red"
         category={[t("common:categories.public_safety"), "text-danger"]}
         header={[t("header")]}
-        description={
-          <Trans>
-            <p className={"text-dim whitespace-pre-line xl:w-2/3"} data-testid="hero-description">
-              {t("description")}
-            </p>
-          </Trans>
-        }
+        description={[t("description"), "whitespace-pre-line"]}
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
         last_updated={last_updated}
         agencyBadge={

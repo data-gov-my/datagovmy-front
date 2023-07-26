@@ -275,27 +275,31 @@ const Ranking = ({ ranks, dashboards_route }: RankingProps) => {
             key={i}
             prefetch={false}
           >
-            <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-6 transition-colors">
+            <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
               <div className="relative flex items-center gap-3">
                 <span className="text-primary text-sm font-bold">#{i + 1}</span>
                 <p className="text-dim text-sm">{t(`agencies:${item.agency}.abbr`)}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
-              <div className="relative flex flex-col items-start gap-3 overflow-hidden">
-                <p className="truncate text-lg font-bold dark:text-white" title={item.name}>
-                  {t(`dashboards.${item.name}.name`)}
-                </p>
-                <p className="text-sm dark:text-white" title={item.name}>
-                  {t(`dashboards.${item.name}.description`)}
-                </p>
-                <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {`${numFormat(item.views, "compact")} ${t("common:common.views", {
-                    count: item.views,
-                  })}`}
-                </p>
-                <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
-                  {t("common:components.click_to_explore")}
-                </p>
+              <div className="flex grow flex-col items-start gap-3 overflow-hidden">
+                <div className="grow space-y-3">
+                  <p className="truncate text-lg font-bold dark:text-white" title={item.name}>
+                    {t(`dashboards.${item.name}.name`)}
+                  </p>
+                  <p className="text-sm dark:text-white" title={item.name}>
+                    {t(`dashboards.${item.name}.description`)}
+                  </p>
+                </div>
+                <div className="relative w-full">
+                  <p className="text-dim transition-transform group-hover:translate-y-6">
+                    {`${numFormat(item.views, "compact")} ${t("common:common.views", {
+                      count: item.views,
+                    })}`}
+                  </p>
+                  <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                    {t("common:components.click_to_explore")}
+                  </p>
+                </div>
               </div>
             </div>
           </At>
