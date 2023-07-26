@@ -3,7 +3,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 import { BREAKPOINTS } from "@lib/constants";
-import { WindowContext } from "datagovmy-ui/hooks";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 
 type MegaMenuProps = {
   icon?: JSX.Element;
@@ -12,15 +12,13 @@ type MegaMenuProps = {
 };
 
 const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
-  const { breakpoint } = useContext(WindowContext);
-  const isTablet = breakpoint > BREAKPOINTS.MD;
-
+  const { size } = useContext(WindowContext);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       {/* Mobile view */}
-      {!isTablet ? (
+      {size.width <= BREAKPOINTS.MD ? (
         <>
           <div
             onClick={() => setIsOpen(!isOpen)}

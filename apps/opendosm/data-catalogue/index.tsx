@@ -14,7 +14,8 @@ import {
 } from "datagovmy-ui/components";
 import { ArrowTrendingUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { FunctionComponent, useContext, useMemo, useRef } from "react";
-import { useFilter, useTranslation, WindowContext } from "datagovmy-ui/hooks";
+import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 import { OptionType } from "@components/types";
 
 import { BREAKPOINTS } from "@lib/constants";
@@ -44,7 +45,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 }) => {
   const { t } = useTranslation();
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     let resultCollection: Array<[string, Catalogue[]]> = [];
@@ -80,7 +81,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
+              block: size.width <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }
