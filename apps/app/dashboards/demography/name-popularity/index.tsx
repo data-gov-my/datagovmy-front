@@ -2,7 +2,16 @@ import AgencyBadge from "@components/Badge/agency";
 import Card from "@components/Card";
 import Chips from "@components/Chips";
 import { JPNIcon } from "@components/Icon/agency";
-import { Button, Container, Dropdown, Hero, Input, Radio, Section } from "@components/index";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Hero,
+  Input,
+  Radio,
+  Section,
+  Tooltip,
+} from "@components/index";
 import Toggle from "@components/Toggle";
 import Spinner from "@components/Spinner";
 import { OptionType } from "@components/types";
@@ -40,7 +49,10 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
       label: t(`ethnicity.${ethnicityDropdown.at(0)}`),
       value: ethnicityDropdown.at(0),
     },
-    selectedYear: { label: `${yearDropdown.at(-1)}`, value: `${yearDropdown.at(-1)}` },
+    selectedYear: {
+      label: t("year_format", { year: yearDropdown.at(-1) }),
+      value: `${yearDropdown.at(-1)}`,
+    },
   });
 
   const { data: searchData, setData: setSearchData } = useData({
@@ -65,7 +77,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   });
 
   const yearOptions: OptionType[] = yearDropdown.map(val => ({
-    label: val.toString(),
+    label: t("year_format", { year: val }),
     value: val.toString(),
   }));
 
@@ -292,13 +304,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     .map((item: { name_first: string; sex: string; count: number }, i: number) => (
                       <tr
                         key={i}
-                        className={"dark:border-washed-dark border-b".concat(
-                          i < 3 ? " bg-background dark:bg-background-dark" : ""
+                        className={clx(
+                          "dark:border-washed-dark border-b",
+                          i < 3 ? "bg-background dark:bg-background-dark" : ""
                         )}
                       >
                         <td
-                          className={"px-1 py-2 text-center text-sm font-medium".concat(
-                            i < 3 ? " text-primary dark:text-primary-dark" : ""
+                          className={clx(
+                            "px-1 py-2 text-center text-sm font-medium",
+                            i < 3 ? "text-primary dark:text-primary-dark" : ""
                           )}
                         >
                           {i + 1}
@@ -333,13 +347,15 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     .map((item: { name_first: string; sex: string; count: number }, i: number) => (
                       <tr
                         key={i}
-                        className={"dark:border-washed-dark border-b".concat(
-                          i < 3 ? " bg-background dark:bg-background-dark" : ""
+                        className={clx(
+                          "dark:border-washed-dark border-b",
+                          i < 3 ? "bg-background dark:bg-background-dark" : ""
                         )}
                       >
                         <td
-                          className={"px-1 py-2 text-center text-sm font-medium".concat(
-                            i < 3 ? " text-primary dark:text-primary-dark" : ""
+                          className={clx(
+                            "px-1 py-2 text-center text-sm font-medium",
+                            i < 3 ? "text-primary dark:text-primary-dark" : ""
                           )}
                         >
                           {i + 1}
@@ -375,10 +391,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 </div>
                 <Input
                   type="search"
-                  className={"dark:focus:border-primary-dark rounded-md border".concat(
+                  className={clx(
+                    "dark:focus:border-primary-dark rounded-md border",
                     searchData.validation
-                      ? " border-danger dark:border-danger border-2"
-                      : " border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
+                      ? "border-danger dark:border-danger border-2"
+                      : "border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
                   )}
                   placeholder={
                     searchData.type.value === "last"
@@ -466,7 +483,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                       }
                       data={{
                         labels: searchData.data.decade
-                          ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
+                          ? searchData.data.decade.map((x: string) => t("year_format", { year: x }))
                           : placeholderData.decade,
                         datasets: [
                           {
@@ -513,12 +530,13 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   <Input
                     type="search"
                     disabled={compareData.names.length > 9}
-                    className={"dark:focus:border-primary-dark rounded-md border".concat(
+                    className={clx(
+                      "dark:focus:border-primary-dark rounded-md border",
                       compareData.validation
-                        ? " border-danger dark:border-danger border-2"
+                        ? "border-danger dark:border-danger border-2"
                         : compareData.names.length > 9
-                        ? " border-outline bg-outline text-dim border opacity-30 dark:border-black dark:bg-black"
-                        : " border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
+                        ? "border-outline bg-outline text-dim border opacity-30 dark:border-black dark:bg-black"
+                        : "border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
                     )}
                     placeholder={
                       compareData.type.value === "compare_last"
@@ -612,15 +630,18 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         ) => (
                           <tr
                             key={item.name}
-                            className={(i < Math.min(3, compareData.data.length - 1)
-                              ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
-                              : ""
-                            ).concat(" md:text-md text-sm")}
+                            className={clx(
+                              i < Math.min(3, compareData.data.length - 1)
+                                ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
+                                : "",
+                              "md:text-md text-sm"
+                            )}
                           >
                             <td
-                              className={"border-b-outline dark:border-washed-dark border-b p-2".concat(
+                              className={clx(
+                                "border-b-outline dark:border-washed-dark border-b p-2",
                                 i < Math.min(3, compareData.data.length - 1)
-                                  ? " text-primary dark:text-primary-dark"
+                                  ? "text-primary dark:text-primary-dark"
                                   : ""
                               )}
                             >
