@@ -24,6 +24,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   async () => {
     const { data } = await get("/explorer", { explorer: "BIRTHDAY_POPULARITY", state: "mys" });
     return {
+      notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
         meta: {
           id: "dashboard-birthday-explorer",
