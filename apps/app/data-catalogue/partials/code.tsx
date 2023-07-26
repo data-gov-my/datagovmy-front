@@ -60,7 +60,6 @@ print(df)`;
     switch (type) {
       case "GEOJSON":
         return ``;
-
       default: // TIMESERIES | CHOROPLETH | TABLE
         return ``;
     }
