@@ -9,12 +9,10 @@ import { OptionType } from "@components/types";
 import { MagnifyingGlassIcon, LockClosedIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { WindowContext } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent, ReactNode, useContext } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { toast } from "@components/Toast";
 import { clx } from "@lib/helpers";
 /**
@@ -24,12 +22,14 @@ import { clx } from "@lib/helpers";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
-interface NamePopularityDashboardProps {}
+interface NamePopularityDashboardProps {
+  top_names: Record<string, any>;
+}
 
-const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
+const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({
+  top_names,
+}) => {
   const { t } = useTranslation(["dashboard-name-popularity", "common"]);
-  const { size } = useContext(WindowContext);
-  const showPlaceholder = size.width >= BREAKPOINTS.LG;
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },
