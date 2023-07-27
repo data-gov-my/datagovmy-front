@@ -188,7 +188,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
               <ComboBox
                 placeholder={t("candidate.search_candidate")}
                 options={CANDIDATE_OPTIONS}
-                selected={data.candidate_option}
+                selected={data.candidate_option ?? null}
                 onChange={selected => {
                   if (selected) {
                     fetchResult(selected).then(({ parlimen, dun }) => {

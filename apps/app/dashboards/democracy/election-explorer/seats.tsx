@@ -225,7 +225,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                     </span>
                   </>
                 )}
-                selected={data.seat_option}
+                selected={data.seat_option ?? null}
                 onChange={selected => {
                   if (selected) {
                     fetchResult(selected).then(elections => {
