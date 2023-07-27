@@ -1,32 +1,35 @@
 import ElectionAnalysis from "./analysis";
 import BallotSeat from "./ballot-seat";
-import { Party, PartyResult, OverallSeat, ElectionEnum } from "../types";
-import Card from "@components/Card";
-import ImageWithFallback from "@components/ImageWithFallback";
+import ElectionFilter from "./filter";
+import { ElectionEnum, OverallSeat, Party, PartyResult } from "../types";
+import { toast } from "@components/Toast";
 import {
   Button,
+  Card,
   Container,
   Dropdown,
+  ImageWithFallback,
+  Label,
+  List,
   Modal,
+  Panel,
   Section,
   StateDropdown,
   Tabs,
 } from "@components/index";
-import Label from "@components/Label";
-import { List, Panel } from "@components/Tabs";
 import { OptionType } from "@components/types";
 import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
+import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
+import { useFilter } from "@hooks/useFilter";
 import { useScrollIntersect } from "@hooks/useScrollIntersect";
 import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
+import { get } from "@lib/api";
 import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
-import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { FunctionComponent, useMemo, useRef } from "react";
-import { WindowProvider } from "@hooks/useWindow";
-import FilterButton from "./filter";
 
 /**
  * Election Explorer Dashboard
@@ -55,8 +58,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   selection,
   table,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-  const { push } = useRouter();
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
+  const { cache } = useCache();
 
   const divRef = useRef<HTMLDivElement>(null);
   useScrollIntersect(divRef.current, "drop-shadow-xl");
@@ -101,9 +104,9 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   ];
   const waffleColours = ["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"];
 
-  const ELECTION_ACRONYM = params.election.slice(-5);
-  const ELECTION_FULLNAME = params.election;
-  const CURRENT_STATE = params.state;
+  const ELECTION_FULLNAME = params.election ?? "GE-15";
+  const ELECTION_ACRONYM = ELECTION_FULLNAME.slice(-5);
+  const CURRENT_STATE = params.state ?? "mys";
 
   const { data, setData } = useData({
     toggle_index: ELECTION_ACRONYM.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
@@ -111,6 +114,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
     election: ELECTION_ACRONYM,
     state: CURRENT_STATE,
     showFullTable: false,
+    seats: seats,
+    table: table,
   });
 
   const TOGGLE_IS_DUN = data.toggle_index === ElectionEnum.Dun;
@@ -136,17 +141,71 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
     return _options;
   }, [data.state]);
 
-  const navigateToElection = (election: string, state?: string) => {
-    if (!election) return;
+  const { setFilter } = useFilter({
+    election: params.election,
+    state: params.state,
+  });
+
+  const fetchResult = async (
+    _election: string,
+    state: string
+  ): Promise<{ seats: OverallSeat[]; table: Party[] }> => {
     setData("loading", true);
-    setData("election", election);
+    setFilter("election", _election);
+    setFilter("state", state);
+    const identifier = `${state}_${_election}`;
 
-    const route = `${routes.ELECTION_EXPLORER}/elections/${encodeURIComponent(election)}/${state}`;
+    const election =
+      _election.startsWith("S") && state && ["mys", "kul", "lbn", "pjy"].includes(state) === false
+        ? `${CountryAndStates[state]} ${_election}`
+        : _election;
 
-    push(route, undefined, {
-      scroll: false,
-      locale: i18n.language,
-    }).then(() => setData("loading", false));
+    return new Promise(resolve => {
+      if (cache.has(identifier)) {
+        setData("loading", false);
+        return resolve(cache.get(identifier));
+      }
+
+      Promise.all([
+        get("/explorer", {
+          explorer: "ELECTIONS",
+          chart: "overall_seat",
+          election,
+          state,
+        }),
+        get("/explorer", {
+          explorer: "ELECTIONS",
+          chart: "full_result",
+          type: "party",
+          election,
+          state,
+        }),
+      ])
+        .then(
+          ([{ data: _seats }, { data: _table }]: [
+            { data: { data: OverallSeat[] } },
+            { data: { data: Party[] } }
+          ]) => {
+            const elections = {
+              seats: _seats.data,
+              table: _table.data.sort((a: Party, b: Party) => {
+                if (a.seats.won === b.seats.won) {
+                  return b.votes.perc - a.votes.perc;
+                } else {
+                  return b.seats.won - a.seats.won;
+                }
+              }),
+            };
+            cache.set(identifier, elections);
+            setData("loading", false);
+            return resolve(elections);
+          }
+        )
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
+    });
   };
 
   const handleElectionTab = (index: number) => {
@@ -169,7 +228,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
         <Modal
           trigger={open => (
             <WindowProvider>
-              <FilterButton onClick={open} />
+              <ElectionFilter onClick={open} />
             </WindowProvider>
           )}
           title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
@@ -193,7 +252,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                 <StateDropdown
                   currentState={data.state}
                   onChange={selected => {
-                    navigateToElection(data.election, selected.value);
+                    fetchResult(data.election, selected.value).then(({ seats, table }) => {
+                      setData("seats", seats);
+                      setData("table", table);
+                    });
                     setData("state", selected.value);
                     TOGGLE_IS_DUN && setData("election", null);
                   }}
@@ -214,7 +276,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                   disabled={!data.state}
                   onChange={selected => {
                     setData("election", selected.value);
-                    navigateToElection(selected.value, data.state);
+                    fetchResult(selected.value, data.state).then(({ seats, table }) => {
+                      setData("seats", seats);
+                      setData("table", table);
+                    });
                   }}
                 />
               </div>
@@ -247,7 +312,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             currentState={data.state}
             onChange={selected => {
               TOGGLE_IS_PARLIMEN
-                ? navigateToElection(data.election, selected.value)
+                ? fetchResult(data.election, selected.value).then(({ seats, table }) => {
+                    setData("seats", seats);
+                    setData("table", table);
+                  })
                 : setData("election", null);
               setData("state", selected.value);
             }}
@@ -266,7 +334,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             }
             onChange={selected => {
               setData("election", selected.value);
-              navigateToElection(selected.value, data.state);
+              fetchResult(selected.value, data.state).then(({ seats, table }) => {
+                setData("seats", seats);
+                setData("table", table);
+              });
             }}
             disabled={!data.state}
           />
@@ -312,7 +383,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                       <>
                         <ElectionTable
                           isLoading={false}
-                          data={data.showFullTable ? table : table.slice(0, 10)}
+                          data={data.showFullTable ? data.table : data.table.slice(0, 10)}
                           columns={generateSchema<Party>([
                             {
                               key: "party",
@@ -403,10 +474,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
         </Tabs>
       </Section>
       {/* View the full ballot for a specific seat */}
-      <BallotSeat seats={seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
+      <BallotSeat seats={data.seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
 
       {/* Election analysis */}
-      <ElectionAnalysis state={CURRENT_STATE} index={data.toggle_index} seats={seats} />
+      <ElectionAnalysis state={CURRENT_STATE} index={data.toggle_index} seats={data.seats} />
     </Container>
   );
 };
