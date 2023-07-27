@@ -50,7 +50,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
 
   return (
     <>
-      <Progress />
+      <Progress disableOnSameRoute />
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}
