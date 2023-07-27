@@ -133,7 +133,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
 
                   <Dialog.Title
                     as="div"
-                    className="flex w-full items-center justify-between pr-8 text-lg uppercase"
+                    className="flex w-full items-start justify-between pr-8 text-lg uppercase"
                   >
                     <div className="flex flex-wrap gap-x-2">
                       <h5>{isParty ? t(data.election_name) : data.area}</h5>
