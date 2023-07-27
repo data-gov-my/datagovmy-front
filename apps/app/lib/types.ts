@@ -111,7 +111,7 @@ export type DCConfig = {
   };
   dates: FilterDate | null;
   options: FilterDefault[] | null;
-  precision: Precision;
+  precision: number | Precision;
   freeze?: string[];
   color?: Color;
   geojson?: Geotype | null;
