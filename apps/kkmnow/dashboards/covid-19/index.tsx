@@ -11,7 +11,7 @@ import {
 } from "datagovmy-ui/components";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import { numFormat } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import { TimeseriesOption } from "@lib/types";
 import dynamic from "next/dynamic";
