@@ -8,8 +8,7 @@
     "dev": "next dev -p 3003",
     "build": "next build",
     "postbuild": "next-sitemap",
-    "start": "next start",
-    "prepare": "husky install"
+    "start": "next start"
   },
   "lint-staged": {
     "*.{js,ts,tsx,css,md}": "prettier --write"
