@@ -121,7 +121,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     setFilter("name", party_name.value);
     setFilter("state", state);
 
-    const identifier = `${party_name}_${state}`;
+    const identifier = `${party_name.value}_${state}`;
     return new Promise(resolve => {
       if (cache.has(identifier)) {
         setData("loading", false);
