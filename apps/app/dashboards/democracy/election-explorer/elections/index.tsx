@@ -111,7 +111,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   const { data, setData } = useData({
     toggle_index: ELECTION_ACRONYM.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
     tab_index: 0,
-    election: ELECTION_ACRONYM,
+    election_fullname: ELECTION_FULLNAME,
+    election_acronym: ELECTION_ACRONYM,
     state: CURRENT_STATE,
     showFullTable: false,
     seats: seats,
@@ -141,7 +142,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
     return _options;
   }, [data.state]);
 
-  const { setFilter } = useFilter({
+  const { filter, setFilter } = useFilter({
     election: params.election,
     state: params.state,
   });
@@ -159,6 +160,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
       _election.startsWith("S") && state && ["mys", "kul", "lbn", "pjy"].includes(state) === false
         ? `${CountryAndStates[state]} ${_election}`
         : _election;
+    setData("election_fullname", election);
 
     return new Promise(resolve => {
       if (cache.has(identifier)) {
@@ -210,7 +212,10 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
 
   const handleElectionTab = (index: number) => {
     if (index === ElectionEnum.Dun) {
-      setData("state", !NON_SE_STATE.includes(CURRENT_STATE) ? data.state || CURRENT_STATE : null);
+      setData(
+        "state",
+        !NON_SE_STATE.includes(filter.state ?? "mys") ? data.state || CURRENT_STATE : null
+      );
       setData("election", null);
     } else {
       setData("state", data.state || CURRENT_STATE);
@@ -252,12 +257,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                 <StateDropdown
                   currentState={data.state}
                   onChange={selected => {
-                    fetchResult(data.election, selected.value).then(({ seats, table }) => {
-                      setData("seats", seats);
-                      setData("table", table);
-                    });
                     setData("state", selected.value);
-                    TOGGLE_IS_DUN && setData("election", null);
+                    TOGGLE_IS_DUN && setData("election_acronym", null);
                   }}
                   exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
                   width="w-full"
@@ -270,21 +271,25 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                   options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
                   selected={
                     TOGGLE_IS_PARLIMEN
-                      ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
-                      : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
+                      ? GE_OPTIONS.find(
+                          e => e.value === data.election_fullname ?? ELECTION_FULLNAME
+                        )
+                      : SE_OPTIONS.find(e => e.value === data.election_acronym ?? ELECTION_ACRONYM)
                   }
                   disabled={!data.state}
-                  onChange={selected => {
-                    setData("election", selected.value);
-                    fetchResult(selected.value, data.state).then(({ seats, table }) => {
+                  onChange={selected => setData("election_acronym", selected.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Button
+                  className="btn-primary w-full justify-center"
+                  onClick={() => {
+                    fetchResult(data.election_acronym, data.state).then(({ seats, table }) => {
                       setData("seats", seats);
                       setData("table", table);
                     });
                   }}
-                />
-              </div>
-              <div className="space-y-2">
-                <Button className="btn-primary w-full justify-center" onClick={close}>
+                >
                   {t("apply_filters")}
                 </Button>
                 <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
@@ -312,11 +317,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             currentState={data.state}
             onChange={selected => {
               TOGGLE_IS_PARLIMEN
-                ? fetchResult(data.election, selected.value).then(({ seats, table }) => {
+                ? fetchResult(data.election_acronym, selected.value).then(({ seats, table }) => {
                     setData("seats", seats);
                     setData("table", table);
                   })
-                : setData("election", null);
+                : setData("election_acronym", null);
               setData("state", selected.value);
             }}
             exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
@@ -329,11 +334,11 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
             selected={
               TOGGLE_IS_PARLIMEN
-                ? GE_OPTIONS.find(e => e.value === data.election ?? ELECTION_FULLNAME)
-                : SE_OPTIONS.find(e => e.value === data.election ?? ELECTION_ACRONYM)
+                ? GE_OPTIONS.find(e => e.value === data.election_fullname ?? ELECTION_FULLNAME)
+                : SE_OPTIONS.find(e => e.value === data.election_acronym ?? ELECTION_ACRONYM)
             }
             onChange={selected => {
-              setData("election", selected.value);
+              setData("election_acronym", selected.value);
               fetchResult(selected.value, data.state).then(({ seats, table }) => {
                 setData("seats", seats);
                 setData("table", table);
@@ -356,11 +361,13 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                   <div className="flex flex-col items-baseline justify-between gap-y-3 sm:flex-row md:gap-y-0">
                     <h5 className="w-fit">
                       {t("election_of", {
-                        context: ELECTION_ACRONYM.startsWith("G") ? "parlimen" : "dun",
+                        context: (filter.election ?? "GE-15").startsWith("G") ? "parlimen" : "dun",
                       })}
-                      <span className="text-primary">{CountryAndStates[CURRENT_STATE]}</span>
+                      <span className="text-primary">
+                        {CountryAndStates[filter.state ?? "mys"]}
+                      </span>
                       <span>: </span>
-                      <span className="text-primary">{t(ELECTION_ACRONYM)}</span>
+                      <span className="text-primary">{t(filter.election ?? "GE-15")}</span>
                     </h5>
                     <div className="flex w-full justify-start sm:w-auto">
                       <List
@@ -412,7 +419,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                       <Card className="bg-background dark:bg-background-dark static xl:py-4">
                         <Choropleth
                           className="h-[400px] w-auto lg:h-[500px]"
-                          type={ELECTION_ACRONYM.startsWith("S") ? "dun" : "parlimen"}
+                          type={(filter.election ?? "GE-15").startsWith("S") ? "dun" : "parlimen"}
                         />
                       </Card>
                     </Panel>
@@ -474,10 +481,18 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
         </Tabs>
       </Section>
       {/* View the full ballot for a specific seat */}
-      <BallotSeat seats={data.seats} state={CURRENT_STATE} election={ELECTION_FULLNAME} />
+      <BallotSeat
+        seats={data.seats}
+        state={filter.state ?? "mys"}
+        election={data.election_fullname}
+      />
 
       {/* Election analysis */}
-      <ElectionAnalysis state={CURRENT_STATE} index={data.toggle_index} seats={data.seats} />
+      <ElectionAnalysis
+        state={filter.state ?? "mys"}
+        index={data.toggle_index}
+        seats={data.seats}
+      />
     </Container>
   );
 };
