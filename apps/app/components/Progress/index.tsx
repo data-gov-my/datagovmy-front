@@ -27,7 +27,8 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = false
     };
 
     const startLoading = (url: string) => {
-      if (disableOnSameRoute && route === url.split("?")[0]) return;
+      const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
+      if (disableOnSameRoute && route === _url.split("?")[0]) return;
 
       gradualTimeout(progress => {
         setProgress(progress);
@@ -35,7 +36,8 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = false
     };
 
     const endLoading = (url: string) => {
-      if (disableOnSameRoute && route === url.split("?")[0]) return;
+      const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
+      if (disableOnSameRoute && route === _url.split("?")[0]) return;
 
       setProgress(100);
       setTimeout(() => {
