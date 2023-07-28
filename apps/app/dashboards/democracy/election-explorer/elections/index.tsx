@@ -190,7 +190,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
           ]) => {
             const elections = {
               seats: _seats.data,
-              table: _table.data.sort((a: Party, b: Party) => {
+              table: _table.data.sort((a, b) => {
                 if (a.seats.won === b.seats.won) {
                   return b.votes.perc - a.votes.perc;
                 } else {
@@ -262,19 +262,17 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                   }}
                   exclude={TOGGLE_IS_DUN ? NON_SE_STATE : []}
                   width="w-full"
-                  anchor="left-0 bottom-10"
+                  anchor="left-0"
                 />
                 <Dropdown
                   width="w-full"
-                  anchor="right-0 bottom-10"
+                  anchor="right-0"
                   placeholder={t("select_election")}
                   options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
                   selected={
                     TOGGLE_IS_PARLIMEN
-                      ? GE_OPTIONS.find(
-                          e => e.value === data.election_fullname ?? ELECTION_FULLNAME
-                        )
-                      : SE_OPTIONS.find(e => e.value === data.election_acronym ?? ELECTION_ACRONYM)
+                      ? GE_OPTIONS.find(e => e.value === data.election_acronym)
+                      : SE_OPTIONS.find(e => e.value === data.election_acronym)
                   }
                   disabled={!data.state}
                   onChange={selected => setData("election_acronym", selected.value)}
@@ -335,8 +333,8 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             options={TOGGLE_IS_PARLIMEN ? GE_OPTIONS : SE_OPTIONS}
             selected={
               TOGGLE_IS_PARLIMEN
-                ? GE_OPTIONS.find(e => e.value === data.election_fullname ?? ELECTION_FULLNAME)
-                : SE_OPTIONS.find(e => e.value === data.election_acronym ?? ELECTION_ACRONYM)
+                ? GE_OPTIONS.find(e => e.value === data.election_acronym)
+                : SE_OPTIONS.find(e => e.value === data.election_acronym)
             }
             onChange={selected => {
               setData("election_acronym", selected.value);
