@@ -104,9 +104,14 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   ];
   const waffleColours = ["#e2462f", "#000080", "#003152", "#FF9B0E", "#E2E8F0"];
 
-  const ELECTION_FULLNAME = params.election ?? "GE-15";
+  const { filter, setFilter } = useFilter({
+    election: params.election,
+    state: params.state,
+  });
+
+  const ELECTION_FULLNAME = filter.election ?? "GE-15";
   const ELECTION_ACRONYM = ELECTION_FULLNAME.slice(-5);
-  const CURRENT_STATE = params.state ?? "mys";
+  const CURRENT_STATE = filter.state ?? "mys";
 
   const { data, setData } = useData({
     toggle_index: ELECTION_ACRONYM.startsWith("G") ? ElectionEnum.Parlimen : ElectionEnum.Dun,
@@ -141,11 +146,6 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
         .reverse();
     return _options;
   }, [data.state]);
-
-  const { filter, setFilter } = useFilter({
-    election: params.election,
-    state: params.state,
-  });
 
   const fetchResult = async (
     _election: string,
@@ -287,6 +287,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
                     fetchResult(data.election_acronym, data.state).then(({ seats, table }) => {
                       setData("seats", seats);
                       setData("table", table);
+                      close();
                     });
                   }}
                 >
