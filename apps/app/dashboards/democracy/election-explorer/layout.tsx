@@ -1,3 +1,4 @@
+import At from "@components/At";
 import AgencyBadge from "@components/Badge/agency";
 import Hero from "@components/Hero";
 import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
@@ -6,10 +7,8 @@ import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
-
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode } from "react";
-import At from "@components/At";
 
 interface ElectionLayoutProps {
   last_updated: string;
@@ -67,29 +66,42 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
       />
 
       {/* Navigations */}
-      <div
-        className={clx(
-          "border-b-outline dark:border-b-washed-dark hide-scrollbar sticky top-14 z-20 flex flex-row gap-2 overflow-x-auto border-b bg-white px-3 dark:bg-black sm:justify-center md:pl-0 lg:static",
-          pathname.endsWith("/trivia") ? "justify-end" : "justify-start"
-        )}
-      >
-        {election_navs.map(nav => (
-          <At
-            className={clx(
-              "flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center text-base font-medium transition lg:p-4",
-              pathname.startsWith(nav.url)
-                ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
-                : "text-dim"
-            )}
-            key={nav.url}
-            href={nav.url}
-            scrollTop={false}
-          >
-            <div className="hidden sm:block">{nav.icon}</div>
-            {nav.name}
-          </At>
-        ))}
-      </div>
+      <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center">
+        <div
+          className={clx(
+            "hide-scrollbar flex snap-x snap-mandatory scroll-px-9 flex-nowrap overflow-x-auto",
+            pathname.endsWith("/trivia") && "max-[360px]:justify-end"
+          )}
+        >
+          {election_navs.map(nav => (
+            <div className="snap-start">
+              <At
+                className="flex h-full min-w-[56px] cursor-pointer items-center justify-center px-3 outline-none"
+                key={nav.url}
+                href={nav.url}
+                scrollTop={false}
+              >
+                <div className="relative flex h-full flex-col items-center justify-center py-4">
+                  <div
+                    className={clx(
+                      "flex items-center gap-2",
+                      pathname.startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
+                    )}
+                  >
+                    <div className="-mx-[5px] hidden sm:block">{nav.icon}</div>
+                    <span className="whitespace-nowrap text-sm font-medium sm:text-base">
+                      {nav.name}
+                    </span>
+                  </div>
+                  {pathname.startsWith(nav.url) && (
+                    <div className="bg-primary dark:bg-primary-dark absolute bottom-0 inline-flex h-1 w-full min-w-[56px] rounded-full"></div>
+                  )}
+                </div>
+              </At>
+            </div>
+          ))}
+        </div>
+      </nav>
 
       {/* Content */}
       {children}
