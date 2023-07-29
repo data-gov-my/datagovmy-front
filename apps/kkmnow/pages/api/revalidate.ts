@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { routes } from "@lib/routes";
 import { STATES } from "@lib/constants";
 

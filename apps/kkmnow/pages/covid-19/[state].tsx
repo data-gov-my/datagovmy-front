@@ -2,13 +2,14 @@ import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import COVID19Dashboard from "@dashboards/covid-19";
 import { useTranslation } from "next-i18next";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import type { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { CountryAndStates } from "@lib/constants";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const COVID19: Page = ({
   meta,
@@ -22,7 +23,7 @@ const COVID19: Page = ({
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={[t("header"), "·", CountryAndStates[params.state]].join(" ")}
         description={t("description")}
@@ -36,7 +37,7 @@ const COVID19: Page = ({
         timeseries={timeseries}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -46,14 +47,14 @@ COVID19.layout = (page, props) => (
       stateSelector={
         <StateDropdown
           width="w-max xl:w-64"
-          url={routes.COVID}
+          url={routes.COVID_19}
           currentState={props.params.state ?? "mys"}
           exclude={["kvy"]}
           hideOnScroll
         />
       }
     >
-      <StateModal state={props.params.state} exclude={["kvy"]} url={routes.COVID} />
+      <StateModal state={props.params.state} exclude={["kvy"]} url={routes.COVID_19} />
       {page}
     </Layout>
   </WindowProvider>

@@ -10,3 +10,176 @@
 @import "leaflet.markercluster";
 @import "leaflet.markercluster/dist/MarkerCluster.css";
 @import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+
+@layer base {
+  h1 {
+    @apply font-header text-4xl font-bold leading-[54px];
+  }
+
+  h2 {
+    @apply font-header text-3xl font-bold leading-[38px] dark:text-white;
+  }
+
+  h3 {
+    @apply font-header text-2xl font-bold dark:text-white;
+  }
+
+  h4 {
+    @apply font-header text-xl font-bold dark:text-white;
+  }
+
+  h5 {
+    @apply text-lg font-bold dark:text-white;
+  }
+
+  h6 {
+    @apply text-base font-semibold uppercase tracking-wider text-gray-500;
+  }
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    appearance: none;
+  }
+
+  textarea {
+    @apply resize-none;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply flex select-none items-center gap-1.5 rounded-md border border-transparent text-start text-sm font-medium outline-none transition;
+  }
+
+  .btn-primary {
+    @apply btn from-primary to-primary-dark shadow-button bg-gradient-to-t px-3 py-1.5 text-white hover:to-[#5B8EFF];
+  }
+
+  .btn-primary svg {
+    @apply fill-white;
+  }
+
+  .btn-ghost {
+    @apply btn hover:bg-washed dark:hover:bg-washed-dark px-3 py-1.5;
+  }
+
+  .btn-default {
+    @apply btn btn-border active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark bg-white px-3 py-1.5 dark:bg-black;
+  }
+
+  .btn-border {
+    @apply border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark;
+  }
+
+  .btn-disabled {
+    @apply disabled:bg-outline dark:disabled:bg-washed-dark 
+    disabled:border-outline dark:disabled:border-washed-dark 
+    disabled:text-outlineHover dark:disabled:text-outlineHover-dark 
+    disabled:pointer-events-none disabled:cursor-not-allowed;
+  }
+
+  .link-primary {
+    @apply text-primary cursor-pointer font-medium [text-underline-position:from-font] hover:underline;
+  }
+
+  .link-dim {
+    @apply text-dim cursor-pointer text-sm [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white;
+  }
+
+  .number {
+    @apply font-medium;
+  }
+
+  /* HERO MESH GRADIENTS */
+}
+
+/* HeadlessUI Dialog Bug. */
+html {
+  overflow: unset !important;
+  padding-right: 0 !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  pointer-events: all;
+}
+
+/* button[role="tab"][aria-selected="true"] {
+    position: relative;
+}
+
+button[role="tab"][aria-selected="true"]::after {
+    content: "";
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #0f172a;
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+} */
+
+.button-dashboard:after {
+  content: "";
+  height: 10px;
+  width: 100%;
+  position: absolute;
+  bottom: -10px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hides outline for GeoChoropleth onclick */
+g:focus {
+  outline: none;
+}
+
+path:focus {
+  outline: none;
+}
+
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  @apply z-0;
+}
+
+.leaflet-tooltip-left,
+.leaflet-tooltip-right {
+  @apply border-0 bg-black/80 font-sans text-xs text-white;
+}
+.leaflet-tooltip-right::before {
+  @apply border-r-0 border-r-black/80;
+}
+.leaflet-tooltip-left::before {
+  @apply border-l-0 border-l-black/80;
+}
+
+/* MapPlot Popup Marker */
+.leaflet-popup-content {
+  width: fit-content !important;
+}
+
+.leaflet-popup-content-wrapper {
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  @apply w-fit whitespace-pre font-mono text-xs;
+}
+
+.leaflet-popup-tip-container {
+}
+
+:focus-visible {
+  outline: unset;
+}

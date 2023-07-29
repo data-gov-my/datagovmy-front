@@ -1,5 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
@@ -9,6 +9,7 @@ import { Page } from "@lib/types";
 import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { routes } from "@lib/routes";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const BloodDonation: Page = ({
   meta,
@@ -37,7 +38,7 @@ const BloodDonation: Page = ({
   });
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords="" />
       <BloodDonationDashboard
         last_updated={last_updated}
@@ -51,7 +52,7 @@ const BloodDonation: Page = ({
         }}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

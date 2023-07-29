@@ -3,7 +3,7 @@
  */
 // import { Metadata } from "@components/index";
 // import HealthcareFacilitiesDashboard from "@dashboards/healthcare-facilities";
-// import { get } from "@lib/api";
+// import { get } from "datagovmy-ui/api";
 import { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 // import { useTranslation } from "next-i18next";

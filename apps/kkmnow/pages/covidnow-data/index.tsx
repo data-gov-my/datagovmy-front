@@ -3,7 +3,7 @@
  */
 // import { Metadata } from "@components/index";
 // import CovidNowDashboard from "@dashboards/covidnow-data";
-// import { get } from "@lib/api";
+// import { get } from "datagovmy-ui/api";
 // import { sortMsiaFirst } from "@lib/helpers";
 import { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";

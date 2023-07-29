@@ -3,13 +3,14 @@ import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import OrganDonationDashboard from "@dashboards/organ-donation";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
 import { withi18n } from "datagovmy-ui/decorators";
 import { DateTime } from "luxon";
 import type { Page } from "@lib/types";
 import type { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const OrganDonationState: Page = ({
   meta,
@@ -23,7 +24,7 @@ const OrganDonationState: Page = ({
   const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
@@ -37,7 +38,7 @@ const OrganDonationState: Page = ({
         barchart_age={barchart_age}
         barchart_time={barchart_time}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -67,7 +68,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  ["dashboard-organ-donation", "common"],
+  ["dashboard-organ-donation"],
   async ({ params }) => {
     const { data } = await get("/dashboard", { dashboard: "organ_donation", state: params?.state });
 

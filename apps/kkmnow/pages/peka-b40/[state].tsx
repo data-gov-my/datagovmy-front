@@ -3,13 +3,14 @@ import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import PekaB40Dashboard from "@dashboards/peka-b40";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { CountryAndStates } from "@lib/constants";
 
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const PekaB40State: Page = ({
   meta,
@@ -21,7 +22,7 @@ const PekaB40State: Page = ({
   const { t } = useTranslation(["dashboard-peka-b40", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
@@ -33,7 +34,7 @@ const PekaB40State: Page = ({
         timeseries={timeseries}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

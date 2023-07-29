@@ -1,5 +1,5 @@
-import type { OptionType } from "../components/types";
-import type { Color } from "../hooks/useColor";
+import type { OptionType } from "@components/types";
+import type { Color } from "@hooks/useColor";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
 import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
@@ -12,6 +12,7 @@ export type AppPropsLayout = AppProps & {
 
 export type Page = NextPage & {
   layout?: (page: ReactNode, props: Record<string, any>) => ReactElement;
+  theme?: "light" | "dark";
 };
 
 // CHART INTERFACE
@@ -37,13 +38,18 @@ export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptio
   };
 };
 
+export type TimeseriesOption = {
+  period: "auto" | "month" | "year";
+  periodly: "daily_7d" | "daily" | "monthly" | "yearly";
+};
+
 export type DownloadOption = {
   id: string;
   image: string | null | false | undefined;
   title: ReactNode;
   description: ReactNode;
   icon: JSX.Element;
-  href: string | (() => void);
+  href: () => void;
 };
 
 export type DownloadOptions = {
@@ -93,6 +99,11 @@ export type FilterDate = BaseFilter & {
 
 export type DCFilter = FilterDefault | FilterDate;
 
+export type Precision = {
+  default: number;
+  columns?: Record<string, number>;
+};
+
 // Usage
 export type DCConfig = {
   context: {
@@ -100,23 +111,18 @@ export type DCConfig = {
   };
   dates: FilterDate | null;
   options: FilterDefault[] | null;
-  precision: number;
+  precision: Precision;
   freeze?: string[];
   color?: Color;
   geojson?: Geotype | null;
   line_variables?: Record<string, any>;
 };
 
-export type Precision = {
-  default: number;
-  columns?: Record<string, number>;
-};
-
 /*************************** MIXPANEL ***************************** */
 
 export type EventType =
-  | "file_download"
   | "image_download"
+  | "file_download"
   | "page_view"
   | "change_language"
   | "select_dropdown"
@@ -131,7 +137,7 @@ export type MixpanelBase = {
 export type MetaPage = Record<string, any> & {
   meta: {
     id: string;
-    type: "misc" | "dashboard" | "catalogue";
+    type: "misc" | "dashboard" | "data-catalogue";
     category:
       | "democracy"
       | "demography"

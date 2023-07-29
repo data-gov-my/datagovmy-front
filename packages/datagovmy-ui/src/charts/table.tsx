@@ -29,7 +29,7 @@ import { useTranslation } from "../hooks/useTranslation";
 import { default as debounce } from "lodash/debounce";
 import type { DebouncedFunc } from "lodash";
 import { clx, numFormat } from "../lib/helpers";
-import { UpDownIcon } from "../components/Icon/up-down";
+import { UpDownIcon } from "../icons";
 import Button from "../components/Button";
 import { Precision } from "../lib/types";
 

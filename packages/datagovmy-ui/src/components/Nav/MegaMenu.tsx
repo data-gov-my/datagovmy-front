@@ -1,33 +1,27 @@
-import { Fragment, useState, ReactElement } from "react";
+import { Fragment, useState, useContext, FunctionComponent, ReactNode } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
 import { BREAKPOINTS } from "../../lib/constants";
-// import { useWindowWidth } from "../../hooks/useWindowWidth";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 
-/**
- * @deprecated No longer used. To revisit when the need arises
- */
-type MegaMenuProps = {
-  icon?: JSX.Element;
+interface MegamenuProps {
+  icon?: ReactNode;
   title: string;
-  children: ReactElement[] | ReactElement;
-};
+  children: ReactNode;
+}
 
-const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
-  //   const windowWidth = useWindowWidth();
-  const isTablet = false; // windowWidth >= BREAKPOINTS.MD;
-
+const Megamenu: FunctionComponent<MegamenuProps> = ({ icon, title, children }) => {
+  const { size } = useContext(WindowContext);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
-      {/* Mobile view */}
-      {!isTablet ? (
+    <div className="w-full">
+      {size.width <= BREAKPOINTS.MD ? (
         <>
           <div
             onClick={() => setIsOpen(!isOpen)}
-            className="hover:bg-washed focus:bg-washed flex w-full items-center gap-2 bg-white px-2 py-2 text-sm font-medium hover:cursor-pointer md:py-[6px]"
+            className="hover:bg-washed dark:hover:bg-washed-dark flex items-center gap-2 rounded-none px-2 py-2 text-sm font-medium transition hover:cursor-pointer md:rounded-md md:py-[6px]"
           >
             {icon}
             {title}
@@ -43,22 +37,21 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
               />
             )}
           </div>
-          {isOpen && children}
+          {isOpen && <div>{children}</div>}
         </>
       ) : (
-        // Desktop view
         <Popover
           onMouseEnter={() => setIsOpen(true)}
           onMouseLeave={() => setIsOpen(false)}
           className="relative"
         >
           <>
-            <Popover.Button className="button-dashboard hover:bg-washed dark:hover:bg-washed-dark flex items-center  gap-2 rounded-md px-2 py-[6px] text-sm font-medium hover:cursor-pointer focus:outline-none">
+            <Popover.Button className="hover:bg-washed dark:hover:bg-washed-dark flex items-center gap-2 rounded-none px-2 py-2 text-sm font-medium transition hover:cursor-pointer dark:text-white md:rounded-md md:py-[6px]">
               {icon}
               {title}
               {isOpen ? (
                 <ChevronUpIcon
-                  className={`h-4 w-4 transition duration-150 ease-in-out group-hover:text-opacity-80`}
+                  className={`dar:text-white h-4 w-4 transition duration-150 ease-in-out group-hover:text-opacity-80`}
                   aria-hidden="true"
                 />
               ) : (
@@ -78,15 +71,17 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ icon, title, children }) => {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="dark:border-washed-dark fixed left-0 z-10 mt-0 w-screen overflow-hidden border bg-white shadow-lg dark:bg-black md:mt-2.5">
-                {children}
+              <Popover.Panel className="fixed left-0 z-10 mt-0 w-screen lg:mt-3">
+                <div className="dark:bg-washed-dark dark:border-outlineHover-dark overflow-hidden border-t bg-white shadow-lg">
+                  {children}
+                </div>
               </Popover.Panel>
             </Transition>
           </>
         </Popover>
       )}
-    </>
+    </div>
   );
 };
 
-export default MegaMenu;
+export default Megamenu;

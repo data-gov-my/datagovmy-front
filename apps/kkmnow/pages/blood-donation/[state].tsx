@@ -5,11 +5,12 @@ import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "datagovmy-ui/decorators";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { DateTime } from "luxon";
 import { routes } from "@lib/routes";
 import BloodDonationDashboard from "@dashboards/blood-donation";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const BloodDonationState: Page = ({
   meta,
@@ -37,7 +38,7 @@ const BloodDonationState: Page = ({
   });
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
@@ -55,7 +56,7 @@ const BloodDonationState: Page = ({
         }}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

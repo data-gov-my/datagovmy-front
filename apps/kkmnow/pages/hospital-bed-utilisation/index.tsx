@@ -1,6 +1,6 @@
 // import { Metadata } from "@components/index";
 // import HospitalBedUtilisationDashboard from "@dashboards/hospital-bed-utilisation";
-// import { get } from "@lib/api";
+// import { get } from "datagovmy-ui/api";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 // import { useTranslation } from "next-i18next";

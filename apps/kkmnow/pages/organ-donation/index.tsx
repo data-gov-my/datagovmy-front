@@ -2,13 +2,14 @@ import Layout from "@components/Layout";
 import OrganDonationDashboard from "@dashboards/organ-donation";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { routes } from "@lib/routes";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DateTime } from "luxon";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import type { Page } from "@lib/types";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const OrganDonation: Page = ({
   meta,
@@ -22,7 +23,7 @@ const OrganDonation: Page = ({
   const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <OrganDonationDashboard
         last_updated={last_updated}
@@ -32,7 +33,7 @@ const OrganDonation: Page = ({
         barchart_age={barchart_age}
         barchart_time={barchart_time}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

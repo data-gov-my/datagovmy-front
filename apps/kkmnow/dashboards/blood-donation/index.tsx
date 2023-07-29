@@ -1,6 +1,6 @@
-import Hero from "@components/Hero";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import {
+  Hero,
   Container,
   Panel,
   Section,
@@ -9,7 +9,9 @@ import {
   Slider,
   LeftRightCard,
   RankList,
+  AgencyBadge,
 } from "datagovmy-ui/components";
+import { PDNIcon } from "datagovmy-ui/icons/agency";
 
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
@@ -93,12 +95,19 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   return (
     <>
       <Hero
-        background="blood-banner"
-        // category={[t("common:categories.healthcare"), "text-danger"]}
+        background="red"
+        category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description"), "text-dim"]}
         action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:pdn.full")}
+            link="https://pdn.gov.my/v2/"
+            icon={<PDNIcon />}
+          />
+        }
       />
       <Container className="min-h-screen">
         {/* What are the latest blood donation trends in Malaysia? */}

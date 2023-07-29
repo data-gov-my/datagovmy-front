@@ -1,13 +1,15 @@
-import Hero from "@components/Hero";
 import {
+  AgencyBadge,
   Container,
   LeftRightCard,
+  Hero,
   Panel,
   Section,
   Slider,
   StateDropdown,
   Tabs,
 } from "datagovmy-ui/components";
+import { NTRCIcon } from "datagovmy-ui/icons/agency";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
@@ -79,14 +81,20 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   return (
     <>
       <Hero
-        background="organ-banner"
-        // category={[t("common:categories.healthcare"), "text-[#16A34A]"]}
+        background="green"
+        category={[t("common:categories.healthcare"), "text-[#16A34A]"]}
         header={[t("header")]}
         description={[t("description")]}
         action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:ntrc.full")}
+            link="https://www.dermaorgan.gov.my/ntrc"
+            icon={<NTRCIcon />}
+          />
+        }
       />
-
       <Container className="min-h-screen">
         {/* What are the latest organ pledger trends in Malaysia? */}
         <Section

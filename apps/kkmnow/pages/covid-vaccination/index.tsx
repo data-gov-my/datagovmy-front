@@ -2,13 +2,14 @@ import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import COVIDVaccinationDashboard from "@dashboards/covid-vaccination";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { withi18n } from "datagovmy-ui/decorators";
 import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const CovidVaccination: Page = ({
   meta,
@@ -22,7 +23,7 @@ const CovidVaccination: Page = ({
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVIDVaccinationDashboard
         params={params}
@@ -32,7 +33,7 @@ const CovidVaccination: Page = ({
         barmeter={barmeter}
         waffle={waffle}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -42,13 +43,13 @@ CovidVaccination.layout = (page, props) => (
       stateSelector={
         <StateDropdown
           width="w-max xl:w-64"
-          url={routes.COVID_VAX}
+          url={routes.COVID_VACCINATION}
           currentState={props?.params.state}
           hideOnScroll
         />
       }
     >
-      <StateModal url={routes.COVID_VAX} state={props.params.state} />
+      <StateModal url={routes.COVID_VACCINATION} state={props.params.state} />
       {page}
     </Layout>
   </WindowProvider>

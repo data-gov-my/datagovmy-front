@@ -18,7 +18,7 @@ const instance = (base: "api" | "local" | string = "api", headers: Record<string
         ? process.env.NEXT_PUBLIC_APP_URL
         : base,
     headers: {
-      Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN as string,
+      Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
       ...headers,
     },
   };
