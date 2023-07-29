@@ -2,9 +2,9 @@ import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
 
 import { OptionType } from "@components/types";
 import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { SHORT_LANG } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import { numFormat } from "datagovmy-ui/helpers";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import groupBy from "lodash/groupBy";
 import dynamic from "next/dynamic";
@@ -19,12 +19,12 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
 });
 const InflationTrends: FunctionComponent = ({}) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   const GRANULAR_OPTIONS: Array<OptionType> = [
-    { label: t("consumer_prices.keys.broad_categories"), value: "2d" },
-    { label: t("consumer_prices.keys.narrow_categories"), value: "4d" },
+    { label: t("keys.broad_categories"), value: "2d" },
+    { label: t("keys.narrow_categories"), value: "4d" },
   ];
 
   const { data, setData } = useData({
@@ -148,7 +148,7 @@ const InflationTrends: FunctionComponent = ({}) => {
         <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
           <Dropdown
             anchor="left"
-            sublabel={t("consumer_prices.section_3.select_granularity") + ":"}
+            sublabel={t("section_3.select_granularity") + ":"}
             selected={data.granular_type}
             options={GRANULAR_OPTIONS}
             onChange={(e: any) => setData("granular_type", e)}
@@ -156,9 +156,9 @@ const InflationTrends: FunctionComponent = ({}) => {
 
           <Select
             anchor="left"
-            sublabel={t("consumer_prices.section_3.select_items") + ":"}
+            sublabel={t("section_3.select_items") + ":"}
             disabled={data.inflation_ys.length >= 6}
-            placeholder={t("consumer_prices.section_3.select_upto6")}
+            placeholder={t("section_3.select_upto6")}
             multiple
             selected={data.inflation_ys}
             options={

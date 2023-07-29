@@ -8,9 +8,10 @@ import { Metadata } from "datagovmy-ui/components";
 import MalaysiaGeojson from "datagovmy-ui/geojson/state/_map";
 
 import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { STATES } from "@lib/schema/kawasanku";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useEffect, useState } from "react";
 
 const KawasankuIndex: Page = ({
   bar,
@@ -19,16 +20,12 @@ const KawasankuIndex: Page = ({
   choropleth,
   population_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-kawasanku"]);
 
   return (
     <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.kawasanku")}
-        description={t("kawasanku.description")}
-        keywords={""}
-      />
-      {/* <KawasankuDashboard
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <KawasankuDashboard
         bar={bar}
         jitterplot={jitterplot}
         pyramid={pyramid}
@@ -36,12 +33,12 @@ const KawasankuIndex: Page = ({
         population_callout={population_callout}
         jitterplot_options={STATES.filter(item => item.value !== "malaysia")}
         geojson={MalaysiaGeojson as GeoJsonObject}
-      /> */}
+      />
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", async () => {
   // const { data } = await get("/dashboard/", {
   //   "dashboard": "kawasanku_admin",
   //   "area": "malaysia",
@@ -49,7 +46,6 @@ export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   // });
 
   return {
-    notFound: true,
     props: {
       meta: {
         id: "dashboard-kawasanku",

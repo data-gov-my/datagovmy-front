@@ -6,11 +6,11 @@ import KawasankuDashboard from "@dashboards/kawasanku";
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { STATE_MAP, DUNS } from "@lib/schema/kawasanku";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { useState } from "react";
 import { withi18n } from "datagovmy-ui/decorators";
 
-const KawasankuArea: Page = ({
+const KawasankuDun: Page = ({
   ctx,
   bar,
   jitterplot,
@@ -36,9 +36,9 @@ const KawasankuArea: Page = ({
   return (
     <>
       <Metadata
-        title={`${t("nav.megamenu.dashboards.kawasanku")} • 
+        title={`${t("header")} • 
         ${DUNS[ctx.state].find(dun => dun.value === ctx.id)?.label}`}
-        description={t("kawasanku.description")}
+        description={t("description")}
         keywords={""}
       />
       <KawasankuDashboard
@@ -62,7 +62,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", async () => {
   // const { data } = await get("/dashboard/", {
   //   "dashboard": "kawasanku_electoral",
   //   "area": params!.id,
@@ -112,4 +112,4 @@ export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   };
 });
 
-export default KawasankuArea;
+export default KawasankuDun;

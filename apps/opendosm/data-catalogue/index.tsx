@@ -1,6 +1,6 @@
-import Hero from "@components/Hero";
 import {
   At,
+  Hero,
   Button,
   Checkbox,
   Container,
@@ -60,17 +60,17 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 
   return (
     <div>
-      <Hero background="data-catalogue-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <h3 className="text-black">{t("header")}</h3>
-          <p className="text-dim">{t("description")}</p>
-
-          <p className="flex items-center gap-2 text-sm text-dim">
-            <ArrowTrendingUpIcon className="h-4 w-4" />
-            <span>{t("dataset_count", { count: total })}</span>
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="blue"
+        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
+        header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
+        description={[
+          t("description", {
+            agency: query.source ?? "",
+            context: query.source ? "agency" : "",
+          }),
+        ]}
+      />
 
       <Container className="min-h-screen lg:px-0">
         <Sidebar

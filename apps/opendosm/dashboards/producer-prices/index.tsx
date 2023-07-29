@@ -1,8 +1,7 @@
-import Hero from "@components/Hero";
-import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
 import { FunctionComponent, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
@@ -10,6 +9,7 @@ import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * Producer Proces (PPI) Dashboard
@@ -41,113 +41,102 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
-  const INDEX_OPTIONS: Array<OptionType> = ["growth_yoy", "growth_mom", "value"].map(
-    (key: string) => ({
-      label: t(`consumer_prices.keys.${key}`),
-      value: key,
-    })
-  );
-  const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("producer_prices.keys.no_shade"), value: "no_shade" },
-    { label: t("producer_prices.keys.recession"), value: "recession" },
-  ];
+  const { t, i18n } = useTranslation(["dashboard-producer-prices", "common"]);
+  // const INDEX_OPTIONS: Array<OptionType> = ["growth_yoy", "growth_mom", "value"].map(
+  //   (key: string) => ({
+  //     label: t(`consumer_prices.keys.${key}`),
+  //     value: key,
+  //   })
+  // );
+  // const SHADE_OPTIONS: Array<OptionType> = [
+  //   { label: t("producer_prices.keys.no_shade"), value: "no_shade" },
+  //   { label: t("producer_prices.keys.recession"), value: "recession" },
+  // ];
 
-  const { data, setData } = useData({
-    index_type: INDEX_OPTIONS[0],
-    shade_type: SHADE_OPTIONS[0],
-    minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
-  });
-  const LATEST_TIMESTAMP =
-    timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
-  const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
+  // const { data, setData } = useData({
+  //   index_type: INDEX_OPTIONS[0],
+  //   shade_type: SHADE_OPTIONS[0],
+  //   minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
+  // });
+  // const LATEST_TIMESTAMP =
+  //   timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
+  // const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
 
-  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
-    (key: string) => {
-      if (key === "no_shade")
-        return {
-          data: [],
-        };
+  // const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
+  //   (key: string) => {
+  //     if (key === "no_shade")
+  //       return {
+  //         data: [],
+  //       };
 
-      return {
-        type: "line",
-        data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
-        borderWidth: 0,
-        fill: true,
-        yAxisID: "y2",
-        stepped: true,
-      };
-    },
-    [data]
-  );
+  //     return {
+  //       type: "line",
+  //       data: coordinate[key],
+  //       backgroundColor: AKSARA_COLOR.BLACK_H,
+  //       borderWidth: 0,
+  //       fill: true,
+  //       yAxisID: "y2",
+  //       stepped: true,
+  //     };
+  //   },
+  //   [data]
+  // );
 
-  const configs = useCallback<(key: string) => { unit: string; callout: string; fill: boolean }>(
-    (key: string) => {
-      const unit = data.index_type.value === "value" ? "" : "%";
-      const callout = [
-        numFormat(timeseries_callouts.data[data.index_type.value][key].callout, "standard", [1, 1]),
-        unit,
-      ].join("");
+  // const configs = useCallback<(key: string) => { unit: string; callout: string; fill: boolean }>(
+  //   (key: string) => {
+  //     const unit = data.index_type.value === "value" ? "" : "%";
+  //     const callout = [
+  //       numFormat(timeseries_callouts.data[data.index_type.value][key].callout, "standard", [1, 1]),
+  //       unit,
+  //     ].join("");
 
-      return {
-        unit,
-        callout,
-        fill: data.shade_type.value === "no_shade",
-      };
-    },
-    [data.index_type, data.shade_type]
-  );
+  //     return {
+  //       unit,
+  //       callout,
+  //       fill: data.shade_type.value === "no_shade",
+  //     };
+  //   },
+  //   [data.index_type, data.shade_type]
+  // );
 
-  const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
-    sectionHeaders.map(chartName => ({
-      title: t(`producer_prices.keys.${chartName}`),
-      unitY: configs(chartName).unit,
-      label: t(`producer_prices.keys.${chartName}`),
-      data: coordinate[chartName],
-      fill: configs(chartName).fill,
-      callout: configs(chartName).callout,
-    }));
+  // const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
+  //   sectionHeaders.map(chartName => ({
+  //     title: t(`producer_prices.keys.${chartName}`),
+  //     unitY: configs(chartName).unit,
+  //     label: t(`producer_prices.keys.${chartName}`),
+  //     data: coordinate[chartName],
+  //     fill: configs(chartName).fill,
+  //     callout: configs(chartName).callout,
+  //   }));
 
-  const section1ChartData = getChartData([
-    "agriculture",
-    "mining",
-    "manufacturing",
-    "electricity",
-    "water",
-  ]);
-
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "producer_prices.header",
-      name_en: "Producer Prices",
-      name_bm: "Harga Pengeluar",
-      route: routes.PRODUCER_PRICES,
-    });
-  }, []);
+  // const section1ChartData = getChartData([
+  //   "agriculture",
+  //   "mining",
+  //   "manufacturing",
+  //   "electricity",
+  //   "water",
+  // ]);
 
   return (
     <>
-      <Hero background="producer-prices-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3>{t("producer_prices.header")}</h3>
-          <p className="text-dim">{t("producer_prices.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="blue"
+        category={[t("common:categories.economy"), "text-blue-700"]}
+        header={[t("header")]}
+        description={[t("description"), "dark:text-white"]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:dosm.full")}
+            link="https://open.dosm.gov.my/"
+            icon={<DOSMIcon />}
+          />
+        }
+      />
 
       <Container className="min-h-screen">
         {/* How is the CPI trending? */}
-        <Section
+        {/* <Section
           title={t("producer_prices.section_1.title")}
           description={t("producer_prices.section_1.description")}
           date={timeseries.data_as_of}
@@ -267,7 +256,7 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
               ))}
             </div>
           </div>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );

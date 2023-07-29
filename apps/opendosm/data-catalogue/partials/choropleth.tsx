@@ -1,7 +1,7 @@
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "datagovmy-ui/hooks";
 
-import { download, exportAs } from "@lib/helpers";
+import { download, exportAs } from "datagovmy-ui/helpers";
 import type { DownloadOptions } from "@lib/types";
 import { track } from "@lib/mixpanel";
 import { default as dynamic } from "next/dynamic";

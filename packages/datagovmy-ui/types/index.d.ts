@@ -64,6 +64,11 @@ export interface AnalyticsEvent {
   value: string;
 }
 
+export type OptionType = {
+  label: string;
+  value: string;
+};
+
 export type Geotype = "state" | "parlimen" | "dun" | "district";
 
 /************************ DATA CATALOGUE ************************** */

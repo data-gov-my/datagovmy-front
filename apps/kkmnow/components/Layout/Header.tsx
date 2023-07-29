@@ -13,21 +13,21 @@ const KKMNOWHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   const { t } = useTranslation(["dashboards"]);
   const megaMenuItems = [
     {
-      title: t("categories.infectious_diseases"),
+      title: t("categories.infectious-diseases"),
       list: [
         { title: t("dashboards.covid-19.name"), link: routes.COVID_19 },
         { title: t("dashboards.covid-vaccination.name"), link: routes.COVID_VACCINATION },
       ],
     },
     {
-      title: t("categories.healthcare_resources"),
+      title: t("categories.healthcare-resources"),
       list: [
         { title: t("dashboards.healthcare-facilities.name"), link: routes.FACILITIES },
         { title: t("dashboards.hospital-bed-utilisation.name"), link: routes.HOSPITAL_BED },
       ],
     },
     {
-      title: t("categories.healthcare_programs"),
+      title: t("categories.healthcare-programs"),
       list: [
         {
           title: t("dashboards.blood-donation.name"),

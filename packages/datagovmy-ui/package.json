@@ -13,7 +13,10 @@
     "./components": "./src/components/index.ts",
     "./contexts/*": "./src/contexts/*.tsx",
     "./decorators": "./src/lib/decorators.ts",
-    "./geojson/*": "./src/lib/geojson/*/*.ts",
+    "./geojson/district/*": "./src/lib/geojson/district/*.ts",
+    "./geojson/dun/*": "./src/lib/geojson/dun/*.ts",
+    "./geojson/parlimen/*": "./src/lib/geojson/parlimen/*.ts",
+    "./geojson/state/*": "./src/lib/geojson/state/*.ts",
     "./helpers": "./src/lib/helpers.ts",
     "./hooks": "./src/hooks/index.ts",
     "./i18n": "./src/i18n/index.cjs",
@@ -54,8 +57,17 @@
       "hooks": [
         "./types/hooks.d.ts"
       ],
-      "geojson/*": [
-        "./src/lib/geojson/*"
+      "geojson/district/*": [
+        "./src/lib/geojson/district/*.ts"
+      ],
+      "geojson/dun/*": [
+        "./src/lib/geojson/dun/*.ts"
+      ],
+      "geojson/parlimen/*": [
+        "./src/lib/geojson/parlimen/*.ts"
+      ],
+      "geojson/state/*": [
+        "./src/lib/geojson/state/*.ts"
       ]
     }
   },

@@ -1,5 +1,5 @@
 import type { TableConfig } from "datagovmy-ui/charts/table";
-import { numFormat } from "@lib/helpers";
+import { numFormat } from "datagovmy-ui/helpers";
 import { At } from "datagovmy-ui/components";
 
 /**

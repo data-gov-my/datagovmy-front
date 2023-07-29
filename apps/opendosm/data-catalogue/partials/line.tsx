@@ -3,7 +3,7 @@ import { FunctionComponent, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
 import { AKSARA_COLOR } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download, exportAs } from "@lib/helpers";
+import { download, exportAs } from "datagovmy-ui/helpers";
 import { useWatch, useTranslation } from "datagovmy-ui/hooks";
 import { track } from "@lib/mixpanel";
 import type { ChartDataset } from "chart.js";

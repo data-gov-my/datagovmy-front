@@ -1,6 +1,6 @@
 import { Metadata } from "datagovmy-ui/components";
 import GDPDashboard from "@dashboards/gdp";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useTranslation } from "datagovmy-ui/hooks";
 
@@ -11,15 +11,11 @@ const GDP = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-gdp", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.gdp")}
-        description={t("gdp.description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GDPDashboard
         last_updated={last_updated}
         timeseries={timeseries}
@@ -29,7 +25,7 @@ const GDP = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-gdp", async () => {
   const { data } = await get("/dashboard", { dashboard: "gross_domestic_product" });
 
   return {

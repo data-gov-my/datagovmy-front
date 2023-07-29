@@ -1,14 +1,14 @@
-import Hero from "@components/Hero";
-import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat, toDate } from "@lib/helpers";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
+// import { AKSARA_COLOR } from "@lib/constants";
+// import { numFormat, toDate } from "datagovmy-ui/helpers";
+// import { track } from "@lib/mixpanel";
+// import { routes } from "@lib/routes";
+// import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
 
 import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * Composite Index Dashboard
@@ -28,88 +28,102 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
-  const INDEX_OPTIONS = ["growth_yoy", "growth_mom", "index"].map((key: string) => ({
-    label: t(`compositeindex.keys.${key}`) as string,
-    value: key,
-  }));
-  const SHADE_OPTIONS = [
-    { label: t("compositeindex.keys.no_shade"), value: "no_shade" },
-    { label: t("compositeindex.keys.recession_growth"), value: "flag_recession_growth" },
-    { label: t("compositeindex.keys.recession_business"), value: "flag_recession_business" },
-  ];
+  const { t, i18n } = useTranslation(["dashboard-composite-index", "common"]);
+  // const INDEX_OPTIONS = ["growth_yoy", "growth_mom", "index"].map((key: string) => ({
+  //   label: t(`compositeindex.keys.${key}`) as string,
+  //   value: key,
+  // }));
+  // const SHADE_OPTIONS = [
+  //   { label: t("compositeindex.keys.no_shade"), value: "no_shade" },
+  //   { label: t("compositeindex.keys.recession_growth"), value: "flag_recession_growth" },
+  //   { label: t("compositeindex.keys.recession_business"), value: "flag_recession_business" },
+  // ];
 
-  const AXIS_Y = {
-    y2: {
-      display: false,
-      grid: {
-        drawTicks: false,
-        drawBorder: false,
-        lineWidth: 0.5,
-      },
-      ticks: {
-        display: false,
-      },
-    },
-  };
+  // const AXIS_Y = {
+  //   y2: {
+  //     display: false,
+  //     grid: {
+  //       drawTicks: false,
+  //       drawBorder: false,
+  //       lineWidth: 0.5,
+  //     },
+  //     ticks: {
+  //       display: false,
+  //     },
+  //   },
+  // };
 
-  const { data, setData } = useData({
-    index_type: INDEX_OPTIONS[0],
-    shade_type: SHADE_OPTIONS[0],
-    minmax: [
-      timeseries.data[INDEX_OPTIONS[0].value].x.length - 120,
-      timeseries.data[INDEX_OPTIONS[0].value].x.length - 1,
-    ],
-  });
-  const LATEST_TIMESTAMP =
-    timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
-  const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
+  // const { data, setData } = useData({
+  //   index_type: INDEX_OPTIONS[0],
+  //   shade_type: SHADE_OPTIONS[0],
+  //   minmax: [
+  //     timeseries.data[INDEX_OPTIONS[0].value].x.length - 120,
+  //     timeseries.data[INDEX_OPTIONS[0].value].x.length - 1,
+  //   ],
+  // });
+  // const LATEST_TIMESTAMP =
+  //   timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
+  // const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
 
-  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
-    (key: string) => {
-      if (key === "no_shade")
-        return {
-          data: [],
-        };
+  // const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
+  //   (key: string) => {
+  //     if (key === "no_shade")
+  //       return {
+  //         data: [],
+  //       };
 
-      return {
-        type: "line",
-        data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
-        borderWidth: 0,
-        fill: true,
-        yAxisID: "y2",
-        stepped: true,
-      };
-    },
-    [data]
-  );
+  //     return {
+  //       type: "line",
+  //       data: coordinate[key],
+  //       backgroundColor: AKSARA_COLOR.BLACK_H,
+  //       borderWidth: 0,
+  //       fill: true,
+  //       yAxisID: "y2",
+  //       stepped: true,
+  //     };
+  //   },
+  //   [data]
+  // );
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "compositeindex.header",
-      name_en: "Composite Index",
-      name_bm: "Indeks Komposit",
-      route: routes.COMPOSITE_INDEX,
-    });
-  }, []);
+  // useEffect(() => {
+  //   track("page_view", {
+  //     type: "dashboard",
+  //     id: "compositeindex.header",
+  //     name_en: "Composite Index",
+  //     name_bm: "Indeks Komposit",
+  //     route: routes.COMPOSITE_INDEX,
+  //   });
+  // }, []);
 
-  useWatch(() => {
-    setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
-  }, [data.index_type]);
+  // useWatch(() => {
+  //   setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
+  // }, [data.index_type]);
 
-  const configs = useMemo<{ unit: string; fill: boolean }>(() => {
-    const unit = data.index_type.value.includes("growth") ? "%" : "";
-    return {
-      unit: unit,
-      fill: data.shade_type.value === "no_shade",
-    };
-  }, [data.index_type, data.shade_type]);
+  // const configs = useMemo<{ unit: string; fill: boolean }>(() => {
+  //   const unit = data.index_type.value.includes("growth") ? "%" : "";
+  //   return {
+  //     unit: unit,
+  //     fill: data.shade_type.value === "no_shade",
+  //   };
+  // }, [data.index_type, data.shade_type]);
 
   return (
     <>
-      <Hero background="composite-index-banner">
+      <Hero
+        background="gray"
+        category={[t("common:categories.economy"), "text-green-700"]}
+        header={[t("header")]}
+        description={[t("description"), "dark:text-white"]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:dosm.full")}
+            link="https://open.dosm.gov.my/"
+            icon={<DOSMIcon />}
+          />
+        }
+      />
+      {/* <Hero background="composite-index-banner">
         <div className="space-y-4 xl:w-2/3">
           <span className="text-sm font-bold uppercase tracking-widest text-blue-300">
             {t("nav.megamenu.categories.economy")}
@@ -123,11 +137,11 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
             })}
           </p>
         </div>
-      </Hero>
+      </Hero> */}
 
       <Container className="min-h-screen">
         {/* How are the Malaysian Economic Indicators trending? */}
-        <Section
+        {/* <Section
           title={t("compositeindex.section_1.title")}
           description={
             <p className="whitespace-pre-line text-dim">
@@ -275,10 +289,10 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
               ]}
             />
           </div>
-        </Section>
+        </Section> */}
 
         {/*Diffusion indices: A different perspective on the Malaysian Economic Indicators */}
-        <Section
+        {/* <Section
           title={t("compositeindex.section_2.title")}
           description={t("compositeindex.section_2.description")}
           date={timeseries.data_as_of}
@@ -345,7 +359,7 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
               ]}
             />
           </div>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );

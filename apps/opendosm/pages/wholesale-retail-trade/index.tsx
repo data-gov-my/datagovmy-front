@@ -1,44 +1,41 @@
 import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import type { Page } from "@lib/types";
 
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import WholesaleRetailDashboard from "@dashboards/wholesale-retail";
 import { withi18n } from "datagovmy-ui/decorators";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const WholesaleRetail: Page = ({
+  meta,
   last_updated,
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-wholesale-retail"]);
 
   return (
-    <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.wholesale_retail")}
-        description={t("wholesaleretail.description")}
-        keywords={""}
-      />
+    <AnalyticsProvider meta={meta}>
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WholesaleRetailDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-wholesale-retail", async () => {
   // const { data } = await get("/dashboard", { dashboard: "wholesale_retail_trade" });
 
   return {
-    notFound: true,
     props: {
       meta: {
-        id: "dashboard-wholesale-retail-trade",
+        id: "dashboard-wholesale-retail",
         type: "dashboard",
         category: "economy",
         agency: "DOSM",

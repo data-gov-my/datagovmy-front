@@ -2,7 +2,7 @@ import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { SHORT_LANG } from "@lib/constants";
 import { OptionType } from "@components/types";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import DataCatalogueShow from "@data-catalogue/show";

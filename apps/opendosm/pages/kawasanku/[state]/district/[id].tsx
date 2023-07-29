@@ -6,7 +6,7 @@ import KawasankuDashboard from "@dashboards/kawasanku";
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { STATE_MAP, DISTRICTS } from "@lib/schema/kawasanku";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { useState } from "react";
 import { withi18n } from "datagovmy-ui/decorators";
 import dynamic from "next/dynamic";

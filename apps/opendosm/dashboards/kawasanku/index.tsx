@@ -5,6 +5,7 @@ import type { Color } from "datagovmy-ui/hooks";
 import type { GeoJsonObject } from "geojson";
 import { FunctionComponent, useEffect, useMemo } from "react";
 import {
+  Hero,
   Button,
   Chips,
   Container,
@@ -16,12 +17,11 @@ import {
   Tooltip,
 } from "datagovmy-ui/components";
 import JitterplotOverlay from "datagovmy-ui/charts/jitterplot-overlay";
-import Hero from "@components/Hero";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import { numFormat } from "datagovmy-ui/helpers";
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
 import { DISTRICTS, DUNS, PARLIMENS, STATES, jitterTooltipFormats } from "@lib/schema/kawasanku";
@@ -70,124 +70,123 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
   geojson,
   choropleth,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-kawasanku", "common"]);
   const router = useRouter();
   const state = (router.query.state as string) ?? "malaysia";
 
-  const AREA_TYPES = [
-    {
-      label: t("kawasanku.area_types.district"),
-      value: "district",
-    },
-    {
-      label: t("kawasanku.area_types.parlimen"),
-      value: "parlimen",
-    },
-    {
-      label: t("kawasanku.area_types.dun"),
-      value: "dun",
-    },
-  ];
-  const INDICATOR_OPTIONS = Object.keys(choropleth.data.parlimen).map((item: string) => ({
-    label: t(`kawasanku.keys.${item}`),
-    value: item,
-  }));
+  // const AREA_TYPES = [
+  //   {
+  //     label: t("area_types.district"),
+  //     value: "district",
+  //   },
+  //   {
+  //     label: t("area_types.parlimen"),
+  //     value: "parlimen",
+  //   },
+  //   {
+  //     label: t("area_types.dun"),
+  //     value: "dun",
+  //   },
+  // ];
+  // const INDICATOR_OPTIONS = Object.keys(choropleth.data.parlimen).map((item: string) => ({
+  //   label: t(`keys.${item}`),
+  //   value: item,
+  // }));
 
-  const AREA_OPTIONS: Record<string, Record<string, OptionType[]>> = {
-    district: DISTRICTS,
-    parlimen: PARLIMENS,
-    dun: DUNS,
-  };
-  const active = useMemo(() => {
-    const uid = router.query.id ? router.query.id : router.query.state;
-    return uid !== "malaysia" ? jitterplot_options.find(option => option.value === uid) : undefined;
-  }, [router.query, jitterplot_options]);
+  // const AREA_OPTIONS: Record<string, Record<string, OptionType[]>> = {
+  //   district: DISTRICTS,
+  //   parlimen: PARLIMENS,
+  //   dun: DUNS,
+  // };
+  // const active = useMemo(() => {
+  //   const uid = router.query.id ? router.query.id : router.query.state;
+  //   return uid !== "malaysia" ? jitterplot_options.find(option => option.value === uid) : undefined;
+  // }, [router.query, jitterplot_options]);
 
-  const { data, setData } = useData({
-    loading: false,
-    state: STATES.find(item => item.value === state),
-    area_type: area_type ? AREA_TYPES.find(item => item.value === area_type) : undefined,
-    area: area_type
-      ? AREA_OPTIONS[area_type as AreaType][state].find(item => item.value === active?.value)
-      : undefined,
-    comparator: [],
-    indicator_type: INDICATOR_OPTIONS[0],
-    indicator_index: 0,
-  });
+  // const { data, setData } = useData({
+  //   loading: false,
+  //   state: STATES.find(item => item.value === state),
+  //   area_type: area_type ? AREA_TYPES.find(item => item.value === area_type) : undefined,
+  //   area: area_type
+  //     ? AREA_OPTIONS[area_type as AreaType][state].find(item => item.value === active?.value)
+  //     : undefined,
+  //   comparator: [],
+  //   indicator_type: INDICATOR_OPTIONS[0],
+  //   indicator_index: 0,
+  // });
 
-  const availableAreaTypes = useMemo(() => {
-    if (["w.p._kuala_lumpur", "w.p._putrajaya", "w.p._labuan"].includes(data.state.value)) {
-      return AREA_TYPES.filter(area => area.value !== "dun");
-    }
+  // const availableAreaTypes = useMemo(() => {
+  //   if (["w.p._kuala_lumpur", "w.p._putrajaya", "w.p._labuan"].includes(data.state.value)) {
+  //     return AREA_TYPES.filter(area => area.value !== "dun");
+  //   }
 
-    return AREA_TYPES;
-  }, [data.state]);
+  //   return AREA_TYPES;
+  // }, [data.state]);
 
-  const handleComparator = (e: OptionType) => {
-    if (data.comparator.length >= 3) return;
-    if (data.comparator.includes(e.label)) return;
+  // const handleComparator = (e: OptionType) => {
+  //   if (data.comparator.length >= 3) return;
+  //   if (data.comparator.includes(e.label)) return;
 
-    setData("comparator", data.comparator.concat(e.label));
-  };
+  //   setData("comparator", data.comparator.concat(e.label));
+  // };
 
-  const isMalaysia = useMemo(() => data.state.value === "malaysia", [data.state]);
+  // const isMalaysia = useMemo(() => data.state.value === "malaysia", [data.state]);
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "nav.megamenu.dashboards.kawasanku",
-      name_en: "Kawasanku",
-      name_bm: "Kawasanku",
-      route: router.asPath,
-    });
-  }, []);
+  // useEffect(() => {
+  //   track("page_view", {
+  //     type: "dashboard",
+  //     id: "nav.megamenu.dashboards.kawasanku",
+  //     name_en: "Kawasanku",
+  //     name_bm: "Kawasanku",
+  //     route: router.asPath,
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    router.events.on("routeChangeComplete", () => setData("loading", false));
-    return () => {
-      router.events.off("routeChangeComplete", () => null);
-    };
-  }, [router.events]);
+  // useEffect(() => {
+  //   router.events.on("routeChangeComplete", () => setData("loading", false));
+  //   return () => {
+  //     router.events.off("routeChangeComplete", () => null);
+  //   };
+  // }, [router.events]);
 
-  const indicator_colors = useMemo<Color>(() => {
-    if (data.indicator_type.value === "treecover") return "greens";
-    if (data.indicator_type.value === "water") return "blues";
-    if (["max_elevation", "gini", "poverty"].includes(data.indicator_type.value)) return "reds";
-    if (["nightlights", "electricity"].includes(data.indicator_type.value)) return "ylGnBu";
+  // const indicator_colors = useMemo<Color>(() => {
+  //   if (data.indicator_type.value === "treecover") return "greens";
+  //   if (data.indicator_type.value === "water") return "blues";
+  //   if (["max_elevation", "gini", "poverty"].includes(data.indicator_type.value)) return "reds";
+  //   if (["nightlights", "electricity"].includes(data.indicator_type.value)) return "ylGnBu";
 
-    return "rdPu";
-  }, [data.indicator_type]);
+  //   return "rdPu";
+  // }, [data.indicator_type]);
 
-  const indicator_unit = useMemo<string>(() => {
-    if (["treecover", "water", "poverty", "electricity"].includes(data.indicator_type.value))
-      return "%";
-    if (data.indicator_type.value === "max_elevation") return "m";
-    if (data.indicator_type.value === "population_density") return "/km^2";
-    return "";
-  }, [data.indicator_type]);
+  // const indicator_unit = useMemo<string>(() => {
+  //   if (["treecover", "water", "poverty", "electricity"].includes(data.indicator_type.value))
+  //     return "%";
+  //   if (data.indicator_type.value === "max_elevation") return "m";
+  //   if (data.indicator_type.value === "population_density") return "/km^2";
+  //   return "";
+  // }, [data.indicator_type]);
 
-  const indicator_prefix = useMemo<string>(() => {
-    if (["income_mean", "expenditure_mean"].includes(data.indicator_type.value)) return "RM ";
-    return "";
-  }, [data.indicator_type]);
+  // const indicator_prefix = useMemo<string>(() => {
+  //   if (["income_mean", "expenditure_mean"].includes(data.indicator_type.value)) return "RM ";
+  //   return "";
+  // }, [data.indicator_type]);
 
   return (
     <>
-      <Hero background="relative kawasanku-banner">
-        <div className="space-y-4 lg:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-dim">
-            {t("nav.megamenu.dashboards.kawasanku")}
-          </span>
-          <h3 className="text-black"> {t("kawasanku.header")}</h3>
-          <p className="whitespace-pre-line text-dim">{t("kawasanku.description")}</p>
+      <div className="kawasanku-banner relative">
+        <div className="mx-auto max-w-screen-2xl px-3 py-12 lg:px-6">
+          <div className=" w-2/3 space-y-4">
+            <span className="text-sm font-bold uppercase tracking-widest text-dim">Kawasanku</span>
+            <h3 className="text-black"> {t("header")}</h3>
+            <p className="whitespace-pre-line text-dim">{t("description")}</p>
 
-          <div className="flex w-full flex-col flex-wrap items-start justify-start gap-2 lg:flex-row lg:items-center">
-            <div className="flex items-center gap-2">
-              <p className="font-bold text-dim">{t("kawasanku.action")}:</p>
-              <Spinner loading={data.loading} className="block place-self-center lg:hidden" />
-            </div>
+            <div className="flex w-full flex-col flex-wrap items-start justify-start gap-2 lg:flex-row lg:items-center">
+              <div className="flex items-center gap-2">
+                <p className="font-bold text-dim">{t("action")}:</p>
+                {/* <Spinner loading={data.loading} className="block place-self-center lg:hidden" /> */}
+              </div>
 
-            <Dropdown
+              {/* <Dropdown
               options={STATES}
               selected={data.state}
               width="w-full lg:w-fit"
@@ -195,7 +194,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
               onChange={(e: OptionType) => {
                 setData("state", e);
                 setData("loading", true);
-                router.push(routes.KAWASANKU.concat("/", e.value !== "malaysia" ? e.value : ""));
+                router.push(routes.concat("/", e.value !== "malaysia" ? e.value : ""));
               }}
               anchor="left"
             />
@@ -208,7 +207,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                 setData("area", undefined);
               }}
               disabled={data.state.value === "malaysia"}
-              sublabel={`${t("kawasanku.geofilter")}:`}
+              sublabel={`${t("geofilter")}:`}
               placeholder={t("common.select")}
               width="w-full lg:w-fit"
             />
@@ -225,7 +224,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                 setData("area", e);
                 setData("loading", true);
                 router.push(
-                  routes.KAWASANKU.concat(
+                  routes.concat(
                     "/",
                     data.state.value,
                     "/",
@@ -248,21 +247,22 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                   {t("common.clear_all")}
                 </Button>
               )}
+            </div> */}
             </div>
           </div>
         </div>
 
-        <OSMapWrapper
+        {/* <OSMapWrapper
           geojson={geojson}
           className="absolute -right-0 top-0 -z-10 h-full overflow-hidden lg:h-full lg:w-[40vw]"
           enableZoom={false}
-        />
-      </Hero>
+        /> */}
+      </div>
 
       <Container className="min-h-screen">
         {/* What does the population of {{ area }} look like? */}
-        <Section
-          title={t("kawasanku.section_1.title", {
+        {/* <Section
+          title={t("section_1.title", {
             area: data.area?.label ?? data.state.label,
             size: numFormat(population_callout.total!, "standard"),
           })}
@@ -281,20 +281,20 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                     labels: pyramid.data.x,
                     datasets: [
                       {
-                        label: t("kawasanku.keys.male"),
+                        label: t("keys.male"),
                         data: pyramid.data.male,
                         backgroundColor: "#0C204E",
                         borderWidth: 0,
                       },
                       {
-                        label: t("kawasanku.keys.female"),
+                        label: t("keys.female"),
                         data: pyramid.data.female,
                         backgroundColor: "#B54768",
                         borderWidth: 0,
                       },
                     ],
                   }}
-                  title={t("kawasanku.gender_distribution")}
+                  title={t("gender_distribution")}
                   className="h-[500px] w-full"
                 />
               </div>
@@ -304,18 +304,18 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
               {Object.entries(bar.data).map(([key, data]) => (
                 <BarMeter
                   key={key}
-                  title={t(`kawasanku.${key}`)}
+                  title={t(`${key}`)}
                   data={data as BarMeterData[]}
                   layout="horizontal"
                   sort="desc"
                   unit="%"
-                  formatX={key => t(`kawasanku.keys.${key}`)}
+                  formatX={key => t(`keys.${key}`)}
                   formatY={
                     key === "sex"
                       ? (value, key) => (
                           <>
                             <Tooltip
-                              tip={t("kawasanku.section_1.number_people", {
+                              tip={t("section_1.number_people", {
                                 size: numFormat(
                                   population_callout[key as keyof typeof population_callout]!,
                                   "standard"
@@ -331,12 +331,12 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
               ))}
             </div>
           </div>
-        </Section>
+        </Section> */}
 
         {/* A comparison of key variables across {{ type }} */}
-        <Section
-          title={t("kawasanku.section_2.title", {
-            type: t(`kawasanku.area_types.${data.area_type?.value ?? "state"}s`),
+        {/* <Section
+          title={t("section_2.title", {
+            type: t(`area_types.${data.area_type?.value ?? "state"}s`),
           })}
           date={"MyCensus 2020"}
         >
@@ -375,13 +375,13 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
             {Object.entries(jitterplot.data).map(([key, dataset]) => (
               <Jitterplot
                 key={key}
-                title={t(`kawasanku.${key}`)}
+                title={t(`${key}`)}
                 data={dataset as JitterData[]}
                 active={active?.label as string}
                 actives={data.comparator}
                 formatTitle={key => (
                   <>
-                    {t(`kawasanku.keys.${key}`)} <Tooltip tip={t(`kawasanku.tips.${key}`)} />
+                    {t(`keys.${key}`)} <Tooltip tip={t(`tips.${key}`)} />
                   </>
                 )}
                 formatTooltip={(key, value) => {
@@ -391,10 +391,12 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
             ))}
           </div>
           <small className="inline-block pt-4 text-gray-500">
-            <i>{t("kawasanku.section_2.note")}</i>
+            <i>{t("section_2.note")}</i>
           </small>
-        </Section>
-        <Section
+        </Section> */}
+
+        {/* A geographic visualisation of selected indicators */}
+        {/* <Section
           title={"A geographic visualisation of selected indicators"}
           date={choropleth.data_as_of}
         >
@@ -423,7 +425,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
               </Panel>
             ))}
           </Tabs>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );

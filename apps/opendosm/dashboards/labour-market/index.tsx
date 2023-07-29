@@ -1,14 +1,12 @@
-import Hero from "@components/Hero";
-import { Container, Section, Slider } from "datagovmy-ui/components";
+import { Container, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
 
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useEffect } from "react";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import type { OptionType } from "@components/types";
-import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
+import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import dynamic from "next/dynamic";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * Labour Market Dashboard
@@ -34,66 +32,55 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
   choropleth,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
-  const INDICATOR_OPTIONS: Array<OptionType> = Object.keys(choropleth.data).map((key: string) => ({
-    label: t(`labour.keys.${key}`),
-    value: key,
-  }));
-  const { data, setData } = useData({
-    minmax: [timeseries.data.x.length - 24, timeseries.data.x.length - 1], // [2 years ago, today]
-    indicator: INDICATOR_OPTIONS[0],
-    indicators: Object.fromEntries(
-      Object.entries(choropleth.data).map(([key, value]) => [
-        key,
-        (value as Array<Record<string, string | number>>).map(item => ({
-          ...item,
-          id: CountryAndStates[item.id],
-        })),
-      ])
-    ),
-  });
-  const LATEST_TIMESTAMP = timeseries.data.x[timeseries.data.x.length - 1];
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
-
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "labour.header",
-      name_en: "Labour Market",
-      name_bm: "Pasaran Buruh",
-      route: routes.LABOUR_MARKET,
-    });
-  }, []);
+  const { t, i18n } = useTranslation(["dashboard-labour-market", "common"]);
+  // const INDICATOR_OPTIONS: Array<OptionType> = Object.keys(choropleth.data).map((key: string) => ({
+  //   label: t(`keys.${key}`),
+  //   value: key,
+  // }));
+  // const { data, setData } = useData({
+  //   minmax: [timeseries.data.x.length - 24, timeseries.data.x.length - 1], // [2 years ago, today]
+  //   indicator: INDICATOR_OPTIONS[0],
+  //   indicators: Object.fromEntries(
+  //     Object.entries(choropleth.data).map(([key, value]) => [
+  //       key,
+  //       (value as Array<Record<string, string | number>>).map(item => ({
+  //         ...item,
+  //         id: CountryAndStates[item.id],
+  //       })),
+  //     ])
+  //   ),
+  // });
+  // const LATEST_TIMESTAMP = timeseries.data.x[timeseries.data.x.length - 1];
+  // const { coordinate } = useSlice(timeseries.data, data.minmax);
 
   return (
     <>
-      <Hero background="labour-market-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-[#FF8328]">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3 className="text-black">{t("labour.header")}</h3>
-          <p className="text-dim">{t("labour.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="orange"
+        category={[t("common:categories.economy"), "text-orange-700"]}
+        header={[t("header")]}
+        description={[t("description"), "dark:text-white"]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:dosm.full")}
+            link="https://open.dosm.gov.my/"
+            icon={<DOSMIcon />}
+          />
+        }
+      />
 
       <Container className="min-h-screen">
         {/* How is unemployment trending? */}
-        <Section
-          title={t("labour.section_1.title")}
-          description={t("labour.section_1.description")}
+        {/* <Section
+          title={t("section_1.title")}
+          description={t("section_1.description")}
           date={timeseries.data_as_of}
         >
           <div className="space-y-4">
             <Timeseries
               className="h-[350px] w-full"
-              title={t("labour.keys.unemployment_rate")}
+              title={t("keys.unemployment_rate")}
               interval="month"
               unitY="%"
               data={{
@@ -102,7 +89,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   {
                     type: "line",
                     data: coordinate.unemployment_rate,
-                    label: t("labour.keys.unemployment_rate"),
+                    label: t("keys.unemployment_rate"),
                     borderColor: AKSARA_COLOR.LABOUR,
                     backgroundColor: AKSARA_COLOR.LABOUR_H,
                     borderWidth: 1.5,
@@ -128,13 +115,13 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
               onChange={e => setData("minmax", e)}
             />
           </div>
-        </Section>
+        </Section> */}
 
         {/* How are other key labour market indicators trending? */}
-        <Section title={t("labour.section_2.title")} date={timeseries.data_as_of}>
+        {/* <Section title={t("section_2.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
             <Timeseries
-              title={t("labour.keys.labour_force_participation")}
+              title={t("keys.labour_force_participation")}
               className="h-[350px] w-full"
               interval="month"
               unitY="%"
@@ -144,7 +131,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   {
                     type: "line",
                     data: coordinate.labour_force_participation,
-                    label: t("labour.keys.labour_force_participation"),
+                    label: t("keys.labour_force_participation"),
                     borderColor: AKSARA_COLOR.LABOUR,
                     backgroundColor: AKSARA_COLOR.LABOUR_H,
                     borderWidth: 1.5,
@@ -162,7 +149,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
               ]}
             />
             {/* <Timeseries
-              title={t("labour.keys.under_employment_rate")}
+              title={t("keys.under_employment_rate")}
               className="h-[350px] w-full"
               interval="month"
               unitY="%"
@@ -172,7 +159,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   {
                     type: "line",
                     data: coordinate.under_employment_rate,
-                    label: t("labour.keys.under_employment_rate"),
+                    label: t("keys.under_employment_rate"),
                     borderColor: AKSARA_COLOR.LABOUR,
                     backgroundColor: AKSARA_COLOR.LABOUR_H,
                     borderWidth: 1.5,
@@ -188,9 +175,9 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   value: `${numFormat(timeseries_callouts.data.under_rate.callout1, "standard")}%`,
                 },
               ]}
-            /> */}
+            /> 
             <Timeseries
-              title={t("labour.keys.employment_population_ratio")}
+              title={t("keys.employment_population_ratio")}
               className="h-[350px] w-full"
               interval="month"
               data={{
@@ -199,7 +186,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   {
                     type: "line",
                     data: coordinate.employment_population_ratio,
-                    label: t("labour.keys.employment_population_ratio"),
+                    label: t("keys.employment_population_ratio"),
                     borderColor: AKSARA_COLOR.LABOUR,
                     backgroundColor: AKSARA_COLOR.LABOUR_H,
                     borderWidth: 1.5,
@@ -217,7 +204,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
               ]}
             />
             <Timeseries
-              title={t("labour.keys.unemployed_persons")}
+              title={t("keys.unemployed_persons")}
               className="h-[350px] w-full"
               interval="month"
               displayNumFormat={(value, type, precision) =>
@@ -229,7 +216,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   {
                     type: "line",
                     data: coordinate.unemployed_persons,
-                    label: t("labour.keys.unemployed_persons"),
+                    label: t("keys.unemployed_persons"),
                     borderColor: AKSARA_COLOR.LABOUR,
                     backgroundColor: AKSARA_COLOR.LABOUR_H,
                     borderWidth: 1.5,
@@ -247,7 +234,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
               ]}
             />
             <Timeseries
-              title={t("labour.keys.own_account_workers")}
+              title={t("keys.own_account_workers")}
               className="h-[350px] w-full"
               interval="month"
               displayNumFormat={(value, type, precision) =>
@@ -259,7 +246,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   {
                     type: "line",
                     data: coordinate.own_account_workers,
-                    label: t("labour.keys.own_account_workers"),
+                    label: t("keys.own_account_workers"),
                     borderColor: AKSARA_COLOR.LABOUR,
                     backgroundColor: AKSARA_COLOR.LABOUR_H,
                     borderWidth: 1.5,
@@ -277,7 +264,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
               ]}
             />
             <Timeseries
-              title={t("labour.keys.outside_labour_force")}
+              title={t("keys.outside_labour_force")}
               className="h-[350px] w-full"
               interval="month"
               displayNumFormat={(value, type, precision) =>
@@ -289,7 +276,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                   {
                     type: "line",
                     data: coordinate.outside_labour_force,
-                    label: t("labour.keys.outside_labour_force"),
+                    label: t("keys.outside_labour_force"),
                     borderColor: AKSARA_COLOR.LABOUR,
                     backgroundColor: AKSARA_COLOR.LABOUR_H,
                     borderWidth: 1.5,
@@ -307,38 +294,38 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
               ]}
             />
           </div>
-        </Section>
+        </Section> */}
 
         {/* A deeper look at the latest labour market snapshot */}
-        {/* <Section title={t("labour.section_3.title")} date={bar.data_as_of}>
+        {/* <Section title={t("section_3.title")} date={bar.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <BarMeter
-              title={t("labour.section_3.bar1_header")}
+              title={t("section_3.bar1_header")}
               data={bar.data.employed_status.map((item: any) => ({
                 ...item,
-                x: t(`labour.keys.${item.x}`),
+                x: t(`keys.${item.x}`),
               }))}
               layout="horizontal"
               unit="%"
               className="flex-col"
             />
             <BarMeter
-              title={t("labour.section_3.bar2_header")}
+              title={t("section_3.bar2_header")}
               layout="horizontal"
               unit="%"
               data={bar.data.unemployed_status.map((item: any) => ({
                 ...item,
-                x: t(`labour.keys.${item.x}`),
+                x: t(`keys.${item.x}`),
               }))}
               className="flex-col"
             />
             <BarMeter
-              title={t("labour.section_3.bar3_header")}
+              title={t("section_3.bar3_header")}
               layout="horizontal"
               unit="%"
               data={bar.data.out_reason.map((item: any) => ({
                 ...item,
-                x: t(`labour.keys.${item.x}`),
+                x: t(`keys.${item.x}`),
               }))}
               className="flex-col"
             />
@@ -346,7 +333,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
         </Section> */}
 
         {/* How do key labour market indicators vary across states? */}
-        {/* <Section title={t("labour.section_4.title")} date={choropleth.data_as_of}>
+        {/* <Section title={t("section_4.title")} date={choropleth.data_as_of}>
           <div>
             <Tabs
               className="flex flex-wrap justify-end gap-2 pb-4"

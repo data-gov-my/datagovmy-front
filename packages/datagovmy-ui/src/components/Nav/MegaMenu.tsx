@@ -16,7 +16,7 @@ const Megamenu: FunctionComponent<MegamenuProps> = ({ icon, title, children }) =
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="w-full">
+    <div>
       {size.width <= BREAKPOINTS.MD ? (
         <>
           <div

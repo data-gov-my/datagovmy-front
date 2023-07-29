@@ -1,26 +1,25 @@
 import type { GeoJsonObject } from "geojson";
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
+
+import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { Page } from "@lib/types";
 
 import KawasankuDashboard from "@dashboards/kawasanku";
 import { Metadata } from "datagovmy-ui/components";
 
-import { useTranslation, useWatch } from "datagovmy-ui/hooks";
-import { STATE_MAP, PARLIMENS } from "@lib/schema/kawasanku";
-import { get } from "@lib/api";
-import { useState } from "react";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "datagovmy-ui/api";
+import { STATES } from "@lib/schema/kawasanku";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useEffect, useState } from "react";
 
-const KawasankuArea: Page = ({
-  ctx,
+const KawasankuParlimen: Page = ({
   bar,
   jitterplot,
-  jitterplot_options,
   pyramid,
   choropleth,
   population_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-kawasanku"]);
   const [geo, setGeo] = useState<undefined | GeoJsonObject>(undefined);
 
   // useWatch(
@@ -35,77 +34,28 @@ const KawasankuArea: Page = ({
 
   return (
     <>
-      <Metadata
-        title={`${t("nav.megamenu.dashboards.kawasanku")} • 
-        ${PARLIMENS[ctx.state].find(parlimen => parlimen.value === ctx.id)?.label}`}
-        description={t("kawasanku.description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <KawasankuDashboard
-        area_type="parlimen"
         bar={bar}
         jitterplot={jitterplot}
         pyramid={pyramid}
-        jitterplot_options={jitterplot_options}
-        geojson={geo}
-        population_callout={population_callout}
         choropleth={choropleth}
+        population_callout={population_callout}
+        jitterplot_options={STATES.filter(item => item.value !== "malaysia")}
+        geojson={geo}
       />
     </>
   );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  /* First visit: SSR, consequent visits: ISR */
-
-  //   let paths: Array<any> = [];
-
-  //   STATES.filter(state => state.value !== "malaysia").forEach(state => {
-  //     PARLIMENS[state.value].forEach(({ value }) => {
-  //       paths = paths.concat([
-  //         {
-  //           params: {
-  //             state: state.value,
-  //             id: value,
-  //           },
-  //         },
-  //         {
-  //           params: {
-  //             state: state.value,
-  //             id: value,
-  //           },
-  //           locale: "ms-MY",
-  //         },
-  //       ]);
-  //     });
-  //   });
-
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", async () => {
   // const { data } = await get("/dashboard/", {
-  //   "dashboard": "kawasanku_electoral",
-  //   "area": params!.id,
-  //   "area-type": "parlimen",
+  //   "dashboard": "kawasanku_admin",
+  //   "area": "malaysia",
+  //   "area-type": "country",
   // });
 
-  // const options = Object.entries(PARLIMENS)
-  //   .sort((a: [string, unknown], b: [string, unknown]) =>
-  //     a[0] === params!.state ? -1 : a[0].localeCompare(b[0])
-  //   )
-  //   .flatMap(([key, parlimens]) =>
-  //     parlimens.map(({ label, value }) => ({
-  //       label: `${label}, ${STATE_MAP[key]}`,
-  //       value: value,
-  //     }))
-  //   );
-
   return {
-    notFound: true,
     props: {
       meta: {
         id: "dashboard-kawasanku",
@@ -113,17 +63,15 @@ export const getStaticProps: GetStaticProps = withi18n("common", async () => {
         category: "demography",
         agency: "DOSM",
       },
-      // ctx: params,
       // bar: data.bar_chart,
-      // jitterplot: data.jitter_chart,
-      // pyramid: data.pyramid_chart,
-      // jitterplot_options: options,
       // population_callout: {
       //   total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
       //   male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
       //   female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
       //     ?.y,
       // },
+      // jitterplot: data.jitter_chart,
+      // pyramid: data.pyramid_chart,
       // choropleth: {
       //   data_as_of: data.choropleth_parlimen.data_as_of,
       //   data: {
@@ -136,4 +84,4 @@ export const getStaticProps: GetStaticProps = withi18n("common", async () => {
   };
 });
 
-export default KawasankuArea;
+export default KawasankuParlimen;

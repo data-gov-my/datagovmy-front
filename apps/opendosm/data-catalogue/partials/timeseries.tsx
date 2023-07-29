@@ -4,7 +4,7 @@ import { default as dynamic } from "next/dynamic";
 import { useWatch, useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, SHORT_PERIOD } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download, exportAs } from "@lib/helpers";
+import { download, exportAs } from "datagovmy-ui/helpers";
 import { track } from "@lib/mixpanel";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { Slider, SliderProvider, toast } from "datagovmy-ui/components";

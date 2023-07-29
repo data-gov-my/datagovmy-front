@@ -1,6 +1,6 @@
 import { Metadata } from "datagovmy-ui/components";
 import ProducerPricesDashboard from "@dashboards/producer-prices";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useTranslation } from "datagovmy-ui/hooks";
 
@@ -11,15 +11,11 @@ const ProducerPrices = ({
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-producer-prices"]);
 
   return (
     <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.producer_prices")}
-        description={t("producer_prices.description")}
-        keywords={""}
-      />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ProducerPricesDashboard
         last_updated={last_updated}
         timeseries={timeseries}
@@ -29,11 +25,10 @@ const ProducerPrices = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-producer-prices", async () => {
   // const { data } = await get("/dashboard", { dashboard: "producer_price_index" });
 
   return {
-    notFound: true,
     props: {
       meta: {
         id: "dashboard-producer-prices",

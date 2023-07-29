@@ -1,8 +1,7 @@
-import Hero from "@components/Hero";
-import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
 import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
 import type { OptionType } from "@components/types";
 import { AKSARA_COLOR } from "@lib/constants";
@@ -10,6 +9,7 @@ import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 import { track } from "@lib/mixpanel";
 import { routes } from "@lib/routes";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * Wholesale & Retail Trade Dashboard
@@ -31,135 +31,124 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
-  const sortedIndices = [
-    "growth_index_yoy",
-    "growth_sales_yoy",
-    "growth_momsa",
-    "index_sa",
-    "index",
-    "sales",
-  ];
-  const INDEX_OPTIONS: Array<OptionType> = sortedIndices.map((key: string) => ({
-    label: t(`wholesaleretail.keys.${key}`),
-    value: key,
-  }));
+  const { t, i18n } = useTranslation(["dashboard-wholesale-retail", "common"]);
+  // const sortedIndices = [
+  //   "growth_index_yoy",
+  //   "growth_sales_yoy",
+  //   "growth_momsa",
+  //   "index_sa",
+  //   "index",
+  //   "sales",
+  // ];
+  // const INDEX_OPTIONS: Array<OptionType> = sortedIndices.map((key: string) => ({
+  //   label: t(`wholesaleretail.keys.${key}`),
+  //   value: key,
+  // }));
 
-  const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("wholesaleretail.keys.no_shade"), value: "no_shade" },
-    { label: t("wholesaleretail.keys.recession"), value: "recession" },
-  ];
+  // const SHADE_OPTIONS: Array<OptionType> = [
+  //   { label: t("wholesaleretail.keys.no_shade"), value: "no_shade" },
+  //   { label: t("wholesaleretail.keys.recession"), value: "recession" },
+  // ];
 
-  const AXIS_Y = {
-    y2: {
-      display: false,
-      grid: {
-        drawTicks: false,
-        drawBorder: false,
-      },
-      ticks: {
-        display: false,
-      },
-    },
-  };
+  // const AXIS_Y = {
+  //   y2: {
+  //     display: false,
+  //     grid: {
+  //       drawTicks: false,
+  //       drawBorder: false,
+  //     },
+  //     ticks: {
+  //       display: false,
+  //     },
+  //   },
+  // };
 
-  const { data, setData } = useData({
-    index_type: INDEX_OPTIONS[0],
-    shade_type: SHADE_OPTIONS[0],
-    minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
-  });
-  const LATEST_TIMESTAMP = useMemo(
-    () =>
-      timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1],
-    [data.index_type]
-  );
+  // const { data, setData } = useData({
+  //   index_type: INDEX_OPTIONS[0],
+  //   shade_type: SHADE_OPTIONS[0],
+  //   minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
+  // });
+  // const LATEST_TIMESTAMP = useMemo(
+  //   () =>
+  //     timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1],
+  //   [data.index_type]
+  // );
 
-  const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
+  // const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
 
-  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
-    (key: string) => {
-      if (key === "no_shade")
-        return {
-          data: [],
-        };
+  // const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
+  //   (key: string) => {
+  //     if (key === "no_shade")
+  //       return {
+  //         data: [],
+  //       };
 
-      return {
-        type: "line",
-        data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
-        borderWidth: 0,
-        fill: true,
-        yAxisID: "y2",
-        stepped: true,
-      };
-    },
-    [data]
-  );
+  //     return {
+  //       type: "line",
+  //       data: coordinate[key],
+  //       backgroundColor: AKSARA_COLOR.BLACK_H,
+  //       borderWidth: 0,
+  //       fill: true,
+  //       yAxisID: "y2",
+  //       stepped: true,
+  //     };
+  //   },
+  //   [data]
+  // );
 
-  const configs = useCallback<
-    (key: string) => { unit: string; prefix: string; callout: string; fill: boolean }
-  >(
-    (key: string) => {
-      const prefix =
-        data.index_type.value.includes("sale") && !data.index_type.value.includes("growth");
+  // const configs = useCallback<
+  //   (key: string) => { unit: string; prefix: string; callout: string; fill: boolean }
+  // >(
+  //   (key: string) => {
+  //     const prefix =
+  //       data.index_type.value.includes("sale") && !data.index_type.value.includes("growth");
 
-      const unit = data.index_type.value.includes("growth") ? "%" : "";
-      return {
-        unit: unit,
-        prefix: prefix ? "RM" : "",
-        callout: [
-          prefix ? "RM" : "",
-          numFormat(
-            timeseries_callouts.data[data.index_type.value][key].callout,
-            "compact",
-            prefix ? [1, 1] : 1,
-            "long",
-            i18n.language,
-            true
-          ),
-          unit,
-        ].join(""),
-        fill: data.shade_type.value === "no_shade",
-      };
-    },
-    [data.index_type, data.shade_type]
-  );
+  //     const unit = data.index_type.value.includes("growth") ? "%" : "";
+  //     return {
+  //       unit: unit,
+  //       prefix: prefix ? "RM" : "",
+  //       callout: [
+  //         prefix ? "RM" : "",
+  //         numFormat(
+  //           timeseries_callouts.data[data.index_type.value][key].callout,
+  //           "compact",
+  //           prefix ? [1, 1] : 1,
+  //           "long",
+  //           i18n.language,
+  //           true
+  //         ),
+  //         unit,
+  //       ].join(""),
+  //       fill: data.shade_type.value === "no_shade",
+  //     };
+  //   },
+  //   [data.index_type, data.shade_type]
+  // );
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "wholesaleretail.header",
-      name_en: "Wholesale & Retail Trade",
-      name_bm: "Perdagangan Borong & Runcit",
-      route: routes.WHOLESALE_RETAIL,
-    });
-  }, []);
-
-  useWatch(() => {
-    setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
-  }, [data.index_type]);
+  // useWatch(() => {
+  //   setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
+  // }, [data.index_type]);
 
   return (
     <>
-      <Hero background="wholesale-retail-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-green-700">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3>{t("wholesaleretail.header")}</h3>
-          <p className="text-dim">{t("wholesaleretail.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="green"
+        category={[t("common:categories.economy"), "text-green-700"]}
+        header={[t("header")]}
+        description={[t("description"), "dark:text-white"]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:dosm.full")}
+            link="https://open.dosm.gov.my/"
+            icon={<DOSMIcon />}
+          />
+        }
+      />
 
       <Container className="min-h-screen">
         {/* How are the Malaysian Economic Indicators trending? */}
-        <Section title={t("wholesaleretail.section_1.title")} date={timeseries.data_as_of}>
+        {/* <Section title={t("wholesaleretail.section_1.title")} date={timeseries.data_as_of}>
           <div className="space-y-8">
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
@@ -324,7 +313,7 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
               />
             </div>
           </div>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );

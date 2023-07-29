@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import type { Page } from "@lib/types";
 
 import { Metadata } from "datagovmy-ui/components";
@@ -8,23 +8,21 @@ import { useTranslation } from "datagovmy-ui/hooks";
 
 import LabourMarketDashboard from "@dashboards/labour-market";
 import { withi18n } from "datagovmy-ui/decorators";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const Labour: Page = ({
+  meta,
   last_updated,
   bar,
   timeseries,
   timeseries_callouts,
   choropleth,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-labour-market"]);
 
   return (
-    <>
-      <Metadata
-        title={t("nav.megamenu.dashboards.labour_market")}
-        description={t("organ.title_description")}
-        keywords={""}
-      />
+    <AnalyticsProvider meta={meta}>
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <LabourMarketDashboard
         last_updated={last_updated}
         bar={bar}
@@ -32,15 +30,14 @@ const Labour: Page = ({
         timeseries_callouts={timeseries_callouts}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-labour-market", async () => {
   // const { data } = await get("/dashboard", { dashboard: "labour" });
 
   return {
-    notFound: true,
     props: {
       meta: {
         id: "dashboard-labour-market",
