@@ -1,6 +1,6 @@
 import type { GeoJsonObject } from "geojson";
 
-import { InferGetStaticPropsType, GetStaticProps } from "next";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Page } from "@lib/types";
 
 import KawasankuDashboard from "@dashboards/kawasanku";
@@ -46,6 +46,13 @@ const KawasankuState: Page = ({
       />
     </>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", async () => {

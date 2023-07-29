@@ -9,7 +9,7 @@ import merge from "lodash/merge";
 import type { MetaPage } from "./types";
 import { existsSync } from "fs";
 import { resolve } from "path";
-import { I18nConfig } from "types/i18n";
+import { I18nConfig } from "../../types/i18n";
 
 type Context = Parameters<GetStaticProps | GetServerSideProps>[0];
 type ResolvedProps<T> = GetStaticPropsResult<T> & GetServerSidePropsResult<T>;
