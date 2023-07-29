@@ -66,11 +66,11 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
       />
 
       {/* Navigations */}
-      <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center">
+      <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center lg:static">
         <div
           className={clx(
             "hide-scrollbar flex snap-x snap-mandatory scroll-px-9 flex-nowrap overflow-x-auto",
-            pathname.endsWith("/trivia") && "max-[360px]:justify-end"
+            pathname.endsWith("/trivia") && "max-[420px]:justify-end"
           )}
         >
           {election_navs.map(nav => (
@@ -89,9 +89,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
                     )}
                   >
                     <div className="-mx-[5px] hidden sm:block">{nav.icon}</div>
-                    <span className="whitespace-nowrap text-sm font-medium sm:text-base">
-                      {nav.name}
-                    </span>
+                    <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
                   </div>
                   {pathname.startsWith(nav.url) && (
                     <div className="bg-primary dark:bg-primary-dark absolute bottom-0 inline-flex h-1 w-full min-w-[56px] rounded-full"></div>
