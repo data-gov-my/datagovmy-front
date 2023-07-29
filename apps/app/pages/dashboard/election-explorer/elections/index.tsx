@@ -8,7 +8,6 @@ import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
-import { isEmpty } from "lodash";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const ElectionExplorerIndex: Page = ({
@@ -40,9 +39,10 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "dashboard-election-explorer",
   async ({ query }) => {
     try {
-      let [election, state] = isEmpty(query)
-        ? [null, null]
-        : [query.election?.toString(), query.state?.toString()];
+      let [election, state] =
+        Object.keys(query).length === 0
+          ? [null, null]
+          : [query.election?.toString(), query.state?.toString()];
 
       election =
         typeof election === "string" &&

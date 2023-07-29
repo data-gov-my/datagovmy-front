@@ -7,7 +7,6 @@ import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
-import { isEmpty } from "lodash";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const ElectionCandidates: Page = ({
@@ -33,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "dashboard-election-explorer",
   async ({ query }) => {
     try {
-      const name = isEmpty(query) ? null : query.name;
+      const name = Object.keys(query).length === 0 ? null : query.name;
       const [{ data: dropdown }, { data: candidate }] = await Promise.all([
         get("/explorer", {
           explorer: "ELECTIONS",
