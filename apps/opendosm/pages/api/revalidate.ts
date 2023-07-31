@@ -1,49 +1,45 @@
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
-import { routes } from "@lib/routes";
-import { STATES } from "@lib/constants";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type RevalidateData = {
-  revalidated: boolean;
+  revalidated: string[];
   message?: string;
+  error?: string;
 };
 
+/**
+ * POST endpoint to revalidate pages from BE activity
+ * @param req Request
+ * @param res Response
+ * @returns {RevalidateData} Result
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<RevalidateData | string>
 ) {
   if (req.headers.authorization !== `Bearer ${process.env.REVALIDATE_TOKEN}`) {
-    return res.status(401).json({ revalidated: false, message: "Invalid bearer token" });
+    return res
+      .status(401)
+      .json({ error: "Unauthorized", message: "Invalid bearer token", revalidated: [] });
   }
 
   try {
-    const { route }: { route: keyof typeof routes } = req.body;
-    if (!route) throw new Error("Route missing");
+    const { route: _route }: { route: string } = req.body;
+    if (!_route) throw new Error("Route(s) missing");
 
-    switch (route) {
-      case "DRUG":
-      case "CRIME":
-        await res.revalidate(routes[route]);
-        await revalidateMany(res, route);
-        break;
+    let routes: string[] = _route.split(",");
 
-      default:
-        await res.revalidate(routes[route]);
+    await Promise.all(routes.map(async route => rebuild(res, route, routes)));
 
-        break;
-    }
-
-    return res.json({ revalidated: true, message: "Revalidated: " + routes[route] });
+    return res.json({ message: "Revalidation successful", revalidated: routes });
   } catch (err: any) {
-    return res.status(500).send(err.message);
+    return res
+      .status(400)
+      .json({ error: "Revalidation failed", message: err.message, revalidated: [] });
   }
 }
-
-const revalidateMany = async (
-  res: NextApiResponse,
-  route: keyof typeof routes,
-  except?: string[]
-): Promise<void> => {
-  STATES.filter(item => !except?.includes(item.key)).forEach(async state => {
-    await res.revalidate(routes[route].concat("/", state.key));
+// Rebuilds the relevant page(s).
+const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
+  new Promise(async (resolve, reject) => {
+    await res.revalidate(route).catch(e => reject(e));
+    resolve(true);
   });
-};
