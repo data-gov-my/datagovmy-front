@@ -4,7 +4,7 @@ import Layout from "@components/Layout";
 import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 import mixpanelConfig from "@config/mixpanel";
-import { ga_track, init_session } from "datagovmy-ui/mixpanel";
+import { ga_track, track } from "datagovmy-ui/mixpanel";
 import { clx } from "datagovmy-ui/helpers";
 import { body, header } from "@config/font";
 import Nexti18NextConfig from "../next-i18next.config";
@@ -18,23 +18,30 @@ function App({ Component, pageProps }: any) {
     ((page: ReactNode) => <Layout className={clx(body.variable, "font-sans")}>{page}</Layout>);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   // trigger page view event for client-side navigation
-  //   const handleRouteChange = (url: string) => {
-  //     ga_track(url);
-  //     init_session();
-  //   };
-  //   router.events.on("routeChangeComplete", handleRouteChange);
+  useEffect(() => {
+    const is_development = process.env.NEXT_PUBLIC_APP_ENV === "development";
+    window.mixpanel.init(
+      mixpanelConfig.token,
+      {
+        debug: is_development,
+        verbose: is_development,
+        api_host: mixpanelConfig.host,
+      },
+      mixpanelConfig.name
+    );
+  }, []);
 
-  //   console.log(
-  //     "%cIn loving memory of Hamzah Bin Ismail (1979-2023). Al-Fatihah",
-  //     "font: 20px; font-family: monospace; font-weight: bold; background: #a4a4a4; color: #000; padding: 4px 12px"
-  //   );
-
-  //   return () => {
-  //     router.events.off("routeChangeComplete", handleRouteChange);
-  //   };
-  // }, [router.events]);
+  useEffect(() => {
+    // trigger page view event for client-side navigation
+    const handleRouteChange = (url: string) => {
+      ga_track(url);
+      track("page_view", pageProps?.meta);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events, pageProps?.meta]);
 
   return (
     <ThemeProvider attribute="class" enableSystem={false} forcedTheme={Component.theme}>
