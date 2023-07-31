@@ -23,6 +23,7 @@ export { default as Megamenu } from "./Nav/megamenu";
 export { default as Metadata } from "./Metadata";
 export { default as Modal } from "./Modal";
 export { default as Nav } from "./Nav";
+export { default as Progress } from "./Progress";
 export { default as Radio } from "./Radio";
 export { default as Search } from "./Search";
 export { default as Section } from "./Section";
