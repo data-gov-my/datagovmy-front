@@ -206,7 +206,7 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
 
   const filterSources: OptionType[] = sources.map(source => ({
     label: t(`agencies:${source}.abbr`),
-    value: source,
+    value: t(`agencies:${source}.abbr`),
   }));
 
   const reset = () => onSearch("");
