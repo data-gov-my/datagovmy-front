@@ -149,7 +149,7 @@ const Home: Page = ({
 
   return (
     <>
-      <Metadata title="OpenDOSM" keywords={"opendosm data negara inflasi"} />
+      <Metadata keywords={"opendosm data negara inflasi"} />
 
       <Hero
         background="gray"

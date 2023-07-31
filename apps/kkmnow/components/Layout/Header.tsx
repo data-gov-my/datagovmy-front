@@ -21,10 +21,7 @@ const KKMNOWHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
     },
     {
       title: t("categories.healthcare-resources"),
-      list: [
-        { title: t("dashboards.healthcare-facilities.name"), link: routes.FACILITIES },
-        { title: t("dashboards.hospital-bed-utilisation.name"), link: routes.HOSPITAL_BED },
-      ],
+      list: [{ title: t("dashboards.hospital-bed-utilisation.name"), link: routes.HOSPITAL_BED }],
     },
     {
       title: t("categories.healthcare-programs"),
@@ -36,10 +33,6 @@ const KKMNOWHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
         { title: t("dashboards.organ-donation.name"), link: routes.ORGAN_DONATION },
         { title: t("dashboards.peka-b40.name"), link: routes.PEKA_B40 },
       ],
-    },
-    {
-      title: t("categories.digitalisation"),
-      list: [{ title: t("dashboards.covidnow-data.name"), link: routes.COVIDNOW_DATA }],
     },
   ];
 
