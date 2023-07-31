@@ -5,9 +5,9 @@ type ProgressProps = {
   disableOnSameRoute?: boolean;
 };
 
-const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = false }) => {
+const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true }) => {
   const [progress, setProgress] = useState<number>(0);
-  const { events, route } = useRouter();
+  const { asPath, events } = useRouter();
 
   useEffect(() => {
     const gradualTimeout = (callback: (progress: number) => void) => {
@@ -28,7 +28,7 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = false
 
     const startLoading = (url: string) => {
       const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
-      if (disableOnSameRoute && route === _url.split("?")[0]) return;
+      if (disableOnSameRoute && asPath.split("?")[0] === _url.split("?")[0]) return;
 
       gradualTimeout(progress => {
         setProgress(progress);
@@ -37,7 +37,7 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = false
 
     const endLoading = (url: string) => {
       const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
-      if (disableOnSameRoute && route === _url.split("?")[0]) return;
+      if (disableOnSameRoute && asPath.split("?")[0] === _url.split("?")[0]) return;
 
       setProgress(100);
       setTimeout(() => {

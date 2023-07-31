@@ -1,10 +1,11 @@
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import Progress from "@components/Progress";
 import Dashboard from "@dashboards/index";
+import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { withi18n } from "@lib/decorators";
+import { Page } from "@lib/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const DashboardIndex: Page = ({
   analytics,
@@ -18,6 +19,7 @@ const DashboardIndex: Page = ({
   return (
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
+      <Progress />
       <Dashboard
         agency={agency}
         sources={sources}
