@@ -95,7 +95,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             enableClear
           />
         }
-        agencyBadge={<AgencyBadge agency={query.source ?? "govt"} />}
+        agencyBadge={<AgencyBadge agency={query.source ?? "GOVT"} />}
       />
 
       <Container className="min-h-screen">

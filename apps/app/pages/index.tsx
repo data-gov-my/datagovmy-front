@@ -1,7 +1,17 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import AgencyIcon from "@components/Icon/agency";
-import { AgencyBadge, At, Card, Container, Hero, Metadata, Section, Tabs } from "@components/index";
+import {
+  AgencyBadge,
+  At,
+  Card,
+  Container,
+  Hero,
+  Metadata,
+  Progress,
+  Section,
+  Tabs,
+} from "@components/index";
 import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
@@ -10,10 +20,9 @@ import { get } from "@lib/api";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { numFormat } from "@lib/helpers";
-import type { Page } from "@lib/types";
+import type { Agency, Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
@@ -66,7 +75,7 @@ const Home: Page = ({
   return (
     <>
       <Metadata keywords={"data.gov.my data malaysia election prices harga"} />
-
+      <Progress />
       <Hero
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
@@ -94,15 +103,7 @@ const Home: Page = ({
             </At>
           </div>
         }
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency="GOVT" />}
       />
 
       <Container className="min-h-screen">
@@ -259,8 +260,10 @@ const Ranking = ({ ranks }: RankingProps) => {
           <At href={item.id} key={item.id}>
             <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
               <div className="relative flex items-center gap-3">
-                <AgencyIcon agency={item.agency_abbr} />
-                <p className="text-dim text-sm uppercase">{item.agency_abbr}</p>
+                <AgencyIcon agency={t(`agencies:${item.agency_abbr}.abbr`)} className="h-6 w-6" />
+                <p className="text-dim text-sm">
+                  {t(`agencies:${item.agency_abbr.toLowerCase()}.abbr`)}
+                </p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative overflow-hidden">
