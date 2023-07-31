@@ -1,4 +1,3 @@
-import ElectionLayout from "./layout";
 import type {
   BaseResult,
   ElectionResource,
@@ -14,13 +13,12 @@ import { toast } from "@components/Toast";
 import { OptionType } from "@components/types";
 import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
+import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { slugify } from "@lib/helpers";
-import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 
 /**
@@ -47,14 +45,8 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
   selection,
   elections,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-  const { push } = useRouter();
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { cache } = useCache();
-
-  const { data, setData } = useData({
-    seat: params.seat_name,
-    loading: false,
-  });
 
   const SEAT_OPTIONS: Array<OptionType & SeatOptions & { seat_area: string }> = selection.map(
     key => ({
@@ -66,28 +58,57 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
     })
   );
 
-  const navigateToSeat = (seat?: string) => {
-    if (!seat) {
-      setData("seat", null);
-      return;
-    }
+  const DEFAULT_SEAT = `${params.type ?? "parlimen"}_${params.seat_name ?? "padang-besar-perlis"}`;
+  const SEAT_OPTION = SEAT_OPTIONS.find(e => e.value === DEFAULT_SEAT);
+
+  const { data, setData } = useData({
+    seat_option: SEAT_OPTION,
+    seat_name: SEAT_OPTION?.label,
+    loading: false,
+    elections: elections,
+  });
+
+  const { setFilter } = useFilter({
+    name: params.seat_name,
+    type: params.type,
+  });
+
+  const fetchResult = async (seat: OptionType): Promise<Seat[]> => {
     setData("loading", true);
+    setData("seat_name", seat.label);
 
-    const match = seat.split("_");
-    const name = match[1];
-    const type = match[0];
-    setData("seat", name);
+    const [type, seat_name] = seat.value.split("_");
+    setFilter("name", seat_name);
+    setFilter("type", type);
 
-    push(`${routes.ELECTION_EXPLORER}/seats/${name}/${type}`, undefined, {
-      scroll: false,
-      locale: i18n.language,
-    }).then(() => {
-      setData("loading", false);
-      cache.clear();
+    const identifier = seat.value;
+    return new Promise(resolve => {
+      if (cache.has(identifier)) {
+        setData("loading", false);
+        return resolve(cache.get(identifier));
+      }
+
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "seats",
+        seat_name,
+        type,
+      })
+        .then(({ data }: { data: { data: Seat[] } }) => {
+          const elections =
+            data.data.sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date))) ?? [];
+          cache.set(identifier, elections);
+          resolve(elections);
+          setData("loading", false);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
     });
   };
 
-  const fetchResult = async (election: string, seat: string): Promise<Result<BaseResult[]>> => {
+  const fetchFullResult = async (election: string, seat: string): Promise<Result<BaseResult[]>> => {
     const identifier = `${election}_${seat}`;
     return new Promise(resolve => {
       if (cache.has(identifier)) return resolve(cache.get(identifier));
@@ -150,12 +171,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
       header: "",
       cell: ({ row, getValue }) => {
         const item = getValue() as Seat;
-        const [area, state] = item.seat.split(",");
 
         return (
           <ElectionCard
             defaultParams={item}
-            onChange={(option: Seat) => fetchResult(option.election_name, option.seat)}
+            onChange={(option: Seat) => fetchFullResult(option.election_name, option.seat)}
             columns={generateSchema<BaseResult>([
               { key: "name", id: "name", header: t("candidate_name") },
               {
@@ -169,7 +189,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                 header: t("votes_won"),
               },
             ])}
-            options={elections}
+            options={data.elections}
             page={row.index}
           />
         );
@@ -205,24 +225,25 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                     </span>
                   </>
                 )}
-                selected={
-                  data.seat
-                    ? SEAT_OPTIONS.find(e => e.value === `${params.type}_${data.seat}`)
-                    : null
-                }
-                onChange={selected => navigateToSeat(selected?.value)}
+                selected={data.seat_option ?? null}
+                onChange={selected => {
+                  if (selected) {
+                    fetchResult(selected).then(elections => {
+                      setData("elections", elections);
+                    });
+                  }
+                  setData("seat_option", selected);
+                }}
               />
             </div>
             <ElectionTable
               title={
                 <h5 className="py-6">
                   {t("seat.title")}
-                  <span className="text-primary">{`${
-                    SEAT_OPTIONS.find(e => e.value === `${params.type}_${params.seat_name}`)?.label
-                  }`}</span>
+                  <span className="text-primary">{data.seat_name}</span>
                 </h5>
               }
-              data={elections}
+              data={data.elections}
               columns={seat_schema}
               isLoading={data.loading}
             />
