@@ -4,6 +4,7 @@ import { CountryAndStates, AKSARA_COLOR } from "@lib/constants";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 import { sortMulti } from "datagovmy-ui/helpers";
+import { WithData } from "datagovmy-ui/types";
 
 const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
@@ -13,7 +14,10 @@ const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
  */
 
 interface InflationGeographyProps {
-  bar: any;
+  bar: WithData<{
+    mom: Record<string, { x: string[]; y: number[] }>;
+    yoy: Record<string, { x: string[]; y: number[] }>;
+  }>;
 }
 
 const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar }) => {

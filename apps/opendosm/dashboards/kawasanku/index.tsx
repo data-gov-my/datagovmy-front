@@ -1,6 +1,6 @@
 import type { BarMeterData } from "datagovmy-ui/charts/bar-meter";
 import type { JitterData } from "datagovmy-ui/charts/jitterplot";
-import type { OptionType } from "@components/types";
+import type { OptionType } from "datagovmy-ui/types";
 import type { Color } from "datagovmy-ui/hooks";
 import type { GeoJsonObject } from "geojson";
 import { FunctionComponent, useEffect, useMemo } from "react";
@@ -22,7 +22,7 @@ import dynamic from "next/dynamic";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR } from "@lib/constants";
 import { numFormat } from "datagovmy-ui/helpers";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 import { routes } from "@lib/routes";
 import { DISTRICTS, DUNS, PARLIMENS, STATES, jitterTooltipFormats } from "@lib/schema/kawasanku";
 import { useRouter } from "next/router";

@@ -4,12 +4,13 @@ import dynamic from "next/dynamic";
 import { smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
 
-import type { OptionType } from "@components/types";
+import type { OptionType } from "datagovmy-ui/types";
 import { AKSARA_COLOR } from "@lib/constants";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { WithData } from "datagovmy-ui/types";
 
 /**
  * GDP Dashboard
@@ -29,10 +30,36 @@ interface TimeseriesChartData {
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
+type GDPKeys =
+  | "x"
+  | "overall"
+  | "supply_services"
+  | "supply_manufacturing"
+  | "supply_agri"
+  | "supply_mining"
+  | "supply_construction"
+  | "supply_import_duties";
+
 interface GDPDashboardProps {
   last_updated: string;
-  timeseries: any;
-  timeseries_callouts: any;
+  timeseries: WithData<{
+    growth_real_yoy: Record<GDPKeys, number[]>;
+    growth_nominal_yoy: Record<GDPKeys, number[]>;
+    growth_real_qoq: Record<GDPKeys, number[]>;
+    growth_nominal_qoq: Record<GDPKeys, number[]>;
+    real: Record<GDPKeys, number[]>;
+    real_sa: Record<GDPKeys, number[]>;
+    nominal: Record<GDPKeys, number[]>;
+  }>;
+  timeseries_callouts: WithData<{
+    growth_real_yoy: Record<GDPKeys, { callout: number }>;
+    growth_nominal_yoy: Record<GDPKeys, { callout: number }>;
+    growth_real_qoq: Record<GDPKeys, { callout: number }>;
+    growth_nominal_qoq: Record<GDPKeys, { callout: number }>;
+    real: Record<GDPKeys, { callout: number }>;
+    real_sa: Record<GDPKeys, { callout: number }>;
+    nominal: Record<GDPKeys, { callout: number }>;
+  }>;
 }
 
 const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
@@ -41,7 +68,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-gdp", "common"]);
-  const INDEX_OPTIONS: Array<OptionType> = [
+  const INDEX_OPTIONS: OptionType[] = [
     "growth_real_yoy",
     "growth_nominal_yoy",
     "growth_real_qoq",
@@ -53,7 +80,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
     label: t(`keys.${key}`),
     value: key,
   }));
-  const SHADE_OPTIONS: Array<OptionType> = [
+  const SHADE_OPTIONS: OptionType[] = [
     { label: t("keys.no_shade"), value: "no_shade" },
     { label: t("keys.recession"), value: "recession" },
   ];
@@ -192,7 +219,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
             >
               <Timeseries
                 title={t("keys.overall")}
-                className="h-[350px] w-full"
+                className="h-[300px] w-full"
                 interval="quarter"
                 enableAnimation={!play}
                 displayNumFormat={value =>
@@ -258,7 +285,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                   <Timeseries
                     key={chartData.title}
                     title={chartData.title}
-                    className="h-[350px] w-full"
+                    className="h-[300px] w-full"
                     interval="quarter"
                     enableAnimation={!play}
                     displayNumFormat={value =>
@@ -319,7 +346,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                     <Timeseries
                       key={chartData.title}
                       title={chartData.title}
-                      className="h-[350px] w-full"
+                      className="h-[300px] w-full"
                       interval="quarter"
                       enableAnimation={!play}
                       displayNumFormat={value =>

@@ -35,7 +35,7 @@ const Labour: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-labour-market", async () => {
-  // const { data } = await get("/dashboard", { dashboard: "labour" });
+  const { data } = await get("/dashboard", { dashboard: "labour" });
 
   return {
     props: {
@@ -45,13 +45,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-labour-market"
         category: "economy",
         agency: "DOSM",
       },
-      // last_updated: new Date().valueOf(),
-      // bar: data.bar_chart,
-      // timeseries: data.timeseries,
-      // timeseries_callouts: data.statistics,
-      // choropleth: data.choropleth_malaysia,
+      last_updated: data.data_last_updated,
+      bar: data.bar_chart,
+      timeseries: data.timeseries,
+      timeseries_callouts: data.statistics,
+      choropleth: data.choropleth_malaysia,
     },
-    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

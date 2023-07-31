@@ -22,6 +22,7 @@
     "./i18n": "./src/i18n/index.cjs",
     "./icons": "./src/icons/index.tsx",
     "./icons/agency": "./src/icons/agency.tsx",
+    "./mixpanel": "./src/lib/mixpanel.ts",
     "./types": "./types/index.d.ts",
     "./styles": "./src/styles/globals.css"
   },
@@ -68,6 +69,9 @@
       ],
       "geojson/state/*": [
         "./src/lib/geojson/state/*.ts"
+      ],
+      "mixpanel": [
+        "./src/lib/mixpanel.ts"
       ]
     }
   },

@@ -3,7 +3,7 @@ import { useTranslation } from "datagovmy-ui/hooks";
 
 import { download, exportAs } from "datagovmy-ui/helpers";
 import type { DownloadOptions } from "@lib/types";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";

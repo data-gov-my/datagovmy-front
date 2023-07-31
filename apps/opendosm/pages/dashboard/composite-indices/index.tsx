@@ -30,10 +30,9 @@ const CompositeIndices: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-composite-index", async () => {
-  // const { data } = await get("/dashboard", { dashboard: "composite_indices" });
+  const { data } = await get("/dashboard", { dashboard: "composite_indices" });
 
   return {
-    notFound: false,
     props: {
       meta: {
         id: "dashboard-composite-index",
@@ -41,11 +40,10 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-composite-inde
         category: "economy",
         agency: "DOSM",
       },
-      //   last_updated: new Date().valueOf(),
-      //   timeseries: data.timeseries,
-      //   timeseries_callouts: data.statistics,
+      last_updated: data.data_last_updated,
+      timeseries: data.timeseries,
+      timeseries_callouts: data.statistics,
     },
-    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 

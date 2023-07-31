@@ -1,7 +1,7 @@
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
 import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { Color } from "datagovmy-ui/hooks";
-import type { OptionType } from "@components/types";
+import type { OptionType } from "datagovmy-ui/types";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";

@@ -3,18 +3,17 @@ import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagov
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 
 import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback, useEffect } from "react";
-import type { OptionType } from "@components/types";
+import { FunctionComponent, useCallback } from "react";
+import type { OptionType } from "datagovmy-ui/types";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { AKSARA_COLOR } from "@lib/constants";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 import InflationGeography from "./inflation-geography";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationTrends from "./inflation-trends";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { WithData } from "datagovmy-ui/types";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -36,12 +35,52 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
 });
 const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
+type ConsumerPriceKeys =
+  | "alcohol_tobacco"
+  | "clothing_footwear"
+  | "communication"
+  | "education"
+  | "food_beverage"
+  | "furnishings"
+  | "health"
+  | "hospitality"
+  | "housing_utilities"
+  | "misc"
+  | "overall"
+  | "recreation_culture"
+  | "transport";
+
 interface ConsumerPricesDashboardProps {
-  last_updated: number;
-  bar: any;
-  timeseries: any;
-  timeseries_callouts: any;
-  choropleth: any;
+  last_updated: string;
+  bar: WithData<{
+    mom: Record<string, { x: string[]; y: number[] }>;
+    yoy: Record<string, { x: string[]; y: number[] }>;
+  }>;
+  timeseries: WithData<{
+    core: {
+      growth_mom: Record<ConsumerPriceKeys | "x" | "recession", number[]>;
+      growth_yoy: Record<ConsumerPriceKeys | "x" | "recession", number[]>;
+      value: Record<ConsumerPriceKeys | "x" | "recession", number[]>;
+    };
+    headline: {
+      growth_mom: Record<ConsumerPriceKeys | "x" | "recession", number[]>;
+      growth_yoy: Record<ConsumerPriceKeys | "x" | "recession", number[]>;
+      value: Record<ConsumerPriceKeys | "x" | "recession", number[]>;
+    };
+  }>;
+  timeseries_callouts: WithData<{
+    core: {
+      growth_mom: Record<ConsumerPriceKeys, { callout: number | null }>;
+      growth_yoy: Record<ConsumerPriceKeys, { callout: number | null }>;
+      value: Record<ConsumerPriceKeys, { callout: number | null }>;
+    };
+    headline: {
+      growth_mom: Record<ConsumerPriceKeys, { callout: number | null }>;
+      growth_yoy: Record<ConsumerPriceKeys, { callout: number | null }>;
+      value: Record<ConsumerPriceKeys, { callout: number | null }>;
+    };
+  }>;
+  choropleth: WithData<{ x: string[]; y: Record<string, number[]> }>;
 }
 
 const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> = ({
@@ -223,7 +262,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
             />
             <Timeseries
               title={t("keys.overall")}
-              className="h-[350px] w-full"
+              className="h-[300px] w-full"
               interval="month"
               unitY={configs("overall").unit}
               displayNumFormat={value =>
@@ -272,7 +311,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                 <Timeseries
                   key={chartData.title}
                   title={chartData.title}
-                  className="h-[350px] w-full"
+                  className="h-[300px] w-full"
                   interval="month"
                   displayNumFormat={value =>
                     numFormat(value, "compact", [1, 1], "short", i18n.language, true)

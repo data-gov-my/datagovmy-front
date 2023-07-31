@@ -160,3 +160,5 @@ export type MetaPage = Record<string, any> & {
     agency: string | null;
   };
 };
+
+export type WithData<T> = { data_as_of: string; data: T };

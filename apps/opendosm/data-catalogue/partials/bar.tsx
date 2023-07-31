@@ -6,7 +6,7 @@ import { WindowContext } from "datagovmy-ui/contexts/window";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "datagovmy-ui/helpers";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";

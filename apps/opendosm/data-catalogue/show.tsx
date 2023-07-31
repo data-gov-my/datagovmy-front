@@ -1,4 +1,4 @@
-import { OptionType } from "@components/types";
+import type { OptionType } from "datagovmy-ui/types";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation, useFilter } from "datagovmy-ui/hooks";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "@lib/constants";
@@ -12,7 +12,7 @@ import type {
   FilterDefault,
 } from "@lib/types";
 import { FunctionComponent, ReactNode, useEffect, useState } from "react";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 import {
   At,
   Card,

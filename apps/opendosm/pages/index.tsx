@@ -268,7 +268,7 @@ const Home: Page = ({
         <Section title={t("home.section_3.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <Timeseries
-              className="h-[250px] w-full"
+              className="h-[300px] w-full"
               title={t("home.keys.views")}
               data={{
                 labels: coordinate.x,
@@ -287,7 +287,7 @@ const Home: Page = ({
               stats={yieldCallout("views")}
             />
             <Timeseries
-              className="h-[250px] w-full"
+              className="h-[300px] w-full"
               title={t("home.keys.users")}
               data={{
                 labels: coordinate.x,
@@ -306,7 +306,7 @@ const Home: Page = ({
               stats={yieldCallout("users")}
             />
             <Timeseries
-              className="h-[250px] w-full"
+              className="h-[300px] w-full"
               title={t("home.keys.downloads")}
               data={{
                 labels: coordinate.x,

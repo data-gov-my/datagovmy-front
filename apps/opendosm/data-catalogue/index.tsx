@@ -16,7 +16,7 @@ import { ArrowTrendingUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { FunctionComponent, useContext, useMemo, useRef } from "react";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { WindowContext } from "datagovmy-ui/contexts/window";
-import { OptionType } from "@components/types";
+import type { OptionType } from "datagovmy-ui/types";
 import { body } from "@config/font";
 import { BREAKPOINTS } from "@lib/constants";
 

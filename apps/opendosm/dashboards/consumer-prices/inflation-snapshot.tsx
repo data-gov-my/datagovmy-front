@@ -1,4 +1,4 @@
-import { OptionType } from "@components/types";
+import type { OptionType } from "datagovmy-ui/types";
 import { get } from "datagovmy-ui/api";
 import { SHORT_LANG } from "@lib/constants";
 import type { ChartDataset } from "chart.js";

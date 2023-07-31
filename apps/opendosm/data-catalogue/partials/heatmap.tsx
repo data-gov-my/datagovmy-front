@@ -4,7 +4,7 @@ import { default as dynamic } from "next/dynamic";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "datagovmy-ui/helpers";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import type { HeatmapData, HeatmapDatum } from "datagovmy-ui/charts/heatmap";
 import { toast } from "datagovmy-ui/components";
