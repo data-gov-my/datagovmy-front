@@ -66,7 +66,7 @@
   }
 
   .btn-default {
-    @apply btn btn-border active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark bg-white px-3 py-1.5 dark:bg-black;
+    @apply btn btn-border active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark bg-white px-3 py-1.5 text-black  dark:bg-black dark:text-white;
   }
 
   .btn-border {

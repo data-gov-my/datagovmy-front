@@ -308,8 +308,9 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 </div>
                 <div className="grid grid-cols-2 gap-3 pt-3">
                   <Dropdown
-                    width="w-full"
                     label={t("begin")}
+                    width="w-full"
+                    anchor="left-0 bottom-10"
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
                     placeholder={t("common:common.select")}
@@ -318,6 +319,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   <Dropdown
                     label={t("end")}
                     width="w-full"
+                    anchor="right-0 bottom-10"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
                     selected={filter.end}

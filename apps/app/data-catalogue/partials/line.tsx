@@ -16,7 +16,7 @@ interface CatalogueLineProps {
   className?: string;
   config: {
     line_variables?: Record<string, any>;
-    precision: Precision;
+    precision: number | Precision;
   };
   dataset: any;
   urls: {
@@ -126,7 +126,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
     <Line
       className={className}
       _ref={ref => setCtx(ref)}
-      precision={config.precision.default}
+      precision={typeof config.precision === "number" ? config.precision : config.precision.default}
       data={{
         labels: dataset.chart.x,
         datasets: _datasets,

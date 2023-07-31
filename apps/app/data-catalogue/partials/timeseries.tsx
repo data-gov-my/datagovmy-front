@@ -17,7 +17,7 @@ import { CATALOGUE_COLORS, SHORT_PERIOD } from "../utils";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
   config: {
-    precision: Precision;
+    precision: number | Precision;
   };
   className?: string;
   dataset: any;
@@ -136,7 +136,9 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             className={className}
             _ref={ref => setData("ctx", ref)}
             interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
-            precision={config.precision.default}
+            precision={
+              typeof config.precision === "number" ? config.precision : config.precision.default
+            }
             enableAnimation={!play}
             enableLegend={_datasets.length > 1}
             mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}

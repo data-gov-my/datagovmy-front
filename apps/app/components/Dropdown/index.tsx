@@ -205,7 +205,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* Label */}
-              <span className="flex flex-grow truncate text-black dark:text-white">
+              <span className="flex flex-grow truncate">
                 {multiple ? title : (selected as OptionType)?.label || placeholder || "Select"}
               </span>
               {/* Label (multiple) */}
