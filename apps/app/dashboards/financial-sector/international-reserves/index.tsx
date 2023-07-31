@@ -10,7 +10,6 @@ import { AKSARA_COLOR } from "@lib/constants";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
 import AgencyBadge from "@components/Badge/agency";
-import { BNMIcon } from "@components/Icon/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
@@ -73,13 +72,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bnm.full")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BNMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="BNM" />}
       />
 
       <Container className="min-h-screen">

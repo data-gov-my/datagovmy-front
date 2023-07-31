@@ -155,3 +155,36 @@ export type MetaPage = Record<string, any> & {
     agency: string | null;
   };
 };
+
+export type Agency =
+  | "BNM"
+  | "BOMBA"
+  | "DOSM"
+  | "EPF"
+  | "EPU"
+  | "GOVT"
+  | "ICU JPM"
+  | "Imigresen"
+  | "JAKOA"
+  | "JPA"
+  | "JPJ"
+  | "JPN"
+  | "JPS"
+  | "KTMB"
+  | "KWAP"
+  | "LHDN"
+  | "MAMPU"
+  | "MCMC"
+  | "MERS 999"
+  | "Met"
+  | "MoE"
+  | "MoF"
+  | "MoH"
+  | "MoT"
+  | "NTRC"
+  | "PDN"
+  | "PDRM"
+  | "PHCorp"
+  | "PERKESO"
+  | "SPR"
+  | "UNHCR";

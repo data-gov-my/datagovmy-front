@@ -3,7 +3,6 @@ import { Hero, Panel, Section, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, useCallback, useMemo } from "react";
 import Container from "@components/Container";
-import { MOEIcon } from "@components/Icon/agency";
 import ComboBox from "@components/Combobox";
 import BarMeter from "@components/Chart/BarMeter";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
@@ -140,14 +139,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:moe.full")}
-            link="https://www.moe.gov.my/"
-            icon={<MOEIcon />}
-          />
-        }
         last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="MoE" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen">

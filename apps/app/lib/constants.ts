@@ -1,3 +1,5 @@
+import { Agency } from "@lib/types";
+
 // GENERAL
 export enum BREAKPOINTS {
   SM = 640,
@@ -244,3 +246,37 @@ export const PoliticalPartyColours: Record<string, string> = (() => {
     return { ...prev, ...{ [current.key]: current.colour } };
   }, {});
 })();
+
+export const AgencyLink: Record<Agency, string> = {
+  "BNM": "https://www.bnm.gov.my/publications/mhs",
+  "BOMBA": "https://www.bomba.gov.my/",
+  "DOSM": "https://open.dosm.gov.my/",
+  "EPF": "https://www.kwsp.gov.my/",
+  "EPU": "https://www.epu.gov.my/en",
+  "GOVT": "https://www.malaysia.gov.my/portal/index",
+  "ICU JPM": "https://www.icu.gov.my/",
+  "Imigresen": "https://www.imi.gov.my/index.php/en/",
+  "JAKOA": "https://www.jakoa.gov.my/",
+  "JPA": "https://www.jpa.gov.my/",
+  "JPJ": "https://www.jpj.gov.my/en/web/main-site/utama",
+  "JPN": "https://www.jpn.gov.my/en/",
+  "JPS": "https://www.jps.gov.my/",
+  "KTMB": "https://www.ktmb.com.my/",
+  "KWAP": "https://www.kwap.gov.my/",
+  "LHDN": "https://www.hasil.gov.my",
+  "MAMPU": "https://www.mampu.gov.my/",
+  "MCMC": "https://www.mcmc.gov.my/en/home",
+  "MERS 999": "https://999.gov.my/",
+  "Met": "https://www.met.gov.my/?lang=en",
+  "MoE": "https://www.moe.gov.my",
+  "MoF": "https://www.mof.gov.my/portal/en",
+  "MoH": "https://www.moh.gov.my",
+  "MoT": "https://www.mot.gov.my/en/",
+  "NTRC": "https://www.dermaorgan.gov.my/ntrc",
+  "PDN": "https://pdn.gov.my/v2/",
+  "PDRM": "https://www.rmp.gov.my/",
+  "PHCorp": "https://www.perkeso.gov.my/en/",
+  "PERKESO": "https://protecthealth.com.my",
+  "SPR": "https://www.spr.gov.my/",
+  "UNHCR": "https://www.unhcr.org/my/",
+} as const;

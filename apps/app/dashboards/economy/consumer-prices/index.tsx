@@ -2,7 +2,6 @@ import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import AgencyBadge from "@components/Badge/agency";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { DOSMIcon } from "@components/Icon/agency";
 import { Container, Dropdown, Hero, Section } from "@components/index";
 import type { OptionType } from "@components/types";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -166,13 +165,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:dosm.full")}
-            link="https://open.dosm.gov.my/"
-            icon={<DOSMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="DOSM" />}
       />
 
       <Container className="min-h-screen">

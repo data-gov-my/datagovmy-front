@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { MCMCIcon } from "@components/Icon/agency";
 
 /**
  * Internet Penetration Dashboard
@@ -22,13 +21,7 @@ const InternetPenetration: FunctionComponent<InternetPenetrationProps> = ({}) =>
         category={[t("common:categories.digitalisation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:mcmc.full")}
-            link="https://www.mcmc.gov.my/en/home"
-            icon={<MCMCIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="MCMC" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

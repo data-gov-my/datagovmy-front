@@ -1,5 +1,4 @@
 import { At, AgencyBadge, Hero } from "@components/index";
-import { SOCSOIcon } from "@components/Icon/agency";
 import Progress from "@components/Progress";
 import { useTranslation } from "@hooks/useTranslation";
 import { clx } from "@lib/helpers";
@@ -44,13 +43,7 @@ const LabourLayout: FunctionComponent<LabourLayoutProps> = ({ children, last_upd
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:perkeso.full")}
-            link="https://www.perkeso.gov.my/en/"
-            icon={<SOCSOIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="PERKESO" />}
       />
 
       {/* Navigations */}

@@ -1,5 +1,4 @@
 import { HeatmapData, HeatmapDatum } from "@components/Chart/Heatmap";
-import { ICUJPMIcon } from "@components/Icon/agency";
 import RankList from "@components/LeftRightCard/partials/RankList";
 import {
   AgencyBadge,
@@ -81,13 +80,7 @@ const Poverty: FunctionComponent<PovertyProps> = ({
         category={[t("common:categories.economy"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:icu-jpm.full")}
-            link="https://www.icu.gov.my/"
-            icon={<ICUJPMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="ICU JPM" />}
       />
 
       <Container className="min-h-screen">

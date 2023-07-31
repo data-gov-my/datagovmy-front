@@ -1,6 +1,5 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { JIMIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   ComboBox,
@@ -121,13 +120,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:imigresen.full")}
-            link="https://www.jpn.gov.my/en/"
-            icon={<JIMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="Imigresen" />}
       />
 
       <Container className="min-h-screen">

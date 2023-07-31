@@ -1,7 +1,6 @@
 import AgencyBadge from "@components/Badge/agency";
 import Card from "@components/Card";
 import Daterange from "@components/Dropdown/Daterange";
-import { JPNIcon } from "@components/Icon/agency";
 import Spinner from "@components/Spinner";
 import { toast } from "@components/Toast";
 
@@ -160,13 +159,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         header={[t("header")]}
         description={[t("description", { quote: t("quote") })]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpn.full")}
-            link="https://www.jpn.gov.my/en/"
-            icon={<JPNIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="JPN" />}
       />
       <Container className="min-h-screen">
         <Section title={t("section_1.title")} description={t("section_1.description")}>

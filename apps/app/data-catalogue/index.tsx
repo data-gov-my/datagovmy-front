@@ -22,7 +22,6 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
-import Image from "next/image";
 import Label from "@components/Label";
 import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
@@ -32,6 +31,7 @@ import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import Daterange from "@components/Dropdown/Daterange";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
+import { Agency } from "@lib/types";
 
 /**
  * Catalogue Index
@@ -44,18 +44,12 @@ export type Catalogue = {
 };
 
 interface CatalogueIndexProps {
-  query: Record<string, string>;
+  query: Record<string, string> & { source: Agency };
   collection: Record<string, any>;
-  total: number;
   sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
-  query,
-  collection,
-  total,
-  sources,
-}) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
@@ -101,15 +95,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             enableClear
           />
         }
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency={query.source ?? "govt"} />}
       />
 
       <Container className="min-h-screen">
