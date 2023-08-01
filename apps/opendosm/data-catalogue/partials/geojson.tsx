@@ -2,7 +2,7 @@ import type { GeoChoroplethRef } from "datagovmy-ui/charts/geochoropleth";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { useExport, useTranslation } from "datagovmy-ui/hooks";
 import type { DownloadOptions } from "@lib/types";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
 

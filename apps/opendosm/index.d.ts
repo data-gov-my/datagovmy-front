@@ -37,3 +37,11 @@ declare module "geojson-bbox" {
 }
 
 import type { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
+
+declare global {
+  interface Window {
+    mixpanel: OverridedMixpanel & {
+      instance: Mixpanel;
+    };
+  }
+}

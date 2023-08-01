@@ -9,7 +9,7 @@ interface SliderProviderProps {
   children: (play: boolean) => ReactNode;
 }
 
-const SliderContext = createContext<SliderContextProps>({
+export const SliderContext = createContext<SliderContextProps>({
   play: false,
   setPlaying: () => {},
 });

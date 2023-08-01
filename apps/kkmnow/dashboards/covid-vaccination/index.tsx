@@ -1,7 +1,8 @@
-import Hero from "@components/Hero";
 import {
+  AgencyBadge,
   Container,
   Dropdown,
+  Hero,
   Panel,
   Section,
   StateDropdown,
@@ -15,6 +16,7 @@ import { numFormat } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
+import { MOHIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * COVID Vaccination Dashboard
@@ -119,12 +121,19 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   return (
     <>
       <Hero
-        background="covidvax-banner"
-        // category={[t("common:categories.healthcare"), "text-green-600"]}
+        background="green"
+        category={[t("common:categories.healthcare"), "text-green-600"]}
         header={[t("header")]}
         description={[t("description")]}
-        action={<StateDropdown url={routes.COVID_VAX} currentState={currentState} />}
+        action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:moh.full")}
+            link="https://www.moh.gov.my"
+            icon={<MOHIcon fillColor="#16A34A" />} // green-600
+          />
+        }
       />
       <Container className="min-h-screen">
         {/* How vaccinated against COVID-19 are we? */}

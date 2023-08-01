@@ -1,10 +1,10 @@
 export const routes = {
-  COVID: "/covid-19",
-  COVID_VAX: "/covid-vaccination",
-  BLOOD_DONATION: "/blood-donation",
-  ORGAN_DONATION: "/organ-donation",
-  PEKA_B40: "/peka-b40",
-  FACILITIES: "/healthcare-facilities",
-  HOSPITAL_BED: "/hospital-bed-utilisation",
-  COVIDNOW_DATA: "/covidnow-data",
+  COVID_19: "/dashboard/covid-19",
+  COVID_VACCINATION: "/dashboard/covid-vaccination",
+  BLOOD_DONATION: "/dashboard/blood-donation",
+  ORGAN_DONATION: "/dashboard/organ-donation",
+  PEKA_B40: "/dashboard/peka-b40",
+  FACILITIES: "/dashboard/healthcare-facilities",
+  HOSPITAL_BED: "/dashboard/hospital-bed-utilisation",
+  COVIDNOW_DATA: "/dashboard/covidnow-data",
 };

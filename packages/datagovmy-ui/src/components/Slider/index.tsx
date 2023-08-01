@@ -4,7 +4,7 @@ import { useTranslation } from "../../hooks/useTranslation";
 import { useWatch } from "../../hooks/useWatch";
 import { clx, toDate } from "../../lib/helpers";
 import { Root, Track, Range, Thumb } from "@radix-ui/react-slider";
-import { SliderContext } from "./context";
+import { SliderContext } from "../../contexts/slider";
 
 type BaseProps = {
   className?: string;

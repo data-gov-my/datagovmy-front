@@ -1,14 +1,16 @@
 import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
-import Hero from "@components/Hero";
 import {
+  AgencyBadge,
   Container,
+  Hero,
   Section,
   StateDropdown,
   Tabs,
   Slider,
   LeftRightCard,
 } from "datagovmy-ui/components";
+import { PHCorpIcon } from "datagovmy-ui/icons/agency";
 import { useTranslation, useData, useSlice } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
@@ -71,11 +73,19 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
   return (
     <>
       <Hero
-        background="peka-banner"
+        background="purple"
+        category={[t("common:categories.healthcare"), "text-purple"]}
         header={[t("header")]}
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:phcorp.full")}
+            link="https://protecthealth.com.my"
+            icon={<PHCorpIcon />}
+          />
+        }
       />
 
       <Container className="min-h-screen">

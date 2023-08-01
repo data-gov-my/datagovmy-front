@@ -1,6 +1,7 @@
 import NextHead from "next/head";
 import { FunctionComponent } from "react";
 import { useTranslation } from "next-i18next";
+import useConfig from "next/config";
 
 interface MetadataProps {
   title?: string | null;
@@ -8,19 +9,30 @@ interface MetadataProps {
   keywords?: string;
 }
 
-const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywords }) => {
+const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywords = "" }) => {
   const { t } = useTranslation();
+  const {
+    publicRuntimeConfig: {
+      APP_NAME,
+      META_AUTHOR,
+      META_THEME,
+      META_DOMAIN,
+      META_URL,
+      META_IMAGE,
+      META_KEYWORDS,
+    },
+  } = useConfig();
 
   const META = {
-    title: title ? title.concat(" | data.gov.my") : "data.gov.my",
+    title: title ? title.concat(" | ", APP_NAME) : APP_NAME,
     icon: "/favicon.ico",
     description: description ? description : t("common:site.description"),
-    author: "Government of Malaysia",
-    themeColor: "#13293D",
-    keywords: keywords ?? "data dosm statistics malaysia",
-    domain: "data.gov.my",
-    url: "https://data.gov.my",
-    image: "https://open.dosm.gov.my/static/images/jata_512.png",
+    author: META_AUTHOR,
+    themeColor: META_THEME,
+    keywords: keywords.concat(META_KEYWORDS),
+    domain: META_DOMAIN,
+    url: META_URL,
+    image: META_IMAGE,
   };
 
   return (

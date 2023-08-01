@@ -116,6 +116,7 @@ export type Precision = {
 
 export type EventType =
   | "file_download"
+  | "image_download"
   | "page_view"
   | "change_language"
   | "select_dropdown"

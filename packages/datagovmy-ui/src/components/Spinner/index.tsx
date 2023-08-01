@@ -1,4 +1,5 @@
 import { FunctionComponent } from "react";
+import { clx } from "../../lib/helpers";
 
 interface SpinnerProps {
   loading: boolean;
@@ -8,10 +9,10 @@ interface SpinnerProps {
 const Spinner: FunctionComponent<SpinnerProps> = ({ loading, className }) => {
   return loading ? (
     <div
-      className={[
+      className={clx(
         "h-4 w-4 animate-spin rounded-[50%] border-2 border-gray-300 border-t-black",
-        className,
-      ].join(" ")}
+        className
+      )}
     />
   ) : (
     <></>

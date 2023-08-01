@@ -29,7 +29,7 @@ import { useTranslation } from "../hooks/useTranslation";
 import { default as debounce } from "lodash/debounce";
 import type { DebouncedFunc } from "lodash";
 import { clx, numFormat } from "../lib/helpers";
-import { UpDownIcon } from "../components/Icon/up-down";
+import { UpDownIcon } from "../icons";
 import Button from "../components/Button";
 import { Precision } from "../lib/types";
 
@@ -273,11 +273,14 @@ const Table: FunctionComponent<TableProps> = ({
                       const relative = cell.column.columnDef.relative ?? undefined;
                       const scale = cell.column.columnDef.scale ?? undefined;
 
-                      const getPrecision = (precision: Precision): number => {
-                        if (precision?.columns && cell.column.id in precision.columns)
+                      const getPrecision = (
+                        precision?: number | Precision
+                      ): number | [number, number] => {
+                        if (!precision) return [1, 0];
+                        else if (typeof precision === "number") return precision;
+                        else if (precision.columns && cell.column.id in precision.columns)
                           return precision.columns[cell.column.id];
-                        else if (precision?.default) return precision.default;
-                        else return 1;
+                        else return precision.default;
                       };
 
                       const classNames = clx(
