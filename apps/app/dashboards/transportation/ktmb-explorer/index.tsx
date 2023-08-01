@@ -1,7 +1,6 @@
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { MOTIcon } from "@components/Icon/agency";
 import Label from "@components/Label";
 import Progress from "@components/Progress";
 import {
@@ -124,13 +123,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:ktmb.full")}
-            link="https://www.ktmb.com.my/"
-            icon={<MOTIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="ktmb" />}
         last_updated={last_updated}
       />
 

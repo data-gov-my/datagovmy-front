@@ -1,6 +1,5 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { MOTIcon } from "@components/Icon/agency";
 import { List } from "@components/Tabs";
 import { AgencyBadge, Container, Hero, Section } from "@components/index";
 import { useData } from "@hooks/useData";
@@ -66,13 +65,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:mot.full")}
-            link="https://www.mot.gov.my/en/"
-            icon={<MOTIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="mot" />}
       />
 
       <Container className="min-h-screen">

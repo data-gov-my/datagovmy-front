@@ -129,8 +129,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("agencies:moh.full")}
-            link="https://www.moh.gov.my"
+            agency="moh"
             icon={<MOHIcon fillColor="#16A34A" />} // green-600
           />
         }

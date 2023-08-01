@@ -3,7 +3,6 @@ import { Button, Dropdown, Hero, Section } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, useContext, useMemo } from "react";
 import Container from "@components/Container";
-import { JPJIcon } from "@components/Icon/agency";
 import Card from "@components/Card";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import dynamic from "next/dynamic";
@@ -123,13 +122,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpj.full")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<JPJIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpj" />}
       />
       <Container className="min-h-screen">
         {/* Best selling cars models and brands in {year} */}

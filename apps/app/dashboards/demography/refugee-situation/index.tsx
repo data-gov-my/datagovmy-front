@@ -1,7 +1,6 @@
 import BarMeter from "@components/Chart/BarMeter";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { UNHCRIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   Container,
@@ -70,13 +69,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:unhcr.full")}
-            link="https://www.unhcr.org/my/"
-            icon={<UNHCRIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="unhcr" />}
         last_updated={last_updated}
       />
 

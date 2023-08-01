@@ -73,12 +73,14 @@ const Hero: FunctionComponent<HeroProps> = ({
       ) : (
         <div>
           {agencyBadge && (
-            <div className="sticky inset-x-0 top-14 z-20 -ml-3 flex md:hidden">{agencyBadge}</div>
+            <div className="md:max-lg:-ml-4.5 sticky inset-x-0 top-14 z-20 -ml-3 flex lg:hidden">
+              {agencyBadge}
+            </div>
           )}
           <div className="space-y-6 py-12 xl:w-full">
             {(category || agencyBadge) && (
               <div className="relative flex justify-between">
-                <div className="hidden md:absolute md:right-0 md:top-0 md:block">{agencyBadge}</div>
+                <div className="hidden lg:absolute lg:right-0 lg:top-0 lg:block">{agencyBadge}</div>
                 {category && (
                   <span
                     className={clx("text-base font-semibold uppercase", category[1])}

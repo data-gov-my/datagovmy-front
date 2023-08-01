@@ -2,7 +2,6 @@ import AgencyBadge from "@components/Badge/agency";
 import BarMeter from "@components/Chart/BarMeter";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { PDNIcon } from "@components/Icon/agency";
 import { Container, Panel, Section, StateDropdown, Tabs, Hero } from "@components/index";
 import LeftRightCard from "@components/LeftRightCard";
 import RankList from "@components/LeftRightCard/partials/RankList";
@@ -96,13 +95,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         description={[t("description"), "text-dim"]}
         action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:pdn.full")}
-            link="https://pdn.gov.my/v2/"
-            icon={<PDNIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="pdn" />}
       />
       <Container className="min-h-screen">
         {/* What are the latest blood donation trends in Malaysia? */}

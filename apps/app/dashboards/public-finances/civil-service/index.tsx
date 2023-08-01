@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { JPAIcon } from "@components/Icon/agency";
 
 /**
  * Civil Service Dashboard
@@ -22,13 +21,7 @@ const CivilService: FunctionComponent<CivilServiceProps> = ({}) => {
         category={[t("common:categories.public_finances"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpa.full")}
-            link="https://www.jpa.gov.my"
-            icon={<JPAIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpa" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

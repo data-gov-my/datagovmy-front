@@ -22,7 +22,6 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
-import Image from "next/image";
 import Label from "@components/Label";
 import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
@@ -46,16 +45,10 @@ export type Catalogue = {
 interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
-  total: number;
   sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
-  query,
-  collection,
-  total,
-  sources,
-}) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
@@ -101,15 +94,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             enableClear
           />
         }
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency={query.source ? query.source.toLowerCase() : "govt"} />}
       />
 
       <Container className="min-h-screen">
@@ -184,6 +169,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.monthly"), value: "MONTHLY" },
       { label: t("filter_options.quarterly"), value: "QUARTERLY" },
       { label: t("filter_options.yearly"), value: "YEARLY" },
+      { label: t("filter_options.infrequent"), value: "INFREQUENT" },
+      { label: t("filter_options.as_required"), value: "AS_REQUIRED" },
     ];
     const geographies: OptionType[] = [
       { label: t("filter_options.national"), value: "NATIONAL" },

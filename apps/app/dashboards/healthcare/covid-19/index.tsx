@@ -1,7 +1,6 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import Stages from "@components/Chart/Stages";
-import { MOHIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   Container,
@@ -130,13 +129,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:moh.full")}
-            link="https://www.moh.gov.my"
-            icon={<MOHIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="moh" />}
       />
 
       <Container className="min-h-screen">

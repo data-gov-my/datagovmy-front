@@ -18,10 +18,12 @@ import { Color, useColor } from "@hooks/useColor";
 import { DeepPartial } from "chart.js/types/utils";
 import "chartjs-adapter-luxon";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
-import { minMax, normalize, numFormat } from "@lib/helpers";
+import { clx, minMax, normalize, numFormat } from "@lib/helpers";
 
 interface HeatmapProps extends ChartHeaderProps {
   className?: string;
+  width?: number;
+  height?: number;
   data?: HeatmapData;
   color?: Color;
   prefix?: string;
@@ -41,7 +43,9 @@ export type HeatmapData = Array<HeatmapDatum>;
 // type HeatmapScaleType = "time" | "category";
 
 const Heatmap: FunctionComponent<HeatmapProps> = ({
-  className = "h-[400px]",
+  className = "h-[350px]",
+  width = 900,
+  height = 350,
   title,
   data = dummyCategory,
   menu,
@@ -50,7 +54,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   prefix,
   unit,
   controls,
-  precision = [1, 1],
+  precision = [1, 0],
   _ref,
 }) => {
   ChartJS.register(
@@ -176,7 +180,8 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   };
 
   const options: ChartCrosshairOption<"matrix"> = {
-    maintainAspectRatio: false,
+    responsive: false,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
@@ -222,10 +227,12 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
     <div>
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
 
-      <div className={className}>
+      <div className={clx("overflow-x-auto", className)}>
         <Chart
           ref={_ref}
           type="matrix"
+          width={width}
+          height={height}
           data={{
             datasets: [
               {

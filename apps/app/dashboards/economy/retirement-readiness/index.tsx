@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { EPFIcon } from "@components/Icon/agency";
 
 /**
  * RetirementReadiness Dashboard
@@ -22,13 +21,7 @@ const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) =>
         category={[t("common:categories.economy"), "text-[#FF820E]"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:epf.full")}
-            link="https://www.kwsp.gov.my/"
-            icon={<EPFIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="epf" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

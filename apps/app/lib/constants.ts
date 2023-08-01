@@ -244,3 +244,37 @@ export const PoliticalPartyColours: Record<string, string> = (() => {
     return { ...prev, ...{ [current.key]: current.colour } };
   }, {});
 })();
+
+export const AgencyLink: Record<string, string> = {
+  "bnm": "https://www.bnm.gov.my/publications/mhs",
+  "bomba": "https://www.bomba.gov.my/",
+  "dosm": "https://open.dosm.gov.my/",
+  "epf": "https://www.kwsp.gov.my/",
+  "epu": "https://www.epu.gov.my/en",
+  "govt": "https://www.malaysia.gov.my/portal/index",
+  "icu-jpm": "https://www.icu.gov.my/",
+  "imigresen": "https://www.imi.gov.my/index.php/en/",
+  "jakoa": "https://www.jakoa.gov.my/",
+  "jpa": "https://www.jpa.gov.my/",
+  "jpj": "https://www.jpj.gov.my/en/web/main-site/utama",
+  "jpn": "https://www.jpn.gov.my/en/",
+  "jps": "https://www.jps.gov.my/",
+  "ktmb": "https://www.ktmb.com.my/",
+  "kwap": "https://www.kwap.gov.my/",
+  "lhdn": "https://www.hasil.gov.my",
+  "mampu": "https://www.mampu.gov.my/",
+  "mcmc": "https://www.mcmc.gov.my/en/home",
+  "mers-999": "https://999.gov.my/",
+  "met": "https://www.met.gov.my/?lang=en",
+  "moe": "https://www.moe.gov.my",
+  "mof": "https://www.mof.gov.my/portal/en",
+  "moh": "https://www.moh.gov.my",
+  "mot": "https://www.mot.gov.my/en/",
+  "ntrc": "https://www.dermaorgan.gov.my/ntrc",
+  "pdn": "https://pdn.gov.my/v2/",
+  "pdrm": "https://www.rmp.gov.my/",
+  "perkeso": "https://www.perkeso.gov.my/en/",
+  "phcorp": "https://protecthealth.com.my",
+  "spr": "https://www.spr.gov.my/",
+  "unhcr": "https://www.unhcr.org/my/",
+} as const;

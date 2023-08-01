@@ -1,6 +1,5 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { BOMBAIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   Container,
@@ -96,13 +95,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         description={[t("description"), "whitespace-pre-line"]}
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bomba.full")}
-            link="https://www.bomba.gov.my/"
-            icon={<BOMBAIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bomba" />}
       />
 
       <Container className="min-h-screen">

@@ -1,4 +1,3 @@
-import { NTRCIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   Container,
@@ -90,13 +89,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:ntrc.full")}
-            link="https://www.dermaorgan.gov.my/ntrc"
-            icon={<NTRCIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="ntrc" />}
       />
 
       <Container className="min-h-screen">
@@ -105,7 +98,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
           title={t("timeseries_header", {
             state: CountryAndStates[currentState],
           })}
-          description={t("timeseries_description")}
+          description={t("timeseries_desc")}
           date={timeseries.data_as_of}
         >
           <SliderProvider>

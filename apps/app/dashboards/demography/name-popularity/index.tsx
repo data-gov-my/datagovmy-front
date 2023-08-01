@@ -1,7 +1,6 @@
 import AgencyBadge from "@components/Badge/agency";
 import Card from "@components/Card";
 import Chips from "@components/Chips";
-import { JPNIcon } from "@components/Icon/agency";
 import {
   Button,
   Container,
@@ -254,13 +253,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpn.full")}
-            link="https://www.jpn.gov.my/en/"
-            icon={<JPNIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
         <Section>

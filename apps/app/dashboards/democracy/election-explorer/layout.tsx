@@ -1,7 +1,7 @@
 import At from "@components/At";
 import AgencyBadge from "@components/Badge/agency";
 import Hero from "@components/Hero";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
+import { SPRIconSolid } from "@components/Icon/agency";
 import Progress from "@components/Progress";
 import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "@hooks/useTranslation";
@@ -49,20 +49,14 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
 
   return (
     <>
-      <Progress disableOnSameRoute />
+      <Progress />
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:spr.full")}
-            link="https://www.spr.gov.my/"
-            icon={<SPRIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="spr" />}
       />
 
       {/* Navigations */}
