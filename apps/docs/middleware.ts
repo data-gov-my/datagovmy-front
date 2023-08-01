@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { locales } from "nextra/locales";
+import { locales, withLocales } from "nextra/locales";
+import { rewrite } from "@vercel/edge";
 
 // Triggers on relevant pages. Middleware to be removed on launch
 export const config = {
@@ -15,9 +16,10 @@ export const middleware = (request: NextRequest) => {
     const [user, password] = atob(authValue).split(":");
 
     if (user === "admin" && password === process.env.AUTHORIZATION_TOKEN) return locales(request);
-  } else {
-    request.nextUrl.pathname = "/api/authorize";
-    return NextResponse.rewrite(new URL("/api/authorize", request.url));
   }
-  return locales(request);
+
+  return new NextResponse("Auth required", {
+    status: 401,
+    headers: { "WWW-Authenticate": `Basic realm="Secure Area"` },
+  });
 };
