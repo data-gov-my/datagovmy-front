@@ -7,7 +7,7 @@
 }
 
 .table th {
-  @apply w-[30%] font-normal text-dim;
+  @apply text-dim w-[30%] font-normal;
 }
 .table tbody tr {
   @apply border-b-[0.5px] border-l-[0.5px] border-l-black;

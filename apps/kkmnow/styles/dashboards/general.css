@@ -55,7 +55,7 @@
 }
 
 .tooltip .tooltip-content {
-  @apply invisible absolute top-4 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:left-[110%] md:-top-2 md:max-w-sm md:translate-x-0;
+  @apply invisible absolute top-4 z-20 inline-block w-max max-w-[200px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:-top-2 md:left-[110%] md:max-w-sm md:translate-x-0;
 }
 
 @media only screen and (min-width: 768px) {
@@ -79,11 +79,11 @@
 }
 
 .nivo-tooltip {
-  @apply flex min-w-max origin-center items-center justify-center rounded bg-black py-[5px] px-[9px] text-sm text-white shadow;
+  @apply flex min-w-max origin-center items-center justify-center rounded bg-black px-[9px] py-[5px] text-sm text-white shadow;
 }
 
 .donut-meter::before {
   content: "";
   transform: translate(-50%, -50%);
-  @apply absolute top-1/2 left-1/2 h-[75%] w-[75%] rounded-[50%] bg-white transition-all;
+  @apply absolute left-1/2 top-1/2 h-[75%] w-[75%] rounded-[50%] bg-white transition-all;
 }

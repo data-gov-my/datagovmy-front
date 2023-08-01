@@ -158,6 +158,8 @@ export const AKSARA_COLOR = {
   DARK_BLUE_H: "#0C32841A",
   PURPLE: "#7C3AED",
   PURPLE_H: "#7C3AED1A",
+  ORANGE: "#FF820E",
+  ORANGE_H: "#FF820E1A",
 } as const;
 
 /**

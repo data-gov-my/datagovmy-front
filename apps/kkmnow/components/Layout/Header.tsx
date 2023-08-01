@@ -45,15 +45,15 @@ const KKMNOWHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
               title={t("common:nav.home")}
               link="/"
               onClick={close}
-              icon={<HomeIcon className="h-4 w-4 dark:text-white text-black" />}
+              icon={<HomeIcon className="h-4 w-4 text-black dark:text-white" />}
             />
             {/* DASHBOARD MEGA MENU */}
             <WindowProvider>
               <Megamenu
                 title={t("common:nav.dashboards")}
-                icon={<RectangleGroupIcon className="h-4 w-4 dark:text-white text-black" />}
+                icon={<RectangleGroupIcon className="h-4 w-4 text-black dark:text-white" />}
               >
-                <div className="px-3 container mx-auto relative grid gap-4 py-3 md:grid-cols-4 md:gap-6 md:py-6">
+                <div className="container relative mx-auto grid gap-4 px-3 py-3 md:grid-cols-4 md:gap-6 md:py-6">
                   {megaMenuItems.map(item => (
                     <div key={item.title} className="text-sm">
                       <p className="mb-2 font-bold">{item.title}</p>

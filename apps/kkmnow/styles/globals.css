@@ -35,11 +35,11 @@
 
 @layer components {
   .text-link {
-    @apply cursor-pointer font-medium text-primary hover:underline;
+    @apply text-primary cursor-pointer font-medium hover:underline;
   }
 
   .text-footer-link {
-    @apply cursor-pointer text-sm text-dim hover:text-black hover:underline;
+    @apply text-dim cursor-pointer text-sm hover:text-black hover:underline;
   }
 
   .number {

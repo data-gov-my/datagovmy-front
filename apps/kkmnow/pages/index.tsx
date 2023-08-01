@@ -39,7 +39,7 @@ const Home: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
         className="relative flex min-h-[300px] flex-col items-center justify-center text-left md:text-center"
       >
         <h3 className="mb-3">{t("home.title")}</h3>
-        <p className="max-w-3xl text-dim">{t("home.description")}</p>
+        <p className="text-dim max-w-3xl">{t("home.description")}</p>
       </Hero>
       <Container className="min-h-screen py-12">
         <h1 className="mb-8 text-2xl md:text-center">{t("home.timeline.title")}</h1>
