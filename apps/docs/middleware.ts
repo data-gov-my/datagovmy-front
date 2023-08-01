@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { locales, withLocales } from "nextra/locales";
-import { rewrite } from "@vercel/edge";
+import { locales } from "nextra/locales";
 
 // Triggers on relevant pages. Middleware to be removed on launch
 export const config = {
