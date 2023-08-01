@@ -1,13 +1,17 @@
-import { AgencyBadge } from "@components/index";
-import At from "@components/At";
-import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import Container from "@components/Container";
-import Hero from "@components/Hero";
-import Metadata from "@components/Metadata";
-import Section from "@components/Section";
-import Tabs from "@components/Tabs";
+import AgencyIcon from "@components/Icon/agency";
+import {
+  AgencyBadge,
+  At,
+  Card,
+  Container,
+  Hero,
+  Metadata,
+  Progress,
+  Section,
+  Tabs,
+} from "@components/index";
 import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
@@ -19,12 +23,10 @@ import { numFormat } from "@lib/helpers";
 import type { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 const Home: Page = ({
-  highlights,
   timeseries,
   timeseries_callouts,
   analytics,
@@ -73,36 +75,35 @@ const Home: Page = ({
   return (
     <>
       <Metadata keywords={"data.gov.my data malaysia election prices harga"} />
-
+      <Progress />
       <Hero
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[t("common:home.title")]}
-        description={
-          <div className="space-y-6">
-            <p className="text-dim xl:w-2/3">{t("common:home.description")}</p>
-            <div className="flex flex-wrap gap-3">
-              <At className="btn btn-primary text-sm" href="/dashboard" enableIcon>
-                {t("common:nav.dashboards")}
-              </At>
-              <At className="btn btn-default text-sm" href="/data-catalogue" enableIcon>
-                {t("common:nav.catalogue")}
-              </At>
-              <At className="btn text-sm" href="#" enableIcon>
-                API Docs
-              </At>
-            </div>
+        description={[t("common:home.description"), "text-dim"]}
+        action={
+          <div className="flex flex-wrap gap-3">
+            <At className="btn-primary shadow-button text-sm" href="/dashboard" enableIcon>
+              {t("common:nav.dashboards")}
+            </At>
+            <At
+              className="btn btn-border active:bg-washed shadow-button bg-white px-3 py-1.5 text-sm text-black"
+              href="/data-catalogue"
+              enableIcon
+            >
+              {t("common:nav.catalogue")}
+            </At>
+            <At
+              className="btn px-3 py-1.5 text-sm"
+              href="https://developer.data.gov.my"
+              enableIcon
+              external
+            >
+              {t("common:nav.api_docs")}
+            </At>
           </div>
         }
-        agencyBadge={
-          <AgencyBadge
-            agency={t("common:agency.govt")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency="govt" />}
       />
 
       <Container className="min-h-screen">
@@ -258,9 +259,9 @@ const Ranking = ({ ranks }: RankingProps) => {
         {ranks.map((item: RankItem) => (
           <At href={item.id} key={item.id}>
             <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
-              <div className="relative flex items-center gap-4">
-                <div className="bg-outline h-4 w-4 rounded-full" />
-                <p className="text-dim text-sm uppercase">{item.agency_abbr}</p>
+              <div className="relative flex items-center gap-3">
+                <AgencyIcon agency={item.agency_abbr} className="h-6 w-6" />
+                <p className="text-dim text-sm">{t(`agencies:${item.agency_abbr}.abbr`)}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative overflow-hidden">
@@ -271,7 +272,9 @@ const Ranking = ({ ranks }: RankingProps) => {
                   {item[`name_${lang as "en" | "bm"}`]}
                 </p>
                 <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {numFormat(item.count, "compact")} {t("common:common.views")}
+                  {`${numFormat(item.count, "compact")} ${t("common:common.views", {
+                    count: item.count,
+                  })}`}
                 </p>
                 <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
                   {t("common:components.click_to_explore")}
@@ -310,7 +313,7 @@ export const getStaticProps: GetStaticProps = withi18n(null, async () => {
         },
         all_time: {
           dataset: data.table_summary.data.all_time.dataset_views,
-          dashboard: data.table_summary.data.all_time.dataset_views,
+          dashboard: data.table_summary.data.all_time.dashboard_views,
         },
         total: {
           catalogue: data.total_catalog,

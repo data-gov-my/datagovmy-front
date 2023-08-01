@@ -8,7 +8,7 @@ const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <Container background="bg-washed dark:bg-black border-t border-outline dark:border-washed-dark pt-12 pb-16 z-30">
+    <Container background="bg-washed dark:bg-black border-t border-outline dark:border-washed-dark pt-12 pb-16 z-10">
       <div className="flex w-full flex-col gap-6 text-sm md:flex-row md:justify-between md:gap-0">
         <div className="flex flex-row gap-4">
           {/* LOGO */}
@@ -29,13 +29,13 @@ const Footer = () => {
           <div className="flex w-full flex-col gap-2 md:w-auto">
             <p className="font-bold">{t("common:nav.open_source")}</p>
 
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.frontend")}
             </a>
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.backend")}
             </a>
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.uiux")}
             </a>
           </div>
@@ -43,10 +43,10 @@ const Footer = () => {
           <div className="flex w-full flex-col gap-2 md:w-auto">
             <p className="font-bold">{t("common:nav.open_data")}</p>
 
-            <a className="text-footer-link" href="#" target="_blank">
+            <a className="link-dim" href="#" target="_blank">
               {t("common:nav.guiding_principles")}
             </a>
-            <At className="text-footer-link" href="#">
+            <At className="link-dim" href="#">
               {t("common:nav.terms_of_use")}
             </At>
           </div>

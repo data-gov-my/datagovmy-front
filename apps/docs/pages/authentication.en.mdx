@@ -1,0 +1,31 @@
+## Requesting an API Token
+
+While accessing the OpenAPI does not require an API token, we provide the option to request a token if you anticipate reaching the rate limits or need increased usage. To request an API token, please follow the steps below:
+
+1. Send an email to [token@dtsa.gov.my](...) with the following details:
+
+   - Your name
+   - Your email address
+   - Reason for requesting an increased rate limit
+
+2. Our team will review your request and assess it on a case-by-case basis.
+
+3. If your request is approved, you will receive an API token via email.
+
+Requesting an API token allows us to ensure fair usage and prevent abuse, while providing you with the necessary resources to meet your application requirements.
+
+## Using Your API Token
+
+Once you have obtained an API token, you need to include it in your API requests to authenticate and gain access to increased usage limits. Follow the steps below to include your API token in the HTTP requests:
+
+1. Add the following header to your request:
+
+   ```
+   Authorization: Bearer <YOUR_TOKEN_HERE>
+   ```
+
+   Replace `<YOUR_TOKEN_HERE>` with the actual token you received.
+
+2. Send your HTTP request with the added `Authorization` header.
+
+By including the API token in the `Authorization` header, you ensure that your requests are authenticated and have the necessary privileges to access the OpenAPI with increased usage limits.

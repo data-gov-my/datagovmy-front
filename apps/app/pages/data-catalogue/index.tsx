@@ -7,19 +7,20 @@ import DataCatalogue, { Catalogue } from "@data-catalogue/index";
 import { SHORT_LANG } from "@lib/constants";
 import { sortAlpha } from "@lib/helpers";
 import { withi18n } from "@lib/decorators";
+import Progress from "@components/Progress";
 
 const CatalogueIndex: Page = ({
   query,
   collection,
-  total,
   sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["catalogue", "common"]);
 
   return (
     <>
+      <Progress />
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
+      <DataCatalogue query={query} collection={collection} sources={sources} />
     </>
   );
 };
@@ -57,7 +58,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             agency: null,
           },
           query: query ?? {},
-          total: data.total_all,
           sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
           collection,
         },

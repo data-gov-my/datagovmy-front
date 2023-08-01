@@ -2,15 +2,18 @@ import type { GeoChoroplethRef } from "@components/Chart/Choropleth/geochoroplet
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { useExport } from "@hooks/useExport";
 import { useTranslation } from "@hooks/useTranslation";
-import type { DownloadOptions, Geotype } from "@lib/types";
+import type { DownloadOptions } from "@lib/types";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
+import { useAnalytics } from "@hooks/useAnalytics";
+import { download } from "@lib/helpers";
 
 const GeoChoropleth = dynamic(() => import("@components/Chart/Choropleth/geochoropleth"), {
   ssr: false,
 });
 
 interface CatalogueChoroplethProps {
+  className?: string;
   config: any;
   dataset: any;
   urls: {
@@ -20,6 +23,7 @@ interface CatalogueChoroplethProps {
 }
 
 const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
+  className = "h-[350px] w-full lg:h-[450px]",
   dataset,
   config,
   urls,
@@ -29,13 +33,14 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   const ctx = useRef<GeoChoroplethRef | null>(null);
   const [mounted, setMounted] = useState(false);
   const { png } = useExport(mounted, dataset.meta.unique_id);
+  const { track } = useAnalytics(dataset);
 
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);
   }, [mounted, png]);
 
-  const availableDownloads = useMemo<DownloadOptions>(
-    () => ({
+  const availableDownloads = useMemo<DownloadOptions>(() => {
+    return {
       chart: [
         {
           id: "png",
@@ -44,8 +49,9 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           description: t("image.desc"),
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
-            if (ctx) ctx.current?.print(dataset.meta.unique_id);
-            // TODO: Add track by mixpanel
+            if (!ctx) return;
+            ctx.current?.print(dataset.meta.unique_id);
+            track("png");
           },
         },
       ],
@@ -56,7 +62,10 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           title: t("csv.title"),
           description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.csv,
+          href: () => {
+            download(urls.csv, dataset.meta.unique_id.concat(".csv"));
+            track("csv");
+          },
         },
         {
           id: "parquet",
@@ -64,27 +73,27 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           title: t("parquet.title"),
           description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.parquet,
+          href: () => {
+            download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+            track("parquet");
+          },
         },
       ],
-    }),
-    [png, ctx]
-  );
+    };
+  }, [png, ctx]);
   return (
-    <>
-      <GeoChoropleth
-        _ref={ctx}
-        id={dataset.meta.unique_id}
-        className="h-[350px] w-full lg:h-[450px]"
-        data={{
-          labels: dataset.chart.x,
-          values: dataset.chart.y,
-        }}
-        color={config.color}
-        type={config.geojson}
-        onReady={mounted => setMounted(mounted)}
-      />
-    </>
+    <GeoChoropleth
+      _ref={ctx}
+      id={dataset.meta.unique_id}
+      className={className}
+      data={{
+        labels: dataset.chart.x,
+        values: dataset.chart.y,
+      }}
+      color={config.color}
+      type={config.geojson}
+      onReady={mounted => setMounted(mounted)}
+    />
   );
 };
 

@@ -4,8 +4,10 @@ import { get } from "@lib/api";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "@hooks/useTranslation";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const InterestRates = ({
+  meta,
   last_updated,
   timeseries,
   timeseries_opr,
@@ -14,7 +16,7 @@ const InterestRates = ({
   const { t } = useTranslation(["dashboard-interest-rates", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InterestRatesDashboard
         last_updated={last_updated}
@@ -22,7 +24,7 @@ const InterestRates = ({
         timeseries_opr={timeseries_opr}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 // Disabled
@@ -107,7 +109,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-interest-rates
         category: "financial-sector",
         agency: "BNM",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
       timeseries_opr: data.timeseries_opr,

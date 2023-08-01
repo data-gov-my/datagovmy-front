@@ -1,0 +1,23 @@
+{
+  "index": "Pengenalan",
+  "changelog": "Log Perubahan",
+  "quickstart": "Cepat Mula",
+  "rate-limit": "Had",
+  "authentication": "Pengesahan",
+  "response-format": "Format Respons",
+  "data-catalogue": "Katalog Data API",
+  "gtfs-static": "Pengangkutan API (GTFS)",
+  "gtfs-realtime": "Pengangkutan API (GTFS-R)",
+  "weather": "Cuaca API",
+  "main-site": {
+    "title": "Tapak Utama",
+    "type": "page",
+    "href": "https://staging.data.gov.my/ms-MY",
+    "newWindow": true
+  },
+  "ai-helper": {
+    "title": "Penolong AI",
+    "type": "page"
+  },
+  "faq": "FAQ"
+}

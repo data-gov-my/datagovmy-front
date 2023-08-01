@@ -15,17 +15,17 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
   const [selected, setSelected] = useState<string>();
   const [show, setShow] = useState<boolean>(false);
   const styles = {
-    base: "px-4 lg:px-5 py-1.5 w-full rounded-none leading-tight",
+    base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
     active:
-      "border-l-2 border-black bg-washed text-black font-medium dark:bg-washed-dark dark:text-white dark:border-white",
-    default: "text-dim",
+      "text-sm border-l-2 border-black bg-washed text-black font-medium dark:bg-washed-dark dark:text-white dark:border-white",
+    default: "text-sm text-dim",
   };
 
   return (
     <>
       <div className="flex w-full flex-row">
         {/* Desktop */}
-        <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/5">
+        <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/4 xl:w-1/5">
           <ul className="sticky top-14 flex h-[90vh] flex-col gap-2 overflow-auto pt-3">
             <li>
               <h5 className={styles.base}>{t("category")}</h5>
@@ -77,9 +77,9 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
         {/* Mobile */}
         <div className="relative w-full">
           <>
-            <div className="pointer-events-none absolute top-20 block h-full lg:hidden">
+            <div className="absolute top-20 block h-full lg:hidden">
               <Button
-                className="btn btn-default pointer-events-auto sticky top-36 z-10"
+                className="btn-default sticky top-36 z-10"
                 icon={<Bars3BottomLeftIcon className="h-4 w-4" />}
                 onClick={() => setShow(true)}
               >
@@ -89,7 +89,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
             <Transition
               show={show}
               as="div"
-              className="dark:border-washed-dark fixed left-0 top-14 z-30 flex h-screen w-2/3 flex-col border border-l-0 bg-white shadow-md dark:bg-black"
+              className="dark:border-washed-dark shadow-floating fixed left-0 top-14 z-30 flex h-screen w-2/3 flex-col border border-r bg-white dark:bg-black sm:w-1/3"
               enter="transition-opacity duration-75"
               enterFrom="opacity-0"
               enterTo="opacity-100"
@@ -100,13 +100,13 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
               <ul className="flex flex-col gap-1 overflow-auto pt-2">
                 <li className="flex items-baseline justify-between">
                   <h5 className={styles.base}>{t("category")}</h5>
-                  <Button
-                    className="btn btn-default mr-3 border text-sm"
-                    icon={<XMarkIcon className="h-4 w-4" />}
+
+                  <button
+                    className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-2 top-2 flex h-8 w-8 items-center rounded-full"
                     onClick={() => setShow(false)}
                   >
-                    {t("common:common.close")}
-                  </Button>
+                    <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+                  </button>
                 </li>
 
                 {categories.length > 0 ? (

@@ -3,7 +3,6 @@ import { Hero, Panel, Section, Tabs, Tooltip } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent, useCallback, useMemo } from "react";
 import Container from "@components/Container";
-import { MOEIcon } from "@components/Icon/agency";
 import ComboBox from "@components/Combobox";
 import BarMeter from "@components/Chart/BarMeter";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
@@ -16,8 +15,9 @@ import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
 import { get } from "@lib/api";
 import debounce from "lodash/debounce";
-import { numFormat } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import { toast } from "@components/Toast";
+import Progress from "@components/Progress";
 /**
  * Sekolahku Dashboard
  * @overview Status: In-development
@@ -25,6 +25,7 @@ import { toast } from "@components/Toast";
 
 interface SekolahkuProps {
   dropdown_data: Record<string, string>[];
+  last_updated: string;
   total_schools: number;
   sekolahku_info: any;
   sekolahku_barmeter: any;
@@ -38,6 +39,7 @@ const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false 
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   dropdown_data,
+  last_updated,
   total_schools,
   sekolahku_info,
   sekolahku_barmeter,
@@ -131,18 +133,14 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   return (
     <>
+      <Progress />
       <Hero
         background="blue"
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Ministry of Education (MoE)"}
-            link="https://www.moe.gov.my/"
-            icon={<MOEIcon />}
-          />
-        }
+        last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="moe" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen">
@@ -235,28 +233,42 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
         <Section title={t("section_2.title", { school: sekolahku_info.school })} date={Date.now()}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-            {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any]) => {
+            {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any], i) => {
               return (
                 <div className="flex flex-col space-y-6" key={k}>
                   <BarMeter
                     key={k}
                     title={t(`section_2.${k}.title`)}
                     layout="horizontal"
-                    unit="%"
                     data={v}
                     sort={"desc"}
                     formatX={key => t(`section_2.${k}.${key}`)}
                     formatY={(value, key) => (
-                      <>
-                        <Tooltip
-                          tip={`${t("section_2.tooltip_count", {
-                            count: sekolahku_barmeter.tooltip[k].find(
-                              (object: { x: string; y: number }) => object.x === key
-                            ).y,
-                          })}`}
-                        />
-                        <span className="pl-1">{value.toFixed(1)}</span>
-                      </>
+                      <Tooltip
+                        tip={`${t("section_2.tooltip_count", {
+                          count: sekolahku_barmeter.tooltip[k].find(
+                            (object: { x: string; y: number }) => object.x === key
+                          ).y,
+                        })}`}
+                        className={clx(
+                          i === 5
+                            ? "right-1/3"
+                            : i === 2
+                            ? "max-lg:right-1/3 xl:right-1/3"
+                            : i % 2 === 1 // 1, 3
+                            ? "max-xl:right-1/3"
+                            : "max-lg:right-1/3"
+                        )}
+                      >
+                        {open => (
+                          <p
+                            className="underline decoration-dashed [text-underline-position:from-font]"
+                            onClick={open}
+                          >
+                            {numFormat(value, "standard", [1, 1])}%
+                          </p>
+                        )}
+                      </Tooltip>
                     )}
                   />
                 </div>

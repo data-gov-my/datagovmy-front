@@ -4,10 +4,12 @@ import { get } from "@lib/api";
 import type { Page } from "@lib/types";
 import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
-import ExchangeRatesDashboard from "@dashboards/economy/exchange-rates";
+import ExchangeRatesDashboard from "@dashboards/financial-sector/exchange-rates";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const ExchangeRates: Page = ({
+  meta,
   last_updated,
   bar,
   timeseries,
@@ -16,7 +18,7 @@ const ExchangeRates: Page = ({
   const { t } = useTranslation(["dashboard-exchange-rates", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ExchangeRatesDashboard
         last_updated={last_updated}
@@ -24,7 +26,7 @@ const ExchangeRates: Page = ({
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -39,7 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rates
         category: "economy",
         agency: "MAMPU",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       bar: data.bar_chart,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

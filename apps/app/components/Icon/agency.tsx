@@ -1,5 +1,6 @@
 import { FunctionComponent, createElement } from "react";
 import type { IconProps } from ".";
+import Image from "next/image";
 
 /**
  * BNM Icon
@@ -270,6 +271,85 @@ export const IPREPUIcon: FunctionComponent<IconProps> = ({ className }) => {
     </svg>
   );
 };
+
+/**
+ * JAKOA Icon Solid
+ * @param className
+ * @returns JAKOAIconSolid
+ */
+export const JAKOAIconSolid: FunctionComponent<IconProps> = ({
+  className,
+  fillColor = "#18181B",
+}) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <g id="Mini-Icon/JAKOA">
+        <path
+          id="Vector 136"
+          d="M6 1.50008C5.6 1.50008 5.5 1.16675 5.5 1.00008C4.5 0.311621 4.5 1.00008 4.5 1.50008C4.5 2.00008 5.5 3.00008 5.5 4.00008V7.00008C5.5 8.50008 6 8.00008 6.5 8.50008C7 9.00008 6.5 9.00008 6.5 10.5001C6.5 11.7001 7.83333 13.0001 8.5 13.5001C9.16667 14.1667 10.4 15.7001 10 16.5001C9.5 17.5001 11.5 17.5001 12 18.0001C12.5 18.5001 14 18.5001 14.5 19.5001C14.9 20.3001 16.3333 20.8334 17 21.0001L18.5 22.5001C18.5 22.5001 20.5 21.0001 21 22.0001C21.4 22.8001 21.8333 22.3334 22 22.0001C21.6667 21.3334 20.9 19.7001 20.5 18.5001C20 17.0001 20 17.5001 18.5 16.5001C17.3 15.7001 18 14.1667 18.5 13.5001C18.1667 13.6667 17.6 13.6001 18 12.0001C18.5 10.0001 18 6.50008 17 6.00008C16 5.50008 15 4.50008 14 3.50008C13.2 2.70008 12.6667 2.50008 12.5 2.50008C12.3333 2.83341 11.9 3.60008 11.5 4.00008C11 4.50008 11 3.50008 10.5 3.50008C10 3.50008 9 5.50008 8.5 5.00008C8 4.50008 8.5 4.50008 8.5 3.50008C8.5 2.70008 7.83333 2.50008 7.5 2.50008C7.5 2.50008 6.5 1.50008 6 1.50008Z"
+          fill={fillColor}
+        />
+        <g id="Vector 137">
+          <path
+            d="M4.00031 5.49984C4.50031 5.49984 5.30031 5.79984 4.50031 6.99984C3.50031 8.49984 2.50031 4.99984 4.00031 5.49984Z"
+            fill={fillColor}
+          />
+          <path
+            d="M2.50005 2.0003C3.50005 1.5003 4.50057 1.5003 4.00031 2.5003C3.50005 3.5003 2.00005 2.5006 2.50005 2.0003Z"
+            fill={fillColor}
+          />
+        </g>
+      </g>
+    </svg>
+  );
+};
+
+/**
+ * JAKOA Icon
+ * @param className
+ * @returns JAKOAIcon
+ */
+export const JAKOAIcon: FunctionComponent<IconProps> = ({ className }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      className={className}
+    >
+      <g clipPath="url(#clip0_4392_26542)">
+        <circle cx="16" cy="16" r="16" fill="#16A34A" />
+        <path
+          d="M10 5.50008C9.6 5.50008 9.5 5.16675 9.5 5.00008C8.5 4.31162 8.5 5.00008 8.5 5.50008C8.5 6.00008 9.5 7.00008 9.5 8.00008V11.0001C9.5 12.5001 10 12.0001 10.5 12.5001C11 13.0001 10.5 13.0001 10.5 14.5001C10.5 15.7001 11.8333 17.0001 12.5 17.5001C13.1667 18.1667 14.4 19.7001 14 20.5001C13.5 21.5001 15.5 21.5001 16 22.0001C16.5 22.5001 18 22.5001 18.5 23.5001C18.9 24.3001 20.3333 24.8334 21 25.0001L22.5 26.5001C22.5 26.5001 24.5 25.0001 25 26.0001C25.4 26.8001 25.8333 26.3334 26 26.0001C25.6667 25.3334 24.9 23.7001 24.5 22.5001C24 21.0001 24 21.5001 22.5 20.5001C21.3 19.7001 22 18.1667 22.5 17.5001C22.1667 17.6667 21.6 17.6001 22 16.0001C22.5 14.0001 22 10.5001 21 10.0001C20 9.50008 19 8.50008 18 7.50008C17.2 6.70008 16.6667 6.50008 16.5 6.50008C16.3333 6.83341 15.9 7.60008 15.5 8.00008C15 8.50008 15 7.50008 14.5 7.50008C14 7.50008 13 9.50008 12.5 9.00008C12 8.50008 12.5 8.50008 12.5 7.50008C12.5 6.70008 11.8333 6.50008 11.5 6.50008C11.5 6.50008 10.5 5.50008 10 5.50008Z"
+          fill="white"
+        />
+        <path
+          d="M8.00031 9.49984C8.50031 9.49984 9.30031 9.79984 8.50031 10.9998C7.50031 12.4998 6.50031 8.99984 8.00031 9.49984Z"
+          fill="white"
+        />
+        <path
+          d="M6.50005 6.0003C7.50005 5.5003 8.50057 5.5003 8.00031 6.5003C7.50005 7.5003 6.00005 6.5006 6.50005 6.0003Z"
+          fill="white"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_4392_26542">
+          <rect width="32" height="32" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
 /**
  * JIM Icon
  * @param className
@@ -511,7 +591,7 @@ export const KWAPIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns LHDNIcon
  */
-export const LHDNIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const LHDNIcon: FunctionComponent<IconProps> = ({ className, fillColor }) => {
   return (
     <svg
       width="32"
@@ -522,7 +602,7 @@ export const LHDNIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1288_13737)">
-        <circle cx="16" cy="16" r="16" fill="#FF820E" />
+        <circle cx="16" cy="16" r="16" fill={fillColor ?? "#FF820E"} />
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -1170,45 +1250,92 @@ export const SPRIconSolid: FunctionComponent<IconProps> = ({ className }) => {
   );
 };
 
+export const UNHCRIcon: FunctionComponent<IconProps> = ({ className }) => {
+  return (
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <g clipPath="url(#clip0_3354_23489)">
+        <circle cx="16" cy="16" r="16" fill="#2563EB" />
+        <path
+          d="M9.57361 12.0312L13.9365 8.03189C14.5806 7.44144 14.9474 6.60775 14.9474 5.73395C14.9474 5.44123 14.6068 5.28049 14.3808 5.46658L7.45924 11.1667C6.53527 11.9276 6 13.0618 6 14.2588V14.357C6 17.2376 6.21997 20.114 6.65798 22.9611L6.9404 24.7968C7.00497 25.2165 7.36609 25.5263 7.79073 25.5263H9.09326C9.68927 25.5263 10.153 25.0083 10.0871 24.4159L9.68421 20.7895C10.3746 20.0991 10.8776 19.2442 11.1458 18.3055L11.7895 16.0526L12.7481 11.2597C12.8036 10.9821 12.6664 10.7016 12.4132 10.575C12.0798 10.4083 11.6755 10.5671 11.5446 10.9161L10.3095 14.2097C10.2459 14.3794 10.1198 14.519 9.95776 14.6001C9.54827 14.8048 9.05256 14.5787 8.94152 14.1345C8.75053 13.3705 8.99312 12.5633 9.57361 12.0312Z"
+          fill="white"
+        />
+        <path
+          d="M22.4264 12.0312L18.0635 8.03189C17.4194 7.44144 17.0526 6.60775 17.0526 5.73395C17.0526 5.44123 17.3932 5.28049 17.6192 5.46658L24.5408 11.1667C25.4647 11.9276 26 13.0618 26 14.2588V14.357C26 17.2376 25.78 20.114 25.342 22.9611L25.0596 24.7968C24.995 25.2165 24.6339 25.5263 24.2093 25.5263H22.9067C22.3107 25.5263 21.847 25.0083 21.9129 24.4159L22.3158 20.7895C21.6254 20.0991 21.1224 19.2442 20.8542 18.3055L20.2105 16.0526L19.2519 11.2597C19.1964 10.9821 19.3336 10.7016 19.5868 10.575C19.9202 10.4083 20.3245 10.5671 20.4554 10.9161L21.6905 14.2097C21.7541 14.3794 21.8802 14.519 22.0422 14.6001C22.4517 14.8048 22.9474 14.5787 23.0585 14.1345C23.2495 13.3705 23.0069 12.5633 22.4264 12.0312Z"
+          fill="white"
+        />
+        <path
+          d="M14.8831 13.0426L15.4734 12.895V12.6987C15.4734 12.491 15.3756 12.2953 15.2094 12.1707L14.9048 11.9422C14.0692 11.3155 13.9291 10.1166 14.5979 9.31411C15.3274 8.43862 16.6721 8.43862 17.4016 9.31411C18.0703 10.1166 17.9303 11.3155 17.0947 11.9422L16.7901 12.1707C16.6239 12.2953 16.5261 12.491 16.5261 12.6987V12.895L17.1164 13.0426C18.0067 13.2652 18.6313 14.0651 18.6313 14.9829V21.895C18.6313 22.4473 18.1836 22.895 17.6313 22.895H17.5787V24.5266C17.5787 25.0789 17.131 25.5266 16.5787 25.5266H15.4208C14.8685 25.5266 14.4208 25.0789 14.4208 24.5266V22.895H14.3682C13.8159 22.895 13.3682 22.4473 13.3682 21.895V14.9829C13.3682 14.0651 13.9928 13.2652 14.8831 13.0426Z"
+          fill="white"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_3354_23489">
+          <rect width="32" height="32" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
+export const JataNegara: FunctionComponent<IconProps> = ({ className }) => {
+  return (
+    <div className={className}>
+      <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
+    </div>
+  );
+};
+
 interface AgencyIconProps {
   agency: string;
+  className?: string;
 }
 
-export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
+export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency, className }) => {
   const Components: Record<string, any> = {
-    "BNM": BNMIcon,
-    "BOMBA": BOMBAIcon,
-    "DOSM": DOSMIcon,
-    "EPF": EPFIcon,
-    "ICU JPM": ICUJPMIcon,
-    "KE": IPREPUIcon,
-    "Imigresen": JIMIcon,
-    "JPA": JPAIcon,
-    "JPJ": JPJIcon,
-    "JPN": JPNIcon,
-    "KWAP": KWAPIcon,
-    "LHDN": LHDNIcon,
-    "MAMPU": MAMPUIcon,
-    "MCMC": MCMCIcon,
-    "MERS 999": MERSIcon,
-    "Met": METIcon,
-    "JPS": MET_FloodIcon,
-    "MoE": MOEIcon,
-    "MoF": MOFIcon,
-    "MoH": MOHIcon,
-    "MoT": MOTIcon,
-    "NTRC": NTRCIcon,
-    "PDN": PDNIcon,
-    "PDRM": PDRMIcon,
-    "PHCorp": PHCorpIcon,
-    "PERKESO": SOCSOIcon,
-    "SPR": SPRIcon,
+    "bnm": BNMIcon,
+    "bomba": BOMBAIcon,
+    "dosm": DOSMIcon,
+    "epf": EPFIcon,
+    "epu": IPREPUIcon,
+    "govt": JataNegara,
+    "icu-jpm": ICUJPMIcon,
+    "imigresen": JIMIcon,
+    "jakoa": JAKOAIcon,
+    "jpa": JPAIcon,
+    "jpj": JPJIcon,
+    "jpn": JPNIcon,
+    "jps": MET_FloodIcon,
+    "ktmb": MOTIcon,
+    "kwap": KWAPIcon,
+    "lhdn": LHDNIcon,
+    "mampu": MAMPUIcon,
+    "mcmc": MCMCIcon,
+    "mers-999": MERSIcon,
+    "met": METIcon,
+    "moe": MOEIcon,
+    "mof": MOFIcon,
+    "moh": MOHIcon,
+    "mot": MOTIcon,
+    "ntrc": NTRCIcon,
+    "pdn": PDNIcon,
+    "pdrm": PDRMIcon,
+    "perkeso": SOCSOIcon,
+    "phcorp": PHCorpIcon,
+    "spr": SPRIcon,
+    "unhcr": UNHCRIcon,
   };
 
   if (typeof Components[agency] !== "undefined") {
-    return createElement(Components[agency], { className: "h-6 w-6" });
+    return createElement(Components[agency], { className });
   }
-  return createElement("p", undefined, "Not found");
+  return createElement(Components["govt"], { className });
 };
 
 export default AgencyIcon;

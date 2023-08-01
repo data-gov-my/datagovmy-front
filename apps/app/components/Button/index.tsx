@@ -9,8 +9,9 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
+// FIXME: This component is really not that useful now
 const Button: FunctionComponent<ButtonProps> = ({
-  className = "text-dim text-sm hover:bg-washed dark:hover:bg-washed-dark",
+  className = "btn",
   icon,
   type = "button",
   onClick,
@@ -18,20 +19,10 @@ const Button: FunctionComponent<ButtonProps> = ({
   disabled = false,
 }) => {
   return (
-    <>
-      <button
-        onClick={onClick}
-        disabled={disabled}
-        type={type}
-        className={[
-          "flex items-center gap-2 self-center rounded-md p-2 text-start text-sm leading-none transition hover:bg-opacity-50 disabled:cursor-not-allowed disabled:opacity-50",
-          className,
-        ].join(" ")}
-      >
-        {icon}
-        {children}
-      </button>
-    </>
+    <button onClick={onClick} disabled={disabled} type={type} className={className}>
+      {icon}
+      {children}
+    </button>
   );
 };
 

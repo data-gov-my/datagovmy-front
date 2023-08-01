@@ -1,12 +1,17 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules
+node_modules/
 /.pnp
 .pnp.js
 
 # testing
 /coverage
+test-results/
+playwright-report/
+playwright/.cache/
+tests/playground/
+*-snapshots/
 
 # next.js
 .next/
@@ -55,6 +60,6 @@ sitemap.xml
 # bundle-analyzer
 analyze
 
-
 # app
 apps/app/public/locales
+dist/

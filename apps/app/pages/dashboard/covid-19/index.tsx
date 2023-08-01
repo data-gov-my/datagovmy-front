@@ -1,27 +1,29 @@
-import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
 import Fonts from "@config/font";
 import COVID19Dashboard from "@dashboards/healthcare/covid-19";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { routes } from "@lib/routes";
-import type { Page } from "@lib/types";
 import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
+import { routes } from "@lib/routes";
+import type { Page } from "@lib/types";
+import { InferGetStaticPropsType, GetStaticProps } from "next";
 
 const COVID19: Page = ({
+  meta,
   params,
   last_updated,
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  util_chart,
   statistics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-covid-19", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <COVID19Dashboard
         params={params}
@@ -29,21 +31,29 @@ const COVID19: Page = ({
         snapshot_bar={snapshot_bar}
         snapshot_graphic={snapshot_graphic}
         timeseries={timeseries}
-        util_chart={util_chart}
         statistics={statistics}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
 COVID19.layout = page => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={<StateDropdown url={routes.COVID_19} currentState={"mys"} hideOnScroll />}
-  >
-    <StateModal state="mys" url={routes.COVID_19} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.COVID_19}
+          currentState={"mys"}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state="mys" url={routes.COVID_19} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", async () => {
@@ -59,31 +69,10 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-19", asy
         agency: "KKM",
       },
       params: { state: "mys" },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       snapshot_bar: data.snapshot_bar,
       snapshot_graphic: data.snapshot_graphic,
-      timeseries: {
-        data_as_of: data.timeseries_admitted.data_as_of,
-        data: {
-          x: data.timeseries_admitted.data.x,
-          admitted: data.timeseries_admitted.data.admitted,
-          admitted_line: data.timeseries_admitted.data.line,
-          cases: data.timeseries_cases.data.cases,
-          cases_line: data.timeseries_cases.data.line,
-          deaths_inpatient: data.timeseries_deaths.data.deaths_inpatient,
-          deaths_brought_in: data.timeseries_deaths.data.deaths_brought_in,
-          deaths_tooltip: data.timeseries_deaths.data.tooltip,
-          deaths_line: data.timeseries_deaths.data.line,
-          icu: data.timeseries_icu.data.icu,
-          icu_line: data.timeseries_icu.data.line,
-          tests_pcr: data.timeseries_tests.data.tests_pcr,
-          tests_rtk: data.timeseries_tests.data.tests_rtk,
-          tests_tooltip: data.timeseries_tests.data.tooltip,
-          vents: data.timeseries_vents.data.vent,
-          vents_line: data.timeseries_vents.data.line,
-        },
-      },
-      util_chart: data.util_chart,
+      timeseries: data.timeseries,
       statistics: data.statistics,
     },
   };

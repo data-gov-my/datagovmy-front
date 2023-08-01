@@ -1,23 +1,23 @@
-import type { DownloadOptions } from "@lib/types";
+import type { DownloadOptions, Precision } from "@lib/types";
 import { FunctionComponent, useMemo } from "react";
 import { default as Slider } from "@components/Chart/Slider";
 import { default as dynamic } from "next/dynamic";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useWatch } from "@hooks/useWatch";
-import { AKSARA_COLOR, SHORT_PERIOD } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { download, exportAs } from "@lib/helpers";
 import { useTranslation } from "@hooks/useTranslation";
-import { track } from "@lib/mixpanel";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { toast } from "@components/Toast";
+import { useAnalytics } from "@hooks/useAnalytics";
+import { CATALOGUE_COLORS, SHORT_PERIOD } from "../utils";
 
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
   config: {
-    precision: number;
+    precision: number | Precision;
   };
   className?: string;
   dataset: any;
@@ -31,7 +31,7 @@ interface CatalogueTimeseriesProps {
 
 const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   config,
-  className = "h-[350px] w-full",
+  className = "h-[350px] w-full lg:h-[450px]",
   dataset,
   urls,
   filter,
@@ -44,6 +44,8 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     minmax: [0, dataset.chart.x.length - 1],
   });
   const { coordinate } = useSlice(dataset.chart, data.minmax);
+  const { track } = useAnalytics(dataset);
+
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
@@ -55,13 +57,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(data.ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name: dataset.meta.title,
-              ext: "png",
-            });
+            track("png");
           },
         },
         {
@@ -73,15 +69,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           href: () => {
             exportAs("svg", data.ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name: dataset.meta.title,
-                  ext: "svg",
-                })
-              )
+              .then(() => track("svg"))
               .catch(e => {
                 toast.error(
                   t("common:error.toast.image_download_failure"),
@@ -99,7 +87,10 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           title: t("csv.title"),
           description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.csv,
+          href: () => {
+            download(urls.csv, dataset.meta.unique_id.concat(".csv"));
+            track("csv");
+          },
         },
         {
           id: "parquet",
@@ -107,7 +98,10 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
           title: t("parquet.title"),
           description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.parquet,
+          href: () => {
+            download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+            track("parquet");
+          },
         },
       ],
     }),
@@ -116,19 +110,13 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
 
   const _datasets = useMemo<ChartDataset<keyof ChartTypeRegistry, any[]>[]>(() => {
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
-    const colors = [
-      AKSARA_COLOR.PRIMARY,
-      AKSARA_COLOR.WARNING,
-      AKSARA_COLOR.DANGER,
-      AKSARA_COLOR.GREY,
-    ]; // [blue, red]
-
+    const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fff8ec", "#fde8e8"]; // [blue, gray, red, yellow]
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
       label: translations[key] ?? key,
-      borderColor: colors[index],
-      backgroundColor: colors[index].concat("1A"),
+      borderColor: CATALOGUE_COLORS[index],
+      backgroundColor: NON_OVERLAPPING_BGCOLOR[index],
       borderWidth: 1,
       fill: dataset.type === "STACKED_AREA" || sets.length <= 1,
     }));
@@ -148,16 +136,19 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             _ref={ref => setData("ctx", ref)}
             interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
             precision={
-              config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]
+              typeof config.precision === "number" ? config.precision : config.precision.default
             }
             enableAnimation={!play}
+            enableLegend={_datasets.length > 1}
             mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
             data={{
               labels: coordinate.x,
               datasets: _datasets,
             }}
+            beginZero={dataset.type === "STACKED_AREA"}
           />
           <Slider
+            className="pt-4"
             type="range"
             data={dataset.chart.x}
             value={data.minmax}

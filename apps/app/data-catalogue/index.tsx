@@ -11,7 +11,7 @@ import {
   Search,
   Section,
 } from "@components/index";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import {
   FunctionComponent,
   useMemo,
@@ -22,7 +22,6 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
-import Image from "next/image";
 import Label from "@components/Label";
 import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
@@ -46,20 +45,18 @@ export type Catalogue = {
 interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
-  total: number;
   sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
-  query,
-  collection,
-  total,
-  sources,
-}) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
+  const sourceOptions = sources.map(source => ({
+    label: source,
+    value: source,
+  }));
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     const resultCollection: Array<[string, Catalogue[]]> = [];
@@ -77,44 +74,30 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       <Hero
         background="blue"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
-        header={[
-          `${
-            filterRef.current?.source?.value ? filterRef.current?.source?.value?.concat(":") : ""
-          } ${t("header")}`,
+        header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
+        description={[
+          t("description", {
+            agency: query.source ?? "",
+            context: query.source ? "agency" : "",
+          }),
         ]}
-        description={
-          <div className="space-y-6 xl:w-2/3">
-            <p className="text-dim">
-              {t("description", {
-                agency: filterRef.current?.source?.value,
-                context: filterRef.current?.source?.value ? "agency" : "",
-              })}
-            </p>
-            <Dropdown
-              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-              className="min-w-[250px]"
-              placeholder={t("placeholder.source")}
-              anchor="left"
-              options={filterRef.current?.filters ?? []}
-              selected={filterRef.current?.source}
-              onChange={e => filterRef.current?.setFilter("source", e)}
-              enableSearch
-              enableClear
-            />
-          </div>
-        }
-        agencyBadge={
-          <AgencyBadge
-            agency={t("common:agency.govt")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
+        action={
+          <Dropdown
+            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+            width="w-64"
+            placeholder={t("placeholder.source")}
+            anchor="left"
+            options={sourceOptions}
+            selected={query.source ? { label: query.source, value: query.source } : undefined}
+            onChange={e => filterRef.current?.setFilter("source", e)}
+            enableSearch
+            enableClear
           />
         }
+        agencyBadge={<AgencyBadge agency={query.source ? query.source.toLowerCase() : "govt"} />}
       />
 
-      <Container className="min-h-screen lg:px-0">
+      <Container className="min-h-screen">
         <Sidebar
           categories={Object.entries(collection).map(([category, subcategory]) => [
             category,
@@ -123,28 +106,29 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
+              block: size.width <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }
         >
-          <CatalogueFilter ref={filterRef} query={query} sources={sources} />
+          <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
           {_collection.length > 0 ? (
             _collection.map(([title, datasets]) => {
               return (
                 <Section
-                  title={<p className="text-lg font-bold">{title}</p>}
+                  title={title}
                   key={title}
                   ref={ref => (scrollRef.current[title] = ref)}
                   className="p-2 pb-8 pt-14 lg:p-8"
                 >
-                  <ul className="columns-1 space-y-3 lg:columns-2 xl:columns-3">
+                  <ul className="columns-1 space-y-3 sm:columns-3">
                     {datasets.map((item: Catalogue, index: number) => (
                       <li key={index}>
                         <At
                           href={`/data-catalogue/${item.id}`}
-                          className="text-primary dark:text-primary-dark no-underline hover:underline"
+                          className="text-primary dark:text-primary-dark no-underline [text-underline-position:from-font] hover:underline"
+                          prefetch={false}
                         >
                           {item.catalog_name}
                         </At>
@@ -168,18 +152,16 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
  */
 interface CatalogueFilterProps {
   query: Record<string, any>;
-  sources: string[];
+  sources: OptionType[];
   ref?: ForwardedRef<CatalogueFilterRef>;
 }
 
 interface CatalogueFilterRef {
-  source?: OptionType;
-  filters?: OptionType[];
   setFilter: (key: string, value: any) => void;
 }
 
 const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forwardRef(
-  ({ query, sources: _sources }, ref) => {
+  ({ query, sources }, ref) => {
     const { t } = useTranslation(["catalogue", "common"]);
     const periods: OptionType[] = [
       { label: t("filter_options.daily"), value: "DAILY" },
@@ -187,13 +169,15 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.monthly"), value: "MONTHLY" },
       { label: t("filter_options.quarterly"), value: "QUARTERLY" },
       { label: t("filter_options.yearly"), value: "YEARLY" },
+      { label: t("filter_options.infrequent"), value: "INFREQUENT" },
+      { label: t("filter_options.as_required"), value: "AS_REQUIRED" },
     ];
     const geographies: OptionType[] = [
+      { label: t("filter_options.national"), value: "NATIONAL" },
       { label: t("filter_options.state"), value: "STATE" },
       { label: t("filter_options.district"), value: "DISTRICT" },
       { label: t("filter_options.parlimen"), value: "PARLIMEN" },
       { label: t("filter_options.dun"), value: "DUN" },
-      { label: t("filter_options.national"), value: "NATIONAL" },
     ];
     const demographies: OptionType[] = [
       { label: t("filter_options.sex"), value: "SEX" },
@@ -205,10 +189,6 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.marital"), value: "MARITAL" },
     ];
 
-    const sources: OptionType[] = _sources.map(source => ({
-      label: source,
-      value: source,
-    }));
     const startYear = 1982;
     const endYear: number = new Date().getFullYear();
 
@@ -222,7 +202,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       geography: query.geography
         ? geographies.filter(item => query.geography.split(",").includes(item.value))
         : [],
-      demographic: query.demography
+      demography: query.demography
         ? demographies.filter(item => query.demography.split(",").includes(item.value))
         : [],
       begin: query.begin
@@ -239,82 +219,85 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       setFilter("search", "");
       setFilter("period", undefined);
       setFilter("geography", []);
-      setFilter("demographic", []);
+      setFilter("demography", []);
       setFilter("begin", undefined);
       setFilter("end", undefined);
     };
 
     useImperativeHandle(ref, () => {
-      return {
-        source: filter.source,
-        filters: sources,
-        setFilter,
-      };
+      return { setFilter };
     });
 
     return (
       <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
-        <div className="flex-grow">
+        <div className="flex-1">
           <Search
-            className="border-0"
+            className="border-none"
             placeholder={t("placeholder.search")}
             query={filter.search}
             onChange={e => setFilter("search", e)}
           />
         </div>
+        {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
+          <Button
+            className="btn hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
+            disabled={!actives.length}
+            onClick={reset}
+          >
+            <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+          </Button>
+        )}
         {/* Mobile */}
         <div className="block xl:hidden">
           <Modal
             trigger={open => (
-              <Button
-                onClick={open}
-                className="border-outline dark:border-washed-dark mr-3 block self-center border px-3 py-1.5 shadow-sm"
-              >
+              <button onClick={open} className="btn-default btn-disabled shadow-floating">
                 <span>{t("filter")}</span>
-                <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white dark:bg-white dark:text-black">
+                <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
                   {actives.length}
                 </span>
-              </Button>
+                <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
+              </button>
             )}
-            title={
-              <Label
-                label={t("filter") + ":"}
-                className="block text-sm font-medium text-black dark:text-white"
-              />
-            }
+            title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="flex-grow space-y-4 overflow-y-auto pb-28 pt-4">
-                <Radio
-                  label={t("period")}
-                  name="period"
-                  className="flex flex-wrap gap-4 px-1 pt-2"
-                  options={periods}
-                  value={filter.period}
-                  onChange={e => setFilter("period", e)}
-                />
-                <Checkbox
-                  label={t("geography")}
-                  className="flex flex-wrap gap-4 px-1 pt-2"
-                  name="geography"
-                  options={geographies}
-                  value={filter.geography}
-                  onChange={e => setFilter("geography", e)}
-                />
-                <Checkbox
-                  className="flex flex-wrap gap-4 px-1 pt-2"
-                  name="demographic"
-                  label={t("demography")}
-                  options={demographies}
-                  value={filter.demographic}
-                  onChange={e => setFilter("demographic", e)}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
+              <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[105px] flex h-[400px] flex-col divide-y overflow-y-auto">
+                <div className="py-3">
+                  <Label label={t("period")} />
+                  <Radio
+                    name="period"
+                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    options={periods}
+                    value={filter.period}
+                    onChange={e => setFilter("period", e)}
+                  />
+                </div>
+                <div className="py-3">
+                  <Label label={t("geography")} />
+                  <Checkbox
+                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    name="geography"
+                    options={geographies}
+                    value={filter.geography}
+                    onChange={e => setFilter("geography", e)}
+                  />
+                </div>
+                <div className="py-3">
+                  <Label label={t("demography")} />
+                  <Checkbox
+                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    name="demography"
+                    options={demographies}
+                    value={filter.demography}
+                    onChange={e => setFilter("demography", e)}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3 pt-3">
                   <Dropdown
-                    width="w-full"
                     label={t("begin")}
-                    sublabel={t("begin") + ":"}
+                    width="w-full"
+                    anchor="left-0 bottom-10"
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
                     placeholder={t("common:common.select")}
@@ -322,8 +305,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   />
                   <Dropdown
                     label={t("end")}
-                    sublabel={t("end") + ":"}
                     width="w-full"
+                    anchor="right-0 bottom-10"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
                     selected={filter.end}
@@ -331,16 +314,16 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                     onChange={e => setFilter("end", e)}
                   />
                 </div>
-
-                <div className="fixed bottom-0 left-0 flex w-full gap-2 bg-white px-2 py-3 dark:bg-black">
+                <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
                   <Button
-                    className="btn btn-primary w-full justify-center"
+                    className="btn-primary w-full justify-center"
                     disabled={!actives.length}
                     onClick={reset}
                   >
                     {t("common:common.reset")}
                   </Button>
-                  <Button className="btn btn-default w-full justify-center" onClick={close}>
+                  <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
+                    <XMarkIcon className="h-5 w-5" />
                     {t("common:common.close")}
                   </Button>
                 </div>
@@ -352,15 +335,14 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         {/* Desktop */}
         <div className="hidden gap-2 pr-6 xl:flex">
           {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
-            <div>
-              <Button
-                icon={<XMarkIcon className="h-4 w-4" />}
-                disabled={!actives.length}
-                onClick={reset}
-              >
-                {t("common:common.clear_all")}
-              </Button>
-            </div>
+            <Button
+              className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
+              disabled={!actives.length}
+              onClick={reset}
+            >
+              <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+              {t("common:common.clear_all")}
+            </Button>
           )}
           <Dropdown
             options={periods}
@@ -382,8 +364,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             title={t("demography")}
             description={t("placeholder.demography") + ":"}
             options={demographies}
-            selected={filter.demographic}
-            onChange={e => setFilter("demographic", e)}
+            selected={filter.demography}
+            onChange={e => setFilter("demography", e)}
           />
 
           <Daterange

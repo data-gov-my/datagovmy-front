@@ -61,14 +61,7 @@ const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) =>
         category={[t("common:categories.economy"), "text-[#FF820E]"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("common:agency.EPF")}
-            link="https://www.kwsp.gov.my/"
-            icon={<EPFIcon />}
-          />
-        }
-        // last_updated={}
+        agencyBadge={<AgencyBadge agency="epf" />}
       />
 
       <Container className="min-h-fit">

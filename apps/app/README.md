@@ -52,18 +52,27 @@ The following are the environment variables (.env) used for data.gov.my. Please 
 
 ## Commands to Know
 
+Turbo
+
 ```bash
 # Start development server
-yarn dev
+yarn dev --filter=app
 
 # Build production app
-yarn build
+yarn build --filter=app
+```
+
+Non-Turbo
+
+```bash
+# Start development server
+yarn workspace app dev
+
+# Build production app
+yarn workspace app build
 
 # Start production server
-yarn start
-
-# Setup husky for githook
-yarn prepare
+yarn workspace start
 ```
 
 ## Development Workflow

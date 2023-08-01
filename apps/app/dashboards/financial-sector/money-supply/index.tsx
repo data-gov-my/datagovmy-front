@@ -12,7 +12,6 @@ import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import type { TableConfig } from "@components/Chart/Table";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/Badge/agency";
-import { BNMIcon } from "@components/Icon/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
@@ -49,7 +48,7 @@ interface TableSummary {
 }
 
 interface MoneySupplyDashboardProps {
-  last_updated: number;
+  last_updated: string;
   table_summary: TableSummary;
   timeseries: any;
   timeseries_callouts: any;
@@ -221,13 +220,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("common:agency.bnm")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BNMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bnm" />}
       />
 
       <Container className="min-h-screen">
@@ -245,8 +238,9 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
         <SliderProvider>
           {play => (
             <>
-              <Section title={t("section_2.title")} date={timeseries.data_as_of}>
-                <div className="space-y-8">
+              <Section
+                title={t("section_2.title")}
+                description={
                   <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                     <Dropdown
                       anchor="left"
@@ -261,57 +255,56 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
                       onChange={e => setData("shade_type", e)}
                     />
                   </div>
-
-                  <Slider
-                    className=""
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries.data[data.index_type.value].x}
-                    period="month"
-                    onChange={e => setData("minmax", e)}
-                  />
-
-                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    {section2ChartData.map(chartData => (
-                      <Timeseries
-                        key={chartData.title}
-                        title={chartData.title}
-                        className="h-[350px] w-full"
-                        interval="month"
-                        enableAnimation={!play}
-                        displayNumFormat={(value, type, precision) =>
-                          smartNumFormat({ value, type, precision, locale: i18n.language })
-                        }
-                        unitY={chartData.unitY}
-                        prefixY={chartData.prefix}
-                        axisY={AXIS_Y}
-                        data={{
-                          labels: coordinate.x,
-                          datasets: [
-                            {
-                              type: "line",
-                              label: chartData.label,
-                              data: chartData.data,
-                              borderColor: AKSARA_COLOR.PRIMARY,
-                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                              fill: chartData.fill,
-                              borderWidth: 1.5,
-                            },
-                            shader(data.shade_type.value),
-                          ],
-                        }}
-                        stats={[
+                }
+                date={timeseries.data_as_of}
+              >
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                  {section2ChartData.map(chartData => (
+                    <Timeseries
+                      key={chartData.title}
+                      title={chartData.title}
+                      className="h-[350px] w-full"
+                      interval="month"
+                      enableAnimation={!play}
+                      displayNumFormat={(value, type, precision) =>
+                        smartNumFormat({ value, type, precision, locale: i18n.language })
+                      }
+                      unitY={chartData.unitY}
+                      prefixY={chartData.prefix}
+                      axisY={AXIS_Y}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
                           {
-                            title: t("common:common.latest", {
-                              date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                            }),
-                            value: chartData.callout,
+                            type: "line",
+                            label: chartData.label,
+                            data: chartData.data,
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            fill: chartData.fill,
+                            borderWidth: 1.5,
                           },
-                        ]}
-                      />
-                    ))}
-                  </div>
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                          }),
+                          value: chartData.callout,
+                        },
+                      ]}
+                    />
+                  ))}
                 </div>
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data[data.index_type.value].x}
+                  period="month"
+                  onChange={e => setData("minmax", e)}
+                />
               </Section>
               {/* A deeper look at M1 (narrow money) */}
               <Section title={t("section_3.title")} date={timeseries.data_as_of}>

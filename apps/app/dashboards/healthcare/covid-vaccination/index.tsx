@@ -1,18 +1,24 @@
 import AgencyBadge from "@components/Badge/agency";
-import { Dropdown, Hero, Panel, Section, StateDropdown, Tabs, Tooltip } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, ReactNode } from "react";
-import Container from "@components/Container";
 import { MOHIcon } from "@components/Icon/agency";
-import { routes } from "@lib/routes";
-
-import dynamic from "next/dynamic";
-import { CountryAndStates } from "@lib/constants";
-
-import { useData } from "@hooks/useData";
+import {
+  Container,
+  Dropdown,
+  Hero,
+  Panel,
+  Section,
+  StateDropdown,
+  Tabs,
+  Tooltip,
+} from "@components/index";
 import { OptionType } from "@components/types";
-import { numFormat } from "@lib/helpers";
 import COVIDVaccinationTrends from "./vaccine-trends";
+import { useData } from "@hooks/useData";
+import { useTranslation } from "@hooks/useTranslation";
+import { CountryAndStates } from "@lib/constants";
+import { numFormat } from "@lib/helpers";
+import { routes } from "@lib/routes";
+import dynamic from "next/dynamic";
+import { FunctionComponent, ReactNode } from "react";
 
 /**
  * COVID Vaccination Dashboard
@@ -20,7 +26,7 @@ import COVIDVaccinationTrends from "./vaccine-trends";
  */
 
 interface COVIDVaccinationProps {
-  lastUpdated: number;
+  last_updated: string;
   params: { state: string };
   timeseries: Record<string, any>;
   statistics: Record<string, any>;
@@ -33,7 +39,7 @@ const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false })
 
 const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   params,
-  lastUpdated,
+  last_updated,
   timeseries,
   statistics,
   barmeter,
@@ -43,16 +49,10 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   const currentState = params.state;
 
   const AGE_OPTIONS: Array<OptionType> = ["total", "child", "adolescent", "adult", "elderly"].map(
-    (key: string) => ({
-      label: t(`${key}`),
-      value: key,
-    })
+    (key: string) => ({ label: t(key), value: key })
   );
   const DOSE_OPTIONS: Array<OptionType> = ["dose1", "dose2", "booster1", "booster2"].map(
-    (key: string) => ({
-      label: t(`${key}`),
-      value: key,
-    })
+    (key: string) => ({ label: t(key), value: key })
   );
 
   const { data, setData } = useData({
@@ -70,7 +70,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           {open => (
             <>
               <p
-                className="pl-1 underline decoration-dashed underline-offset-4"
+                className="pl-1 underline decoration-dashed [text-underline-position:from-font]"
                 onClick={() => open()}
               >
                 {numFormat(waffle.data[data.filter_age.value].dose1.perc, "standard", 1)}%
@@ -88,7 +88,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           {open => (
             <>
               <p
-                className="pl-1 underline decoration-dashed underline-offset-4"
+                className="pl-1 underline decoration-dashed [text-underline-position:from-font]"
                 onClick={() => open()}
               >
                 {numFormat(waffle.data[data.filter_age.value].dose2.perc, "standard", 1)}%
@@ -124,19 +124,12 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         background="green"
         category={[t("common:categories.healthcare"), "text-green-600"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-6">
-              <StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />
-            </div>
-          </>
-        }
-        last_updated={lastUpdated}
+        description={[t("description")]}
+        action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
+        last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={"Ministry of Health (MoH)"}
-            link="https://www.moh.gov.my"
+            agency="moh"
             icon={<MOHIcon fillColor="#16A34A" />} // green-600
           />
         }
@@ -200,7 +193,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
                         </span>
                       </p>
                       <p>
-                        {`${t("daily")} - `}
+                        {`${t("common:time.daily")} - `}
                         <span className="font-medium">
                           {waffle.data[data.filter_age.value][doseType].daily}
                         </span>

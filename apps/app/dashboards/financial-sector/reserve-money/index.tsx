@@ -11,7 +11,6 @@ import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import Slider from "@components/Chart/Slider";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/Badge/agency";
-import { BNMIcon } from "@components/Icon/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
 
 /**
@@ -32,7 +31,7 @@ interface TimeseriesChartData {
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 
 interface ReserveMoneyDashboardProps {
-  last_updated: number;
+  last_updated: string;
   timeseries: any;
   timeseries_callouts: any;
 }
@@ -150,13 +149,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("common:agency.bnm")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BNMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bnm" />}
       />
 
       <Container className="min-h-screen">
@@ -166,10 +159,7 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
               {/* How is reserve money trending? */}
               <Section
                 title={t("section_1.title")}
-                description={t("section_1.description")}
-                date={timeseries.data_as_of}
-              >
-                <div className="space-y-8">
+                description={
                   <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                     <Dropdown
                       anchor="left"
@@ -184,115 +174,115 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
                       onChange={e => setData("shade_type", e)}
                     />
                   </div>
-
-                  <Slider
-                    className=""
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries.data[data.index_type.value].x}
-                    period="month"
-                    onChange={e => setData("minmax", e)}
-                  />
-                  <Timeseries
-                    title={t("keys.total")}
-                    className="h-[350px] w-full"
-                    interval="month"
-                    enableAnimation={!play}
-                    displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
-                    }
-                    unitY={configs("total").unit}
-                    prefixY={configs("total").prefix}
-                    axisY={{
-                      y2: {
+                }
+                date={timeseries.data_as_of}
+              >
+                <Timeseries
+                  title={t("keys.total")}
+                  className="h-[350px] w-full"
+                  interval="month"
+                  enableAnimation={!play}
+                  displayNumFormat={(value, type, precision) =>
+                    smartNumFormat({ value, type, precision, locale: i18n.language })
+                  }
+                  unitY={configs("total").unit}
+                  prefixY={configs("total").prefix}
+                  axisY={{
+                    y2: {
+                      display: false,
+                      grid: {
+                        drawTicks: false,
+                        drawBorder: false,
+                        lineWidth: 0.5,
+                      },
+                      ticks: {
                         display: false,
-                        grid: {
-                          drawTicks: false,
-                          drawBorder: false,
-                          lineWidth: 0.5,
-                        },
-                        ticks: {
-                          display: false,
-                        },
                       },
-                    }}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          data: coordinate.total,
-                          label: t("keys.total"),
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          borderWidth: 1.5,
-                          fill: configs("total").fill,
-                        },
-                        shader(data.shade_type.value),
-                      ],
-                    }}
-                    stats={[
+                    },
+                  }}
+                  data={{
+                    labels: coordinate.x,
+                    datasets: [
                       {
-                        title: t("common:common.latest", {
-                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                        }),
-                        value: configs("total").callout,
+                        type: "line",
+                        data: coordinate.total,
+                        label: t("keys.total"),
+                        borderColor: AKSARA_COLOR.PRIMARY,
+                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                        borderWidth: 1.5,
+                        fill: configs("total").fill,
                       },
-                    ]}
-                  />
-
-                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    {section1ChartData.map(chartData => (
-                      <Timeseries
-                        key={chartData.title}
-                        title={chartData.title}
-                        className="h-[350px] w-full"
-                        interval="month"
-                        enableAnimation={!play}
-                        displayNumFormat={(value, type, precision) =>
-                          smartNumFormat({ value, type, precision, locale: i18n.language })
-                        }
-                        unitY={chartData.unitY}
-                        prefixY={chartData.prefix}
-                        axisY={{
-                          y2: {
+                      shader(data.shade_type.value),
+                    ],
+                  }}
+                  stats={[
+                    {
+                      title: t("common:common.latest", {
+                        date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                      }),
+                      value: configs("total").callout,
+                    },
+                  ]}
+                />
+                <Slider
+                  className="pb-12 pt-8"
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data[data.index_type.value].x}
+                  period="month"
+                  onChange={e => setData("minmax", e)}
+                />
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                  {section1ChartData.map(chartData => (
+                    <Timeseries
+                      key={chartData.title}
+                      title={chartData.title}
+                      className="h-[350px] w-full"
+                      interval="month"
+                      enableAnimation={!play}
+                      displayNumFormat={(value, type, precision) =>
+                        smartNumFormat({ value, type, precision, locale: i18n.language })
+                      }
+                      unitY={chartData.unitY}
+                      prefixY={chartData.prefix}
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
                             display: false,
-                            grid: {
-                              drawTicks: false,
-                              drawBorder: false,
-                              lineWidth: 0.5,
-                            },
-                            ticks: {
-                              display: false,
-                            },
                           },
-                        }}
-                        data={{
-                          labels: coordinate.x,
-                          datasets: [
-                            {
-                              type: "line",
-                              label: chartData.label,
-                              data: chartData.data,
-                              borderColor: AKSARA_COLOR.PRIMARY,
-                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                              fill: chartData.fill,
-                              borderWidth: 1.5,
-                            },
-                            shader(data.shade_type.value),
-                          ],
-                        }}
-                        stats={[
+                        },
+                      }}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
                           {
-                            title: t("common:common.latest", {
-                              date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                            }),
-                            value: chartData.callout,
+                            type: "line",
+                            label: chartData.label,
+                            data: chartData.data,
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            fill: chartData.fill,
+                            borderWidth: 1.5,
                           },
-                        ]}
-                      />
-                    ))}
-                  </div>
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                          }),
+                          value: chartData.callout,
+                        },
+                      ]}
+                    />
+                  ))}
                 </div>
               </Section>
               {/* Factors affecting Reserve Money */}

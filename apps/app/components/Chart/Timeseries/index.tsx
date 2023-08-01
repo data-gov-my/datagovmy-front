@@ -27,6 +27,9 @@ import {
   Scale,
   Tick,
   TooltipItem,
+  LegendItem,
+  ChartEvent,
+  LegendElement,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import AnnotationPlugin from "chartjs-plugin-annotation";
@@ -38,7 +41,6 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "@lib/constants";
 import Spinner from "@components/Spinner";
-
 export type Periods =
   | false
   | "auto"
@@ -52,6 +54,7 @@ export type Periods =
   | "quarter"
   | "year";
 export interface TimeseriesProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   description?: string;
   type?: keyof ChartTypeRegistry;
@@ -71,14 +74,18 @@ export interface TimeseriesProps extends ChartHeaderProps {
   gridYValues?: Array<number> | undefined;
   minY?: number;
   maxY?: number;
+  suggestedMaxY?: number;
+  stepSize?: number;
   precision?: number | [min: number, max: number];
   enableAnimation?: boolean;
   enableRightScale?: boolean;
   enableCallout?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  enableTooltip?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  enableMajorTick?: boolean;
   tickXCallback?: (
     this: Scale,
     tickValue: number | string,
@@ -88,6 +95,8 @@ export interface TimeseriesProps extends ChartHeaderProps {
   gridOffsetX?: boolean;
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
+  tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
+  generateLabels?: (chart: ChartJS<"line">) => LegendItem[];
   displayNumFormat?: (
     value: number,
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
@@ -97,6 +106,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
 }
 
 const Timeseries: FunctionComponent<TimeseriesProps> = ({
+  id,
   className = "w-full h-[450px]", // manage CSS here
   menu,
   title,
@@ -115,20 +125,26 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   subheader,
   type = "bar",
   axisY = undefined,
-  precision = 1,
+  precision = [1, 0],
   enableRightScale = false,
   enableCallout = false,
   enableCrosshair = true,
   enableLegend = false,
   enableGridX = false,
   enableGridY = true,
+  enableMajorTick = true,
   enableAnimation = true,
+  enableTooltip = true,
   gridOffsetX = true,
   tooltipCallback,
+  tooltipItemSort,
+  generateLabels,
   tickXCallback,
-  beginZero = false,
+  beginZero = true,
   minY,
   maxY,
+  stepSize,
+  suggestedMaxY,
   displayNumFormat = numFormat,
   _ref,
 }) => {
@@ -176,11 +192,28 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       plugins: {
         legend: {
           display: enableLegend,
-          position: "chartArea" as const,
+          onClick: (e, legendItem, legend) => {
+            const index = legendItem.datasetIndex as number;
+            const ci = legend.chart;
+            if (ci.isDatasetVisible(index)) {
+              ci.hide(index);
+              legendItem.hidden = true;
+            } else {
+              ci.show(index);
+              legendItem.hidden = false;
+            }
+          },
+          labels: {
+            usePointStyle: true,
+            pointStyle: "rect",
+            generateLabels: generateLabels,
+          },
+          position: "top",
           align: "start",
         },
         tooltip: {
-          enabled: true,
+          enabled: enableTooltip,
+          itemSort: tooltipItemSort,
           bodyFont: {
             family: "Inter",
           },
@@ -313,7 +346,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ticks: {
             callback: tickXCallback,
             major: {
-              enabled: true,
+              enabled: enableMajorTick,
             },
             minRotation: 0,
             maxRotation: 0,
@@ -324,6 +357,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           stacked: mode === "stacked",
         },
         y: {
+          suggestedMax: suggestedMaxY,
           grid: {
             display: enableGridY,
             borderWidth: 1,
@@ -341,6 +375,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
           },
           ticks: {
+            precision: Array.isArray(precision) ? precision[1] : precision,
+            stepSize: stepSize,
             padding: 6,
             callback: (value: string | number) => {
               return value && display(value as number, "compact", precision);
@@ -392,20 +428,42 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   );
 
   return (
-    <div className="space-y-2">
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+    <div>
       {isLoading ? (
         <div className={clx("flex items-center justify-center", className)}>
           <Spinner loading={isLoading} />
         </div>
       ) : (
-        <>
-          {stats && <Stats data={stats} />}
-          {subheader && <div>{subheader}</div>}
+        <div className="flex flex-col gap-y-6">
+          {[menu, title, controls, state, stats, subheader].some(Boolean) && (
+            <div className="flex flex-col gap-y-3">
+              <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+              {stats && <Stats data={stats} />}
+              {subheader && <div>{subheader}</div>}
+            </div>
+          )}
           <div className={className}>
-            <Chart ref={_ref} data={data} options={options()} type={type} />
+            <Chart
+              data-testid={id || title}
+              ref={_ref}
+              data={data}
+              options={options()}
+              type={type}
+              plugins={[
+                {
+                  id: "increase-legend-spacing",
+                  beforeInit(chart) {
+                    const originalFit = (chart.legend as any).fit;
+                    (chart.legend as any).fit = function fit() {
+                      originalFit.bind(chart.legend)();
+                      this.height += 20;
+                    };
+                  },
+                },
+              ]}
+            />
           </div>
-        </>
+        </div>
       )}
       {description && <p className="text-dim pt-4 text-sm">{description}</p>}
     </div>
@@ -468,7 +526,7 @@ export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
               {open => (
                 <>
                   <p
-                    className="font-medium underline decoration-dashed underline-offset-4"
+                    className="font-medium underline decoration-dashed [text-underline-position:from-font]"
                     onClick={() => open()}
                   >
                     {value}

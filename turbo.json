@@ -15,13 +15,19 @@
         "NEXT_PUBLIC_AUTHORIZATION_TOKEN",
         "NEXT_PUBLIC_TILESERVER_URL"
       ],
+      "outputMode": "new-only",
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "e2e:test": {
+      "dependsOn": ["^build"],
+      "outputs": ["playwright-report/**", "test-results/**"]
     },
     "lint": {
       "outputs": []
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     }
   }
 }
