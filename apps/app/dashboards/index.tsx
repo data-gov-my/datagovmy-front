@@ -17,7 +17,6 @@ import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
@@ -33,7 +32,7 @@ type Dashboard = {
 };
 
 interface DashboardIndexProps {
-  agency: string | null;
+  agency: string;
   analytics: any;
   sources: string[];
   dashboards: Record<string, Dashboard[]>;
@@ -101,15 +100,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             context: agency ? "agency" : "",
           }),
         ]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency={agency ?? "govt"} />}
       />
       <DashboardFilter
         data={{
@@ -154,12 +145,12 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
               return (
                 dashboards.length > 0 && (
                   <Card
-                    className="border-outline bg-background dark:border-washed-dark dark:bg-background-dark my-3 inline-block h-min w-full rounded-xl border p-[18px]"
+                    className="border-outline bg-background dark:border-washed-dark dark:bg-background-dark mb-6 inline-block h-min w-full rounded-xl border p-[18px]"
                     key={category}
                   >
-                    <h5 className="pb-1">{t(`categories.${category}`)}</h5>
+                    <h5>{t(`categories.${category}`)}</h5>
                     {dashboards.map(item => (
-                      <div className="pt-2" key={item.name}>
+                      <div className="pt-3" key={item.name}>
                         <At
                           href={dashboards_route[item.name].route}
                           locale={i18n.language}
@@ -167,7 +158,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                         >
                           <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
-                              <AgencyIcon agency={item.agency} />
+                              <AgencyIcon agency={item.agency} className="h-6 w-6" />
                               <p className="text-dim text-sm">
                                 {t(`agencies:${item.agency}.abbr`)}
                               </p>
@@ -176,6 +167,14 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                             <div className="relative overflow-hidden">
                               <p className="truncate font-medium dark:text-white">
                                 {t(`dashboards.${item.name}.name`)}
+                              </p>
+                              <p className="text-dim transition-transform group-hover:translate-y-6">
+                                {`${numFormat(item.views, "compact")} ${t("common:common.views", {
+                                  count: item.views,
+                                })}`}
+                              </p>
+                              <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                                {t("common:components.click_to_explore")}
                               </p>
                             </div>
                           </Card>
@@ -211,7 +210,7 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
 
   const filterSources: OptionType[] = sources.map(source => ({
     label: t(`agencies:${source}.abbr`),
-    value: source,
+    value: t(`agencies:${source}.abbr`),
   }));
 
   const reset = () => onSearch("");
@@ -275,27 +274,31 @@ const Ranking = ({ ranks, dashboards_route }: RankingProps) => {
             key={i}
             prefetch={false}
           >
-            <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-6 transition-colors">
+            <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
               <div className="relative flex items-center gap-3">
                 <span className="text-primary text-sm font-bold">#{i + 1}</span>
                 <p className="text-dim text-sm">{t(`agencies:${item.agency}.abbr`)}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
-              <div className="relative flex flex-col items-start gap-3 overflow-hidden">
-                <p className="truncate text-lg font-bold dark:text-white" title={item.name}>
-                  {t(`dashboards.${item.name}.name`)}
-                </p>
-                <p className="text-sm dark:text-white" title={item.name}>
-                  {t(`dashboards.${item.name}.description`)}
-                </p>
-                <p className="text-dim transition-transform group-hover:translate-y-6">
-                  {`${numFormat(item.views, "compact")} ${t("common:common.views", {
-                    count: item.views,
-                  })}`}
-                </p>
-                <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
-                  {t("common:components.click_to_explore")}
-                </p>
+              <div className="flex grow flex-col items-start gap-3 overflow-hidden">
+                <div className="grow space-y-3">
+                  <p className="truncate text-lg font-bold dark:text-white" title={item.name}>
+                    {t(`dashboards.${item.name}.name`)}
+                  </p>
+                  <p className="text-sm dark:text-white" title={item.name}>
+                    {t(`dashboards.${item.name}.description`)}
+                  </p>
+                </div>
+                <div className="relative w-full">
+                  <p className="text-dim transition-transform group-hover:translate-y-6">
+                    {`${numFormat(item.views, "compact")} ${t("common:common.views", {
+                      count: item.views,
+                    })}`}
+                  </p>
+                  <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                    {t("common:components.click_to_explore")}
+                  </p>
+                </div>
               </div>
             </div>
           </At>

@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
+import canvasToSvg from "canvas2svg";
 
 /**
  * Conditional class joiner.
@@ -24,7 +25,7 @@ export const maxBy = (array: Array<any>, key: string) => {
   });
 };
 /**
- * Returns the object of max value by a given key in the array.
+ * Returns the object of min value by a given key in the array.
  * @param array Object array
  * @param key Comparing key
  * @returns Object
@@ -76,12 +77,12 @@ export const minMax = (values: Array<number | null>): [min: number, max: number]
 export const numFormat = (
   value: number,
   type: "compact" | "standard" | "scientific" | "engineering" | undefined = "compact",
-  precision: number | [min: number, max: number] = 1,
+  precision: number | [min: number, max: number] = 0,
   compactDisplay: "short" | "long" = "short",
   locale: string = "en",
   smart: boolean = false
 ): string => {
-  const [max, min] = Array.isArray(precision) ? precision : [precision, 0];
+  const [max, min] = Array.isArray(precision) ? precision : [precision, precision];
 
   if (smart === true) {
     let formatter: Intl.NumberFormat;
@@ -230,6 +231,19 @@ export const getTopIndices = (arr: number[], n: number, reverse = false): number
 };
 
 /**
+ * Slugify a given string
+ * @param value String to slugify
+ */
+export const slugify = (value: string): string => {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "") // remove all chars not letters, numbers and spaces (to be replaced)
+    .replace(/\s+/g, "-") // separator
+    .replace(/-+/g, "-"); // collapse dashes
+};
+
+/**
  * Generic download helper function
  * @param url URL or URLData
  * @param callback Callback function
@@ -269,8 +283,18 @@ export const chunkSplit = (text: string, len: number): string[] => {
   return r;
 };
 
-export const exportAs = async (type: "svg" | "png", element: Node): Promise<string> => {
-  return type === "svg" ? DomToImage.toSvg(element) : DomToImage.toPng(element);
+export const exportAs = async (
+  type: "svg" | "png",
+  element: HTMLCanvasElement
+): Promise<string> => {
+  if (type === "svg") {
+    return new Promise(resolve => {
+      const canvas = canvasToSvg(element.width, element.height);
+      canvas.drawImage(element, 0, 0);
+      resolve("data:svg+xml;utf8,".concat(canvas.getSerializedSvg()));
+    });
+  }
+  return DomToImage.toPng(element);
 };
 
 /**
@@ -294,7 +318,8 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
       "a",
       {
         href: url,
-        className: "text-primary dark:text-primary-dark hover:underline inline",
+        className:
+          "text-primary dark:text-primary-dark hover:underline inline [text-underline-position:from-font]",
         target: "_blank",
       },
       text

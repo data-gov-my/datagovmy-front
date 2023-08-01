@@ -1,18 +1,15 @@
-import "../styles/globals.css";
+import "datagovmy-ui/styles";
 import { appWithTranslation } from "next-i18next";
 import Layout from "@components/Layout";
 import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
-import mixpanel from "mixpanel-browser";
 import mixpanelConfig from "@config/mixpanel";
-import { ga_track, init_session } from "@lib/mixpanel";
+import { ga_track, track } from "datagovmy-ui/mixpanel";
 import { clx } from "datagovmy-ui/helpers";
 import { body, header } from "@config/font";
 import Nexti18NextConfig from "../next-i18next.config";
-import { WindowProvider } from "datagovmy-ui/hooks";
-
-// Global settings
-mixpanel.init(mixpanelConfig.token, { debug: process.env.NODE_ENV === "development" });
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { ThemeProvider } from "next-themes";
 
 // App instance
 function App({ Component, pageProps }: any) {
@@ -22,31 +19,40 @@ function App({ Component, pageProps }: any) {
   const router = useRouter();
 
   useEffect(() => {
+    const is_development = process.env.NEXT_PUBLIC_APP_ENV === "development";
+    window.mixpanel.init(
+      mixpanelConfig.token,
+      {
+        debug: is_development,
+        verbose: is_development,
+        api_host: mixpanelConfig.host,
+      },
+      mixpanelConfig.name
+    );
+  }, []);
+
+  useEffect(() => {
     // trigger page view event for client-side navigation
     const handleRouteChange = (url: string) => {
       ga_track(url);
-      init_session();
+      track("page_view", pageProps?.meta);
     };
     router.events.on("routeChangeComplete", handleRouteChange);
-
-    console.log(
-      "%cIn loving memory of Hamzah Bin Ismail (1979-2023). Al-Fatihah",
-      "font: 20px; font-family: monospace; font-weight: bold; background: #a4a4a4; color: #000; padding: 4px 12px"
-    );
-
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [router.events]);
+  }, [router.events, pageProps?.meta]);
 
   return (
-    <WindowProvider>
-      {layout(
-        <div className={clx(body.variable, header.variable, "font-sans")}>
-          <Component {...pageProps} />
-        </div>
-      )}
-    </WindowProvider>
+    <ThemeProvider attribute="class" enableSystem={false} forcedTheme={Component.theme}>
+      <WindowProvider>
+        {layout(
+          <div className={clx(body.variable, header.variable, "font-sans")}>
+            <Component {...pageProps} />
+          </div>
+        )}
+      </WindowProvider>
+    </ThemeProvider>
   );
 }
 

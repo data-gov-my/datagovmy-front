@@ -79,7 +79,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
           <>
             <div className="pointer-events-none absolute top-20 block h-full lg:hidden">
               <Button
-                className="btn btn-default pointer-events-auto sticky top-36 z-10"
+                className="border-outline pointer-events-auto sticky top-36 z-10 border bg-white dark:bg-black"
                 icon={<Bars3BottomLeftIcon className="h-4 w-4" />}
                 onClick={() => setShow(true)}
               >

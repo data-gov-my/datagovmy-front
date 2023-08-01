@@ -1,4 +1,3 @@
-import { JAKOAIcon } from "@components/Icon/agency";
 import Progress from "@components/Progress";
 import {
   AgencyBadge,
@@ -115,13 +114,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
         header={[t("header")]}
         description={[t("description")]}
         last_updated={village.data_last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jakoa.full")}
-            link="https://www.jakoa.gov.my/"
-            icon={<JAKOAIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jakoa" />}
       />
 
       <Container className="min-h-screen">

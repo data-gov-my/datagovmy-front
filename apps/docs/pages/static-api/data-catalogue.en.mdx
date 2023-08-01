@@ -1,5 +1,164 @@
-# Data Catalogue
+## The Data Catalogue API Endpoint
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae iusto quam natus eum molestias
-impedit, magnam error harum quos vitae illum quidem, quod modi doloremque iste adipisci nam corrupti
-quo?
+```http
+GET https://api.data.gov.my/catalogue
+```
+
+## What does Data Catalogue API do?
+
+The Data Catalogue API is designed to allow users to access data from the data catalogue programmatically. It provides a set of endpoints that can be used to query the data based on various parameters and filters. The API is meant for use by developers and data scientists who want to programmatically access the data catalogue, although users who want to download data directly can also refer to the Data Catalogue page.
+
+### How do I know what resources are available?
+
+To determine the available resources and their corresponding IDs and fields, you can refer to the [Data Catalogue page](#TODO). The Data Catalogue page provides a comprehensive list of all the resources available in the catalogue, along with their associated IDs and fields.
+
+By visiting the Data Catalogue page, you can browse through the available resources and explore their details. Each resource will have a unique ID that you can use when making requests to the Data Catalogue API. Additionally, you can view the fields or columns associated with each resource, which will help you understand the structure of the data and what information is available.
+
+Make sure to regularly check the Data Catalogue page for any updates or new additions to the catalogue, as it will provide the most up-to-date information about the available resources and their corresponding IDs and fields.
+
+## Query Parameters
+
+The Data Catalogue API supports several query parameters. The following table provides information about the available query parameters, their data types, and whether they are required:
+
+| Parameter | Type      | Required | Description                                                            |
+| --------- | --------- | -------- | ---------------------------------------------------------------------- |
+| id        | `string`  | Required | Indicates the specific resource requested.                             |
+| filter    | `string`  | Optional | Indicates filter(s) of the data.                                       |
+| limit     | `integer` | Optional | Indicates the maximum number of responses to return.                   |
+| sort      | `string`  | Optional | Indicates the order of the response, in ascending or descending order. |
+| include   | `string`  | Optional | Indicates the columns to include in the response.                      |
+| exclude   | `string`  | Optional | Indicates the columns to exclude from the response.                    |
+| start     | `date`    | Optional | Indicates the start date range (only if `date` is available).          |
+| end       | `date`    | Optional | Indicates the end date range (only if `date` is available).            |
+
+Please note that the `filter` parameter is used for row-level filtering, while `include`/`exclude` parameters are used for column-level filtering.
+
+## Query Syntax
+
+When working with the OpenAPI, you can define query parameters by appending a question mark (`?`) after the base URL. Query parameters consist of a key-value pair, where the key and value are separated by an equal sign (`=`). If there are multiple parameters, they are separated by an ampersand (`&`).
+
+### The `filter` Parameter
+
+The `filter` parameter allows you to refine your API request by applying specific filters to the data. There are 2 different supported formats:
+
+#### String Equal filter
+
+```http
+# Syntax
+?filter=<value>@<column>
+
+# Example
+GET .../catalogue?id=fuelprice&filter=level@series_type
+```
+
+- This format filters the data based on an exact string match.
+- The `<value>` represents the desired string value within the `<column>`.
+- The `<column>` denotes the column to be filtered.
+
+#### Range Filter
+
+```http
+# Syntax
+?filter=<column>[<begin>:<end>]
+
+# Example - between 0 (inclusive) and 1 (inclusive)
+GET .../catalogue?id=fuelprice&filter=ron95[0:1]
+
+# Example - between lowest possible ron95 value and 1 (inclusive)
+GET .../catalogue?id=fuelprice&filter=ron95[:1]
+```
+
+- This format filters the data within a specified numeric range.
+- `<column>` (required): Specifies the column to be filtered.
+- `<begin>` and `<end>` (optional): Define the numeric range. Both values are inclusive. If `<begin>` and `<end>` are not provided, the lowest or highest possible values will be used instead.
+
+### The `limit` Parameter
+
+```http
+# Syntax
+?limit=<value>
+
+# Example
+GET .../catalogue?id=fuelprice&limit=10
+```
+
+- `<value>` should be a positive integer that represents the maximum number of responses to be returned.
+- The API will return up to `<value>` responses based on the specified limit.
+- If the total number of available responses is less than the specified limit, all available responses will be returned.
+
+### The `sort` Parameter
+
+```http
+# Syntax
+?sort=<column>@<order>
+
+# Example
+GET .../catalogue?id=fuelprice&sort=ron95@asc
+```
+
+- `<column>` represents the column by which to sort.
+- `<order>` can be either `asc` (ascending) or `desc` (descending).
+- Nested sorting is supported by using space-separated queries, e.g. <nobr>`sort=ron95@asc date@desc`</nobr>.
+
+### Using `include` and `exclude` Parameters
+
+```http
+# Syntax
+?include=<column1,column2,...>
+?exclude=<column1,column2,...>
+
+# Example
+GET .../catalogue?id=fuelprice&include=ron95,ron97
+GET .../catalogue?id=fuelprice&exclude=diesel
+```
+
+- `<column1, column2, ...>` specifies the columns to be included or excluded.
+- Multiple columns can be separated by commas.
+- When both `include` and `exclude` parameters are provided, `include` takes precedence over `exclude`, such that only fields specified in `include` will be shown.
+
+### Using `start` and `end` Parameters
+
+```http
+# Syntax
+?start=<start_date>
+?end=<end_date>
+
+# Example
+GET .../catalogue?id=fuelprice&start=2022-01-01&end=2022-12-31
+```
+
+- `<start_date>` and `<end_date>` represent the start and end dates of the desired date range.
+- The dates must be in a format compatible with the data being queried. TODO: update this with specific format once BE updates.
+- The data will be filtered to include dates greater than or equal to `<start_date>` and less than or equal to `<end_date>`.
+
+## Response Format
+
+### Valid Response
+
+When you make a successful request to the Data Catalogue API, you will receive a response with a status code of `200`. Here is the structure of the response format:
+
+```JSON
+{
+    meta: {...},
+    data: {...}
+}
+```
+
+- `meta` - This field indicates lightweight meta information about the requested resource.
+- `data` - This field represents the requested resource, which may include additional information based on the provided query parameters.
+
+### Error Response
+
+In case of an error, the Data Catalogue API will return an error response in JSON format. The error response will contain the following elements:
+
+```json
+{
+    status: <int>,
+    errors: [...],
+}
+```
+
+- `status` - This field indicates the response code corresponding to the error.
+- `errors` - This field provides an array of error messages or descriptions.
+
+The error response is designed to help you identify and troubleshoot the issue you encountered with your API requests.

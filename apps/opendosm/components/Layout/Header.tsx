@@ -1,182 +1,104 @@
-import Link from "next/link";
-import Image from "next/image";
-import { FunctionComponent, ReactElement, useState } from "react";
-import { useTranslation } from "datagovmy-ui/hooks";
-import {
-  HomeIcon,
-  Bars3BottomRightIcon,
-  ChartBarSquareIcon,
-  RectangleGroupIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
-
-import { languages } from "@lib/options";
-
+import { FunctionComponent, ReactNode } from "react";
+import { ChartBarSquareIcon, HomeIcon, RectangleGroupIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
-import { useLanguage } from "@hooks/useLanguage";
-import Nav from "@components/Nav";
-import NavItem from "@components/Nav/Item";
-import { Dropdown, Container } from "datagovmy-ui/components";
-import MegaMenu from "@components/Nav/MegaMenu";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { At, Header, Nav, Megamenu } from "datagovmy-ui/components";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { clx } from "datagovmy-ui/helpers";
 
 interface HeaderProps {
-  stateSelector?: ReactElement;
+  stateSelector?: ReactNode;
 }
 
-const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
-  const { t } = useTranslation("common");
-  const { language, onLanguageChange } = useLanguage();
-
-  const [isTabletNavOpen, setIsTabletNavOpen] = useState(false);
+const OpenDOSMHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
+  const { t } = useTranslation(["dashboards"]);
 
   const megaMenuItems = [
     {
-      title: t("nav.megamenu.categories.economy"),
+      title: t("categories.economy"),
       list: [
-        { title: t("nav.megamenu.dashboards.labour_market"), link: routes.LABOUR_MARKET },
-        { title: t("nav.megamenu.dashboards.composite_index"), link: routes.COMPOSITE_INDEX },
-        { title: t("nav.megamenu.dashboards.wholesale_retail"), link: routes.WHOLESALE_RETAIL },
+        { title: t("dashboards.labour-market.name"), link: routes.LABOUR_MARKET },
+        { title: t("dashboards.composite-index.name"), link: routes.COMPOSITE_INDEX },
+        { title: t("dashboards.wholesale-retail.name"), link: routes.WHOLESALE_RETAIL },
         {
-          title: t("nav.megamenu.dashboards.industrial_production"),
+          title: t("dashboards.industrial-production.name"),
           link: routes.INDUSTRIAL_PRODUCTION,
         },
         {
-          title: t("nav.megamenu.dashboards.consumer_prices"),
+          title: t("dashboards.consumer-prices.name"),
           link: routes.CONSUMER_PRICES,
         },
         {
-          title: t("nav.megamenu.dashboards.producer_prices"),
+          title: t("dashboards.producer-prices.name"),
           link: routes.PRODUCER_PRICES,
         },
-        { title: t("nav.megamenu.dashboards.exchange_rate"), link: routes.EXCHANGE_RATE },
-        // Menu hidden until further notice
-        // {
-        //   title: t("nav.megamenu.dashboards.rubber"),
-        //   link: routes.RUBBER,
-        // },
       ],
     },
     {
-      title: t("nav.megamenu.categories.financial_sector"),
-      list: [
-        {
-          title: t("nav.megamenu.dashboards.currency_in_circulation"),
-          link: routes.CURRENCY_IN_CIRCULATION,
-        },
-        {
-          title: t("nav.megamenu.dashboards.money_supply"),
-          link: routes.MONEY_SUPPLY,
-        },
-        {
-          title: t("nav.megamenu.dashboards.reserve_money"),
-          link: routes.RESERVE_MONEY,
-        },
-        {
-          title: t("nav.megamenu.dashboards.international_reserves"),
-          link: routes.INTERNATIONAL_RESERVES,
-        },
-        {
-          title: t("nav.megamenu.dashboards.interest_rates"),
-          link: routes.INTEREST_RATES,
-        },
-      ],
+      title: t("categories.national-accounts"),
+      list: [{ title: t("dashboards.gdp.name"), link: routes.GDP }],
     },
     {
-      title: t("nav.megamenu.categories.social"),
-      list: [
-        { title: t("nav.megamenu.dashboards.crime"), link: routes.CRIME },
-        { title: t("nav.megamenu.dashboards.drug"), link: routes.DRUG },
-      ],
-    },
-    {
-      title: t("nav.megamenu.categories.national_accounts"),
-      list: [{ title: t("nav.megamenu.dashboards.gdp"), link: routes.GDP }],
-    },
-    {
-      title: t("nav.megamenu.categories.demography"),
-      list: [{ title: t("nav.megamenu.dashboards.kawasanku"), link: routes.KAWASANKU }],
+      title: t("categories.demography"),
+      list: [{ title: t("dashboards.kawasanku.name"), link: routes.KAWASANKU }],
     },
   ];
 
   return (
-    <div className="fixed left-0 top-0 z-30 w-full">
-      <Container background="bg-white" className="flex items-center gap-4 border-b py-[11px]">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <div className="flex cursor-pointer gap-2">
-                <div className="flex w-8 items-center justify-center">
-                  <Image src="/static/images/logo.png" width={48} height={36} alt="" />
-                </div>
-                <h4>OpenDOSM</h4>
-              </div>
-            </Link>
-            <Nav isTabletNavOpen={isTabletNavOpen}>
-              <NavItem
-                title={t("nav.home")}
-                link="/"
-                icon={<HomeIcon className="h-5 w-5 text-black" />}
-                onClick={() => setIsTabletNavOpen(false)}
-              />
-              <NavItem
-                title={t("nav.catalogue")}
-                link="/data-catalogue"
-                icon={<ChartBarSquareIcon className="h-5 w-5 text-black" />}
-                onClick={() => setIsTabletNavOpen(false)}
-              />
-              {/* DASHBOARD MEGA MENU */}
-              <MegaMenu
-                title={t("nav.dashboards")}
-                icon={<RectangleGroupIcon className="h-5 w-5 text-black" />}
+    <Header>
+      <Nav stateSelector={stateSelector}>
+        {close => (
+          <>
+            <Nav.Item
+              title={t("common:nav.home")}
+              link="/"
+              onClick={close}
+              icon={<HomeIcon className="h-4 w-4 text-black dark:text-white" />}
+            />
+            <Nav.Item
+              title={t("common:nav.catalogue")}
+              key="/data-catalogue"
+              link="/data-catalogue"
+              onClick={close}
+              icon={<ChartBarSquareIcon className="h-5 w-5 text-black dark:text-white" />}
+            />
+            {/* DASHBOARD MEGA MENU */}
+            <WindowProvider>
+              <Megamenu
+                title={t("common:nav.dashboards")}
+                icon={<RectangleGroupIcon className="h-4 w-4 text-black dark:text-white" />}
               >
-                <Container className="relative grid max-h-[70vh] grid-cols-2 gap-8 overflow-auto py-3 lg:grid-cols-3 lg:gap-12 lg:py-6">
+                <div className="container relative mx-auto grid gap-4 px-3 py-3 md:grid-cols-4 md:gap-6 md:py-6">
                   {megaMenuItems.map(item => (
                     <div key={item.title} className="text-sm">
                       <p className="mb-2 font-bold">{item.title}</p>
                       <ul
-                        className={[
+                        className={clx(
                           "gap-4 space-y-2",
-                          item.list.length > 3 ? "columns-1 lg:columns-2" : "columns-1",
-                        ].join(" ")}
+                          item.list.length > 3 ? "columns-1 lg:columns-2" : "columns-1"
+                        )}
                       >
                         {item.list.map((li, index) => (
                           <li
                             key={item.title.concat(index.toString())}
-                            className="text-footer-link"
+                            className="text-dim hover:text-black dark:hover:text-white"
                           >
-                            <Link href={li.link} onClick={() => setIsTabletNavOpen(false)}>
+                            <At href={li.link} onClick={close}>
                               {li.title}
-                            </Link>
+                            </At>
                           </li>
                         ))}
                       </ul>
                     </div>
                   ))}
-                </Container>
-              </MegaMenu>
-            </Nav>
-          </div>
-          <div className="flex items-center gap-4">
-            {stateSelector}
-            {/* LANGUAGE DROPDOWN */}
-            <Dropdown selected={language} onChange={onLanguageChange} options={languages} />
-            {/* MOBILE NAV ICONS */}
-            {isTabletNavOpen ? (
-              <XMarkIcon
-                className="block h-5 w-5 text-black md:hidden"
-                onClick={() => setIsTabletNavOpen(false)}
-              />
-            ) : (
-              <Bars3BottomRightIcon
-                className="block h-5 w-5 text-black md:hidden"
-                onClick={() => setIsTabletNavOpen(true)}
-              />
-            )}
-          </div>
-        </div>
-      </Container>
-    </div>
+                </div>
+              </Megamenu>
+            </WindowProvider>
+          </>
+        )}
+      </Nav>
+    </Header>
   );
 };
 
-export default Header;
+export default OpenDOSMHeader;

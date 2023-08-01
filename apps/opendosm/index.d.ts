@@ -35,3 +35,13 @@ declare module "canvas2svg" {
 declare module "geojson-bbox" {
   export default function (geojson: GeoJSONObject): [number, number, number, number] {}
 }
+
+import type { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
+
+declare global {
+  interface Window {
+    mixpanel: OverridedMixpanel & {
+      instance: Mixpanel;
+    };
+  }
+}

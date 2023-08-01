@@ -60,7 +60,7 @@ const Bar: FunctionComponent<BarProps> = ({
   formatX,
   onClick,
   reverse = false,
-  precision = 1,
+  precision = [1, 0],
   enableLegend = false,
   enableStack = false,
   enableGridX = true,
@@ -73,7 +73,7 @@ const Bar: FunctionComponent<BarProps> = ({
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
   const isVertical = useMemo(() => layout === "vertical", [layout]);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
   const { theme } = useTheme();
 
@@ -87,7 +87,7 @@ const Bar: FunctionComponent<BarProps> = ({
 
   const displayLabel = (value: string) => {
     const label = formatX ? formatX(value) : value;
-    if (label.length > 25 && windowWidth < BREAKPOINTS.SM) return label.slice(0, 25).concat("..");
+    if (label.length > 25 && size.width < BREAKPOINTS.SM) return label.slice(0, 25).concat("..");
     return label;
   };
 
@@ -168,11 +168,11 @@ const Bar: FunctionComponent<BarProps> = ({
             if (!formatX) {
               return isVertical
                 ? this.getLabelForValue(value as number).concat(unitX ?? "")
-                : display(value as number, "compact", 1);
+                : display(value as number, "compact", precision);
             }
             let text = isVertical
               ? formatX(this.getLabelForValue(value as number))
-              : display(value as number, "compact", 1);
+              : display(value as number, "compact", precision);
             if (text.length > 25) text = text.slice(0, 25).concat("..");
             return text;
           },
@@ -206,7 +206,7 @@ const Bar: FunctionComponent<BarProps> = ({
           callback: function (value: string | number) {
             return displayLabel(
               isVertical
-                ? display(value as number, "compact", 1)
+                ? display(value as number, "compact", precision)
                 : this.getLabelForValue(value as number).concat(unitX ?? "")
             );
           },

@@ -12,7 +12,6 @@ import Slider from "@components/Chart/Slider";
 import { useWatch } from "@hooks/useWatch";
 import AgencyBadge from "@components/Badge/agency";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { DOSMIcon } from "@components/Icon/agency";
 
 /**
  * GDP Dashboard
@@ -161,13 +160,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:dosm.full")}
-            link="https://open.dosm.gov.my/"
-            icon={<DOSMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
       <SliderProvider>
         {play => (

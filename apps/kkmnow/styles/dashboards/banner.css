@@ -1,0 +1,44 @@
+.home-banner {
+  background: url("/static/images/home-hero.png") no-repeat;
+  background-size: cover;
+}
+.organ-banner {
+  background: url("/static/images/banner/organ.png") no-repeat;
+  background-size: cover;
+}
+.blood-banner {
+  background: url("/static/images/banner/blood.png") no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+.covidvax-banner {
+  background: url("/static/images/banner/covidvax.png") no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+.covid-banner {
+  background: url("/static/images/banner/covid.png") no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+.covidnow-banner {
+  background: url("/static/images/banner/covidnow.png") no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.facilities-banner {
+  background: url("/static/images/banner/facilities.png") no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+.hospbed-banner {
+  background: url("/static/images/banner/hospbed.png") no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+.peka-banner {
+  background: url("/static/images/banner/peka.png") no-repeat;
+  background-size: cover;
+  background-position: center center;
+}

@@ -12,6 +12,7 @@ export type AppPropsLayout = AppProps & {
 
 export type Page = NextPage & {
   layout?: (page: ReactNode, props: Record<string, any>) => ReactElement;
+  theme?: "light" | "dark";
 };
 
 // CHART INTERFACE
@@ -98,6 +99,11 @@ export type FilterDate = BaseFilter & {
 
 export type DCFilter = FilterDefault | FilterDate;
 
+export type Precision = {
+  default: number;
+  columns?: Record<string, number>;
+};
+
 // Usage
 export type DCConfig = {
   context: {
@@ -105,7 +111,7 @@ export type DCConfig = {
   };
   dates: FilterDate | null;
   options: FilterDefault[] | null;
-  precision: number;
+  precision: number | Precision;
   freeze?: string[];
   color?: Color;
   geojson?: Geotype | null;
@@ -149,3 +155,36 @@ export type MetaPage = Record<string, any> & {
     agency: string | null;
   };
 };
+
+// export type Agency =
+// | "bnm"
+// | "bomba"
+// | "dosm"
+// | "epf"
+// | "epu"
+// | "govt"
+// | "icu-jpm"
+// | "imigresen"
+// | "jakoa"
+// | "jpa"
+// | "jpj"
+// | "jpn"
+// | "jps"
+// | "ktmb"
+// | "kwap"
+// | "lhdn"
+// | "mampu"
+// | "mcmc"
+// | "mers-999"
+// | "met"
+// | "moe"
+// | "mof"
+// | "moh"
+// | "mot"
+// | "ntrc"
+// | "pdn"
+// | "pdrm"
+// | "phcorp"
+// | "perkeso"
+// | "spr"
+// | "unhcr";

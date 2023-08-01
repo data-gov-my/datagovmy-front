@@ -1,22 +1,28 @@
 import AgencyBadge from "@components/Badge/agency";
 import Card from "@components/Card";
 import Chips from "@components/Chips";
-import { JPNIcon } from "@components/Icon/agency";
-import { Button, Container, Hero, Input, Radio, Section } from "@components/index";
+import {
+  Button,
+  Container,
+  Dropdown,
+  Hero,
+  Input,
+  Radio,
+  Section,
+  Tooltip,
+} from "@components/index";
 import Toggle from "@components/Toggle";
 import Spinner from "@components/Spinner";
 import { OptionType } from "@components/types";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { MagnifyingGlassIcon, LockClosedIcon } from "@heroicons/react/20/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
-import { useWatch } from "@hooks/useWatch";
-import { WindowContext } from "@hooks/useWindow";
 import { get } from "@lib/api";
-import { BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { toast } from "@components/Toast";
+import { clx } from "@lib/helpers";
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
@@ -24,13 +30,29 @@ import { toast } from "@components/Toast";
 
 const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
 
-interface NamePopularityDashboardProps {}
+interface NamePopularityDashboardProps {
+  top_names: Record<string, any>;
+  yearDropdown: number[];
+  ethnicityDropdown: string[];
+}
 
-const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = () => {
-  const { t, i18n } = useTranslation(["dashboard-name-popularity", "common"]);
-  // const { windowWidth } = useContext(WindowContext);
+const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({
+  top_names,
+  yearDropdown,
+  ethnicityDropdown,
+}) => {
+  const { t } = useTranslation(["dashboard-name-popularity", "common"]);
 
-  // const showPlaceholder = windowWidth >= BREAKPOINTS.LG;
+  const { data: tableData, setData: setTableData } = useData({
+    selectedEthnicity: {
+      label: t(`ethnicity.${ethnicityDropdown.at(0)}`),
+      value: ethnicityDropdown.at(0),
+    },
+    selectedYear: {
+      label: t("year_format", { year: yearDropdown.at(-1) }),
+      value: `${yearDropdown.at(-1)}`,
+    },
+  });
 
   const { data: searchData, setData: setSearchData } = useData({
     type: { label: t("first_name"), value: "first" },
@@ -39,6 +61,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     params: {},
     data: null,
     loading: false,
+    private: false,
   });
 
   const { data: compareData, setData: setCompareData } = useData({
@@ -52,34 +75,16 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     loading: false,
   });
 
+  const yearOptions: OptionType[] = yearDropdown.map(val => ({
+    label: t("year_format", { year: val }),
+    value: val.toString(),
+  }));
+
+  const ethnicityOptions: OptionType[] = ethnicityDropdown.map(ethnicity => ({
+    label: t(`ethnicity.${ethnicity}`),
+    value: ethnicity,
+  }));
   const { theme } = useTheme();
-
-  // trigger API calls when parameters (user inputs) are updated
-  // useWatch(() => {
-  //   setSearchData("loading", true);
-  //   get("/explorer", searchData.params)
-  //     .then(({ data }) => {
-  //       setSearchData("data", data);
-  //       setSearchData("loading", false);
-  //     })
-  //     .catch(e => {
-  //       toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-  //       console.error(e);
-  //     });
-  // }, [searchData.params]);
-
-  // useWatch(() => {
-  //   setCompareData("loading", true);
-  //   get("/explorer", compareData.params)
-  //     .then(({ data }) => {
-  //       setCompareData("data", data);
-  //       setCompareData("loading", false);
-  //     })
-  //     .catch(e => {
-  //       toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-  //       console.error(e);
-  //     });
-  // }, [compareData.params]);
 
   const filterTypes: Array<OptionType> = [
     { label: t("first_name"), value: "first" },
@@ -99,22 +104,33 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   };
 
   const searchHandler = () => {
-    const name: string = processName(searchData.name);
-    if (name.length > 0) {
-      setSearchData("params", {
-        explorer: "NAME_POPULARITY",
-        name: name,
-        type: searchData.type.value,
-        compare_name: "false",
-      });
-    } else {
+    const params = {
+      explorer: "NAME_POPULARITY",
+      name: processName(searchData.name),
+      type: searchData.type.value,
+      compare_name: "false",
+    };
+    if (!params.name.length) {
       setSearchData(
         "validation",
         searchData.type.value === "first"
           ? t("search_validation_first")
           : t("search_validation_last")
       );
+      return;
     }
+
+    setSearchData("params", params);
+    get("/explorer", params)
+      .then(({ data }) => {
+        setSearchData("data", data.data);
+        setSearchData("private", data.data?.count === null);
+        setSearchData("loading", false);
+      })
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      });
   };
 
   const compareHandler = () => {
@@ -139,14 +155,25 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     }
 
     if (compareData.names.length > 1) {
-      setCompareData("params", {
+      const params = {
         explorer: "NAME_POPULARITY",
         type: compareData.type.value === "compare_first" ? "first" : "last",
         name: compareData.names
           .map((name: { label: string; value: string }) => name.value)
           .join(","),
         compare_name: "true",
-      });
+      };
+      setCompareData("loading", true);
+      setCompareData("params", params);
+      get("/explorer", params)
+        .then(({ data }) => {
+          setCompareData("data", data.data);
+          setCompareData("loading", false);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
     } else {
       setCompareData("validation", t("compare_validation"));
     }
@@ -184,6 +211,41 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     count: [10004, 13409, 30904, 43434, 50694, 75443, 70530, 78667, 62537, 15519],
   };
 
+  const renderPlaceholderBar = (
+    icon: ReactNode,
+    prompt_key: string,
+    alwaysShow: boolean = true
+  ) => (
+    <div
+      className={clx(
+        "relative h-[460px] w-full items-center justify-center",
+        alwaysShow ? "flex" : "hidden lg:flex"
+      )}
+    >
+      <Bar
+        className="absolute top-0 h-[460px] w-full opacity-10"
+        precision={0}
+        data={{
+          labels: placeholderData.decade,
+          datasets: [
+            {
+              data: placeholderData.count,
+              borderRadius: 12,
+              barThickness: 12,
+              backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
+            },
+          ],
+        }}
+        enableGridX={false}
+        tooltipEnabled={false}
+      />
+      <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
+        {icon}
+        <p>{t(prompt_key)}</p>
+      </Card>
+    </div>
+  );
+
   return (
     <>
       <Hero
@@ -191,19 +253,123 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpn.full")}
-            link="https://www.jpn.gov.my/en/"
-            icon={<JPNIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
-        {/* <Section title={t("section1_title")}>
+        <Section>
+          <div className="space-y-6">
+            <div className="flex flex-col place-content-center place-items-center gap-3 sm:flex-row">
+              <h4 className="text-center">{t("section1_title1")}</h4>
+              <Dropdown
+                width="w-fit"
+                selected={tableData.selectedEthnicity}
+                onChange={e => {
+                  setTableData("selectedEthnicity", e);
+                }}
+                options={ethnicityOptions}
+              />
+              <h4 className="text-center">{t("section1_title2")}</h4>
+              <Dropdown
+                width="w-fit"
+                selected={tableData.selectedYear}
+                onChange={e => {
+                  setTableData("selectedYear", e);
+                }}
+                options={yearOptions}
+              />
+            </div>
+            <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12">
+              <table className="lg:col-span-4 lg:col-start-3">
+                <thead className="dark:border-washed-dark border-b-2">
+                  <tr>
+                    <th className="px-1 py-2 text-center text-sm font-medium">#</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
+                      {t("column_male_name")}
+                    </th>
+                    <th className="px-1 py-2 text-end text-sm font-medium">{t("column_count")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {top_names[tableData.selectedYear.value][tableData.selectedEthnicity.value]
+                    .filter(({ sex }: { sex: string }) => {
+                      return sex === "male";
+                    })
+                    .map((item: { name_first: string; sex: string; count: number }, i: number) => (
+                      <tr
+                        key={i}
+                        className={clx(
+                          "dark:border-washed-dark border-b",
+                          i < 3 ? "bg-background dark:bg-background-dark" : ""
+                        )}
+                      >
+                        <td
+                          className={clx(
+                            "px-1 py-2 text-center text-sm font-medium",
+                            i < 3 ? "text-primary dark:text-primary-dark" : ""
+                          )}
+                        >
+                          {i + 1}
+                        </td>
+                        <td className="w-1/2 px-1 py-2 text-start text-sm font-medium capitalize">
+                          {`${item.name_first}`}
+                        </td>
+
+                        <td className="px-1 py-2 text-end text-sm font-medium">
+                          {item.count.toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+
+              <table className="lg:col-span-4 lg:col-start-7">
+                <thead className="dark:border-washed-dark border-b-2">
+                  <tr>
+                    <th className="px-1 py-2 text-center text-sm font-medium">#</th>
+                    <th className="px-1 py-2 text-start text-sm font-medium">
+                      {t("column_female_name")}
+                    </th>
+                    <th className="px-1 py-2 text-end text-sm font-medium">{t("column_count")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {top_names[tableData.selectedYear.value][tableData.selectedEthnicity.value]
+                    .filter(({ sex }: { sex: string }) => {
+                      return sex === "female";
+                    })
+                    .map((item: { name_first: string; sex: string; count: number }, i: number) => (
+                      <tr
+                        key={i}
+                        className={clx(
+                          "dark:border-washed-dark border-b",
+                          i < 3 ? "bg-background dark:bg-background-dark" : ""
+                        )}
+                      >
+                        <td
+                          className={clx(
+                            "px-1 py-2 text-center text-sm font-medium",
+                            i < 3 ? "text-primary dark:text-primary-dark" : ""
+                          )}
+                        >
+                          {i + 1}
+                        </td>
+                        <td className="w-1/2 px-1 py-2 text-start text-sm font-medium capitalize">
+                          {`${item.name_first}`}
+                        </td>
+                        <td className="px-1 py-2 text-end text-sm font-medium">
+                          {item.count.toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Section>
+        <Section title={t("section2_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow-button">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col	justify-start gap-6 rounded-xl border p-6">
                 <div className="flex flex-row gap-4">
                   <span className="text-sm font-medium">{t("search_radio_label")}</span>
                   <Radio
@@ -218,10 +384,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 </div>
                 <Input
                   type="search"
-                  className={"dark:focus:border-primary-dark rounded-md border".concat(
+                  className={clx(
+                    "dark:focus:border-primary-dark rounded-md border",
                     searchData.validation
-                      ? " border-danger dark:border-danger border-2"
-                      : " border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
+                      ? "border-danger dark:border-danger border-2"
+                      : "border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
                   )}
                   placeholder={
                     searchData.type.value === "last"
@@ -239,108 +406,107 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   }}
                   validation={searchData.validation}
                 />
-                <div className="">
-                  <Button
-                    icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                    className="btn-primary"
-                    onClick={searchHandler}
-                  >
-                    {t("search_button")}
-                  </Button>
-                </div>
+
+                <Button
+                  icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
+                  className="btn-primary w-fit"
+                  onClick={searchHandler}
+                >
+                  {t("search_button")}
+                </Button>
+
                 <p className="text-dim text-sm">{t("search_details")}</p>
                 <p className="text-dim text-sm">{t("search_disclaimer")}</p>
               </Card>
             </div>
-            {!showPlaceholder && !searchData.data ? (
-              <></>
-            ) : (
-              <div
-                className={
-                  "col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2"
-                }
-              >
-                {searchData.data ? (
-                  <div className="w-full">
-                    {searchData.loading ? (
-                      <div className="flex h-[460px] items-center justify-center">
-                        <Spinner loading={searchData.loading} />
+            <div className="col-span-full flex max-h-fit place-content-center place-items-center lg:col-span-2">
+              {searchData.data ? (
+                <div className="w-full">
+                  {searchData.loading ? (
+                    <div className="flex h-[460px] items-center justify-center">
+                      <Spinner loading={searchData.loading} />
+                    </div>
+                  ) : searchData.private ? (
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-lg font-bold">
+                          <span>
+                            {t(`bar_title_${searchData.params.type}`, {
+                              count: searchData.data.total || 0,
+                            })}
+                          </span>
+                          <span>{`"${searchData.params.name}".`}</span>
+                        </p>
+                        <p className="text-dim text-sm">
+                          <span>
+                            {t("bar_description", {
+                              name: searchData.params.name,
+                            })}
+                          </span>
+                        </p>
                       </div>
-                    ) : (
-                      <Bar
-                        precision={0}
-                        suggestedMaxY={5}
-                        className="h-[460px]"
-                        title={
-                          <>
-                            <p className="text-lg font-bold">
-                              <span>
-                                {t(`bar_title_${searchData.params.type}`, {
-                                  count: searchData.data.total || 0,
-                                })}
-                              </span>
-                              <span>{`"${searchData.params.name}".`}</span>
-                            </p>
-                            <p className="text-dim text-sm">
-                              <span>
-                                {t("bar_description", {
-                                  name: searchData.params.name,
-                                })}
-                              </span>
-                            </p>
-                          </>
-                        }
-                        data={{
-                          labels: searchData.data.decade
-                            ? searchData.data.decade.map((x: string) => x.toString().concat("s"))
-                            : placeholderData.decade,
-                          datasets: [
-                            {
-                              data: searchData.data.count,
-                              label: "Similar names",
-                              borderRadius: 12,
-                              barThickness: 12,
-                              backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
-                            },
-                          ],
-                        }}
-                        enableGridX={false}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <div className="relative flex h-[460px] w-full items-center justify-center">
+                      {renderPlaceholderBar(
+                        <LockClosedIcon className="h-4 w-4" />,
+                        t("privacy_prompt")
+                      )}
+                    </div>
+                  ) : (
                     <Bar
-                      className="absolute top-0 h-[460px] w-full opacity-30"
+                      precision={0}
+                      suggestedMaxY={5}
+                      className="h-[460px]"
+                      title={
+                        <>
+                          <p className="text-lg font-bold">
+                            <span>
+                              {t(`bar_title_${searchData.params.type}`, {
+                                count: searchData.data.total || 0,
+                              })}
+                            </span>
+                            <span>{`"${searchData.params.name}".`}</span>
+                          </p>
+                          <p className="text-dim text-sm">
+                            <span>
+                              {t("bar_description", {
+                                name: searchData.params.name,
+                              })}
+                            </span>
+                          </p>
+                        </>
+                      }
                       data={{
-                        labels: placeholderData.decade,
+                        labels: searchData.data.decade
+                          ? searchData.data.decade.map((x: string) => t("year_format", { year: x }))
+                          : placeholderData.decade,
                         datasets: [
                           {
-                            data: placeholderData.count,
+                            data: searchData.data.count,
+                            label: t("similar_names"),
                             borderRadius: 12,
                             barThickness: 12,
-                            backgroundColor: theme === "light" ? "#71717A" : "#FFFFFF",
+                            backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                           },
                         ],
                       }}
                       enableGridX={false}
-                      tooltipEnabled={false}
                     />
-                    <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark z-10 flex h-min w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto">
-                      <MagnifyingGlassIcon className=" h-4 w-4" />
-                      <p>{t("search_prompt")}</p>
-                    </Card>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              ) : (
+                renderPlaceholderBar(
+                  <MagnifyingGlassIcon className="h-4 w-4" />,
+                  "search_prompt",
+                  false
+                )
+              )}
+            </div>
           </div>
         </Section>
 
-        <Section title={t("section2_title")}>
+        <Section title={t("section3_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 flex flex-col justify-start	gap-6 rounded-xl border p-6 shadow-button">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col	justify-start gap-6 rounded-xl border p-6">
                 <div className="flex flex-col justify-start gap-3">
                   <div className="flex flex-col gap-4">
                     <span className="text-sm font-medium">{t("compare_radio")}</span>
@@ -357,12 +523,13 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                   <Input
                     type="search"
                     disabled={compareData.names.length > 9}
-                    className={"dark:focus:border-primary-dark rounded-md border".concat(
+                    className={clx(
+                      "dark:focus:border-primary-dark rounded-md border",
                       compareData.validation
-                        ? " border-danger dark:border-danger border-2"
+                        ? "border-danger dark:border-danger border-2"
                         : compareData.names.length > 9
-                        ? " border-outline bg-outline text-dim border opacity-30 dark:border-black dark:bg-black"
-                        : " border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
+                        ? "border-outline bg-outline text-dim border opacity-30 dark:border-black dark:bg-black"
+                        : "border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
                     )}
                     placeholder={
                       compareData.type.value === "compare_last"
@@ -413,101 +580,120 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               </Card>
             </div>
 
-            {!showPlaceholder && !compareData.data ? (
-              <></>
-            ) : (
-              <div className="col-span-full flex min-h-[460px] flex-col gap-3 lg:col-span-2">
-                <div className="flex flex-col gap-2 md:flex-row md:justify-between">
-                  <p className="text-lg font-bold">
-                    <span>{t("compare_title")}</span>
-                  </p>
-                  <Toggle
-                    enabled={false}
-                    onStateChanged={checked => setCompareData("order", checked)}
-                    label={t("compare_toggle")}
-                  />
-                </div>
-
-                <table className="w-full table-fixed border-collapse">
-                  <thead>
-                    <tr className="md:text-md border-b-outline dark:border-washed-dark max-w-full border-b-2 text-left text-sm [&>*]:p-2">
-                      <th className="w-5 md:w-[50px]">#</th>
-                      <th>
-                        {compareData.params.type === "last" ? t("last_name") : t("first_name")}
-                      </th>
-                      <th>{t("table_total")}</th>
-                      <th>{t("table_most_popular")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {compareData.data ? (
-                      compareData.data
-                        .sort((a: { total: number }, b: { total: number }) =>
-                          a.total == 0
-                            ? Number.MIN_VALUE
-                            : compareData.order
-                            ? b.total - a.total
-                            : a.total - b.total
-                        )
-                        .map(
-                          (
-                            item: { name: string; total: number; max: string; min: string },
-                            i: number
-                          ) => (
-                            <tr
-                              key={item.name}
-                              className={(i < Math.min(3, compareData.data.length - 1)
-                                ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
-                                : ""
-                              ).concat(" md:text-md text-sm")}
-                            >
-                              <td
-                                className={"border-b-outline dark:border-washed-dark border-b p-2".concat(
-                                  i < Math.min(3, compareData.data.length - 1)
-                                    ? " text-primary dark:text-primary-dark"
-                                    : ""
-                                )}
-                              >
-                                {i + 1}
-                              </td>
-                              <td className="border-b-outline dark:border-washed-dark truncate border-b p-2 capitalize">
-                                {`${item.name} `.concat(
-                                  i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
-                                )}
-                              </td>
-                              <td className="border-b-outline dark:border-washed-dark border-b p-2">
-                                {item.total.toLocaleString("en-US")}
-                              </td>
-                              <td className="border-b-outline dark:border-washed-dark border-b p-2">
-                                {item.total === 0 ? item.max : item.max.toString().concat("s")}
-                              </td>
-                            </tr>
-                          )
-                        )
-                    ) : compareData.isLoading ? (
-                      <tr>
-                        <td colSpan={5}>
-                          <div className="grid place-items-center py-3">
-                            <Spinner loading={compareData.isLoading} />
-                          </div>
-                        </td>
-                      </tr>
-                    ) : (
-                      <tr>
-                        <td colSpan={5}>
-                          <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark my-3 hidden w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto lg:flex">
-                            <MagnifyingGlassIcon className=" h-4 w-4" />
-                            <p>{t("compare_prompt")}</p>
-                          </Card>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+            <div
+              className={clx(
+                "col-span-full flex min-h-[460px] flex-col gap-3 lg:col-span-2",
+                compareData.data ?? "hidden lg:flex"
+              )}
+            >
+              <div className="flex flex-col gap-2 md:flex-row md:justify-between">
+                <p className="text-lg font-bold">
+                  <span>{t("compare_title")}</span>
+                </p>
+                <Toggle
+                  enabled={false}
+                  onStateChanged={checked => setCompareData("order", checked)}
+                  label={t("compare_toggle")}
+                />
               </div>
-            )}
+
+              <table className="w-full table-fixed border-collapse">
+                <thead>
+                  <tr className="md:text-md border-b-outline dark:border-washed-dark max-w-full border-b-2 text-left text-sm [&>*]:p-2">
+                    <th className="w-5 md:w-[50px]">#</th>
+                    <th>{compareData.params.type === "last" ? t("last_name") : t("first_name")}</th>
+                    <th>{t("table_total")}</th>
+                    <th>{t("table_most_popular")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {compareData.data ? (
+                    compareData.data
+                      .sort((a: { total: number }, b: { total: number }) =>
+                        a.total == 0
+                          ? Number.MIN_VALUE
+                          : compareData.order
+                          ? b.total - a.total
+                          : a.total - b.total
+                      )
+                      .map(
+                        (
+                          item: { name: string; total: number; max: string; min: string },
+                          i: number
+                        ) => (
+                          <tr
+                            key={item.name}
+                            className={clx(
+                              i < Math.min(3, compareData.data.length - 1)
+                                ? "bg-background dark:border-washed-dark dark:bg-washed-dark/50"
+                                : "",
+                              "md:text-md text-sm"
+                            )}
+                          >
+                            <td
+                              className={clx(
+                                "border-b-outline dark:border-washed-dark border-b p-2",
+                                i < Math.min(3, compareData.data.length - 1)
+                                  ? "text-primary dark:text-primary-dark"
+                                  : ""
+                              )}
+                            >
+                              {i + 1}
+                            </td>
+                            <td className="border-b-outline dark:border-washed-dark truncate border-b p-2 capitalize">
+                              {`${item.name} `.concat(
+                                i < Math.min(3, compareData.data.length - 1) ? emojiMap[i] : ""
+                              )}
+                            </td>
+                            <td className="border-b-outline dark:border-washed-dark border-b p-2">
+                              {item.total.toLocaleString("en-US")}
+                            </td>
+                            <td className="border-b-outline dark:border-washed-dark border-b p-2">
+                              {item.max ? (
+                                t("year_format", { year: item.max })
+                              ) : item.total === 0 ? (
+                                "N/A"
+                              ) : (
+                                <div className="flex">
+                                  <Tooltip tip={t("privacy_prompt2")} className="left-1/3">
+                                    {open => (
+                                      <div
+                                        className="cursor-help whitespace-nowrap underline decoration-dashed [text-underline-position:from-font]"
+                                        onClick={open}
+                                      >
+                                        <LockClosedIcon className="h-4 w-4" />
+                                      </div>
+                                    )}
+                                  </Tooltip>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        )
+                      )
+                  ) : compareData.isLoading ? (
+                    <tr>
+                      <td colSpan={5}>
+                        <div className="grid place-items-center py-3">
+                          <Spinner loading={compareData.isLoading} />
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr>
+                      <td colSpan={5}>
+                        <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark my-3 hidden w-fit flex-row items-center gap-2 rounded-md border px-3 py-1.5 md:mx-auto lg:flex">
+                          <MagnifyingGlassIcon className=" h-4 w-4" />
+                          <p>{t("compare_prompt")}</p>
+                        </Card>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </Section> */}
+        </Section>
       </Container>
     </>
   );

@@ -20,6 +20,7 @@ const CatalogueShow: Page = ({
   metadata,
   urls,
   translations,
+  catalogueId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["catalogue", "common"]);
 
@@ -57,6 +58,7 @@ const CatalogueShow: Page = ({
         metadata={metadata}
         urls={urls}
         translations={translations}
+        catalogueId={catalogueId}
       />
     </AnalyticsProvider>
   );
@@ -147,6 +149,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         },
         urls: data.downloads ?? {},
         translations: data.translations ?? {},
+        catalogueId: params?.id,
       },
     };
   }

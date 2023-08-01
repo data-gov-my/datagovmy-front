@@ -1,14 +1,14 @@
-import Hero from "@components/Hero";
 import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat, toDate } from "@lib/helpers";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
 
-import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
+import { FunctionComponent, useCallback, useMemo } from "react";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import type { WithData } from "datagovmy-ui/types";
 
 /**
  * Composite Index Dashboard
@@ -17,10 +17,36 @@ import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
 });
+
+type CompositeIndexKeys =
+  | "coincident"
+  | "coincident_diffusion"
+  | "lagging"
+  | "leading"
+  | "leading_diffusion";
+type CompositeIndexValues = {
+  callout1: number | null;
+  callout2: number | null;
+  callout3: number | null;
+};
+
 interface CompositeIndexDashboardProps {
-  last_updated: number;
-  timeseries: any;
-  timeseries_callouts: any;
+  last_updated: string;
+  timeseries: WithData<{
+    growth_mom: Record<
+      CompositeIndexKeys | "x" | "flag_recession_business" | "flag_recession_growth",
+      number[]
+    >;
+    growth_yoy: Record<
+      CompositeIndexKeys | "x" | "flag_recession_business" | "flag_recession_growth",
+      number[]
+    >;
+    index: Record<
+      CompositeIndexKeys | "x" | "flag_recession_business" | "flag_recession_growth",
+      number[]
+    >;
+  }>;
+  timeseries_callouts: WithData<Record<CompositeIndexKeys, CompositeIndexValues>>;
 }
 
 const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> = ({
@@ -28,15 +54,15 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-composite-index", "common"]);
   const INDEX_OPTIONS = ["growth_yoy", "growth_mom", "index"].map((key: string) => ({
-    label: t(`compositeindex.keys.${key}`) as string,
+    label: t(`keys.${key}`) as string,
     value: key,
   }));
   const SHADE_OPTIONS = [
-    { label: t("compositeindex.keys.no_shade"), value: "no_shade" },
-    { label: t("compositeindex.keys.recession_growth"), value: "flag_recession_growth" },
-    { label: t("compositeindex.keys.recession_business"), value: "flag_recession_business" },
+    { label: t("keys.no_shade"), value: "no_shade" },
+    { label: t("keys.recession_growth"), value: "flag_recession_growth" },
+    { label: t("keys.recession_business"), value: "flag_recession_business" },
   ];
 
   const AXIS_Y = {
@@ -85,20 +111,6 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
     [data]
   );
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "compositeindex.header",
-      name_en: "Composite Index",
-      name_bm: "Indeks Komposit",
-      route: routes.COMPOSITE_INDEX,
-    });
-  }, []);
-
-  useWatch(() => {
-    setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
-  }, [data.index_type]);
-
   const configs = useMemo<{ unit: string; fill: boolean }>(() => {
     const unit = data.index_type.value.includes("growth") ? "%" : "";
     return {
@@ -109,243 +121,269 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
 
   return (
     <>
-      <Hero background="composite-index-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-blue-300">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3 className="text-white">{t("compositeindex.header")}</h3>
-          <p className="text-white">{t("compositeindex.description")}</p>
-
-          <p className="text-sm text-white">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="gray"
+        category={[t("common:categories.economy"), "text-green-700"]}
+        header={[t("header")]}
+        description={[t("description"), "dark:text-white"]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency={t("agencies:dosm.full")}
+            link="https://open.dosm.gov.my/"
+            icon={<DOSMIcon />}
+          />
+        }
+      />
 
       <Container className="min-h-screen">
-        {/* How are the Malaysian Economic Indicators trending? */}
-        <Section
-          title={t("compositeindex.section_1.title")}
-          description={
-            <p className="whitespace-pre-line text-dim">
-              {t("compositeindex.section_1.description")}
-            </p>
-          }
-          date={timeseries.data_as_of}
-        >
-          <div className="space-y-8">
-            <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
-              <Dropdown
-                anchor="left"
-                selected={data.index_type}
-                options={INDEX_OPTIONS}
-                onChange={(e: any) => setData("index_type", e)}
-              />
-              <Dropdown
-                options={SHADE_OPTIONS}
-                selected={data.shade_type}
-                onChange={(e: any) => setData("shade_type", e)}
-              />
-            </div>
+        <SliderProvider>
+          {play => (
+            <>
+              {/* How are the Malaysian Economic Indicators trending? */}
+              <Section
+                title={t("section_1.title")}
+                description={
+                  <p className="whitespace-pre-line text-dim">{t("section_1.description")}</p>
+                }
+                date={timeseries.data_as_of}
+              >
+                <div className="space-y-8">
+                  <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
+                    <Dropdown
+                      anchor="left"
+                      selected={data.index_type}
+                      options={INDEX_OPTIONS}
+                      onChange={(e: any) => setData("index_type", e)}
+                    />
+                    <Dropdown
+                      options={SHADE_OPTIONS}
+                      selected={data.shade_type}
+                      onChange={(e: any) => setData("shade_type", e)}
+                    />
+                  </div>
 
-            <Slider
-              className=""
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.index_type.value].x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
-            <Timeseries
-              className="h-[350px] w-full"
-              title={t("compositeindex.keys.leading")}
-              interval="month"
-              unitY={data.index_type.value === "index" ? "" : "%"}
-              axisY={AXIS_Y}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.leading,
-                    label: t("compositeindex.keys.leading"),
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    borderWidth: 1.5,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    fill: configs.fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: numFormat(timeseries_callouts.data.leading.callout1, "standard"),
-                },
-                {
-                  title: t("compositeindex.mom_growth"),
-                  value: `${numFormat(timeseries_callouts.data.leading.callout2, "standard")}%`,
-                },
-                {
-                  title: t("compositeindex.yoy_growth"),
-                  value: `${numFormat(timeseries_callouts.data.leading.callout3, "standard")}%`,
-                },
-              ]}
-            />
+                  <Slider
+                    className=""
+                    type="range"
+                    value={data.minmax}
+                    data={timeseries.data[data.index_type.value].x}
+                    period="month"
+                    onChange={e => setData("minmax", e)}
+                  />
+                  <Timeseries
+                    className="h-[300px] w-full"
+                    title={t("keys.leading")}
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY={data.index_type.value === "index" ? "" : "%"}
+                    axisY={AXIS_Y}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.leading,
+                          label: t("keys.leading"),
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: configs.fill,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: numFormat(timeseries_callouts.data.leading.callout1, "standard"),
+                      },
+                      {
+                        title: t("mom_growth"),
+                        value: `${numFormat(
+                          timeseries_callouts.data.leading.callout2,
+                          "standard"
+                        )}%`,
+                      },
+                      {
+                        title: t("yoy_growth"),
+                        value: `${numFormat(
+                          timeseries_callouts.data.leading.callout3,
+                          "standard"
+                        )}%`,
+                      },
+                    ]}
+                  />
 
-            <Timeseries
-              title={t("compositeindex.keys.coincident")}
-              className="h-[350px] w-full"
-              interval="month"
-              unitY={data.index_type.value === "index" ? "" : "%"}
-              axisY={AXIS_Y}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.coincident,
-                    label: t("compositeindex.keys.coincident"),
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    borderWidth: 1.5,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    fill: configs.fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: numFormat(timeseries_callouts.data.coincident.callout1, "standard"),
-                },
-                {
-                  title: t("compositeindex.mom_growth"),
-                  value: `${numFormat(timeseries_callouts.data.coincident.callout2, "standard")}%`,
-                },
-                {
-                  title: t("compositeindex.yoy_growth"),
-                  value: `${numFormat(timeseries_callouts.data.coincident.callout3, "standard")}%`,
-                },
-              ]}
-            />
-            <Timeseries
-              title={t("compositeindex.keys.lagging")}
-              className="h-[350px] w-full"
-              interval="month"
-              unitY={data.index_type.value === "index" ? "" : "%"}
-              axisY={AXIS_Y}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.lagging,
-                    label: t("compositeindex.keys.lagging"),
-                    borderColor: AKSARA_COLOR.DANGER,
-                    borderWidth: 1.5,
-                    backgroundColor: AKSARA_COLOR.DANGER_H,
-                    fill: configs.fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: numFormat(timeseries_callouts.data.lagging.callout1, "standard"),
-                },
-                {
-                  title: t("compositeindex.mom_growth"),
-                  value: `${numFormat(timeseries_callouts.data.lagging.callout2, "standard")}%`,
-                },
-                {
-                  title: t("compositeindex.yoy_growth"),
-                  value: `${numFormat(timeseries_callouts.data.lagging.callout3, "standard")}%`,
-                },
-              ]}
-            />
-          </div>
-        </Section>
+                  <Timeseries
+                    title={t("keys.coincident")}
+                    className="h-[300px] w-full"
+                    interval="month"
+                    unitY={data.index_type.value === "index" ? "" : "%"}
+                    enableAnimation={!play}
+                    axisY={AXIS_Y}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.coincident,
+                          label: t("keys.coincident"),
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: configs.fill,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: numFormat(timeseries_callouts.data.coincident.callout1, "standard"),
+                      },
+                      {
+                        title: t("mom_growth"),
+                        value: `${numFormat(
+                          timeseries_callouts.data.coincident.callout2,
+                          "standard"
+                        )}%`,
+                      },
+                      {
+                        title: t("yoy_growth"),
+                        value: `${numFormat(
+                          timeseries_callouts.data.coincident.callout3,
+                          "standard"
+                        )}%`,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.lagging")}
+                    className="h-[300px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY={data.index_type.value === "index" ? "" : "%"}
+                    axisY={AXIS_Y}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          data: coordinate.lagging,
+                          label: t("keys.lagging"),
+                          borderColor: AKSARA_COLOR.DANGER,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
+                          fill: configs.fill,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: numFormat(timeseries_callouts.data.lagging.callout1, "standard"),
+                      },
+                      {
+                        title: t("mom_growth"),
+                        value: `${numFormat(
+                          timeseries_callouts.data.lagging.callout2,
+                          "standard"
+                        )}%`,
+                      },
+                      {
+                        title: t("yoy_growth"),
+                        value: `${numFormat(
+                          timeseries_callouts.data.lagging.callout3,
+                          "standard"
+                        )}%`,
+                      },
+                    ]}
+                  />
+                </div>
+              </Section>
 
-        {/*Diffusion indices: A different perspective on the Malaysian Economic Indicators */}
-        <Section
-          title={t("compositeindex.section_2.title")}
-          description={t("compositeindex.section_2.description")}
-          date={timeseries.data_as_of}
-        >
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-            <Timeseries
-              title={t("compositeindex.keys.leading_diffusion")}
-              className="h-[350px] w-full"
-              interval="month"
-              unitY="%"
-              axisY={AXIS_Y}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: t("compositeindex.keys.leading_diffusion"),
-                    data: coordinate.leading_diffusion,
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    fill: configs.fill,
-                    borderWidth: 1.5,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: `${timeseries_callouts.data.leading_diffusion.callout1.toLocaleString()}%`,
-                },
-              ]}
-            />
-            <Timeseries
-              title={t("compositeindex.keys.coincident_diffusion")}
-              className="h-[350px] w-full"
-              interval="month"
-              unitY="%"
-              axisY={AXIS_Y}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    label: t("compositeindex.keys.coincident_diffusion"),
-                    data: coordinate.coincident_diffusion,
-                    borderColor: AKSARA_COLOR.DANGER,
-                    backgroundColor: AKSARA_COLOR.DANGER_H,
-                    fill: configs.fill,
-                    borderWidth: 1.5,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: `${timeseries_callouts.data.coincident_diffusion.callout1.toLocaleString()}%`,
-                },
-              ]}
-            />
-          </div>
-        </Section>
+              {/*Diffusion indices: A different perspective on the Malaysian Economic Indicators */}
+              <Section
+                title={t("section_2.title")}
+                description={t("section_2.description")}
+                date={timeseries.data_as_of}
+              >
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+                  <Timeseries
+                    title={t("keys.leading_diffusion")}
+                    className="h-[300px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY="%"
+                    axisY={AXIS_Y}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("keys.leading_diffusion"),
+                          data: coordinate.leading_diffusion,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: configs.fill,
+                          borderWidth: 1.5,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: `${timeseries_callouts.data.leading_diffusion.callout1.toLocaleString()}%`,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.coincident_diffusion")}
+                    className="h-[300px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY="%"
+                    axisY={AXIS_Y}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("keys.coincident_diffusion"),
+                          data: coordinate.coincident_diffusion,
+                          borderColor: AKSARA_COLOR.DANGER,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
+                          fill: configs.fill,
+                          borderWidth: 1.5,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: `${timeseries_callouts.data.coincident_diffusion.callout1.toLocaleString()}%`,
+                      },
+                    ]}
+                  />
+                </div>
+              </Section>
+            </>
+          )}
+        </SliderProvider>
       </Container>
     </>
   );

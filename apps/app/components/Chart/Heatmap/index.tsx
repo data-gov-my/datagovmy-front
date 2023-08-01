@@ -18,14 +18,17 @@ import { Color, useColor } from "@hooks/useColor";
 import { DeepPartial } from "chart.js/types/utils";
 import "chartjs-adapter-luxon";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
-import { minMax, normalize, numFormat } from "@lib/helpers";
+import { clx, minMax, normalize, numFormat } from "@lib/helpers";
 
 interface HeatmapProps extends ChartHeaderProps {
   className?: string;
+  width?: number;
+  height?: number;
   data?: HeatmapData;
   color?: Color;
   prefix?: string;
   unit?: string;
+  precision?: [number, number] | number;
 
   _ref?: ForwardedRef<ChartJSOrUndefined<"matrix", any[], unknown>>;
 }
@@ -40,7 +43,9 @@ export type HeatmapData = Array<HeatmapDatum>;
 // type HeatmapScaleType = "time" | "category";
 
 const Heatmap: FunctionComponent<HeatmapProps> = ({
-  className = "h-[400px]",
+  className = "h-[350px]",
+  width = 900,
+  height = 350,
   title,
   data = dummyCategory,
   menu,
@@ -48,6 +53,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   prefix,
   unit,
   controls,
+  precision = [1, 0],
   _ref,
 }) => {
   ChartJS.register(
@@ -93,6 +99,11 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         grid: {
           display: false,
         },
+        ticks: {
+          font: {
+            size: 14,
+          },
+        },
         position: "top",
       },
       y: {
@@ -101,6 +112,11 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
         offset: true,
         grid: {
           display: false,
+        },
+        ticks: {
+          font: {
+            size: 14,
+          },
         },
       },
     };
@@ -163,7 +179,8 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   };
 
   const options: ChartCrosshairOption<"matrix"> = {
-    maintainAspectRatio: false,
+    responsive: false,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
@@ -171,12 +188,16 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
       datalabels: {
         display: true,
         color(context: { dataIndex: number }) {
-          if (data[context.dataIndex].z === null) return "#000";
+          if ([null, 0].includes(data[context.dataIndex].z)) return "#71717A";
           const n_value = normalize(data[context.dataIndex].z!, min, max);
           return n_value > 0.7 ? "#fff" : "#000";
         },
-        formatter(value: HeatmapDatum) {
-          return value.z;
+        font: {
+          size: 16,
+          lineHeight: 24,
+        },
+        formatter(v: HeatmapDatum) {
+          return display(v.z!, "standard", precision);
         },
       },
       tooltip: {
@@ -190,7 +211,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
           label(context) {
             const v = data[context.dataIndex];
             return `${v.y}, ${v.x}: ${
-              v.z === null ? "No data" : display(v.z!, "standard", [1, 1])
+              v.z === null ? "No data" : display(v.z!, "standard", precision)
             }`;
           },
         },
@@ -205,15 +226,16 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
     <div>
       <ChartHeader title={title} menu={menu} controls={controls} />
 
-      <div className={className}>
+      <div className={clx("overflow-x-auto", className)}>
         <Chart
           ref={_ref}
           type="matrix"
+          width={width}
+          height={height}
           data={{
             datasets: [
               {
                 data: data,
-                borderWidth: 1,
                 backgroundColor(ctx: ScriptableContext<"matrix">) {
                   return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).z);
                 },

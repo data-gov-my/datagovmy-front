@@ -21,16 +21,17 @@ import {
   FilterFn,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-
-import { ArrowLeftIcon, ArrowRightIcon, ArrowsUpDownIcon } from "@heroicons/react/24/solid";
-import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/20/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { CountryAndStates } from "../lib/constants";
 import Image from "next/image";
 import { useTranslation } from "../hooks/useTranslation";
 import { default as debounce } from "lodash/debounce";
 import type { DebouncedFunc } from "lodash";
-import { clx } from "../lib/helpers";
+import { clx, numFormat } from "../lib/helpers";
+import { UpDownIcon } from "../icons";
+import Button from "../components/Button";
+import { Precision } from "../lib/types";
 
 export interface TableConfigColumn {
   id: string;
@@ -68,6 +69,7 @@ export interface TableProps {
   config?: Array<TableConfig>;
   responsive?: Boolean;
   enablePagination?: false | number;
+  precision?: Precision;
 }
 
 const relativeColor = (delta: number, inverse: boolean = false) => {
@@ -108,18 +110,19 @@ const Table: FunctionComponent<TableProps> = ({
   search,
   responsive = true,
   enablePagination = false,
-  cellClass = "text-right",
+  cellClass,
+  precision,
 }) => {
   const columns = useMemo<ColumnDef<Record<string, any>>[]>(() => config as any, [config]);
   const [sorting, setSorting] = useState<SortingState>(sorts);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   const sortTooltip = (sortDir: "asc" | "desc" | false) => {
-    if (sortDir === false) return "Sort";
-    else if (sortDir === "desc") return "Desc order";
-    else if (sortDir === "asc") return "Asc order";
+    if (sortDir === false) return t("common:common.sort");
+    else if (sortDir === "desc") return t("common:common.desc_order");
+    else if (sortDir === "asc") return t("common:common.asc_order");
 
     return undefined;
   };
@@ -139,23 +142,14 @@ const Table: FunctionComponent<TableProps> = ({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
-    sortingFns: {
-      localeNumber: (row_a: any, row_b: any, column_id: any): number => {
-        const [a, b] = [
-          Number(row_a.getValue(column_id).replaceAll(",", "")),
-          Number(row_b.getValue(column_id).replaceAll(",", "")),
-        ];
-        return a > b ? 1 : -1;
-      },
-    },
     debugTable: false,
   };
 
   const table = useReactTable(ReactTableProps);
 
   useEffect(() => {
-    enablePagination && table.setPageSize(enablePagination);
-  }, []);
+    if (enablePagination) table.setPageSize(enablePagination);
+  }, [enablePagination]);
 
   const onSearch = useCallback(
     debounce((query: string) => {
@@ -165,6 +159,7 @@ const Table: FunctionComponent<TableProps> = ({
   );
 
   const calcStickyLeft = (cellId: string) => {
+    // FIXME: clientWidth is not the exact width that ends up rendered
     const ele = document.getElementById(cellId)?.previousElementSibling;
     return ele !== undefined && ele !== null ? ele.clientWidth : 0;
   };
@@ -177,7 +172,7 @@ const Table: FunctionComponent<TableProps> = ({
       </div>
 
       {(search || controls) && (
-        <div className="flex w-full flex-wrap items-center justify-between gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4 pb-2">
           <div className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:items-center">
             {controls && controls(setColumnFilters)}
           </div>
@@ -195,7 +190,10 @@ const Table: FunctionComponent<TableProps> = ({
                       key={header.id}
                       id={header.id}
                       colSpan={header.colSpan}
-                      className={clx(freeze?.includes(header.id)) && "sticky-col"}
+                      className={clx(
+                        freeze?.includes(header.id) && "sticky-col",
+                        "border-outline dark:border-washed-dark border-b-2 py-[10px] font-medium"
+                      )}
                       style={{
                         left: freeze?.includes(header.id) ? calcStickyLeft(header.id) : 0,
                       }}
@@ -204,7 +202,7 @@ const Table: FunctionComponent<TableProps> = ({
                         <div
                           className={clx(
                             header.subHeaders.length < 1
-                              ? "flex select-none justify-between gap-1 px-2 text-left text-sm"
+                              ? "flex select-none items-center justify-between gap-1 px-2 text-left text-sm"
                               : !header.column.columnDef.header
                               ? "hidden"
                               : "pr-2 text-end",
@@ -228,21 +226,27 @@ const Table: FunctionComponent<TableProps> = ({
                           </div>
                           {header.subHeaders.length < 1 && (
                             <span
-                              className="ml-2 inline-block"
+                              className="ml-1 inline-block"
                               title={sortTooltip(header.column.getIsSorted())}
                             >
                               {
                                 {
                                   asc: (
-                                    <ArrowUpIcon className="inline-block h-4 w-auto text-black dark:text-white" />
+                                    <UpDownIcon
+                                      className="h-5 w-5 text-black dark:text-white"
+                                      transform="down"
+                                    />
                                   ),
                                   desc: (
-                                    <ArrowDownIcon className="inline-block h-4 w-auto text-black dark:text-white" />
+                                    <UpDownIcon
+                                      className="h-5 w-5 text-black dark:text-white"
+                                      transform="up"
+                                    />
                                   ),
                                 }[header.column.getIsSorted() as "asc" | "desc"]
                               }
                               {header.column.getCanSort() && !header.column.getIsSorted() && (
-                                <ArrowsUpDownIcon className="text-dim inline-block h-4 w-auto" />
+                                <UpDownIcon className="-m-1 h-5 w-5 text-black dark:text-white" />
                               )}
                             </span>
                           )}
@@ -269,25 +273,46 @@ const Table: FunctionComponent<TableProps> = ({
                       const relative = cell.column.columnDef.relative ?? undefined;
                       const scale = cell.column.columnDef.scale ?? undefined;
 
+                      const getPrecision = (
+                        precision?: number | Precision
+                      ): number | [number, number] => {
+                        if (!precision) return [1, 0];
+                        else if (typeof precision === "number") return precision;
+                        else if (precision.columns && cell.column.id in precision.columns)
+                          return precision.columns[cell.column.id];
+                        else return precision.default;
+                      };
+
                       const classNames = clx(
+                        "border-outline dark:border-washed-dark border-b px-2 py-2.5 max-sm:max-w-[150px] truncate",
+                        typeof value === "number" && "tabular-nums text-right",
                         lastCellInGroup.id === cell.column.id && "text-sm",
                         relative ? relativeColor(value as number, inverse) : "bg-opacity-20",
                         scale && scaleColor(value as number),
-                        freeze?.includes(cell.column.id) && "sticky-col border-l",
+                        freeze?.includes(cell.column.id) && "sticky-col",
                         cell.column.columnDef.className
                           ? cell.column.columnDef.className
                           : cellClass
                       );
+
+                      const displayValue = () => {
+                        if (typeof value === "number")
+                          return numFormat(value, "standard", getPrecision(precision!));
+                        if (value === "NaN") return "-";
+                        return flexRender(cell.column.columnDef.cell, cell.getContext());
+                      };
                       return (
                         <td
                           id={cell.id}
                           key={cell.id}
                           className={classNames}
                           style={{
-                            left: freeze?.includes(cell.column.id) ? calcStickyLeft(cell.id) : 0,
+                            left: freeze?.includes(cell.column.id)
+                              ? calcStickyLeft(cell.column.id)
+                              : 0,
                           }}
                         >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {displayValue()}
                           {value !== null && unit}
                           {value === null && relative && "-"}
                         </td>
@@ -307,29 +332,30 @@ const Table: FunctionComponent<TableProps> = ({
         </table>
       </div>
       {enablePagination && (
-        <div className={`mt-5 flex items-center justify-center gap-4 text-sm ${className}`}>
-          <button
-            className="flex flex-row gap-2 rounded border px-2 py-1 disabled:bg-slate-100 disabled:opacity-50"
+        <div className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium`}>
+          <Button
+            className="btn-disabled btn-default"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <ArrowLeftIcon className="text-dim h-5 w-4" />
+            <ChevronLeftIcon className="h-4.5 w-4.5" />
             {t("common:common.previous")}
-          </button>
+          </Button>
 
-          <span className="flex items-center gap-1 text-center text-sm">
+          <span className="flex items-center gap-1 text-center">
             {t("common:common.page_of", {
               current: table.getState().pagination.pageIndex + 1,
               total: table.getPageCount(),
             })}
           </span>
-          <button
-            className="flex flex-row gap-2 rounded border px-2 py-1 disabled:bg-slate-100 disabled:opacity-50"
+          <Button
+            className="btn-disabled btn-default"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            {t("common:common.next")} <ArrowRightIcon className="text-dim h-5 w-4" />
-          </button>
+            {t("common:common.next")}
+            <ChevronRightIcon className="h-4.5 w-4.5" />
+          </Button>
         </div>
       )}
     </>

@@ -1,11 +1,12 @@
 import type { DownloadOptions } from "@lib/types";
 import { FunctionComponent, useContext, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
-import { useWatch, useTranslation, WindowContext } from "datagovmy-ui/hooks";
+import { useWatch, useTranslation } from "datagovmy-ui/hooks";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download, exportAs } from "@lib/helpers";
-import { track } from "@lib/mixpanel";
+import { download, exportAs } from "datagovmy-ui/helpers";
+import { track } from "datagovmy-ui/mixpanel";
 
 import type { ChartDataset } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -31,12 +32,11 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"bar", any[], unknown> | null>(null);
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
-    if (dataset.type === "HBAR" || breakpoint < BREAKPOINTS.MD) return "horizontal";
-
+    if (dataset.type === "HBAR" || size.width < BREAKPOINTS.MD) return "horizontal";
     return "vertical";
-  }, [dataset.type, breakpoint]);
+  }, [dataset.type, size.width]);
 
   const availableDownloads = useMemo<DownloadOptions>(
     () => ({

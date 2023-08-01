@@ -1,4 +1,4 @@
-import { ElectionEnum, ElectionResource, Party, PartyResult } from "./types";
+import { ElectionResource, Party, PartyResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
 import ImageWithFallback from "@components/ImageWithFallback";
@@ -7,14 +7,13 @@ import { toast } from "@components/Toast";
 import type { OptionType } from "@components/types";
 import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
+import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
 import { CountryAndStates } from "@lib/constants";
-import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 
 /**
@@ -35,15 +34,24 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
   selection,
   elections,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-  const { push } = useRouter();
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { cache } = useCache();
+
+  const PARTY_OPTIONS: Array<OptionType> = selection.map(option => ({
+    label: t(option),
+    value: option,
+  }));
+
+  const DEFAULT_PARTY = "PERIKATAN";
+  const PARTY_OPTION = PARTY_OPTIONS.find(e => e.value === (params.party_name ?? DEFAULT_PARTY));
 
   const { data, setData } = useData({
     tab_index: 0, // parlimen = 0; dun = 1
-    party: params.party_name,
-    state: params.state,
+    party_option: PARTY_OPTION,
+    party_name: PARTY_OPTION?.label,
     loading: false,
+    parlimen: elections.parlimen,
+    dun: elections.dun,
   });
 
   const party_schema = generateSchema<Party>([
@@ -67,12 +75,12 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
       id: "full_result",
       header: "",
       cell: ({ row, getValue }) => {
-        const selection = data.tab_index === 0 ? elections.parlimen : elections.dun;
+        const selection = data.tab_index === 0 ? data.parlimen : data.dun;
         const item = getValue() as Party;
         return (
           <ElectionCard
             defaultParams={item}
-            onChange={(option: Party) => fetchResult(option.election_name, option.state)}
+            onChange={(option: Party) => fetchFullResult(option.election_name, option.state)}
             columns={generateSchema<PartyResult[number]>([
               {
                 key: "party",
@@ -91,7 +99,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
               },
             ])}
             options={selection}
-            highlighted={params.party_name}
+            highlighted={data.party_name}
             page={row.index}
           />
         );
@@ -99,34 +107,51 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
     },
   ]);
 
-  const PARTY_OPTIONS: Array<OptionType> = selection.map(option => ({
-    label: t(`${option}`),
-    value: option,
-  }));
+  const { filter, setFilter } = useFilter({
+    name: params.party_name,
+    state: params.state,
+  });
 
-  const navigateToParty = (name?: string, state?: string) => {
-    if (!name) {
-      setData("party", null);
-      return;
-    }
+  const fetchResult = async (
+    party_name: OptionType,
+    state: string
+  ): Promise<Record<"parlimen" | "dun", Party[]>> => {
     setData("loading", true);
-    setData("party", name);
-    setData("state", state);
+    setData("party_name", party_name.label);
+    setFilter("name", party_name.value);
+    setFilter("state", state);
 
-    const route = state
-      ? `${routes.ELECTION_EXPLORER}/parties/${encodeURIComponent(name)}/${state}`
-      : `${routes.ELECTION_EXPLORER}/parties/${encodeURIComponent(name)}`;
+    const identifier = `${party_name.value}_${state}`;
+    return new Promise(resolve => {
+      if (cache.has(identifier)) {
+        setData("loading", false);
+        return resolve(cache.get(identifier));
+      }
 
-    push(route, undefined, {
-      scroll: false,
-      locale: i18n.language,
-    }).then(() => {
-      setData("loading", false);
-      cache.clear();
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "party",
+        party_name: party_name.value,
+        state,
+      })
+        .then(({ data }: { data: { data: Record<"parlimen" | "dun", Party[]> } }) => {
+          const party = {
+            parlimen:
+              data.data.parlimen.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)) ?? [],
+            dun: data.data.dun.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)) ?? [],
+          };
+          cache.set(identifier, party);
+          resolve(party);
+          setData("loading", false);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
     });
   };
 
-  const fetchResult = async (election: string, state: string): Promise<Result<PartyResult>> => {
+  const fetchFullResult = async (election: string, state: string): Promise<Result<PartyResult>> => {
     const identifier = `${election}_${state}`;
     return new Promise(resolve => {
       if (cache.has(identifier)) return resolve(cache.get(identifier));
@@ -169,37 +194,47 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 placeholder={t("party.search_party")}
                 imageSource="/static/images/parties/"
                 options={PARTY_OPTIONS}
-                selected={data.party ? PARTY_OPTIONS.find(e => e.value === data.party) : null}
-                onChange={selected => navigateToParty(selected?.value, data.state)}
+                selected={data.party_option ?? null}
+                onChange={selected => {
+                  if (selected) {
+                    fetchResult(selected, filter.state ?? "mys").then(({ parlimen, dun }) => {
+                      setData("parlimen", parlimen);
+                      setData("dun", dun);
+                    });
+                  }
+                  setData("party_option", selected);
+                }}
                 enableFlag
               />
             </div>
             <Tabs
               title={
-                <Trans>
-                  <span className="text-lg font-normal leading-9">
-                    <ImageWithFallback
-                      className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
-                      src={`/static/images/parties/${params.party_name}.png`}
-                      width={32}
-                      height={18}
-                      alt={t(`${params.party_name}`)}
-                      inline
-                    />
+                <span className="text-lg leading-9">
+                  <ImageWithFallback
+                    className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
+                    src={`/static/images/parties/${filter.name ?? DEFAULT_PARTY}.png`}
+                    width={32}
+                    height={18}
+                    alt={t(filter.name ?? DEFAULT_PARTY)}
+                    inline
+                  />
+                  <Trans>
                     {t("party.title", {
-                      party: `$t(dashboard-election-explorer:${params.party_name})`,
+                      party: `$t(dashboard-election-explorer:${filter.name ?? DEFAULT_PARTY})`,
                     })}
-                    <StateDropdown
-                      currentState={data.state}
-                      onChange={selected => {
-                        setData("state", selected.value);
-                        navigateToParty(data.party, selected.value);
-                      }}
-                      width="inline-flex ml-0.5"
-                      anchor="left"
-                    />
-                  </span>
-                </Trans>
+                  </Trans>
+                  <StateDropdown
+                    currentState={filter.state ?? "mys"}
+                    onChange={selected => {
+                      fetchResult(data.party_option, selected.value).then(({ parlimen, dun }) => {
+                        setData("parlimen", parlimen);
+                        setData("dun", dun);
+                      });
+                    }}
+                    width="inline-flex ml-0.5"
+                    anchor="left"
+                  />
+                </span>
               }
               current={data.tab_index}
               onChange={(index: number) => setData("tab_index", index)}
@@ -207,14 +242,14 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
             >
               <Panel name={t("parlimen")}>
                 <ElectionTable
-                  data={elections.parlimen}
+                  data={data.parlimen}
                   columns={party_schema}
                   isLoading={data.loading}
                   empty={
                     <Trans>
                       {t("party.no_data", {
-                        party: `$t(dashboard-election-explorer:${params.party_name})`,
-                        state: CountryAndStates[data.state],
+                        party: `$t(dashboard-election-explorer:${filter.name ?? DEFAULT_PARTY})`,
+                        state: CountryAndStates[filter.state],
                         context: "parlimen",
                       })}
                     </Trans>
@@ -223,21 +258,17 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
               </Panel>
               <Panel name={t("dun")}>
                 <ElectionTable
-                  data={
-                    data.tab_index === ElectionEnum.Dun && params.state === "mys"
-                      ? []
-                      : elections.dun
-                  }
+                  data={["mys", null].includes(filter.state) ? [] : data.dun}
                   columns={party_schema}
                   isLoading={data.loading}
                   empty={
                     <Trans>
                       {t("party.no_data", {
-                        party: `$t(dashboard-election-explorer:${params.party_name})`,
-                        state: CountryAndStates[data.state],
-                        context: ["kul", "lbn", "pjy"].includes(data.state)
+                        party: `$t(dashboard-election-explorer:${filter.name ?? DEFAULT_PARTY})`,
+                        state: CountryAndStates[filter.state],
+                        context: ["kul", "lbn", "pjy"].includes(filter.state)
                           ? "dun_wp"
-                          : data.state === "mys"
+                          : ["mys", null].includes(filter.state)
                           ? "dun_mys"
                           : "dun",
                       })}

@@ -5,9 +5,10 @@ import { Party } from "@dashboards/democracy/election-explorer/types";
 import { AnalyticsProvider } from "@hooks/useAnalytics";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import type { Page } from "@lib/types";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const ElectionExplorerIndex: Page = ({
   last_updated,
@@ -16,7 +17,7 @@ const ElectionExplorerIndex: Page = ({
   seats,
   selection,
   table,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
   return (
@@ -34,56 +35,72 @@ const ElectionExplorerIndex: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-election-explorer", async () => {
-  try {
-    const [election, state] = ["GE-15", "mys"];
-    const [dropdown, seats, table] = await Promise.all([
-      get("/explorer", {
-        explorer: "ELECTIONS",
-        dropdown: "election_list",
-      }),
-      get("/explorer", {
-        explorer: "ELECTIONS",
-        chart: "overall_seat",
-        election,
-        state,
-      }),
-      get("/explorer", {
-        explorer: "ELECTIONS",
-        chart: "full_result",
-        type: "party",
-        election,
-        state,
-      }),
-    ]).catch(e => {
-      throw new Error("Invalid seat name. Message: " + e);
-    });
+export const getServerSideProps: GetServerSideProps = withi18n(
+  "dashboard-election-explorer",
+  async ({ query }) => {
+    try {
+      let [election, state] =
+        Object.keys(query).length === 0
+          ? [null, null]
+          : [query.election?.toString(), query.state?.toString()];
 
-    return {
-      props: {
-        last_updated: seats.data.data_last_update,
-        meta: {
-          id: "dashboard-election-explorer",
-          type: "dashboard",
-          category: "democracy",
-          agency: "SPR",
-        },
-        params: { election, state },
-        seats: seats.data.data,
-        selection: dropdown.data ?? [],
-        table: table.data.data.sort((a: Party, b: Party) => {
-          if (a.seats.won === b.seats.won) {
-            return b.votes.perc - a.votes.perc;
-          } else {
-            return b.seats.won - a.seats.won;
-          }
+      election =
+        typeof election === "string" &&
+        typeof state === "string" &&
+        election.startsWith("S") &&
+        state &&
+        ["mys", "kul", "lbn", "pjy"].includes(state) === false
+          ? `${CountryAndStates[state]} ${election}`
+          : election;
+
+      const [{ data: dropdown }, { data: seats }, { data: table }] = await Promise.all([
+        get("/explorer", {
+          explorer: "ELECTIONS",
+          dropdown: "election_list",
         }),
-      },
-    };
-  } catch (error: any) {
-    console.error(error.message);
-    return { notFound: true };
+        get("/explorer", {
+          explorer: "ELECTIONS",
+          chart: "overall_seat",
+          election: election ?? "GE-15",
+          state: state ?? "mys",
+        }),
+        get("/explorer", {
+          explorer: "ELECTIONS",
+          chart: "full_result",
+          type: "party",
+          election: election ?? "GE-15",
+          state: state ?? "mys",
+        }),
+      ]).catch(e => {
+        throw new Error("Invalid election name/state. Message: " + e);
+      });
+
+      return {
+        props: {
+          last_updated: seats.data_last_updated,
+          meta: {
+            id: "dashboard-election-explorer",
+            type: "dashboard",
+            category: "democracy",
+            agency: "SPR",
+          },
+          params: { election, state },
+          seats: seats.data,
+          selection: dropdown ?? [],
+          table: table.data.sort((a: Party, b: Party) => {
+            if (a.seats.won === b.seats.won) {
+              return b.votes.perc - a.votes.perc;
+            } else {
+              return b.seats.won - a.seats.won;
+            }
+          }),
+        },
+      };
+    } catch (error: any) {
+      console.error(error.message);
+      return { notFound: true };
+    }
   }
-});
+);
 
 export default ElectionExplorerIndex;

@@ -22,13 +22,12 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
-import Image from "next/image";
 import Label from "@components/Label";
 import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { OptionType } from "@components/types";
 import Sidebar from "@components/Sidebar";
-import { WindowContext, WindowProvider } from "@hooks/useWindow";
+import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import Daterange from "@components/Dropdown/Daterange";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
@@ -46,20 +45,14 @@ export type Catalogue = {
 interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
-  total: number;
   sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
-  query,
-  collection,
-  total,
-  sources,
-}) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
-  const { windowWidth } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const sourceOptions = sources.map(source => ({
     label: source,
     value: source,
@@ -101,15 +94,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             enableClear
           />
         }
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency={query.source ? query.source.toLowerCase() : "govt"} />}
       />
 
       <Container className="min-h-screen">
@@ -121,7 +106,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: windowWidth <= BREAKPOINTS.LG ? "start" : "center",
+              block: size.width <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }
@@ -184,6 +169,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.monthly"), value: "MONTHLY" },
       { label: t("filter_options.quarterly"), value: "QUARTERLY" },
       { label: t("filter_options.yearly"), value: "YEARLY" },
+      { label: t("filter_options.infrequent"), value: "INFREQUENT" },
+      { label: t("filter_options.as_required"), value: "AS_REQUIRED" },
     ];
     const geographies: OptionType[] = [
       { label: t("filter_options.national"), value: "NATIONAL" },
@@ -215,7 +202,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       geography: query.geography
         ? geographies.filter(item => query.geography.split(",").includes(item.value))
         : [],
-      demographic: query.demography
+      demography: query.demography
         ? demographies.filter(item => query.demography.split(",").includes(item.value))
         : [],
       begin: query.begin
@@ -232,7 +219,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       setFilter("search", "");
       setFilter("period", undefined);
       setFilter("geography", []);
-      setFilter("demographic", []);
+      setFilter("demography", []);
       setFilter("begin", undefined);
       setFilter("end", undefined);
     };
@@ -251,6 +238,15 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             onChange={e => setFilter("search", e)}
           />
         </div>
+        {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
+          <Button
+            className="btn hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
+            disabled={!actives.length}
+            onClick={reset}
+          >
+            <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+          </Button>
+        )}
         {/* Mobile */}
         <div className="block xl:hidden">
           <Modal
@@ -291,16 +287,17 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   <Label label={t("demography")} />
                   <Checkbox
                     className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
-                    name="demographic"
+                    name="demography"
                     options={demographies}
-                    value={filter.demographic}
-                    onChange={e => setFilter("demographic", e)}
+                    value={filter.demography}
+                    onChange={e => setFilter("demography", e)}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3 pt-3">
                   <Dropdown
-                    width="w-full"
                     label={t("begin")}
+                    width="w-full"
+                    anchor="left-0 bottom-10"
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
                     placeholder={t("common:common.select")}
@@ -309,6 +306,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   <Dropdown
                     label={t("end")}
                     width="w-full"
+                    anchor="right-0 bottom-10"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
                     selected={filter.end}
@@ -337,16 +335,14 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         {/* Desktop */}
         <div className="hidden gap-2 pr-6 xl:flex">
           {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
-            <div>
-              <Button
-                className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
-                disabled={!actives.length}
-                onClick={reset}
-              >
-                <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
-                {t("common:common.clear_all")}
-              </Button>
-            </div>
+            <Button
+              className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
+              disabled={!actives.length}
+              onClick={reset}
+            >
+              <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+              {t("common:common.clear_all")}
+            </Button>
           )}
           <Dropdown
             options={periods}
@@ -368,8 +364,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             title={t("demography")}
             description={t("placeholder.demography") + ":"}
             options={demographies}
-            selected={filter.demographic}
-            onChange={e => setFilter("demographic", e)}
+            selected={filter.demography}
+            onChange={e => setFilter("demography", e)}
           />
 
           <Daterange

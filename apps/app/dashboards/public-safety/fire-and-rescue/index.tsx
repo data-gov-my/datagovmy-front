@@ -1,6 +1,5 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { BOMBAIcon } from "@components/Icon/agency";
 import {
   AgencyBadge,
   Container,
@@ -19,7 +18,6 @@ import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import { TimeseriesOption } from "@lib/types";
-import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -94,16 +92,10 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         background="red"
         category={[t("common:categories.public_safety"), "text-danger"]}
         header={[t("header")]}
-        description={[t("description")]}
+        description={[t("description"), "whitespace-pre-line"]}
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bomba.full")}
-            link="https://www.bomba.gov.my/"
-            icon={<BOMBAIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bomba" />}
       />
 
       <Container className="min-h-screen">

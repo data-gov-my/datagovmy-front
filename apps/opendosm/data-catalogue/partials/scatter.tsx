@@ -3,11 +3,11 @@ import { FunctionComponent, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
 import { AKSARA_COLOR } from "@lib/constants";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download, exportAs } from "@lib/helpers";
+import { download, exportAs } from "datagovmy-ui/helpers";
 import { useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { ChartDataset } from "chart.js";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 import { toast } from "datagovmy-ui/components";
 
 const Scatter = dynamic(() => import("datagovmy-ui/charts/scatter"), { ssr: false });

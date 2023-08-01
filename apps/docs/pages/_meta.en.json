@@ -1,14 +1,21 @@
 {
   "index": "Introduction",
-  "overview": "Overview",
+  "changelog": "Changelog",
+  "quickstart": "Quickstart Guide",
+  "rate-limit": "Rate Limit",
+  "authentication": "Authentication",
+  "response-format": "Response Format",
   "static-api": "Static APIs",
-  "realtime-api": "Real-time APIs",
-  "resources": {
-    "title": "Resources",
+  "realtime-api": "Realtime APIs",
+  "main-site": {
+    "title": "Main Site",
+    "type": "page",
+    "href": "https://staging.data.gov.my",
+    "newWindow": true
+  },
+  "ai-helper": {
+    "title": "AI Helper",
     "type": "page"
   },
-  "contact": {
-    "title": "Contact us",
-    "type": "page"
-  }
+  "faq": "FAQ"
 }

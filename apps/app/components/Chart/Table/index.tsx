@@ -28,9 +28,10 @@ import Image from "next/image";
 import { useTranslation } from "@hooks/useTranslation";
 import { default as debounce } from "lodash/debounce";
 import type { DebouncedFunc } from "lodash";
-import { clx } from "@lib/helpers";
+import { clx, numFormat } from "@lib/helpers";
 import { UpDownIcon } from "@components/Icon";
 import Button from "@components/Button";
+import { Precision } from "@lib/types";
 
 export interface TableConfigColumn {
   id: string;
@@ -68,6 +69,7 @@ export interface TableProps {
   config?: Array<TableConfig>;
   responsive?: Boolean;
   enablePagination?: false | number;
+  precision?: number | Precision;
 }
 
 const relativeColor = (delta: number, inverse: boolean = false) => {
@@ -108,7 +110,8 @@ const Table: FunctionComponent<TableProps> = ({
   search,
   responsive = true,
   enablePagination = false,
-  cellClass = "text-right",
+  cellClass,
+  precision,
 }) => {
   const columns = useMemo<ColumnDef<Record<string, any>>[]>(() => config as any, [config]);
   const [sorting, setSorting] = useState<SortingState>(sorts);
@@ -139,23 +142,14 @@ const Table: FunctionComponent<TableProps> = ({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
-    sortingFns: {
-      localeNumber: (row_a: any, row_b: any, column_id: any): number => {
-        let [a, b] = [row_a.getValue(column_id), row_b.getValue(column_id)];
-        if (typeof a === "string" && typeof b === "string") {
-          [a, b] = [Number(a.replaceAll(",", "")), Number(b.replaceAll(",", ""))];
-        }
-        return a > b ? 1 : -1;
-      },
-    },
     debugTable: false,
   };
 
   const table = useReactTable(ReactTableProps);
 
   useEffect(() => {
-    enablePagination && table.setPageSize(enablePagination);
-  }, []);
+    if (enablePagination) table.setPageSize(enablePagination);
+  }, [enablePagination]);
 
   const onSearch = useCallback(
     debounce((query: string) => {
@@ -165,7 +159,7 @@ const Table: FunctionComponent<TableProps> = ({
   );
 
   const calcStickyLeft = (cellId: string) => {
-    // FIXME: document.getElementById returns null when page is turned
+    // FIXME: clientWidth is not the exact width that ends up rendered
     const ele = document.getElementById(cellId)?.previousElementSibling;
     return ele !== undefined && ele !== null ? ele.clientWidth : 0;
   };
@@ -178,7 +172,7 @@ const Table: FunctionComponent<TableProps> = ({
       </div>
 
       {(search || controls) && (
-        <div className="flex w-full flex-wrap items-center justify-between gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4 pb-2">
           <div className="flex w-full flex-col gap-2 lg:w-auto lg:flex-row lg:items-center">
             {controls && controls(setColumnFilters)}
           </div>
@@ -202,7 +196,6 @@ const Table: FunctionComponent<TableProps> = ({
                       )}
                       style={{
                         left: freeze?.includes(header.id) ? calcStickyLeft(header.id) : 0,
-                        // width: header.getSize(),
                       }}
                     >
                       {header.isPlaceholder ? null : (
@@ -280,8 +273,19 @@ const Table: FunctionComponent<TableProps> = ({
                       const relative = cell.column.columnDef.relative ?? undefined;
                       const scale = cell.column.columnDef.scale ?? undefined;
 
+                      const getPrecision = (
+                        precision?: number | Precision
+                      ): number | [number, number] => {
+                        if (!precision) return [1, 0];
+                        else if (typeof precision === "number") return precision;
+                        else if (precision.columns && cell.column.id in precision.columns)
+                          return precision.columns[cell.column.id];
+                        else return precision.default;
+                      };
+
                       const classNames = clx(
-                        "border-outline dark:border-washed-dark snap-end border-b p-2",
+                        "border-outline dark:border-washed-dark border-b px-2 py-2.5 max-sm:max-w-[150px] truncate",
+                        typeof value === "number" && "tabular-nums text-right",
                         lastCellInGroup.id === cell.column.id && "text-sm",
                         relative ? relativeColor(value as number, inverse) : "bg-opacity-20",
                         scale && scaleColor(value as number),
@@ -290,16 +294,25 @@ const Table: FunctionComponent<TableProps> = ({
                           ? cell.column.columnDef.className
                           : cellClass
                       );
+
+                      const displayValue = () => {
+                        if (typeof value === "number")
+                          return numFormat(value, "standard", getPrecision(precision));
+                        if (value === "NaN") return "-";
+                        return flexRender(cell.column.columnDef.cell, cell.getContext());
+                      };
                       return (
                         <td
                           id={cell.id}
                           key={cell.id}
                           className={classNames}
                           style={{
-                            left: freeze?.includes(cell.column.id) ? calcStickyLeft(cell.id) : 0,
+                            left: freeze?.includes(cell.column.id)
+                              ? calcStickyLeft(cell.column.id)
+                              : 0,
                           }}
                         >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {displayValue()}
                           {value !== null && unit}
                           {value === null && relative && "-"}
                         </td>
@@ -319,9 +332,7 @@ const Table: FunctionComponent<TableProps> = ({
         </table>
       </div>
       {enablePagination && (
-        <div
-          className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium ${className}`}
-        >
+        <div className={`mt-5 flex items-center justify-center gap-4 text-sm font-medium`}>
           <Button
             className="btn-disabled btn-default"
             onClick={() => table.previousPage()}
@@ -331,7 +342,7 @@ const Table: FunctionComponent<TableProps> = ({
             {t("common:common.previous")}
           </Button>
 
-          <span className="flex items-center gap-1 text-center text-sm">
+          <span className="flex items-center gap-1 text-center">
             {t("common:common.page_of", {
               current: table.getState().pagination.pageIndex + 1,
               total: table.getPageCount(),

@@ -1,4 +1,4 @@
-import type { DownloadOptions } from "@lib/types";
+import type { DownloadOptions, Precision } from "@lib/types";
 import { FunctionComponent, useMemo } from "react";
 import { default as Slider } from "@components/Chart/Slider";
 import { default as dynamic } from "next/dynamic";
@@ -17,7 +17,7 @@ import { CATALOGUE_COLORS, SHORT_PERIOD } from "../utils";
 const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
   config: {
-    precision: number;
+    precision: number | Precision;
   };
   className?: string;
   dataset: any;
@@ -110,8 +110,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
 
   const _datasets = useMemo<ChartDataset<keyof ChartTypeRegistry, any[]>[]>(() => {
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
-    const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fde8e8", "#fff8ec"]; // [blue, gray, red, yellow]
-
+    const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fff8ec", "#fde8e8"]; // [blue, gray, red, yellow]
     return sets.map(([key, y], index) => ({
       type: "line",
       data: y as number[],
@@ -137,7 +136,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             _ref={ref => setData("ctx", ref)}
             interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
             precision={
-              config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]
+              typeof config.precision === "number" ? config.precision : config.precision.default
             }
             enableAnimation={!play}
             enableLegend={_datasets.length > 1}
@@ -149,6 +148,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             beginZero={dataset.type === "STACKED_AREA"}
           />
           <Slider
+            className="pt-4"
             type="range"
             data={dataset.chart.x}
             value={data.minmax}

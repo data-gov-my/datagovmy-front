@@ -10,7 +10,6 @@ import {
   StateDropdown,
   Tabs,
 } from "@components/index";
-import { IPREPUIcon } from "@components/Icon/agency";
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
 import { OptionType } from "@components/types";
@@ -98,13 +97,7 @@ const IPR: FunctionComponent<IPRProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.IPR} currentState={params.state} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:epu.full")}
-            link="https://www.epu.gov.my/en"
-            icon={<IPREPUIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="epu" />}
       />
 
       <Container className="min-h-screen">

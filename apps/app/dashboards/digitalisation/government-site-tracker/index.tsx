@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { MAMPUIcon } from "@components/Icon/agency";
 
 /**
  * Government Site Tracker Dashboard
@@ -22,13 +21,7 @@ const GovernmentSiteTracker: FunctionComponent<GovernmentSiteTrackerProps> = ({}
         category={[t("common:categories.digitalisation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:mampu.full")}
-            link="https://www.mampu.gov.my/"
-            icon={<MAMPUIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="mampu" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

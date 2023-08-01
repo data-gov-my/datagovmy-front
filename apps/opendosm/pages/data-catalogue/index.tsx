@@ -2,10 +2,10 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Page } from "@lib/types";
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import DataCatalogue, { Catalogue } from "@data-catalogue/index";
 import { SHORT_LANG } from "@lib/constants";
-import { sortAlpha } from "@lib/helpers";
+import { sortAlpha } from "datagovmy-ui/helpers";
 import { withi18n } from "datagovmy-ui/decorators";
 
 const CatalogueIndex: Page = ({
@@ -18,7 +18,7 @@ const CatalogueIndex: Page = ({
 
   return (
     <>
-      <Metadata title={t("nav.catalogue")} description={""} keywords={""} />
+      <Metadata title={t("header")} description={"description"} keywords={""} />
       <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
     </>
   );
@@ -42,6 +42,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   async ({ locale, query }) => {
     const { data } = await get("/data-catalog/", {
       lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+      source: "DOSM",
       ...query,
     });
 

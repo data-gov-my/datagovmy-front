@@ -11,7 +11,7 @@ import type {
   DownloadOptions,
   FilterDefault,
 } from "@lib/types";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import At from "@components/At";
 import Card from "@components/Card";
 import Slider from "@components/Chart/Slider";
@@ -24,9 +24,11 @@ import { useFilter } from "@hooks/useFilter";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import CatalogueCode from "./partials/code";
+import { SampleCode } from "./partials/code";
 import { useAnalytics } from "@hooks/useAnalytics";
 import sum from "lodash/sum";
 import { WindowProvider } from "@hooks/useWindow";
+import CatalogueEmbed, { EmbedInterface } from "./partials/embed";
 
 /**
  * Catalogue Show
@@ -103,6 +105,7 @@ interface CatalogueShowProps {
   translations: {
     [key: string]: string;
   };
+  catalogueId?: string;
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -114,12 +117,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   metadata,
   urls,
   translations,
+  catalogueId,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
+  const embedRef = useRef<EmbedInterface>(null);
   const { filter, setFilter } = useFilter(config.context, { id: params.id });
   const { result, track } = useAnalytics(dataset);
+  const availableDownloads = useMemo<DownloadOption[]>(
+    () => Object.values(downloads).flatMap(option => option),
+    [downloads]
+  );
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -270,8 +279,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
               i18n.language
             );
-          else if (typeof item[key] === "string") return item[key];
-          else if (typeof item[key] === "number") return numFormat(item[key], "standard");
+          else return item[key];
         });
       case "GEOPOINT":
       case "TABLE":
@@ -285,6 +293,36 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze);
     }
   };
+
+  const sampleDescription = (
+    <>
+      {t("sample_query.desc1")}
+      <At
+        external={true}
+        className="link-dim text-base underline"
+        href={
+          i18n.language == "en-GB"
+            ? "https://developer.data.gov.my/data-catalogue/request-query"
+            : "https://developer.data.gov.my/ms/data-catalogue/request-query"
+        }
+      >
+        {t("sample_query.link1")}
+      </At>
+      <span>{`. ${t("sample_query.desc2")}`}</span>
+      <At
+        external={true}
+        className="link-dim text-base underline"
+        href={
+          i18n.language == "en-GB"
+            ? `https://developer.data.gov.my/data-catalogue/example-requests?id=${catalogueId}`
+            : `https://developer.data.gov.my/ms/data-catalogue/example-requests?id=${catalogueId}`
+        }
+      >
+        {t("sample_query.link2")}
+      </At>
+      .
+    </>
+  );
 
   return (
     <div>
@@ -305,7 +343,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           menu={
             <>
               <Dropdown
-                className="flex-row items-center"
+                className="w-fit"
                 sublabel={<EyeIcon className="h-4 w-4" />}
                 selected={show}
                 options={options}
@@ -316,21 +354,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
-                options={
-                  downloads
-                    ? downloads.chart.concat(downloads.data).map(item => ({
-                        label: item.title as string,
-                        value: item.id,
-                      }))
-                    : []
-                }
-                onChange={async e => {
-                  const action = downloads.chart
-                    .concat(downloads.data)
-                    .find(({ id }) => e.value === id);
-
+                options={availableDownloads
+                  .map(item => ({
+                    label: item.title as string,
+                    value: item.id,
+                  }))
+                  .concat({ label: t("embed"), value: "embed" })}
+                onChange={e => {
+                  // embed
+                  if (e.value === "embed") {
+                    embedRef.current?.open();
+                    return;
+                  }
+                  // downloads
+                  const action = availableDownloads.find(({ id }) => e.value === id);
                   if (!action) return;
-
                   return action.href();
                 }}
               />
@@ -379,6 +417,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 responsive={dataset.type === "TABLE"}
                 data={dataset.table}
                 freeze={config.freeze}
+                precision={config.precision}
                 search={
                   dataset.type === "TABLE"
                     ? onSearch => (
@@ -410,9 +449,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             />
           )}
 
-          <p className="text-dim mt-6 flex justify-end gap-2 text-sm">
+          <CatalogueEmbed
+            uid={dataset.meta.unique_id}
+            ref={embedRef}
+            options={config.options}
+            defaultOption={filter}
+            translations={translations}
+          />
+
+          {/* Views / download count*/}
+          <p className="text-dim flex justify-end gap-2 py-6 text-sm">
             <span>
-              {`${numFormat(result?.all_time_view ?? 0, "compact", 1)} ${t("common:common.views", {
+              {`${numFormat(result?.all_time_view ?? 0, "compact")} ${t("common:common.views", {
                 count: result?.all_time_view ?? 0,
               })}`}
             </span>
@@ -425,8 +473,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   result?.download_png,
                   result?.download_svg,
                 ]) ?? 0,
-                "compact",
-                1
+                "compact"
               )} ${t("common:common.downloads", {
                 count:
                   sum([
@@ -440,7 +487,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           </p>
         </Section>
 
-        <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-12">
+        <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-8 lg:py-12">
           {/* How is this data produced? */}
           <Section
             title={t("header_1")}
@@ -455,7 +502,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             }
           />
 
-          {/* Are there any pitfalls I should bear in mind when using this data? */}
+          {/* What caveats I should bear in mind when using this data? */}
           <Section
             title={t("header_2")}
             className=""
@@ -469,7 +516,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             }
           />
 
-          {/* Publication using this Data */}
+          {/* Publication(s) using this data */}
           {Boolean(explanation.publication) && (
             <Section
               title={t("header_3")}
@@ -489,7 +536,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         {/* Metadata */}
         <Section
           title={"Metadata"}
-          className="dark:border-b-outlineHover-dark mx-auto border-b py-12"
+          className="dark:border-b-outlineHover-dark mx-auto border-b py-8 lg:py-12"
         >
           <Card className="bg-background dark:border-outlineHover-dark dark:bg-washed-dark p-6">
             <div className="space-y-6">
@@ -611,7 +658,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           className="dark:border-b-outlineHover-dark mx-auto border-b py-12 "
         >
           <div className="space-y-5">
-            {downloads!.chart?.length > 0 && (
+            {downloads?.chart.length > 0 && (
               <>
                 <h5>{t("chart")}</h5>
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
@@ -627,7 +674,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 </div>
               </>
             )}
-            {downloads!.data?.length > 0 && (
+            {downloads?.data.length > 0 && (
               <>
                 <h5>Data</h5>
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
@@ -646,9 +693,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           </div>
         </Section>
 
-        {/* Code */}
+        {/* Dataset Source Code */}
         <Section title={t("code")} description={t("code_desc")} className="mx-auto w-full py-12">
           <CatalogueCode type={dataset.type} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
+        </Section>
+
+        {/* API Request Code */}
+        <Section
+          title={t("sample_query.section_title")}
+          description={sampleDescription}
+          className="mx-auto w-full py-12"
+        >
+          <SampleCode catalogueId={catalogueId} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
         </Section>
       </Container>
     </div>
@@ -697,7 +753,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
 
         <div className="space-y-1">
           {icon}
-          <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact", 1)}</p>
+          <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact")}</p>
         </div>
       </div>
     </Card>

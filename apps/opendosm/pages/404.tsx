@@ -1,20 +1,18 @@
-import ErrorCode from "@components/Error";
-import { Container } from "datagovmy-ui/components";
-import { Metadata } from "datagovmy-ui/components";
+import { Container, Metadata, ErrorStatus } from "datagovmy-ui/components";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
 import { withi18n } from "datagovmy-ui/decorators";
 
 const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation();
   return (
     <>
-      <Metadata title={t("error.404.title") as string} keywords={""} />
+      <Metadata title={t("error.404.title")} keywords={""} />
 
       <Container className="min-h-[76vh] pt-7 text-black">
-        <ErrorCode
-          title={t("error.404.title") as string}
+        <ErrorStatus
+          title={t("error.404.title")}
           description={t("error.404.description")}
           code={404}
           reason={t("error.404.reason")}
@@ -26,11 +24,11 @@ const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Error404;
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
     props: {
       meta: {
-        id: "404",
+        id: "error-404",
         type: "misc",
         category: null,
         agency: null,

@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { MET_FloodIcon } from "@components/Icon/agency";
 
 /**
  * FloodWarning Dashboard
@@ -22,13 +21,7 @@ const FloodWarning: FunctionComponent<FloodWarningProps> = ({}) => {
         category={[t("common:categories.environment"), "text-[#16A34A]"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jps.full")}
-            link="https://www.jps.gov.my/"
-            icon={<MET_FloodIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jps" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

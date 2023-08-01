@@ -2,36 +2,12 @@ import type { Page } from "@lib/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 
 import dynamic from "next/dynamic";
-import { get } from "@lib/api";
-import {
-  Container,
-  Section,
-  Tabs,
-  Panel,
-  Metadata,
-  Card,
-  At,
-  Slider,
-} from "datagovmy-ui/components";
-import Hero from "@components/Hero";
-import { useSlice, useData, useTranslation, WindowContext } from "datagovmy-ui/hooks";
-import { AKSARA_COLOR, BREAKPOINTS, SHORT_LANG } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { EyeIcon, DocumentArrowDownIcon } from "@heroicons/react/24/solid";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
-import { ReactNode, useContext, useEffect, useMemo } from "react";
-import { routes } from "@lib/routes";
-import {
-  UsersIcon,
-  EconomicGrowthIcon,
-  BankIcon,
-  IndustryIcon,
-  ProductionIcon,
-  RetailTradeIcon,
-  UnemploymentIcon,
-  InflationIcon,
-} from "@components/Icon";
-import { track } from "@lib/mixpanel";
+import { Container, Metadata, At, Hero } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { SHORT_LANG } from "@lib/constants";
+import { numFormat } from "datagovmy-ui/helpers";
+import { ReactNode, useContext } from "react";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
@@ -44,7 +20,7 @@ const Home: Page = ({
   timeseries_callouts,
   analytics,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const { t, i18n } = useTranslation();
 
   // const { data, setData } = useData({
@@ -173,10 +149,10 @@ const Home: Page = ({
 
   return (
     <>
-      <Metadata title="OpenDOSM" keywords={"opendosm data negara inflasi"} />
+      <Metadata keywords={"opendosm data negara inflasi"} />
 
       <Hero
-        background="home-banner"
+        background="gray"
         className="relative flex min-h-[300px] flex-col items-center justify-center text-left md:text-center"
       >
         <h3 className="mb-3">{t("home.title")}</h3>
@@ -292,7 +268,7 @@ const Home: Page = ({
         <Section title={t("home.section_3.title")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <Timeseries
-              className="h-[250px] w-full"
+              className="h-[300px] w-full"
               title={t("home.keys.views")}
               data={{
                 labels: coordinate.x,
@@ -311,7 +287,7 @@ const Home: Page = ({
               stats={yieldCallout("views")}
             />
             <Timeseries
-              className="h-[250px] w-full"
+              className="h-[300px] w-full"
               title={t("home.keys.users")}
               data={{
                 labels: coordinate.x,
@@ -330,7 +306,7 @@ const Home: Page = ({
               stats={yieldCallout("users")}
             />
             <Timeseries
-              className="h-[250px] w-full"
+              className="h-[300px] w-full"
               title={t("home.keys.downloads")}
               data={{
                 labels: coordinate.x,

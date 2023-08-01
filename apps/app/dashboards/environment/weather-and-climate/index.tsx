@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { METIcon } from "@components/Icon/agency";
 
 /**
  * WeatherandClimate Dashboard
@@ -22,13 +21,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({}) => {
         category={[t("common:categories.environment"), "text-[#16A34A]"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:met.full")}
-            link="https://www.met.gov.my/?lang=en"
-            icon={<METIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="met" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

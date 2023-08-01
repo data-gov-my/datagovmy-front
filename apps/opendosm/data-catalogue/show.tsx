@@ -1,8 +1,8 @@
-import { OptionType } from "@components/types";
+import type { OptionType } from "datagovmy-ui/types";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useTranslation, useFilter } from "datagovmy-ui/hooks";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "@lib/constants";
-import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
+import { clx, download, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
 import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
 import type {
   DCChartKeys,
@@ -12,7 +12,7 @@ import type {
   FilterDefault,
 } from "@lib/types";
 import { FunctionComponent, ReactNode, useEffect, useState } from "react";
-import { track } from "@lib/mixpanel";
+import { track } from "datagovmy-ui/mixpanel";
 import {
   At,
   Card,
@@ -284,11 +284,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
   return (
     <div>
-      <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
+      <Container className="mx-auto w-full md:max-w-screen-md lg:max-w-screen-lg">
         {/* Chart & Table */}
         <Section
           title={dataset.meta.title}
-          className=""
+          className="py-6"
           description={
             <p className="whitespace-pre-line text-base text-dim">
               {interpolate(dataset.meta.desc.substring(dataset.meta.desc.indexOf("]") + 1))}
@@ -397,7 +397,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Date Slider (optional) */}
           {config.dates !== null && (
             <Slider
-              className="pt-8"
               type="single"
               value={config.dates?.options.indexOf(
                 filter[config.dates.key].value ?? config.dates.default
@@ -411,7 +410,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           )}
         </Section>
 
-        <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-12">
+        <div className="space-y-8 border-b py-12 dark:border-b-outlineHover-dark">
           {/* How is this data produced? */}
           <Section
             title={t("header_1")}
@@ -451,9 +450,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         {/* Metadata */}
         <Section
           title={"Metadata"}
-          className="dark:border-b-outlineHover-dark mx-auto border-b py-12"
+          className="mx-auto border-b py-12 dark:border-b-outlineHover-dark"
         >
-          <Card className="dark:border-outlineHover-dark dark:bg-washed-dark bg-background p-6">
+          <Card className="bg-background p-6 dark:border-outlineHover-dark dark:bg-washed-dark">
             <div className="space-y-6">
               {/* Dataset description */}
               <div className="space-y-3">
@@ -576,7 +575,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         {/* Download */}
         <Section
           title={t("download")}
-          className="dark:border-b-outlineHover-dark mx-auto border-b py-12 "
+          className="mx-auto border-b py-12 dark:border-b-outlineHover-dark "
         >
           <div className="space-y-5">
             {downloads!.chart?.length > 0 && (
@@ -650,7 +649,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
 }) => {
   return typeof href === "string" ? (
     <a href={href} download onClick={() => track("file_download", meta)}>
-      <Card className="dark:border-outlineHover-dark dark:bg-washed-dark bg-background p-4.5">
+      <Card className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark">
         <div className="flex items-center gap-4.5">
           {image && (
             <Image
@@ -674,7 +673,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
     // .png & svg
     <Card
       onClick={href}
-      className="dark:border-outlineHover-dark dark:bg-washed-dark bg-background p-4.5"
+      className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
     >
       <div className="flex items-center gap-4.5">
         {image && (

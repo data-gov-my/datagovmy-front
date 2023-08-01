@@ -10,7 +10,7 @@ export class Page {
   }
 
   async goto() {
-    await this.page.goto(`http://localhost:3000${this.path}`);
+    await this.page.goto(this.path);
     await this.page.waitForLoadState("networkidle");
   }
 }

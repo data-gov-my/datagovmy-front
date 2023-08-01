@@ -1,6 +1,5 @@
 import Slider from "@components/Chart/Slider";
 import { SliderProvider } from "@components/Chart/Slider/context";
-import { MOTIcon } from "@components/Icon/agency";
 import { List } from "@components/Tabs";
 import { AgencyBadge, Container, Hero, Section } from "@components/index";
 import { useData } from "@hooks/useData";
@@ -9,7 +8,6 @@ import { useTranslation } from "@hooks/useTranslation";
 import { AKSARA_COLOR } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
 import { TimeseriesOption } from "@lib/types";
-import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -67,13 +65,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:mot.full")}
-            link="https://www.mot.gov.my/en/"
-            icon={<MOTIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="mot" />}
       />
 
       <Container className="min-h-screen">
@@ -174,7 +166,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                             {
                               type: coordinate.x.length === 1 ? "bar" : "line",
                               data: coordinate[key],
-                              label: t(data.periodly),
+                              label: t(`common:time.${data.periodly}`),
                               fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,

@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import { AgencyBadge, Container, Hero, Section, StateDropdown, Tabs } from "@components/index";
-import { PHCorpIcon } from "@components/Icon/agency";
 import LeftRightCard from "@components/LeftRightCard";
 import Slider from "@components/Chart/Slider";
 import { useData } from "@hooks/useData";
@@ -74,13 +73,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:phcorp.full")}
-            link="https://protecthealth.com.my"
-            icon={<PHCorpIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="phcorp" />}
       />
 
       <Container className="min-h-screen">

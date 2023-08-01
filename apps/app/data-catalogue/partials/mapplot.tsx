@@ -12,6 +12,7 @@ const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), {
   ssr: false,
 });
 interface CatalogueMapPlotProps {
+  className?: string;
   dataset: any;
   urls: {
     [key: string]: string;
@@ -20,6 +21,7 @@ interface CatalogueMapPlotProps {
 }
 
 const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
+  className = "h-[350px] w-full lg:h-[450px]",
   dataset,
   urls,
   onDownload,
@@ -77,12 +79,7 @@ const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
     [png, ctx]
   );
   return (
-    <MapPlot
-      _ref={ctx}
-      id={dataset.meta.unique_id}
-      className="h-[350px] w-full lg:h-[450px]"
-      markers={dataset.chart}
-    />
+    <MapPlot _ref={ctx} id={dataset.meta.unique_id} className={className} markers={dataset.chart} />
   );
 };
 

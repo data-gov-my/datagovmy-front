@@ -32,7 +32,6 @@ type CommonProps = {
   width?: string;
   label?: string;
   sublabel?: ReactNode;
-  darkMode?: boolean;
   anchor?: "left" | "right" | string;
   enableSearch?: boolean;
   enableFlag?: boolean;
@@ -73,7 +72,6 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   width = "w-full lg:w-fit",
   label,
   sublabel,
-  darkMode = false,
   enableFlag = false,
   enableClear = false,
 }) => {
@@ -121,11 +119,8 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       key={index}
       style={style}
       className={clx(
-        "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
+        "hover:bg-washed dark:hover:bg-washed-dark relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
         multiple ? "pl-10" : "pl-4",
-        darkMode
-          ? "hover:bg-washed-dark/50 text-white"
-          : "hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
         multiple &&
           selected &&
           Array.isArray(selected) &&
@@ -148,10 +143,10 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         )}
         {/* Option label */}
         <span
-          className={[
+          className={clx(
             "block flex-grow truncate",
-            option === selected ? "font-medium" : "font-normal",
-          ].join(" ")}
+            option === selected ? "font-medium" : "font-normal"
+          )}
         >
           {option.label}
         </span>
@@ -187,15 +182,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         disabled={disabled}
       >
         <div className="relative text-sm">
-          <Listbox.Button
-            className={clx(
-              "btn-default btn-disabled",
-              className,
-              width,
-              darkMode &&
-                "border-washed-dark active:bg-washed-dark hover:border-outlineHover-dark bg-black text-white"
-            )}
-          >
+          <Listbox.Button className={clx("btn-default btn-disabled", className, width)}>
             <>
               {/* Icon */}
               {icon}
@@ -241,9 +228,8 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
             <Listbox.Options
               ref={optionsRef}
               className={clx(
-                "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 min-w-full rounded-md text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
-                anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                darkMode ? "border-washed-dark border bg-black" : "bg-white"
+                "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 min-w-full rounded-md bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black dark:text-white",
+                anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
               )}
             >
               {/* Description - optional*/}

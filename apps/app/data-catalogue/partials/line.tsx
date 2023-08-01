@@ -1,4 +1,4 @@
-import type { DownloadOptions } from "@lib/types";
+import type { DownloadOptions, Precision } from "@lib/types";
 import { FunctionComponent, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
 import { useWatch } from "@hooks/useWatch";
@@ -13,9 +13,10 @@ import { CATALOGUE_COLORS } from "../utils";
 
 const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
 interface CatalogueLineProps {
+  className?: string;
   config: {
     line_variables?: Record<string, any>;
-    precision: number;
+    precision: number | Precision;
   };
   dataset: any;
   urls: {
@@ -26,6 +27,7 @@ interface CatalogueLineProps {
 }
 
 const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
+  className = "h-[350px] w-full lg:h-[450px]",
   config,
   dataset,
   urls,
@@ -122,9 +124,9 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
 
   return (
     <Line
-      className="h-[350px] w-full lg:h-[450px]"
+      className={className}
       _ref={ref => setCtx(ref)}
-      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+      precision={typeof config.precision === "number" ? config.precision : config.precision.default}
       data={{
         labels: dataset.chart.x,
         datasets: _datasets,
