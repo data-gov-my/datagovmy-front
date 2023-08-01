@@ -146,12 +146,12 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
               return (
                 dashboards.length > 0 && (
                   <Card
-                    className="border-outline bg-background dark:border-washed-dark dark:bg-background-dark my-3 inline-block h-min w-full rounded-xl border p-[18px]"
+                    className="border-outline bg-background dark:border-washed-dark dark:bg-background-dark mb-6 inline-block h-min w-full rounded-xl border p-[18px]"
                     key={category}
                   >
-                    <h5 className="pb-1">{t(`categories.${category}`)}</h5>
+                    <h5>{t(`categories.${category}`)}</h5>
                     {dashboards.map(item => (
-                      <div className="pt-2" key={item.name}>
+                      <div className="pt-3" key={item.name}>
                         <At
                           href={dashboards_route[item.name].route}
                           locale={i18n.language}
@@ -171,6 +171,14 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                             <div className="relative overflow-hidden">
                               <p className="truncate font-medium dark:text-white">
                                 {t(`dashboards.${item.name}.name`)}
+                              </p>
+                              <p className="text-dim transition-transform group-hover:translate-y-6">
+                                {`${numFormat(item.views, "compact")} ${t("common:common.views", {
+                                  count: item.views,
+                                })}`}
+                              </p>
+                              <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                                {t("common:components.click_to_explore")}
                               </p>
                             </div>
                           </Card>
