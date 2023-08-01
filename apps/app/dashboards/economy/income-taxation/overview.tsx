@@ -14,10 +14,9 @@ import { useTheme } from "next-themes";
 
 interface IncomeTaxationProps {
   stacked_bar: any;
-  last_updated: any;
 }
 
-const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, last_updated }) => {
+const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar }) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
   const { theme } = useTheme();
 

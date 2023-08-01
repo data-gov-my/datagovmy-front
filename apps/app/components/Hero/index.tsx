@@ -102,7 +102,7 @@ const Hero: FunctionComponent<HeroProps> = ({
 
                 {description && Array.isArray(description) ? (
                   <p
-                    className={clx("text-dim xl:w-2/3", description[1])}
+                    className={clx("text-dim max-xl:max-w-prose xl:w-2/3", description[1])}
                     data-testid="hero-description"
                   >
                     <Trans>{description[0]}</Trans>

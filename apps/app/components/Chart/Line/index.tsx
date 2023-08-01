@@ -50,7 +50,6 @@ const Line: FunctionComponent<LineProps> = ({
   controls,
   subheader,
   title,
-  state,
   type = "linear",
   prefixX,
   prefixY,
@@ -174,9 +173,9 @@ const Line: FunctionComponent<LineProps> = ({
 
   return (
     <div className="flex flex-col gap-y-6">
-      {[title, menu, controls, state, subheader, stats].some(Boolean) && (
+      {[title, menu, controls, subheader, stats].some(Boolean) && (
         <div className="flex flex-col gap-y-3">
-          <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+          <ChartHeader title={title} menu={menu} controls={controls} />
           {subheader && <div className="text-dim text-sm">{subheader}</div>}
           {stats && <Stats data={stats} />}
         </div>

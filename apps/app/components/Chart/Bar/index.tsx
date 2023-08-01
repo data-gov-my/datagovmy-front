@@ -50,7 +50,6 @@ const Bar: FunctionComponent<BarProps> = ({
   menu,
   title,
   controls,
-  state,
   type = "category",
   unitX,
   enableStep,
@@ -221,7 +220,7 @@ const Bar: FunctionComponent<BarProps> = ({
   };
   return (
     <div className="space-y-4">
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={className}>
         <BarCanvas
           id={id}

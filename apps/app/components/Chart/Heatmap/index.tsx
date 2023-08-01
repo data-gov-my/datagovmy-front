@@ -49,7 +49,6 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
   title,
   data = dummyCategory,
   menu,
-  state,
   color = "blues",
   prefix,
   unit,
@@ -225,7 +224,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
 
   return (
     <div>
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
 
       <div className={clx("overflow-x-auto", className)}>
         <Chart

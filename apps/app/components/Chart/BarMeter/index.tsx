@@ -26,7 +26,6 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   title,
   menu,
   controls,
-  state,
   max = 100,
   data = dummy,
   layout = "vertical",
@@ -137,10 +136,10 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
               </p>
               <div className="bg-washed dark:bg-washed-dark relative flex h-[80%] w-6 overflow-x-hidden rounded-full">
                 <div
-                  className=" animate-slide absolute bottom-0 w-full items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
+                  className="absolute bottom-0 w-full animate-[grow_1.5s_ease-in-out] items-center overflow-hidden rounded-full bg-[#0F172A] dark:bg-white"
                   style={{
-                    ["--from-width" as string]: 0,
-                    ["--to-width" as string]: percentFill(item.y),
+                    ["--from-height" as string]: 0,
+                    ["--to-height" as string]: percentFill(item.y),
                     height: percentFill(item.y),
                   }}
                 />
@@ -171,7 +170,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
 
   return (
     <div className="space-y-6" data-testid={title}>
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={clx(layout_style[layout], className)}>
         {_data?.map((item, index) => {
           return (
