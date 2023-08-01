@@ -260,10 +260,8 @@ const Ranking = ({ ranks }: RankingProps) => {
           <At href={item.id} key={item.id}>
             <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
               <div className="relative flex items-center gap-3">
-                <AgencyIcon agency={t(`agencies:${item.agency_abbr}.abbr`)} className="h-6 w-6" />
-                <p className="text-dim text-sm">
-                  {t(`agencies:${item.agency_abbr.toLowerCase()}.abbr`)}
-                </p>
+                <AgencyIcon agency={item.agency_abbr} className="h-6 w-6" />
+                <p className="text-dim text-sm">{t(`agencies:${item.agency_abbr}.abbr`)}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative overflow-hidden">
