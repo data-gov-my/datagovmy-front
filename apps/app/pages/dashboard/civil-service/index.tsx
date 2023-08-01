@@ -37,7 +37,7 @@ const CivilService: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-civil-service", async () => {
-  const { data } = await get("/dashboard", { dashboard: "civil_service" });
+  // const { data } = await get("/dashboard", { dashboard: "civil_service" });
 
   return {
     notFound: true,
@@ -49,12 +49,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-civil-service"
         agency: "JPA",
       },
       agencies: [],
-      barmeter: data.barmeter,
-      choropleth: data.choropleth,
+      barmeter: [], //data.barmeter,
+      choropleth: [], //data.choropleth,
       last_updated: Date.now(),
       pyramid: [],
-      timeseries: data.timeseries,
-      timeseries_callout: data.timeseries_callout,
+      timeseries: [], //data.timeseries,
+      timeseries_callout: [], //data.timeseries_callout,
     },
   };
 });
