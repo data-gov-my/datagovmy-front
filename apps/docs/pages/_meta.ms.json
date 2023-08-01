@@ -4,6 +4,7 @@
   "quickstart": "Cepat Mula",
   "rate-limit": "Had",
   "authentication": "Pengesahan",
+  "response-format": "Format Respons",
   "data-catalogue": "Katalog Data API",
   "gtfs-static": "Pengangkutan API (GTFS)",
   "gtfs-realtime": "Pengangkutan API (GTFS-R)",
