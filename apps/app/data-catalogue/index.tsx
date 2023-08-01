@@ -169,6 +169,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.monthly"), value: "MONTHLY" },
       { label: t("filter_options.quarterly"), value: "QUARTERLY" },
       { label: t("filter_options.yearly"), value: "YEARLY" },
+      { label: t("filter_options.infrequent"), value: "INFREQUENT" },
+      { label: t("filter_options.as_required"), value: "AS_REQUIRED" },
     ];
     const geographies: OptionType[] = [
       { label: t("filter_options.national"), value: "NATIONAL" },
