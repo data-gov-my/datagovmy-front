@@ -88,14 +88,7 @@ const CivilService: FunctionComponent<CivilServiceProps> = ({
         category={[t("common:categories.public_finances"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Public Service Department (JPA)"}
-            link="https://www.jpa.gov.my"
-            icon={<JPAIcon />}
-          />
-        }
-        // last_updated={}
+        agencyBadge={<AgencyBadge agency="jpa" />}
       />
 
       <Container className="min-h-screen">

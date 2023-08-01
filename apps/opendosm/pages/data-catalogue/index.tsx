@@ -1,12 +1,12 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "datagovmy-ui/api";
 import DataCatalogue, { Catalogue } from "@data-catalogue/index";
 import { SHORT_LANG } from "@lib/constants";
-import { sortAlpha } from "@lib/helpers";
+import { sortAlpha } from "datagovmy-ui/helpers";
+import { withi18n } from "datagovmy-ui/decorators";
 
 const CatalogueIndex: Page = ({
   query,
@@ -14,11 +14,11 @@ const CatalogueIndex: Page = ({
   total,
   sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["catalogue", "common"]);
 
   return (
     <>
-      <Metadata title={t("nav.catalogue")} description={""} keywords={""} />
+      <Metadata title={t("header")} description={"description"} keywords={""} />
       <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
     </>
   );
@@ -37,25 +37,32 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getServerSideProps: GetServerSideProps = withi18n(
+  ["catalogue", "common"],
+  async ({ locale, query }) => {
+    const { data } = await get("/data-catalog/", {
+      lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+      source: "DOSM",
+      ...query,
+    });
 
-  const { data } = await get("/data-catalog/", {
-    lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
-    ...query,
-  });
+    const collection = recurSort(data.dataset);
 
-  const collection = recurSort(data.dataset);
-
-  return {
-    props: {
-      ...i18n,
-      query: query ?? {},
-      total: data.total_all,
-      sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
-      collection,
-    },
-  };
-};
+    return {
+      props: {
+        meta: {
+          id: "data-catalogue",
+          type: "misc",
+          category: null,
+          agency: null,
+        },
+        query: query ?? {},
+        total: data.total_all,
+        sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
+        collection,
+      },
+    };
+  }
+);
 
 export default CatalogueIndex;

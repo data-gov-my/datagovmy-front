@@ -1,110 +1,118 @@
-import { useTranslation } from "@hooks/useTranslation";
-import { numFormat, toDate } from "@lib/helpers";
-
-type XYColumn = {
-  x_en: string;
-  x_bm: string;
-  [y_lang: string]: string;
-};
-
-type Period = "DAILY" | "WEEKLY" | "MONTHLY" | "QUARTERLY" | "YEARLY";
+import type { TableConfig } from "datagovmy-ui/charts/table";
+import { numFormat } from "datagovmy-ui/helpers";
+import { At } from "datagovmy-ui/components";
 
 /**
- * For timeseries & choropleth.
- * @param {XYColumn} column Column
- * @param {en|bm}locale en | bm
- * @param {Period} period Period
- * @returns table schema
+ * Table schema for data catalogue
+ * @param {string[]} column
+ * @param {Record<string, any>} translations i18n key-value
+ * @param {string[]} freezeKeys Freeze cols
+ * @returns {TableConfig[]} Table schema
  */
-export const CATALOGUE_TABLE_SCHEMA = (
-  column: XYColumn,
-  locale: "en" | "bm" = "en",
-  period: Period,
-  headers: string[],
-  precision: number | [number, number]
-) => {
-  const formatBy = {
-    DAILY: "dd MMM yyyy",
-    WEEKLY: "dd MMM yyyy",
-    MONTHLY: "MMM yyyy",
-    QUARTERLY: "qQ yyyy",
-    YEARLY: "yyyy",
-  };
-  const { t } = useTranslation();
-  const y_headers = headers
-    .filter((y: string) => !["line", "x"].includes(y))
-    .map((y: string) => ({
-      id: y,
-      header: locale === "en" ? column[`${y}_en`] : column[`${y}_bm`],
-      accessorFn: (item: any) =>
-        typeof item[y] === "number" ? numFormat(item[y], "standard", precision) : item[y],
-      sortingFn: "localeNumber",
-    }));
+export const UNIVERSAL_TABLE_SCHEMA = (
+  column: string[],
+  translations: Record<string, string>,
+  freezeKeys?: string[],
+  accessorFn?: (item: any, key: string) => string
+): TableConfig[] => {
+  const yieldValue = (key: string) => (!isEmpty(translations) ? translations[key] ?? key : key);
 
+  if (!freezeKeys)
+    return column.map((key: string) => generateSchema(key, yieldValue(key), accessorFn));
+
+  const [index_cols, rest]: [[string, string][], [string, string][]] = [[], []];
+  column.forEach((key: string) => {
+    if (freezeKeys.includes(key)) index_cols.push([key, yieldValue(key)]);
+    else rest.push([key, yieldValue(key)]);
+  });
+
+  return index_cols.concat(rest).map(([key, value]) => generateSchema(key, value, accessorFn));
+};
+
+/**
+ * Metadata table schema.
+ * @param {Function} t
+ * @param {boolean} isTable is-type TABLE
+ * @returns {TableConfig[]} Metadata schema
+ */
+export const METADATA_TABLE_SCHEMA = (
+  t: (key: string, params?: any) => string,
+  isTable: boolean = false
+): TableConfig[] => {
   return [
     {
-      id: "x",
-      header: locale === "en" ? column.x_en : column.x_bm,
-      accessorKey: "x",
-      cell: (item: any) => {
-        const x: number | string = item.getValue();
+      id: "variable",
+      header: t("meta_variable_name"),
+      accessorFn({ variable, data_type }) {
+        return `${variable}$$${data_type ? `(${data_type})` : ""}`;
+      },
+      cell: value => {
+        const [variable, data_type] = value.getValue().split("$$");
         return (
-          <div>
-            <span className="text-sm">
-              {
-                {
-                  number: toDate(x, formatBy[period], locale),
-                  string: !t(`catalogue.show_filters.${x}`).includes(".show_filters")
-                    ? t(`catalogue.show_filters.${x}`)
-                    : x,
-                }[typeof x as number | string]
-              }
-            </span>
-          </div>
+          <p className="font-mono text-sm">
+            {variable} {data_type}
+          </p>
+        );
+      },
+      className: "text-left",
+      enableSorting: false,
+    },
+    {
+      id: "variable_name",
+      header: t("meta_variable"),
+      accessorFn: (item: any) => JSON.stringify({ uid: item.uid, name: item.variable_name }),
+      className: "text-left min-w-[140px]",
+      enableSorting: false,
+      cell: value => {
+        const [item, index] = [JSON.parse(value.getValue()), value.row.index];
+        return (
+          <>
+            {Boolean(item.uid) ? (
+              <At href={`/data-catalogue/${item.uid}`} className="hover:underline dark:text-white">
+                {item.name}
+              </At>
+            ) : (
+              <p>{item.name}</p>
+            )}
+            {index === 0 && !isTable && (
+              <p className="font-normal text-dim">
+                <i>{t("meta_chart_above")}</i>
+              </p>
+            )}
+          </>
         );
       },
     },
-    ...y_headers,
+    {
+      id: "definition",
+      header: t("meta_definition"),
+      accessorKey: "definition",
+      className: "text-left leading-relaxed",
+      cell: value => <p>{value.getValue()}</p>,
+      enableSorting: false,
+    },
   ];
 };
 
-export type UniversalColumn = {
-  en: Record<string, string>;
-  bm: Record<string, string>;
+const generateSchema = (
+  key: string,
+  value: any,
+  accessorFn?: (item: any, key: string) => string
+): TableConfig => {
+  return {
+    id: key,
+    header: value,
+    // Filter bug, cannot have number type in table: https://github.com/TanStack/table/issues/4280
+    accessorFn: accessorFn
+      ? (item: any) => accessorFn(item, key)
+      : (item: any) => {
+          if (typeof item[key] === "string") return item[key];
+          if (typeof item[key] === "number") return numFormat(item[key], "standard");
+          return "";
+        },
+    className: "text-left",
+    sortingFn: "localeNumber",
+  };
 };
 
-/**
- *
- * @param {UniversalColumn} column
- * @param locale en | bm
- * @param keys
- * @returns Table schema
- */
-export const UNIVERSAL_TABLE_SCHEMA = (
-  column: UniversalColumn,
-  locale: "en" | "bm",
-  keys: string[]
-) => {
-  const columns = Object.entries(column[locale]);
-  const [index_cols, rest]: [[string, string][], [string, string][]] = [[], []];
-
-  columns.forEach(([key, value]: [string, string]) => {
-    if (keys.includes(key)) index_cols.push([key, value]);
-    else rest.push([key, value]);
-  });
-
-  return [...index_cols, ...rest].map(([key, value]) => {
-    return {
-      id: key,
-      header: value,
-      // accessorKey: key,
-      // Filter bug, cannot have number type in table: https://github.com/TanStack/table/issues/4280
-      accessorFn: (item: any) => {
-        if (typeof item[key] === "string") return item[key];
-        if (typeof item[key] === "number") return item[key].toString();
-        return "";
-      },
-      className: "text-left",
-    };
-  });
-};
+const isEmpty = (obj: Object) => Object.keys(obj).length === 0;

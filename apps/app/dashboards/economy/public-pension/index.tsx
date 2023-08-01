@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { KWAPIcon } from "@components/Icon/agency";
 
 /**
  * PublicPension Dashboard
@@ -22,13 +21,7 @@ const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
         category={[t("common:categories.economy"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Retirement Fund Inc (KWAP)"}
-            link="https://www.kwap.gov.my"
-            icon={<KWAPIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="kwap" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

@@ -9,8 +9,11 @@ import { withi18n } from "@lib/decorators";
 import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
 import type { Page } from "@lib/types";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { WindowProvider } from "@hooks/useWindow";
 
 const IPR: Page = ({
+  meta,
   choropleth,
   last_updated,
   params,
@@ -20,7 +23,7 @@ const IPR: Page = ({
   const { t } = useTranslation(["dashboard-ipr", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IPRDashboard
         choropleth={choropleth}
@@ -29,20 +32,27 @@ const IPR: Page = ({
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
 IPR.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown url={routes.IPR} currentState={props.params.state} hideOnScroll />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.IPR} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.IPR}
+          currentState={props.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.IPR} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async () => {
@@ -61,7 +71,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ipr", async ()
         agency: "EPU",
       },
       choropleth: data.choropleth,
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       params: { state: "mys" },
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout.data,

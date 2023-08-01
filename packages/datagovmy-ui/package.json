@@ -1,0 +1,148 @@
+{
+  "name": "datagovmy-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "src",
+    "types"
+  ],
+  "exports": {
+    "./api": "./src/lib/api.ts",
+    "./charts/*": "./src/charts/*.tsx",
+    "./components": "./src/components/index.ts",
+    "./contexts/*": "./src/contexts/*.tsx",
+    "./decorators": "./src/lib/decorators.ts",
+    "./geojson/district/*": "./src/lib/geojson/district/*.ts",
+    "./geojson/dun/*": "./src/lib/geojson/dun/*.ts",
+    "./geojson/parlimen/*": "./src/lib/geojson/parlimen/*.ts",
+    "./geojson/state/*": "./src/lib/geojson/state/*.ts",
+    "./helpers": "./src/lib/helpers.ts",
+    "./hooks": "./src/hooks/index.ts",
+    "./i18n": "./src/i18n/index.cjs",
+    "./icons": "./src/icons/index.tsx",
+    "./icons/agency": "./src/icons/agency.tsx",
+    "./mixpanel": "./src/lib/mixpanel.ts",
+    "./types": "./types/index.d.ts",
+    "./styles": "./src/styles/globals.css"
+  },
+  "typesVersions": {
+    "*": {
+      "api": [
+        "./src/lib/api.ts"
+      ],
+      "charts/*": [
+        "./src/charts/*.tsx"
+      ],
+      "components": [
+        "./types/components.d.ts"
+      ],
+      "contexts/*": [
+        "./src/contexts/*.tsx"
+      ],
+      "i18n": [
+        "./types/i18n.d.ts"
+      ],
+      "icons": [
+        "./types/icons.d.ts"
+      ],
+      "icons/agency": [
+        "./types/icons.agency.d.ts"
+      ],
+      "decorators": [
+        "./types/decorators.d.ts"
+      ],
+      "helpers": [
+        "./types/helpers.d.ts"
+      ],
+      "hooks": [
+        "./types/hooks.d.ts"
+      ],
+      "geojson/district/*": [
+        "./src/lib/geojson/district/*.ts"
+      ],
+      "geojson/dun/*": [
+        "./src/lib/geojson/dun/*.ts"
+      ],
+      "geojson/parlimen/*": [
+        "./src/lib/geojson/parlimen/*.ts"
+      ],
+      "geojson/state/*": [
+        "./src/lib/geojson/state/*.ts"
+      ],
+      "mixpanel": [
+        "./src/lib/mixpanel.ts"
+      ]
+    }
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.14",
+    "@heroicons/react": "^2.0.11",
+    "@nivo/core": "^0.79.0",
+    "@nivo/waffle": "^0.80.0",
+    "@radix-ui/react-slider": "^1.1.1",
+    "@tanstack/match-sorter-utils": "^8.8.4",
+    "@tanstack/react-table": "^8.8.5",
+    "axios": "^0.27.2",
+    "canvas2svg": "^1.0.16",
+    "chart.js": "^3.9.1",
+    "chartjs-adapter-luxon": "^1.2.0",
+    "chartjs-chart-geo": "3.10.0",
+    "chartjs-chart-matrix": "^2.0.1",
+    "chartjs-plugin-annotation": "^2.0.1",
+    "chartjs-plugin-crosshair": "^1.2.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "d3-scale-chromatic": "^3.0.0",
+    "dom-to-image": "^2.6.0",
+    "highlight.js": "^11.6.0",
+    "i18next": "^22.4.14",
+    "i18next-http-backend": "^2.2.0",
+    "leaflet": "^1.9.1",
+    "leaflet-easyprint": "^2.1.9",
+    "leaflet.markercluster": "^1.5.3",
+    "lodash": "^4.17.21",
+    "luxon": "^3.0.3",
+    "next-i18next": "^13.2.2",
+    "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^12.2.0",
+    "react-leaflet": "^4.1.0",
+    "react-window": "^1.8.9",
+    "sonner": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.5.1",
+    "@types/d3-scale": "^4.0.2",
+    "@types/d3-shape": "^3.1.0",
+    "@types/dom-to-image": "^2.6.4",
+    "@types/gtag.js": "^0.0.12",
+    "@types/leaflet": "^1.8.0",
+    "@types/leaflet.markercluster": "^1.5.1",
+    "@types/lodash": "^4.14.185",
+    "@types/luxon": "^3.0.1",
+    "@types/mixpanel-browser": "^2.38.1",
+    "@types/node": "^20.3.1",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/react-window": "^1.8.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "autoprefixer": "^10.4.7",
+    "cookie": "^0.5.0",
+    "eslint": "^8.40.0",
+    "eslint-config-datagovmy": "*",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "geojson-bbox": "^0.0.1",
+    "postcss": "*",
+    "postcss-import": "^14.1.0",
+    "postcss-nesting": "^10.1.10",
+    "prettier": "^2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.11",
+    "tailwindcss": "*",
+    "tsconfig": "*",
+    "typescript": "*"
+  }
+}

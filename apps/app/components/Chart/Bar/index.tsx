@@ -19,6 +19,7 @@ import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
 import { useTheme } from "next-themes";
 
 interface BarProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   layout?: "vertical" | "horizontal";
   data?: ChartData<"bar", any[], string | number>;
@@ -44,6 +45,7 @@ interface BarProps extends ChartHeaderProps {
 }
 
 const Bar: FunctionComponent<BarProps> = ({
+  id,
   className = "w-full h-full", // manage CSS here
   menu,
   title,
@@ -59,7 +61,7 @@ const Bar: FunctionComponent<BarProps> = ({
   formatX,
   onClick,
   reverse = false,
-  precision = 1,
+  precision = [1, 0],
   enableLegend = false,
   enableStack = false,
   enableGridX = true,
@@ -72,7 +74,7 @@ const Bar: FunctionComponent<BarProps> = ({
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
   const isVertical = useMemo(() => layout === "vertical", [layout]);
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
   const { theme } = useTheme();
 
@@ -85,12 +87,9 @@ const Bar: FunctionComponent<BarProps> = ({
   };
 
   const displayLabel = (value: string) => {
-    if (breakpoint >= BREAKPOINTS.MD) return formatX ? formatX(value) : value;
-
-    if (formatX) {
-      return formatX(value).length > 25 ? formatX(value).slice(0, 25).concat("..") : formatX(value);
-    }
-    return value.length > 25 ? value.slice(0, 25).concat("..") : value;
+    const label = formatX ? formatX(value) : value;
+    if (label.length > 25 && size.width < BREAKPOINTS.SM) return label.slice(0, 25).concat("..");
+    return label;
   };
 
   const _data = useMemo<ChartData<"bar", any[], string | number>>(() => {
@@ -170,11 +169,11 @@ const Bar: FunctionComponent<BarProps> = ({
             if (!formatX) {
               return isVertical
                 ? this.getLabelForValue(value as number).concat(unitX ?? "")
-                : display(value as number, "compact", 1);
+                : display(value as number, "compact", precision);
             }
             let text = isVertical
               ? formatX(this.getLabelForValue(value as number))
-              : display(value as number, "compact", 1);
+              : display(value as number, "compact", precision);
             if (text.length > 25) text = text.slice(0, 25).concat("..");
             return text;
           },
@@ -208,7 +207,7 @@ const Bar: FunctionComponent<BarProps> = ({
           callback: function (value: string | number) {
             return displayLabel(
               isVertical
-                ? display(value as number, "compact", 1)
+                ? display(value as number, "compact", precision)
                 : this.getLabelForValue(value as number).concat(unitX ?? "")
             );
           },
@@ -225,6 +224,8 @@ const Bar: FunctionComponent<BarProps> = ({
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
       <div className={className}>
         <BarCanvas
+          id={id}
+          data-testid={id}
           ref={_ref ?? ref}
           onClick={event => {
             if (ref?.current) {

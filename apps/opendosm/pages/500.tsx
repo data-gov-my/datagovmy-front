@@ -1,10 +1,9 @@
-import Container from "@components/Container";
-import ErrorCode from "@components/Error";
-import Metadata from "@components/Metadata";
+import { Container, Metadata, ErrorStatus } from "datagovmy-ui/components";
 import { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+import { withi18n } from "datagovmy-ui/decorators";
 
 const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
@@ -12,7 +11,7 @@ const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
     <>
       <Metadata title={t("error.500.title")} keywords={""} />
       <Container className="min-h-[76vh] pt-7 text-black">
-        <ErrorCode
+        <ErrorStatus
           title={t("error.500.title")}
           description={t("error.500.description")}
           code={500}
@@ -25,11 +24,15 @@ const Error500: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Error500;
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "error-500",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
     },
   };
-};
+});

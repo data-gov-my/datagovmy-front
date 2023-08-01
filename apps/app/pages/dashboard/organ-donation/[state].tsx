@@ -1,17 +1,20 @@
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import { CountryAndStates, STATES } from "@lib/constants";
-import { useTranslation } from "@hooks/useTranslation";
-import { routes } from "@lib/routes";
 import Fonts from "@config/font";
 import OrganDonationDashboard from "@dashboards/healthcare/organ-donation";
-import { DateTime } from "luxon";
-import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { useTranslation } from "@hooks/useTranslation";
+import { WindowProvider } from "@hooks/useWindow";
+import { get } from "@lib/api";
+import { CountryAndStates } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
+import { clx } from "@lib/helpers";
+import { routes } from "@lib/routes";
+import type { Page } from "@lib/types";
+import { DateTime } from "luxon";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 
 const OrganDonationState: Page = ({
+  meta,
   last_updated,
   params,
   timeseries,
@@ -22,7 +25,7 @@ const OrganDonationState: Page = ({
   const { t } = useTranslation(["dashboard-organ-donation", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={CountryAndStates[params.state].concat(" - ", t("header"))}
         description={t("description")}
@@ -36,39 +39,30 @@ const OrganDonationState: Page = ({
         barchart_age={barchart_age}
         barchart_time={barchart_time}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
 OrganDonationState.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown url={routes.ORGAN_DONATION} currentState={props.params.state} hideOnScroll />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.ORGAN_DONATION} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(Fonts.body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.ORGAN_DONATION}
+          currentState={props.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.ORGAN_DONATION} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  //   let paths: Array<any> = [];
-  //   STATES.forEach(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",
@@ -94,7 +88,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "healthcare",
           agency: "NTRC",
         },
-        last_updated: new Date().valueOf(),
+        last_updated: data.data_last_updated,
         params: params,
         timeseries: data.timeseries,
         choropleth: data.choropleth_malaysia,

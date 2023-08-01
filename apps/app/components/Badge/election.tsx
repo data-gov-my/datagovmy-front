@@ -28,9 +28,9 @@ interface WonProps {
 
 export const Won: FunctionComponent<WonProps> = ({ desc }) => {
   return (
-    <span className="flex flex-row items-center gap-1.5">
-      <CheckCircleIcon className="h-4 w-4 self-center text-[#10B981]" />
-      {desc && <span className="whitespace-nowrap uppercase text-[#10B981]">{desc}</span>}
+    <span className="text-success flex gap-1.5">
+      <CheckCircleIcon className="h-4 w-4 self-center" />
+      {desc && <span className="whitespace-nowrap uppercase">{desc}</span>}
     </span>
   );
 };
@@ -41,9 +41,9 @@ interface LostProps {
 
 export const Lost: FunctionComponent<LostProps> = ({ desc }) => {
   return (
-    <span className="flex flex-row items-center gap-1.5">
-      <XCircleIcon className="text-danger h-4 w-4 self-center" />
-      {desc && <span className="text-danger whitespace-nowrap uppercase">{desc}</span>}
+    <span className="text-danger flex gap-1.5">
+      <XCircleIcon className="h-4 w-4 self-center" />
+      {desc && <span className="whitespace-nowrap uppercase">{desc}</span>}
     </span>
   );
 };

@@ -1,141 +1,120 @@
-import type { DownloadOptions, ChoroplethColors } from "@lib/types";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import type { DownloadOptions } from "@lib/types";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { default as dynamic } from "next/dynamic";
-import { useExport } from "@hooks/useExport";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download } from "@lib/helpers";
-import { track } from "mixpanel-browser";
+import { download, exportAs } from "datagovmy-ui/helpers";
+import { track } from "datagovmy-ui/mixpanel";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import type { HeatmapData, HeatmapDatum } from "datagovmy-ui/charts/heatmap";
+import { toast } from "datagovmy-ui/components";
 
-const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), {
+const Heatmap = dynamic(() => import("datagovmy-ui/charts/heatmap"), {
   ssr: false,
 });
 
-type ChoroPoint = {
-  id: string;
-  value: number;
-};
-
 interface CatalogueHeatmapProps {
-  config: {
-    color: ChoroplethColors;
-    precision: number;
-  };
-  dataset: {
-    chart: Array<ChoroPoint>;
-    meta: {
-      en: {
-        title: string;
-      };
-      bm: {
-        title: string;
-      };
-      unique_id: string;
-    };
-  };
-  lang: "en" | "bm";
+  config: any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
+  translations: any;
   onDownload?: (prop: DownloadOptions) => void;
 }
 
 const CatalogueHeatmap: FunctionComponent<CatalogueHeatmapProps> = ({
   dataset,
   config,
-  lang,
   urls,
+  translations,
   onDownload,
 }) => {
-  const { t } = useTranslation();
-  const [mounted, setMounted] = useState<boolean>(false);
-  const { onRefChange, svg, png } = useExport(mounted);
-
+  const { t } = useTranslation(["catalogue", "common"]);
+  const [ctx, setCtx] = useState<ChartJSOrUndefined<"matrix", any[], unknown> | null>(null);
   useEffect(() => {
-    onDownload && onDownload(availableDownloads());
-  }, [svg, png, mounted]);
+    if (onDownload) onDownload(availableDownloads);
+  }, [ctx]);
 
-  const availableDownloads = useCallback(
+  const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
         {
-          key: "png",
-          image: png,
-          title: t("catalogue.image.title"),
-          description: t("catalogue.image.desc"),
+          id: "png",
+          image: ctx && ctx.toBase64Image("png", 1),
+          title: t("image.title"),
+          description: t("image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (png) {
-              download(png, dataset.meta.unique_id.concat(".png"), () =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_png"),
-                  id: dataset.meta.unique_id,
-                  ext: "svg",
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  type: "image",
-                })
-              );
-            }
+            download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name: dataset.meta.title,
+              ext: "png",
+            });
           },
         },
         {
-          key: "svg",
-          image: png,
-          title: t("catalogue.vector.title"),
-          description: t("catalogue.vector.desc"),
+          id: "svg",
+          image: ctx && ctx.toBase64Image("png", 1),
+          title: t("vector.title"),
+          description: t("vector.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (svg) {
-              download(svg, dataset.meta.unique_id.concat(".svg"), () =>
+            exportAs("svg", ctx!.canvas)
+              .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
+              .then(() =>
                 track("file_download", {
                   uid: dataset.meta.unique_id.concat("_svg"),
-                  id: dataset.meta.unique_id,
-                  ext: "svg",
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
                   type: "image",
+                  id: dataset.meta.unique_id,
+                  name: dataset.meta.title,
+                  ext: "svg",
                 })
-              );
-            }
+              )
+              .catch(e => {
+                toast.error(
+                  t("common:error.toast.image_download_failure"),
+                  t("common:error.toast.try_again")
+                );
+                console.error(e);
+              });
           },
         },
       ],
       data: [
         {
-          key: "csv",
+          id: "csv",
           image: "/static/images/icons/csv.png",
-          title: t("catalogue.csv.title"),
-          description: t("catalogue.csv.desc"),
+          title: t("csv.title"),
+          description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: urls.csv,
         },
         {
-          key: "parquet",
+          id: "parquet",
           image: "/static/images/icons/parquet.png",
-          title: t("catalogue.parquet.title"),
-          description: t("catalogue.parquet.desc"),
+          title: t("parquet.title"),
+          description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: urls.parquet,
         },
       ],
     }),
-    [mounted, svg, png]
+    [ctx]
   );
 
-  return (
-    <>
-      <div ref={onRefChange}>
-        <Heatmap
-          className="h-[350px] w-full lg:h-[600px]"
-          //   data={dataset.chart}
-          //   color={config.color}
-          //   graphChoice={config.geojson}
-          //   onReady={e => setMounted(e)}
-        />
-      </div>
-    </>
-  );
+  const _datasets = useMemo<HeatmapData>(() => {
+    return dataset.chart.map((item: HeatmapDatum) => ({
+      x: translations[item.x] ?? item.x,
+      y: translations[item.y] ?? item.y,
+      z: item.z,
+    }));
+  }, [dataset.chart]);
+
+  return <Heatmap _ref={ref => setCtx(ref)} data={_datasets} color={config.color} />;
 };
 
 export default CatalogueHeatmap;

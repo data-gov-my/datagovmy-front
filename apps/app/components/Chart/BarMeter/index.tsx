@@ -65,9 +65,9 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
       case "horizontal":
         return (
           <div className="space-y-2" key={item.x.concat(`_${index}`)}>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-2">
               <p className="text-sm">{formatX ? formatX(item.x) : item.x}</p>
-              <div className="text-dim text-sm dark:text-white">
+              <div className="text-dim flex self-end text-sm dark:text-white">
                 {formatY ? formatY(item.y, item.x) : <p>{numFormat(item.y, "standard", 1)}</p>}
                 {unit}
               </div>
@@ -170,7 +170,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid={title}>
       <ChartHeader title={title} menu={menu} controls={controls} state={state} />
       <div className={clx(layout_style[layout], className)}>
         {_data?.map((item, index) => {

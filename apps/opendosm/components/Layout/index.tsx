@@ -1,20 +1,22 @@
-import { FunctionComponent, ReactElement } from "react";
+import { FunctionComponent, ReactElement, ReactNode } from "react";
 
 import Header from "./Header";
 import Footer from "./Footer";
 
 interface LayoutProps {
-  stateSelector?: ReactElement;
-  children: React.ReactNode;
+  stateSelector?: ReactNode;
+  className?: string;
+  children: ReactNode;
 }
-
-const Layout: FunctionComponent<LayoutProps> = ({ children, stateSelector }) => {
+const Layout: FunctionComponent<LayoutProps> = ({ className, children, stateSelector }) => {
   return (
-    <>
+    <div className={className}>
       <Header stateSelector={stateSelector} />
-      <div className="pt-14">{children}</div>
-      <Footer />
-    </>
+      <div className="flex min-h-screen flex-col">
+        <div className="flex flex-grow flex-col pt-14">{children}</div>
+        <Footer />
+      </div>
+    </div>
   );
 };
 

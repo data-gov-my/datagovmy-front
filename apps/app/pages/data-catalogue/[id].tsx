@@ -5,12 +5,14 @@ import { SHORT_LANG } from "@lib/constants";
 import { OptionType } from "@components/types";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
-
+import Progress from "@components/Progress";
 import Metadata from "@components/Metadata";
 import DataCatalogueShow from "@data-catalogue/show";
 import { useMemo } from "react";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CatalogueShow: Page = ({
+  meta,
   params,
   config,
   dataset,
@@ -18,6 +20,7 @@ const CatalogueShow: Page = ({
   metadata,
   urls,
   translations,
+  catalogueId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["catalogue", "common"]);
 
@@ -39,7 +42,8 @@ const CatalogueShow: Page = ({
   }, [dataset.type]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
+      <Progress />
       <Metadata
         title={dataset.meta.title}
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
@@ -54,8 +58,9 @@ const CatalogueShow: Page = ({
         metadata={metadata}
         urls={urls}
         translations={translations}
+        catalogueId={catalogueId}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -114,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       props: {
         meta: {
           id: data.chart_details.intro.unique_id,
-          type: "catalogue",
+          type: "data-catalogue",
           category: null,
           agency: Array.isArray(data.metadata.data_source)
             ? data.metadata.data_source.join(",")
@@ -144,6 +149,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         },
         urls: data.downloads ?? {},
         translations: data.translations ?? {},
+        catalogueId: params?.id,
       },
     };
   }

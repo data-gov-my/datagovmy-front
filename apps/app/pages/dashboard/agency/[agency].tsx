@@ -11,57 +11,73 @@ const DashboardAgency: Page = ({
   sources,
   dashboards,
   agency,
+  dashboards_route,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
-      <Dashboard agency={agency} sources={sources} analytics={analytics} dashboards={dashboards} />
+      <Dashboard
+        agency={agency}
+        sources={sources}
+        analytics={analytics}
+        dashboards={dashboards}
+        dashboards_route={dashboards_route}
+      />
     </>
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",
   };
 };
 
-export const getStaticProps: GetStaticProps = withi18n(null, async ({ params }) => {
-  try {
-    const { data } = await get("/dashboard/", { dashboard: "dashboards" });
-    return {
-      props: {
-        meta: {
-          id: "dashboard-agency",
-          type: "misc",
-          category: null,
-          agency: (params?.agency as string) || null,
-        },
-        agency: params?.agency || null,
-        sources: data.agencies_all.data,
-        analytics: {
-          data_as_of: data.dashboards_top.data_as_of,
-          en: {
-            today: data.dashboards_top.data.en.today,
-            last_month: data.dashboards_top.data.en.last_month,
-            all_time: data.dashboards_top.data.en.all_time,
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboards", "agencies"],
+  async ({ params }) => {
+    try {
+      const _agency = params ? String(params?.agency).toLowerCase() : null;
+      const [agencyDropdown, data] = await Promise.all([
+        get("/dropdown", { dashboard: "dashboards" }).then(res => {
+          if (!res.data?.data.find((agency: string) => agency === _agency)) {
+            throw `Invalid agency parameter: ${_agency}`;
+          }
+          return res.data;
+        }),
+        get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),
+      ]).catch(e => {
+        throw new Error("Error retrieving dashboards data. Message: " + e);
+      });
+
+      return {
+        props: {
+          meta: {
+            id: "dashboard-agency",
+            type: "misc",
+            category: null,
+            agency: _agency,
           },
-          bm: {
-            today: data.dashboards_top.data.bm.today,
-            last_month: data.dashboards_top.data.bm.last_month,
-            all_time: data.dashboards_top.data.bm.all_time,
+          agency: _agency,
+          sources: agencyDropdown.data,
+          analytics: {
+            data_as_of: data.dashboards_top.data_as_of,
+            today: data.dashboards_top.data.today,
+            last_month: data.dashboards_top.data.last_month,
+            all_time: data.dashboards_top.data.all_time,
           },
+          dashboards: data.dashboards_all.data,
+          dashboards_route: data.dashboards_route.data,
         },
-        dashboards: data.dashboards_all.data,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return { notFound: true };
+      };
+    } catch (e) {
+      console.error(e);
+      return { notFound: true };
+    }
   }
-});
+);
 
 export default DashboardAgency;

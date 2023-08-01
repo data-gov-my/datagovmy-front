@@ -6,6 +6,7 @@
     "base.json",
     "nextjs.json",
     "react-library.json",
+    "playwright.json",
     "tailwindcss.js",
     "postcss.js"
   ],

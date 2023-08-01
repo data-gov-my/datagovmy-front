@@ -1,40 +1,21 @@
-import type { ChoroplethColors, DownloadOptions } from "@lib/types";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
-import { default as dynamic } from "next/dynamic";
-import { useExport } from "@hooks/useExport";
-import { useTranslation } from "@hooks/useTranslation";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { download } from "@lib/helpers";
-import { track } from "mixpanel-browser";
+import { useTranslation } from "datagovmy-ui/hooks";
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
+import { download, exportAs } from "datagovmy-ui/helpers";
+import type { DownloadOptions } from "@lib/types";
+import { track } from "datagovmy-ui/mixpanel";
+import { default as dynamic } from "next/dynamic";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
+import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { toast } from "datagovmy-ui/components";
+
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), {
   ssr: false,
 });
 
-type ChoroPoint = {
-  id: string;
-  value: number;
-};
-
 interface CatalogueChoroplethProps {
-  config: {
-    color: ChoroplethColors;
-    geojson: "state" | "dun" | "parlimen" | "district";
-    precision: number;
-  };
-  dataset: {
-    chart: Array<ChoroPoint>;
-    meta: {
-      en: {
-        title: string;
-      };
-      bm: {
-        title: string;
-      };
-      unique_id: string;
-    };
-  };
-  lang: "en" | "bm";
+  config: any;
+  dataset: any;
   urls: {
     [key: string]: string;
   };
@@ -44,98 +25,97 @@ interface CatalogueChoroplethProps {
 const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   dataset,
   config,
-  lang,
   urls,
   onDownload,
 }) => {
-  const { t } = useTranslation();
-  const [mounted, setMounted] = useState<boolean>(false);
-  const { onRefChange, svg, png } = useExport(mounted);
+  const { t } = useTranslation(["catalogue", "common"]);
 
+  const [ctx, setCtx] = useState<ChartJSOrUndefined<"choropleth", any[], unknown> | null>(null);
   useEffect(() => {
-    onDownload && onDownload(availableDownloads());
-  }, [svg, png, mounted]);
+    if (onDownload) onDownload(availableDownloads);
+  }, [ctx]);
 
-  const availableDownloads = useCallback(
+  const availableDownloads = useMemo<DownloadOptions>(
     () => ({
       chart: [
         {
-          key: "png",
-          image: png,
-          title: t("catalogue.image.title"),
-          description: t("catalogue.image.desc"),
+          id: "png",
+          image: ctx && ctx.toBase64Image("png", 1),
+          title: t("image.title"),
+          description: t("image.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (png) {
-              download(png, dataset.meta.unique_id.concat(".png"), () =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_png"),
-                  id: dataset.meta.unique_id,
-                  ext: "svg",
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
-                  type: "image",
-                })
-              );
-            }
+            download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
+            track("file_download", {
+              uid: dataset.meta.unique_id.concat("_png"),
+              type: "image",
+              id: dataset.meta.unique_id,
+              name: dataset.meta.title,
+              ext: "png",
+            });
           },
         },
         {
-          key: "svg",
-          image: png,
-          title: t("catalogue.vector.title"),
-          description: t("catalogue.vector.desc"),
+          id: "svg",
+          image: ctx && ctx.toBase64Image("png", 1),
+          title: t("vector.title"),
+          description: t("vector.desc"),
           icon: <CloudArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: () => {
-            if (svg) {
-              download(svg, dataset.meta.unique_id.concat(".svg"), () =>
+            exportAs("svg", ctx!.canvas)
+              .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
+              .then(() =>
                 track("file_download", {
                   uid: dataset.meta.unique_id.concat("_svg"),
-                  id: dataset.meta.unique_id,
-                  ext: "svg",
-                  name_en: dataset.meta.en.title,
-                  name_bm: dataset.meta.bm.title,
                   type: "image",
+                  id: dataset.meta.unique_id,
+                  name: dataset.meta.title,
+                  ext: "svg",
                 })
-              );
-            }
+              )
+              .catch(e => {
+                toast.error(
+                  t("common:error.toast.image_download_failure"),
+                  t("common:error.toast.try_again")
+                );
+                console.error(e);
+              });
           },
         },
       ],
       data: [
         {
-          key: "csv",
+          id: "csv",
           image: "/static/images/icons/csv.png",
-          title: t("catalogue.csv.title"),
-          description: t("catalogue.csv.desc"),
+          title: t("csv.title"),
+          description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: urls.csv,
         },
         {
-          key: "parquet",
+          id: "parquet",
           image: "/static/images/icons/parquet.png",
-          title: t("catalogue.parquet.title"),
-          description: t("catalogue.parquet.desc"),
+          title: t("parquet.title"),
+          description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
           href: urls.parquet,
         },
       ],
     }),
-    [mounted, svg, png]
+    [ctx]
   );
 
   return (
-    <>
-      <div ref={onRefChange}>
-        <Choropleth
-          className="h-[350px] w-full lg:h-[600px]"
-          data={dataset.chart}
-          colorScale={config.color}
-          graphChoice={config.geojson}
-          onReady={e => setMounted(e)}
-        />
-      </div>
-    </>
+    <Choropleth
+      _ref={_ref => setCtx(_ref)}
+      className="h-[350px] w-full lg:h-[450px]"
+      data={{
+        labels: dataset.chart.x,
+        values: dataset.chart.y,
+      }}
+      color={config.color}
+      type={config.geojson}
+    />
   );
 };
 

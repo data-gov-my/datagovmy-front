@@ -1,5 +1,7 @@
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
-import { AnnotationPluginOptions } from "chartjs-plugin-annotation";
+import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
+import type { Color } from "datagovmy-ui/hooks";
+import type { OptionType } from "datagovmy-ui/types";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
@@ -11,6 +13,8 @@ export type AppPropsLayout = AppProps & {
 export type Page = NextPage & {
   layout?: (page: ReactNode) => ReactElement;
 };
+
+export type Geotype = "state" | "parlimen" | "dun" | "district";
 
 // CHART INTERFACE
 export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptions<T> & {
@@ -35,8 +39,8 @@ export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptio
 };
 
 export type DownloadOption = {
-  key: string;
-  image: string | false | undefined;
+  id: string;
+  image: string | null | false | undefined;
   title: ReactNode;
   description: ReactNode;
   icon: JSX.Element;
@@ -96,4 +100,50 @@ export type EventType =
 export type MixpanelBase = {
   project_id: string | number;
   event: EventType;
+};
+
+export type DCChartKeys =
+  | "TABLE"
+  | "TIMESERIES"
+  | "CHOROPLETH"
+  | "GEOCHOROPLETH"
+  | "GEOPOINT"
+  | "GEOJSON"
+  | "BAR"
+  | "HBAR"
+  | "LINE"
+  | "PYRAMID"
+  | "HEATTABLE"
+  | "SCATTER"
+  | "STACKED_AREA"
+  | "STACKED_BAR";
+export type DCPeriod = "YEARLY" | "QUARTERLY" | "MONTHLY" | "WEEKLY" | "DAILY";
+
+type BaseFilter = {
+  key: string;
+  default: string;
+  options: string[];
+};
+export type FilterDefault = BaseFilter & {
+  interval: never;
+};
+
+export type FilterDate = BaseFilter & {
+  interval: DCPeriod;
+};
+
+export type DCFilter = FilterDefault | FilterDate;
+
+// Usage
+export type DCConfig = {
+  context: {
+    [key: string]: OptionType;
+  };
+  dates: FilterDate | null;
+  options: FilterDefault[] | null;
+  precision: number;
+  freeze?: string[];
+  color?: Color;
+  geojson?: Geotype | null;
+  line_variables?: Record<string, any>;
 };

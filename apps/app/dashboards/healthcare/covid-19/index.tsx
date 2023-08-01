@@ -1,6 +1,6 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
-import Image from "next/image";
+import Slider from "@components/Chart/Slider";
+import { SliderProvider } from "@components/Chart/Slider/context";
+import Stages from "@components/Chart/Stages";
 import {
   AgencyBadge,
   Container,
@@ -10,16 +10,16 @@ import {
   StateDropdown,
   Tabs,
 } from "@components/index";
-import { MOHIcon } from "@components/Icon/agency";
-import Slider from "@components/Chart/Slider";
-import Stages from "@components/Chart/Stages";
 import { useData } from "@hooks/useData";
 import { useSlice } from "@hooks/useSlice";
 import { useTranslation } from "@hooks/useTranslation";
-import { routes } from "@lib/routes";
-import { CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { numFormat } from "@lib/helpers";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import { routes } from "@lib/routes";
+import { TimeseriesOption } from "@lib/types";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { FunctionComponent } from "react";
 
 /**
  * COVID19 Dashboard
@@ -31,11 +31,10 @@ const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: 
 
 interface COVID19Props {
   params: Record<string, any>;
-  last_updated: number;
+  last_updated: string;
   snapshot_bar: any;
   snapshot_graphic: any;
   timeseries: any;
-  util_chart: any;
   statistics: any;
 }
 
@@ -45,7 +44,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
   snapshot_bar,
   snapshot_graphic,
   timeseries,
-  util_chart,
   statistics,
 }) => {
   const currentState = params.state;
@@ -64,10 +62,32 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     filter_death: 0,
     filter_state: 0,
     filter_cases: 0,
-    minmax: [timeseries.data.x.length - 365, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    period: "auto",
+    periodly: "daily_7d",
+    tab_index: 0,
   });
 
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
+  };
+
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
 
   const BarTabsMenu = [
     {
@@ -106,22 +126,10 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         background="red"
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
-        description={
-          <>
-            <p className={"text-dim xl:w-2/3"}>{t("description")}</p>
-            <div className="pt-3">
-              <StateDropdown url={routes.COVID_19} currentState={currentState} />
-            </div>
-          </>
-        }
-        agencyBadge={
-          <AgencyBadge
-            agency={"Ministry of Health (MoH)"}
-            link="https://www.moh.gov.my"
-            icon={<MOHIcon />}
-          />
-        }
+        description={[t("description")]}
+        action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
         last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="moh" />}
       />
 
       <Container className="min-h-screen">
@@ -307,13 +315,30 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             state: CountryAndStates[currentState],
           })}
           date={timeseries.data_as_of}
+          menu={
+            <Tabs.List
+              options={[
+                t("common:time.daily_7d"),
+                t("common:time.daily"),
+                t("common:time.monthly"),
+                t("common:time.yearly"),
+              ]}
+              current={data.tab_index}
+              onChange={index => {
+                setData("tab_index", index);
+                setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
+                setData("period", config[index].period);
+                setData("periodly", config[index].periodly);
+              }}
+            />
+          }
         >
           <SliderProvider>
             {play => (
               <>
                 <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
                   <Timeseries
-                    className="h-[250px] w-full"
+                    className="h-[300px]"
                     title={t("area_chart_title1")}
                     enableAnimation={!play}
                     stats={[
@@ -331,24 +356,25 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       datasets: [
                         {
                           type: "line",
-                          label: `${t("area_chart_tooltip1")}`,
+                          label: t("total"),
                           pointRadius: 0,
-                          data: coordinate.deaths_line,
-                          borderColor: "#2563EB",
+                          data: coordinate.deaths_tooltip,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          backgroundColor: AKSARA_COLOR.PRIMARY,
                           borderWidth: 1.5,
                         },
                         {
                           type: "bar",
-                          label: `${t("area_chart_tooltip2")}`,
+                          label: t("area_chart_tooltip2"),
                           data: coordinate.deaths_inpatient,
-                          backgroundColor: "#6BABFA",
+                          backgroundColor: "#447BF4",
                           stack: "same",
                         },
                         {
                           type: "bar",
-                          label: `${t("area_chart_tooltip3")}`,
+                          label: t("area_chart_tooltip3"),
                           data: coordinate.deaths_brought_in,
-                          backgroundColor: "#2563EB4D",
+                          backgroundColor: "#A8C3FF",
                           stack: "same",
                         },
                       ],
@@ -356,7 +382,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     enableGridX={false}
                   />
                   <Timeseries
-                    className="h-[250px] w-full"
+                    className="h-[300px]"
                     title={t("area_chart_title2")}
                     enableAnimation={!play}
                     stats={[
@@ -374,25 +400,19 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       datasets: [
                         {
                           type: "line",
-                          label: `${t("area_chart2_tooltip1")}`,
-                          pointRadius: 0,
-                          data: coordinate.vents_line,
-                          borderColor: "#2563EB",
+                          label: t("area_chart2_tooltip2"),
+                          data: coordinate.vent,
+                          borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth: 1.5,
-                        },
-                        {
-                          type: "bar",
-                          label: `${t("area_chart2_tooltip2")}`,
-                          data: coordinate.vents,
-                          backgroundColor: "#2563EB4D",
-                          stack: "same",
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
                         },
                       ],
                     }}
                     enableGridX={false}
                   />
                   <Timeseries
-                    className="h-[250px] w-full"
+                    className="h-[300px]"
                     title={t("area_chart_title3")}
                     enableAnimation={!play}
                     stats={[
@@ -410,25 +430,19 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       datasets: [
                         {
                           type: "line",
-                          label: `${t("area_chart3_tooltip1")}`,
-                          pointRadius: 0,
-                          data: coordinate.icu_line,
-                          borderColor: "#2563EB",
-                          borderWidth: 1.5,
-                        },
-                        {
-                          type: "bar",
-                          label: `${t("area_chart3_tooltip2")}`,
+                          label: t("area_chart3_tooltip2"),
                           data: coordinate.icu,
-                          backgroundColor: "#2563EB4D",
-                          stack: "same",
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
                         },
                       ],
                     }}
                     enableGridX={false}
                   />
                   <Timeseries
-                    className="h-[250px] w-full"
+                    className="h-[300px]"
                     title={t("area_chart_title4")}
                     enableAnimation={!play}
                     stats={[
@@ -446,25 +460,19 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       datasets: [
                         {
                           type: "line",
-                          label: `${t("area_chart4_tooltip1")}`,
-                          pointRadius: 0,
-                          data: coordinate.admitted_line,
-                          borderColor: "#2563EB",
-                          borderWidth: 1.5,
-                        },
-                        {
-                          type: "bar",
-                          label: `${t("area_chart4_tooltip2")}`,
+                          label: t("area_chart4_tooltip2"),
                           data: coordinate.admitted,
-                          backgroundColor: "#2563EB4D",
-                          stack: "same",
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
                         },
                       ],
                     }}
                     enableGridX={false}
                   />
                   <Timeseries
-                    className="h-[250px] w-full"
+                    className="h-[300px]"
                     title={t("area_chart_title5")}
                     enableAnimation={!play}
                     stats={[
@@ -482,25 +490,19 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       datasets: [
                         {
                           type: "line",
-                          label: `${t("area_chart5_tooltip1")}`,
-                          pointRadius: 0,
-                          data: coordinate.cases_line,
-                          borderColor: "#2563EB",
-                          borderWidth: 1.5,
-                        },
-                        {
-                          type: "bar",
-                          label: `${t("area_chart5_tooltip2")}`,
+                          label: t("area_chart5_tooltip2"),
                           data: coordinate.cases,
-                          backgroundColor: "#2563EB4D",
-                          stack: "same",
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
                         },
                       ],
                     }}
                     enableGridX={false}
                   />
                   <Timeseries
-                    className="h-[250px] w-full"
+                    className="h-[300px]"
                     title={t("area_chart_title6")}
                     enableAnimation={!play}
                     stats={[
@@ -519,8 +521,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       datasets: [
                         {
                           type: "line",
-                          label: `${t("area_chart6_tooltip1")}`,
-                          pointRadius: 0,
+                          label: t("area_chart6_tooltip1"),
                           borderColor: "#2563EB",
                           data: coordinate.tests_tooltip,
                           borderWidth: 1.5,
@@ -529,16 +530,16 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                         },
                         {
                           type: "bar",
-                          label: `${t("area_chart6_tooltip2")}`,
+                          label: t("area_chart6_tooltip2"),
                           data: coordinate.tests_rtk,
-                          backgroundColor: "#6BABFA",
+                          backgroundColor: "#447BF4",
                           stack: "same",
                         },
                         {
                           type: "bar",
-                          label: `${t("area_chart6_tooltip3")}`,
+                          label: t("area_chart6_tooltip3"),
                           data: coordinate.tests_pcr,
-                          backgroundColor: "#2563EB4D",
+                          backgroundColor: "#A8C3FF",
                           stack: "same",
                         },
                       ],
@@ -549,7 +550,8 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                 <div>
                   <Slider
                     type="range"
-                    data={timeseries.data.x}
+                    period={data.period}
+                    data={timeseries.data[data.periodly].x}
                     value={data.minmax}
                     onChange={e => setData("minmax", e)}
                   />

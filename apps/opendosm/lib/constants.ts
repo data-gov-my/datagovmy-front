@@ -124,8 +124,9 @@ export const MYR_COLOR = {
  * @example AKSARA_COLOR.PRIMARY -> "#2563EB"
  */
 export const AKSARA_COLOR = {
-  BLACK: "#0F172A",
-  BLACK_H: "#0F172A1A",
+  BLACK: "#18181B",
+  BLACK_H: "#18181B1A",
+  WHITE: "FFFFFF",
   DANGER: "#DC2626",
   DANGER_H: "#DC26261A",
   PRIMARY: "#2563EB",
@@ -138,12 +139,14 @@ export const AKSARA_COLOR = {
   GREEN_H: "#2E804C1A",
   WARNING: "#FBBF24",
   WARNING_H: "#FBBF241A",
-  DIM: "#64748B",
-  DIM_H: "#64748B1A",
+  DIM: "#71717A",
+  DIM_H: "#71717A1A",
   WASHED: "#F1F5F9",
   WASHED_H: "#F1F5F9CC",
+  WASHED_DARK: "#27272A",
   OUTLINE: "#E2E8F0",
   OUTLINE_H: "#E2E8F01A",
+  OUTLINE_DARK: "#3F3F46",
   LABOUR: "#FF8328",
   LABOUR_H: "#FF83281A",
   TURQUOISE: "#30C3B2",
@@ -152,19 +155,9 @@ export const AKSARA_COLOR = {
   GREY_H: "#94A3B81A",
   DARK_BLUE: "#0C3284",
   DARK_BLUE_H: "#0C32841A",
+  PURPLE: "#7C3AED",
+  PURPLE_H: "#7C3AED1A",
 } as const;
-
-export const CHOROPLETH_YELLOW_GREEN_BLUE_SCALE: string[] = [
-  "#061E58",
-  "#215FA8",
-  "#215FA8",
-  "#1D91C0",
-  "#41B6C4",
-  "#7FCDBB",
-  "#C7E9B4",
-  "#EDF8B1",
-  "#FFFFD9",
-];
 
 /**
  * Convert locale code to shorter code. Used in reference to AKSARA's API
@@ -185,4 +178,16 @@ export const SHORT_PERIOD = {
   MONTHLY: "month",
   QUARTERLY: "quarter",
   YEARLY: "year",
+} as const;
+
+/**
+ * Convert AKSARA API's periods to the designated timeseries interval.
+ * @example SHORT_PERIOD["WEEKLY"] -> "weekly"
+ */
+export const SHORT_PERIOD_FORMAT = {
+  DAILY: "dd MMM yyyy",
+  WEEKLY: "dd MMM yyyy",
+  MONTHLY: "MMM yyyy",
+  QUARTERLY: "qQ yyyy",
+  YEARLY: "yyyy",
 } as const;

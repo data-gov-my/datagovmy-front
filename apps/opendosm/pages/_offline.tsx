@@ -1,9 +1,8 @@
 import type { Page } from "@lib/types";
-import Container from "@components/Container";
-import Metadata from "@components/Metadata";
-import ErrorCode from "@components/Error";
+import { Container, Metadata, ErrorStatus } from "datagovmy-ui/components";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
+import { withi18n } from "datagovmy-ui/decorators";
 
 const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
@@ -11,7 +10,7 @@ const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Metadata title={"Oops, You are offline!"} keywords={""} />
 
       <Container className="min-h-[76vh] pt-7 text-black">
-        <ErrorCode
+        <ErrorStatus
           title="You are offline."
           description="You are offline. Please connect to the internet"
           code={200}
@@ -24,11 +23,15 @@ const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Fallback;
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
     props: {
-      ...i18n,
+      meta: {
+        id: "offline",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
     },
   };
-};
+});

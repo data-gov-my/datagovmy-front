@@ -1,5 +1,5 @@
-import type { OptionType } from "@components/types";
-import { numFormat } from "@lib/helpers";
+import type { OptionType } from "datagovmy-ui/types";
+import { numFormat } from "datagovmy-ui/helpers";
 
 export const STATES: Array<OptionType> = [
   {

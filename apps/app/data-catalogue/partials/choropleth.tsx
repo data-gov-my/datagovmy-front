@@ -1,19 +1,19 @@
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import type { Color } from "@hooks/useColor";
 import { useTranslation } from "@hooks/useTranslation";
 import { download, exportAs } from "@lib/helpers";
-import type { DownloadOptions, Geotype } from "@lib/types";
-import { track } from "@lib/mixpanel";
+import type { DownloadOptions } from "@lib/types";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { toast } from "@components/Toast";
+import { useAnalytics } from "@hooks/useAnalytics";
 
 const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), {
   ssr: false,
 });
 
 interface CatalogueChoroplethProps {
+  className?: string;
   config: any;
   dataset: any;
   urls: {
@@ -23,20 +23,22 @@ interface CatalogueChoroplethProps {
 }
 
 const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
+  className = "h-[350px] w-full lg:h-[450px]",
   dataset,
   config,
   urls,
   onDownload,
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
+  const { track } = useAnalytics(dataset);
 
   const [ctx, setCtx] = useState<ChartJSOrUndefined<"choropleth", any[], unknown> | null>(null);
   useEffect(() => {
     if (onDownload) onDownload(availableDownloads);
   }, [ctx]);
 
-  const availableDownloads = useMemo<DownloadOptions>(
-    () => ({
+  const availableDownloads = useMemo<DownloadOptions>(() => {
+    return {
       chart: [
         {
           id: "png",
@@ -46,13 +48,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(ctx!.toBase64Image("png", 1), dataset.meta.unique_id.concat(".png"));
-            track("file_download", {
-              uid: dataset.meta.unique_id.concat("_png"),
-              type: "image",
-              id: dataset.meta.unique_id,
-              name: dataset.meta.title,
-              ext: "png",
-            });
+            track("png");
           },
         },
         {
@@ -64,15 +60,7 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           href: () => {
             exportAs("svg", ctx!.canvas)
               .then(dataUrl => download(dataUrl, dataset.meta.unique_id.concat(".svg")))
-              .then(() =>
-                track("file_download", {
-                  uid: dataset.meta.unique_id.concat("_svg"),
-                  type: "image",
-                  id: dataset.meta.unique_id,
-                  name: dataset.meta.title,
-                  ext: "svg",
-                })
-              )
+              .then(() => track("svg"))
               .catch(e => {
                 toast.error(
                   t("common:error.toast.image_download_failure"),
@@ -90,7 +78,10 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           title: t("csv.title"),
           description: t("csv.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.csv,
+          href: () => {
+            download(urls.csv, dataset.meta.unique_id.concat(".csv"));
+            track("csv");
+          },
         },
         {
           id: "parquet",
@@ -98,17 +89,19 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
           title: t("parquet.title"),
           description: t("parquet.desc"),
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: urls.parquet,
+          href: () => {
+            download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+            track("parquet");
+          },
         },
       ],
-    }),
-    [ctx]
-  );
+    };
+  }, [ctx]);
 
   return (
     <Choropleth
       _ref={_ref => setCtx(_ref)}
-      className="h-[350px] w-full lg:h-[450px]"
+      className={className}
       data={{
         labels: dataset.chart.x,
         values: dataset.chart.y,

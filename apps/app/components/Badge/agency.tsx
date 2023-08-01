@@ -1,26 +1,25 @@
-import Card from "@components/Card";
+import AgencyIcon from "@components/Icon/agency";
 import ArrowUpRightIcon from "@heroicons/react/24/solid/ArrowUpRightIcon";
+import { AgencyLink } from "@lib/constants";
 import { useTranslation } from "next-i18next";
 import { FunctionComponent, ReactNode } from "react";
 
 export interface AgencyBadgeProps {
   agency: string;
-  link: string;
   icon?: ReactNode;
 }
 
-const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }) => {
+const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon }) => {
   const { t } = useTranslation();
-  const isGovt = agency === t("common:agency.govt");
+  const isGovt = agency === "govt";
   return (
-    <a href={link} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
-      <Card className="border-outline hover:border-outlineHover dark:border-washed-dark dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark group -mx-3 flex w-screen items-center border-y bg-white px-3 py-1.5 transition-[padding] duration-200 hover:pr-10 dark:bg-black md:m-0 md:w-fit md:rounded-full md:border md:py-1 md:pl-2 md:pr-6">
-        <div className="relative flex w-full items-center gap-2">
+    <a href={AgencyLink[agency]} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
+      <div className="border-outline lg:hover:border-outlineHover dark:border-washed-dark lg:dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark group relative flex w-screen items-center border-y bg-white px-3 py-1.5 transition-[padding] duration-200 hover:pr-10 dark:bg-black lg:w-fit lg:rounded-full lg:border lg:py-1 lg:pl-2 lg:pr-6">
+        <div className="relative flex w-full items-center gap-2 max-lg:pr-6">
           {/* Agency icon */}
-          {icon || <div className="bg-outline h-8 w-8 rounded-full" />}
+          {icon ? icon : <AgencyIcon agency={agency} />}
 
           {/* On hover: RightArrow icon */}
-          <ArrowUpRightIcon className="text-dim absolute right-0 h-4 w-4 opacity-100 transition duration-200 group-hover:translate-x-1 md:opacity-0 md:group-hover:opacity-100 lg:-right-6" />
           <div className="relative overflow-hidden">
             {/* Brought to you by / Visit our portal */}
             <p className="text-dim text-xs transition-transform duration-200 group-hover:-translate-y-6">
@@ -31,10 +30,13 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, link, icon }
             </p>
 
             {/* Agency name */}
-            <p className="truncate text-sm font-medium dark:text-white">{agency}</p>
+            <p className="truncate text-sm font-medium dark:text-white" data-testid="hero-agency">
+              {t(`agencies:${agency}.full`)}
+            </p>
           </div>
         </div>
-      </Card>
+        <ArrowUpRightIcon className="text-dim right-4.5 absolute h-4 w-4 opacity-100 transition duration-200 group-hover:translate-x-1 lg:opacity-0 lg:group-hover:opacity-100 " />
+      </div>
     </a>
   );
 };

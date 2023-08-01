@@ -1,20 +1,13 @@
-import type { Page } from "@lib/types";
+import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { SHORT_LANG } from "@lib/constants";
-import { OptionType } from "@components/types";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-
-import Metadata from "@components/Metadata";
+import type { OptionType } from "datagovmy-ui/types";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import DataCatalogueShow from "@data-catalogue/show";
 import { useMemo } from "react";
-
-type CatalogueFilter = {
-  key: string;
-  default: OptionType<string, string>;
-  options: OptionType<string, string>[];
-};
+import { withi18n } from "datagovmy-ui/decorators";
 
 const CatalogueShow: Page = ({
   params,
@@ -23,120 +16,136 @@ const CatalogueShow: Page = ({
   explanation,
   metadata,
   urls,
+  translations,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t, i18n } = useTranslation();
-  const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
+  const { t } = useTranslation(["catalogue", "common"]);
 
   const availableOptions = useMemo<OptionType[]>(() => {
     switch (dataset.type) {
       case "TABLE":
-        return [{ label: t("catalogue.table"), value: "table" }];
+        return [{ label: t("table"), value: "table" }];
 
       case "GEOJSON":
-        return [{ label: t("catalogue.chart"), value: "chart" }];
+      case "HEATTABLE":
+        return [{ label: t("chart"), value: "chart" }];
+
       default:
         return [
-          { label: t("catalogue.chart"), value: "chart" },
-          { label: t("catalogue.table"), value: "table" },
+          { label: t("chart"), value: "chart" },
+          { label: t("table"), value: "table" },
         ];
     }
   }, [dataset.type]);
 
-  const availableFilters = useMemo<{
-    filter_state: Record<string, OptionType> | undefined;
-    filter_mapping: Array<CatalogueFilter>;
-  }>(() => {
-    return {
-      filter_mapping: config.filter_mapping?.map(
-        (filter: CatalogueFilter): CatalogueFilter => ({
-          ...filter,
-          options: filter.options.map((option: OptionType) => ({
-            label: (t(`catalogue.show_filters.${option.value}`) as string).includes("catalogue")
-              ? option.value
-              : t(`catalogue.show_filters.${option.value}`),
-            value: option.value,
-          })),
-        })
-      ),
-      filter_state: Object.fromEntries(
-        Object.entries(config.filter_state).map(([key, option]: [string, unknown]) => [
-          key,
-          {
-            label: (t(`catalogue.show_filters.${(option as OptionType).value}`) as string).includes(
-              "catalogue"
-            )
-              ? (option as OptionType).value
-              : t(`catalogue.show_filters.${(option as OptionType).value}`),
-            value: (option as OptionType).value,
-          },
-        ])
-      ),
-    };
-  }, [config]);
-
   return (
     <>
       <Metadata
-        title={dataset.meta[lang].title}
-        description={dataset.meta[lang].desc.replace(/^(.*?)]/, "")}
+        title={dataset.meta.title}
+        description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
       <DataCatalogueShow
         options={availableOptions}
         params={params}
-        config={{ ...config, ...availableFilters }}
+        config={config}
         dataset={dataset}
         explanation={explanation}
         metadata={metadata}
         urls={urls}
+        translations={translations}
       />
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query, params }) => {
-  const i18n = await serverSideTranslations(locale!, ["common"]);
+export const getServerSideProps: GetServerSideProps = withi18n(
+  ["catalogue", "common"],
+  async ({ locale, query, params }) => {
+    const { data } = await get("/data-variable/", {
+      id: params?.id,
+      lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
+      ...query,
+    });
+    const config: DCConfig = {
+      context: {},
+      dates: null,
+      options: null,
+      precision: data.API.precision ?? null,
+      freeze: data.API.freeze ?? null,
+      color: data.API.colour ?? "blues",
+      geojson: data.API.file_json ?? null,
+      line_variables: data.API.line_variables ?? null,
+    };
 
-  const { data } = await get("/data-variable/", { id: params!.id, ...query });
+    const hasTranslations = data.translations && Object.keys(data.translations).length;
+    const hasQuery = query && Object.keys(query).length > 1;
 
-  let filter_state;
+    const assignContext = (item: DCFilter) => {
+      let [label, value] = ["", ""];
+      if (item.key === "date_slider") {
+        label = (query[item.key] as string) ?? item.default;
+        value = (query[item.key] as string) ?? item.default;
+      } else if (!hasTranslations && !hasQuery) {
+        label = item.default;
+        value = item.default;
+      } else if (!hasTranslations && hasQuery) {
+        label = query[item.key] as string;
+        value = query[item.key] as string;
+      } else if (hasTranslations && !hasQuery) {
+        label = (data.translations[item.default] as string) ?? item.default;
+        value = item.default;
+      } else {
+        label = data.translations[query[item.key] as string] ?? query[item.key];
+        value = query[item.key] as string;
+      }
 
-  if (["TIMESERIES", "BAR", "HBAR", "PYRAMID"].includes(data.API.chart_type)) {
-    filter_state = Object.fromEntries(
-      data.API.filters.map((filter: any) => [
-        filter.key,
-        filter.options.find((item: OptionType) => item.value === query[filter.key]) ??
-          filter.default,
-      ])
-    );
+      Object.assign(config.context, { [item.key]: { label, value } });
+    };
+
+    data.API.filters?.forEach((item: DCFilter) => {
+      if (item.key === "date_slider") config.dates = item as FilterDate;
+      assignContext(item);
+    });
+    config.options =
+      data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
+
+    return {
+      props: {
+        meta: {
+          id: data.chart_details.intro.unique_id,
+          type: "catalogue",
+          category: null,
+          agency: Array.isArray(data.metadata.data_source)
+            ? data.metadata.data_source.join(",")
+            : "",
+        },
+        config,
+        params,
+        dataset: {
+          type: data.API.chart_type,
+          chart: data.chart_details.chart_data ?? {},
+          table: data.chart_details.table_data ?? null,
+          meta: data.chart_details.intro,
+        },
+        explanation: data.explanation,
+        metadata: {
+          url: {
+            csv: data.metadata.url.csv ?? null,
+            parquet: data.metadata.url.parquet ?? null,
+            link_geojson: data.metadata.url.link_geojson ?? null,
+          },
+          data_as_of: data.metadata.data_as_of,
+          last_updated: data.metadata.last_updated,
+          next_update: data.metadata.next_update,
+          description: data.metadata.dataset_desc,
+          source: data.metadata.data_source,
+          definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
+        },
+        urls: data.downloads ?? {},
+        translations: data.translations ?? {},
+      },
+    };
   }
-
-  const { in_dataset: _, out_dataset: __, ...metadata } = data.metadata;
-
-  return {
-    props: {
-      ...i18n,
-      config: {
-        filter_state: filter_state ?? {},
-        filter_mapping: data.API.filters ?? null,
-        ...data.API,
-      },
-      params: params,
-      dataset: {
-        type: data.API.chart_type,
-        chart: data.chart_details.chart_data ?? {},
-        table: data.chart_details.table_data ?? null,
-        meta: data.chart_details.intro,
-      },
-      explanation: data.explanation,
-      metadata: {
-        ...metadata,
-        definitions: [...(data.metadata?.in_dataset ?? []), ...data.metadata.out_dataset],
-      },
-      urls: data.downloads ?? {},
-    },
-  };
-};
+);
 
 export default CatalogueShow;
-/** ------------------------------------------------------------------------------------------------------------- */

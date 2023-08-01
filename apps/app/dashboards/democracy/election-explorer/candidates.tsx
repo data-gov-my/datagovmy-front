@@ -1,19 +1,18 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
-import { Container, Panel, Section, Tabs } from "@components/index";
+import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
 import ComboBox from "@components/Combobox";
+import { Container, Panel, Section, Tabs } from "@components/index";
+import { toast } from "@components/Toast";
+import { OptionType } from "@components/types";
+import { useCache } from "@hooks/useCache";
 import { useData } from "@hooks/useData";
+import { useFilter } from "@hooks/useFilter";
 import { useTranslation } from "@hooks/useTranslation";
 import { get } from "@lib/api";
-import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
+import { slugify } from "@lib/helpers";
 import { generateSchema } from "@lib/schema/election-explorer";
-import { ResultBadge } from "@components/Badge/election";
-import ElectionLayout from "./layout";
-import { toast } from "@components/Toast";
-import { useCache } from "@hooks/useCache";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
@@ -33,8 +32,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
   selection,
   params,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-election-explorer", "common"]);
-  const { push } = useRouter();
+  const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { cache } = useCache();
   const candidate_schema = generateSchema<Candidate>([
     { key: "election_name", id: "election_name", header: t("election_name") },
@@ -47,14 +45,13 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
       id: "full_result",
       header: "",
       cell: ({ row, getValue }) => {
-        const selection = data.tab_index === 0 ? elections.parlimen : elections.dun;
+        const selection = data.tab_index === 0 ? data.parlimen : data.dun;
         const item = getValue() as Candidate;
-        const [area, state] = item.seat.split(",");
 
         return (
           <ElectionCard
             defaultParams={item}
-            onChange={(option: Candidate) => fetchResult(option.election_name, option.seat)}
+            onChange={(option: Candidate) => fetchFullResult(option.election_name, option.seat)}
             columns={generateSchema<BaseResult>([
               {
                 key: "name",
@@ -72,17 +69,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
                 header: t("votes_won"),
               },
             ])}
-            title={
-              <div className="flex w-full items-start justify-between pr-12">
-                <div className="flex flex-col uppercase md:flex-row md:gap-2">
-                  <h5>{area}</h5>
-                  <span className="text-dim text-lg font-normal">{state}</span>
-                </div>
-                <ResultBadge value={item.result} />
-              </div>
-            }
-            subtitle
-            highlighted={params.candidate_name}
+            highlighted={data.candidate}
             options={selection}
             page={row.index}
           />
@@ -91,30 +78,64 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     },
   ]);
 
-  const { data, setData } = useData({
-    tab_index: 0, // parlimen = 0; dun = 1
-    candidate: params.candidate_name,
-    loading: false,
+  const CANDIDATE_OPTIONS: Array<OptionType> = selection.map((key: string) => {
+    return { label: key, value: slugify(key) };
   });
 
-  const navigateToCandidate = (name?: string) => {
-    if (!name) {
-      setData("candidate", null);
-      return;
-    }
-    setData("loading", true);
-    setData("candidate", name);
+  const DEFAULT_CANDIDATE = "tunku-abdul-rahman-putra-alhaj";
+  const CANDIDATE_OPTION = CANDIDATE_OPTIONS.find(
+    e => e.value === (params.candidate_name ?? DEFAULT_CANDIDATE)
+  );
 
-    push(`${routes.ELECTION_EXPLORER}/candidates/${encodeURIComponent(name)}`, undefined, {
-      scroll: false,
-      locale: i18n.language,
-    }).then(() => {
-      setData("loading", false);
-      cache.clear();
+  const { data, setData } = useData({
+    tab_index: 0, // parlimen = 0; dun = 1
+    candidate_option: CANDIDATE_OPTION,
+    candidate_name: CANDIDATE_OPTION?.label,
+    loading: false,
+    parlimen: elections.parlimen,
+    dun: elections.dun,
+  });
+
+  const { setFilter } = useFilter({
+    name: params.candidate_name,
+  });
+
+  const fetchResult = async (
+    candidate: OptionType
+  ): Promise<Record<"parlimen" | "dun", Candidate[]>> => {
+    setData("loading", true);
+    setData("candidate_name", candidate.label);
+    setFilter("name", candidate.value);
+    const identifier = candidate.value;
+    return new Promise(resolve => {
+      if (cache.has(identifier)) {
+        setData("loading", false);
+        return resolve(cache.get(identifier));
+      }
+
+      get("/explorer", {
+        explorer: "ELECTIONS",
+        chart: "candidates",
+        name: candidate.value,
+      })
+        .then(({ data }: { data: { data: Record<"parlimen" | "dun", Candidate[]> } }) => {
+          const candidate = {
+            parlimen:
+              data.data.parlimen.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)) ?? [],
+            dun: data.data.dun.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)) ?? [],
+          };
+          cache.set(identifier, candidate);
+          resolve(candidate);
+          setData("loading", false);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
     });
   };
 
-  const fetchResult = async (election: string, seat: string): Promise<Result<BaseResult[]>> => {
+  const fetchFullResult = async (election: string, seat: string): Promise<Result<BaseResult[]>> => {
     const identifier = `${election}_${seat}`;
     return new Promise(resolve => {
       if (cache.has(identifier)) return resolve(cache.get(identifier));
@@ -125,19 +146,25 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
         election,
         seat,
       })
-        .then(({ data }: { data: CandidateResult }) => {
+        .then(({ data }: { data: { data: CandidateResult } }) => {
+          const data2 = data.data;
           const result: Result<BaseResult[]> = {
-            data: data.data.sort((a, b) => b.votes.abs - a.votes.abs),
+            data: data2.data.sort((a, b) => b.votes.abs - a.votes.abs),
             votes: [
               {
+                x: "majority",
+                abs: data2.votes.majority,
+                perc: data2.votes.majority_perc,
+              },
+              {
                 x: "voter_turnout",
-                abs: data.votes.voter_turnout,
-                perc: data.votes.voter_turnout_perc,
+                abs: data2.votes.voter_turnout,
+                perc: data2.votes.voter_turnout_perc,
               },
               {
                 x: "rejected_votes",
-                abs: data.votes.votes_rejected,
-                perc: data.votes.votes_rejected_perc,
+                abs: data2.votes.votes_rejected,
+                perc: data2.votes.votes_rejected_perc,
               },
             ],
           };
@@ -151,78 +178,66 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
     });
   };
 
-  const CANDIDATE_OPTIONS = selection.map((key: string) => {
-    return { label: key, value: key };
-  });
-
   return (
-    <ElectionLayout>
-      <Container className="min-h-fit">
-        <Section>
-          <div className="lg:grid lg:grid-cols-12">
-            <div className="lg:col-span-10 lg:col-start-2">
-              <h4 className="text-center">{t("candidate.header")}</h4>
-              <div className="grid grid-cols-12 pb-12 pt-6 lg:grid-cols-10">
-                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 md:col-span-6 md:col-start-4 lg:col-span-4 lg:col-start-4">
-                  <ComboBox
-                    placeholder={t("candidate.search_candidate")}
-                    options={CANDIDATE_OPTIONS}
-                    selected={
-                      data.candidate
-                        ? CANDIDATE_OPTIONS.find(e => e.value === data.candidate)
-                        : null
-                    }
-                    onChange={selected => navigateToCandidate(selected?.value)}
-                  />
-                </div>
-              </div>
-              <Tabs
-                title={
-                  <div className="text-base font-bold">
-                    {t("candidate.title")}
-                    <span className="text-primary">{params.candidate_name}</span>
-                  </div>
-                }
-                current={data.tab_index}
-                onChange={index => setData("tab_index", index)}
-                className="pb-6"
-              >
-                <Panel name={t("parliament_elections")}>
-                  <ElectionTable
-                    data={elections.parlimen}
-                    columns={candidate_schema}
-                    isLoading={data.loading}
-                    empty={
-                      <p>
-                        {t("candidate.no_data", {
-                          name: data.candidate,
-                          context: "parliament",
-                        })}
-                      </p>
-                    }
-                  />
-                </Panel>
-                <Panel name={t("state_elections")}>
-                  <ElectionTable
-                    data={elections.dun}
-                    columns={candidate_schema}
-                    isLoading={data.loading}
-                    empty={
-                      <p>
-                        {t("candidate.no_data", {
-                          name: params.candidate_name,
-                          context: "dun",
-                        })}
-                      </p>
-                    }
-                  />
-                </Panel>
-              </Tabs>
+    <Container className="min-h-fit">
+      <Section>
+        <div className="xl:grid xl:grid-cols-12">
+          <div className="xl:col-span-10 xl:col-start-2">
+            <h4 className="text-center">{t("candidate.header")}</h4>
+            <div className="mx-auto w-full p-6 sm:w-[500px]">
+              <ComboBox
+                placeholder={t("candidate.search_candidate")}
+                options={CANDIDATE_OPTIONS}
+                selected={data.candidate_option ?? null}
+                onChange={selected => {
+                  if (selected) {
+                    fetchResult(selected).then(({ parlimen, dun }) => {
+                      setData("parlimen", parlimen);
+                      setData("dun", dun);
+                    });
+                  }
+                  setData("candidate_option", selected);
+                }}
+              />
             </div>
+            <Tabs
+              title={
+                <h5>
+                  {t("candidate.title")}
+                  <span className="text-primary">{data.candidate_name}</span>
+                </h5>
+              }
+              current={data.tab_index}
+              onChange={index => setData("tab_index", index)}
+              className="py-6"
+            >
+              <Panel name={t("parlimen")}>
+                <ElectionTable
+                  data={data.parlimen}
+                  columns={candidate_schema}
+                  isLoading={data.loading}
+                  empty={t("candidate.no_data", {
+                    name: data.candidate_name,
+                    context: "parliament",
+                  })}
+                />
+              </Panel>
+              <Panel name={t("dun")}>
+                <ElectionTable
+                  data={data.dun}
+                  columns={candidate_schema}
+                  isLoading={data.loading}
+                  empty={t("candidate.no_data", {
+                    name: data.candidate_name,
+                    context: "dun",
+                  })}
+                />
+              </Panel>
+            </Tabs>
           </div>
-        </Section>
-      </Container>
-    </ElectionLayout>
+        </div>
+      </Section>
+    </Container>
   );
 };
 

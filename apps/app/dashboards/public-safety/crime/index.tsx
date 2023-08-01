@@ -3,7 +3,6 @@ import { Hero } from "@components/index";
 import { useTranslation } from "@hooks/useTranslation";
 import { FunctionComponent } from "react";
 import Container from "@components/Container";
-import { PDRMIcon } from "@components/Icon/agency";
 
 /**
  * Crime Dashboard
@@ -22,13 +21,7 @@ const Crime: FunctionComponent<CrimeProps> = ({}) => {
         category={[t("common:categories.public_safety"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Royal Malaysian Police (PDRM)"}
-            link="https://www.rmp.gov.my/"
-            icon={<PDRMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="pdrm" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

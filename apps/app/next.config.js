@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const { i18n } = require("./next-i18next.config");
 
 /**
@@ -16,27 +15,22 @@ const pwa = require("next-pwa")({
 
 /**
  * Next Config
- */
+ * @type {import('next').NextConfig}
+ * */
 const nextConfig = {
   i18n,
   reactStrictMode: true,
   swcMinify: true,
-  async redirects() {
+  async rewrites() {
     return [
       {
         source: "/dashboard/election-explorer",
         destination: "/dashboard/election-explorer/elections",
-        permanent: true,
       },
       {
-        source: "/ms-MY/dashboard/election-explorer",
-        destination: "/ms-MY/dashboard/election-explorer/elections",
-        permanent: true,
+        source: "/dashboard/income-taxation",
+        destination: "/dashboard/income-taxation/overview",
       },
-    ];
-  },
-  async rewrites() {
-    return [
       {
         source: "/mp/lib.min.js",
         destination: "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js",

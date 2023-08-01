@@ -1,7 +1,9 @@
-import { FunctionComponent, ReactNode, useMemo } from "react";
+import { FunctionComponent, ReactNode, useContext, useMemo } from "react";
 import Container from "@components/Container";
-import { clx, toDate } from "@lib/helpers";
-import { useTranslation } from "next-i18next";
+import { clx, numFormat, toDate } from "@lib/helpers";
+import { Trans, useTranslation } from "next-i18next";
+import { AnalyticsContext } from "@hooks/useAnalytics";
+import { EyeIcon } from "@heroicons/react/20/solid";
 
 type ConditionalHeroProps =
   | {
@@ -10,6 +12,7 @@ type ConditionalHeroProps =
       header?: never;
       category?: never;
       description?: never;
+      action?: never;
       agencyBadge?: never;
     }
   | HeroDefault;
@@ -20,6 +23,7 @@ type HeroDefault = {
   header?: [text: string, className?: string];
   category?: [text: string, className?: string];
   description?: [text: string, className?: string] | ReactNode;
+  action?: ReactNode;
   agencyBadge?: ReactNode;
 };
 
@@ -35,10 +39,12 @@ const Hero: FunctionComponent<HeroProps> = ({
   category,
   header,
   description,
+  action,
   last_updated,
   agencyBadge,
 }) => {
   const { t, i18n } = useTranslation();
+  const { result } = useContext(AnalyticsContext);
 
   const background_style = useMemo<string>(() => {
     switch (background) {
@@ -58,55 +64,79 @@ const Hero: FunctionComponent<HeroProps> = ({
   }, [background]);
 
   return (
-    <>
-      <Container
-        background={background_style.concat(" border-b dark:border-washed-dark")}
-        className={clx("relative", className)}
-      >
-        <div className="sticky left-0 top-14 z-10 flex flex-row-reverse md:hidden md:pb-0">
-          {agencyBadge}
-        </div>
-        {children ? (
-          children
-        ) : (
-          <>
-            <div className="space-y-6 py-12 xl:w-full">
-              {(category || agencyBadge) && (
-                <div className="relative flex justify-between">
-                  <div className="hidden md:absolute md:right-0 md:top-0 md:block">
-                    {agencyBadge}
-                  </div>
-                  {category && (
-                    <span className={clx("text-base font-semibold uppercase", category[1])}>
-                      {t(category[0])}
-                    </span>
-                  )}
-                </div>
-              )}
-
-              {(header || description) && (
-                <div className="space-y-3">
-                  {header && <h2 className={clx("text-black", header[1])}>{header[0]}</h2>}
-                  {description && Array.isArray(description) ? (
-                    <p className={clx("text-dim xl:w-2/3", description[1])}>{description[0]}</p>
-                  ) : (
-                    description
-                  )}
-                </div>
-              )}
-
-              {last_updated && (
-                <p className="text-dim text-sm">
-                  {t("common:common.last_updated", {
-                    date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-                  })}
-                </p>
-              )}
+    <Container
+      background={clx(background_style, "border-b dark:border-washed-dark")}
+      className={clx("relative", className)}
+    >
+      {children ? (
+        children
+      ) : (
+        <div>
+          {agencyBadge && (
+            <div className="md:max-lg:-ml-4.5 sticky inset-x-0 top-14 z-20 -ml-3 flex lg:hidden">
+              {agencyBadge}
             </div>
-          </>
-        )}
-      </Container>
-    </>
+          )}
+          <div className="space-y-6 py-12 xl:w-full">
+            {(category || agencyBadge) && (
+              <div className="relative flex justify-between">
+                <div className="hidden lg:absolute lg:right-0 lg:top-0 lg:block">{agencyBadge}</div>
+                {category && (
+                  <span
+                    className={clx("text-base font-semibold uppercase", category[1])}
+                    data-testid="hero-category"
+                  >
+                    {t(category[0])}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {(header || description || result?.all_time_view) && (
+              <div className="space-y-3">
+                {header && (
+                  <h2 className={clx("text-black", header[1])} data-testid="hero-header">
+                    {header[0]}
+                  </h2>
+                )}
+
+                {description && Array.isArray(description) ? (
+                  <p
+                    className={clx("text-dim xl:w-2/3", description[1])}
+                    data-testid="hero-description"
+                  >
+                    <Trans>{description[0]}</Trans>
+                  </p>
+                ) : (
+                  description
+                )}
+                {result?.all_time_view && (
+                  <p className="text-dim flex gap-2 text-sm" data-testid="hero-views">
+                    <EyeIcon className="w-4.5 h-4.5 self-center" />
+                    {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
+                      count: result.all_time_view,
+                    })}`}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {(action || last_updated) && (
+              <div className="space-y-3">
+                {action}
+                {last_updated && (
+                  <p className="text-dim text-sm" data-testid="hero-last-updated">
+                    {t("common:common.last_updated", {
+                      date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
+                    })}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </Container>
   );
 };
 

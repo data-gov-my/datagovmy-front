@@ -1,17 +1,12 @@
-import Slider from "@components/Chart/Slider";
-import Chips from "@components/Chips";
-import Dropdown from "@components/Dropdown";
-import Select from "@components/Dropdown/Select";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useWatch } from "@hooks/useWatch";
-import { get } from "@lib/api";
+import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
+
+import type { OptionType } from "datagovmy-ui/types";
+import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
+import { get } from "datagovmy-ui/api";
 import { SHORT_LANG } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import { numFormat } from "datagovmy-ui/helpers";
 import type { ChartDataset, ChartTypeRegistry } from "chart.js";
 import groupBy from "lodash/groupBy";
-import { useTranslation } from "@hooks/useTranslation";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -20,15 +15,16 @@ import { FunctionComponent, useCallback } from "react";
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-
-const InflationTrends: FunctionComponent = ({}) => {
-  const { t, i18n } = useTranslation();
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
+const InflationTrends: FunctionComponent = () => {
+  const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   const GRANULAR_OPTIONS: Array<OptionType> = [
-    { label: t("consumer_prices.keys.broad_categories"), value: "2d" },
-    { label: t("consumer_prices.keys.narrow_categories"), value: "4d" },
+    { label: t("keys.broad_categories"), value: "2d" },
+    { label: t("keys.narrow_categories"), value: "4d" },
   ];
 
   const { data, setData } = useData({
@@ -152,17 +148,17 @@ const InflationTrends: FunctionComponent = ({}) => {
         <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
           <Dropdown
             anchor="left"
-            sublabel={t("consumer_prices.section_3.select_granularity") + ":"}
+            sublabel={t("section_3.select_granularity") + ":"}
             selected={data.granular_type}
             options={GRANULAR_OPTIONS}
-            onChange={e => setData("granular_type", e)}
+            onChange={(e: any) => setData("granular_type", e)}
           />
 
           <Select
             anchor="left"
-            sublabel={t("consumer_prices.section_3.select_items") + ":"}
+            sublabel={t("section_3.select_items") + ":"}
             disabled={data.inflation_ys.length >= 6}
-            placeholder={t("consumer_prices.section_3.select_upto6")}
+            placeholder={t("section_3.select_upto6")}
             multiple
             selected={data.inflation_ys}
             options={

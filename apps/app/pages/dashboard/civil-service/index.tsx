@@ -6,12 +6,14 @@ import Metadata from "@components/Metadata";
 import { useTranslation } from "@hooks/useTranslation";
 import CivilServiceDashboard from "@dashboards/public-finances/civil-service";
 import { withi18n } from "@lib/decorators";
+import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CivilService: Page = ({
   agencies,
   barmeter,
   choropleth,
   last_updated,
+  meta,
   pyramid,
   timeseries,
   timeseries_callout,
@@ -19,7 +21,7 @@ const CivilService: Page = ({
   const { t } = useTranslation(["common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CivilServiceDashboard
         agencies={agencies}
@@ -30,16 +32,15 @@ const CivilService: Page = ({
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = withi18n("dashboard-civil-service", async () => {
-  const { data } = await get("/dashboard", { dashboard: "unhcr" });
-  const { data: timeseries } = await get("/dashboard", { dashboard: "immigration" });
+  const { data } = await get("/dashboard", { dashboard: "civil_service" });
 
   return {
-    notFound: false,
+    notFound: true,
     props: {
       meta: {
         id: "dashboard-civil-service",
@@ -52,8 +53,8 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-civil-service"
       choropleth: data.choropleth,
       last_updated: Date.now(),
       pyramid: [],
-      timeseries: timeseries.timeseries,
-      timeseries_callout: timeseries.timeseries_callout,
+      timeseries: data.timeseries,
+      timeseries_callout: data.timeseries_callout,
     },
   };
 });
