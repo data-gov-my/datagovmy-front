@@ -50,7 +50,6 @@ const Bar: FunctionComponent<BarProps> = ({
   menu,
   title,
   controls,
-  state,
   type = "category",
   unitX,
   enableStep,
@@ -61,7 +60,7 @@ const Bar: FunctionComponent<BarProps> = ({
   formatX,
   onClick,
   reverse = false,
-  precision = 1,
+  precision = [1, 0],
   enableLegend = false,
   enableStack = false,
   enableGridX = true,
@@ -77,7 +76,7 @@ const Bar: FunctionComponent<BarProps> = ({
   const { size } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
   const { theme = "light" } = useTheme();
-
+  console.log(theme);
   const display = (
     value: number,
     type: "compact" | "standard",
@@ -169,11 +168,11 @@ const Bar: FunctionComponent<BarProps> = ({
             if (!formatX) {
               return isVertical
                 ? this.getLabelForValue(value as number).concat(unitX ?? "")
-                : display(value as number, "compact", 1);
+                : display(value as number, "compact", precision);
             }
             let text = isVertical
               ? formatX(this.getLabelForValue(value as number))
-              : display(value as number, "compact", 1);
+              : display(value as number, "compact", precision);
             if (text.length > 25) text = text.slice(0, 25).concat("..");
             return text;
           },
@@ -207,7 +206,7 @@ const Bar: FunctionComponent<BarProps> = ({
           callback: function (value: string | number) {
             return displayLabel(
               isVertical
-                ? display(value as number, "compact", 1)
+                ? display(value as number, "compact", precision)
                 : this.getLabelForValue(value as number).concat(unitX ?? "")
             );
           },
@@ -221,7 +220,7 @@ const Bar: FunctionComponent<BarProps> = ({
   };
   return (
     <div className="space-y-4">
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={className}>
         <BarCanvas
           id={id}

@@ -50,7 +50,6 @@ const Line: FunctionComponent<LineProps> = ({
   controls,
   subheader,
   title,
-  state,
   type = "linear",
   prefixX,
   prefixY,
@@ -59,7 +58,7 @@ const Line: FunctionComponent<LineProps> = ({
   data = dummy,
   enableGridX = true,
   enableGridY = true,
-  precision = 1,
+  precision = [1, 0],
   minY,
   maxY,
   stats,
@@ -117,6 +116,7 @@ const Line: FunctionComponent<LineProps> = ({
         : false,
       tooltip: {
         enabled: enableTooltip,
+        intersect: false,
         callbacks: {
           label: item =>
             `${item.dataset.label as string}: ${
@@ -173,11 +173,14 @@ const Line: FunctionComponent<LineProps> = ({
 
   return (
     <div className="flex flex-col gap-y-6">
-      <div className="flex flex-col gap-y-3">
-        <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-        {subheader && <div className="text-dim text-sm">{subheader}</div>}
-        {stats && <Stats data={stats} />}
-      </div>
+      {[title, menu, controls, subheader, stats].some(Boolean) && (
+        <div className="flex flex-col gap-y-3">
+          <ChartHeader title={title} menu={menu} controls={controls} />
+          {subheader && <div className="text-dim text-sm">{subheader}</div>}
+          {stats && <Stats data={stats} />}
+        </div>
+      )}
+
       <div className={className}>
         <LineCanvas
           ref={_ref}

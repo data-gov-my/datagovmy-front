@@ -31,7 +31,6 @@ const Waffle: FunctionComponent<WaffleProps> = ({
   controls,
   className,
   data = dummy,
-  state,
   color = "#157857",
   total = 100,
   padding = 4,
@@ -45,7 +44,7 @@ const Waffle: FunctionComponent<WaffleProps> = ({
   const { theme = "light" } = useTheme();
   return (
     <div>
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={className}>
         <ResponsiveWaffle
           data={data}

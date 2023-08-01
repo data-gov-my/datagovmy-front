@@ -47,7 +47,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   position = [5.1420589, 109.618149], // default - Malaysia
   data = dummyData,
   color = "reds",
-  precision = 1,
+  precision = [1, 0],
   unit,
   enableZoom = true,
   enableFill = true,
@@ -85,6 +85,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
       <ChartHeader title={title} menu={menu} controls={controls} />
       <MapContainer
         id={id}
+        data-testid={id || title}
         className={className}
         center={position as LatLngTuple}
         zoom={zoom}

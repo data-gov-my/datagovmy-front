@@ -24,11 +24,10 @@ const Stages: FunctionComponent<StagesProps> = ({
   menu,
   controls,
   data,
-  state,
 }) => {
   return (
     <div>
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={className}>
         {/* Header */}
         {data?.header && (
