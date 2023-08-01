@@ -4,10 +4,9 @@
   "quickstart": "Quickstart Guide",
   "rate-limit": "Rate Limit",
   "authentication": "Authentication",
-  "data-catalogue": "Data Catalogue API",
-  "gtfs-static": "Transport API (GTFS)",
-  "gtfs-realtime": "Transport API (GTFS-R)",
-  "weather": "Weather API",
+  "response-format": "Response Format",
+  "static-api": "Static APIs",
+  "realtime-api": "Realtime APIs",
   "main-site": {
     "title": "Main Site",
     "type": "page",
