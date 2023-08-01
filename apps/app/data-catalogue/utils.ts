@@ -7,8 +7,8 @@ import { AKSARA_COLOR } from "@lib/constants";
 export const CATALOGUE_COLORS = [
   AKSARA_COLOR.PRIMARY,
   AKSARA_COLOR.GREY,
+  "#E2A614",
   AKSARA_COLOR.DANGER,
-  AKSARA_COLOR.WARNING,
 ] as const;
 
 /**
