@@ -21,7 +21,7 @@ const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = (
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="MoH" />}
+        agencyBadge={<AgencyBadge agency="moh" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

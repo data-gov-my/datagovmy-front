@@ -21,7 +21,7 @@ const GovernmentSiteTracker: FunctionComponent<GovernmentSiteTrackerProps> = ({}
         category={[t("common:categories.digitalisation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="MAMPU" />}
+        agencyBadge={<AgencyBadge agency="mampu" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

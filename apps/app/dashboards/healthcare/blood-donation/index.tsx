@@ -95,7 +95,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         description={[t("description"), "text-dim"]}
         action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="PDN" />}
+        agencyBadge={<AgencyBadge agency="pdn" />}
       />
       <Container className="min-h-screen">
         {/* What are the latest blood donation trends in Malaysia? */}

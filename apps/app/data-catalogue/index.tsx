@@ -31,7 +31,6 @@ import { WindowContext } from "@hooks/useWindow";
 import { BREAKPOINTS } from "@lib/constants";
 import Daterange from "@components/Dropdown/Daterange";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
-import { Agency } from "@lib/types";
 
 /**
  * Catalogue Index
@@ -44,7 +43,7 @@ export type Catalogue = {
 };
 
 interface CatalogueIndexProps {
-  query: Record<string, string> & { source: Agency };
+  query: Record<string, string>;
   collection: Record<string, any>;
   sources: string[];
 }
@@ -95,7 +94,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             enableClear
           />
         }
-        agencyBadge={<AgencyBadge agency={query.source ?? "GOVT"} />}
+        agencyBadge={<AgencyBadge agency={query.source.toLowerCase() ?? "govt"} />}
       />
 
       <Container className="min-h-screen">

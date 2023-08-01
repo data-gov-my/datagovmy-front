@@ -21,7 +21,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({}) => {
         category={[t("common:categories.environment"), "text-[#16A34A]"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="Met" />}
+        agencyBadge={<AgencyBadge agency="met" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

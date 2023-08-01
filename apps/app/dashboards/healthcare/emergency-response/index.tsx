@@ -21,7 +21,7 @@ const EmergencyResponse: FunctionComponent<EmergencyResponseProps> = ({}) => {
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="MERS 999" />}
+        agencyBadge={<AgencyBadge agency="mers-999" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

@@ -253,7 +253,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="JPN" />}
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
         <Section>

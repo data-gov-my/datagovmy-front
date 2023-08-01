@@ -20,7 +20,7 @@ import { get } from "@lib/api";
 import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
 import { withi18n } from "@lib/decorators";
 import { numFormat } from "@lib/helpers";
-import type { Agency, Page } from "@lib/types";
+import type { Page } from "@lib/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
 
@@ -103,7 +103,7 @@ const Home: Page = ({
             </At>
           </div>
         }
-        agencyBadge={<AgencyBadge agency="GOVT" />}
+        agencyBadge={<AgencyBadge agency="govt" />}
       />
 
       <Container className="min-h-screen">

@@ -73,7 +73,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="MAMPU" />}
+        agencyBadge={<AgencyBadge agency="mampu" />}
       />
 
       <Container className="start-h-screen">

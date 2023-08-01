@@ -140,7 +140,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="MoE" />}
+        agencyBadge={<AgencyBadge agency="moe" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen">

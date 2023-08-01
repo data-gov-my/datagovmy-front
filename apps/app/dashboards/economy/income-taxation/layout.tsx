@@ -43,7 +43,7 @@ const IncomeTaxationLayout: FunctionComponent<IncomeTaxationLayoutProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="LHDN" icon={<LHDNIcon fillColor="#71717A" />} />}
+        agencyBadge={<AgencyBadge agency="lhdn" icon={<LHDNIcon fillColor="#71717A" />} />}
       />
 
       {/* Navigations */}

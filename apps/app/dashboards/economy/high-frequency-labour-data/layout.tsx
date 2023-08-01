@@ -43,7 +43,7 @@ const LabourLayout: FunctionComponent<LabourLayoutProps> = ({ children, last_upd
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="PERKESO" />}
+        agencyBadge={<AgencyBadge agency="perkeso" />}
       />
 
       {/* Navigations */}

@@ -97,7 +97,7 @@ const IPR: FunctionComponent<IPRProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.IPR} currentState={params.state} />}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="EPU" />}
+        agencyBadge={<AgencyBadge agency="epu" />}
       />
 
       <Container className="min-h-screen">

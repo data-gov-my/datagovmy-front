@@ -72,7 +72,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="BNM" />}
+        agencyBadge={<AgencyBadge agency="bnm" />}
       />
 
       <Container className="min-h-screen">

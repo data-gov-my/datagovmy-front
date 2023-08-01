@@ -114,7 +114,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
         header={[t("header")]}
         description={[t("description")]}
         last_updated={village.data_last_updated}
-        agencyBadge={<AgencyBadge agency="JAKOA" />}
+        agencyBadge={<AgencyBadge agency="jakoa" />}
       />
 
       <Container className="min-h-screen">

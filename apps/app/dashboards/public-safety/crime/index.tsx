@@ -21,7 +21,7 @@ const Crime: FunctionComponent<CrimeProps> = ({}) => {
         category={[t("common:categories.public_safety"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="PDRM" />}
+        agencyBadge={<AgencyBadge agency="pdrm" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

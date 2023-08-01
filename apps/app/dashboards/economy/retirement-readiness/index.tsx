@@ -21,7 +21,7 @@ const RetirementReadiness: FunctionComponent<RetirementReadinessProps> = ({}) =>
         category={[t("common:categories.economy"), "text-[#FF820E]"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="EPF" />}
+        agencyBadge={<AgencyBadge agency="epf" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

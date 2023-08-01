@@ -69,7 +69,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="UNHCR" />}
+        agencyBadge={<AgencyBadge agency="unhcr" />}
         last_updated={last_updated}
       />
 

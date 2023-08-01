@@ -89,7 +89,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="NTRC" />}
+        agencyBadge={<AgencyBadge agency="ntrc" />}
       />
 
       <Container className="min-h-screen">

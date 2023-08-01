@@ -95,7 +95,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         description={[t("description"), "whitespace-pre-line"]}
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="BOMBA" />}
+        agencyBadge={<AgencyBadge agency="bomba" />}
       />
 
       <Container className="min-h-screen">

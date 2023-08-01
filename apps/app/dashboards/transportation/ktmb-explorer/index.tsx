@@ -123,7 +123,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="KTMB" />}
+        agencyBadge={<AgencyBadge agency="ktmb" />}
         last_updated={last_updated}
       />
 

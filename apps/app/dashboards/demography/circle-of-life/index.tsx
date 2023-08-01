@@ -21,7 +21,7 @@ const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="JPN" />}
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

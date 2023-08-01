@@ -1,7 +1,6 @@
 import { FunctionComponent, createElement } from "react";
 import type { IconProps } from ".";
 import Image from "next/image";
-import { Agency } from "@lib/types";
 
 /**
  * BNM Icon
@@ -1300,43 +1299,43 @@ interface AgencyIconProps {
 
 export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency, className }) => {
   const Components: Record<string, any> = {
-    "BNM": BNMIcon,
-    "BOMBA": BOMBAIcon,
-    "DOSM": DOSMIcon,
-    "EPF": EPFIcon,
-    "EPU": IPREPUIcon,
-    "GOVT": JataNegara,
-    "ICU JPM": ICUJPMIcon,
-    "Imigresen": JIMIcon,
-    "JAKOA": JAKOAIcon,
-    "JPA": JPAIcon,
-    "JPJ": JPJIcon,
-    "JPN": JPNIcon,
-    "JPS": MET_FloodIcon,
-    "KTMB": MOTIcon,
-    "KWAP": KWAPIcon,
-    "LHDN": LHDNIcon,
-    "MAMPU": MAMPUIcon,
-    "MCMC": MCMCIcon,
-    "MERS 999": MERSIcon,
-    "Met": METIcon,
-    "MoE": MOEIcon,
-    "MoF": MOFIcon,
-    "MoH": MOHIcon,
-    "MoT": MOTIcon,
-    "NTRC": NTRCIcon,
-    "PDN": PDNIcon,
-    "PDRM": PDRMIcon,
-    "PHCorp": SOCSOIcon,
-    "PERKESO": PHCorpIcon,
-    "SPR": SPRIcon,
-    "UNHCR": UNHCRIcon,
+    "bnm": BNMIcon,
+    "bomba": BOMBAIcon,
+    "dosm": DOSMIcon,
+    "epf": EPFIcon,
+    "epu": IPREPUIcon,
+    "govt": JataNegara,
+    "icu-jpm": ICUJPMIcon,
+    "imigresen": JIMIcon,
+    "jakoa": JAKOAIcon,
+    "jpa": JPAIcon,
+    "jpj": JPJIcon,
+    "jpn": JPNIcon,
+    "jps": MET_FloodIcon,
+    "ktmb": MOTIcon,
+    "kwap": KWAPIcon,
+    "lhdn": LHDNIcon,
+    "mampu": MAMPUIcon,
+    "mcmc": MCMCIcon,
+    "mers-999": MERSIcon,
+    "met": METIcon,
+    "moe": MOEIcon,
+    "mof": MOFIcon,
+    "moh": MOHIcon,
+    "mot": MOTIcon,
+    "ntrc": NTRCIcon,
+    "pdn": PDNIcon,
+    "pdrm": PDRMIcon,
+    "perkeso": SOCSOIcon,
+    "phcorp": PHCorpIcon,
+    "spr": SPRIcon,
+    "unhcr": UNHCRIcon,
   };
 
   if (typeof Components[agency] !== "undefined") {
     return createElement(Components[agency], { className });
   }
-  return createElement(Components["GOVT"], { className });
+  return createElement(Components["govt"], { className });
 };
 
 export default AgencyIcon;

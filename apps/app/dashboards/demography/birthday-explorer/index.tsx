@@ -159,7 +159,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         header={[t("header")]}
         description={[t("description", { quote: t("quote") })]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="JPN" />}
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
         <Section title={t("section_1.title")} description={t("section_1.description")}>

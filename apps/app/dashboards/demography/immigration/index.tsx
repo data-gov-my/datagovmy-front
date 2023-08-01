@@ -120,7 +120,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="Imigresen" />}
+        agencyBadge={<AgencyBadge agency="imigresen" />}
       />
 
       <Container className="min-h-screen">

@@ -56,7 +56,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="SPR" />}
+        agencyBadge={<AgencyBadge agency="spr" />}
       />
 
       {/* Navigations */}

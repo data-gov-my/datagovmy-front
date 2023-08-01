@@ -129,7 +129,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="MoH" />}
+        agencyBadge={<AgencyBadge agency="moh" />}
       />
 
       <Container className="min-h-screen">

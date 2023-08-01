@@ -1,18 +1,17 @@
 import AgencyIcon from "@components/Icon/agency";
 import ArrowUpRightIcon from "@heroicons/react/24/solid/ArrowUpRightIcon";
 import { AgencyLink } from "@lib/constants";
-import { Agency } from "@lib/types";
 import { useTranslation } from "next-i18next";
 import { FunctionComponent, ReactNode } from "react";
 
 export interface AgencyBadgeProps {
-  agency: Agency;
+  agency: string;
   icon?: ReactNode;
 }
 
 const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon }) => {
   const { t } = useTranslation();
-  const isGovt = agency === "GOVT";
+  const isGovt = agency === "govt";
   return (
     <a href={AgencyLink[agency]} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
       <div className="border-outline lg:hover:border-outlineHover dark:border-washed-dark lg:dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark group relative flex w-screen items-center border-y bg-white px-3 py-1.5 transition-[padding] duration-200 hover:pr-10 dark:bg-black lg:w-fit lg:rounded-full lg:border lg:py-1 lg:pl-2 lg:pr-6">
@@ -32,7 +31,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon }) => {
 
             {/* Agency name */}
             <p className="truncate text-sm font-medium dark:text-white" data-testid="hero-agency">
-              {t(`agencies:${String(agency).toLowerCase()}.full`)}
+              {t(`agencies:${agency}.full`)}
             </p>
           </div>
         </div>

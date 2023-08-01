@@ -21,7 +21,7 @@ const PublicContracting: FunctionComponent<PublicContractingProps> = ({}) => {
         category={[t("common:categories.public_finances"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="MoF" />}
+        agencyBadge={<AgencyBadge agency="mof" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

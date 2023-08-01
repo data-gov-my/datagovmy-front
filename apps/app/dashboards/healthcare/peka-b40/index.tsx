@@ -73,7 +73,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="PHCorp" />}
+        agencyBadge={<AgencyBadge agency="phcorp" />}
       />
 
       <Container className="min-h-screen">

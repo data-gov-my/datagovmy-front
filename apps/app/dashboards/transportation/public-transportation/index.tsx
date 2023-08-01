@@ -65,7 +65,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="MoT" />}
+        agencyBadge={<AgencyBadge agency="mot" />}
       />
 
       <Container className="min-h-screen">

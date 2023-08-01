@@ -21,7 +21,7 @@ const PublicPension: FunctionComponent<PublicPensionProps> = ({}) => {
         category={[t("common:categories.economy"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="KWAP" />}
+        agencyBadge={<AgencyBadge agency="kwap" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

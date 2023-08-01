@@ -80,7 +80,7 @@ const Poverty: FunctionComponent<PovertyProps> = ({
         category={[t("common:categories.economy"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="ICU JPM" />}
+        agencyBadge={<AgencyBadge agency="icu-jpm" />}
       />
 
       <Container className="min-h-screen">

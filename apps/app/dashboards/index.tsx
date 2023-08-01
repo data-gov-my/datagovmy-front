@@ -17,7 +17,6 @@ import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useData } from "@hooks/useData";
 import { useTranslation } from "@hooks/useTranslation";
 import { numFormat } from "@lib/helpers";
-import { Agency } from "@lib/types";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
@@ -28,12 +27,12 @@ import { FunctionComponent, useMemo } from "react";
 
 type Dashboard = {
   name: string;
-  agency: Agency;
+  agency: string;
   views: number;
 };
 
 interface DashboardIndexProps {
-  agency: Agency;
+  agency: string;
   analytics: any;
   sources: string[];
   dashboards: Record<string, Dashboard[]>;
@@ -101,7 +100,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             context: agency ? "agency" : "",
           }),
         ]}
-        agencyBadge={<AgencyBadge agency={t(`agencies:${agency ?? "govt"}.abbr`)} />}
+        agencyBadge={<AgencyBadge agency={agency ?? "govt"} />}
       />
       <DashboardFilter
         data={{
@@ -159,10 +158,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                         >
                           <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
-                              <AgencyIcon
-                                agency={t(`agencies:${item.agency}.abbr`)}
-                                className="h-6 w-6"
-                              />
+                              <AgencyIcon agency={item.agency} className="h-6 w-6" />
                               <p className="text-dim text-sm">
                                 {t(`agencies:${item.agency}.abbr`)}
                               </p>

@@ -122,7 +122,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="JPJ" />}
+        agencyBadge={<AgencyBadge agency="jpj" />}
       />
       <Container className="min-h-screen">
         {/* Best selling cars models and brands in {year} */}
