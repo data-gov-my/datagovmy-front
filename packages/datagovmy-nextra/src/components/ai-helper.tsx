@@ -1,9 +1,17 @@
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import {
+  FunctionComponent,
+  ForwardRefExoticComponent,
+  forwardRef,
+  useEffect,
+  useState,
+  ForwardedRef,
+  useRef,
+} from "react";
 import { BoltIcon, XMarkIcon, UserIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import cn from "clsx";
 import Button from "./button";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
 import Markdown from "react-markdown";
 import { Textarea } from "./text-area";
 import { stream } from "../utils/api";
@@ -15,47 +23,66 @@ type ChatType = {
 };
 
 interface ChatInterface {
+  ref?: ForwardedRef<HTMLDivElement>;
   from: "user" | "ai";
   children: string;
 }
 
-const ChatBubble: FunctionComponent<ChatInterface> = ({ from = "user", children }) => {
-  return (
-    <div className="flex items-start gap-2">
-      {
-        {
-          ai: (
-            <div className="bg-primary-dgm dark:bg-primary-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg">
-              <BoltIcon className="h-5 w-5 text-white" />
-            </div>
-          ),
-          user: (
-            <div className="dark:border-outlineHover-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg border bg-white dark:bg-black">
-              <UserIcon className="h-5 w-5 text-black dark:text-white" />
-            </div>
-          ),
-        }[from]
-      }
-      <div
-        className={cn(
-          "dark:border-outlineHover-dark whitespace-pre-wrap rounded-lg border p-2.5 text-sm",
-          from === "user" ? "bg-washed dark:bg-washed-dark" : "bg-transparent"
-        )}
-      >
+const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
+  ({ from = "user", children }, ref) => {
+    const [dots, setDot] = useState(".");
+    useEffect(() => {
+      let _dots = ".";
+      const loop = setInterval(() => {
+        _dots += ".";
+        if (_dots.length > 3) _dots = ".";
+        setDot(_dots);
+      }, 300);
+
+      return () => {
+        clearInterval(loop);
+      };
+    }, []);
+    return (
+      <div className="flex items-start gap-2" ref={ref}>
         {
           {
-            ai: <Markdown>{children}</Markdown>,
-            user: <p>{children} </p>,
+            ai: (
+              <div className="bg-primary-dgm dark:bg-primary-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg">
+                <BoltIcon className="h-5 w-5 text-white" />
+              </div>
+            ),
+            user: (
+              <div className="dark:border-outlineHover-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg border bg-white dark:bg-black">
+                <UserIcon className="h-5 w-5 text-black dark:text-white" />
+              </div>
+            ),
           }[from]
         }
+        <div
+          className={cn(
+            "dark:border-outlineHover-dark whitespace-pre-wrap rounded-lg border p-2.5 text-sm",
+            from === "user" ? "bg-washed dark:bg-washed-dark" : "bg-transparent"
+          )}
+        >
+          {
+            {
+              ai: children.length > 0 ? <Markdown>{children}</Markdown> : <p>{dots}</p>,
+              user: <p>{children} </p>,
+            }[from]
+          }
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
+
+ChatBubble.displayName = "ChatBubble";
 
 interface AIHelperProps {}
 
 const AIHelper: FunctionComponent<AIHelperProps> = () => {
+  const chatRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [fetching, setFetching] = useState<boolean>(false);
   const [answer, setAnswer] = useState<string>("");
@@ -63,6 +90,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
   const [chats, setChats] = useLocalStorage("chats", []);
 
   const fetchResponse = async (prompt: string) => {
+    scrollToBottom();
     setFetching(true);
     const payload = {
       model: "gpt-3.5-turbo",
@@ -101,6 +129,15 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
     }
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [answer]);
+
+  const scrollToBottom = () => {
+    const element = chatRef.current;
+    if (element && element !== null) element.scrollTop = element.scrollHeight;
+  };
+
   const submitPrompt = (prompt: string) => {
     setChats([...chats, { from: "user", text: prompt }]);
     fetchResponse(prompt);
@@ -131,7 +168,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
           <div className="block lg:p-4">
             <Dialog.Panel className="shadow-floating dark:border-outlineHover-dark absolute bottom-[72px] right-0 top-0 flex w-full flex-col rounded-xl border bg-white font-sans dark:bg-black lg:right-6 lg:top-6 lg:w-1/4">
               <div className="relative flex h-full w-full flex-col">
-                <div className="relative  grow overflow-auto px-5">
+                <div className="relative grow overflow-auto px-5" ref={chatRef}>
                   {chats.length > 0 ? (
                     // Chat Bubbles
                     <div className="space-y-3 pb-16 pt-5">
