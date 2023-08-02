@@ -13,7 +13,7 @@ interface ButtonProps {
 }
 
 const Button: FunctionComponent<ButtonProps> = ({
-  className = "",
+  className = "rounded-md px-3 py-1.5",
   variant,
   title,
   type = "button",
@@ -22,11 +22,13 @@ const Button: FunctionComponent<ButtonProps> = ({
   disabled = false,
 }) => {
   const style = {
-    base: "rounded-md px-3 py-1.5 font-medium transition flex items-center gap-2",
+    base: "font-medium transition flex items-center gap-1 disabled:opacity-50",
     default:
       "border border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark bg-white text-black",
-    primary: "from-primary hover:to-primary bg-gradient-to-t to-[#3E7AFF] text-white hover:shadow",
+    primary:
+      "from-primary-dgm to-primary-dark shadow-button bg-gradient-to-t text-white hover:to-[#5B8EFF]",
   };
+
   return (
     <>
       <button
