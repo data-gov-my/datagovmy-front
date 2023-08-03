@@ -15,7 +15,8 @@ import { Dialog } from "@headlessui/react";
 import Markdown from "react-markdown";
 import { Textarea } from "./text-area";
 import { stream } from "../utils/api";
-import { useLocalStorage, useSessionStorage } from "../utils/hooks";
+import { useRouter } from "next/router";
+import { useTranslation, useLocalStorage, useSessionStorage } from "../utils/hooks";
 
 type ChatType = {
   from: "user" | "ai";
@@ -88,6 +89,8 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
   const [answer, setAnswer] = useState<string>("");
   const [prompt, setPrompt] = useSessionStorage("prompt");
   const [chats, setChats] = useLocalStorage("chats", []);
+  const { locale } = useRouter();
+  const { t } = useTranslation(locale);
 
   const fetchResponse = async (prompt: string) => {
     scrollToBottom();
@@ -108,24 +111,29 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
       temperature: 0,
     };
 
-    const { body } = await stream("/chat", payload);
-    if (body === null) {
-      setFetching(false);
-      return;
-    }
-
-    const reader = body.pipeThrough(new TextDecoderStream()).getReader();
-    let _answer = "";
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) {
+    try {
+      const { body } = await stream("/chat", payload);
+      if (body === null) {
         setFetching(false);
-        setChats((chats: ChatType[]) => chats.concat({ from: "ai", text: _answer }));
-        setAnswer("");
-        break;
+        throw new Error(t("ai.error"));
       }
-      setAnswer(answer => answer.concat(value));
-      _answer += value;
+
+      const reader = body.pipeThrough(new TextDecoderStream()).getReader();
+      let _answer = "";
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          setFetching(false);
+          setChats((chats: ChatType[]) => chats.concat({ from: "ai", text: _answer }));
+          setAnswer("");
+          break;
+        }
+        setAnswer(answer => answer.concat(value));
+        _answer += value;
+      }
+    } catch (error: any) {
+      setChats((chats: ChatType[]) => chats.concat({ from: "ai", text: error.message }));
+      console.error(error.message);
     }
   };
 
@@ -153,7 +161,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
         onClick={() => setOpen(true)}
       >
         <BoltIcon className="h-4 w-4" />
-        <p>AI Helper</p>
+        <p>{t("ai.header")}</p>
       </Button>
 
       <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
@@ -183,12 +191,8 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                       <div className="bg-primary-dgm dark:bg-primary-dark shadow-primary-dgm flex aspect-square w-12 items-center justify-center rounded-lg shadow-2xl">
                         <BoltIcon className="h-8 w-8 text-white" />
                       </div>
-                      <h3>AI Helper</h3>
-                      <p className="text-center">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris
-                      </p>
+                      <h3>{t("ai.header")}</h3>
+                      <p className="text-center">{t("ai.description")}</p>
                     </div>
                   )}
                 </div>
@@ -203,7 +207,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                       onClick={clearChats}
                     >
                       <TrashIcon className="h-4 w-4" />
-                      Clear chat
+                      {t("ai.clear-chat")}
                     </Button>
                   </div>
                 )}
@@ -212,7 +216,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                 <div className="shadow-floating dark:border-outlineHover-dark mx-5 mb-5 flex items-center gap-2 rounded-lg border bg-white">
                   <Textarea
                     className="max-h-[30vh] min-h-[40px] w-full grow bg-white pr-12 pt-3 text-sm dark:border-transparent lg:text-sm"
-                    placeholder="Ask a question related to data.gov.my"
+                    placeholder={t("ai.ask-question")}
                     value={prompt}
                     onChange={e => setPrompt(e.target.value)}
                     onKeyDown={e => {
@@ -228,7 +232,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                   <Button
                     variant="primary"
                     className="absolute right-7 aspect-square w-8 justify-center rounded-md"
-                    title="Submit prompt"
+                    title={t("ai.submit-prompt")}
                     disabled={!prompt.length || fetching}
                     onClick={e => {
                       if (prompt.length === 0) return;

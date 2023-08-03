@@ -1914,6 +1914,39 @@ pre .nextra-copy-icon {
 }
 pre {
   white-space: pre-wrap;
+  overflow-wrap: break-word;
+  border-width: 1px;
+  border-color: rgba(24, 24, 27, var(--tw-border-opacity));
+  --tw-border-opacity: 0.04;
+  --tw-bg-opacity: 1;
+  background-color: rgba(226, 232, 240, var(--tw-bg-opacity));
+  background-color: hsl(var(--nextra-primary-hue) 100% 39%/0.05);
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  border-radius: 0.75rem;
+  padding: 1rem 0.25em;
+  font-size: 0.9em;
+  font-weight: 500;
+  overflow-x: auto;
+}
+:is(html[class~="dark"] pre) {
+  background-color: hsl(var(--nextra-primary-hue) 100% 77%/0.1);
+}
+code {
+  overflow-wrap: break-word;
+  border-width: 1px;
+  border-color: rgba(24, 24, 27, var(--tw-border-opacity));
+  --tw-border-opacity: 0.04;
+  --tw-bg-opacity: 1;
+  background-color: rgba(226, 232, 240, var(--tw-bg-opacity));
+  border-radius: 0.375rem;
+  padding: 0.125rem 0.25em;
+  font-size: 0.9em;
+}
+:is(html[class~="dark"] code) {
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+  background-color: rgba(255, 255, 255, 0.1);
 }
 @keyframes fade-in {
   0% {

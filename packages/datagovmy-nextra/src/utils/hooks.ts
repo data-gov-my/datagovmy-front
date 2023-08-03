@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { en, ms } from "./i18n";
 const useLocalStorage = (key: string, defaultValue: {}) => {
   const [value, setValue] = useState(() => {
     let currentValue;
@@ -40,4 +40,23 @@ const useSessionStorage = (key: string, defaultValue: string = "") => {
   return [value, setValue];
 };
 
-export { useLocalStorage, useSessionStorage };
+const useTranslation = (locale?: string) => {
+  const getValueByDotNotation = (obj: any, dotNotation: string) => {
+    const properties = dotNotation.split(".");
+    let value = obj;
+    for (let i = 0; i < properties.length; i++) {
+      value = value[properties[i]];
+      if (value === undefined) return dotNotation; // Property not found, return undefined
+    }
+    return value;
+  };
+
+  const t = (key: string) => {
+    const dict = locale === "ms" ? ms : en;
+    return getValueByDotNotation(dict, key);
+  };
+
+  return { t };
+};
+
+export { useLocalStorage, useSessionStorage, useTranslation };
