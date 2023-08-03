@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { en, ms } from "./i18n";
+import { useRouter } from "next/router";
 const useLocalStorage = (key: string, defaultValue: {}) => {
   const [value, setValue] = useState(() => {
     let currentValue;
@@ -40,7 +41,9 @@ const useSessionStorage = (key: string, defaultValue: string = "") => {
   return [value, setValue];
 };
 
-const useTranslation = (locale?: string) => {
+const useTranslation = () => {
+  const { locale, defaultLocale } = useRouter();
+
   const getValueByDotNotation = (obj: any, dotNotation: string) => {
     const properties = dotNotation.split(".");
     let value = obj;
@@ -52,11 +55,12 @@ const useTranslation = (locale?: string) => {
   };
 
   const t = (key: string) => {
-    const dict = locale === "ms" ? ms : en;
+    const _locale = locale ? locale : defaultLocale ? defaultLocale : "en";
+    const dict = _locale === "ms" ? ms : en;
     return getValueByDotNotation(dict, key);
   };
 
-  return { t };
+  return { t, locale: locale };
 };
 
 export { useLocalStorage, useSessionStorage, useTranslation };

@@ -1,5 +1,4 @@
 import type { NextSeoProps } from "next-seo";
-import { useRouter } from "next/router";
 import { DiscordIcon, GitHubIcon } from "nextra/icons";
 import type { Item } from "nextra/normalize-pages";
 import type { FC, ReactNode } from "react";
@@ -12,6 +11,7 @@ import { themeOptionsSchema, ThemeSwitch } from "./components/theme-switch";
 import type { TOCProps } from "./components/toc";
 import { useConfig } from "./contexts";
 import { getGitIssueUrl, useGitEditUrl } from "./utils";
+import { useTranslation } from "./utils/hooks";
 
 export const DEFAULT_LOCALE = "en";
 
@@ -158,286 +158,213 @@ const publicThemeSchema = themeSchema.deepPartial().extend({
 export type DocsThemeConfig = z.infer<typeof themeSchema>;
 export type PartialDocsThemeConfig = z.infer<typeof publicThemeSchema>;
 
-const LOADING_LOCALES: Record<string, string> = {
-  "en": "Loading",
-  "ms": "Memuatkan",
-  "fr": "Сhargement",
-  "ru": "Загрузка",
-  "zh-CN": "正在加载",
-};
-
-const PLACEHOLDER_LOCALES: Record<string, string> = {
-  "en": "Search documentation",
-  "ms": "Cari dokumentasi",
-  "fr": "Rechercher documents",
-  "ru": "Поиск документации",
-  "zh-CN": "搜索文档",
-};
-
-const FEEDBACK_LOCALES: Record<string, string> = {
-  en: "Question? Give us feedback →",
-  ms: "Ada soalan? Berikan maklum balas kepada kami →",
-};
-
-const EDIT_LOCALES: Record<string, string> = {
-  en: "Edit this page on GitHub →",
-  ms: "Sunting laman ini di GitHub →",
-};
-
-const UPDATED_LOCALES: Record<string, string> = {
-  en: "Last updated on",
-  ms: "Kemaskini terakhir pada",
-};
-
-type FooterProps = {
-  govMy: string;
-  dtsa: string;
-  openSource: string;
-  fe: string;
-  be: string;
-  uiux: string;
-  openData: string;
-  guide: string;
-  tos: string;
-};
-
-const FOOTER_LOCALES: Record<string, FooterProps> = {
-  en: {
-    govMy: "Government of Malaysia",
-    dtsa: "© 2023 Public Sector Open Data",
-    openSource: "Open Source",
-    fe: "Frontend Repo: NextJS",
-    be: "Backend Repo: Django",
-    uiux: "UI + UX Design: Figma",
-    openData: "Open Data",
-    guide: "Guiding Principles",
-    tos: "Terms of Use",
-  },
-  ms: {
-    govMy: "Kerajaan Malaysia",
-    dtsa: "© 2023 Data Terbuka Sektor Awam",
-    openSource: "Sumber Terbuka",
-    fe: "Repo 'Frontend': NextJS",
-    be: "Repo 'Backend': Django",
-    uiux: "Reka Bentuk UI + UX: Figma",
-    openData: "Data Terbuka",
-    guide: "Prinsip Panduan",
-    tos: "Syarat Penggunaan",
-  },
-};
-
-export const DEFAULT_THEME: DocsThemeConfig = {
-  banner: {
-    dismissible: true,
-    key: "nextra-banner",
-  },
-  chat: {
-    icon: (
-      <>
-        <DiscordIcon />
-        <span className="sr-only">Discord</span>
-      </>
-    ),
-  },
-  darkMode: true,
-  direction: "ltr",
-  docsRepositoryBase: "https://github.com/data-gov-my/datagovmy-front/tree/main/apps/docs",
-  editLink: {
-    component: function EditLink({ className, filePath, children }) {
-      const editUrl = useGitEditUrl(filePath);
-      if (!editUrl) {
-        return null;
-      }
+export const DEFAULT_THEME: DocsThemeConfig = (() => {
+  // const { t } = useTranslation();
+  return {
+    banner: {
+      dismissible: true,
+      key: "nextra-banner",
+    },
+    chat: {
+      icon: (
+        <>
+          <DiscordIcon />
+          <span className="sr-only">Discord</span>
+        </>
+      ),
+    },
+    darkMode: true,
+    direction: "ltr",
+    docsRepositoryBase: "https://github.com/data-gov-my/datagovmy-front/tree/main/apps/docs",
+    editLink: {
+      component: function EditLink({ className, filePath, children }) {
+        const editUrl = useGitEditUrl(filePath);
+        if (!editUrl) {
+          return null;
+        }
+        return (
+          <Anchor className={className} href={editUrl}>
+            {children}
+          </Anchor>
+        );
+      },
+      text() {
+        const { t } = useTranslation();
+        return t("common.edit-github");
+      },
+    },
+    feedback: {
+      content() {
+        const { t } = useTranslation();
+        return t("common.feedback");
+      },
+      labels: "feedback",
+      useLink() {
+        const config = useConfig();
+        return getGitIssueUrl({
+          labels: config.feedback.labels,
+          repository: config.docsRepositoryBase,
+          title: `Feedback for “${config.title}”`,
+        });
+      },
+    },
+    footer: {
+      component: Footer,
+      govMy() {
+        const { t } = useTranslation();
+        return t("footer.govt");
+      },
+      dtsa() {
+        const { t } = useTranslation();
+        return t("footer.dtsa");
+      },
+      openSource() {
+        const { t } = useTranslation();
+        return t("footer.open-source");
+      },
+      fe() {
+        const { t } = useTranslation();
+        return t("footer.fe");
+      },
+      be() {
+        const { t } = useTranslation();
+        return t("footer.be");
+      },
+      uiux() {
+        const { t } = useTranslation();
+        return t("footer.uiux");
+      },
+      openData() {
+        const { t } = useTranslation();
+        return t("footer.open-data");
+      },
+      guide() {
+        const { t } = useTranslation();
+        return t("footer.guide");
+      },
+      tos() {
+        const { t } = useTranslation();
+        return t("footer.tos");
+      },
+    },
+    gitTimestamp: ({ timestamp }) => {
+      const { t, locale } = useTranslation();
       return (
-        <Anchor className={className} href={editUrl}>
-          {children}
-        </Anchor>
+        <>
+          {t("common.last-updated")}{" "}
+          <time dateTime={timestamp.toISOString()}>
+            {timestamp.toLocaleDateString(locale, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </time>
+        </>
       );
     },
-    text() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const edit = (locale && EDIT_LOCALES[locale]) || EDIT_LOCALES[defaultLocale];
-      return edit;
-    },
-  },
-  feedback: {
-    content() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const feedback = (locale && FEEDBACK_LOCALES[locale]) || FEEDBACK_LOCALES[defaultLocale];
-      return feedback;
-    },
-    labels: "feedback",
-    useLink() {
-      const config = useConfig();
-      return getGitIssueUrl({
-        labels: config.feedback.labels,
-        repository: config.docsRepositoryBase,
-        title: `Feedback for “${config.title}”`,
-      });
-    },
-  },
-  footer: {
-    component: Footer,
-    govMy() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const govMy = (locale && FOOTER_LOCALES[locale].govMy) || FOOTER_LOCALES[defaultLocale].govMy;
-      return govMy;
-    },
-    dtsa() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const dtsa = (locale && FOOTER_LOCALES[locale].dtsa) || FOOTER_LOCALES[defaultLocale].dtsa;
-      return dtsa;
-    },
-    openSource() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const openSource =
-        (locale && FOOTER_LOCALES[locale].openSource) || FOOTER_LOCALES[defaultLocale].openSource;
-      return openSource;
-    },
-    fe() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const fe = (locale && FOOTER_LOCALES[locale].fe) || FOOTER_LOCALES[defaultLocale].fe;
-      return fe;
-    },
-    be() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const be = (locale && FOOTER_LOCALES[locale].be) || FOOTER_LOCALES[defaultLocale].be;
-      return be;
-    },
-    uiux() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const uiux = (locale && FOOTER_LOCALES[locale].uiux) || FOOTER_LOCALES[defaultLocale].uiux;
-      return uiux;
-    },
-    openData() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const openData =
-        (locale && FOOTER_LOCALES[locale].openData) || FOOTER_LOCALES[defaultLocale].openData;
-      return openData;
-    },
-    guide() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const guide = (locale && FOOTER_LOCALES[locale].guide) || FOOTER_LOCALES[defaultLocale].guide;
-      return guide;
-    },
-    tos() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const tos = (locale && FOOTER_LOCALES[locale].tos) || FOOTER_LOCALES[defaultLocale].tos;
-      return tos;
-    },
-  },
-  gitTimestamp: function GitTimestamp({ timestamp }) {
-    const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-    return (
+    head: (
       <>
-        {(locale && UPDATED_LOCALES[locale]) || UPDATED_LOCALES[defaultLocale]}{" "}
-        <time dateTime={timestamp.toISOString()}>
-          {timestamp.toLocaleDateString(locale, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </time>
-      </>
-    );
-  },
-  head: (
-    <>
-      <meta name="msapplication-TileColor" content="#fff" />
-      <meta httpEquiv="Content-Language" content="en" />
-      <meta name="description" content="Nextra: the next docs builder" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@shuding_" />
-      <meta property="og:title" content="Nextra: the next docs builder" />
-      <meta property="og:description" content="Nextra: the next docs builder" />
-      <meta name="apple-mobile-web-app-title" content="Nextra" />
-    </>
-  ),
-  i18n: [],
-  logo: (
-    <>
-      <span className="font-extrabold">Nextra</span>
-      <span className="ml-2 hidden font-normal text-gray-600 md:inline">The Next Docs Builder</span>
-    </>
-  ),
-  logoLink: true,
-  navbar: {
-    component: Navbar,
-  },
-  navigation: true,
-  nextThemes: {
-    defaultTheme: "system",
-    storageKey: "theme",
-  },
-  notFound: {
-    content: "Submit an issue about broken link →",
-    labels: "bug",
-  },
-  primaryHue: {
-    dark: 204,
-    light: 212,
-  },
-  project: {
-    icon: (
-      <>
-        <GitHubIcon />
-        <span className="sr-only">GitHub</span>
+        <meta name="msapplication-TileColor" content="#fff" />
+        <meta httpEquiv="Content-Language" content="en" />
+        <meta name="description" content="Nextra: the next docs builder" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@shuding_" />
+        <meta property="og:title" content="Nextra: the next docs builder" />
+        <meta property="og:description" content="Nextra: the next docs builder" />
+        <meta name="apple-mobile-web-app-title" content="Nextra" />
       </>
     ),
-  },
-  search: {
-    component: function Search({ className, directories }) {
-      const config = useConfig();
-      return config.flexsearch ? (
-        <Flexsearch className={className} />
-      ) : (
-        <MatchSorterSearch className={className} directories={directories} />
-      );
-    },
-    emptyResult: (
-      <span className="block select-none p-8 text-center text-sm text-gray-400">
-        No results found.
-      </span>
+    i18n: [],
+    logo: (
+      <>
+        <span className="font-extrabold">data.gov.my-nextra</span>
+      </>
     ),
-    error: "Failed to load search index.",
-    loading: function useLoading() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const text = (locale && LOADING_LOCALES[locale]) || LOADING_LOCALES[defaultLocale];
-      return <>{text}…</>;
+    logoLink: true,
+    navbar: {
+      component: Navbar,
     },
-    placeholder: function usePlaceholder() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const text = (locale && PLACEHOLDER_LOCALES[locale]) || PLACEHOLDER_LOCALES[defaultLocale];
-      return `${text}…`;
+    navigation: true,
+    nextThemes: {
+      defaultTheme: "system",
+      storageKey: "theme",
     },
-  },
-  serverSideError: {
-    content: "Submit an issue about error in url →",
-    labels: "bug",
-  },
-  sidebar: {
-    defaultMenuCollapseLevel: 2,
-    titleComponent: ({ title }) => <>{title}</>,
-    toggleButton: false,
-  },
-  themeSwitch: {
-    component: ThemeSwitch,
-    useOptions() {
-      const { locale } = useRouter();
-
-      if (locale === "zh-CN") {
-        return { dark: "深色主题", light: "浅色主题", system: "系统默认" };
-      }
-      return { dark: "Dark", light: "Light", system: "System" };
+    notFound: {
+      content: () => {
+        const { t } = useTranslation();
+        return t("common.error-500");
+      },
+      labels: "bug",
     },
-  },
-  toc: {
-    component: TOC,
-    float: true,
-    title: "On This Page",
-  },
-  useNextSeoProps: () => ({ titleTemplate: "%s – OpenAPI" }),
-};
+    primaryHue: {
+      dark: 204,
+      light: 212,
+    },
+    project: {
+      icon: (
+        <>
+          <GitHubIcon />
+          <span className="sr-only">GitHub</span>
+        </>
+      ),
+    },
+    search: {
+      component: ({ className, directories }) => {
+        const config = useConfig();
+        return config.flexsearch ? (
+          <Flexsearch className={className} />
+        ) : (
+          <MatchSorterSearch className={className} directories={directories} />
+        );
+      },
+      emptyResult: () => {
+        const { t } = useTranslation();
+        return (
+          <span className="block select-none p-8 text-center text-sm text-gray-400">
+            {t("common:empty-result")}
+          </span>
+        );
+      },
+      error: "Failed to load search index.",
+      loading: () => {
+        const { t } = useTranslation();
+        return `${t("common.loading")}...`;
+      },
+      placeholder: () => {
+        const { t } = useTranslation();
+        return `${t("common.search-docs")}...`;
+      },
+    },
+    serverSideError: {
+      content: () => {
+        const { t } = useTranslation();
+        return t("common.error-500");
+      },
+      labels: "bug",
+    },
+    sidebar: {
+      defaultMenuCollapseLevel: 2,
+      titleComponent: ({ title }) => <>{title}</>,
+      toggleButton: false,
+    },
+    themeSwitch: {
+      component: ThemeSwitch,
+      useOptions() {
+        // const { locale } = useRouter();
+        // if (locale === "zh-CN") {
+        //   return { dark: "深色主题", light: "浅色主题", system: "系统默认" };
+        // }
+        return { dark: "Dark", light: "Light", system: "System" };
+      },
+    },
+    toc: {
+      component: TOC,
+      float: true,
+      title: "On This Page",
+    },
+    useNextSeoProps: () => ({ titleTemplate: "%s – OpenAPI" }),
+  };
+})();
 
 export const DEEP_OBJECT_KEYS = Object.entries(DEFAULT_THEME)
   .map(([key, value]) => {

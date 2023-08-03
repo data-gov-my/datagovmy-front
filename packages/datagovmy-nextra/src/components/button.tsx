@@ -3,7 +3,7 @@ import { FunctionComponent, MouseEventHandler, ReactNode } from "react";
 
 interface ButtonProps {
   className?: string;
-  variant: "default" | "primary";
+  variant: "reset" | "default" | "primary";
   type?: "button" | "reset" | "submit";
   onClick?: MouseEventHandler<HTMLButtonElement> | (() => void);
   children?: ReactNode;
@@ -23,6 +23,7 @@ const Button: FunctionComponent<ButtonProps> = ({
 }) => {
   const style = {
     base: "font-medium transition flex items-center gap-1 disabled:opacity-50",
+    reset: "",
     default:
       "border border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark bg-white text-black",
     primary:
