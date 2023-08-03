@@ -22,3 +22,4 @@ export { Steps } from "./steps";
 export { Tabs, Tab } from "./tabs";
 export { ThemeSwitch } from "./theme-switch";
 export { TOC } from "./toc";
+export { default as AIHelper } from "./ai-helper";
