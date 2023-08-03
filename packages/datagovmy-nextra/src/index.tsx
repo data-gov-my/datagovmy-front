@@ -238,4 +238,5 @@ export {
   SkipNavContent,
   SkipNavLink,
   ThemeSwitch,
+  AIHelper,
 } from "./components";

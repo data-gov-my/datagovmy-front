@@ -14,7 +14,7 @@ export const middleware = (request: NextRequest) => {
     const authValue = basicAuth.split(" ")[1];
     const [user, password] = atob(authValue).split(":");
 
-    if (user === "admin" && password === process.env.AUTHORIZATION_TOKEN) return locales(request);
+    if (user === "admin" && password === process.env.AUTH_TOKEN) return locales(request);
   }
 
   return new NextResponse("Auth required", {

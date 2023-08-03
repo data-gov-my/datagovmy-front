@@ -14,48 +14,38 @@ const makePrimaryColor =
 module.exports = {
   content: ["./src/**/*.tsx"],
   theme: {
-    fontFamily: {
-      sans: ["Inter", ...fontFamily.sans],
-      body: ["Inter", ...fontFamily.sans],
-      header: ["Poppins", ...fontFamily.sans],
-    },
-    screens: {
-      "sm": "640px",
-      "md": "768px",
-      "lg": "1024px",
-      "xl": "1280px",
-      "2xl": "1536px",
-    },
-    fontSize: {
-      "xs": ".75rem",
-      "sm": ".875rem",
-      "base": "1rem",
-      "lg": "1.125rem",
-      "xl": "1.25rem",
-      "2xl": "1.5rem",
-      "3xl": "1.875rem",
-      "4xl": "2.25rem",
-      "5xl": "3rem",
-      "6xl": "4rem",
-    },
-
-    colors: {
-      transparent: "transparent",
-      current: "currentColor",
-      white: "#fff",
-      gray: colors.gray,
-      slate: colors.slate,
-      neutral: colors.neutral,
-      red: colors.red,
-      orange: colors.orange,
-      blue: colors.blue,
-      yellow: colors.yellow,
-    },
     extend: {
+      fontFamily: {
+        sans: ["Inter", ...fontFamily.sans],
+        body: ["Inter", ...fontFamily.sans],
+        header: ["Poppins", ...fontFamily.sans],
+      },
+      screens: {
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px",
+      },
+      fontSize: {
+        "xs": ".75rem",
+        "sm": ".875rem",
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "1.875rem",
+        "4xl": "2.25rem",
+        "5xl": "3rem",
+        "6xl": "4rem",
+      },
+      boxShadow: {
+        button: "0 1px 2px rgba(0, 0, 0, 0.1)",
+        floating: "0 6px 24px rgba(0, 0, 0, 0.1)",
+      },
       colors: {
         "dark": "#111",
         "black": "#18181B", // Zinc 900
-        // "primary": "#2563EB",
         "primary": {
           50: makePrimaryColor(97),
           100: makePrimaryColor(94),
@@ -69,6 +59,7 @@ module.exports = {
           800: makePrimaryColor(32),
           900: makePrimaryColor(24),
         },
+        "primary-dgm": "#2563EB",
         "primary-dark": "#3E7AFF",
         "success": "#22C55E", // Green 500
         "danger": "#DC2626", // Red 600
@@ -80,7 +71,7 @@ module.exports = {
         "outlineHover": "#94A3B8", // Slate 400
         "outlineHover-dark": "#3F3F46", // Zinc 700
         "background": "#F8FAFC", // Slate 500
-        "background-dark": "#121212", // Slate 500
+        "background-dark": "#121212",
         "purple": "#7C3AED", // Violet 600
       },
       letterSpacing: {
