@@ -1,4 +1,4 @@
-import type {
+import {
   GetServerSideProps,
   GetStaticProps,
   GetServerSidePropsResult,
@@ -6,7 +6,7 @@ import type {
 } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import merge from "lodash/merge";
-import type { MetaPage } from "./types";
+import { MetaPage } from "./types";
 import { existsSync } from "fs";
 import { resolve } from "path";
 import { I18nConfig } from "../../types/i18n";

@@ -1,3 +1,4 @@
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Container,
@@ -9,13 +10,11 @@ import {
   StateDropdown,
   Tabs,
 } from "datagovmy-ui/components";
-import { NTRCIcon } from "datagovmy-ui/icons/agency";
-import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
-import { routes } from "@lib/routes";
-import { TimeseriesOption } from "@lib/types";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -87,13 +86,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:ntrc.full")}
-            link="https://www.dermaorgan.gov.my/ntrc"
-            icon={<NTRCIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="ntrc" />}
       />
       <Container className="min-h-screen">
         {/* What are the latest organ pledger trends in Malaysia? */}

@@ -1,17 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FunctionComponent, ReactNode } from "react";
-import { useTranslation } from "../../hooks/useTranslation";
 import Container from "../Container";
 import getConfig from "next/config";
 
 interface HeaderProps {
   children: ReactNode;
-  // children: (close: () => void) => ReactNode;
 }
 
 const Header: FunctionComponent<HeaderProps> = ({ children }) => {
-  const { t } = useTranslation("common");
   const { publicRuntimeConfig } = getConfig();
 
   return (

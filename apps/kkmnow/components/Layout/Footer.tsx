@@ -14,28 +14,30 @@ const KKMNOWFooter: FunctionComponent = () => {
       }
     >
       {/* OPEN SOURCE REPOS */}
-      <div className="flex w-full flex-col gap-2 md:w-auto">
+      <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("nav.open_source")}</p>
 
-        <a className="link-dim" href="#" target="_blank">
+        <At className="link-dim" external href="https://github.com/MoH-Malaysia/kkmnow-front">
           {t("nav.frontend")}
-        </a>
-        <a className="link-dim" href="#" target="_blank">
+        </At>
+        <At className="link-dim" external href="https://github.com/MoH-Malaysia/kkmnow-back">
           {t("nav.backend")}
-        </a>
-        <a className="link-dim" href="#" target="_blank">
-          {t("nav.uiux")}
-        </a>
+        </At>
       </div>
+
       {/* OPEN DATA */}
-      <div className="flex w-full flex-col gap-2 md:w-auto">
+      <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("nav.open_data")}</p>
 
-        <a className="link-dim" href="#" target="_blank">
-          {t("nav.guiding_principles")}
-        </a>
-        <At className="link-dim" href="#">
-          {t("nav.terms_of_use")}
+        <At className="link-dim" external href="https://github.com/MoH-Malaysia/">
+          Github
+        </At>
+        <At
+          className="link-dim"
+          external
+          href="https://github.com/MoH-Malaysia/kkmnow-data/blob/main/README.md#larger-datasets-made-available-via-google-cloud"
+        >
+          Google Cloud
         </At>
       </div>
     </Footer>

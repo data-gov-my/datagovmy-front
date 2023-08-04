@@ -1,6 +1,6 @@
 import { Tabs, Panel } from "datagovmy-ui/components";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { CountryAndStates, AKSARA_COLOR } from "@lib/constants";
+import { CountryAndStates, AKSARA_COLOR } from "datagovmy-ui/constants";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 import { sortMulti } from "datagovmy-ui/helpers";

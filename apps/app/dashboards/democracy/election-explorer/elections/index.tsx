@@ -2,7 +2,9 @@ import ElectionAnalysis from "./analysis";
 import BallotSeat from "./ballot-seat";
 import ElectionFilter from "./filter";
 import { ElectionEnum, OverallSeat, Party, PartyResult } from "../types";
-import { toast } from "@components/Toast";
+import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
+import { generateSchema } from "@lib/schema/election-explorer";
+import { get } from "datagovmy-ui/api";
 import {
   Button,
   Card,
@@ -16,18 +18,18 @@ import {
   Section,
   StateDropdown,
   Tabs,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { BuildingLibraryIcon, FlagIcon, MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
-import { useCache } from "@hooks/useCache";
-import { useData } from "@hooks/useData";
-import { useFilter } from "@hooks/useFilter";
-import { useScrollIntersect } from "@hooks/useScrollIntersect";
-import { useTranslation } from "@hooks/useTranslation";
-import { WindowProvider } from "@hooks/useWindow";
-import { get } from "@lib/api";
-import { CountryAndStates, PoliticalPartyColours } from "@lib/constants";
-import { generateSchema } from "@lib/schema/election-explorer";
+  toast,
+} from "datagovmy-ui/components";
+import { CountryAndStates, PoliticalPartyColours } from "datagovmy-ui/constants";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import {
+  useCache,
+  useData,
+  useFilter,
+  useScrollIntersect,
+  useTranslation,
+} from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useMemo, useRef } from "react";
 
@@ -39,8 +41,8 @@ import { FunctionComponent, useMemo, useRef } from "react";
 const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {
   ssr: false,
 });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Waffle = dynamic(() => import("datagovmy-ui/charts/waffle"), { ssr: false });
 
 interface ElectionExplorerProps {
   params: {

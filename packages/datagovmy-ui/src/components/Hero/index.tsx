@@ -64,83 +64,79 @@ const Hero: FunctionComponent<HeroProps> = ({
   }, [background]);
 
   return (
-    <div className={clx("flex h-full w-full justify-center", background_style)}>
-      <div
-        className={clx(
-          "md:px-4.5 dark:divide-washed-dark relative h-full w-full max-w-screen-2xl px-3 lg:px-6",
-          className
-        )}
-      >
-        {children ? (
-          children
-        ) : (
-          <div>
-            {agencyBadge && (
-              <div className="sticky inset-x-0 top-14 z-20 -ml-3 flex md:hidden">{agencyBadge}</div>
-            )}
-            <div className="space-y-6 py-12 xl:w-full">
-              {(category || agencyBadge) && (
-                <div className="relative flex justify-between">
-                  <div className="hidden md:absolute md:right-0 md:top-0 md:block">
-                    {agencyBadge}
-                  </div>
-                  {category && (
-                    <span
-                      className={clx("text-base font-semibold uppercase", category[1])}
-                      data-testid="hero-category"
-                    >
-                      {t(category[0])}
-                    </span>
-                  )}
-                </div>
-              )}
-
-              {(header || description || result?.all_time_view) && (
-                <div className="space-y-3">
-                  {header && (
-                    <h2 className={clx("text-black", header[1])} data-testid="hero-header">
-                      {header[0]}
-                    </h2>
-                  )}
-
-                  {description && Array.isArray(description) ? (
-                    <p
-                      className={clx("text-dim xl:w-2/3", description[1])}
-                      data-testid="hero-description"
-                    >
-                      <Trans>{description[0]}</Trans>
-                    </p>
-                  ) : (
-                    description
-                  )}
-                  {result?.all_time_view && (
-                    <p className="text-dim flex gap-2 text-sm" data-testid="hero-views">
-                      <EyeIcon className="w-4.5 h-4.5 self-center" />
-                      {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
-                        count: result.all_time_view,
-                      })}`}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {(action || last_updated) && (
-                <div className="space-y-3">
-                  {action}
-                  {last_updated && (
-                    <p className="text-dim text-sm" data-testid="hero-last-updated">
-                      {t("common:common.last_updated", {
-                        date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-                      })}
-                    </p>
-                  )}
-                </div>
-              )}
+    <Container
+      background={clx(background_style, "border-b dark:border-washed-dark")}
+      className={clx("relative", className)}
+    >
+      {children ? (
+        children
+      ) : (
+        <div>
+          {agencyBadge && (
+            <div className="md:max-lg:-ml-4.5 sticky inset-x-0 top-14 z-20 -ml-3 flex lg:hidden">
+              {agencyBadge}
             </div>
+          )}
+          <div className="space-y-6 py-12 xl:w-full">
+            {(category || agencyBadge) && (
+              <div className="relative flex justify-between">
+                <div className="hidden lg:absolute lg:right-0 lg:top-0 lg:block">{agencyBadge}</div>
+                {category && (
+                  <span
+                    className={clx("text-base font-semibold uppercase", category[1])}
+                    data-testid="hero-category"
+                  >
+                    {t(category[0])}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {(header || description || result?.all_time_view) && (
+              <div className="space-y-3">
+                {header && (
+                  <h2 className={clx("text-black", header[1])} data-testid="hero-header">
+                    {header[0]}
+                  </h2>
+                )}
+
+                {description && Array.isArray(description) ? (
+                  <p
+                    className={clx("text-dim max-xl:max-w-prose xl:w-2/3", description[1])}
+                    data-testid="hero-description"
+                  >
+                    <Trans>{description[0]}</Trans>
+                  </p>
+                ) : (
+                  description
+                )}
+                {result?.all_time_view && (
+                  <p className="text-dim flex gap-2 text-sm" data-testid="hero-views">
+                    <EyeIcon className="w-4.5 h-4.5 self-center" />
+                    {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
+                      count: result.all_time_view,
+                    })}`}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {(action || last_updated) && (
+              <div className="space-y-3">
+                {action}
+                {last_updated && (
+                  <p className="text-dim text-sm" data-testid="hero-last-updated">
+                    {t("common:common.last_updated", {
+                      date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
+                    })}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </Container>
   );
 };
 

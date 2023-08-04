@@ -1,6 +1,6 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import AgencyIcon from "@components/Icon/agency";
+import Progress from "@components/Progress";
+import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
+import { get } from "datagovmy-ui/api";
 import {
   AgencyBadge,
   At,
@@ -8,23 +8,21 @@ import {
   Container,
   Hero,
   Metadata,
-  Progress,
   Section,
+  Slider,
   Tabs,
-} from "@components/index";
-import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
-import { withi18n } from "@lib/decorators";
-import { numFormat } from "@lib/helpers";
-import type { Page } from "@lib/types";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { withi18n } from "datagovmy-ui/decorators";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { AgencyIcon } from "datagovmy-ui/icons/agency";
+import { Agency, Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 const Home: Page = ({
   timeseries,
@@ -243,7 +241,7 @@ type RankItem = {
   count: number;
   name_bm: string;
   name_en: string;
-  agency_abbr: string;
+  agency_abbr: Agency;
 };
 interface RankingProps {
   ranks: RankItem[];

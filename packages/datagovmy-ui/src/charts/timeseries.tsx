@@ -35,7 +35,7 @@ import AnnotationPlugin, { AnnotationOptions } from "chartjs-plugin-annotation";
 import { Chart } from "react-chartjs-2";
 import { clx, numFormat } from "../lib/helpers";
 import "chartjs-adapter-luxon";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "@types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "../lib/constants";
@@ -319,10 +319,14 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
             tooltipFormat: tooltipFormat
               ? tooltipFormat
-              : ["year", "month", "quarter", "day"].includes(interval as string)
-              ? { quarter: "qQ yyyy", month: "MMM yyyy", year: "yyyy", day: "dd MMM" }[
-                  interval as string
-                ]
+              : ["year", "month", "quarter", "day", "minute"].includes(interval as string)
+              ? {
+                  quarter: "qQ yyyy",
+                  month: "MMM yyyy",
+                  year: "yyyy",
+                  day: "dd MMM",
+                  minute: "dd MMM yyyy HH:mm",
+                }[interval as string]
               : "dd MMM yyyy",
           },
           grid: {
@@ -453,33 +457,38 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
 };
 
 const dummy: ChartData = {
-  labels: [1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
+  labels: [
+    0, 300000, 600000, 900000, 1200000, 1500000, 1800000, 2100000, 2400000, 2700000, 3000000,
+    3300000, 3600000,
+  ], //[1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
+  // labels: [1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
   datasets: [
     // stacked y-values
     {
       type: "line",
       label: "Moving Average (MA)",
-      data: [1, 2, 3], // y-values
+      data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // y-values
+      // data: [1, 2, 3], // y-values
       borderColor: "red",
     },
-    {
-      type: "bar",
-      label: "Primary",
-      data: [4, 5, 6], // y-values
-      backgroundColor: "blue",
-    },
-    {
-      type: "bar",
-      label: "Booster 1",
-      data: [1, 2, 3], // y-values
-      backgroundColor: "teal",
-    },
-    {
-      type: "bar",
-      label: "Booster 2",
-      data: [10, 11, 12], // y-values
-      backgroundColor: "green",
-    },
+    // {
+    //   type: "bar",
+    //   label: "Primary",
+    //   data: [4, 5, 6], // y-values
+    //   backgroundColor: "blue",
+    // },
+    // {
+    //   type: "bar",
+    //   label: "Booster 1",
+    //   data: [1, 2, 3], // y-values
+    //   backgroundColor: "teal",
+    // },
+    // {
+    //   type: "bar",
+    //   label: "Booster 2",
+    //   data: [10, 11, 12], // y-values
+    //   backgroundColor: "green",
+    // },
   ],
 };
 

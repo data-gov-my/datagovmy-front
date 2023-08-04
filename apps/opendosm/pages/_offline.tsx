@@ -1,8 +1,7 @@
-import type { Page } from "@lib/types";
 import { Container, Metadata, ErrorStatus } from "datagovmy-ui/components";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-
 import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (

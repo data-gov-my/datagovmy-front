@@ -1,5 +1,4 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Container,
@@ -10,13 +9,13 @@ import {
   Slider,
   LeftRightCard,
 } from "datagovmy-ui/components";
-import { PHCorpIcon } from "datagovmy-ui/icons/agency";
-import { useTranslation, useData, useSlice } from "datagovmy-ui/hooks";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { routes } from "@lib/routes";
-import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { TimeseriesOption } from "@lib/types";
+import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useTranslation, useData, useSlice } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 
 /**
  * PekaB40 Dashboard
@@ -79,13 +78,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:phcorp.full")}
-            link="https://protecthealth.com.my"
-            icon={<PHCorpIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="phcorp" />}
       />
 
       <Container className="min-h-screen">

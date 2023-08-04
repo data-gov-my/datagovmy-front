@@ -1,24 +1,25 @@
-import Accordion from "@components/Accordion";
-import Button from "@components/Button";
-import Card from "@components/Card";
-import Container from "@components/Container";
-import Dropdown from "@components/Dropdown";
-import { CheckMarkIcon } from "@components/Icon";
-import Input from "@components/Input";
-import Section from "@components/Section";
-import Spinner from "@components/Spinner";
-import { toast } from "@components/Toast";
-import { OptionType } from "@components/types";
-import { ChevronRightIcon, PlusIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { post } from "@lib/api";
-import { clx } from "@lib/helpers";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { post } from "datagovmy-ui/api";
+import {
+  Accordion,
+  Button,
+  Card,
+  Container,
+  Dropdown,
+  Input,
+  Section,
+  Spinner,
+  toast,
+} from "datagovmy-ui/components";
+import { clx } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { CheckMarkIcon } from "datagovmy-ui/icons";
+import { OptionType } from "datagovmy-ui/types";
 import { FunctionComponent } from "react";
 
 /**
  * Helpdesk Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const HelpdeskDashboard: FunctionComponent = () => {
@@ -91,11 +92,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
               {[...Array(5)].map((_, i) => {
                 i++;
                 return (
-                  <Accordion
-                    key={"general" + i}
-                    icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                    title={t("general_q" + i)}
-                  >
+                  <Accordion key={"general" + i} title={t("general_q" + i)}>
                     <p>{t("general_a" + i)}</p>
                   </Accordion>
                 );
@@ -107,11 +104,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
               {[...Array(5)].map((_, i) => {
                 i++;
                 return (
-                  <Accordion
-                    key={"data-tech" + i}
-                    icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                    title={t("data-tech_q" + i)}
-                  >
+                  <Accordion key={"data-tech" + i} title={t("data-tech_q" + i)}>
                     <p>{t("data-tech_a" + i)}</p>
                   </Accordion>
                 );

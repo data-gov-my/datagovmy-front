@@ -1,8 +1,8 @@
-import type { BarMeterData } from "datagovmy-ui/charts/bar-meter";
-import type { JitterData } from "datagovmy-ui/charts/jitterplot";
-import type { OptionType } from "datagovmy-ui/types";
-import type { Color } from "datagovmy-ui/hooks";
-import type { GeoJsonObject } from "geojson";
+import { BarMeterData } from "datagovmy-ui/charts/bar-meter";
+import { JitterData } from "datagovmy-ui/charts/jitterplot";
+import { OptionType } from "datagovmy-ui/types";
+import { Color } from "datagovmy-ui/hooks";
+import { GeoJsonObject } from "geojson";
 import { FunctionComponent, useEffect, useMemo } from "react";
 import {
   Hero,
@@ -20,11 +20,17 @@ import JitterplotOverlay from "datagovmy-ui/charts/jitterplot-overlay";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { AKSARA_COLOR } from "@lib/constants";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { numFormat } from "datagovmy-ui/helpers";
 import { track } from "datagovmy-ui/mixpanel";
 import { routes } from "@lib/routes";
-import { DISTRICTS, DUNS, PARLIMENS, STATES, jitterTooltipFormats } from "@lib/schema/kawasanku";
+import {
+  DISTRICTS,
+  DUNS,
+  PARLIMENS,
+  STATES,
+  jitterTooltipFormats,
+} from "datagovmy-ui/schema/kawasanku";
 import { useRouter } from "next/router";
 
 /**

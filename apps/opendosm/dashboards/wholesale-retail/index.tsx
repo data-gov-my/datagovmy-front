@@ -3,9 +3,9 @@ import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
-import type { OptionType } from "datagovmy-ui/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { OptionType } from "datagovmy-ui/types";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
 
 import { track } from "datagovmy-ui/mixpanel";
 import { routes } from "@lib/routes";

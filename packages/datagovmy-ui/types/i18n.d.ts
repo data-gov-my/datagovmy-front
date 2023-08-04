@@ -1,4 +1,4 @@
-import type { UserConfig } from "next-i18next";
+import { UserConfig } from "next-i18next";
 
 export type I18nConfig = UserConfig & { autoloadNs: string[] };
 

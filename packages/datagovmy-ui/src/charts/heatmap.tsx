@@ -13,7 +13,7 @@ import { Chart } from "react-chartjs-2";
 import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
-import type { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "@types";
 import { Color, useColor } from "../hooks/useColor";
 import { DeepPartial } from "chart.js/types/utils";
 import "chartjs-adapter-luxon";

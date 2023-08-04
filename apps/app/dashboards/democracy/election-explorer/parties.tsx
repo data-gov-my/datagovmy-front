@@ -1,24 +1,27 @@
 import { ElectionResource, Party, PartyResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
-import ComboBox from "@components/Combobox";
-import ImageWithFallback from "@components/ImageWithFallback";
-import { Container, Panel, Section, StateDropdown, Tabs } from "@components/index";
-import { toast } from "@components/Toast";
-import type { OptionType } from "@components/types";
-import { useCache } from "@hooks/useCache";
-import { useData } from "@hooks/useData";
-import { useFilter } from "@hooks/useFilter";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { CountryAndStates } from "@lib/constants";
 import { generateSchema } from "@lib/schema/election-explorer";
+import { get } from "datagovmy-ui/api";
+import {
+  ComboBox,
+  Container,
+  ImageWithFallback,
+  Panel,
+  Section,
+  StateDropdown,
+  Tabs,
+  toast,
+} from "datagovmy-ui/components";
+import { CountryAndStates } from "datagovmy-ui/constants";
+import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { Trans } from "next-i18next";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
 /**
  * Election Explorer Dashboard - Political Parties Tab
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {

@@ -1,13 +1,13 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import IncomeTaxationLayout from "@dashboards/economy/income-taxation/layout";
 import IncomeRankDashboard from "@dashboards/economy/income-taxation/rank-me";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { withi18n } from "@lib/decorators";
-import type { Page } from "@lib/types";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "datagovmy-ui/api";
+import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
 import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 
 const IncomeRank: Page = ({
   last_updated,

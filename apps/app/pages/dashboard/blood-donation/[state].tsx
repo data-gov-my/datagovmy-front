@@ -1,17 +1,18 @@
-import { useTranslation } from "@hooks/useTranslation";
-import { Page } from "@lib/types";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { CountryAndStates } from "@lib/constants";
-import { withi18n } from "@lib/decorators";
-import { get } from "@lib/api";
+import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { CountryAndStates } from "datagovmy-ui/constants";
+import { withi18n } from "datagovmy-ui/decorators";
+import { get } from "datagovmy-ui/api";
 import { DateTime } from "luxon";
 import { routes } from "@lib/routes";
 import BloodDonationDashboard from "@dashboards/healthcare/blood-donation";
-import Fonts from "@config/font";
-import { clx } from "@lib/helpers";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
-import { WindowProvider } from "@hooks/useWindow";
+import { body } from "datagovmy-ui/configs/font";
+import { clx } from "datagovmy-ui/helpers";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 
 const BloodDonationState: Page = ({
   meta,
@@ -64,7 +65,7 @@ const BloodDonationState: Page = ({
 BloodDonationState.layout = (page, props) => (
   <WindowProvider>
     <Layout
-      className={clx(Fonts.body.variable, "font-sans")}
+      className={clx(body.variable, "font-sans")}
       stateSelector={
         <StateDropdown
           width="w-max xl:w-64"

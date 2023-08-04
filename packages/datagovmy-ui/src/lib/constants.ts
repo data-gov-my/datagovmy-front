@@ -1,3 +1,5 @@
+import { Agency } from "../../types";
+
 // GENERAL
 export enum BREAKPOINTS {
   SM = 640,
@@ -126,7 +128,8 @@ export const MYR_COLOR = {
 export const AKSARA_COLOR = {
   BLACK: "#18181B",
   BLACK_H: "#18181B1A",
-  WHITE: "FFFFFF",
+  WHITE: "#FFFFFF",
+  WHITE_H: "#FFFFFF1A",
   DANGER: "#DC2626",
   DANGER_H: "#DC26261A",
   PRIMARY: "#2563EB",
@@ -157,6 +160,8 @@ export const AKSARA_COLOR = {
   DARK_BLUE_H: "#0C32841A",
   PURPLE: "#7C3AED",
   PURPLE_H: "#7C3AED1A",
+  ORANGE: "#FF820E",
+  ORANGE_H: "#FF820E1A",
 } as const;
 
 /**
@@ -169,7 +174,18 @@ export const SHORT_LANG = {
 } as const;
 
 /**
- * Convert AKSARA API's periods to the designated timeseries interval.
+ * Color ordering for data-catalogue.
+ * @example CATALOGUE_COLORS[0] -> AKSARA_COLOR.PRIMARY
+ */
+export const CATALOGUE_COLORS = [
+  AKSARA_COLOR.PRIMARY,
+  AKSARA_COLOR.GREY,
+  "#E2A614",
+  AKSARA_COLOR.DANGER,
+] as const;
+
+/**
+ * Convert AKSARA API periods to the designated timeseries interval.
  * @example SHORT_PERIOD["WEEKLY"] -> "weekly"
  */
 export const SHORT_PERIOD = {
@@ -178,11 +194,14 @@ export const SHORT_PERIOD = {
   MONTHLY: "month",
   QUARTERLY: "quarter",
   YEARLY: "year",
+  INTRADAY: "auto",
+  INFREQUENT: "auto",
+  AS_REQUIRED: "auto",
 } as const;
 
 /**
- * Convert AKSARA API's periods to the designated timeseries interval.
- * @example SHORT_PERIOD["WEEKLY"] -> "weekly"
+ * Convert AKSARA API periods to the designated timeseries tooltip format.
+ * @example SHORT_PERIOD_FORMAT["WEEKLY"] -> "weekly"
  */
 export const SHORT_PERIOD_FORMAT = {
   DAILY: "dd MMM yyyy",
@@ -190,6 +209,9 @@ export const SHORT_PERIOD_FORMAT = {
   MONTHLY: "MMM yyyy",
   QUARTERLY: "qQ yyyy",
   YEARLY: "yyyy",
+  INTRADAY: "dd MMM yyyy",
+  INFREQUENT: "dd MMM yyyy",
+  AS_REQUIRED: "dd MMM yyyy",
 } as const;
 
 /**
@@ -267,3 +289,37 @@ export const PoliticalPartyColours: Record<string, string> = (() => {
     return { ...prev, ...{ [current.key]: current.colour } };
   }, {});
 })();
+
+export const AgencyLink: Record<Agency, string> = {
+  "bnm": "https://www.bnm.gov.my/publications/mhs",
+  "bomba": "https://www.bomba.gov.my/",
+  "dosm": "https://open.dosm.gov.my/",
+  "epf": "https://www.kwsp.gov.my/",
+  // "epu": "https://www.epu.gov.my/en",
+  "govt": "https://www.malaysia.gov.my/portal/index",
+  "icu-jpm": "https://www.icu.gov.my/",
+  "imigresen": "https://www.imi.gov.my/index.php/en/",
+  "jakoa": "https://www.jakoa.gov.my/",
+  "jpa": "https://www.jpa.gov.my/",
+  "jpj": "https://www.jpj.gov.my/en/web/main-site/utama",
+  "jpn": "https://www.jpn.gov.my/en/",
+  "jps": "https://www.jps.gov.my/",
+  "ktmb": "https://www.ktmb.com.my/",
+  "kwap": "https://www.kwap.gov.my/",
+  "lhdn": "https://www.hasil.gov.my",
+  "mampu": "https://www.mampu.gov.my/",
+  "mcmc": "https://www.mcmc.gov.my/en/home",
+  "mers-999": "https://999.gov.my/",
+  "met": "https://www.met.gov.my/?lang=en",
+  "moe": "https://www.moe.gov.my",
+  "mof": "https://www.mof.gov.my/portal/en",
+  "moh": "https://www.moh.gov.my",
+  "mot": "https://www.mot.gov.my/en/",
+  "ntrc": "https://www.dermaorgan.gov.my/ntrc",
+  "pdn": "https://pdn.gov.my/v2/",
+  "pdrm": "https://www.rmp.gov.my/",
+  "perkeso": "https://www.perkeso.gov.my/en/",
+  "phcorp": "https://protecthealth.com.my",
+  "spr": "https://www.spr.gov.my/",
+  "unhcr": "https://www.unhcr.org/my/",
+} as const;

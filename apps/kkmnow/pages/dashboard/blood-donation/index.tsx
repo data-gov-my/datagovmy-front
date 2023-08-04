@@ -5,7 +5,7 @@ import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import BloodDonationDashboard from "@dashboards/blood-donation";
 import { DateTime } from "luxon";
-import { Page } from "@lib/types";
+import { Page } from "datagovmy-ui/types";
 import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
 import { routes } from "@lib/routes";

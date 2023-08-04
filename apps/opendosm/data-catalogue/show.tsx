@@ -1,18 +1,11 @@
-import type { OptionType } from "datagovmy-ui/types";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
-import { useTranslation, useFilter } from "datagovmy-ui/hooks";
-import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "@lib/constants";
-import { clx, download, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
-import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
-import type {
+import {
   DCChartKeys,
   DCConfig,
   DownloadOption,
   DownloadOptions,
   FilterDefault,
-} from "@lib/types";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
-import { track } from "datagovmy-ui/mixpanel";
+} from "datagovmy-ui/types";
 import {
   At,
   Card,
@@ -23,9 +16,16 @@ import {
   Section,
   Tooltip,
 } from "datagovmy-ui/components";
+import CatalogueCode from "datagovmy-ui/dc-charts/code";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
+import { clx, download, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useTranslation, useFilter } from "datagovmy-ui/hooks";
+import { track } from "datagovmy-ui/mixpanel";
+import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import CatalogueCode from "./partials/code";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 
 /**
  * Catalogue Show
@@ -33,34 +33,34 @@ import CatalogueCode from "./partials/code";
  */
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
-const CatalogueTimeseries = dynamic(() => import("@data-catalogue/partials/timeseries"), {
+const CatalogueTimeseries = dynamic(() => import("datagovmy-ui/dc-charts/timeseries"), {
   ssr: false,
 });
-const CatalogueChoropleth = dynamic(() => import("@data-catalogue/partials/choropleth"), {
+const CatalogueChoropleth = dynamic(() => import("datagovmy-ui/dc-charts/choropleth"), {
   ssr: true,
 });
-const CatalogueGeoChoropleth = dynamic(() => import("@data-catalogue/partials/geochoropleth"), {
+const CatalogueGeoChoropleth = dynamic(() => import("datagovmy-ui/dc-charts/geochoropleth"), {
   ssr: true,
 });
-const CatalogueScatter = dynamic(() => import("@data-catalogue/partials/scatter"), {
+const CatalogueScatter = dynamic(() => import("datagovmy-ui/dc-charts/scatter"), {
   ssr: true,
 });
-const CatalogueMapPlot = dynamic(() => import("@data-catalogue/partials/mapplot"), {
+const CatalogueMapPlot = dynamic(() => import("datagovmy-ui/dc-charts/mapplot"), {
   ssr: false,
 });
-const CatalogueGeojson = dynamic(() => import("@data-catalogue/partials/geojson"), {
+const CatalogueGeojson = dynamic(() => import("datagovmy-ui/dc-charts/geojson"), {
   ssr: true,
 });
-const CatalogueBar = dynamic(() => import("@data-catalogue/partials/bar"), {
+const CatalogueBar = dynamic(() => import("datagovmy-ui/dc-charts/bar"), {
   ssr: true,
 });
-const CataloguePyramid = dynamic(() => import("@data-catalogue/partials/pyramid"), {
+const CataloguePyramid = dynamic(() => import("datagovmy-ui/dc-charts/pyramid"), {
   ssr: true,
 });
-const CatalogueHeatmap = dynamic(() => import("@data-catalogue/partials/heatmap"), {
+const CatalogueHeatmap = dynamic(() => import("datagovmy-ui/dc-charts/heatmap"), {
   ssr: true,
 });
-const CatalogueLine = dynamic(() => import("@data-catalogue/partials/line"), {
+const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
   ssr: true,
 });
 
@@ -239,7 +239,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title: t("csv.title"),
             description: t("csv.desc"),
             icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
-            href: urls.csv,
+            href() {
+              download(urls.csv, dataset.meta.unique_id.concat(".csv"));
+              track("csv");
+            },
           },
           {
             id: "parquet",
@@ -247,7 +250,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title: t("parquet.title"),
             description: t("parquet.desc"),
             icon: <DocumentArrowDownIcon className="h-6 min-w-[24px] text-dim" />,
-            href: urls.parquet,
+            href() {
+              download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+              track("parquet");
+            },
           },
         ],
       });

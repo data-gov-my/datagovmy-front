@@ -2,7 +2,7 @@ import { Container, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/comp
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import { AKSARA_COLOR } from "@lib/constants";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import dynamic from "next/dynamic";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";

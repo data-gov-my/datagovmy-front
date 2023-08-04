@@ -1,24 +1,18 @@
-import Slider from "@components/Chart/Slider";
-import Chips from "@components/Chips";
-import Dropdown from "@components/Dropdown";
-import Select from "@components/Dropdown/Select";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useWatch } from "@hooks/useWatch";
-import { get } from "@lib/api";
-import { SHORT_LANG } from "@lib/constants";
-import type { ChartDataset } from "chart.js";
-import { useTranslation } from "@hooks/useTranslation";
+import { ChartDataset } from "chart.js";
+import { get } from "datagovmy-ui/api";
+import { Chips, Dropdown, Select, Slider, toast } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { useData, useTranslation, useWatch } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useMemo } from "react";
-import { toast } from "@components/Toast";
 
 /**
  * Consumer Prices (CPI) - Inflation Snapshot Section
  * @overview Status: Live
  */
 
-const Scatter = dynamic(() => import("@components/Chart/Scatter"), { ssr: false });
+const Scatter = dynamic(() => import("datagovmy-ui/charts/scatter"), { ssr: false });
 
 const InflationSnapshot: FunctionComponent = ({}) => {
   const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);

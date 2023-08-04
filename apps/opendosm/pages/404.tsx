@@ -1,8 +1,8 @@
 import { Container, Metadata, ErrorStatus } from "datagovmy-ui/components";
-import { Page } from "@lib/types";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { useTranslation } from "next-i18next";
 import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
+import { useTranslation } from "next-i18next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation();

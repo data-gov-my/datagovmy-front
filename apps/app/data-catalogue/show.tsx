@@ -1,69 +1,69 @@
-import { OptionType } from "@components/types";
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "@hooks/useTranslation";
-import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "./utils";
-import { clx, download, interpolate, numFormat, toDate } from "@lib/helpers";
-import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
-import type {
+import CatalogueCode from "datagovmy-ui/charts/partials/code";
+import { SampleCode } from "datagovmy-ui/charts/partials/code";
+import CatalogueEmbed, { EmbedInterface } from "datagovmy-ui/charts/partials/embed";
+import {
+  At,
+  Card,
+  Container,
+  Dropdown,
+  Search,
+  Section,
+  Slider,
+  Tooltip,
+} from "datagovmy-ui/components";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { clx, download, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useAnalytics, useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
+import {
   DCChartKeys,
   DCConfig,
   DownloadOption,
   DownloadOptions,
   FilterDefault,
-} from "@lib/types";
-import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import At from "@components/At";
-import Card from "@components/Card";
-import Slider from "@components/Chart/Slider";
-import Container from "@components/Container";
-import Dropdown from "@components/Dropdown";
-import Search from "@components/Search";
-import Section from "@components/Section";
-import Tooltip from "@components/Tooltip";
-import { useFilter } from "@hooks/useFilter";
+  OptionType,
+} from "datagovmy-ui/types";
+import sum from "lodash/sum";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import CatalogueCode from "./partials/code";
-import { SampleCode } from "./partials/code";
-import { useAnalytics } from "@hooks/useAnalytics";
-import sum from "lodash/sum";
-import { WindowProvider } from "@hooks/useWindow";
-import CatalogueEmbed, { EmbedInterface } from "./partials/embed";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 /**
  * Catalogue Show
  * @overview Status: Live
  */
 
-const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
-const CatalogueTimeseries = dynamic(() => import("@data-catalogue/partials/timeseries"), {
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
+const CatalogueTimeseries = dynamic(() => import("datagovmy-ui/dc-charts/timeseries"), {
   ssr: false,
 });
-const CatalogueChoropleth = dynamic(() => import("@data-catalogue/partials/choropleth"), {
+const CatalogueChoropleth = dynamic(() => import("datagovmy-ui/dc-charts/choropleth"), {
   ssr: false,
 });
-const CatalogueGeoChoropleth = dynamic(() => import("@data-catalogue/partials/geochoropleth"), {
+const CatalogueGeoChoropleth = dynamic(() => import("datagovmy-ui/dc-charts/geochoropleth"), {
   ssr: false,
 });
-const CatalogueScatter = dynamic(() => import("@data-catalogue/partials/scatter"), {
+const CatalogueScatter = dynamic(() => import("datagovmy-ui/dc-charts/scatter"), {
   ssr: false,
 });
-const CatalogueMapPlot = dynamic(() => import("@data-catalogue/partials/mapplot"), {
+const CatalogueMapPlot = dynamic(() => import("datagovmy-ui/dc-charts/mapplot"), {
   ssr: false,
 });
-const CatalogueGeojson = dynamic(() => import("@data-catalogue/partials/geojson"), {
+const CatalogueGeojson = dynamic(() => import("datagovmy-ui/dc-charts/geojson"), {
   ssr: false,
 });
-const CatalogueBar = dynamic(() => import("@data-catalogue/partials/bar"), {
+const CatalogueBar = dynamic(() => import("datagovmy-ui/dc-charts/bar"), {
   ssr: false,
 });
-const CataloguePyramid = dynamic(() => import("@data-catalogue/partials/pyramid"), {
+const CataloguePyramid = dynamic(() => import("datagovmy-ui/dc-charts/pyramid"), {
   ssr: false,
 });
-const CatalogueHeatmap = dynamic(() => import("@data-catalogue/partials/heatmap"), {
+const CatalogueHeatmap = dynamic(() => import("datagovmy-ui/dc-charts/heatmap"), {
   ssr: false,
 });
-const CatalogueLine = dynamic(() => import("@data-catalogue/partials/line"), {
+const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
   ssr: false,
 });
 
@@ -258,7 +258,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             description: t("parquet.desc"),
             icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
             href() {
-              download(urls.csv, dataset.meta.unique_id.concat(".parquet"));
+              download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
               track("parquet");
             },
           },

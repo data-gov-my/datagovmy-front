@@ -1,12 +1,12 @@
 import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import { withi18n } from "@lib/decorators";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { InferGetStaticPropsType } from "next";
+import { get } from "datagovmy-ui/api";
+import { Page } from "datagovmy-ui/types";
+import { withi18n } from "datagovmy-ui/decorators";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const CarPopularity: Page = ({
   meta,

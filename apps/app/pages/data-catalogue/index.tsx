@@ -1,13 +1,13 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import DataCatalogue, { Catalogue } from "@data-catalogue/index";
-import { SHORT_LANG } from "@lib/constants";
-import { sortAlpha } from "@lib/helpers";
-import { withi18n } from "@lib/decorators";
 import Progress from "@components/Progress";
+import DataCatalogue, { Catalogue } from "@data-catalogue/index";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { withi18n } from "datagovmy-ui/decorators";
+import { sortAlpha } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const CatalogueIndex: Page = ({
   query,

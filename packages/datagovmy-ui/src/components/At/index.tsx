@@ -1,6 +1,6 @@
-import { FunctionComponent, ReactNode } from "react";
-import Link, { LinkProps } from "next/link";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import Link, { LinkProps } from "next/link";
+import { FunctionComponent, ReactNode } from "react";
 
 interface AtProps extends LinkProps {
   href: string;
@@ -8,6 +8,7 @@ interface AtProps extends LinkProps {
   children: ReactNode;
   scrollTop?: boolean;
   enableIcon?: boolean;
+  external?: boolean;
 }
 
 const At: FunctionComponent<AtProps> = ({
@@ -17,9 +18,11 @@ const At: FunctionComponent<AtProps> = ({
   scrollTop = true,
   enableIcon = false,
   onClick,
+  external,
+  prefetch,
 }) => {
-  return (
-    <Link href={href} scroll={scrollTop} className={className} onClick={onClick}>
+  const content = (
+    <>
       {enableIcon ? (
         <div className="group flex items-center gap-2">
           {children}
@@ -28,6 +31,21 @@ const At: FunctionComponent<AtProps> = ({
       ) : (
         children
       )}
+    </>
+  );
+  return external ? (
+    <a href={href} className={className} onClick={onClick} target="_blank">
+      {content}
+    </a>
+  ) : (
+    <Link
+      href={href}
+      scroll={scrollTop}
+      className={className}
+      onClick={onClick}
+      prefetch={prefetch}
+    >
+      {content}
     </Link>
   );
 };

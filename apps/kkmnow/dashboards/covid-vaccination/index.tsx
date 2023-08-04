@@ -1,3 +1,5 @@
+import COVIDVaccinationTrends from "./vaccine-trends";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Container,
@@ -9,14 +11,12 @@ import {
   Tabs,
   Tooltip,
 } from "datagovmy-ui/components";
-import COVIDVaccinationTrends from "./vaccine-trends";
-import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { CountryAndStates } from "@lib/constants";
+import { CountryAndStates } from "datagovmy-ui/constants";
 import { numFormat } from "datagovmy-ui/helpers";
-import { routes } from "@lib/routes";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { MOHIcon } from "datagovmy-ui/icons/agency";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
-import { MOHIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * COVID Vaccination Dashboard
@@ -129,8 +129,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("agencies:moh.full")}
-            link="https://www.moh.gov.my"
+            agency="moh"
             icon={<MOHIcon fillColor="#16A34A" />} // green-600
           />
         }

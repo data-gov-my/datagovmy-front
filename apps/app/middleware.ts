@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { rewrite, next } from "@vercel/edge";
 
 // Triggers on relevant pages. Middleware to be removed on launch

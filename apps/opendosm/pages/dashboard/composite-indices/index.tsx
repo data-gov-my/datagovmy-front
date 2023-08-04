@@ -1,13 +1,11 @@
-import type { InferGetStaticPropsType } from "next";
-import { GetStaticProps } from "next";
-import { get } from "datagovmy-ui/api";
-import type { Page } from "@lib/types";
-
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
-import { withi18n } from "datagovmy-ui/decorators";
 import CompositeIndexDashboard from "@dashboards/composite-indices";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const CompositeIndices: Page = ({
   meta,

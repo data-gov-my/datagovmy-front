@@ -1,9 +1,9 @@
 import { useTranslation } from "datagovmy-ui/hooks";
-import { Page } from "@lib/types";
+import { Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
-import { CountryAndStates } from "@lib/constants";
+import { CountryAndStates } from "datagovmy-ui/constants";
 import { withi18n } from "datagovmy-ui/decorators";
 import { get } from "datagovmy-ui/api";
 import { DateTime } from "luxon";

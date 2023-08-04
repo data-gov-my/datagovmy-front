@@ -1,10 +1,10 @@
-import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { Section, Tabs, Slider } from "datagovmy-ui/components";
-import { useTranslation, useSlice, useData } from "datagovmy-ui/hooks";
-import dynamic from "next/dynamic";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
-import { TimeseriesOption } from "@lib/types";
+import { useTranslation, useSlice, useData } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
 /**

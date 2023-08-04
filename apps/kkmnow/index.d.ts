@@ -1,4 +1,4 @@
-import type { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
+import { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
 
 declare namespace NodeJS {
   export interface ProcessEnv {
@@ -10,13 +10,6 @@ declare namespace NodeJS {
     NEXT_PUBLIC_GMAP_API_KEY: string;
     NEXT_PUBLIC_MAPTILER_API_KEY: string;
   }
-}
-
-declare module "*.gql" {
-  import { DocumentNode } from "graphql";
-  const Schema: DocumentNode;
-
-  export = Schema;
 }
 
 declare module "chartjs-plugin-crosshair" {

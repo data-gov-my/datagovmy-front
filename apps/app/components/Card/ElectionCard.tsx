@@ -1,8 +1,5 @@
-import { Button } from "..";
 import { ResultBadge } from "@components/Badge/election";
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
-import Font from "@config/font";
 import type {
   BaseResult,
   Candidate,
@@ -13,9 +10,11 @@ import type {
 import { Dialog, Transition } from "@headlessui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { clx, numFormat, slugify, toDate } from "@lib/helpers";
+import BarPerc from "datagovmy-ui/charts/bar-perc";
+import { Button } from "datagovmy-ui/components";
+import { body } from "datagovmy-ui/configs/font";
+import { clx, numFormat, slugify, toDate } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { Fragment, useState } from "react";
 
 export type Result<T> = {
@@ -120,7 +119,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
               >
                 <Dialog.Panel
                   className={clx(
-                    Font.body.variable,
+                    body.variable,
                     "border-outline dark:border-outlineHover-dark shadow-floating w-full max-w-4xl transform rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
                   )}
                 >
@@ -209,7 +208,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                         {options && options?.length <= 10 && (
                           <div className="flex flex-row items-center justify-center gap-1.5">
                             {options?.map((option, index) => (
-                              <Button
+                              <button
                                 key={index}
                                 onClick={() =>
                                   onChange(option).then(item => {
@@ -233,7 +232,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                         {options.length > 1 && (
                           <div className="flex items-center justify-center gap-4 text-sm font-medium">
                             <Button
-                              className="btn-disabled btn-default"
+                              className="btn-default btn-disabled"
                               onClick={() =>
                                 onChange(options[data.index - 1]).then(item => {
                                   if (!item) return;
@@ -253,7 +252,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
                               </span>
                             )}
                             <Button
-                              className="btn-disabled btn-default"
+                              className="btn-default btn-disabled"
                               onClick={() =>
                                 onChange(options[data.index + 1]).then(item => {
                                   if (!item) return;

@@ -1,17 +1,24 @@
+import { BuildingLibraryIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import {
   AgencyBadge,
   At,
   Button,
   Checkbox,
   Container,
+  Daterange,
   Dropdown,
   Hero,
+  Label,
   Modal,
   Radio,
   Search,
   Section,
-} from "@components/index";
-import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+  Sidebar,
+} from "datagovmy-ui/components";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { Agency, OptionType } from "datagovmy-ui/types";
 import {
   FunctionComponent,
   useMemo,
@@ -22,15 +29,6 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
-import Label from "@components/Label";
-import { useFilter } from "@hooks/useFilter";
-import { useTranslation } from "@hooks/useTranslation";
-import { OptionType } from "@components/types";
-import Sidebar from "@components/Sidebar";
-import { WindowContext } from "@hooks/useWindow";
-import { BREAKPOINTS } from "@lib/constants";
-import Daterange from "@components/Dropdown/Daterange";
-import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 
 /**
  * Catalogue Index
@@ -70,7 +68,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
   }, [collection]);
 
   return (
-    <div>
+    <>
       <Hero
         background="blue"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
@@ -94,7 +92,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             enableClear
           />
         }
-        agencyBadge={<AgencyBadge agency={query.source ? query.source.toLowerCase() : "govt"} />}
+        agencyBadge={
+          <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : "govt"} />
+        }
       />
 
       <Container className="min-h-screen">
@@ -143,7 +143,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
           )}
         </Sidebar>
       </Container>
-    </div>
+    </>
   );
 };
 
@@ -169,6 +169,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.monthly"), value: "MONTHLY" },
       { label: t("filter_options.quarterly"), value: "QUARTERLY" },
       { label: t("filter_options.yearly"), value: "YEARLY" },
+      { label: t("filter_options.intraday"), value: "INTRADAY" },
       { label: t("filter_options.infrequent"), value: "INFREQUENT" },
       { label: t("filter_options.as_required"), value: "AS_REQUIRED" },
     ];
@@ -251,13 +252,13 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         <div className="block xl:hidden">
           <Modal
             trigger={open => (
-              <button onClick={open} className="btn-default btn-disabled shadow-floating">
+              <Button onClick={open} className="btn-default shadow-floating">
                 <span>{t("filter")}</span>
                 <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
                   {actives.length}
                 </span>
                 <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
-              </button>
+              </Button>
             )}
             title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
           >
@@ -369,15 +370,13 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
           />
 
           <Daterange
-            beginOptions={filterYears(startYear, endYear)}
-            endOptions={filterYears(startYear, endYear)}
-            selected={[
-              filterYears(startYear, endYear).find(item => item.value === query.begin),
-              filterYears(startYear, endYear).find(item => item.value === query.end),
-            ]}
+            startYear={startYear}
+            endYear={endYear}
+            selectedStart={query.begin}
+            selectedEnd={query.end}
             onChange={([begin, end]) => {
-              if (begin) setFilter("begin", begin);
-              if (end) setFilter("end", end);
+              if (begin) setFilter("begin", { label: begin, value: begin });
+              if (end) setFilter("end", { label: end, value: end });
             }}
             onReset={() => {
               setFilter("begin", undefined);

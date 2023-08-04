@@ -1,8 +1,8 @@
-import { FunctionComponent, ReactNode, useMemo } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 import { CountryAndStates } from "../lib/constants";
 import { clx, limitMax, maxBy, numFormat } from "../lib/helpers";
 import Image from "next/image";
+import { FunctionComponent, ReactNode, useMemo } from "react";
 
 type BarMeterProps = ChartHeaderProps & {
   className?: string;
@@ -106,7 +106,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
 
             <div className="flex flex-grow items-center gap-2">
               <p className="text-dim w-[40px] text-sm">
-                {numFormat(item.y, "standard", [1, 1])}
+                {numFormat(item.y, "standard", 1)}
                 {unit}
               </p>
               <div className="bg-washed dark:bg-washed-dark flex h-3 w-full overflow-x-hidden rounded-full">
@@ -131,7 +131,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
               key={item.x.concat(`_${index}`)}
             >
               <p>
-                {numFormat(item.y, "standard", [1, 1])}
+                {numFormat(item.y, "standard", 1)}
                 {unit}
               </p>
               <div className="bg-washed dark:bg-washed-dark relative flex h-[80%] w-6 overflow-x-hidden rounded-full">

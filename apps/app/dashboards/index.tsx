@@ -1,22 +1,21 @@
-import Card from "@components/Card";
-import AgencyIcon from "@components/Icon/agency";
+import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
+import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import {
-  AgencyBadge,
   At,
+  AgencyBadge,
   Button,
+  Card,
   Container,
   Dropdown,
   Hero,
+  Search,
   Section,
   Tabs,
-} from "@components/index";
-import Search from "@components/Search";
-import { OptionType } from "@components/types";
-import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
-import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { numFormat } from "@lib/helpers";
+} from "datagovmy-ui/components";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { AgencyIcon } from "datagovmy-ui/icons/agency";
+import { Agency, OptionType } from "datagovmy-ui/types";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
@@ -27,12 +26,12 @@ import { FunctionComponent, useMemo } from "react";
 
 type Dashboard = {
   name: string;
-  agency: string;
+  agency: Agency;
   views: number;
 };
 
 interface DashboardIndexProps {
-  agency: string;
+  agency: Agency;
   analytics: any;
   sources: string[];
   dashboards: Record<string, Dashboard[]>;

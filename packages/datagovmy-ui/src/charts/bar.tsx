@@ -1,4 +1,7 @@
-import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { ChartCrosshairOption } from "../../types";
+import { WindowContext } from "../contexts/window";
+import { numFormat } from "../lib/helpers";
+import { AKSARA_COLOR, BREAKPOINTS } from "../lib/constants";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 import {
   Chart as ChartJS,
@@ -10,13 +13,10 @@ import {
   ChartData,
   Legend,
 } from "chart.js";
-import { Bar as BarCanvas, getElementAtEvent } from "react-chartjs-2";
-import { numFormat } from "../lib/helpers";
-import { ChartCrosshairOption } from "../lib/types";
-import type { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
-import { WindowContext } from "../contexts/window";
-import { AKSARA_COLOR, BREAKPOINTS } from "../lib/constants";
 import { useTheme } from "next-themes";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { Bar as BarCanvas, getElementAtEvent } from "react-chartjs-2";
+import { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
 
 interface BarProps extends ChartHeaderProps {
   id?: string;
@@ -76,7 +76,7 @@ const Bar: FunctionComponent<BarProps> = ({
   const { size } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
   const { theme = "light" } = useTheme();
-  console.log(theme);
+
   const display = (
     value: number,
     type: "compact" | "standard",

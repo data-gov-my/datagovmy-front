@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { serialize } from "cookie";
+import { NextApiRequest, NextApiResponse } from "next";
 
 type AuthorizedResponse = {
   authorized: boolean;

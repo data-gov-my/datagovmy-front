@@ -1,13 +1,9 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { List } from "@components/Tabs";
-import { Container, Section } from "@components/index";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { TimeseriesOption } from "@lib/types";
+import { Container, List, Section, Slider } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -16,7 +12,7 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface LabourLossesProps {
   timeseries: any;
@@ -109,7 +105,7 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
                     value: `${LABOUR_LOSSES.growth_wow.value > 0 ? "+" : ""}${numFormat(
                       LABOUR_LOSSES.growth_wow.value,
                       "standard",
-                      [1, 1]
+                      1
                     )}%`,
                   },
                   {
@@ -117,7 +113,7 @@ const LabourLosses: FunctionComponent<LabourLossesProps> = ({ timeseries, timese
                     value: `${LABOUR_LOSSES.growth_mom.value > 0 ? "+" : ""}${numFormat(
                       LABOUR_LOSSES.growth_mom.value,
                       "standard",
-                      [1, 1]
+                      1
                     )}%`,
                   },
                 ]}

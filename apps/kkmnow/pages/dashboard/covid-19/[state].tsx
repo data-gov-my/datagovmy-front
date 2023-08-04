@@ -5,9 +5,9 @@ import { useTranslation } from "next-i18next";
 import { get } from "datagovmy-ui/api";
 import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
-import type { Page } from "@lib/types";
-import type { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { CountryAndStates } from "@lib/constants";
+import { Page } from "datagovmy-ui/types";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
+import { CountryAndStates } from "datagovmy-ui/constants";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 

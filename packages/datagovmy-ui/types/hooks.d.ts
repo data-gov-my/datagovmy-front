@@ -1,7 +1,7 @@
 export * from "datagovmy-ui/src/hooks";
 
 // Import Leaflet into L in case you want to reference Leaflet types
-import type * as L from "leaflet";
+import * as L from "leaflet";
 
 // Declare the leaflet module so we can modify it
 declare module "leaflet" {

@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 export function renderComponent<T>(ComponentOrNode: FC<T> | ReactNode, props?: T) {
   if (!ComponentOrNode) return null;

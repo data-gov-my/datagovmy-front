@@ -1,5 +1,5 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import { GlobeAltIcon } from "@heroicons/react/24/outline";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   ComboBox,
@@ -7,17 +7,16 @@ import {
   Dropdown,
   Hero,
   LeftRightCard,
+  RankList,
   Section,
+  Slider,
   Tabs,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
-import { routes } from "@lib/routes";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
@@ -28,8 +27,8 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface ImmigrationProps {
   choropleth: any;
@@ -92,11 +91,6 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
     country.data[data.country_period],
     data.country_minmax
   );
-  const topStateIndices = getTopIndices(
-    choropleth.data[data.filter].y.value,
-    choropleth.data[data.filter].y.length,
-    true
-  );
 
   const navigateToCountry = (country?: string) => {
     if (!country) {
@@ -145,25 +139,22 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
                     onChange={e => setData("filter", e.value)}
                   />
                   <p className="text-dim">{t("choro_description")}</p>
-                  <div className="border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-                  </div>
                 </div>
-                <div className="flex flex-col space-y-3 overflow-auto">
-                  {topStateIndices.map((pos, i) => {
-                    return (
-                      <div className="mr-4.5 flex space-x-3" key={pos}>
-                        <span className="text-dim font-medium">#{i + 1}</span>
-                        <span className="grow">
-                          {CountryAndStates[choropleth.data[data.filter].x[pos]]}
-                        </span>
-                        <span className="text-purple font-bold">
-                          {numFormat(choropleth.data[data.filter].y.value[pos], "standard")}
-                        </span>
-                      </div>
-                    );
+                <RankList
+                  id="active-passport-by-state"
+                  title={t("common:common.ranking", {
+                    count: choropleth.data[data.filter].x.length,
                   })}
-                </div>
+                  data={choropleth.data[data.filter].y.value}
+                  color="text-purple"
+                  threshold={choropleth.data[data.filter].x.length}
+                  format={(position: number) => {
+                    return {
+                      label: CountryAndStates[choropleth.data[data.filter].x[position]],
+                      value: numFormat(choropleth.data[data.filter].y.value[position], "standard"),
+                    };
+                  }}
+                />
               </div>
             }
             right={

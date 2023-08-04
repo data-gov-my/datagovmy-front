@@ -1,7 +1,7 @@
 import { Color, useColor } from "../hooks/useColor";
 import { MapControl, MapControlRef } from "../hooks/useMap";
 import { minMax, numFormat } from "../lib/helpers";
-import type { FeatureCollection } from "geojson";
+import { FeatureCollection } from "geojson";
 import { LatLng, LatLngBounds, LatLngExpression, LatLngTuple } from "leaflet";
 import { useTheme } from "next-themes";
 import {
@@ -13,9 +13,9 @@ import {
   useState,
 } from "react";
 import { GeoJSON, MapContainer, TileLayer, Tooltip } from "react-leaflet";
-import type { ChoroplethData } from "./choropleth";
+import { ChoroplethData } from "./choropleth";
 import ChartHeader, { ChartHeaderProps } from "./chart-header";
-import type { Geotype } from "../lib/types";
+import { Geotype } from "@types";
 import { useTranslation } from "react-i18next";
 
 export interface GeoChoroplethRef {

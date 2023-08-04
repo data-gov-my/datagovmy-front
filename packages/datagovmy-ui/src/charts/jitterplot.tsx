@@ -1,10 +1,10 @@
-import type { ScriptableContext } from "chart.js";
+import { ScriptableContext } from "chart.js";
 import { FunctionComponent, ReactNode, useCallback, useMemo } from "react";
 import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } from "chart.js";
 import { Bubble } from "react-chartjs-2";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 import { AKSARA_COLOR, CountryAndStates } from "../lib/constants";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "@types";
 
 /** ------------------------GROUPED------------------------------------- */
 

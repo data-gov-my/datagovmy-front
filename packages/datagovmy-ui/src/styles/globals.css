@@ -122,10 +122,10 @@ button[role="tab"][aria-selected="true"]::after {
 
 .button-dashboard:after {
   content: "";
-  height: 10px;
+  height: 12px;
   width: 100%;
   position: absolute;
-  bottom: -10px;
+  bottom: -12px;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

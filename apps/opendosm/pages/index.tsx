@@ -1,14 +1,13 @@
-import type { Page } from "@lib/types";
-import { InferGetStaticPropsType, GetStaticProps } from "next";
-
-import dynamic from "next/dynamic";
 import { Container, Metadata, At, Hero } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
-import { SHORT_LANG } from "@lib/constants";
-import { numFormat } from "datagovmy-ui/helpers";
-import { ReactNode, useContext } from "react";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { InferGetStaticPropsType, GetStaticProps } from "next";
+import dynamic from "next/dynamic";
+import { ReactNode, useContext } from "react";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,

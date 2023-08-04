@@ -1,15 +1,14 @@
-import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { withi18n } from "@lib/decorators";
-import { SHORT_LANG } from "@lib/constants";
-import { OptionType } from "@components/types";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import Metadata from "@components/Metadata";
 import DataCatalogueWidget from "@data-catalogue/widget";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { DCConfig, DCFilter, FilterDate, OptionType, Page } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo } from "react";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
-import { WindowProvider } from "@hooks/useWindow";
 
 const CatalogueEmbed: Page = ({
   meta,

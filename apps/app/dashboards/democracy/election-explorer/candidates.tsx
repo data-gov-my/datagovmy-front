@@ -1,22 +1,17 @@
-import type { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
+import { BaseResult, Candidate, CandidateResult, ElectionResource } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
-import ComboBox from "@components/Combobox";
-import { Container, Panel, Section, Tabs } from "@components/index";
-import { toast } from "@components/Toast";
-import { OptionType } from "@components/types";
-import { useCache } from "@hooks/useCache";
-import { useData } from "@hooks/useData";
-import { useFilter } from "@hooks/useFilter";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { slugify } from "@lib/helpers";
 import { generateSchema } from "@lib/schema/election-explorer";
+import { get } from "datagovmy-ui/api";
+import { ComboBox, Container, Panel, Section, Tabs, toast } from "datagovmy-ui/components";
+import { slugify } from "datagovmy-ui/helpers";
+import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
 /**
  * Election Explorer Dashboard - Candidates Tab
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {

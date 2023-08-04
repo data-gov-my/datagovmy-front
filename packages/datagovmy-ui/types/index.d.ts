@@ -1,10 +1,10 @@
-import type { OptionType } from "@components/types";
-import type { Color } from "@hooks/useColor";
-import type { ChartOptions, ChartTypeRegistry } from "chart.js";
-import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
-import type { NextPage } from "next";
-import type { AppProps } from "next/app";
-import type { ReactElement, ReactNode } from "react";
+import { OptionType } from "../components/types";
+import { Color } from "../hooks/useColor";
+import { ChartOptions, ChartTypeRegistry } from "chart.js";
+import { AnnotationPluginOptions } from "chartjs-plugin-annotation";
+import { NextPage } from "next";
+import { AppProps } from "next/app";
+import { ReactElement, ReactNode } from "react";
 
 export type AppPropsLayout = AppProps & {
   Component: Page;
@@ -69,6 +69,8 @@ export type OptionType = {
   value: string;
 };
 
+export const isOptionType = (value: any): value is OptionType => "value" in value;
+
 export type Geotype = "state" | "parlimen" | "dun" | "district";
 
 /************************ DATA CATALOGUE ************************** */
@@ -116,7 +118,7 @@ export type DCConfig = {
   };
   dates: FilterDate | null;
   options: FilterDefault[] | null;
-  precision: Precision;
+  precision: number | Precision;
   freeze?: string[];
   color?: Color;
   geojson?: Geotype | null;
@@ -162,3 +164,36 @@ export type MetaPage = Record<string, any> & {
 };
 
 export type WithData<T> = { data_as_of: string; data: T };
+
+export type Agency =
+  | "bnm"
+  | "bomba"
+  | "dosm"
+  | "epf"
+  // | "epu"
+  | "govt"
+  | "icu-jpm"
+  | "imigresen"
+  | "jakoa"
+  | "jpa"
+  | "jpj"
+  | "jpn"
+  | "jps"
+  | "ktmb"
+  | "kwap"
+  | "lhdn"
+  | "mampu"
+  | "mcmc"
+  | "mers-999"
+  | "met"
+  | "moe"
+  | "mof"
+  | "moh"
+  | "mot"
+  | "ntrc"
+  | "pdn"
+  | "pdrm"
+  | "phcorp"
+  | "perkeso"
+  | "spr"
+  | "unhcr";

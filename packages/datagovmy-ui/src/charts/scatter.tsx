@@ -13,7 +13,7 @@ import {
 import { Scatter as ScatterCanvas } from "react-chartjs-2";
 import { maxBy, minBy, numFormat, standardDeviation } from "../lib/helpers";
 // import RegressionPlugin from "./regression-line";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "@types";
 import { AKSARA_COLOR } from "../lib/constants";
 import { useTheme } from "next-themes";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";

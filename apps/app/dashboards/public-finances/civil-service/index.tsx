@@ -1,7 +1,5 @@
-import BarMeter from "@components/Chart/BarMeter";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { JPAIcon } from "@components/Icon/agency";
+import { routes } from "@lib/routes";
+import BarMeter from "datagovmy-ui/charts/bar-meter";
 import {
   AgencyBadge,
   ComboBox,
@@ -9,15 +7,14 @@ import {
   Hero,
   LeftRightCard,
   Section,
+  Slider,
   Tooltip,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
-import { routes } from "@lib/routes";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
@@ -27,9 +24,9 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Pyramid = dynamic(() => import("datagovmy-ui/charts/pyramid"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface CivilServiceProps {
   agencies: any;

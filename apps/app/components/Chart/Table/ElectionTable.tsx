@@ -1,14 +1,12 @@
-import { FunctionComponent, ReactNode } from "react";
-import ImageWithFallback from "@components/ImageWithFallback";
-import Spinner from "@components/Spinner";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
-import { useTranslation } from "@hooks/useTranslation";
-import { clx, numFormat, toDate } from "@lib/helpers";
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Tooltip } from "@components/index";
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import { ResultBadge } from "@components/Badge/election";
 import { ElectionResult } from "@dashboards/democracy/election-explorer/types";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import BarPerc from "datagovmy-ui/charts/bar-perc";
+import { ImageWithFallback, Spinner, Tooltip } from "datagovmy-ui/components";
+import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { FunctionComponent, ReactNode } from "react";
 
 export interface ElectionTableProps {
   className?: string;

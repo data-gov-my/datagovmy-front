@@ -1,14 +1,14 @@
-import type { GeoJsonObject } from "geojson";
+import { GeoJsonObject } from "geojson";
 
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { Page } from "@lib/types";
+import { Page } from "datagovmy-ui/types";
 
 import KawasankuDashboard from "@dashboards/kawasanku";
 import { Metadata } from "datagovmy-ui/components";
 
 import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "datagovmy-ui/api";
-import { STATES } from "@lib/schema/kawasanku";
+import { STATES } from "datagovmy-ui/schema/kawasanku";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useEffect, useState } from "react";
 

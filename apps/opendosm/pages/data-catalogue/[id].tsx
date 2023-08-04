@@ -1,13 +1,12 @@
-import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { SHORT_LANG } from "@lib/constants";
-import type { OptionType } from "datagovmy-ui/types";
+import DataCatalogueShow from "@data-catalogue/show";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
-import DataCatalogueShow from "@data-catalogue/show";
-import { useMemo } from "react";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { DCConfig, DCFilter, FilterDate, Page, OptionType } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useMemo } from "react";
 
 const CatalogueShow: Page = ({
   params,

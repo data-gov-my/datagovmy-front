@@ -1,7 +1,6 @@
 import { Fragment, useState, useContext, FunctionComponent, ReactNode } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-
 import { BREAKPOINTS } from "../../lib/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 
@@ -46,7 +45,7 @@ const Megamenu: FunctionComponent<MegamenuProps> = ({ icon, title, children }) =
           className="relative"
         >
           <>
-            <Popover.Button className="hover:bg-washed dark:hover:bg-washed-dark flex items-center gap-2 rounded-none px-2 py-2 text-sm font-medium transition hover:cursor-pointer dark:text-white md:rounded-md md:py-[6px]">
+            <Popover.Button className="hover:bg-washed dark:hover:bg-washed-dark button-dashboard flex items-center gap-2 rounded-none px-2 py-2 text-sm font-medium transition hover:cursor-pointer dark:text-white md:rounded-md md:py-[6px]">
               {icon}
               {title}
               {isOpen ? (

@@ -1,4 +1,4 @@
-import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Hero,
@@ -9,12 +9,11 @@ import {
   Panel,
   StateDropdown,
 } from "datagovmy-ui/components";
-import { MOHIcon } from "datagovmy-ui/icons/agency";
-import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
-import { routes } from "@lib/routes";
-import { TimeseriesOption } from "@lib/types";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent } from "react";
@@ -128,13 +127,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:moh.full")}
-            link="https://www.moh.gov.my"
-            icon={<MOHIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="moh" />}
       />
 
       <Container className="min-h-screen">

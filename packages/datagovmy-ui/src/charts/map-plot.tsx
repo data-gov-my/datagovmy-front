@@ -1,5 +1,5 @@
 import { MapControl, MapControlRef } from "../hooks/useMap";
-import type { GeoJsonObject } from "geojson";
+import { GeoJsonObject } from "geojson";
 import { LatLng, LatLngBounds, LatLngTuple } from "leaflet";
 import { useTheme } from "next-themes";
 import { ForwardedRef, FunctionComponent, useImperativeHandle, useRef } from "react";

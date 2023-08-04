@@ -1,8 +1,9 @@
-import type { OptionType } from "../types";
+import type { OptionType } from "../../../types";
 import { default as Label, LabelProps } from "../Label";
-import { Fragment, FunctionComponent, ReactElement, ReactNode } from "react";
+import { Fragment, FunctionComponent, ReactNode } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { clx } from "../../lib/helpers";
 
 type CommonProps = {
   className?: string;
@@ -18,7 +19,7 @@ type ConditionalProps =
       multiple?: true;
       selected?: any[];
       title?: string;
-      placeholder?: string;
+      placeholder?: never;
       onChange: (selected: any) => void;
     }
   | {
@@ -32,7 +33,7 @@ type ConditionalProps =
 type SelectProps = CommonProps & ConditionalProps & LabelProps;
 
 const Select: FunctionComponent<SelectProps> = ({
-  className = "relative lg:w-fit flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm",
+  className = "relative lg:w-fit flex gap-1.5 rounded-md border py-1.5 pl-3 pr-8 text-left shadow-button",
   disabled = false,
   multiple = false,
   options = dummy,
@@ -121,15 +122,15 @@ const Select: FunctionComponent<SelectProps> = ({
       >
         {({ open }) => (
           <>
-            <div className={["relative text-sm", disabled ? "cursor-not-allowed" : ""].join(" ")}>
+            <div className={clx("relative text-sm", disabled ? "cursor-not-allowed" : "")}>
               <Listbox.Button
-                className={[
-                  "dark:border-washed-dark relative flex w-full flex-col items-start gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:bg-black lg:w-fit lg:flex-row lg:items-center",
+                className={clx(
+                  "dark:border-washed-dark shadow-button relative flex w-full flex-col items-start gap-1.5 rounded-md border py-1.5 pl-3 pr-8 text-left dark:bg-black lg:w-fit lg:flex-row lg:items-center",
                   className,
                   disabled
                     ? "bg-outline text-dim pointer-events-none"
-                    : "hover:border-outlineHover focus:outline-none focus-visible:ring-0",
-                ].join(" ")}
+                    : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+                )}
               >
                 <>
                   {sublabel && <span className="text-dim truncate">{sublabel}</span>}
@@ -152,10 +153,10 @@ const Select: FunctionComponent<SelectProps> = ({
                 leaveTo="opacity-0"
               >
                 <Listbox.Options
-                  className={[
-                    "absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none lg:w-auto",
-                    anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                  ].join(" ")}
+                  className={clx(
+                    "shadow-floating absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none lg:w-auto",
+                    anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
+                  )}
                   static={!disabled}
                 >
                   {recurOptions(options)}

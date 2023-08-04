@@ -1,14 +1,14 @@
 import type { NextSeoProps } from "next-seo";
 import { DiscordIcon, GitHubIcon } from "nextra/icons";
-import type { Item } from "nextra/normalize-pages";
-import type { FC, ReactNode } from "react";
+import { Item } from "nextra/normalize-pages";
+import { FC, ReactNode } from "react";
 import { isValidElement } from "react";
 import { z } from "zod";
 import { Anchor, Flexsearch, Footer, Navbar, TOC } from "./components";
 import { MatchSorterSearch } from "./components/match-sorter-search";
-import type { NavBarProps } from "./components/navbar";
+import { NavBarProps } from "./components/navbar";
 import { themeOptionsSchema, ThemeSwitch } from "./components/theme-switch";
-import type { TOCProps } from "./components/toc";
+import { TOCProps } from "./components/toc";
 import { useConfig } from "./contexts";
 import { getGitIssueUrl, useGitEditUrl } from "./utils";
 import { useTranslation } from "./utils/hooks";
@@ -345,7 +345,7 @@ export const DEFAULT_THEME: DocsThemeConfig = (() => {
     sidebar: {
       defaultMenuCollapseLevel: 2,
       titleComponent: ({ title }) => <>{title}</>,
-      toggleButton: false,
+      toggleButton: true,
     },
     themeSwitch: {
       component: ThemeSwitch,
