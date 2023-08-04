@@ -43,7 +43,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[`DOSM: ${t("header")}`]}
-        description={[t("description", { agency: "", context: "" })]}
+        description={[t("description", { agency: t("agencies:dosm.abbr"), context: "agency" })]}
         // TODO: Add when @lenny updated datagovmy-ui
         // agencyBadge={<AgencyBadge agency="govt" />}
       />
