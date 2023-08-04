@@ -1,5 +1,4 @@
-import type { OptionType } from "../components/types";
-import type { Color } from "../hooks/useColor";
+import type { Color } from "./hooks";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
 import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
@@ -68,8 +67,6 @@ export type OptionType = {
   label: string;
   value: string;
 };
-
-export const isOptionType = (value: any): value is OptionType => "value" in value;
 
 export type Geotype = "state" | "parlimen" | "dun" | "district";
 
