@@ -26,7 +26,7 @@ export function LocaleSwitch({ options, lite, className }: LocaleSwitchProps): R
       selected={{
         key: selected?.locale || "",
         name: (
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 text-sm">
             <GlobeIcon />
             <span className={lite ? "hidden" : ""}>{selected?.text}</span>
           </span>
