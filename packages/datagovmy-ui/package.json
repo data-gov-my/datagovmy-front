@@ -44,10 +44,10 @@
         "./types/i18n.d.ts"
       ],
       "icons": [
-        "./types/icons.d.ts"
+        "./src/icons/index.ts"
       ],
       "icons/agency": [
-        "./types/icons.agency.d.ts"
+        "./src/icons/agency.tsx"
       ],
       "decorators": [
         "./types/decorators.d.ts"

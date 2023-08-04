@@ -1,4 +1,4 @@
-import { FunctionComponent, createElement } from "react";
+import { ComponentType, FunctionComponent, createElement } from "react";
 import type { IconProps } from ".";
 
 /**
@@ -1288,7 +1288,7 @@ interface AgencyIconProps {
 }
 
 export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
-  const Components: Record<string, any> = {
+  const Components: Record<string, FunctionComponent<IconProps>> = {
     "bnm": BNMIcon,
     "bomba": BOMBAIcon,
     "dosm": DOSMIcon,
@@ -1321,8 +1321,10 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
     "unhcr": UNHCRIcon,
   };
 
-  if (typeof Components[agency] !== "undefined") {
-    return createElement(Components[agency], { className: "h-6 w-6" });
+  const Icon = Components[agency];
+
+  if (typeof Icon !== "undefined") {
+    return createElement(Icon, { className: "h-6 w-6" });
   }
   return createElement("div", { className: "h-6 w-6 rounded-full" });
 };
