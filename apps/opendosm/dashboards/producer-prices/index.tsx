@@ -136,13 +136,7 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:dosm.full")}
-            link="https://open.dosm.gov.my/"
-            icon={<DOSMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
 
       <Container className="min-h-screen">
