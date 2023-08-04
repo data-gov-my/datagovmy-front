@@ -27,7 +27,8 @@
     "./icons/agency": "./src/icons/agency.tsx",
     "./mixpanel": "./src/lib/mixpanel.ts",
     "./options": "./src/lib/options.ts",
-    "./schemas/*": "./src/lib/schema/*.tsx",
+    "./schema/*": "./src/lib/schema/*.tsx",
+    "./schema/exchange-rates": "./src/lib/schema/exchange-rates.ts",
     "./styles": "./src/styles/globals.css",
     "./types": "./types/index.d.ts"
   },
@@ -92,6 +93,9 @@
       ],
       "schema/*": [
         "./src/lib/schema/*.tsx"
+      ],
+      "schema/exchange-rates": [
+        "./src/lib/schema/exchange-rates.ts"
       ]
     }
   },
