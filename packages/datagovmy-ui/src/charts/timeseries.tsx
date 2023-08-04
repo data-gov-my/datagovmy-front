@@ -35,7 +35,7 @@ import AnnotationPlugin, { AnnotationOptions } from "chartjs-plugin-annotation";
 import { Chart } from "react-chartjs-2";
 import { clx, numFormat } from "../lib/helpers";
 import "chartjs-adapter-luxon";
-import { ChartCrosshairOption } from "@types";
+import { ChartCrosshairOption } from "../../types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "../lib/constants";

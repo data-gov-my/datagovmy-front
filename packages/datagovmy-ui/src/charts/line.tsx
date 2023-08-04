@@ -15,7 +15,7 @@ import {
 import AnnotationPlugin from "chartjs-plugin-annotation";
 import { Line as LineCanvas } from "react-chartjs-2";
 import { numFormat } from "../lib/helpers";
-import { ChartCrosshairOption } from "@types";
+import { ChartCrosshairOption } from "../../types";
 import { Stats, StatProps } from "./timeseries";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import { useTheme } from "next-themes";

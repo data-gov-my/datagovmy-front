@@ -31,7 +31,7 @@ import { DebouncedFunc } from "lodash";
 import { clx, numFormat } from "../lib/helpers";
 import { UpDownIcon } from "../icons";
 import Button from "../components/Button";
-import { Precision } from "@types";
+import { Precision } from "../../types";
 
 export interface TableConfigColumn {
   id: string;

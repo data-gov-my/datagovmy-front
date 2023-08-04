@@ -11,7 +11,7 @@ import {
 } from "chart.js";
 import { Bar as BarCanvas } from "react-chartjs-2";
 import { numFormat } from "../lib/helpers";
-import { ChartCrosshairOption } from "@types";
+import { ChartCrosshairOption } from "../../types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 type PyramidProps = ChartHeaderProps & {

@@ -5,7 +5,7 @@ import { ChartHeaderProps, default as ChartHeader } from "./chart-header";
 import { FeatureCollection } from "geojson";
 import { Color } from "../hooks/useColor";
 import { clx, numFormat } from "../lib/helpers";
-import { ChartCrosshairOption, Geotype } from "@types";
+import { ChartCrosshairOption, Geotype } from "../../types";
 import { useTheme } from "next-themes";
 import { Chart } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";

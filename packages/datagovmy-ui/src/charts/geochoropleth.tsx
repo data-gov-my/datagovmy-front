@@ -15,7 +15,7 @@ import {
 import { GeoJSON, MapContainer, TileLayer, Tooltip } from "react-leaflet";
 import { ChoroplethData } from "./choropleth";
 import ChartHeader, { ChartHeaderProps } from "./chart-header";
-import { Geotype } from "@types";
+import { Geotype } from "../../types";
 import { useTranslation } from "react-i18next";
 
 export interface GeoChoroplethRef {

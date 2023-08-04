@@ -4,7 +4,7 @@ import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } fro
 import { Bubble } from "react-chartjs-2";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 import { AKSARA_COLOR, CountryAndStates } from "../lib/constants";
-import { ChartCrosshairOption } from "@types";
+import { ChartCrosshairOption } from "../../types";
 
 /** ------------------------GROUPED------------------------------------- */
 
