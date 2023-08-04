@@ -19,7 +19,7 @@ type ConditionalProps =
       multiple?: true;
       selected?: any[];
       title?: string;
-      placeholder?: never;
+      placeholder?: string;
       onChange: (selected: any) => void;
     }
   | {
