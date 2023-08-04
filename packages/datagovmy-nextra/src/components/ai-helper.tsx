@@ -189,7 +189,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
               leaveTo="opacity-0 translate-y-1"
             >
               <Popover.Panel className="shadow-floating dark:border-outlineHover-dark fixed bottom-[72px] right-0 top-0 z-50 flex w-full flex-col rounded-xl border bg-white font-sans dark:bg-black lg:right-6 lg:top-6 lg:max-w-[400px] xl:max-w-[25%]">
-                <div className="relative flex h-full w-full grow flex-col overflow-hidden rounded-lg bg-white shadow-lg  dark:bg-black">
+                <div className="relative flex h-full w-full grow flex-col overflow-hidden rounded-xl bg-white shadow-lg dark:bg-black">
                   <div className="relative grow overflow-auto px-5" ref={chatRef}>
                     {chats.length > 0 ? (
                       // Chat Bubbles
