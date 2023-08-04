@@ -56,7 +56,7 @@
         "./types/i18n.d.ts"
       ],
       "icons": [
-        "./src/icons/index.ts"
+        "./src/icons/index.tsx"
       ],
       "icons/agency": [
         "./src/icons/agency.tsx"
