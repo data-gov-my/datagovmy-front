@@ -1,4 +1,4 @@
-import { ComponentType, FunctionComponent, createElement } from "react";
+import { FunctionComponent, createElement } from "react";
 import { IconProps } from ".";
 import Image from "next/image";
 import { Agency } from "../../types";
