@@ -1,7 +1,7 @@
-import { HomeIcon, RectangleGroupIcon } from "@heroicons/react/24/solid";
-import { routes } from "@lib/routes";
+// import { HomeIcon, RectangleGroupIcon } from "@heroicons/react/24/solid";
+// import { routes } from "@lib/routes";
 import { At, Header, Nav, Megamenu } from "datagovmy-ui/components";
-import { WindowProvider } from "datagovmy-ui/contexts/window";
+// import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, ReactNode } from "react";
 
@@ -11,44 +11,40 @@ interface HeaderProps {
 
 const KKMNOWHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   const { t } = useTranslation(["dashboards"]);
-  const megaMenuItems = [
-    {
-      title: t("categories.infectious-diseases"),
-      list: [
-        { title: t("dashboards.covid-19.name"), link: routes.COVID_19 },
-        { title: t("dashboards.covid-vaccination.name"), link: routes.COVID_VACCINATION },
-      ],
-    },
-    {
-      title: t("categories.healthcare-resources"),
-      list: [{ title: t("dashboards.hospital-bed-utilisation.name"), link: routes.HOSPITAL_BED }],
-    },
-    {
-      title: t("categories.healthcare-programs"),
-      list: [
-        {
-          title: t("dashboards.blood-donation.name"),
-          link: routes.BLOOD_DONATION,
-        },
-        { title: t("dashboards.organ-donation.name"), link: routes.ORGAN_DONATION },
-        { title: t("dashboards.peka-b40.name"), link: routes.PEKA_B40 },
-      ],
-    },
-  ];
+  // const megaMenuItems = [
+  //   {
+  //     title: t("categories.infectious-diseases"),
+  //     list: [
+  //       { title: t("dashboards.covid-19.name"), link: routes.COVID_19 },
+  //       { title: t("dashboards.covid-vaccination.name"), link: routes.COVID_VACCINATION },
+  //     ],
+  //   },
+  //   {
+  //     title: t("categories.healthcare-resources"),
+  //     list: [{ title: t("dashboards.hospital-bed-utilisation.name"), link: routes.HOSPITAL_BED_UTILISATION }],
+  //   },
+  //   {
+  //     title: t("categories.healthcare-programs"),
+  //     list: [
+  //       {
+  //         title: t("dashboards.blood-donation.name"),
+  //         link: routes.BLOOD_DONATION,
+  //       },
+  //       { title: t("dashboards.organ-donation.name"), link: routes.ORGAN_DONATION },
+  //       { title: t("dashboards.peka-b40.name"), link: routes.PEKA_B40 },
+  //     ],
+  //   },
+  // ];
 
   return (
     <Header>
       <Nav stateSelector={stateSelector}>
         {close => (
           <>
-            <Nav.Item
-              title={t("common:nav.home")}
-              link="/"
-              onClick={close}
-              icon={<HomeIcon className="h-4 w-4 text-black dark:text-white" />}
-            />
+            <Nav.Item title={t("common:nav.home")} link="/" onClick={close} />
+            <Nav.Item title={t("common:nav.dashboards")} link="/dashboard" onClick={close} />
             {/* DASHBOARD MEGA MENU */}
-            <WindowProvider>
+            {/* <WindowProvider>
               <Megamenu
                 title={t("common:nav.dashboards")}
                 icon={<RectangleGroupIcon className="h-4 w-4 text-black dark:text-white" />}
@@ -73,7 +69,7 @@ const KKMNOWHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                   ))}
                 </div>
               </Megamenu>
-            </WindowProvider>
+            </WindowProvider> */}
           </>
         )}
       </Nav>

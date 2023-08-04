@@ -13,57 +13,53 @@ interface HeaderProps {
 const OpenDOSMHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
   const { t } = useTranslation(["dashboards"]);
 
-  const megaMenuItems = [
-    {
-      title: t("categories.economy"),
-      list: [
-        { title: t("dashboards.labour-market.name"), link: routes.LABOUR_MARKET },
-        { title: t("dashboards.composite-index.name"), link: routes.COMPOSITE_INDEX },
-        { title: t("dashboards.wholesale-retail.name"), link: routes.WHOLESALE_RETAIL },
-        {
-          title: t("dashboards.industrial-production.name"),
-          link: routes.INDUSTRIAL_PRODUCTION,
-        },
-        {
-          title: t("dashboards.consumer-prices.name"),
-          link: routes.CONSUMER_PRICES,
-        },
-        {
-          title: t("dashboards.producer-prices.name"),
-          link: routes.PRODUCER_PRICES,
-        },
-      ],
-    },
-    {
-      title: t("categories.national-accounts"),
-      list: [{ title: t("dashboards.gdp.name"), link: routes.GDP }],
-    },
-    {
-      title: t("categories.demography"),
-      list: [{ title: t("dashboards.kawasanku.name"), link: routes.KAWASANKU }],
-    },
-  ];
+  // const megaMenuItems = [
+  //   {
+  //     title: t("categories.economy"),
+  //     list: [
+  //       { title: t("dashboards.labour-market.name"), link: routes.LABOUR_MARKET },
+  //       { title: t("dashboards.composite-index.name"), link: routes.COMPOSITE_INDEX },
+  //       { title: t("dashboards.wholesale-retail.name"), link: routes.WHOLESALE_RETAIL },
+  //       {
+  //         title: t("dashboards.industrial-production.name"),
+  //         link: routes.INDUSTRIAL_PRODUCTION,
+  //       },
+  //       {
+  //         title: t("dashboards.consumer-prices.name"),
+  //         link: routes.CONSUMER_PRICES,
+  //       },
+  //       {
+  //         title: t("dashboards.producer-prices.name"),
+  //         link: routes.PRODUCER_PRICES,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: t("categories.national-accounts"),
+  //     list: [{ title: t("dashboards.gdp.name"), link: routes.GDP }],
+  //   },
+  //   {
+  //     title: t("categories.demography"),
+  //     list: [{ title: t("dashboards.kawasanku.name"), link: routes.KAWASANKU }],
+  //   },
+  // ];
 
   return (
     <Header>
       <Nav stateSelector={stateSelector}>
         {close => (
           <>
-            <Nav.Item
-              title={t("common:nav.home")}
-              link="/"
-              onClick={close}
-              icon={<HomeIcon className="h-4 w-4 text-black dark:text-white" />}
-            />
+            <Nav.Item title={t("common:nav.home")} link="/" onClick={close} />
+            <Nav.Item title={t("common:nav.dashboards")} link="/dashboard" onClick={close} />
             <Nav.Item
               title={t("common:nav.catalogue")}
               key="/data-catalogue"
               link="/data-catalogue"
               onClick={close}
-              icon={<ChartBarSquareIcon className="h-5 w-5 text-black dark:text-white" />}
             />
+
             {/* DASHBOARD MEGA MENU */}
-            <WindowProvider>
+            {/* <WindowProvider>
               <Megamenu
                 title={t("common:nav.dashboards")}
                 icon={<RectangleGroupIcon className="h-4 w-4 text-black dark:text-white" />}
@@ -93,7 +89,7 @@ const OpenDOSMHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                   ))}
                 </div>
               </Megamenu>
-            </WindowProvider>
+            </WindowProvider> */}
           </>
         )}
       </Nav>
