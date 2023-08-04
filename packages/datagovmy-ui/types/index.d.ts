@@ -1,10 +1,10 @@
-import { OptionType } from "../components/types";
-import { Color } from "../hooks/useColor";
-import { ChartOptions, ChartTypeRegistry } from "chart.js";
-import { AnnotationPluginOptions } from "chartjs-plugin-annotation";
-import { NextPage } from "next";
-import { AppProps } from "next/app";
-import { ReactElement, ReactNode } from "react";
+import type { OptionType } from "../components/types";
+import type { Color } from "../hooks/useColor";
+import type { ChartOptions, ChartTypeRegistry } from "chart.js";
+import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
+import type { NextPage } from "next";
+import type { AppProps } from "next/app";
+import type { ReactElement, ReactNode } from "react";
 
 export type AppPropsLayout = AppProps & {
   Component: Page;

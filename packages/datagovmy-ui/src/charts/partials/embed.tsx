@@ -1,4 +1,5 @@
-import { FilterDefault, OptionType, isOptionType } from "../../../types";
+import { FilterDefault } from "../../../types";
+import { OptionType, isOptionType } from "./types";
 import { CodeBlock, Dropdown, Modal, ModalInterface, Panel, Tabs } from "../../components";
 import { useData, useTranslation } from "../../hooks";
 import { languages } from "../../lib/options";
