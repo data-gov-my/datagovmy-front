@@ -1,4 +1,4 @@
-import { OptionType } from "../components/types";
+import { OptionType } from "../../types";
 import { MALAYSIA, STATES } from "./constants";
 import { sortMsiaFirst } from "./helpers";
 
