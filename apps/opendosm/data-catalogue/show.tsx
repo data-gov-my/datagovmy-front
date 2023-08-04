@@ -17,15 +17,15 @@ import {
   Tooltip,
 } from "datagovmy-ui/components";
 import CatalogueCode from "datagovmy-ui/dc-charts/code";
+import { EmbedInterface } from "datagovmy-ui/charts/partials/embed";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
 import { clx, download, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
-import { useTranslation, useFilter } from "datagovmy-ui/hooks";
-import { track } from "datagovmy-ui/mixpanel";
+import { useTranslation, useFilter, useAnalytics } from "datagovmy-ui/hooks";
 import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
 import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 /**
  * Catalogue Show
@@ -117,7 +117,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
+  const embedRef = useRef<EmbedInterface>(null);
   const { filter, setFilter } = useFilter(config.context, { id: params.id });
+  const { result, track } = useAnalytics(dataset);
+  const availableDownloads = useMemo<DownloadOption[]>(
+    () => Object.values(downloads).flatMap(option => option),
+    [downloads]
+  );
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -223,12 +229,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   };
 
   useEffect(() => {
-    track("page_view", {
-      type: "catalogue",
-      id: dataset.meta.unique_id,
-      name_en: dataset.meta.title,
-      name_bm: dataset.meta.title,
-    });
     if (dataset.type === "TABLE") {
       setDownloads({
         chart: [],
@@ -323,25 +323,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       }))
                     : []
                 }
-                onChange={async e => {
-                  const action = downloads.chart
-                    .concat(downloads.data)
-                    .find(({ id }) => e.value === id);
-
-                  if (!action) return;
-
-                  if (typeof action?.href === "string") {
-                    download(action.href, dataset.meta.unique_id);
-                    track("file_download", {
-                      uid: dataset.meta.unique_id.concat("_", action.id),
-                      type: ["csv", "parquet"].includes(e.value) ? "file" : "image",
-                      id: dataset.meta.unique_id,
-                      name: dataset.meta.title,
-                      ext: action.id,
-                    });
+                onChange={e => {
+                  // embed
+                  if (e.value === "embed") {
+                    embedRef.current?.open();
                     return;
                   }
-
+                  // downloads
+                  const action = availableDownloads.find(({ id }) => e.value === id);
+                  if (!action) return;
                   return action.href();
                 }}
               />
@@ -541,15 +531,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       <li key={url as string}>
                         <a
                           href={url as string}
-                          className="break-all text-primary hover:underline dark:text-primary-dark"
+                          className="break-all text-primary [text-underline-position:from-font] hover:underline dark:text-primary-dark"
                           onClick={() =>
-                            track("file_download", {
-                              uid: dataset.meta.unique_id.concat("_", key),
-                              id: dataset.meta.unique_id,
-                              name: dataset.meta.title,
-                              type: "file",
-                              ext: key,
-                            })
+                            track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
                           }
                         >
                           {url as string}
@@ -645,49 +629,39 @@ interface DownloadCard extends DownloadOption {
   };
 }
 
+interface DownloadCard extends DownloadOption {
+  views?: number;
+}
+
 const DownloadCard: FunctionComponent<DownloadCard> = ({
   href,
   image,
   title,
   description,
   icon,
-  meta,
+  id,
+  views,
 }) => {
-  return typeof href === "string" ? (
-    <a href={href} download onClick={() => track("file_download", meta)}>
-      <Card className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark">
-        <div className="flex items-center gap-4.5">
-          {image && (
-            <Image
-              height={64}
-              width={64}
-              src={image}
-              className="object-contain"
-              alt={title as string}
-            />
-          )}
-          <div className="block flex-grow">
-            <p className="font-bold">{title}</p>
-            {description && <p className="text-sm text-dim">{description}</p>}
-          </div>
-
-          {icon && icon}
-        </div>
-      </Card>
-    </a>
-  ) : (
-    // .png & svg
+  return (
     <Card
       onClick={href}
       className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
     >
       <div className="flex items-center gap-4.5">
-        {image && (
+        {["svg", "png"].includes(id) ? (
           <Image
-            src={image}
+            src={image || ""}
             className="aspect-video h-14 rounded border bg-white object-cover lg:h-16"
             width={128}
             height={64}
+            alt={title as string}
+          />
+        ) : (
+          <Image
+            height={64}
+            width={64}
+            src={image || ""}
+            className="object-contain"
             alt={title as string}
           />
         )}
@@ -696,7 +670,10 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
           {description && <p className="text-sm text-dim">{description}</p>}
         </div>
 
-        {icon && icon}
+        <div className="space-y-1">
+          {icon}
+          <p className="text-center text-xs text-dim">{numFormat(views ?? 0, "compact")}</p>
+        </div>
       </div>
     </Card>
   );
