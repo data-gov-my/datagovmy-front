@@ -43,7 +43,7 @@ export function ThemeSwitch({ lite, className }: ThemeSwitchProps): ReactElement
       selected={{
         key: theme,
         name: (
-          <div className="flex items-center gap-2 capitalize">
+          <div className="flex items-center gap-2 text-sm capitalize">
             <IconToUse />
             <span className={lite ? "md:hidden" : ""}>
               {mounted ? options[theme as keyof typeof options] : options.light}

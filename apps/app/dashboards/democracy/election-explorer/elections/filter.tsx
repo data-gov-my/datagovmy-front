@@ -1,8 +1,8 @@
-import Button from "@components/Button";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { useTranslation } from "@hooks/useTranslation";
-import { WindowContext } from "@hooks/useWindow";
-import { clx } from "@lib/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Button } from "datagovmy-ui/components";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { clx } from "datagovmy-ui/helpers";
 import { FunctionComponent, MouseEventHandler, useContext, useMemo } from "react";
 
 /**

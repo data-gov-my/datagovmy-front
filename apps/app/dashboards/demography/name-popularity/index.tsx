@@ -1,35 +1,34 @@
-import AgencyBadge from "@components/Badge/agency";
-import Card from "@components/Card";
-import Chips from "@components/Chips";
-import { JPNIcon } from "@components/Icon/agency";
+import { MagnifyingGlassIcon, LockClosedIcon } from "@heroicons/react/20/solid";
+import { get } from "datagovmy-ui/api";
 import {
+  AgencyBadge,
   Button,
+  Card,
+  Chips,
   Container,
   Dropdown,
   Hero,
   Input,
   Radio,
   Section,
+  Spinner,
+  toast,
+  Toggle,
   Tooltip,
-} from "@components/index";
-import Toggle from "@components/Toggle";
-import Spinner from "@components/Spinner";
-import { OptionType } from "@components/types";
-import { MagnifyingGlassIcon, LockClosedIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
+} from "datagovmy-ui/components";
+import { clx } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
-import { toast } from "@components/Toast";
-import { clx } from "@lib/helpers";
+
 /**
  * Name Popularity Dashboard
  * @overview Status: Live
  */
 
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface NamePopularityDashboardProps {
   top_names: Record<string, any>;
@@ -254,13 +253,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpn.full")}
-            link="https://www.jpn.gov.my/en/"
-            icon={<JPNIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
         <Section>

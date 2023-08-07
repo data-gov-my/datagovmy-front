@@ -1,10 +1,10 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import ConsumerPricesDashboard from "@dashboards/economy/consumer-prices";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { useTranslation } from "@hooks/useTranslation";
-import { withi18n } from "@lib/decorators";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { withi18n } from "datagovmy-ui/decorators";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const ConsumerPrices = ({
   meta,

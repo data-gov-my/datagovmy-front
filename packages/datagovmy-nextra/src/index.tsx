@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
-import type { NextraThemeLayoutProps, PageOpts } from "nextra";
-import type { ReactElement, ReactNode } from "react";
+import { NextraThemeLayoutProps, PageOpts } from "nextra";
+import { ReactElement, ReactNode } from "react";
 import { useMemo } from "react";
 import "focus-visible";
 import cn from "clsx";
 import { useFSRoute, useMounted } from "nextra/hooks";
 import { MDXProvider } from "nextra/mdx";
 import "./polyfill";
-import type { PageTheme } from "nextra/normalize-pages";
+import { PageTheme } from "nextra/normalize-pages";
 import { normalizePages } from "nextra/normalize-pages";
 import { Banner, Breadcrumb, Head, NavLinks, Sidebar, SkipNavContent } from "./components";
 import { DEFAULT_LOCALE, PartialDocsThemeConfig } from "./constants";
@@ -238,4 +238,5 @@ export {
   SkipNavContent,
   SkipNavLink,
   ThemeSwitch,
+  AIHelper,
 } from "./components";

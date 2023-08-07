@@ -1,12 +1,12 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import ElectionCandidatesDashboard from "@dashboards/democracy/election-explorer/candidates";
 import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
-import type { Candidate } from "@dashboards/democracy/election-explorer/types";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { withi18n } from "@lib/decorators";
-import type { Page } from "@lib/types";
+import { Candidate } from "@dashboards/democracy/election-explorer/types";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "datagovmy-ui/api";
+import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const ElectionCandidates: Page = ({

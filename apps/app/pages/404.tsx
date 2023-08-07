@@ -1,10 +1,8 @@
-import Container from "@components/Container";
-import ErrorCode from "@components/Error";
-import Metadata from "@components/Metadata";
-import { Page } from "@lib/types";
+import { Container, ErrorStatus, Metadata } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { useTranslation } from "hooks/useTranslation";
-import { withi18n } from "@lib/decorators";
 
 const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
@@ -13,7 +11,7 @@ const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Metadata title={t("common:error.404.title") as string} keywords={""} />
 
       <Container className="min-h-[76vh] pt-7 text-black">
-        <ErrorCode
+        <ErrorStatus
           title={t("common:error.404.title") as string}
           description={t("common:error.404.description")}
           code={404}

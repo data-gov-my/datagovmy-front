@@ -1,21 +1,28 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import AgencyIcon from "@components/Icon/agency";
-import { AgencyBadge, At, Card, Container, Hero, Metadata, Section, Tabs } from "@components/index";
+import Progress from "@components/Progress";
 import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
-import { withi18n } from "@lib/decorators";
-import { numFormat } from "@lib/helpers";
-import type { Page } from "@lib/types";
+import { get } from "datagovmy-ui/api";
+import {
+  AgencyBadge,
+  At,
+  Card,
+  Container,
+  Hero,
+  Metadata,
+  Section,
+  Slider,
+  Tabs,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { withi18n } from "datagovmy-ui/decorators";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { AgencyIcon } from "datagovmy-ui/icons/agency";
+import { Agency, Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 const Home: Page = ({
   timeseries,
@@ -66,7 +73,7 @@ const Home: Page = ({
   return (
     <>
       <Metadata keywords={"data.gov.my data malaysia election prices harga"} />
-
+      <Progress />
       <Hero
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
@@ -94,15 +101,7 @@ const Home: Page = ({
             </At>
           </div>
         }
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency="govt" />}
       />
 
       <Container className="min-h-screen">
@@ -242,7 +241,7 @@ type RankItem = {
   count: number;
   name_bm: string;
   name_en: string;
-  agency_abbr: string;
+  agency_abbr: Agency;
 };
 interface RankingProps {
   ranks: RankItem[];
@@ -259,8 +258,8 @@ const Ranking = ({ ranks }: RankingProps) => {
           <At href={item.id} key={item.id}>
             <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
               <div className="relative flex items-center gap-3">
-                <AgencyIcon agency={item.agency_abbr} />
-                <p className="text-dim text-sm uppercase">{item.agency_abbr}</p>
+                <AgencyIcon agency={item.agency_abbr} className="h-6 w-6" />
+                <p className="text-dim text-sm">{t(`agencies:${item.agency_abbr}.abbr`)}</p>
                 <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>
               <div className="relative overflow-hidden">

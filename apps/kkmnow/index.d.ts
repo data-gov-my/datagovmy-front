@@ -1,3 +1,5 @@
+import { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
+
 declare namespace NodeJS {
   export interface ProcessEnv {
     APP_URL: string;
@@ -10,18 +12,18 @@ declare namespace NodeJS {
   }
 }
 
-declare module "*.gql" {
-  import { DocumentNode } from "graphql";
-  const Schema: DocumentNode;
-
-  export = Schema;
-}
-
 declare module "chartjs-plugin-crosshair" {
   export const CrosshairPlugin: any;
   export const Interpolate: any;
 
   export interface InteractionModeMap {
     interpolate: Function;
+  }
+}
+declare global {
+  interface Window {
+    mixpanel: OverridedMixpanel & {
+      instance: Mixpanel;
+    };
   }
 }

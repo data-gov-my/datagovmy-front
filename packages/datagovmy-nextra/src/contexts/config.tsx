@@ -1,12 +1,12 @@
 import { ThemeProvider } from "next-themes";
-import type { FrontMatter, PageMapItem, PageOpts } from "nextra";
+import { FrontMatter, PageMapItem, PageOpts } from "nextra";
 import { metaSchema } from "nextra/normalize-pages";
-import type { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
-import type { ZodError } from "zod";
-import type { DocsThemeConfig } from "../constants";
+import { ZodError } from "zod";
+import { DocsThemeConfig } from "../constants";
 import { DEEP_OBJECT_KEYS, DEFAULT_THEME, themeSchema } from "../constants";
-import type { Context } from "../types";
+import { Context } from "../types";
 import { MenuProvider } from "./menu";
 
 type Config<FrontMatterType = FrontMatter> = DocsThemeConfig &

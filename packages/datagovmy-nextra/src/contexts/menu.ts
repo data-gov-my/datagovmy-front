@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 
 interface Menu {

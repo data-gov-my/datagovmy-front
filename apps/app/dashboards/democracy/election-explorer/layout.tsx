@@ -1,14 +1,17 @@
-import At from "@components/At";
-import AgencyBadge from "@components/Badge/agency";
-import Hero from "@components/Hero";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import Progress from "@components/Progress";
 import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "@hooks/useTranslation";
-import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
+import { At, AgencyBadge, Hero } from "datagovmy-ui/components";
+import { clx } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { SPRIconSolid } from "datagovmy-ui/icons/agency";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode } from "react";
+
+/**
+ * Election Explorer Layout
+ * @overview Status: Live
+ */
 
 interface ElectionLayoutProps {
   last_updated: string;
@@ -49,20 +52,14 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
 
   return (
     <>
-      <Progress disableOnSameRoute />
+      <Progress />
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:spr.full")}
-            link="https://www.spr.gov.my/"
-            icon={<SPRIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="spr" />}
       />
 
       {/* Navigations */}
@@ -74,10 +71,9 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
           )}
         >
           {election_navs.map(nav => (
-            <div className="snap-start">
+            <div key={nav.url} className="snap-start">
               <At
                 className="flex h-full min-w-[56px] cursor-pointer items-center justify-center px-3 outline-none"
-                key={nav.url}
                 href={nav.url}
                 scrollTop={false}
               >

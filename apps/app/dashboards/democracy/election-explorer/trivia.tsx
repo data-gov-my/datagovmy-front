@@ -1,26 +1,23 @@
 import { BaseResult, ElectionEnum, Seat, SeatResult } from "./types";
 import ElectionCard, { Result } from "@components/Card/ElectionCard";
-import { SPRIconSolid } from "@components/Icon/agency";
-import { Container, Dropdown, Panel, StateDropdown, Tabs } from "@components/index";
-import { toast } from "@components/Toast";
-import { OptionType } from "@components/types";
-import { useCache } from "@hooks/useCache";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { CountryAndStates } from "@lib/constants";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import { routes } from "@lib/routes";
 import { generateSchema } from "@lib/schema/election-explorer";
+import { get } from "datagovmy-ui/api";
+import { Container, Dropdown, Panel, StateDropdown, Tabs, toast } from "datagovmy-ui/components";
+import { CountryAndStates } from "datagovmy-ui/constants";
+import { useCache, useData, useTranslation } from "datagovmy-ui/hooks";
+import { SPRIconSolid } from "datagovmy-ui/icons/agency";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
 
 /**
  * Election Explorer Dashboard - Trivia Tab
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
 const ElectionTable = dynamic(() => import("@components/Chart/Table/ElectionTable"), {
   ssr: false,
 });
@@ -168,6 +165,7 @@ const ElectionTriviaDashboard: FunctionComponent<ElectionTriviaProps> = ({
               anchor="left"
               width="w-fit"
               currentState={params.state}
+              exclude={["kul", "lbn", "pjy"]}
             />
           </div>
 

@@ -7,7 +7,7 @@ const path = require("path");
 
 // Declare constants & helper functions
 const outputImportStatements = `import { FunctionComponent } from "react";
-import type { IconProps } from ".";
+import { IconProps } from ".";
 
 `;
 

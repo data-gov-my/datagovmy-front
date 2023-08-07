@@ -12,7 +12,7 @@ export function Footer(): ReactElement {
   return (
     <footer className="bg-background border-outline dark:border-washed-dark dark:bg-dark z-10 flex h-full w-full justify-center border-t pb-16 pt-12">
       <div className="md:px-4.5 h-full w-full max-w-screen-2xl px-3 lg:px-6">
-        <div className="flex gap-y-6 max-md:flex-col md:justify-between">
+        <div className="flex gap-y-8 max-md:flex-col md:justify-between">
           <div className="flex items-start gap-x-4">
             <Image src="/assets/jata_logo.png" width={48} height={36} alt="jata negara" />
             <div className="space-y-2">
@@ -20,8 +20,8 @@ export function Footer(): ReactElement {
               <p className="text-dim text-sm">{renderString(config.footer.dtsa)}</p>
             </div>
           </div>
-          <div className="flex gap-x-3 text-sm lg:gap-x-6">
-            <div className="flex w-[200px] flex-col gap-y-2">
+          <div className="flex gap-6 text-sm">
+            <div className="flex w-full flex-col gap-2 md:w-[200px]">
               <p className="font-bold">{renderString(config.footer.openSource)}</p>
               <a
                 className={classes.link}
@@ -46,7 +46,7 @@ export function Footer(): ReactElement {
                 {renderString(config.footer.uiux)}
               </a>
             </div>
-            <div className="flex w-[200px] flex-col gap-y-2">
+            <div className="flex w-full flex-col gap-2 md:w-[200px]">
               <p className="font-bold">{renderString(config.footer.openData)}</p>
               <a className={classes.link} href="#" target="_blank">
                 {renderString(config.footer.guide)}

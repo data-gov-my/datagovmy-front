@@ -4,6 +4,7 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 module.exports = {
   darkMode: "class",
   content: [
+    "../../packages/datagovmy-ui/src/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -62,6 +63,10 @@ module.exports = {
         slide: {
           from: { width: "var(--from-width)" },
           to: { width: "var(--to-width)" },
+        },
+        grow: {
+          from: { height: "var(--from-height)" },
+          to: { height: "var(--to-height)" },
         },
       },
       animation: {

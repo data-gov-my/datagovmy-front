@@ -1,34 +1,31 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { BOMBAIcon } from "@components/Icon/agency";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Container,
   Dropdown,
   Hero,
   LeftRightCard,
+  RankList,
   Section,
+  Slider,
   StateDropdown,
   Tabs,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
-import { routes } from "@lib/routes";
-import { TimeseriesOption } from "@lib/types";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType, TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
 /**
- * FireandRescue Dashboard
- * @overview Status: In-development
+ * Fire and Rescue Dashboard
+ * @overview Status: Live
  */
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface FireandRescueProps {
   choropleth: any;
@@ -55,7 +52,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
   );
   const { data, setData } = useData({
     minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
-    filter: FILTER_OPTIONS[0],
+    filter: FILTER_OPTIONS[0].value,
     period: "auto",
     periodly: "daily_7d",
     tab_index: 0,
@@ -81,11 +78,6 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
   };
 
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
-  const topStateIndices = getTopIndices(
-    choropleth.data[data.filter.value].y.value,
-    choropleth.data[data.filter.value].y.length,
-    true
-  );
 
   return (
     <>
@@ -96,13 +88,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         description={[t("description"), "whitespace-pre-line"]}
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bomba.full")}
-            link="https://www.bomba.gov.my/"
-            icon={<BOMBAIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bomba" />}
       />
 
       <Container className="min-h-screen">
@@ -223,6 +209,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
           </SliderProvider>
         </Section>
 
+        {/* How does the rate of fire and rescue incidents differ across states? */}
         <Section>
           <LeftRightCard
             left={
@@ -241,32 +228,26 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                     width="w-full lg:w-fit"
                     placeholder={t("common:common.select")}
                     options={FILTER_OPTIONS}
-                    selected={FILTER_OPTIONS.find(e => e.value === data.filter.value)}
-                    onChange={e => setData("filter", e)}
+                    selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
+                    onChange={e => setData("filter", e.value)}
                   />
                   <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
-                  <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
-                    {t("choro_ranking")}
-                  </p>
                 </div>
-                <div className="space-y-3 overflow-auto">
-                  {topStateIndices.map((pos, i) => {
-                    return (
-                      <div className="mr-4.5 flex space-x-3" key={pos}>
-                        <div className="text-dim font-medium">#{i + 1}</div>
-                        <div className="grow">
-                          {CountryAndStates[choropleth.data[data.filter.value].x[pos]]}
-                        </div>
-                        <div className="text-danger font-bold">
-                          {`${numFormat(
-                            choropleth.data[data.filter.value].y.value[pos],
-                            "standard"
-                          )}`}
-                        </div>
-                      </div>
-                    );
+                <RankList
+                  id="active-passport-by-state"
+                  title={t("common:common.ranking", {
+                    count: choropleth.data[data.filter].x.length,
                   })}
-                </div>
+                  data={choropleth.data[data.filter].y.value}
+                  color="text-danger"
+                  threshold={choropleth.data[data.filter].x.length}
+                  format={(position: number) => {
+                    return {
+                      label: CountryAndStates[choropleth.data[data.filter].x[position]],
+                      value: numFormat(choropleth.data[data.filter].y.value[position], "standard"),
+                    };
+                  }}
+                />
               </div>
             }
             right={
@@ -274,10 +255,10 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                 className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
                 color="reds"
                 data={{
-                  labels: choropleth.data[data.filter.value].x.map(
+                  labels: choropleth.data[data.filter].x.map(
                     (state: string) => CountryAndStates[state]
                   ),
-                  values: choropleth.data[data.filter.value].y.value,
+                  values: choropleth.data[data.filter].y.value,
                 }}
                 type="state"
               />

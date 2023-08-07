@@ -1,11 +1,11 @@
-import { Disclosure, Transition } from "@headlessui/react";
 import { clx } from "../../lib/helpers";
+import { Disclosure, Transition } from "@headlessui/react";
+import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { FunctionComponent, ReactNode } from "react";
 
 type AccordionProps = {
   className?: string;
   width?: string;
-  icon?: ReactNode;
   title: string;
   children: ReactNode;
 };
@@ -13,29 +13,26 @@ type AccordionProps = {
 const Accordion: FunctionComponent<AccordionProps> = ({
   className,
   width = "w-full",
-  icon,
   title,
   children,
 }) => {
   return (
     <Disclosure>
       {({ open }) => (
-        <div>
-          <Disclosure.Button as="div">
-            <div
-              className={clx(
-                open ? "rounded-none" : "rounded-b-xl",
-                "hover:bg-washed dark:hover:bg-washed-dark cursor-pointer rounded-t-xl p-4 shadow",
-                "border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark border",
-                width,
-                className
-              )}
-            >
-              <div className="flex">
-                {icon}
-                <p className="pl-8">{title}</p>
-              </div>
-            </div>
+        <details>
+          <Disclosure.Button
+            as="div"
+            className={clx(
+              open ? "rounded-none" : "shadow-button rounded-b-xl",
+              "active:bg-washed hover:dark:bg-washed-dark px-4.5 flex items-center gap-x-3 rounded-t-xl bg-white py-3 dark:bg-black",
+              "border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark border outline-none",
+              "cursor-pointer select-none text-start text-sm font-medium text-black dark:text-white",
+              width,
+              className
+            )}
+          >
+            {open ? <MinusIcon className="h-5 w-5" /> : <PlusIcon className="h-5 w-5" />}
+            {title}
           </Disclosure.Button>
 
           <Transition
@@ -49,7 +46,7 @@ const Accordion: FunctionComponent<AccordionProps> = ({
             <Disclosure.Panel>
               <div
                 className={clx(
-                  "text-dim border-outline dark:border-washed-dark rounded-b-xl border border-t-0 p-4 font-normal shadow",
+                  "text-dim border-outline dark:border-washed-dark shadow-button px-4.5 rounded-b-xl border border-t-0 py-3",
                   width
                 )}
               >
@@ -57,7 +54,7 @@ const Accordion: FunctionComponent<AccordionProps> = ({
               </div>
             </Disclosure.Panel>
           </Transition>
-        </div>
+        </details>
       )}
     </Disclosure>
   );

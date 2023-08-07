@@ -55,7 +55,11 @@
 }
 
 .tooltip .tooltip-content {
-  @apply invisible absolute top-8 z-20 inline-block w-max max-w-[150px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:-top-4 md:left-[130%] md:max-w-sm md:translate-x-0;
+  @apply invisible absolute top-8 z-20 hidden w-max max-w-[150px] -translate-x-1/2 transform rounded bg-black p-3 text-sm font-normal text-white md:-top-4 md:left-[130%] md:inline-block md:max-w-sm md:translate-x-0;
+}
+
+.tooltip .tooltip-left {
+  @apply shadow-floating invisible absolute bottom-[125%] z-10 hidden w-max max-w-[200px] transform rounded-md bg-black p-3 text-sm text-white md:inline-block;
 }
 
 @media only screen and (min-width: 768px) {
@@ -74,6 +78,7 @@
   }
 }
 
+.tooltip:hover .tooltip-left,
 .tooltip:hover .tooltip-content {
   @apply visible;
 }

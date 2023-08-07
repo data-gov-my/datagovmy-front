@@ -1,39 +1,36 @@
-import Card from "@components/Card";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { MOTIcon } from "@components/Icon/agency";
-import Label from "@components/Label";
 import Progress from "@components/Progress";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Button,
+  Card,
   Container,
   Dropdown,
   Hero,
+  Label,
   Modal,
   Section,
+  Slider,
   Spinner,
   Tabs,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { routes } from "@lib/routes";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
 /**
  * KTMB Explorer
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface KTMBExplorerProps {
   A_to_B: any;
@@ -124,13 +121,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:ktmb.full")}
-            link="https://www.ktmb.com.my/"
-            icon={<MOTIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="ktmb" />}
         last_updated={last_updated}
       />
 
@@ -143,13 +134,13 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
               <div className="flex sm:hidden">
                 <Modal
                   trigger={open => (
-                    <button onClick={open} className="btn-default btn-disabled shadow-floating">
+                    <Button onClick={open} className="btn-default shadow-floating">
                       <span>{t("filters")}</span>
                       <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
                         3
                       </span>
                       <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
-                    </button>
+                    </Button>
                   )}
                   title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
                 >

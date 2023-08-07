@@ -1,9 +1,6 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
+import { AgencyBadge, Container, Hero } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import Container from "@components/Container";
-import { PDRMIcon } from "@components/Icon/agency";
 
 /**
  * Crime Dashboard
@@ -22,13 +19,7 @@ const Crime: FunctionComponent<CrimeProps> = ({}) => {
         category={[t("common:categories.public_safety"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:pdrm.full")}
-            link="https://www.rmp.gov.my/"
-            icon={<PDRMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="pdrm" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

@@ -1,18 +1,20 @@
-import Hero from "@components/Hero";
+import COVIDVaccinationTrends from "./vaccine-trends";
+import { routes } from "@lib/routes";
 import {
+  AgencyBadge,
   Container,
   Dropdown,
+  Hero,
   Panel,
   Section,
   StateDropdown,
   Tabs,
   Tooltip,
 } from "datagovmy-ui/components";
-import COVIDVaccinationTrends from "./vaccine-trends";
-import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { CountryAndStates } from "@lib/constants";
+import { CountryAndStates } from "datagovmy-ui/constants";
 import { numFormat } from "datagovmy-ui/helpers";
-import { routes } from "@lib/routes";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { MOHIcon } from "datagovmy-ui/icons/agency";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
 
@@ -119,12 +121,18 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   return (
     <>
       <Hero
-        background="covidvax-banner"
-        // category={[t("common:categories.healthcare"), "text-green-600"]}
+        background="green"
+        category={[t("common:categories.healthcare"), "text-green-600"]}
         header={[t("header")]}
         description={[t("description")]}
-        action={<StateDropdown url={routes.COVID_VAX} currentState={currentState} />}
+        action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
         last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge
+            agency="moh"
+            icon={<MOHIcon fillColor="#16A34A" />} // green-600
+          />
+        }
       />
       <Container className="min-h-screen">
         {/* How vaccinated against COVID-19 are we? */}

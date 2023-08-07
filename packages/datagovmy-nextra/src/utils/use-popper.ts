@@ -1,6 +1,6 @@
-import type { Options } from "@popperjs/core";
+import { Options } from "@popperjs/core";
 import { createPopper } from "@popperjs/core";
-import type { RefCallback } from "react";
+import { RefCallback } from "react";
 import { useCallback, useMemo, useRef } from "react";
 
 /**

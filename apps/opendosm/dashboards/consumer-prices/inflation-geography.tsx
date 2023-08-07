@@ -1,9 +1,10 @@
 import { Tabs, Panel } from "datagovmy-ui/components";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { CountryAndStates, AKSARA_COLOR } from "@lib/constants";
+import { CountryAndStates, AKSARA_COLOR } from "datagovmy-ui/constants";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
-import { sortMulti } from "@lib/helpers";
+import { sortMulti } from "datagovmy-ui/helpers";
+import { WithData } from "datagovmy-ui/types";
 
 const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
@@ -13,11 +14,14 @@ const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
  */
 
 interface InflationGeographyProps {
-  bar: any;
+  bar: WithData<{
+    mom: Record<string, { x: string[]; y: number[] }>;
+    yoy: Record<string, { x: string[]; y: number[] }>;
+  }>;
 }
 
 const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-consumer-prices", "common"]);
   const periods = ["yoy", "mom"];
   const { data, setData } = useData({
     active_state: "mys",
@@ -69,11 +73,11 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
       <div>
         <Tabs
-          title={t("consumer_prices.section_1.inflation_by_state")}
+          title={t("section_1.inflation_by_state")}
           onChange={index => setData("period_state", index)}
         >
           {periods.map(period => (
-            <Panel name={t(`consumer_prices.section_1.${period}`)}>
+            <Panel key={period.concat("-state")} name={t(`section_1.${period}`)}>
               <Bar
                 className="h-[400px] w-full lg:h-[550px]"
                 layout="horizontal"
@@ -85,7 +89,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                   labels: sortStateData(period).x,
                   datasets: [
                     {
-                      label: t("consumer_prices.section_1.inflation_by_state"),
+                      label: t("section_1.inflation_by_state"),
                       data: sortStateData(period).y,
                       backgroundColor(ctx) {
                         return ctx.dataIndex === data.active_index
@@ -109,12 +113,12 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       </div>
       <div>
         <Tabs
-          title={t("consumer_prices.section_1.inflation_by_category", {
+          title={t("section_1.inflation_by_category", {
             state: CountryAndStates[data.active_state],
           })}
         >
           {periods.map(period => (
-            <Panel name={t(`consumer_prices.section_1.${period}`)}>
+            <Panel key={period.concat("-category")} name={t(`section_1.${period}`)}>
               <Bar
                 className="h-[400px] w-full lg:h-[550px]"
                 layout="horizontal"
@@ -122,12 +126,12 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                 type="category"
                 unitY="%"
                 enableStep
-                formatX={key => t(`consumer_prices.section_1.short_categories.${key}`)}
+                formatX={key => t(`section_1.short_categories.${key}`)}
                 data={{
                   labels: sortCategoryData(period).x,
                   datasets: [
                     {
-                      label: t("consumer_prices.section_1.inflation_by_category", {
+                      label: t("section_1.inflation_by_category", {
                         state: CountryAndStates[data.active_state],
                       }),
                       data: sortCategoryData(period).y,

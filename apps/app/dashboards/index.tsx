@@ -1,23 +1,21 @@
-import Card from "@components/Card";
-import AgencyIcon from "@components/Icon/agency";
+import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
+import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import {
-  AgencyBadge,
   At,
+  AgencyBadge,
   Button,
+  Card,
   Container,
   Dropdown,
   Hero,
+  Search,
   Section,
   Tabs,
-} from "@components/index";
-import Search from "@components/Search";
-import { OptionType } from "@components/types";
-import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
-import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { numFormat } from "@lib/helpers";
-import Image from "next/image";
+} from "datagovmy-ui/components";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { AgencyIcon } from "datagovmy-ui/icons/agency";
+import { Agency, OptionType } from "datagovmy-ui/types";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
@@ -28,12 +26,12 @@ import { FunctionComponent, useMemo } from "react";
 
 type Dashboard = {
   name: string;
-  agency: string;
+  agency: Agency;
   views: number;
 };
 
 interface DashboardIndexProps {
-  agency: string | null;
+  agency: Agency;
   analytics: any;
   sources: string[];
   dashboards: Record<string, Dashboard[]>;
@@ -101,15 +99,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             context: agency ? "agency" : "",
           }),
         ]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
-        }
+        agencyBadge={<AgencyBadge agency={agency ?? "govt"} />}
       />
       <DashboardFilter
         data={{
@@ -154,12 +144,12 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
               return (
                 dashboards.length > 0 && (
                   <Card
-                    className="border-outline bg-background dark:border-washed-dark dark:bg-background-dark my-3 inline-block h-min w-full rounded-xl border p-[18px]"
+                    className="border-outline bg-background dark:border-washed-dark dark:bg-background-dark mb-6 inline-block h-min w-full rounded-xl border p-[18px]"
                     key={category}
                   >
-                    <h5 className="pb-1">{t(`categories.${category}`)}</h5>
+                    <h5>{t(`categories.${category}`)}</h5>
                     {dashboards.map(item => (
-                      <div className="pt-2" key={item.name}>
+                      <div className="pt-3" key={item.name}>
                         <At
                           href={dashboards_route[item.name].route}
                           locale={i18n.language}
@@ -167,7 +157,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                         >
                           <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
-                              <AgencyIcon agency={item.agency} />
+                              <AgencyIcon agency={item.agency} className="h-6 w-6" />
                               <p className="text-dim text-sm">
                                 {t(`agencies:${item.agency}.abbr`)}
                               </p>
@@ -176,6 +166,14 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                             <div className="relative overflow-hidden">
                               <p className="truncate font-medium dark:text-white">
                                 {t(`dashboards.${item.name}.name`)}
+                              </p>
+                              <p className="text-dim transition-transform group-hover:translate-y-6">
+                                {`${numFormat(item.views, "compact")} ${t("common:common.views", {
+                                  count: item.views,
+                                })}`}
+                              </p>
+                              <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                                {t("common:components.click_to_explore")}
                               </p>
                             </div>
                           </Card>
@@ -211,7 +209,7 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
 
   const filterSources: OptionType[] = sources.map(source => ({
     label: t(`agencies:${source}.abbr`),
-    value: source,
+    value: t(`agencies:${source}.abbr`),
   }));
 
   const reset = () => onSearch("");

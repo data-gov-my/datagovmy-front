@@ -4,19 +4,14 @@
   "quickstart": "Cepat Mula",
   "rate-limit": "Had",
   "authentication": "Pengesahan",
-  "data-catalogue": "Katalog Data API",
-  "gtfs-static": "Pengangkutan API (GTFS)",
-  "gtfs-realtime": "Pengangkutan API (GTFS-R)",
-  "weather": "Cuaca API",
+  "response-format": "Format Respons",
+  "static-api": "Static APIs",
+  "realtime-api": "Realtime APIs",
   "main-site": {
     "title": "Tapak Utama",
     "type": "page",
     "href": "https://staging.data.gov.my/ms-MY",
     "newWindow": true
-  },
-  "ai-helper": {
-    "title": "Penolong AI",
-    "type": "page"
   },
   "faq": "FAQ"
 }

@@ -1,13 +1,13 @@
 import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { InferGetStaticPropsType } from "next";
+import { get } from "datagovmy-ui/api";
+import { Page } from "datagovmy-ui/types";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import IncomeTaxationLayout from "@dashboards/economy/income-taxation/layout";
 import IncomeTaxationDashboard from "@dashboards/economy/income-taxation/overview";
-import { withi18n } from "@lib/decorators";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { withi18n } from "datagovmy-ui/decorators";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const IncomeTaxation: Page = ({
   last_updated,
@@ -20,12 +20,12 @@ const IncomeTaxation: Page = ({
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IncomeTaxationLayout last_updated={last_updated}>
-        <IncomeTaxationDashboard stacked_bar={stacked_bar} last_updated={last_updated} />
+        <IncomeTaxationDashboard stacked_bar={stacked_bar} />
       </IncomeTaxationLayout>
     </AnalyticsProvider>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxation", async () => {
   const { data } = await get("/dashboard", { dashboard: "income_tax" });
   return {

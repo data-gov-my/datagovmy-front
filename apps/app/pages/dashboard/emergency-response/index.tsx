@@ -1,12 +1,12 @@
 import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-// import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
-import { withi18n } from "@lib/decorators";
+import { InferGetStaticPropsType } from "next";
+// import { get } from "datagovmy-ui/api";
+import { Page } from "datagovmy-ui/types";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { withi18n } from "datagovmy-ui/decorators";
 import EmergencyResponseDashboard from "@dashboards/healthcare/emergency-response";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const EmergencyResponse: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-emergency-response", "common"]);

@@ -5,12 +5,12 @@ import { Table } from "./components/table";
 import { Td } from "./components/td";
 import { Tr } from "./components/tr";
 import { Th } from "./components/th";
-import type { Components } from "nextra/mdx";
-import type { ComponentProps, ReactElement, ReactNode } from "react";
+import { Components } from "nextra/mdx";
+import { ComponentProps, ReactElement, ReactNode } from "react";
 import { Children, cloneElement, useEffect, useRef, useState } from "react";
 import { Anchor, Collapse } from "./components";
-import type { AnchorProps } from "./components/anchor";
-import type { DocsThemeConfig } from "./constants";
+import { AnchorProps } from "./components/anchor";
+import { DocsThemeConfig } from "./constants";
 import { DetailsProvider, useDetails, useSetActiveAnchor } from "./contexts";
 import { useIntersectionObserver, useSlugs } from "./contexts/active-anchor";
 

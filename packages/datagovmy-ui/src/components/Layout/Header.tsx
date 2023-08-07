@@ -1,16 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FunctionComponent, ReactNode } from "react";
-import { useTranslation } from "../../hooks/useTranslation";
-import Nav from "../Nav";
 import Container from "../Container";
+import getConfig from "next/config";
 
 interface HeaderProps {
-  stateSelector?: ReactNode;
+  children: ReactNode;
 }
 
-const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
-  const { t } = useTranslation("common");
+const Header: FunctionComponent<HeaderProps> = ({ children }) => {
+  const { publicRuntimeConfig } = getConfig();
 
   return (
     <div className="dark:border-washed-dark fixed left-0 top-0 z-30 w-full border-b">
@@ -21,43 +20,10 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
               <div className="flex w-8 items-center justify-center">
                 <Image src="/static/images/logo.png" width={48} height={36} alt="datagovmy_logo" />
               </div>
-              <h4>data.gov.my</h4>
+              <h4>{publicRuntimeConfig.APP_NAME}</h4>
             </div>
           </Link>
-
-          <Nav stateSelector={stateSelector}>
-            {close => (
-              <>
-                <Nav.Item key={"/"} title={t("common:nav.home")} link="/" onClick={close} />
-                <Nav.Item
-                  title={t("common:nav.dashboards")}
-                  link="/dashboard"
-                  key="/dashboard"
-                  onClick={close}
-                />
-                <Nav.Item
-                  title={t("common:nav.catalogue")}
-                  key="/data-catalogue"
-                  link="/data-catalogue"
-                  onClick={close}
-                />
-
-                <Nav.Item title={"API Docs"} link="#" onClick={close} />
-                <Nav.Item
-                  title={t("common:nav.community")}
-                  key="/community"
-                  link="/community"
-                  onClick={close}
-                />
-                <Nav.Item
-                  title={t("common:nav.helpdesk")}
-                  key="/heldesk"
-                  link="/helpdesk"
-                  onClick={close}
-                />
-              </>
-            )}
-          </Nav>
+          {children}
         </div>
       </Container>
     </div>

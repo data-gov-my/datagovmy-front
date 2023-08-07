@@ -1,12 +1,10 @@
-import { Section, Tabs } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent } from "react";
-import Container from "@components/Container";
-import dynamic from "next/dynamic";
-import { AKSARA_COLOR } from "@lib/constants";
-import { useData } from "@hooks/useData";
-import { OptionType } from "@components/types";
+import { Container, Section, Tabs } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 /**
  * Income Taxation Dashboard
  * @overview Status: In-development
@@ -14,14 +12,13 @@ import { useTheme } from "next-themes";
 
 interface IncomeTaxationProps {
   stacked_bar: any;
-  last_updated: any;
 }
 
-const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar, last_updated }) => {
+const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar }) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
   const { theme } = useTheme();
 
-  const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+  const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
   const TABS: OptionType[] = [
     { label: t("absolute"), value: "abs" },

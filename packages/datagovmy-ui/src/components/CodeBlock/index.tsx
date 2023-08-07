@@ -1,6 +1,9 @@
-import Dropdown from "../Dropdown";
+import Dropdown from "../../components/Dropdown";
+import { useTranslation } from "../../hooks/useTranslation";
+import { clx, copyClipboard } from "../../lib/helpers";
+import { track } from "../../lib/mixpanel";
+import { GithubThemes } from "./theme";
 import { DocumentDuplicateIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -9,10 +12,10 @@ import dart from "highlight.js/lib/languages/dart";
 import kotlin from "highlight.js/lib/languages/kotlin";
 import java from "highlight.js/lib/languages/java";
 import html_xml from "highlight.js/lib/languages/xml";
-import { GithubThemes } from "./theme";
-import { clx, copyClipboard } from "../../lib/helpers";
-import { useTranslation } from "../../hooks/useTranslation";
+import r from "highlight.js/lib/languages/r";
+import julia from "highlight.js/lib/languages/julia";
 import { useTheme } from "next-themes";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 const LANGUAGE_OPTIONS = [
   {
@@ -43,6 +46,14 @@ const LANGUAGE_OPTIONS = [
     label: "Java",
     value: "java",
   },
+  {
+    label: "R",
+    value: "r",
+  },
+  {
+    label: "Julia",
+    value: "julia",
+  },
 ] as const;
 
 export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
@@ -63,6 +74,8 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
   hljs.registerLanguage("kotlin", kotlin);
   hljs.registerLanguage("java", java);
   hljs.registerLanguage("html", html_xml);
+  hljs.registerLanguage("r", r);
+  hljs.registerLanguage("julia", julia);
 
   const languageOptions = LANGUAGE_OPTIONS.filter(({ value }) => {
     return Object.keys(children).includes(value);
@@ -89,6 +102,7 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
   );
 
   const handleCopy = () => {
+    track("code_copy", { language: language.value, ...event });
     copyClipboard(children[language.value] ?? "");
     setCopyText(t("common.copied"));
     setTimeout(() => {
@@ -106,10 +120,7 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
           onChange={e => setLanguage(e)}
           width="w-min"
         />
-        <button
-          className="text-dim hover:bg-washed/10 flex select-none items-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 text-start text-sm font-medium outline-none transition"
-          onClick={handleCopy}
-        >
+        <button className="btn text-dim hover:bg-washed/10 px-3 py-1.5" onClick={handleCopy}>
           <DocumentDuplicateIcon className="h-4 w-4" />
           {copyText}
         </button>

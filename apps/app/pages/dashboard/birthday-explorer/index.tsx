@@ -1,11 +1,11 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import BirthdayExplorerDashboard from "@dashboards/demography/birthday-explorer";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import { useTranslation } from "@hooks/useTranslation";
-import { withi18n } from "@lib/decorators";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
-import { WindowProvider } from "@hooks/useWindow";
+import { get } from "datagovmy-ui/api";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { withi18n } from "datagovmy-ui/decorators";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 
 const BirthdayExplorer = ({
   meta,

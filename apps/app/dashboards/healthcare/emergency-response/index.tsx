@@ -1,9 +1,6 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero, Section } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
+import { AgencyBadge, Container, Hero, Section } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import Container from "@components/Container";
-import { MERSIcon } from "@components/Icon/agency";
 
 /**
  * Emergency Response Dashboard
@@ -22,13 +19,7 @@ const EmergencyResponse: FunctionComponent<EmergencyResponseProps> = ({}) => {
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:mers-999.full")}
-            link="https://999.gov.my/"
-            icon={<MERSIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="mers-999" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

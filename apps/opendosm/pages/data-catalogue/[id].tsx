@@ -1,13 +1,12 @@
-import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { SHORT_LANG } from "@lib/constants";
-import { OptionType } from "@components/types";
-import { get } from "@lib/api";
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
 import DataCatalogueShow from "@data-catalogue/show";
-import { useMemo } from "react";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { DCConfig, DCFilter, FilterDate, Page, OptionType } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useMemo } from "react";
 
 const CatalogueShow: Page = ({
   params,
@@ -113,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       props: {
         meta: {
           id: data.chart_details.intro.unique_id,
-          type: "catalogue",
+          type: "data-catalogue",
           category: null,
           agency: Array.isArray(data.metadata.data_source)
             ? data.metadata.data_source.join(",")

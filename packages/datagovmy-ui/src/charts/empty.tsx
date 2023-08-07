@@ -16,7 +16,7 @@ import {
 
 import "chartjs-adapter-luxon";
 import { Chart } from "react-chartjs-2";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "../../types";
 import { numFormat } from "../lib/helpers";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 

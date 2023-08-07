@@ -1,10 +1,10 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
 import Dashboard from "@dashboards/index";
-import { get } from "@lib/api";
-import { withi18n } from "@lib/decorators";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
 const DashboardAgency: Page = ({
   analytics,
@@ -40,10 +40,11 @@ export const getStaticProps: GetStaticProps = withi18n(
   ["dashboards", "agencies"],
   async ({ params }) => {
     try {
+      const _agency = params ? String(params?.agency).toLowerCase() : null;
       const [agencyDropdown, data] = await Promise.all([
         get("/dropdown", { dashboard: "dashboards" }).then(res => {
-          if (!res.data?.data.find((agency: string) => agency === params?.agency)) {
-            throw `Invalid agency parameter: ${params?.agency}`;
+          if (!res.data?.data.find((agency: string) => agency === _agency)) {
+            throw `Invalid agency parameter: ${_agency}`;
           }
           return res.data;
         }),
@@ -58,9 +59,9 @@ export const getStaticProps: GetStaticProps = withi18n(
             id: "dashboard-agency",
             type: "misc",
             category: null,
-            agency: (params?.agency as string) || null,
+            agency: _agency,
           },
-          agency: params?.agency || null,
+          agency: _agency,
           sources: agencyDropdown.data,
           analytics: {
             data_as_of: data.dashboards_top.data_as_of,

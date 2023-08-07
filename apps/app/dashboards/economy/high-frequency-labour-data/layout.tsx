@@ -1,11 +1,15 @@
-import { At, AgencyBadge, Hero } from "@components/index";
-import { SOCSOIcon } from "@components/Icon/agency";
 import Progress from "@components/Progress";
-import { useTranslation } from "@hooks/useTranslation";
-import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
+import { At, AgencyBadge, Hero } from "datagovmy-ui/components";
+import { clx } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode } from "react";
+
+/**
+ * High Frequency Labour Data Layout
+ * @overview Status: Live
+ */
 
 interface LabourLayoutProps {
   children: ReactNode;
@@ -36,7 +40,7 @@ const LabourLayout: FunctionComponent<LabourLayoutProps> = ({ children, last_upd
   ];
 
   return (
-    <div>
+    <>
       <Progress />
       <Hero
         background="blue"
@@ -44,52 +48,57 @@ const LabourLayout: FunctionComponent<LabourLayoutProps> = ({ children, last_upd
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:perkeso.full")}
-            link="https://www.perkeso.gov.my/en/"
-            icon={<SOCSOIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="perkeso" />}
       />
 
       {/* Navigations */}
-      <div
-        className={clx(
-          "border-b-outline dark:border-b-washed-dark hide-scrollbar sticky top-14 z-20 flex flex-row gap-2 overflow-x-auto border-b bg-white px-3 dark:bg-black sm:justify-center md:pl-0 lg:static"
-        )}
-      >
-        {labour_navs.map(nav =>
-          nav.url.endsWith("/job-losses") ? (
-            <At
-              className={clx(
-                "flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center font-medium transition lg:p-4",
-                pathname.startsWith(nav.url)
-                  ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
-                  : "text-dim"
-              )}
-              key={nav.url}
-              href={nav.url}
-              scrollTop={false}
-            >
-              {nav.name}
-            </At>
-          ) : (
-            <div
-              className={clx(
-                "text-dim flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center font-medium transition lg:p-4"
-              )}
-              key={nav.url}
-            >
-              {nav.name}
-            </div>
-          )
-        )}
-      </div>
-
+      <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center lg:static">
+        <div
+          className={clx(
+            "hide-scrollbar flex snap-x snap-mandatory scroll-px-9 flex-nowrap overflow-x-auto max-[420px]:justify-center",
+            pathname.endsWith("/job-seekers") && "max-[350px]:justify-center",
+            pathname.endsWith("/job-vacancies") && "max-[350px]:justify-end"
+          )}
+        >
+          {labour_navs.map(nav =>
+            nav.url.endsWith("/job-losses") ? (
+              <div key={nav.url} className="snap-start">
+                <At
+                  className="flex h-full min-w-[56px] cursor-pointer items-center justify-center px-3 outline-none"
+                  href={nav.url}
+                  scrollTop={false}
+                >
+                  <div className="relative flex h-full flex-col items-center justify-center py-4">
+                    <div
+                      className={clx(
+                        "flex items-center gap-2",
+                        pathname.startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
+                      )}
+                    >
+                      <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
+                    </div>
+                    {pathname.startsWith(nav.url) && (
+                      <div className="bg-primary dark:bg-primary-dark absolute bottom-0 inline-flex h-1 w-full min-w-[56px] rounded-full"></div>
+                    )}
+                  </div>
+                </At>
+              </div>
+            ) : (
+              <div
+                className={clx(
+                  "text-dim flex snap-start flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center font-medium transition lg:p-4"
+                )}
+                key={nav.url}
+              >
+                {nav.name}
+              </div>
+            )
+          )}
+        </div>
+      </nav>
       {/* Content */}
       {children}
-    </div>
+    </>
   );
 };
 

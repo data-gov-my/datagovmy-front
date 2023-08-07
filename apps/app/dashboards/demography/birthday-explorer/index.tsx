@@ -1,19 +1,23 @@
-import AgencyBadge from "@components/Badge/agency";
-import Card from "@components/Card";
-import Daterange from "@components/Dropdown/Daterange";
-import { JPNIcon } from "@components/Icon/agency";
-import Spinner from "@components/Spinner";
-import { toast } from "@components/Toast";
-
-import { Button, Container, Dropdown, Hero, Section, StateDropdown } from "@components/index";
-import { OptionType } from "@components/types";
 import { CakeIcon, MagnifyingGlassIcon as SearchIcon } from "@heroicons/react/24/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { WindowContext } from "@hooks/useWindow";
-import { get } from "@lib/api";
-import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "@lib/constants";
-import { clx, toDate } from "@lib/helpers";
+import { get } from "datagovmy-ui/api";
+import {
+  AgencyBadge,
+  Button,
+  Card,
+  Container,
+  Dropdown,
+  Hero,
+  Section,
+  StateDropdown,
+  Daterange,
+  Spinner,
+  toast,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { clx, toDate } from "datagovmy-ui/helpers";
+import { OptionType } from "datagovmy-ui/types";
 import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useContext, useEffect, useMemo } from "react";
@@ -23,7 +27,7 @@ import { FunctionComponent, useContext, useEffect, useMemo } from "react";
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface BirthdayExplorerDashboardProps {
   last_updated: string;
@@ -160,13 +164,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         header={[t("header")]}
         description={[t("description", { quote: t("quote") })]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpn.full")}
-            link="https://www.jpn.gov.my/en/"
-            icon={<JPNIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
         <Section title={t("section_1.title")} description={t("section_1.description")}>
@@ -202,7 +200,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   currentState={data.p_state}
                   onChange={selected => setData("p_state", selected.value)}
                   include={[{ label: t("common:components.ovs"), value: "Overseas" }]}
-                  exclude={["kvy"]}
                   width="w-full"
                 />
                 <Button
@@ -350,17 +347,14 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 onChange={({ value }) => setData("groupBy", value)}
               />
               <Daterange
-                className="dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
-                beginOptions={filterYears(startYear, endYear).slice().reverse()}
-                endOptions={filterYears(startYear, endYear)}
+                startYear={startYear}
+                endYear={endYear}
+                selectedStart={data.start}
+                selectedEnd={data.end}
                 anchor={"left"}
-                selected={[
-                  filterYears(startYear, endYear).find(item => item.value === data.start),
-                  filterYears(startYear, endYear).find(item => item.value === data.end),
-                ]}
                 onChange={([begin, end]) => {
-                  if (begin) setData("start", begin.value);
-                  if (end) setData("end", end.value);
+                  if (begin) setData("start", begin);
+                  if (end) setData("end", end);
                 }}
                 onReset={() => {
                   setData("start", "1923");

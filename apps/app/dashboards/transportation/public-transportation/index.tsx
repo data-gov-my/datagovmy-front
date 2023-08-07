@@ -1,23 +1,18 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { MOTIcon } from "@components/Icon/agency";
-import { List } from "@components/Tabs";
-import { AgencyBadge, Container, Hero, Section } from "@components/index";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { TimeseriesOption } from "@lib/types";
+import { AgencyBadge, Container, Hero, List, Section, Slider } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
 /**
- * PublicTransportation Dashboard
- * @overview Status: In-development
+ * Public Transportation Dashboard
+ * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface PublicTransportationProps {
   last_updated: string;
@@ -66,13 +61,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:mot.full")}
-            link="https://www.mot.gov.my/en/"
-            icon={<MOTIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="mot" />}
       />
 
       <Container className="min-h-screen">

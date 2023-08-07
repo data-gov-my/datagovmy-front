@@ -1,23 +1,20 @@
-import { Tabs } from "@components/index";
-import LeftRightCard from "@components/LeftRightCard";
-import { List, Panel } from "@components/Tabs";
+import { OverallSeat } from "../types";
 import { MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { numFormat } from "@lib/helpers";
+import { TableConfig } from "datagovmy-ui/charts/table";
+import { LeftRightCard, List, Panel, Tabs } from "datagovmy-ui/components";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
-import { OverallSeat } from "../types";
-import { TableConfig } from "@components/Chart/Table";
+
 /**
  * Election Explorer - Election Analysis
  * @overview Status: In-development
  */
 
-const Table = dynamic(() => import("@components/Chart/Table"), {
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
   ssr: false,
 });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 type Analysis = {
   seat: string;

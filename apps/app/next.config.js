@@ -21,6 +21,16 @@ const nextConfig = {
   i18n,
   reactStrictMode: true,
   swcMinify: true,
+  transpilePackages: ["datagovmy-ui"],
+  publicRuntimeConfig: {
+    APP_NAME: "data.gov.my",
+    META_AUTHOR: "Government of Malaysia",
+    META_THEME: "#13293D",
+    META_KEYWORDS: "data dosm statistics malaysia",
+    META_DOMAIN: "data.gov.my",
+    META_URL: "https://data.gov.my",
+    META_IMAGE: "https://data.gov.my/static/images/jata_512.png",
+  },
   async rewrites() {
     return [
       {

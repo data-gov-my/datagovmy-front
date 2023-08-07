@@ -1,4 +1,4 @@
-import type { LeafletMouseEvent } from "leaflet";
+import { LeafletMouseEvent } from "leaflet";
 import {
   ForwardRefExoticComponent,
   ForwardedRef,

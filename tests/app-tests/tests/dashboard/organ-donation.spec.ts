@@ -6,7 +6,7 @@ import { enumify } from "utils/helper";
  * Please fill this in.
  */
 const parameters: HeroParameters = {
-  _agency: "National Transplant Resource Center",
+  _agency: "National Transplant Resource Centre",
   _category: "Healthcare",
 };
 const ID = enumify([

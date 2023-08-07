@@ -1,11 +1,10 @@
-import type { InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import Hero from "@components/Hero";
-import type { Page } from "@lib/types";
-import { Container, Metadata } from "datagovmy-ui/components";
+import { Page } from "datagovmy-ui/types";
+import { Container, Metadata, Hero } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
 // import Zoom from "react-medium-image-zoom";
 // import "react-medium-image-zoom/dist/styles.css";
 
@@ -36,11 +35,11 @@ const Home: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Metadata keywords={""} />
 
       <Hero
-        background="home-banner"
+        background="gray"
         className="relative flex min-h-[300px] flex-col items-center justify-center text-left md:text-center"
       >
         <h3 className="mb-3">{t("home.title")}</h3>
-        <p className="max-w-3xl text-dim">{t("home.description")}</p>
+        <p className="text-dim max-w-3xl">{t("home.description")}</p>
       </Hero>
       <Container className="min-h-screen py-12">
         <h1 className="mb-8 text-2xl md:text-center">{t("home.timeline.title")}</h1>
@@ -83,15 +82,17 @@ const Home: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const translation = await serverSideTranslations(locale!, ["common"]);
-
+export const getStaticProps: GetStaticProps = withi18n(null, async () => {
   return {
     props: {
-      ...translation,
+      meta: {
+        id: "kkmnow.home",
+        type: "misc",
+        category: null,
+        agency: null,
+      },
     },
-    revalidate: 300,
   };
-};
+});
 
 export default Home;

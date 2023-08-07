@@ -1,25 +1,30 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
-import { AgencyBadge, Container, Hero, Section, StateDropdown, Tabs } from "@components/index";
-import { PHCorpIcon } from "@components/Icon/agency";
-import LeftRightCard from "@components/LeftRightCard";
-import Slider from "@components/Chart/Slider";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { TimeseriesOption } from "@lib/types";
+import {
+  AgencyBadge,
+  Container,
+  Hero,
+  LeftRightCard,
+  RankList,
+  Section,
+  Slider,
+  StateDropdown,
+  Tabs,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 
 /**
  * PekaB40 Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 interface PekaB40Props {
   last_updated: string;
@@ -63,7 +68,6 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
   };
 
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
-  const topStateIndices = getTopIndices(choropleth.data.y.perc, choropleth.data.y.length, true);
 
   return (
     <>
@@ -74,13 +78,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:phcorp.full")}
-            link="https://protecthealth.com.my"
-            icon={<PHCorpIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="phcorp" />}
       />
 
       <Container className="min-h-screen">
@@ -165,23 +163,20 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
                     </span>
                   </div>
                   <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
-                  <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
-                    {t("choro_ranking")}
-                  </p>
                 </div>
-                <div className="space-y-3 overflow-auto">
-                  {topStateIndices.map((pos, i) => {
-                    return (
-                      <div className="mr-4.5 flex space-x-3" key={pos}>
-                        <div className="text-dim font-medium">#{i + 1}</div>
-                        <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
-                        <div className="text-purple font-bold">
-                          {`${numFormat(choropleth.data.y.perc[pos], "standard", [2, 2])}%`}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <RankList
+                  id="peka-b40-by-state"
+                  title={t("common:common.ranking", { count: choropleth.data.x.length })}
+                  data={choropleth.data.y.perc}
+                  color="text-purple"
+                  threshold={choropleth.data.x.length}
+                  format={(position: number) => {
+                    return {
+                      label: CountryAndStates[choropleth.data.x[position]],
+                      value: `${numFormat(choropleth.data.y.perc[position], "compact", 1)}%`,
+                    };
+                  }}
+                />
               </div>
             }
             right={

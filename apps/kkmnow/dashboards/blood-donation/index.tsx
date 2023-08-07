@@ -1,6 +1,6 @@
-import Hero from "@components/Hero";
-import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { routes } from "@lib/routes";
 import {
+  Hero,
   Container,
   Panel,
   Section,
@@ -9,13 +9,13 @@ import {
   Slider,
   LeftRightCard,
   RankList,
+  AgencyBadge,
 } from "datagovmy-ui/components";
-
-import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
-import { routes } from "@lib/routes";
-import { TimeseriesOption } from "@lib/types";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -93,12 +93,13 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
   return (
     <>
       <Hero
-        background="blood-banner"
-        // category={[t("common:categories.healthcare"), "text-danger"]}
+        background="red"
+        category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description"), "text-dim"]}
         action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
         last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="pdn" />}
       />
       <Container className="min-h-screen">
         {/* What are the latest blood donation trends in Malaysia? */}

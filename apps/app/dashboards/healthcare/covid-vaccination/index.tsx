@@ -1,6 +1,7 @@
-import AgencyBadge from "@components/Badge/agency";
-import { MOHIcon } from "@components/Icon/agency";
+import COVIDVaccinationTrends from "./vaccine-trends";
+import { routes } from "@lib/routes";
 import {
+  AgencyBadge,
   Container,
   Dropdown,
   Hero,
@@ -9,14 +10,13 @@ import {
   StateDropdown,
   Tabs,
   Tooltip,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import COVIDVaccinationTrends from "./vaccine-trends";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { routes } from "@lib/routes";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { MOHIcon } from "datagovmy-ui/icons/agency";
+import { OptionType, WithData } from "datagovmy-ui/types";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
 
@@ -30,12 +30,12 @@ interface COVIDVaccinationProps {
   params: { state: string };
   timeseries: Record<string, any>;
   statistics: Record<string, any>;
-  barmeter: Record<string, any>;
+  barmeter: WithData<Record<string, Array<{ x: string; y: number }>>>;
   waffle: Record<string, any>;
 }
 
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
-const Waffle = dynamic(() => import("@components/Chart/Waffle"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
+const Waffle = dynamic(() => import("datagovmy-ui/charts/waffle"), { ssr: false });
 
 const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   params,
@@ -46,6 +46,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   waffle,
 }) => {
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
+  const { theme } = useTheme();
   const currentState = params.state;
 
   const AGE_OPTIONS: Array<OptionType> = ["total", "child", "adolescent", "adult", "elderly"].map(
@@ -129,8 +130,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            agency={t("agencies:moh.full")}
-            link="https://www.moh.gov.my"
+            agency="moh"
             icon={<MOHIcon fillColor="#16A34A" />} // green-600
           />
         }
@@ -170,7 +170,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
 
           <Tabs hidden current={data.vax_tab} onChange={i => setData("vax_tab", i)}>
             <Panel name={t("filter_age")} key={t("filter_age")}>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-10 py-5 lg:grid-cols-4 lg:gap-6">
+              <div className="grid grid-cols-2 gap-x-2 gap-y-10 pt-6 lg:grid-cols-4 lg:gap-6">
                 {WAFFLE_LIST.map(({ doseType, dosePerc, color }) => (
                   <Waffle
                     key={doseType}
@@ -205,11 +205,23 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
               </div>
             </Panel>
             <Panel name={t("filter_dose")} key={t("filter_dose")}>
-              <BarMeter
-                className="col-span-2"
-                data={barmeter.data[data.filter_dose.value]}
-                unit="%"
+              <Bar
+                className="h-[350px] pt-6"
+                data={{
+                  labels: barmeter.data[data.filter_dose.value].map(e => e.x),
+                  datasets: [
+                    {
+                      data: barmeter.data.dose1.map(e => e.y),
+                      label: t("dose1"),
+                      borderRadius: 12,
+                      barThickness: 12,
+                      backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.WHITE,
+                    },
+                  ],
+                }}
                 layout="vertical"
+                enableGridX={false}
+                unitY="%"
               />
             </Panel>
           </Tabs>

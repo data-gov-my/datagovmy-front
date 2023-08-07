@@ -200,7 +200,7 @@
 - 23fc5b7: style improvements
 - d1d873f: typed frontmatter -> `useConfig<YOUR_FRONTMATTER_TYPE>`
 - 93b9596: fix overflow for main content on desktop and mobile
-- 6626356: prefer `import type`
+- 6626356: prefer `import`
 - 2234a13: fix raw `__esModule` string ☠️
 - Updated dependencies [d1d873f]
 - Updated dependencies [6626356]

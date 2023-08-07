@@ -1,4 +1,4 @@
-import { ForwardedRef, FunctionComponent, useRef } from "react";
+import { ForwardedRef, FunctionComponent } from "react";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 import {
   Chart as ChartJS,
@@ -13,7 +13,7 @@ import {
 import { Scatter as ScatterCanvas } from "react-chartjs-2";
 import { maxBy, minBy, numFormat, standardDeviation } from "../lib/helpers";
 // import RegressionPlugin from "./regression-line";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "../../types";
 import { AKSARA_COLOR } from "../lib/constants";
 import { useTheme } from "next-themes";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -46,7 +46,6 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   menu,
   title,
   controls,
-  state,
   unitX,
   unitY,
   prefixY,
@@ -347,7 +346,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
 
   return (
     <div className="space-y-4">
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={className}>
         <ScatterCanvas
           ref={_ref}

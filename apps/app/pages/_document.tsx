@@ -1,3 +1,4 @@
+import i18nextConfig from "../next-i18next.config";
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -7,7 +8,6 @@ import Document, {
   NextScript,
 } from "next/document";
 import Script from "next/script";
-import i18nextConfig from "../next-i18next.config";
 
 class HTMLDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {

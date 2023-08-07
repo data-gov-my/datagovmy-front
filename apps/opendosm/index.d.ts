@@ -36,4 +36,12 @@ declare module "geojson-bbox" {
   export default function (geojson: GeoJSONObject): [number, number, number, number] {}
 }
 
-import type { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
+import { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
+
+declare global {
+  interface Window {
+    mixpanel: OverridedMixpanel & {
+      instance: Mixpanel;
+    };
+  }
+}

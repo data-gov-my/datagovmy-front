@@ -1,13 +1,14 @@
-const path = require("path");
+const defineConfig = require("datagovmy-ui/i18n");
 
-/** @type {import('next-i18next').UserConfig} */
-module.exports = {
-  i18n: {
-    defaultLocale: "en-GB",
-    locales: ["en-GB", "ms-MY"],
-  },
-  lng: "en-GB",
-  load: "currentOnly",
-  localePath: path.resolve("./public/locales"),
-  reloadOnPrerender: true,
-};
+const namespaces = [
+  "common",
+  "agencies",
+  "dashboard-blood-donation",
+  "dashboard-covid-19",
+  "dashboard-covid-vaccination",
+  "dashboard-hospital-bed-utilisation",
+  "dashboard-organ-donation",
+  "dashboard-peka-b40",
+];
+
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);

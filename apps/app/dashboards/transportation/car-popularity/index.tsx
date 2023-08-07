@@ -1,22 +1,24 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Button, Dropdown, Hero, Section } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, useContext, useMemo } from "react";
-import Container from "@components/Container";
-import { JPJIcon } from "@components/Icon/agency";
-import Card from "@components/Card";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { get } from "datagovmy-ui/api";
+import {
+  AgencyBadge,
+  Button,
+  Card,
+  Container,
+  Dropdown,
+  Hero,
+  Section,
+  toast,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, BREAKPOINTS } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { useData } from "@hooks/useData";
-import { get } from "@lib/api";
-import { OptionType } from "@components/types";
-import { WindowContext } from "@hooks/useWindow";
-import { AKSARA_COLOR, BREAKPOINTS } from "@lib/constants";
-import Spinner from "@components/Spinner";
-import { toast } from "@components/Toast";
+import { FunctionComponent, useContext, useMemo } from "react";
 
 /**
- * CarPopularity Dashboard
+ * Car Popularity Dashboard
  * @overview Status: In-development
  */
 
@@ -26,7 +28,7 @@ interface CarPopularityProps {
   tableData: Record<string, any>;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 const CarPopularity: FunctionComponent<CarPopularityProps> = ({
   last_updated,
@@ -123,13 +125,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jpj.full")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<JPJIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpj" />}
       />
       <Container className="min-h-screen">
         {/* Best selling cars models and brands in {year} */}

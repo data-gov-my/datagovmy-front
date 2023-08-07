@@ -1,19 +1,13 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback } from "react";
-import dynamic from "next/dynamic";
-import { numFormat, smartNumFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
-import type { OptionType } from "@components/types";
-import { AKSARA_COLOR, MYR_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
-import { useWatch } from "@hooks/useWatch";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
+import { AKSARA_COLOR, MYR_COLOR } from "datagovmy-ui/constants";
+import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
-import AgencyBadge from "@components/Badge/agency";
-import { BNMIcon } from "@components/Icon/agency";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Currency in Circulation Dashboard
@@ -25,8 +19,8 @@ export interface DenoData {
   y: number;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
 
 interface CurrencyInCirculationDashboardProps {
   last_updated: string;
@@ -151,13 +145,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bnm.full")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BNMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bnm" />}
       />
 
       <Container className="min-h-screen">

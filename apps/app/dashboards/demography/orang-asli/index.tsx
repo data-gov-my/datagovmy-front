@@ -1,5 +1,5 @@
-import { JAKOAIcon } from "@components/Icon/agency";
 import Progress from "@components/Progress";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   ComboBox,
@@ -8,13 +8,11 @@ import {
   Hero,
   LeftRightCard,
   Section,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
-import { routes } from "@lib/routes";
+} from "datagovmy-ui/components";
+import { CountryAndStates } from "datagovmy-ui/constants";
+import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -22,13 +20,13 @@ import { FunctionComponent } from "react";
 
 /**
  * Orang Asli Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
-const Pyramid = dynamic(() => import("@components/Chart/Pyramid"), { ssr: false });
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const MapPlot = dynamic(() => import("datagovmy-ui/charts/map-plot"), { ssr: false });
+const Pyramid = dynamic(() => import("datagovmy-ui/charts/pyramid"), { ssr: false });
 
 interface OrangAsliProps {
   dropdown: any;
@@ -115,13 +113,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
         header={[t("header")]}
         description={[t("description")]}
         last_updated={village.data_last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:jakoa.full")}
-            link="https://www.jakoa.gov.my/"
-            icon={<JAKOAIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jakoa" />}
       />
 
       <Container className="min-h-screen">
@@ -182,7 +174,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                         <span className="font-bold text-green-600">
                           {data.filter === "population"
                             ? numFormat(choropleth.y[data.filter][pos], "standard")
-                            : numFormat(choropleth.y[data.filter][pos], "standard", [1, 1])}
+                            : numFormat(choropleth.y[data.filter][pos], "standard", 1)}
                           {data.filter === "population_prop" ? "%" : ""}
                         </span>
                       </div>

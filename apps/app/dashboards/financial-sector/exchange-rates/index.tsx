@@ -1,24 +1,18 @@
-import { FunctionComponent, useCallback } from "react";
+import { closestIndex, getColor } from "datagovmy-ui/schema/exchange-rates";
+import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "datagovmy-ui/components";
+import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
+import { sortMulti } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
-import { sortMulti } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useData } from "@hooks/useData";
-import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
-import { default as Tabs, Panel } from "@components/Tabs";
-import Container from "@components/Container";
-import Hero from "@components/Hero";
-import Section from "@components/Section";
-import { closestIndex, getColor } from "@lib/schema/exchange-rates";
-import AgencyBadge from "@components/Badge/agency";
-import { MAMPUIcon } from "@components/Icon/agency";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Exchange Rates Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface ExchangeRatesDashboardProps {
   last_updated: string;
@@ -74,13 +68,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:mampu.full")}
-            link="https://open.mampu.gov.my/"
-            icon={<MAMPUIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="mampu" />}
       />
 
       <Container className="start-h-screen">

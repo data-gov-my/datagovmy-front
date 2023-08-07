@@ -1,41 +1,30 @@
-// import AgencyBadge from "@components/Badge/agency";
-// import { Hero } from "@components/index";
-// import { useTranslation } from "@hooks/useTranslation";
-// import { FunctionComponent } from "react";
-// import Container from "@components/Container";
-// import { MOHIcon } from "@components/Icon/agency";
+import { AgencyBadge, Container, Hero } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { FunctionComponent } from "react";
 
-// /**
-//  * HospitalBedUtilisation Dashboard
-//  * @overview Status: In-development
-//  */
+/**
+ * HospitalBedUtilisation Dashboard
+ * @overview Status: In-development
+ */
 
-// interface HospitalBedUtilisationProps {}
+interface HospitalBedUtilisationProps {}
 
-// const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = ({}) => {
-//   const { t, i18n } = useTranslation(["dashboard-hospital-bed-utilisation", "common"]);
+const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = ({}) => {
+  const { t, i18n } = useTranslation(["dashboard-hospital-bed-utilisation", "common"]);
 
-//   return (
-//     <>
-//       <Hero
-//         background="red"
-//         category={[t("common:categories.healthcare"), "text-danger"]}
-//         header={[t("header")]}
-//         description={[t("description")]}
-//         agencyBadge={
-//           <AgencyBadge
-//             agency={t("agencies:moh.full")}
-//             link="https://www.moh.gov.my"
-//             icon={<MOHIcon />}
-//           />
-//         }
-//       />
-//       {/* Rest of page goes here */}
-//       <Container className="min-h-screen"></Container>
-//     </>
-//   );
-// };
+  return (
+    <>
+      <Hero
+        background="red"
+        category={[t("common:categories.healthcare"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
+        agencyBadge={<AgencyBadge agency="moh" />}
+      />
+      {/* Rest of page goes here */}
+      <Container className="min-h-screen"></Container>
+    </>
+  );
+};
 
-// export default HospitalBedUtilisation;
-
-export default "";
+export default HospitalBedUtilisation;
