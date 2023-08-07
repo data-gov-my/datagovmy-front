@@ -1,10 +1,10 @@
-import Metadata from "@components/Metadata";
 import Progress from "@components/Progress";
 import Dashboard from "@dashboards/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { withi18n } from "@lib/decorators";
-import { Page } from "@lib/types";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const DashboardIndex: Page = ({

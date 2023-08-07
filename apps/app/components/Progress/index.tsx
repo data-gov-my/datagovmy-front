@@ -36,13 +36,14 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true 
     };
 
     const endLoading = (url: string) => {
-      const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
-      if (disableOnSameRoute && asPath.split("?")[0] === _url.split("?")[0]) return;
-
-      setProgress(100);
-      setTimeout(() => {
-        setProgress(0);
-      }, 150);
+      // const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
+      // if (disableOnSameRoute && asPath.split("?")[0] === _url.split("?")[0]) return;
+      if (progress > 0) {
+        setProgress(100);
+        setTimeout(() => {
+          setProgress(0);
+        }, 150);
+      }
     };
 
     events.on("routeChangeStart", startLoading);

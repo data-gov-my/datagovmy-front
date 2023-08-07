@@ -4,12 +4,12 @@ import { WindowProvider } from "datagovmy-ui/contexts/window";
 import OrganDonationDashboard from "@dashboards/organ-donation";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "datagovmy-ui/api";
-import { CountryAndStates } from "@lib/constants";
+import { CountryAndStates } from "datagovmy-ui/constants";
 import { routes } from "@lib/routes";
 import { withi18n } from "datagovmy-ui/decorators";
 import { DateTime } from "luxon";
-import type { Page } from "@lib/types";
-import type { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const OrganDonationState: Page = ({

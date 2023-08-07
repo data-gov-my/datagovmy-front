@@ -1,10 +1,9 @@
-import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import type { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
-import { withi18n } from "@lib/decorators";
 import CommunityDashboard from "@misc/community";
+import { Metadata } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const Community: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["community", "common"]);

@@ -1,5 +1,7 @@
-import { ComponentType, FunctionComponent, createElement } from "react";
-import type { IconProps } from ".";
+import { FunctionComponent, createElement } from "react";
+import { IconProps } from ".";
+import Image from "next/image";
+import { Agency } from "../../types";
 
 /**
  * BNM Icon
@@ -1283,23 +1285,34 @@ export const UNHCRIcon: FunctionComponent<IconProps> = ({ className }) => {
   );
 };
 
+export const JataNegara: FunctionComponent<IconProps> = ({ className }) => {
+  return (
+    <div className={className}>
+      <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
+    </div>
+  );
+};
+
 interface AgencyIconProps {
-  agency: string;
+  agency: Agency;
+  className?: string;
 }
 
-export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
-  const Components: Record<string, FunctionComponent<IconProps>> = {
+export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency, className }) => {
+  const Components: Record<Agency, FunctionComponent<IconProps>> = {
     "bnm": BNMIcon,
     "bomba": BOMBAIcon,
     "dosm": DOSMIcon,
     "epf": EPFIcon,
+    // "epu": IPREPUIcon,
+    "govt": JataNegara,
     "icu-jpm": ICUJPMIcon,
-    "ke": IPREPUIcon,
     "imigresen": JIMIcon,
     "jakoa": JAKOAIcon,
     "jpa": JPAIcon,
     "jpj": JPJIcon,
     "jpn": JPNIcon,
+    "jps": MET_FloodIcon,
     "ktmb": MOTIcon,
     "kwap": KWAPIcon,
     "lhdn": LHDNIcon,
@@ -1307,7 +1320,6 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
     "mcmc": MCMCIcon,
     "mers-999": MERSIcon,
     "met": METIcon,
-    "jps": MET_FloodIcon,
     "moe": MOEIcon,
     "mof": MOFIcon,
     "moh": MOHIcon,
@@ -1315,8 +1327,8 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
     "ntrc": NTRCIcon,
     "pdn": PDNIcon,
     "pdrm": PDRMIcon,
-    "phcorp": PHCorpIcon,
     "perkeso": SOCSOIcon,
+    "phcorp": PHCorpIcon,
     "spr": SPRIcon,
     "unhcr": UNHCRIcon,
   };
@@ -1324,9 +1336,9 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency }) => {
   const Icon = Components[agency];
 
   if (typeof Icon !== "undefined") {
-    return createElement(Icon, { className: "h-6 w-6" });
+    return createElement(Icon, { className });
   }
-  return createElement("div", { className: "h-6 w-6 rounded-full" });
+  return createElement(Components["govt"], { className });
 };
 
 export default AgencyIcon;

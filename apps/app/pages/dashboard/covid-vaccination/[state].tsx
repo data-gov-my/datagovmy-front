@@ -1,14 +1,15 @@
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import Fonts from "@config/font";
+import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { body } from "datagovmy-ui/configs/font";
 import CovidVaccinationDashboard from "@dashboards/healthcare/covid-vaccination";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
-import { WindowProvider } from "@hooks/useWindow";
-import { get } from "@lib/api";
-import { CountryAndStates } from "@lib/constants";
-import { withi18n } from "@lib/decorators";
-import { clx } from "@lib/helpers";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { get } from "datagovmy-ui/api";
+import { CountryAndStates } from "datagovmy-ui/constants";
+import { withi18n } from "datagovmy-ui/decorators";
+import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
-import { Page } from "@lib/types";
+import { Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useTranslation } from "next-i18next";
 
@@ -48,7 +49,7 @@ const CovidVaccinationState: Page = ({
 CovidVaccinationState.layout = (page, props) => (
   <WindowProvider>
     <Layout
-      className={clx(Fonts.body.variable, "font-sans")}
+      className={clx(body.variable, "font-sans")}
       stateSelector={
         <StateDropdown
           width="w-max xl:w-64"

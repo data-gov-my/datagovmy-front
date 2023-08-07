@@ -1,14 +1,12 @@
-import { AKSARA_COLOR } from "@lib/constants";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
-
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useMemo } from "react";
-import { DOSMIcon } from "datagovmy-ui/icons/agency";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import type { WithData } from "datagovmy-ui/types";
+import { WithData } from "datagovmy-ui/types";
 
 /**
  * Composite Index Dashboard
@@ -127,13 +125,7 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:dosm.full")}
-            link="https://open.dosm.gov.my/"
-            icon={<DOSMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
 
       <Container className="min-h-screen">

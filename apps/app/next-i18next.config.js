@@ -1,6 +1,6 @@
-const I18NextHttpBackend = require("i18next-http-backend/cjs");
+const defineConfig = require("datagovmy-ui/i18n");
 
-const namespace = [
+const namespaces = [
   "common",
   "catalogue",
   "community",
@@ -49,24 +49,4 @@ const namespace = [
   "helpdesk",
 ];
 
-/** @type {import('next-i18next').UserConfig} */
-module.exports = {
-  i18n: {
-    defaultLocale: "en-GB",
-    locales: ["en-GB", "ms-MY"],
-    backend: {
-      backendOptions: [{ expirationTime: 60 * 60 * 1000 }, {}], // 1 hour
-      loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n/?lang={{lng}}&filename={{ns}}`,
-      customHeaders: {
-        Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
-      },
-      crossDomain: true,
-    },
-  },
-  ns: namespace,
-  load: "currentOnly",
-  preload: ["en-GB", "ms-MY"],
-  serializeConfig: false,
-  reloadOnPrerender: true,
-  use: [I18NextHttpBackend],
-};
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);

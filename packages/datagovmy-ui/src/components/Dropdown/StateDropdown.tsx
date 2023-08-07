@@ -1,4 +1,4 @@
-import { OptionType } from "../types";
+import { OptionType } from "../../../types";
 import { WindowContext } from "../../contexts/window";
 import { statesOptions } from "../../lib/options";
 import { useTranslation } from "../../hooks/useTranslation";
@@ -19,6 +19,7 @@ interface StateDropdownProps {
   hideOnScroll?: boolean;
   width?: string;
   sublabel?: string;
+  darkMode?: boolean;
 }
 
 const StateDropdown: FunctionComponent<StateDropdownProps> = ({
@@ -51,7 +52,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   return (
     <div className={clx(!hideOnScroll ? `block ${width}` : show ? "hidden lg:block" : "hidden")}>
       <Dropdown
-        className="flex-row items-center"
+        className={clx("flex-row items-center", className)}
         onChange={selected => (onChange ? onChange(selected) : redirect(selected))}
         disabled={disabled}
         selected={options.find(state => state.value === currentState)}

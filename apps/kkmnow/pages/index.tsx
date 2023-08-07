@@ -1,8 +1,8 @@
-import type { InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
 
-import type { Page } from "@lib/types";
+import { Page } from "datagovmy-ui/types";
 import { Container, Metadata, Hero } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
 // import Zoom from "react-medium-image-zoom";

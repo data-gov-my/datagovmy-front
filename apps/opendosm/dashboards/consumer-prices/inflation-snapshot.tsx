@@ -1,7 +1,7 @@
-import type { OptionType } from "datagovmy-ui/types";
+import { OptionType } from "datagovmy-ui/types";
 import { get } from "datagovmy-ui/api";
-import { SHORT_LANG } from "@lib/constants";
-import type { ChartDataset } from "chart.js";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { ChartDataset } from "chart.js";
 
 import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
 import { useData, useWatch, useTranslation } from "datagovmy-ui/hooks";

@@ -1,11 +1,11 @@
 import { Chips, Dropdown, Slider, Select } from "datagovmy-ui/components";
 
-import type { OptionType } from "datagovmy-ui/types";
+import { OptionType } from "datagovmy-ui/types";
 import { useData, useSlice, useWatch, useTranslation } from "datagovmy-ui/hooks";
 import { get } from "datagovmy-ui/api";
-import { SHORT_LANG } from "@lib/constants";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { numFormat } from "datagovmy-ui/helpers";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import groupBy from "lodash/groupBy";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";

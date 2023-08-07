@@ -1,10 +1,10 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
 import Dashboard from "@dashboards/index";
-import { get } from "@lib/api";
-import { withi18n } from "@lib/decorators";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
 const DashboardAgency: Page = ({
   analytics,

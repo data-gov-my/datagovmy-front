@@ -2,7 +2,7 @@ import { Container, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/comp
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import { AKSARA_COLOR } from "@lib/constants";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import dynamic from "next/dynamic";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
@@ -63,13 +63,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:dosm.full")}
-            link="https://open.dosm.gov.my/"
-            icon={<DOSMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
 
       <Container className="min-h-screen">

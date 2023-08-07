@@ -1,16 +1,13 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback } from "react";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
-import type { OptionType } from "@components/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
-import AgencyBadge from "@components/Badge/agency";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import { FunctionComponent, useCallback } from "react";
+
 /**
  * Interest Rates Dashboard
  * @overview Status: Live
@@ -25,7 +22,7 @@ interface TimeseriesChartData {
   callout: string;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface InterestRatesDashboardProps {
   last_updated: string;

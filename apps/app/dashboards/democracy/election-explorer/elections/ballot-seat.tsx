@@ -1,22 +1,23 @@
-import type { BaseResult, OverallSeat, SeatResult } from "../types";
+import { BaseResult, OverallSeat, SeatResult } from "../types";
 import { Won } from "@components/Badge/election";
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import ElectionTable from "@components/Chart/Table/ElectionTable";
-import ComboBox from "@components/Combobox";
-import ImageWithFallback from "@components/ImageWithFallback";
-import LeftRightCard from "@components/LeftRightCard";
-import Section from "@components/Section";
-import { toast } from "@components/Toast";
-import Font from "@config/font";
 import { Dialog, Transition } from "@headlessui/react";
 import { ArrowsPointingOutIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { useCache } from "@hooks/useCache";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { clx, numFormat, toDate } from "@lib/helpers";
 import { generateSchema } from "@lib/schema/election-explorer";
+import { get } from "datagovmy-ui/api";
+import BarPerc from "datagovmy-ui/charts/bar-perc";
+import {
+  Button,
+  ComboBox,
+  ImageWithFallback,
+  LeftRightCard,
+  Section,
+  toast,
+} from "datagovmy-ui/components";
+import { body } from "datagovmy-ui/configs/font";
+import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useCache, useData, useTranslation } from "datagovmy-ui/hooks";
 import {
   CSSProperties,
   Fragment,
@@ -182,7 +183,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
             {seat.majority.abs === null ? `—` : numFormat(seat.majority.abs, "standard")}
             {seat.majority.perc === null
               ? ` (—)`
-              : ` (${numFormat(seat.majority.perc, "compact", [1, 1])}%)`}
+              : ` (${numFormat(seat.majority.perc, "compact", 1)}%)`}
           </span>
         </div>
       </div>
@@ -193,7 +194,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
     return (
       <div className="space-y-8 overflow-y-auto">
         <div className="flex items-start gap-4 lg:items-center">
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="mr-6 flex flex-wrap gap-x-3 uppercase">
               <h5>{seat_info.area}</h5>
               <p className="text-dim text-lg">{seat_info.state}</p>
@@ -241,7 +242,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
                 <div className="flex items-center space-x-3">
                   <BarPerc hidden value={item.perc} size={"h-[5px] w-[50px]"} />
                   <p>{`${item.abs !== null ? numFormat(item.abs, "standard") : "—"} ${
-                    item.perc !== null ? `(${numFormat(item.perc, "compact", [1, 1])}%)` : "(—)"
+                    item.perc !== null ? `(${numFormat(item.perc, "compact", 1)}%)` : "(—)"
                   }`}</p>
                 </div>
               </div>
@@ -381,7 +382,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
               >
                 <Dialog.Panel
                   className={clx(
-                    Font.body.variable,
+                    body.variable,
                     "border-outline dark:border-outlineHover-dark w-full max-w-4xl transform rounded-xl border bg-white p-6 text-left align-middle font-sans shadow-xl transition-all dark:bg-black"
                   )}
                 >

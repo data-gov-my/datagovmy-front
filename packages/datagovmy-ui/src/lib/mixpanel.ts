@@ -1,4 +1,4 @@
-import type { EventType } from "./types";
+import { EventType } from "../../types";
 
 /**
  * Mixpanel track events.
@@ -21,6 +21,5 @@ export const init_session = (): void => {
  * @param url URL path
  */
 export const ga_track = (url: string): void => {
-  if (window.gtag)
-    window.gtag("config", process.env.NEXT_PUBLIC_GA_TAG as string, { page_path: url });
+  if (window.gtag) window.gtag("config", process.env.NEXT_PUBLIC_GA_TAG, { page_path: url });
 };

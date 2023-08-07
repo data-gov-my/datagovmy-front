@@ -1,15 +1,12 @@
-import type { GeoJsonObject } from "geojson";
-
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { Page } from "@lib/types";
-
 import KawasankuDashboard from "@dashboards/kawasanku";
-import { Metadata } from "datagovmy-ui/components";
-
-import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "datagovmy-ui/api";
-import { STATES } from "@lib/schema/kawasanku";
+import { Metadata } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { STATES } from "datagovmy-ui/schema/kawasanku";
+import { Page } from "datagovmy-ui/types";
+import { GeoJsonObject } from "geojson";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useEffect, useState } from "react";
 
 const KawasankuParlimen: Page = ({

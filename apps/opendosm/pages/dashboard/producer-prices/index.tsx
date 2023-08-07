@@ -1,12 +1,11 @@
-import { Metadata } from "datagovmy-ui/components";
 import ProducerPricesDashboard from "@dashboards/producer-prices";
 import { get } from "datagovmy-ui/api";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
-import { useTranslation } from "datagovmy-ui/hooks";
-
-import { withi18n } from "datagovmy-ui/decorators";
+import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
-import { Page } from "@lib/types";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticProps, InferGetServerSidePropsType } from "next";
 
 const ProducerPrices: Page = ({
   meta,

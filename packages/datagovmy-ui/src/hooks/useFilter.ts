@@ -1,4 +1,4 @@
-import { OptionType } from "../components/types";
+import { OptionType } from "../../types";
 import debounce from "lodash/debounce";
 import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";

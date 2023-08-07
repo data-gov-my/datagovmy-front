@@ -1,11 +1,11 @@
-import Metadata from "@components/Metadata";
+import { Metadata } from "datagovmy-ui/components";
 import ImmigrationDashboard from "@dashboards/demography/immigration";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { withi18n } from "@lib/decorators";
-import type { Page } from "@lib/types";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { get } from "datagovmy-ui/api";
+import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
+import { InferGetStaticPropsType } from "next";
 
 const Immigration: Page = ({
   choropleth,

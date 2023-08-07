@@ -1,13 +1,10 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { Section, Tabs } from "@components/index";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
+import { Slider, Section, Tabs } from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { TimeseriesOption } from "@lib/types";
 import { FunctionComponent } from "react";
 
 /**
@@ -21,7 +18,7 @@ interface COVIDVaccinationTrendsProps {
   statistics: Record<string, any>;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = ({
   currentState,
   timeseries,

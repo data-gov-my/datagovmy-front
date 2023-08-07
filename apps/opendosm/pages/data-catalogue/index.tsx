@@ -1,17 +1,16 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Page } from "@lib/types";
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "datagovmy-ui/api";
 import DataCatalogue, { Catalogue } from "@data-catalogue/index";
-import { SHORT_LANG } from "@lib/constants";
-import { sortAlpha } from "datagovmy-ui/helpers";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { withi18n } from "datagovmy-ui/decorators";
+import { sortAlpha } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Page } from "datagovmy-ui/types";
 
 const CatalogueIndex: Page = ({
   query,
   collection,
-  total,
   sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["catalogue", "common"]);
@@ -19,7 +18,7 @@ const CatalogueIndex: Page = ({
   return (
     <>
       <Metadata title={t("header")} description={"description"} keywords={""} />
-      <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
+      <DataCatalogue query={query} collection={collection} sources={sources} />
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "../hooks/useTranslation";
-import type { Geotype } from "../lib/types";
+import { Geotype } from "../../types";
 import { FunctionComponent } from "react";
 
 interface JitterplotOverlayProps {

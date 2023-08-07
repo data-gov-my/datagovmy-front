@@ -11,7 +11,10 @@
     "./api": "./src/lib/api.ts",
     "./charts/*": "./src/charts/*.tsx",
     "./components": "./src/components/index.ts",
+    "./configs/*": "./src/configs/*.ts",
+    "./constants": "./src/lib/constants.ts",
     "./contexts/*": "./src/contexts/*.tsx",
+    "./dc-charts/*": "./src/charts/partials/*.tsx",
     "./decorators": "./src/lib/decorators.ts",
     "./geojson/district/*": "./src/lib/geojson/district/*.ts",
     "./geojson/dun/*": "./src/lib/geojson/dun/*.ts",
@@ -23,8 +26,11 @@
     "./icons": "./src/icons/index.tsx",
     "./icons/agency": "./src/icons/agency.tsx",
     "./mixpanel": "./src/lib/mixpanel.ts",
-    "./types": "./types/index.d.ts",
-    "./styles": "./src/styles/globals.css"
+    "./options": "./src/lib/options.ts",
+    "./schema/*": "./src/lib/schema/*.tsx",
+    "./schema/exchange-rates": "./src/lib/schema/exchange-rates.ts",
+    "./styles": "./src/styles/globals.css",
+    "./types": "./types/index.d.ts"
   },
   "typesVersions": {
     "*": {
@@ -37,17 +43,26 @@
       "components": [
         "./types/components.d.ts"
       ],
+      "configs/*": [
+        "./src/configs/*.ts"
+      ],
       "contexts/*": [
         "./src/contexts/*.tsx"
+      ],
+      "dc-charts/*": [
+        "./src/charts/partials/*.tsx"
       ],
       "i18n": [
         "./types/i18n.d.ts"
       ],
       "icons": [
-        "./src/icons/index.ts"
+        "./src/icons/index.tsx"
       ],
       "icons/agency": [
         "./src/icons/agency.tsx"
+      ],
+      "constants": [
+        "./types/constants.d.ts"
       ],
       "decorators": [
         "./types/decorators.d.ts"
@@ -72,6 +87,15 @@
       ],
       "mixpanel": [
         "./src/lib/mixpanel.ts"
+      ],
+      "options": [
+        "./src/lib/options.ts"
+      ],
+      "schema/*": [
+        "./src/lib/schema/*.tsx"
+      ],
+      "schema/exchange-rates": [
+        "./src/lib/schema/exchange-rates.ts"
       ]
     }
   },

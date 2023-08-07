@@ -1,24 +1,22 @@
-import "../styles/globals.css";
-import { appWithTranslation } from "next-i18next";
-import { AppPropsLayout } from "@lib/types";
-import Layout from "@components/Layout";
-import { useEffect, ReactNode } from "react";
-import { useRouter } from "next/router";
-import mixpanelConfig from "@config/mixpanel";
-import { ga_track, track } from "@lib/mixpanel";
-import Fonts from "@config/font";
-import { ThemeProvider } from "next-themes";
 import Nexti18NextConfig from "../next-i18next.config";
-import { clx } from "@lib/helpers";
-import { Toast } from "@components/Toast";
+import "datagovmy-ui/styles";
+import Layout from "@components/Layout";
+import { Toast } from "datagovmy-ui/components";
+import { header, body } from "datagovmy-ui/configs/font";
+import mixpanelConfig from "datagovmy-ui/configs/mixpanel";
+import { clx } from "datagovmy-ui/helpers";
+import { ga_track, track } from "datagovmy-ui/mixpanel";
+import { AppPropsLayout } from "datagovmy-ui/types";
+import { appWithTranslation } from "next-i18next";
+import { ThemeProvider } from "next-themes";
+import { useRouter } from "next/router";
+import { useEffect, ReactNode } from "react";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
   const layout =
     Component.layout ||
-    ((page: ReactNode) => (
-      <Layout className={clx(Fonts.body.variable, "font-sans")}>{page}</Layout>
-    ));
+    ((page: ReactNode) => <Layout className={clx(body.variable, "font-sans")}>{page}</Layout>);
   const router = useRouter();
 
   // Mixpanel initialisation
@@ -48,7 +46,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
   }, [router.events, pageProps?.meta]);
 
   return (
-    <div className={clx(Fonts.body.variable, Fonts.header.variable, "font-sans dark:bg-black")}>
+    <div className={clx(body.variable, header.variable, "font-sans dark:bg-black")}>
       <ThemeProvider attribute="class" enableSystem={false} forcedTheme={Component.theme}>
         {layout(<Component {...pageProps} />, pageProps)}
         <Toast />

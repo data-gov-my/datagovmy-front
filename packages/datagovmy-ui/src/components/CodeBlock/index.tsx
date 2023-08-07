@@ -1,6 +1,9 @@
 import Dropdown from "../../components/Dropdown";
+import { useTranslation } from "../../hooks/useTranslation";
+import { clx, copyClipboard } from "../../lib/helpers";
+import { track } from "../../lib/mixpanel";
+import { GithubThemes } from "./theme";
 import { DocumentDuplicateIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import hljs from "highlight.js/lib/core";
 import python from "highlight.js/lib/languages/python";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -11,12 +14,8 @@ import java from "highlight.js/lib/languages/java";
 import html_xml from "highlight.js/lib/languages/xml";
 import r from "highlight.js/lib/languages/r";
 import julia from "highlight.js/lib/languages/julia";
-
-import { GithubThemes } from "./theme";
-import { clx, copyClipboard } from "../../lib/helpers";
-import { useTranslation } from "../../hooks/useTranslation";
-import { track } from "../../lib/mixpanel";
 import { useTheme } from "next-themes";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 const LANGUAGE_OPTIONS = [
   {

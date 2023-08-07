@@ -1,3 +1,4 @@
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import {
   At,
   Hero,
@@ -12,13 +13,11 @@ import {
   Label,
   Search,
 } from "datagovmy-ui/components";
-import { ArrowTrendingUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { FunctionComponent, useContext, useMemo, useRef } from "react";
-import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
-import type { OptionType } from "datagovmy-ui/types";
-import { body } from "@config/font";
-import { BREAKPOINTS } from "@lib/constants";
+import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
 
 /**
  * Catalogue Index
@@ -33,16 +32,10 @@ export type Catalogue = {
 interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
-  total: number;
   sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
-  query,
-  collection,
-  total,
-  sources,
-}) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const { size } = useContext(WindowContext);
@@ -184,7 +177,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b py-4 lg:pl-2">
       <div className="flex-grow">
         <Search
           className="border-0"
@@ -196,7 +189,6 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
       {/* Mobile */}
       <div className="block xl:hidden">
         <Modal
-          fontFamily={body.variable}
           trigger={open => (
             <Button
               onClick={open}
@@ -262,9 +254,9 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
                 onChange={e => setFilter("source", e)}
               /> */}
 
-              <div className="fixed bottom-0 left-0 flex w-full gap-2 bg-white px-2 py-3">
+              <div className="fixed bottom-0 left-0 flex w-full gap-2 px-2 py-3">
                 <Button
-                  className="w-full justify-center bg-black text-white"
+                  className="btn-primary w-full justify-center text-white"
                   disabled={!actives.length}
                   onClick={reset}
                 >

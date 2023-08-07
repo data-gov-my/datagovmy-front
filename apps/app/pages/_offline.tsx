@@ -1,9 +1,7 @@
-import type { Page } from "@lib/types";
-import Container from "@components/Container";
-import Metadata from "@components/Metadata";
-import ErrorCode from "@components/Error";
+import { Container, ErrorStatus, Metadata } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { withi18n } from "@lib/decorators";
 
 const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
@@ -11,7 +9,7 @@ const Fallback: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Metadata title={"Oops, You are offline!"} keywords={""} />
 
       <Container className="min-h-[76vh] pt-7 text-black">
-        <ErrorCode
+        <ErrorStatus
           title="You are offline."
           description="You are offline. Please connect to the internet"
           code={200}

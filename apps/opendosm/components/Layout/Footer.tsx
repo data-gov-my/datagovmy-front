@@ -10,25 +10,20 @@ const OpenDOSMFooter: FunctionComponent = () => {
       <div className="flex w-full flex-col gap-2 md:w-auto">
         <p className="font-bold">{t("nav.open_source")}</p>
 
-        <a className="link-dim" href="#" target="_blank">
+        <At className="link-dim" external href="https://github.com/dosm-malaysia/aksara-front">
           {t("nav.frontend")}
-        </a>
-        <a className="link-dim" href="#" target="_blank">
+        </At>
+        <At className="link-dim" external href="https://github.com/dosm-malaysia/aksara-back">
           {t("nav.backend")}
-        </a>
-        <a className="link-dim" href="#" target="_blank">
-          {t("nav.uiux")}
-        </a>
+        </At>
       </div>
+
       {/* OPEN DATA */}
       <div className="flex w-full flex-col gap-2 md:w-auto">
         <p className="font-bold">{t("nav.open_data")}</p>
 
-        <a className="link-dim" href="#" target="_blank">
-          {t("nav.guiding_principles")}
-        </a>
-        <At className="link-dim" href="#">
-          {t("nav.terms_of_use")}
+        <At className="link-dim" external href="https://github.com/dosm-malaysia/">
+          Github
         </At>
       </div>
     </Footer>

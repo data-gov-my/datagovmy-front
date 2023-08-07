@@ -6,7 +6,7 @@ import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/router";
 import mixpanelConfig from "@config/mixpanel";
 import { ga_track, track } from "datagovmy-ui/mixpanel";
-import { header, body } from "@config/font";
+import { header, body } from "datagovmy-ui/configs/font";
 import { ThemeProvider } from "next-themes";
 import Nexti18NextConfig from "../next-i18next.config";
 import { clx } from "datagovmy-ui/helpers";

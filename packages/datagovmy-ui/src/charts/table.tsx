@@ -27,11 +27,11 @@ import { CountryAndStates } from "../lib/constants";
 import Image from "next/image";
 import { useTranslation } from "../hooks/useTranslation";
 import { default as debounce } from "lodash/debounce";
-import type { DebouncedFunc } from "lodash";
+import { DebouncedFunc } from "lodash";
 import { clx, numFormat } from "../lib/helpers";
 import { UpDownIcon } from "../icons";
 import Button from "../components/Button";
-import { Precision } from "../lib/types";
+import { Precision } from "../../types";
 
 export interface TableConfigColumn {
   id: string;
@@ -69,7 +69,7 @@ export interface TableProps {
   config?: Array<TableConfig>;
   responsive?: Boolean;
   enablePagination?: false | number;
-  precision?: Precision;
+  precision?: number | Precision;
 }
 
 const relativeColor = (delta: number, inverse: boolean = false) => {
@@ -297,7 +297,7 @@ const Table: FunctionComponent<TableProps> = ({
 
                       const displayValue = () => {
                         if (typeof value === "number")
-                          return numFormat(value, "standard", getPrecision(precision!));
+                          return numFormat(value, "standard", getPrecision(precision));
                         if (value === "NaN") return "-";
                         return flexRender(cell.column.columnDef.cell, cell.getContext());
                       };

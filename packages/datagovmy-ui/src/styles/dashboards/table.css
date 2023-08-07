@@ -15,13 +15,6 @@
 .table tbody tr {
   @apply bg-white dark:bg-black;
 }
-/* .table td:not(:first-child) {
-  @apply whitespace-nowrap;
-} */
-
-/* .table td > div {
-    @apply w-max px-2 py-1 text-sm lg:w-auto;
-} */
 
 .table-default th:first-child > div {
   @apply text-left;
@@ -35,9 +28,6 @@
   @apply border-outline dark:border-washed-dark sticky z-10 bg-inherit max-lg:border-r-2;
 }
 
-/* .table tr > td:first-child {
-    @apply w-44 text-left;
-} */
 .table th:not(:first-child) {
   @apply w-auto;
 }

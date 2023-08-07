@@ -1,15 +1,15 @@
-import "datagovmy-ui/styles";
-import { appWithTranslation } from "next-i18next";
-import Layout from "@components/Layout";
-import { useEffect, ReactNode } from "react";
-import { useRouter } from "next/router";
-import mixpanelConfig from "@config/mixpanel";
-import { ga_track, track } from "datagovmy-ui/mixpanel";
-import { clx } from "datagovmy-ui/helpers";
-import { body, header } from "@config/font";
 import Nexti18NextConfig from "../next-i18next.config";
+import Layout from "@components/Layout";
+import "datagovmy-ui/styles";
+import { body, header } from "datagovmy-ui/configs/font";
+import mixpanelConfig from "datagovmy-ui/configs/mixpanel";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { clx } from "datagovmy-ui/helpers";
+import { ga_track, track } from "datagovmy-ui/mixpanel";
+import { appWithTranslation } from "next-i18next";
 import { ThemeProvider } from "next-themes";
+import { useRouter } from "next/router";
+import { useEffect, ReactNode } from "react";
 
 // App instance
 function App({ Component, pageProps }: any) {

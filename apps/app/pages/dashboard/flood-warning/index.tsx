@@ -1,12 +1,12 @@
 import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { InferGetStaticPropsType } from "next";
+import { get } from "datagovmy-ui/api";
+import { Page } from "datagovmy-ui/types";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import FloodWarningDashboard from "@dashboards/environment/flood-warning";
-import { withi18n } from "@lib/decorators";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { withi18n } from "datagovmy-ui/decorators";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const FloodWarning: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-flood-warning", "common"]);

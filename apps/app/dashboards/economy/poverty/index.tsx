@@ -1,33 +1,31 @@
-import { HeatmapData, HeatmapDatum } from "@components/Chart/Heatmap";
-import RankList from "@components/LeftRightCard/partials/RankList";
+import { HeatmapData, HeatmapDatum } from "datagovmy-ui/charts/heatmap";
 import {
   AgencyBadge,
   Container,
   Dropdown,
   Hero,
   LeftRightCard,
+  RankList,
   Section,
   Slider,
-  SliderProvider,
   Tabs,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { numFormat, toDate } from "@lib/helpers";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useMemo } from "react";
 
 /**
  * Poverty Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Heatmap = dynamic(() => import("datagovmy-ui/charts/heatmap"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface PovertyProps {
   choropleth: any;

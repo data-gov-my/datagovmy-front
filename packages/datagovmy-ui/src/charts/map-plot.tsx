@@ -1,9 +1,9 @@
 import { MapControl, MapControlRef } from "../hooks/useMap";
-import type { GeoJsonObject } from "geojson";
+import { GeoJsonObject } from "geojson";
 import { LatLng, LatLngBounds, LatLngTuple } from "leaflet";
 import { useTheme } from "next-themes";
 import { ForwardedRef, FunctionComponent, useImperativeHandle, useRef } from "react";
-import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import Markercluster from "./markercluster";
 
 type MapPlotProps = {
@@ -11,6 +11,7 @@ type MapPlotProps = {
   _ref?: ForwardedRef<MapPlotRef>;
   className?: string;
   position?: LatLngTuple; // [lat: number, lng: number]
+  tileTheme?: "light" | "dark" | "terrain";
   enableZoom?: boolean;
   zoom?: number;
   geojson?: GeoJsonObject;
@@ -32,15 +33,15 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
   id,
   className = "h-full lg:h-[500px] w-full",
   position = [5.1420589, 109.618149], // default: Malaysia
+  tileTheme,
   enableZoom = true,
   zoom = 5,
   markers,
-  geojson,
   _ref,
 }) => {
   const { theme } = useTheme();
   const controlRef = useRef<MapControlRef>(null);
-
+  const _theme = tileTheme ?? theme;
   useImperativeHandle(
     _ref,
     () => {
@@ -74,9 +75,9 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
       <MapControl ref={controlRef} />
 
       <TileLayer
-        key={theme}
+        key={_theme}
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${theme}/{z}/{x}/{y}.png`}
+        url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${_theme}/{z}/{x}/{y}.png`}
       />
       <Markercluster chunkedLoading removeOutsideVisibleBounds chunkDelay={0} chunkInterval={50}>
         {markers?.map((item: MarkerDatum, index) => {

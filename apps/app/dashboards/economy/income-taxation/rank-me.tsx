@@ -1,4 +1,5 @@
-import { toast } from "@components/Toast";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { get } from "datagovmy-ui/api";
 import {
   Card,
   Container,
@@ -9,13 +10,11 @@ import {
   Section,
   Spinner,
   StateDropdown,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-import { CountryAndStates } from "@lib/constants";
+  toast,
+} from "datagovmy-ui/components";
+import { CountryAndStates } from "datagovmy-ui/constants";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { FunctionComponent, useRef } from "react";
 
 /**

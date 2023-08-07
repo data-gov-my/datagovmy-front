@@ -1,5 +1,4 @@
-import type { OptionType } from "@components/types";
-import type { Color } from "@hooks/useColor";
+import type { Color } from "./hooks";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
 import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
@@ -116,7 +115,7 @@ export type DCConfig = {
   };
   dates: FilterDate | null;
   options: FilterDefault[] | null;
-  precision: Precision;
+  precision: number | Precision;
   freeze?: string[];
   color?: Color;
   geojson?: Geotype | null;
@@ -162,3 +161,36 @@ export type MetaPage = Record<string, any> & {
 };
 
 export type WithData<T> = { data_as_of: string; data: T };
+
+export type Agency =
+  | "bnm"
+  | "bomba"
+  | "dosm"
+  | "epf"
+  // | "epu"
+  | "govt"
+  | "icu-jpm"
+  | "imigresen"
+  | "jakoa"
+  | "jpa"
+  | "jpj"
+  | "jpn"
+  | "jps"
+  | "ktmb"
+  | "kwap"
+  | "lhdn"
+  | "mampu"
+  | "mcmc"
+  | "mers-999"
+  | "met"
+  | "moe"
+  | "mof"
+  | "moh"
+  | "mot"
+  | "ntrc"
+  | "pdn"
+  | "pdrm"
+  | "phcorp"
+  | "perkeso"
+  | "spr"
+  | "unhcr";

@@ -1,9 +1,8 @@
-import Link from "next/link";
+import { Container, Nav } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import Image from "next/image";
+import Link from "next/link";
 import { FunctionComponent, ReactNode } from "react";
-import { useTranslation } from "@hooks/useTranslation";
-import Nav from "@components/Nav";
-import Container from "@components/Container";
 
 interface HeaderProps {
   stateSelector?: ReactNode;

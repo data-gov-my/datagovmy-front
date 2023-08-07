@@ -1,14 +1,11 @@
-import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "datagovmy-ui/api";
-import type { Page } from "@lib/types";
-
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
-
 import LabourMarketDashboard from "@dashboards/labour-market";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const Labour: Page = ({
   meta,

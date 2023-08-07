@@ -7,6 +7,7 @@ import type { ReactElement, ReactNode } from "react";
 import { useConfig, useMenu } from "../contexts";
 import { renderComponent } from "../utils";
 import { Anchor } from "./anchor";
+import { LocaleSwitch } from "./locale-switch";
 
 export type NavBarProps = {
   flatDirectories: Item[];
@@ -163,6 +164,9 @@ export function Navbar({ flatDirectories, items }: NavBarProps): ReactElement {
               {renderComponent(config.project.icon)}
             </Anchor>
           ) : null} */}
+
+          {config.darkMode && renderComponent(config.themeSwitch.component)}
+          {config.i18n.length > 0 && <LocaleSwitch options={config.i18n} />}
 
           {config.chat.link ? (
             <Anchor className="p-2 text-current" href={config.chat.link} newWindow>

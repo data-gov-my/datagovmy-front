@@ -6,8 +6,8 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { get } from "datagovmy-ui/api";
 import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
-import type { Page } from "@lib/types";
-import { CountryAndStates } from "@lib/constants";
+import { Page } from "datagovmy-ui/types";
+import { CountryAndStates } from "datagovmy-ui/constants";
 
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";

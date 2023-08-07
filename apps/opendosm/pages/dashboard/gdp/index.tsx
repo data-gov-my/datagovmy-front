@@ -1,8 +1,8 @@
-import { Metadata } from "datagovmy-ui/components";
 import GDPDashboard from "@dashboards/gdp";
 import { get } from "datagovmy-ui/api";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
+import { GetStaticProps, InferGetServerSidePropsType } from "next";
 
 import { withi18n } from "datagovmy-ui/decorators";
 

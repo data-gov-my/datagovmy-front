@@ -1,6 +1,6 @@
 import Input from "../Input";
 import { default as Label, LabelProps } from "../Label";
-import type { OptionType } from "../types";
+import type { OptionType } from "../../../types";
 import { Listbox, Transition } from "@headlessui/react";
 import {
   CheckCircleIcon,
@@ -119,7 +119,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       key={index}
       style={style}
       className={clx(
-        "hover:bg-washed dark:hover:bg-washed-dark relative flex w-full cursor-default select-none flex-row items-center gap-2 py-2 pr-4",
+        "hover:bg-washed dark:hover:bg-washed-dark relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
         multiple ? "pl-10" : "pl-4",
         multiple &&
           selected &&
@@ -132,7 +132,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       value={option}
     >
       {/* State flag - optional */}
-      <div className="flex w-full flex-row items-center justify-between gap-2">
+      <div className="flex w-full items-center justify-between gap-2">
         {enableFlag && (
           <Image
             src={`/static/images/states/${option.value}.jpeg`}
@@ -184,7 +184,11 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         <div className="relative text-sm">
           <Listbox.Button
             className={clx(
-              "border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark flex select-none items-center gap-1.5 rounded-md border bg-white px-3 py-1.5 text-start text-sm font-medium outline-none transition dark:bg-black",
+              "shadow-button flex items-center gap-1.5 rounded-md px-3 py-1.5 text-start text-sm font-medium text-black dark:text-white",
+              "active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark select-none bg-white dark:bg-black",
+              "border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark border outline-none",
+              disabled &&
+                "disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline dark:disabled:border-washed-dark disabled:text-outlineHover dark:disabled:text-outlineHover-dark disabled:pointer-events-none disabled:cursor-not-allowed",
               className,
               width
             )}
@@ -211,7 +215,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* Label */}
-              <span className="flex flex-grow truncate text-black dark:text-white">
+              <span className="flex flex-grow truncate">
                 {multiple ? title : (selected as OptionType)?.label || placeholder || "Select"}
               </span>
               {/* Label (multiple) */}

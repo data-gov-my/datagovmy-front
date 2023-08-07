@@ -1,7 +1,7 @@
-import { Metadata, Progress } from "datagovmy-ui/components";
 import Dashboard from "@dashboards/index";
-import { useTranslation } from "datagovmy-ui/hooks";
+import { Metadata, Progress } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 

@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import Label, { LabelProps } from "../Label";
-import { OptionType } from "../types";
+import { OptionType } from "../../../types";
 
 interface RadioProps extends LabelProps {
   className?: string;

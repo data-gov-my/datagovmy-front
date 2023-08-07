@@ -1,24 +1,29 @@
-import AgencyBadge from "@components/Badge/agency";
-import BarMeter from "@components/Chart/BarMeter";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { Container, Panel, Section, StateDropdown, Tabs, Hero } from "@components/index";
-import LeftRightCard from "@components/LeftRightCard";
-import RankList from "@components/LeftRightCard/partials/RankList";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { numFormat, toDate } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import { TimeseriesOption } from "@lib/types";
+import BarMeter from "datagovmy-ui/charts/bar-meter";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import {
+  AgencyBadge,
+  Container,
+  LeftRightCard,
+  Panel,
+  RankList,
+  Section,
+  Slider,
+  StateDropdown,
+  Tabs,
+  Hero,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 interface BloodDonationDashboardProps {
   last_updated: string;
@@ -93,7 +98,13 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description"), "text-dim"]}
-        action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
+        action={
+          <StateDropdown
+            url={routes.BLOOD_DONATION}
+            currentState={params.state}
+            exclude={["pjy", "pls", "lbn"]}
+          />
+        }
         last_updated={last_updated}
         agencyBadge={<AgencyBadge agency="pdn" />}
       />
@@ -189,7 +200,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
                   format={(position: number) => {
                     return {
                       label: CountryAndStates[choropleth.data.x[position]],
-                      value: `${numFormat(choropleth.data.y.perc[position], "compact", [1, 1])}%`,
+                      value: `${numFormat(choropleth.data.y.perc[position], "compact", 1)}%`,
                     };
                   }}
                 />

@@ -1,13 +1,17 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { EPFIcon } from "@components/Icon/agency";
-import { AgencyBadge, Container, Dropdown, Hero, Section, Spinner, Tabs } from "@components/index";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
+import {
+  AgencyBadge,
+  Container,
+  Dropdown,
+  Hero,
+  Section,
+  Slider,
+  Tabs,
+} from "datagovmy-ui/components";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -16,8 +20,8 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
-const Heatmap = dynamic(() => import("@components/Chart/Heatmap"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Heatmap = dynamic(() => import("datagovmy-ui/charts/heatmap"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface RetirementReadinessProps {}
 

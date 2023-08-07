@@ -7,8 +7,8 @@ import { routes } from "@lib/routes";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DateTime } from "luxon";
-import type { GetStaticProps, InferGetStaticPropsType } from "next";
-import type { Page } from "@lib/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { Page } from "datagovmy-ui/types";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const OrganDonation: Page = ({

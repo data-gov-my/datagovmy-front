@@ -1,16 +1,16 @@
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import Fonts from "@config/font";
+import Layout from "@components/Layout";
 import ElectionLayout from "@dashboards/democracy/election-explorer/layout";
 import ElectionTriviaDashboard from "@dashboards/democracy/election-explorer/trivia";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
-import { useTranslation } from "@hooks/useTranslation";
-import { WindowProvider } from "@hooks/useWindow";
-import { get } from "@lib/api";
-import { CountryAndStates } from "@lib/constants";
-import { withi18n } from "@lib/decorators";
-import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import type { Page } from "@lib/types";
+import { Page } from "datagovmy-ui/types";
+import { get } from "datagovmy-ui/api";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { body } from "datagovmy-ui/configs/font";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { withi18n } from "datagovmy-ui/decorators";
+import { clx } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const ElectionTrivia: Page = ({
@@ -41,7 +41,7 @@ const ElectionTrivia: Page = ({
 ElectionTrivia.layout = (page, props) => (
   <WindowProvider>
     <Layout
-      className={clx(Fonts.body.variable, "font-sans")}
+      className={clx(body.variable, "font-sans")}
       stateSelector={
         <StateDropdown
           width="w-max xl:w-64"

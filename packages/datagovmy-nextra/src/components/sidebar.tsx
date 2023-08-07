@@ -426,7 +426,7 @@ export function Sidebar({
             )}
             data-toggle-animation={showToggleAnimation ? (showSidebar ? "show" : "hide") : "off"}
           >
-            {hasI18n && (
+            {/* {hasI18n && (
               <LocaleSwitch
                 options={config.i18n}
                 lite={!showSidebar}
@@ -439,7 +439,7 @@ export function Sidebar({
                   lite: !showSidebar || hasI18n,
                 })}
               </div>
-            )}
+            )} */}
             {config.sidebar.toggleButton && (
               <button
                 title={showSidebar ? "Hide sidebar" : "Show sidebar"}

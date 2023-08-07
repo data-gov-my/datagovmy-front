@@ -11,8 +11,8 @@ import {
 } from "chart.js";
 import { Bar as BarCanvas } from "react-chartjs-2";
 import { numFormat } from "../lib/helpers";
-import { ChartCrosshairOption } from "../lib/types";
-import type { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { ChartCrosshairOption } from "../../types";
+import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 
 type PyramidProps = ChartHeaderProps & {
   className?: string;
@@ -33,7 +33,6 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
   menu,
   title,
   controls,
-  state,
   unitX,
   unitY,
   precision,
@@ -79,7 +78,7 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
         },
         callbacks: {
           label: function (item) {
-            return `${item.dataset.label} : ${
+            return `${item.dataset.label}: ${
               item.parsed.x ? display(Math.abs(item.parsed.x), "standard") : "-"
             }`;
           },
@@ -106,7 +105,8 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
             return display(Math.abs(value as number), "compact");
           },
         },
-        stacked: true,
+        beginAtZero: true,
+        stacked: false,
         min: minX ?? -1 * equimax,
         max: maxX ?? equimax,
       },
@@ -136,7 +136,7 @@ const Pyramid: FunctionComponent<PyramidProps> = ({
   };
   return (
     <div className={className}>
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={className}>
         <BarCanvas ref={_ref ?? ref} data={data} options={options} />
       </div>

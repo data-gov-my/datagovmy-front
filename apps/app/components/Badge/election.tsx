@@ -1,7 +1,7 @@
 import { ElectionResult } from "@dashboards/democracy/election-explorer/types";
-import { FunctionComponent } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "@hooks/useTranslation";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { FunctionComponent } from "react";
 
 interface ResultBadgeProps {
   value: ElectionResult | undefined;

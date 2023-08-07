@@ -1,21 +1,17 @@
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import AgencyBadge from "@components/Badge/agency";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import type { OptionType } from "@components/types";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR } from "@lib/constants";
-import { numFormat, toDate } from "@lib/helpers";
-import { useTheme } from "next-themes";
-import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback } from "react";
 import InflationTrends from "./inflation-trends";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationGeography from "./inflation-geography";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
+import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -32,8 +28,8 @@ interface TimeseriesChartData {
   prefix?: string;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 interface ConsumerPricesDashboardProps {
   last_updated: string;
@@ -117,7 +113,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               numFormat(
                 timeseries_callouts.data[data.cpi_type.value][data.index_type.value][key].callout,
                 "standard",
-                [1, 1]
+                1
               ),
               unit,
             ].join("")
@@ -217,7 +213,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                     enableAnimation={!play}
                     unitY={configs("overall").unit}
                     displayNumFormat={value =>
-                      numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+                      numFormat(value, "compact", 1, "short", i18n.language, true)
                     }
                     axisY={{
                       y2: {
@@ -272,7 +268,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                         interval="month"
                         enableAnimation={!play}
                         displayNumFormat={value =>
-                          numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+                          numFormat(value, "compact", 1, "short", i18n.language, true)
                         }
                         unitY={chartData.unitY}
                         axisY={{

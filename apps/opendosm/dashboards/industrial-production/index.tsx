@@ -5,9 +5,9 @@ import dynamic from "next/dynamic";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
 
-import type { OptionType } from "datagovmy-ui/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { OptionType } from "datagovmy-ui/types";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { WithData } from "datagovmy-ui/types";
@@ -129,13 +129,7 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:dosm.full")}
-            link="https://open.dosm.gov.my/"
-            icon={<DOSMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
 
       <Container className="min-h-screen">

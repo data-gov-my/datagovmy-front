@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { static_routes } from "@lib/routes";
-import { STATES } from "@lib/constants";
+import { STATES } from "datagovmy-ui/constants";
+import { NextApiRequest, NextApiResponse } from "next";
 
 type RevalidateData = {
   revalidated: string[];

@@ -1,6 +1,5 @@
 import { FunctionComponent, ReactElement, ReactNode, useMemo } from "react";
 import { Tab } from "@headlessui/react";
-import { useTranslation } from "../../hooks/useTranslation";
 import { clx } from "../../lib/helpers";
 
 interface TabsProps {
@@ -41,7 +40,7 @@ const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons,
         <li
           key={option}
           className={clx(
-            "flex cursor-pointer self-center whitespace-nowrap rounded-full px-[10px] py-1 text-sm outline-none transition-colors",
+            "flex cursor-pointer select-none self-center whitespace-nowrap rounded-full px-2.5 py-1 text-sm outline-none transition-colors",
             current === index
               ? "bg-outline dark:bg-washed-dark font-medium text-black dark:text-white"
               : "text-dim bg-transparent hover:text-black dark:hover:text-white"
@@ -63,12 +62,9 @@ const Tabs: FunctionComponent<TabsProps> & { Panel: typeof Panel; List: typeof L
   title,
   controls,
   current,
-  state,
   menu,
   onChange = () => {},
 }) => {
-  const { t } = useTranslation();
-
   const _children = useMemo(() => {
     return Array.isArray(children) ? children : [children];
   }, [children]);

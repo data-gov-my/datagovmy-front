@@ -1,8 +1,6 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
+import { AgencyBadge, Container, Hero } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import Container from "@components/Container";
 
 /**
  * FloodWarning Dashboard

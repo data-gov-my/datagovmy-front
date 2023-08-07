@@ -1,6 +1,4 @@
-import BarMeter from "@components/Chart/BarMeter";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import BarMeter from "datagovmy-ui/charts/bar-meter";
 import {
   AgencyBadge,
   Container,
@@ -8,24 +6,24 @@ import {
   Hero,
   LeftRightCard,
   Section,
+  Slider,
   Tooltip,
-} from "@components/index";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { clx, getTopIndices, numFormat, toDate } from "@lib/helpers";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { clx, getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
 /**
  * Refugee Situation Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface RefugeeSituationProps {
   barmeter: any;
@@ -248,7 +246,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
                                 : numFormat(
                                     choropleth.data[data.filter].y.value[pos],
                                     "standard",
-                                    [1, 1]
+                                    1
                                   )}
                               {data.filter === "perc" ? "%" : ""}
                             </div>

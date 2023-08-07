@@ -1,22 +1,20 @@
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import Stages from "@components/Chart/Stages";
+import { routes } from "@lib/routes";
+import Stages from "datagovmy-ui/charts/stages";
 import {
   AgencyBadge,
   Container,
-  Hero,
   Panel,
   Section,
+  Slider,
   StateDropdown,
   Tabs,
-} from "@components/index";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { routes } from "@lib/routes";
-import { TimeseriesOption } from "@lib/types";
+  Hero,
+} from "datagovmy-ui/components";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent } from "react";
@@ -26,8 +24,8 @@ import { FunctionComponent } from "react";
  * @overview Status: Live
  */
 
-const BarMeter = dynamic(() => import("@components/Chart/BarMeter"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface COVID19Props {
   params: Record<string, any>;

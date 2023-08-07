@@ -1,5 +1,5 @@
 import { post } from "../lib/api";
-import { MetaPage } from "../lib/types";
+import { MetaPage } from "../../types";
 import { FunctionComponent, ReactNode, createContext, useEffect, useState } from "react";
 
 /**

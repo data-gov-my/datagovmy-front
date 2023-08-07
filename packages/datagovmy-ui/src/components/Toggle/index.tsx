@@ -2,15 +2,14 @@ import { ChangeEvent, FunctionComponent, useState } from "react";
 
 interface ToggleProps {
   enabled: boolean;
+  label?: string;
   onStateChanged: (checked: boolean) => void;
   disabled?: boolean;
-  className?: string;
-  label?: string;
 }
 
 const Toggle: FunctionComponent<ToggleProps> = ({
   enabled,
-  label = "",
+  label,
   onStateChanged,
   disabled = false,
 }) => {
@@ -23,12 +22,13 @@ const Toggle: FunctionComponent<ToggleProps> = ({
           type="checkbox"
           className="peer sr-only"
           checked={toggled}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          disabled={disabled}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
             setToggled(prevToggled => !prevToggled);
             onStateChanged(e.target.checked);
           }}
         />
-        <span className="bg-outline peer-checked:bg-primary peer h-4 w-[26px]  rounded-full after:absolute after:left-0.5 after:top-0.5 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-2.5 peer-focus:ring-blue-500 dark:bg-zinc-800 dark:after:bg-slate-100" />
+        <span className="bg-outline peer-checked:bg-primary peer h-4 w-[26px] rounded-full after:absolute after:left-0.5 after:top-0.5 after:h-3 after:w-3 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-2.5 peer-focus:ring-blue-500 dark:bg-zinc-800 dark:after:bg-slate-100" />
       </label>
       <span className="text-sm text-black dark:text-white">{label}</span>
     </div>

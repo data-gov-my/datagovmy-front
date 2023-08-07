@@ -1,22 +1,21 @@
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Container,
   Hero,
   LeftRightCard,
   Panel,
+  RankList,
   Section,
   Slider,
-  SliderProvider,
   StateDropdown,
   Tabs,
-} from "@components/index";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
-import { routes } from "@lib/routes";
-import { TimeseriesOption } from "@lib/types";
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -26,9 +25,9 @@ import { FunctionComponent } from "react";
  * @overview Status: In-development
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface OrganDonationProps {
   last_updated: string;
@@ -78,7 +77,6 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
 
   const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
   const { theme } = useTheme();
-  const topStateIndices = getTopIndices(choropleth.data.y.perc, choropleth.data.y.length, true);
 
   return (
     <>
@@ -164,7 +162,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
           <LeftRightCard
             left={
               <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
-                <div className="space-y-6">
+                <div className="space-y-6 pb-6">
                   <div className="flex flex-col gap-2">
                     <h4>{t("choro_header")}</h4>
                     <span className="text-dim text-sm">
@@ -174,23 +172,20 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                     </span>
                   </div>
                   <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
-                  <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
-                    {t("choro_ranking")}
-                  </p>
                 </div>
-                <div className="space-y-3 overflow-auto">
-                  {topStateIndices.map((pos, i) => {
-                    return (
-                      <div className="mr-4.5 flex space-x-3" key={pos}>
-                        <div className="text-dim font-medium">#{i + 1}</div>
-                        <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
-                        <div className="font-bold text-green-600">
-                          {`${numFormat(choropleth.data.y.perc[pos], "standard", [2, 2])}%`}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <RankList
+                  id="organ-donation-by-state"
+                  title={t("common:common.ranking", { count: choropleth.data.x.length })}
+                  data={choropleth.data.y.perc}
+                  color="text-green-600"
+                  threshold={choropleth.data.x.length}
+                  format={(position: number) => {
+                    return {
+                      label: CountryAndStates[choropleth.data.x[position]],
+                      value: `${numFormat(choropleth.data.y.perc[position], "compact", 2)}%`,
+                    };
+                  }}
+                />
               </div>
             }
             right={
