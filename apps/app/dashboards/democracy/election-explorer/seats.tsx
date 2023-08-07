@@ -213,7 +213,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                     </span>
                   </>
                 )}
-                selected={data.seat_option ?? null}
+                selected={
+                  data.seat_option
+                    ? SEAT_OPTIONS.find(e => e.value === data.seat_option.value)
+                    : null
+                }
                 onChange={selected => {
                   if (selected) {
                     fetchResult(selected).then(elections => {

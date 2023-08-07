@@ -197,7 +197,11 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                 placeholder={t("party.search_party")}
                 imageSource="/static/images/parties/"
                 options={PARTY_OPTIONS}
-                selected={data.party_option ?? null}
+                selected={
+                  data.party_option
+                    ? PARTY_OPTIONS.find(e => e.value === data.party_option.value)
+                    : null
+                }
                 onChange={selected => {
                   if (selected) {
                     fetchResult(selected, filter.state ?? "mys").then(({ parlimen, dun }) => {
