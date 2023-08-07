@@ -13,23 +13,23 @@
 
 @layer base {
   h1 {
-    @apply font-header text-4xl font-bold leading-[54px];
+    @apply font-header text-4xl font-bold leading-[54px] text-black dark:text-white;
   }
 
   h2 {
-    @apply font-header text-3xl font-bold leading-[38px] dark:text-white;
+    @apply font-header text-3xl font-bold leading-[38px] text-black dark:text-white;
   }
 
   h3 {
-    @apply font-header text-2xl font-bold dark:text-white;
+    @apply font-header text-2xl font-bold text-black dark:text-white;
   }
 
   h4 {
-    @apply font-header text-xl font-bold dark:text-white;
+    @apply font-header text-xl font-bold text-black dark:text-white;
   }
 
   h5 {
-    @apply text-lg font-bold dark:text-white;
+    @apply text-lg font-bold text-black dark:text-white;
   }
 
   h6 {

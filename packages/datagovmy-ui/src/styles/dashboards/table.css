@@ -7,13 +7,21 @@
   /* max-sm:snap-x max-sm:snap-mandatory; */
 }
 
-.table th {
-  @apply text-dim w-auto py-3 font-normal dark:text-white;
-  /* max-sm:snap-end; */
+.table > thead > th {
+  @apply border-outline dark:border-washed-dark border border-b-2;
 }
 
 .table tbody tr {
-  @apply bg-white dark:bg-black;
+  @apply border-outline dark:border-washed-dark border-b;
+}
+
+.table thead tr th {
+  @apply w-auto px-2 py-2.5 text-sm font-medium text-black dark:text-white;
+  /* max-sm:snap-end; */
+}
+
+.table tbody tr td {
+  @apply truncate bg-white px-2 py-2.5 text-sm font-normal text-black dark:bg-black dark:text-white max-sm:max-w-[150px];
 }
 
 .table-default th:first-child > div {
@@ -30,10 +38,6 @@
 
 .table th:not(:first-child) {
   @apply w-auto;
-}
-
-.table tr:first-child {
-  @apply dark:border-t-washed-dark border-t-black;
 }
 
 .table-stripe tr {
