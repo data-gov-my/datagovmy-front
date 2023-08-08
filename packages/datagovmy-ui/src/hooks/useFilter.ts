@@ -64,13 +64,24 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
     []
   );
 
+  const _setData = (key: string, value: any) => {
+    let flag = false;
+    for (const _key in data) {
+      if (flag && _key !== "range") setData(_key, undefined);
+      if (key === _key) {
+        setData(key, value);
+        flag = true;
+      }
+    }
+  };
+
   useWatch(() => {
     search(actives);
   }, [data]);
 
   return {
     filter: data,
-    setFilter: setData,
+    setFilter: _setData,
     queries,
     actives,
   };

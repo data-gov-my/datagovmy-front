@@ -268,7 +268,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   }, []);
 
   const generateTableSchema = () => {
-    const columns = Object.keys(dataset.table[0]);
+    const columns = Array.isArray(dataset.table) ? Object.keys(dataset.table[0]) : [];
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
@@ -276,7 +276,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           if (key === "x")
             return toDate(
               item[key],
-              SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              "dd MMM yyy", //SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
               i18n.language
             );
           else return item[key];
