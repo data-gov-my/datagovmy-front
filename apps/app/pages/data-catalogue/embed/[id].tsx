@@ -101,8 +101,8 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         label = (data.translations[item.default] as string) ?? item.default;
         value = item.default;
       } else {
-        label = data.translations[query[item.key] as string] ?? query[item.key];
-        value = query[item.key] as string;
+        label = data.translations[query[item.key] as string] ?? query[item.key] ?? item.default;
+        value = (query[item.key] as string) ?? item.default;
       }
 
       Object.assign(config.context, { [item.key]: { label, value } });

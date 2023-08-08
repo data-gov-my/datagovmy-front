@@ -10,7 +10,7 @@ type BaseProps = {
   className?: string;
   data?: Array<number | string>;
   parseAsDate?: boolean;
-  period?: "year" | "month" | "day" | "auto" | "quarter";
+  period?: "year" | "month" | "day" | "auto" | "quarter" | "hour";
 };
 
 type RangeProps = BaseProps & {
@@ -52,6 +52,7 @@ const Slider: FunctionComponent<SliderProps> = ({
     month: "MMM yyyy",
     quarter: "qQ yyyy",
     year: "yyyy",
+    hour: "dd MMM yy HH:mm ",
   };
 
   useWatch(() => {

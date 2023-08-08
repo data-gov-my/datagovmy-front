@@ -1,7 +1,7 @@
 import { FilterDefault } from "../../../types";
 import { OptionType, isOptionType } from "./types";
 import { CodeBlock, Dropdown, Modal, ModalInterface, Panel, Tabs } from "../../components";
-import { useData, useTranslation } from "../../hooks";
+import { useData, useTranslation, useWatch } from "../../hooks";
 import { languages } from "../../lib/options";
 import {
   ForwardRefExoticComponent,
@@ -12,6 +12,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { get } from "../../lib/api";
 
 export interface EmbedInterface {
   open: () => void;
@@ -30,26 +31,53 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
     const modalRef = useRef<ModalInterface>(null);
     const { t, i18n } = useTranslation(["catalogue"]);
     const { data, setData } = useData(defaultOption);
+    const [filters, setFilters] = useState<FilterDefault[] | null | undefined>(options);
     const [language, setLanguage] = useState<OptionType | undefined>(
       languages.find(item => item.value === i18n.language)
     );
     useImperativeHandle(ref, () => ({ open: modalRef.current!.open }));
 
-    const EMBED_URL = useMemo<string>(() => {
-      const url = new URL(
+    const EMBED = useMemo<{ url: string; params: URLSearchParams }>(() => {
+      const embed = new URL(
         `${process.env.NEXT_PUBLIC_APP_URL}${
           language?.value === "ms-MY" ? "/ms-MY" : ""
         }/data-catalogue/embed/${uid}`
       );
       const search_params = new URLSearchParams(
-        Object.entries(data).map(([key, value]: [string, unknown]) => {
-          if (isOptionType(value)) return [key, value.value];
-          return [key, value as string];
-        })
+        Object.entries(data)
+          .filter(([_, value]) => !!value)
+          .map(([key, value]: [string, unknown]) => {
+            if (isOptionType(value)) return [key, value.value];
+            return [key, value as string];
+          })
       );
-      url.search = search_params.toString();
-      return url.href;
+
+      embed.search = search_params.toString();
+
+      return { url: embed.href, params: search_params };
     }, [uid, data, language]);
+
+    const _setData = (key: string, value: any) => {
+      let flag = false;
+      for (const _key in data) {
+        if (flag && _key !== "range") setData(_key, undefined);
+        if (key === _key) {
+          setData(key, value);
+          flag = true;
+        }
+      }
+    };
+
+    useWatch(() => {
+      get(
+        "/api/embed",
+        { id: uid, lang: i18n.language, ...Object.fromEntries(EMBED.params) },
+        "local"
+      ).then(res => {
+        const { options } = res.data;
+        if (options && options !== null) setFilters(options);
+      });
+    }, [EMBED.params]);
 
     return (
       <Modal ref={modalRef} title={t("embed")} className="lg:max-w-screen-xl">
@@ -60,7 +88,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                 <Panel name={t("desktop")}>
                   <div className="flex flex-col items-start">
                     <iframe
-                      src={EMBED_URL}
+                      src={EMBED.url}
                       className="dark:border-outlineHover-dark mx-auto mt-2 rounded border bg-white"
                       style={{
                         height: "500px",
@@ -72,7 +100,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                 </Panel>
                 <Panel name={t("mobile")}>
                   <iframe
-                    src={EMBED_URL}
+                    src={EMBED.url}
                     className="mx-auto mt-2 rounded border bg-white"
                     style={{
                       height: "500px",
@@ -97,7 +125,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                       options={languages}
                     />
                   </div>
-                  {options?.map((item: FilterDefault, index: number) => (
+                  {filters?.map((item: FilterDefault, index: number) => (
                     <div className="flex w-full items-center justify-between" key={item.key}>
                       <p className="font-mono text-sm">{item.key}</p>
                       <Dropdown
@@ -109,7 +137,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                           value: option,
                         }))}
                         selected={data[item.key]}
-                        onChange={e => setData(item.key, e)}
+                        onChange={e => _setData(item.key, e)}
                       />
                     </div>
                   ))}
@@ -120,7 +148,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                 <h5>{t("embed_code")}</h5>
                 <CodeBlock hidden>
                   {{
-                    html: `<iframe src="${EMBED_URL}" width="100%" height="400px" />`,
+                    html: `<iframe src="${EMBED.url}" width="100%" height="400px" />`,
                   }}
                 </CodeBlock>
               </div>
