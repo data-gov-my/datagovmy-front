@@ -23,22 +23,22 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
     {
       name: t("browse"),
       icon: <MagnifyingGlassIcon className="mr-1 h-5 w-5" />,
-      url: routes.PUBLICATIONS.concat("/browse"),
+      url: routes.PUBLICATIONS,
     },
     {
       name: t("upcoming"),
-      icon: <BookOpenIcon className="mr-1 h-5 w-5" />,
+      icon: <CalendarIcon className="mr-1 h-5 w-5" />,
       url: routes.PUBLICATIONS.concat("/upcoming"),
     },
     {
       name: t("documentation"),
-      icon: <CalendarIcon className="mr-1 h-5 w-5" />,
+      icon: <BookOpenIcon className="mr-1 h-5 w-5" />,
       url: routes.PUBLICATIONS.concat("/documentation"),
     },
   ];
 
   return (
-    <div>
+    <>
       <Hero
         background="gray"
         category={[t("nso"), "text-dim"]}
@@ -65,17 +65,17 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
                   <div
                     className={clx(
                       "flex items-center gap-2",
-                      pathname.startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
+                      pathname === nav.url ? "text-black dark:text-white" : "text-dim"
                     )}
                   >
                     <div className="hidden sm:block">{nav.icon}</div>
                     <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
-                    {pathname.startsWith(nav.url) && (
+                    {pathname === nav.url && (
                       <div className="absolute bottom-0 inline-flex h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:hidden"></div>
                     )}
                   </div>
                 </div>
-                {pathname.startsWith(nav.url) && (
+                {pathname === nav.url && (
                   <div className="absolute bottom-0 hidden h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:inline-flex"></div>
                 )}
               </At>
@@ -86,7 +86,7 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
 
       {/* Content */}
       {children}
-    </div>
+    </>
   );
 };
 
