@@ -7,13 +7,14 @@
 @import "./dashboards/general.css";
 @import "./dashboards/table.css";
 @import "./dashboards/banner.css";
+@import "./markdown.css";
 @import "leaflet.markercluster";
 @import "leaflet.markercluster/dist/MarkerCluster.css";
 @import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 @layer base {
   h1 {
-    @apply font-header text-4xl font-bold leading-[54px];
+    @apply font-header text-4xl font-bold leading-[54px] dark:text-white;
   }
 
   h2 {
@@ -33,7 +34,7 @@
   }
 
   h6 {
-    @apply text-base font-semibold uppercase tracking-wider text-gray-500;
+    @apply text-base font-semibold uppercase tracking-wider text-gray-500 dark:text-white;
   }
 
   input[type="search"]::-webkit-search-decoration,
