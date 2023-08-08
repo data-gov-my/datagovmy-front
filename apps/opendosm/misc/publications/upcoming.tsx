@@ -25,7 +25,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   return (
     <Container className="min-h-screen">
       <Section
-        title={t("section2.title")}
+        title={t("upcoming_publications")}
         menu={
           <Tabs.List
             options={[t("absolute"), t("relative")]}

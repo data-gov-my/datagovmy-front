@@ -25,7 +25,7 @@ const DocsPublicationsDashboard: FunctionComponent<DocumentationProps> = ({}) =>
   return (
     <Container className="min-h-screen">
       <Section
-        title={t("section2.title")}
+        title={t("documentation")}
         menu={
           <Tabs.List
             options={[t("absolute"), t("relative")]}
