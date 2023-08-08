@@ -135,14 +135,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
+      case "INTRADAY":
         return (
           <CatalogueTimeseries
-            config={config}
-            dataset={dataset}
-            filter={filter}
             urls={urls}
+            dataset={dataset}
             translations={translations}
             onDownload={prop => setDownloads(prop)}
+            config={{
+              precision: config.precision,
+              range: filter?.range?.value ?? "INTRADAY",
+            }}
           />
         );
       case "CHOROPLETH":
