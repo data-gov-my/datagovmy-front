@@ -11,6 +11,7 @@ import {
   Section,
   Slider,
   Tooltip,
+  Markdown,
 } from "datagovmy-ui/components";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
@@ -29,7 +30,6 @@ import sum from "lodash/sum";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import Markdown from "react-markdown";
 
 /**
  * Catalogue Show
@@ -328,35 +328,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     </>
   );
 
-  const text = `
-Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum inventore delectus nesciunt ullam, esse iusto! Molestias iusto impedit earum explicabo aliquid! Ad modi eos magni, hic harum vel quos iste!
-
-# H1
-## H2
-### H3
-#### H4
-##### H5
-###### H6
-
-\`code\`
-
-*italics*
-
-**bold**
-
-
-
-
-* Follows [CommonMark](https://commonmark.org)
-* Optionally follows [GitHub Flavored Markdown](https://github.github.com/gfm/)
-* Renders actual React elements instead of using 
-* Lets you define your own components (to render )
-* Has a lot of plugins
-
-1. Hellow 
-2. World
-`;
-
   return (
     <div>
       <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
@@ -631,7 +602,9 @@ Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum inventore delect
               <div className="space-y-3">
                 <h5>{t("meta_source")}</h5>
                 <ul className="text-dim ml-6 list-outside list-disc">
-                  {metadata.source?.map(source => <li key={source}>{source}</li>)}
+                  {metadata.source?.map(source => (
+                    <li key={source}>{source}</li>
+                  ))}
                 </ul>
               </div>
               {/* URLs to dataset */}
