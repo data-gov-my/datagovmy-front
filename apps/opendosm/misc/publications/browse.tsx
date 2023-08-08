@@ -46,12 +46,14 @@ interface BrowsePublicationsProps {
   dropdown: any;
   publications: Publication[];
   query: any;
+  total_pubs: number;
 }
 
 const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = ({
   dropdown,
   publications,
   query,
+  total_pubs,
 }) => {
   const { t, i18n } = useTranslation(["publications", "catalogue", "common"]);
   const { cache } = useCache();
@@ -108,11 +110,11 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     demography: query.demography
       ? demographies.filter(item => query.demography.split(",").includes(item.value))
       : [],
-    search: query.search ?? "",
+    pub_type: query.pub_type ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type) : "",
   });
 
   const reset = () => {
-    setFilter("search", "");
+    setFilter("pub-type", "");
     setFilter("frequency", undefined);
     setFilter("geography", []);
     setFilter("demography", []);
@@ -150,7 +152,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             }
             onChange={selected => {
               setData("publication_option", selected);
-              setFilter("search", selected);
+              setFilter("pub_type", selected.value);
             }}
           />
         </div>
@@ -269,50 +271,48 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 pt-8 lg:grid-cols-2 lg:pt-12 xl:grid-cols-3">
-            {publications
-              // .slice(ITEMS_PER_PAGE * data.page, ITEMS_PER_PAGE * (data.page + 1))
-              .map((item, i) => (
-                <Button
-                  className="btn-border group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition hover:bg-background dark:hover:bg-washed-dark/50"
-                  onClick={() => {
-                    setShow(true);
-                    // setData("index", ITEMS_PER_PAGE * data.page + i);
-                    fetchResource(item.publication_id).then(data => setData("res", data));
-                  }}
-                >
-                  <div className="relative flex w-full items-center justify-between">
-                    <p className="text-sm uppercase text-dim">
-                      {toDate(item.release_date, "dd MMM yyyy", i18n.language)}
-                    </p>
-                    {Date.parse(item.release_date) === NEWEST_PUB_DATE_IN_MS && (
-                      <div className="flex items-center gap-1.5 rounded-full bg-danger px-1.5 py-0.5 text-xs text-white group-hover:-translate-x-9">
-                        <span className="h-2 w-2 rounded-full bg-white" />
-                        {t("new")}!
-                      </div>
-                    )}
-                    <ArrowUpRightIcon className="absolute right-0 h-5 w-5 text-dim opacity-0 transition-opacity duration-0 group-hover:opacity-100 group-hover:duration-300" />
-                  </div>
+            {publications.map((item, i) => (
+              <Button
+                className="btn-border group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition hover:bg-background dark:hover:bg-washed-dark/50"
+                onClick={() => {
+                  setShow(true);
+                  setData("index", i);
+                  fetchResource(item.publication_id).then(data => setData("res", data));
+                }}
+              >
+                <div className="relative flex w-full items-center justify-between">
+                  <p className="text-sm uppercase text-dim">
+                    {toDate(item.release_date, "dd MMM yyyy", i18n.language)}
+                  </p>
+                  {Date.parse(item.release_date) === NEWEST_PUB_DATE_IN_MS && (
+                    <div className="flex items-center gap-1.5 rounded-full bg-danger px-1.5 py-0.5 text-xs text-white group-hover:-translate-x-9">
+                      <span className="h-2 w-2 rounded-full bg-white" />
+                      {t("new")}!
+                    </div>
+                  )}
+                  <ArrowUpRightIcon className="absolute right-0 h-5 w-5 text-dim opacity-0 transition-opacity duration-0 group-hover:opacity-100 group-hover:duration-300" />
+                </div>
 
-                  <div className="flex grow flex-col gap-3 overflow-hidden text-start ">
-                    <div className="grow flex-wrap space-y-3">
-                      <p className="text-lg font-bold">{item.title}</p>
-                      <p className="text-sm">{item.description}</p>
-                    </div>
-                    <div className="relative w-full">
-                      <p className="text-dim transition-transform group-hover:translate-y-6">
-                        {numFormat(100000, "compact")}
-                        {100000 % 10 !== 0 ? "+ " : " "}
-                        {t("common:common.downloads", {
-                          count: 100000,
-                        })}
-                      </p>
-                      <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
-                        {t("common:components.click_to_explore")}
-                      </p>
-                    </div>
+                <div className="flex grow flex-col gap-3 overflow-hidden text-start ">
+                  <div className="grow flex-wrap space-y-3">
+                    <p className="text-lg font-bold">{item.title}</p>
+                    <p className="text-sm">{item.description}</p>
                   </div>
-                </Button>
-              ))}
+                  <div className="relative w-full">
+                    <p className="text-dim transition-transform group-hover:translate-y-6">
+                      {numFormat(100000, "compact")}
+                      {100000 % 10 !== 0 ? "+ " : " "}
+                      {t("common:common.downloads", {
+                        count: 100000,
+                      })}
+                    </p>
+                    <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
+                      {t("common:components.click_to_explore")}
+                    </p>
+                  </div>
+                </div>
+              </Button>
+            ))}
           </div>
         )}
 
@@ -414,7 +414,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                                   </td>
                                   <td className="px-2 py-2.5 text-start text-sm font-normal text-black dark:text-white">
                                     {numFormat(10000, "standard")}
-                                    {/* {r.resource_downloads} */}
                                   </td>
                                 </tr>
                               ))}
@@ -477,31 +476,33 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           </p>
         )}
 
-        <div className="flex hidden items-center justify-center gap-4 pt-8 text-sm font-medium">
-          <Button
-            className="btn-disabled btn-default"
-            onClick={() => setData("page", data.page - 1)}
-            disabled={data.page === 0}
-          >
-            <ChevronLeftIcon className="h-4.5 w-4.5" />
-            {t("common:common.previous")}
-          </Button>
+        {total_pubs > ITEMS_PER_PAGE && (
+          <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
+            <Button
+              className="btn-disabled btn-default"
+              onClick={() => setData("page", data.page - 1)}
+              disabled={data.page === 0}
+            >
+              <ChevronLeftIcon className="h-4.5 w-4.5" />
+              {t("common:common.previous")}
+            </Button>
 
-          <span className="flex items-center gap-1 text-center">
-            {t("common:common.page_of", {
-              current: data.page + 1,
-              total: Math.ceil(120 / ITEMS_PER_PAGE),
-            })}
-          </span>
-          <Button
-            className="btn-disabled btn-default"
-            onClick={() => setData("page", data.page + 1)}
-            disabled={data.page === Math.floor(120 / ITEMS_PER_PAGE) - 1}
-          >
-            {t("common:common.next")}
-            <ChevronRightIcon className="h-4.5 w-4.5" />
-          </Button>
-        </div>
+            <span className="flex items-center gap-1 text-center">
+              {t("common:common.page_of", {
+                current: data.page + 1,
+                total: Math.ceil(total_pubs / ITEMS_PER_PAGE),
+              })}
+            </span>
+            <Button
+              className="btn-disabled btn-default"
+              onClick={() => setData("page", data.page + 1)}
+              disabled={data.page + 1 === Math.ceil(total_pubs / ITEMS_PER_PAGE)}
+            >
+              {t("common:common.next")}
+              <ChevronRightIcon className="h-4.5 w-4.5" />
+            </Button>
+          </div>
+        )}
       </Section>
     </Container>
   );

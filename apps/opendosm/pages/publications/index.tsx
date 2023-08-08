@@ -13,6 +13,7 @@ const BrowsePublications: Page = ({
   meta,
   publications,
   query,
+  total_pubs,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["publications", "common"]);
 
@@ -24,6 +25,7 @@ const BrowsePublications: Page = ({
           dropdown={dropdown}
           publications={publications}
           query={query}
+          total_pubs={total_pubs}
         />
       </PublicationsLayout>
     </AnalyticsProvider>
@@ -62,6 +64,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
                 Date.parse(b.release_date) - Date.parse(a.release_date)
             ) ?? [],
           query: query ?? {},
+          total_pubs: data.count,
         },
       };
     } catch (e: any) {
