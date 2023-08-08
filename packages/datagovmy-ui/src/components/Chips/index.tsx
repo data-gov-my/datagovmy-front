@@ -10,7 +10,7 @@ interface ChipsProps {
   colors?: string[];
   data: OptionType[];
   onRemove: null | ((value: string) => void);
-  onClearAll?: () => void;
+  onClearAll?: null | (() => void);
 }
 
 const Chips: FunctionComponent<ChipsProps> = ({
@@ -27,7 +27,7 @@ const Chips: FunctionComponent<ChipsProps> = ({
       {data.map((option: OptionType, index: number) => (
         <li
           key={option.value}
-          className="bg-outline dark:bg-washed-dark flex cursor-pointer flex-row items-center gap-1.5 truncate rounded-full px-3 py-1.5 text-sm font-medium text-black outline-none transition-colors dark:text-white"
+          className="bg-outline dark:bg-washed-dark flex cursor-pointer flex-row items-center gap-1.5 truncate rounded-full px-3 py-1 text-sm font-medium text-black outline-none transition-colors dark:text-white"
           onClick={() => onRemove && onRemove(option.value)}
         >
           {colors && (
@@ -39,7 +39,7 @@ const Chips: FunctionComponent<ChipsProps> = ({
           )}
         </li>
       ))}
-      {data.length > 0 && (
+      {data.length > 0 && onClearAll !== null && (
         <Button
           className="text-dim px-3 py-1.5 hover:text-black dark:hover:text-white"
           onClick={onClearAll}
