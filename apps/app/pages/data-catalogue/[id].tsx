@@ -75,11 +75,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       context: {},
       dates: null,
       options: null,
-      // precision: data.API.precision ?? null,
-      precision:
-        data.API.chart_type === "TIMESERIES"
-          ? { default: 0, columns: { y1: 1, y2: 2 } }
-          : data.API.precision, // data.API.precision ?? null,
+      precision: data.API.precision ?? null,
       freeze: data.API.freeze ?? null,
       color: data.API.colour ?? "blues",
       geojson: data.API.file_json ?? null,
