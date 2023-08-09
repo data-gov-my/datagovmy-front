@@ -3,14 +3,15 @@ import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
 import canvasToSvg from "canvas2svg";
+import { twMerge, ClassNameValue } from "tailwind-merge";
 
 /**
  * Conditional class joiner.
  * @param args classNames
  * @returns string
  */
-export const clx = (...args: any[]): string => {
-  return args.filter(Boolean).join(" ");
+export const clx = (...args: ClassNameValue[]): string => {
+  return twMerge(args);
 };
 
 /**

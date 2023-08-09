@@ -6,45 +6,61 @@ type ProgressProps = {
 };
 
 const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true }) => {
-  const [progress, setProgress] = useState<number>(0);
-  const { asPath, events } = useRouter();
+  const [opacity, setOpacity] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(-1);
+  const { events, route } = useRouter();
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    let trickle: NodeJS.Timer;
+
     const gradualTimeout = (callback: (progress: number) => void) => {
-      const steps = 10;
-      const stepSize = 100 / steps;
-      let fake_progress = 0;
+      let n = 0;
+      var amount: number;
+      if (n >= 0 && n < 20) {
+        amount = 10;
+      } else if (n >= 20 && n < 40) {
+        amount = 0.01;
+      } else {
+        amount = 0;
+      }
+      trickle = setInterval(() => {
+        n += amount;
 
-      const updateProgress = setInterval(() => {
-        fake_progress += stepSize;
-
-        if (fake_progress > 90) {
-          clearInterval(updateProgress);
+        if (n > 40) {
+          clearInterval(trickle);
         } else {
-          callback(fake_progress);
+          callback(n);
         }
-      }, 100);
+      }, 150);
     };
 
     const startLoading = (url: string) => {
-      const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
-      if (disableOnSameRoute && asPath.split("?")[0] === _url.split("?")[0]) return;
+        if (disableOnSameRoute && route === url) return;
 
-      gradualTimeout(progress => {
-        setProgress(progress);
-      });
-    };
+        clearTimeout(timeout);
+        clearInterval(trickle);
+        timeout = setTimeout(() => {
+          setOpacity(1);
+          setProgress(10);
+        }, 0);
 
-    const endLoading = (url: string) => {
-      // const _url = url.startsWith("/ms-MY") ? url.slice(6) : url;
-      // if (disableOnSameRoute && asPath.split("?")[0] === _url.split("?")[0]) return;
-      if (progress > 0) {
-        setProgress(100);
+        gradualTimeout(progress => {
+          setProgress(progress);
+        });
+      },
+      endLoading = () => {
+        clearTimeout(timeout);
+        clearInterval(trickle);
+        setProgress(50 + Math.random() * 50);
         setTimeout(() => {
-          setProgress(0);
-        }, 150);
-      }
-    };
+          setProgress(100);
+        }, 50);
+        setTimeout(() => {
+          setOpacity(0);
+          setProgress(-1);
+        }, 300);
+      };
 
     events.on("routeChangeStart", startLoading);
     events.on("routeChangeComplete", endLoading);
@@ -61,9 +77,10 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true 
     <div className="fixed left-0 top-0 z-50 h-[3px] w-full bg-transparent">
       {progress > 0 && (
         <div
-          className="bg-primary dark:bg-primary-dark h-full transition-[width] duration-150 ease-out"
+          className="bg-primary dark:bg-primary-dark h-full transition-[width] duration-300 ease-out"
           style={{
             width: `${progress}%`,
+            opacity: `${opacity}`,
           }}
         />
       )}
