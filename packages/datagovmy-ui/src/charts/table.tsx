@@ -20,6 +20,7 @@ import {
   ColumnFiltersState,
   FilterFn,
   getFilteredRowModel,
+  SortDirection,
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { rankItem } from "@tanstack/match-sorter-utils";
@@ -119,11 +120,10 @@ const Table: FunctionComponent<TableProps> = ({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { t } = useTranslation("common");
 
-  const sortTooltip = (sortDir: "asc" | "desc" | false) => {
+  const sortTooltip = (sortDir: SortDirection | false) => {
     if (sortDir === false) return t("common:common.sort");
     else if (sortDir === "desc") return t("common:common.desc_order");
     else if (sortDir === "asc") return t("common:common.asc_order");
-
     return undefined;
   };
   const ReactTableProps: any = {
@@ -165,7 +165,7 @@ const Table: FunctionComponent<TableProps> = ({
   };
 
   return (
-    <>
+    <div>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
         <span className="text-base font-bold">{title}</span>
         {menu && <div className="flex items-center justify-end gap-2">{menu}</div>}
@@ -179,8 +179,13 @@ const Table: FunctionComponent<TableProps> = ({
           {search && search(onSearch)}
         </div>
       )}
-      <div className={clx(responsive && "table-responsive")}>
-        <table className={clx("table", className)}>
+      <div className={clx(responsive && "relative overflow-x-auto")}>
+        <table
+          className={clx(
+            "relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit",
+            className
+          )}
+        >
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
@@ -243,7 +248,7 @@ const Table: FunctionComponent<TableProps> = ({
                                       transform="up"
                                     />
                                   ),
-                                }[header.column.getIsSorted() as "asc" | "desc"]
+                                }[header.column.getIsSorted() as SortDirection]
                               }
                               {header.column.getCanSort() && !header.column.getIsSorted() && (
                                 <UpDownIcon className="-m-1 h-5 w-5 text-black dark:text-white" />
@@ -358,7 +363,7 @@ const Table: FunctionComponent<TableProps> = ({
           </Button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

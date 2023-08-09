@@ -1,28 +1,28 @@
-.table {
+/* .table {
   @apply relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit;
 }
 
 .table-responsive {
   @apply relative overflow-x-auto;
-  /* max-sm:snap-x max-sm:snap-mandatory; */
-}
+  max-sm:snap-x max-sm:snap-mandatory;
+} */
 
 .table > thead > th {
   @apply border-outline dark:border-washed-dark border border-b-2;
 }
 
 .table tbody tr {
-  @apply border-outline dark:border-washed-dark border-b;
+  @apply bg-white dark:bg-black border-outline dark:border-washed-dark border-b;
 }
 
-.table thead tr th {
+/* .table thead tr th {
   @apply w-auto px-2 py-2.5 text-sm font-medium text-black dark:text-white;
-  /* max-sm:snap-end; */
+  max-sm:snap-end;
 }
 
 .table tbody tr td {
   @apply truncate bg-white px-2 py-2.5 text-sm font-normal text-black dark:bg-black dark:text-white max-sm:max-w-[150px];
-}
+} */
 
 .table-default th:first-child > div {
   @apply text-left;
@@ -41,7 +41,7 @@
 }
 
 .table-stripe tr {
-  @apply even:bg-background even:dark:bg-washed-dark;
+  @apply even:bg-background even:dark:bg-washed-dark odd:bg-white odd:dark:bg-black;
 }
 
 .table-default th:first-child {
