@@ -65,7 +65,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   maxY?: number;
   suggestedMaxY?: number;
   stepSize?: number;
-  precision?: number | [min: number, max: number];
+  precision?: number | [max: number, min: number];
   enableAnimation?: boolean;
   enableRightScale?: boolean;
   enableCallout?: boolean;

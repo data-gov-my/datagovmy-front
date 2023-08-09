@@ -3,7 +3,7 @@ import { Slider, toast } from "../../components";
 import { SliderProvider } from "../../contexts/slider";
 import { useAnalytics, useData, useSlice, useTranslation, useWatch } from "../../hooks";
 import { CATALOGUE_COLORS, SHORT_PERIOD } from "../../lib/constants";
-import { download, exportAs } from "../../lib/helpers";
+import { download, exportAs, numFormat } from "../../lib/helpers";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { default as dynamic } from "next/dynamic";
@@ -103,12 +103,24 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     [data.ctx]
   );
 
+  const getPrecision = (key: string, precision: number | Precision): number | [number, number] => {
+    if (!precision) return [1, 0];
+    else if (typeof precision === "number") return precision;
+    else if (precision.columns && key in precision.columns) return precision.columns[key];
+    else return precision.default;
+  };
+
+  const getPrecisionMinMax = (precision: Precision): number => {
+    if (precision.columns) return Math.min(...Object.values(precision.columns), precision.default);
+    else return precision.default;
+  };
+
   const _datasets = useMemo<ChartDataset<keyof ChartTypeRegistry, any[]>[]>(() => {
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
     const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fff8ec", "#fde8e8"]; // [blue, gray, red, yellow]
     return sets.map(([key, y], index) => ({
       type: "line",
-      data: y as number[],
+      data: (y as number[]).map(e => numFormat(e, "standard", getPrecision(key, config.precision))),
       label: translations[key] ?? key,
       borderColor: CATALOGUE_COLORS[index],
       backgroundColor: NON_OVERLAPPING_BGCOLOR[index],
@@ -131,8 +143,15 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             _ref={ref => setData("ctx", ref)}
             interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
             precision={
-              typeof config.precision === "number" ? config.precision : config.precision.default
+              typeof config.precision === "number"
+                ? config.precision
+                : getPrecisionMinMax(config.precision)
             }
+            tooltipCallback={function (item: any) {
+              return `${item.dataset.label as string}: ${
+                item.raw !== undefined || item.raw !== null ? item.raw : "-"
+              }`;
+            }}
             enableAnimation={!play}
             enableLegend={_datasets.length > 1}
             mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
