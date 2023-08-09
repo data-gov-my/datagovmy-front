@@ -2,6 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { get } from "datagovmy-ui/api";
+import { TableConfig } from "datagovmy-ui/charts/table";
 import {
   At,
   Button,
@@ -12,6 +13,7 @@ import {
   Label,
   Modal,
   Radio,
+  Search,
   Section,
   Spinner,
   toast,
@@ -21,18 +23,25 @@ import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { ExcelIcon, PDFIcon } from "datagovmy-ui/icons";
 import { OptionType } from "datagovmy-ui/types";
-import { Fragment, FunctionComponent, useState } from "react";
+import { matchSorter, MatchSorterOptions } from "match-sorter";
+import dynamic from "next/dynamic";
+import { Fragment, FunctionComponent, useMemo, useState } from "react";
 
 /**
  * Publications
  * @overview Status: In-development
  */
 
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
+  ssr: false,
+});
+
 export type Publication = {
-  publication_id: string;
-  title: string;
   description: string;
+  publication_id: string;
+  publication_type: string;
   release_date: string;
+  title: string;
 };
 
 type Resource = {
@@ -43,7 +52,7 @@ type Resource = {
 };
 
 interface BrowsePublicationsProps {
-  dropdown: any;
+  dropdown: Array<{ publication_type: string; publication_type_title: string }>;
   publications: Publication[];
   query: any;
   total_pubs: number;
@@ -60,17 +69,23 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
 
   const [show, setShow] = useState<boolean>(false);
   const ITEMS_PER_PAGE = 15;
-  const NEWEST_PUB_DATE_IN_MS = Math.max(...publications.map(e => Date.parse(e.release_date)));
   const { data, setData } = useData({
     loading: false,
-    index: 0,
-    page: 0,
+    pub_idx: 0,
+    publication_option: query.pub_type,
+    query: "",
     res: [],
+    table_page_idx: 0,
   });
 
-  const PUBLICATION_OPTIONS: OptionType[] = dropdown.map((e: string) => ({
-    label: e,
-    value: e,
+  const filteredRes = useMemo(
+    () => matchSorter(data.res, data.query, { keys: ["resource_name"] }),
+    [data.res, data.query]
+  );
+
+  const PUBLICATION_OPTIONS: OptionType[] = dropdown.map(e => ({
+    label: e.publication_type_title,
+    value: e.publication_type,
   }));
 
   const frequencies: OptionType[] = [
@@ -101,23 +116,28 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   ];
 
   const { filter, setFilter, actives } = useFilter({
+    demography: query.demography
+      ? demographies.filter(item => query.demography.split(",").includes(item.value))
+      : [],
     frequency: query.frequency
       ? frequencies.find(item => item.value === query.frequency)
       : undefined,
     geography: query.geography
       ? geographies.filter(item => query.geography.split(",").includes(item.value))
       : [],
-    demography: query.demography
-      ? demographies.filter(item => query.demography.split(",").includes(item.value))
-      : [],
-    pub_type: query.pub_type ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type) : "",
+    page: query.page ?? "1",
+    // page_size: query.page_size ?? `${ITEMS_PER_PAGE}`,
+    pub_type: query.pub_type
+      ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)
+      : undefined,
   });
 
   const reset = () => {
-    setFilter("pub-type", "");
+    setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
-    setFilter("demography", []);
+    setFilter("pub_type", "");
+    setData("publication_option", undefined);
   };
 
   const fetchResource = async (publication_id: string): Promise<Resource[]> => {
@@ -137,6 +157,38 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     });
   };
 
+  const config: TableConfig[] = [
+    {
+      accessorKey: "resource_name",
+      id: "resource_name",
+      header: t("subject"),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "resource_link",
+      id: "download_link",
+      header: t("file_download"),
+      enableSorting: false,
+      cell: ({ row, getValue }) => {
+        return (
+          <At external href={getValue()} className="link-primary font-normal">
+            {row.original.resource_type === "excel" ? (
+              <ExcelIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
+            ) : (
+              <PDFIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
+            )}
+            {t("download", { context: row.original.resource_type })}
+          </At>
+        );
+      },
+    },
+    {
+      accessorKey: "downloads",
+      id: "downloads",
+      header: t("downloads"),
+    },
+  ];
+
   return (
     <Container>
       <Section>
@@ -152,7 +204,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             }
             onChange={selected => {
               setData("publication_option", selected);
-              setFilter("pub_type", selected.value);
+              if (selected) setFilter("pub_type", selected.value);
             }}
           />
         </div>
@@ -253,16 +305,17 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             selected={filter.demography}
             onChange={e => setFilter("demography", e)}
           />
-          {actives.length > 0 && (
-            <Button
-              className="btn-ghost group text-dim hover:text-black dark:hover:text-white"
-              disabled={!actives.length}
-              onClick={reset}
-            >
-              <XMarkIcon className="h-5 w-5 text-dim group-hover:text-black dark:group-hover:text-white" />
-              {t("common:common.clear_all")}
-            </Button>
-          )}
+          {actives.length > 0 &&
+            actives.findIndex(active => !["page", "page_size"].includes(active[0])) !== -1 && (
+              <Button
+                className="btn-ghost group text-dim hover:text-black dark:hover:text-white"
+                disabled={!actives.length}
+                onClick={reset}
+              >
+                <XMarkIcon className="h-5 w-5 text-dim group-hover:text-black dark:group-hover:text-white" />
+                {t("common:common.clear_all")}
+              </Button>
+            )}
         </div>
 
         {data.loading ? (
@@ -271,12 +324,13 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 pt-8 lg:grid-cols-2 lg:pt-12 xl:grid-cols-3">
-            {publications.map((item, i) => (
+            {publications.map((item: Publication, i: number) => (
               <Button
+                key={item.publication_id}
                 className="btn-border group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition hover:bg-background dark:hover:bg-washed-dark/50"
                 onClick={() => {
                   setShow(true);
-                  setData("index", i);
+                  setData("pub_idx", i);
                   fetchResource(item.publication_id).then(data => setData("res", data));
                 }}
               >
@@ -284,7 +338,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   <p className="text-sm uppercase text-dim">
                     {toDate(item.release_date, "dd MMM yyyy", i18n.language)}
                   </p>
-                  {Date.parse(item.release_date) === NEWEST_PUB_DATE_IN_MS && (
+                  {Date.now() - Date.parse(item.release_date) < 2529000000 && (
                     <div className="flex items-center gap-1.5 rounded-full bg-danger px-1.5 py-0.5 text-xs text-white group-hover:-translate-x-9">
                       <span className="h-2 w-2 rounded-full bg-white" />
                       {t("new")}!
@@ -293,7 +347,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   <ArrowUpRightIcon className="absolute right-0 h-5 w-5 text-dim opacity-0 transition-opacity duration-0 group-hover:opacity-100 group-hover:duration-300" />
                 </div>
 
-                <div className="flex grow flex-col gap-3 overflow-hidden text-start ">
+                <div className="flex grow flex-col gap-3 overflow-hidden text-start">
                   <div className="grow flex-wrap space-y-3">
                     <p className="text-lg font-bold">{item.title}</p>
                     <p className="text-sm">{item.description}</p>
@@ -316,7 +370,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           </div>
         )}
 
-        {publications.length !== 0 ? (
+        {publications ? (
           <Transition show={show} as={Fragment}>
             <Dialog as="div" className="relative z-30" onClose={() => setShow(false)}>
               <Transition.Child
@@ -351,16 +405,16 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                       <Dialog.Title as="div" className="flex flex-col gap-y-1.5">
                         <p className="pr-8 text-sm uppercase text-dim">
                           {toDate(
-                            publications[data.index].release_date,
+                            publications[data.pub_idx].release_date,
                             "dd MMM yyyy",
                             i18n.language
                           )}
                         </p>
                         <p className="text-lg font-bold text-black dark:text-white">
-                          {publications[data.index].title}
+                          {publications[data.pub_idx].title}
                         </p>
                         <p className="text-sm text-black dark:text-white">
-                          {publications[data.index].description}
+                          {publications[data.pub_idx].description}
                         </p>
                         <Button
                           className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
@@ -369,100 +423,22 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                           <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
                         </Button>
                       </Dialog.Title>
-
-                      {data.res && (
-                        <div className="space-y-3">
-                          <div className="font-bold text-black dark:text-white">
-                            {t("download_list")}
-                          </div>
-                          <table className="w-full table-auto">
-                            <thead>
-                              <tr className="border-b-2 border-outline dark:border-washed-dark">
-                                <th className="px-2 py-2.5 text-start text-sm font-medium text-black dark:text-white">
-                                  {t("subject")}
-                                </th>
-                                <th className="px-2 py-2.5 text-start text-sm font-medium text-black dark:text-white">
-                                  {t("file_download")}
-                                </th>
-                                <th className="px-2 py-2.5 text-start text-sm font-medium text-black dark:text-white">
-                                  {t("downloads")}
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {data.res.map((r: Resource) => (
-                                <tr
-                                  key={r.resource_id}
-                                  className="border-b dark:border-washed-dark"
-                                >
-                                  <td className="flex-wrap break-words px-2 py-2.5 text-start text-sm font-normal capitalize text-black dark:text-white">
-                                    {r.resource_name}
-                                  </td>
-                                  <td>
-                                    <At
-                                      external
-                                      href={r.resource_link}
-                                      className="link-primary px-2 py-2.5 text-sm font-normal"
-                                    >
-                                      {r.resource_type === "excel" ? (
-                                        <ExcelIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
-                                      ) : (
-                                        <PDFIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
-                                      )}
-                                      {t("download", { context: r.resource_type })}
-                                    </At>
-                                  </td>
-                                  <td className="px-2 py-2.5 text-start text-sm font-normal text-black dark:text-white">
-                                    {numFormat(10000, "standard")}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-
-                          {data.res.length > 10 && (
-                            <div className="flex items-center justify-center gap-4 text-sm font-medium">
-                              <Button
-                                className="btn-default btn-disabled"
-                                onClick={() =>
-                                  fetchResource(publications[data.index - 1].publication_id).then(
-                                    item => {
-                                      if (!item) return;
-                                      setData("index", data.index - 1);
-                                      setData("result", item);
-                                    }
-                                  )
-                                }
-                                disabled={data.index === 0}
-                              >
-                                <ChevronLeftIcon className="h-4.5 w-4.5" />
-                                {t("common:common.previous")}
-                              </Button>
-                              <span className="flex items-center gap-1 text-center">
-                                {t("common:common.page_of", {
-                                  current: data.index + 1,
-                                  total: data.res.length,
-                                })}
-                              </span>
-                              <Button
-                                className="btn-default btn-disabled"
-                                onClick={() =>
-                                  fetchResource(publications[data.index + 1].publication_id).then(
-                                    item => {
-                                      if (!item) return;
-                                      setData("index", data.index + 1);
-                                      setData("result", item);
-                                    }
-                                  )
-                                }
-                                disabled={data.index === publications.length - 1}
-                              >
-                                {t("common:common.next")}
-                                <ChevronRightIcon className="h-4.5 w-4.5" />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
+                      <div className="flex justify-between">
+                        <h5>{t("download_list")}</h5>
+                        <Search
+                          className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark lg:w-[300px]"
+                          placeholder={t("search_subject")}
+                          onChange={q => setData("query", q)}
+                        />
+                      </div>
+                      {filteredRes && (
+                        <Table
+                          className="lg:w-full"
+                          data={filteredRes}
+                          enablePagination={filteredRes.length > 10 ? 10 : false}
+                          config={config}
+                          precision={0}
+                        />
                       )}
                     </Dialog.Panel>
                   </Transition.Child>
@@ -471,7 +447,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             </Dialog>
           </Transition>
         ) : (
-          <p className="flex w-full justify-center py-12 text-dim">
+          <p className="flex h-[300px] w-full items-center justify-center text-dim">
             {t("common:common.no_entries")}.
           </p>
         )}
@@ -480,8 +456,8 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
             <Button
               className="btn-disabled btn-default"
-              onClick={() => setData("page", data.page - 1)}
-              disabled={data.page === 0}
+              onClick={() => setFilter("page", `${+filter.page - 1}`)}
+              disabled={filter.page === "1"}
             >
               <ChevronLeftIcon className="h-4.5 w-4.5" />
               {t("common:common.previous")}
@@ -489,14 +465,16 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
 
             <span className="flex items-center gap-1 text-center">
               {t("common:common.page_of", {
-                current: data.page + 1,
+                current: filter.page,
                 total: Math.ceil(total_pubs / ITEMS_PER_PAGE),
               })}
             </span>
             <Button
               className="btn-disabled btn-default"
-              onClick={() => setData("page", data.page + 1)}
-              disabled={data.page + 1 === Math.ceil(total_pubs / ITEMS_PER_PAGE)}
+              onClick={() => {
+                setFilter("page", `${+filter.page + 1}`);
+              }}
+              disabled={filter.page === `${Math.ceil(total_pubs / ITEMS_PER_PAGE)}`}
             >
               {t("common:common.next")}
               <ChevronRightIcon className="h-4.5 w-4.5" />

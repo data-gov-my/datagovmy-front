@@ -115,7 +115,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
 
   return (
     <>
-      <Progress />
+      {/* <Progress /> */}
       <Hero
         background="blue"
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}

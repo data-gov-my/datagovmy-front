@@ -52,7 +52,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
 
   return (
     <>
-      <Progress />
+      {/* <Progress /> */}
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}
@@ -73,7 +73,7 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
           {election_navs.map(nav => (
             <div key={nav.url} className="snap-start">
               <At
-                className="flex h-full min-w-[56px] cursor-pointer items-center justify-center px-3 outline-none"
+                className="relative flex h-full cursor-pointer items-center justify-center px-3 outline-none"
                 href={nav.url}
                 scrollTop={false}
               >
@@ -81,16 +81,19 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
                   <div
                     className={clx(
                       "flex items-center gap-2",
-                      pathname.startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
+                      pathname === nav.url ? "text-black dark:text-white" : "text-dim"
                     )}
                   >
                     <div className="-mx-[5px] hidden sm:block">{nav.icon}</div>
                     <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
+                    {pathname === nav.url && (
+                      <div className="bg-primary dark:bg-primary-dark absolute bottom-0 inline-flex h-1 w-full rounded-full sm:hidden"></div>
+                    )}
                   </div>
-                  {pathname.startsWith(nav.url) && (
-                    <div className="bg-primary dark:bg-primary-dark absolute bottom-0 inline-flex h-1 w-full min-w-[56px] rounded-full"></div>
-                  )}
                 </div>
+                {pathname === nav.url && (
+                  <div className="bg-primary dark:bg-primary-dark absolute bottom-0 hidden h-1 w-full rounded-full sm:inline-flex"></div>
+                )}
               </At>
             </div>
           ))}

@@ -11,6 +11,7 @@ import { appWithTranslation } from "next-i18next";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { useEffect, ReactNode } from "react";
+import Progress from "@components/Progress";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
@@ -49,6 +50,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
     <div className={clx(body.variable, header.variable, "font-sans dark:bg-black")}>
       <ThemeProvider attribute="class" enableSystem={false} forcedTheme={Component.theme}>
         {layout(<Component {...pageProps} />, pageProps)}
+        <Progress />
         <Toast />
       </ThemeProvider>
     </div>

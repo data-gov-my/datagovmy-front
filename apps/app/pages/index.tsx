@@ -73,7 +73,7 @@ const Home: Page = ({
   return (
     <>
       <Metadata keywords={"data.gov.my data malaysia election prices harga"} />
-      <Progress />
+      {/* <Progress /> */}
       <Hero
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}

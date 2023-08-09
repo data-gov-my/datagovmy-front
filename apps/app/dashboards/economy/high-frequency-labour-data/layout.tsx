@@ -41,7 +41,7 @@ const LabourLayout: FunctionComponent<LabourLayoutProps> = ({ children, last_upd
 
   return (
     <>
-      <Progress />
+      {/* <Progress /> */}
       <Hero
         background="blue"
         category={[t("common:categories.economy"), "text-primary dark:text-primary-dark"]}

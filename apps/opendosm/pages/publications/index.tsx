@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         get("/publication-dropdown", {
           language: locale,
         }),
-        get("/publication/", {
+        get("/publication", {
           language: locale,
           ...query,
         }),

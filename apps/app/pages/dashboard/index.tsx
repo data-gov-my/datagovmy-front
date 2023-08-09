@@ -19,7 +19,7 @@ const DashboardIndex: Page = ({
   return (
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
-      <Progress />
+      {/* <Progress /> */}
       <Dashboard
         agency={agency}
         sources={sources}

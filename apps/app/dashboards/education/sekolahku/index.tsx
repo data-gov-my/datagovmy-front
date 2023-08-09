@@ -138,7 +138,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   return (
     <>
-      <Progress />
+      {/* <Progress /> */}
       <Hero
         background="blue"
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}

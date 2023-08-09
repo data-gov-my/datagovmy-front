@@ -106,7 +106,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
 
   return (
     <>
-      <Progress />
+      {/* <Progress /> */}
       <Hero
         background="green"
         category={[t("common:categories.demography"), "text-green-600"]}
