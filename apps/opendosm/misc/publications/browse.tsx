@@ -128,7 +128,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     page: query.page ?? "1",
     // page_size: query.page_size ?? `${ITEMS_PER_PAGE}`,
     pub_type: query.pub_type
-      ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)
+      ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
       : undefined,
   });
 
@@ -136,7 +136,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
-    setFilter("pub_type", "");
+    setFilter("pub_type", undefined);
     setData("publication_option", undefined);
   };
 
@@ -199,12 +199,17 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             options={PUBLICATION_OPTIONS}
             selected={
               data.publication_option
-                ? PUBLICATION_OPTIONS.find(e => e.value === data.publication_option.value)
+                ? PUBLICATION_OPTIONS.find(e => e.value === data.publication_option)
                 : null
             }
             onChange={selected => {
-              setData("publication_option", selected);
-              if (selected) setFilter("pub_type", selected.value);
+              if (selected) {
+                setFilter("pub_type", selected.value);
+                setData("publication_option", selected.value);
+              } else {
+                setFilter("pub_type", null);
+                setData("publication_option", null);
+              }
             }}
           />
         </div>
@@ -323,7 +328,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             <Spinner loading={data.loading} />
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 pt-8 lg:grid-cols-2 lg:pt-12 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 pt-8 sm:grid-cols-2 lg:pt-12 xl:grid-cols-3">
             {publications.map((item: Publication, i: number) => (
               <Button
                 key={item.publication_id}
@@ -423,17 +428,17 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                           <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
                         </Button>
                       </Dialog.Title>
-                      <div className="flex justify-between">
+                      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                         <h5>{t("download_list")}</h5>
                         <Search
-                          className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark lg:w-[300px]"
+                          className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark sm:w-[300px]"
                           placeholder={t("search_subject")}
                           onChange={q => setData("query", q)}
                         />
                       </div>
                       {filteredRes && (
                         <Table
-                          className="lg:w-full"
+                          className="md:w-full"
                           data={filteredRes}
                           enablePagination={filteredRes.length > 10 ? 10 : false}
                           config={config}
