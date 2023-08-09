@@ -63,7 +63,7 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
                 <Dialog.Panel
                   className={clx(
                     body.variable,
-                    "dark:border-washed-dark dark:bg-background-dark h-fit grow rounded-t-xl border bg-white font-sans lg:rounded-xl",
+                    "dark:border-washed-dark dark:bg-background-dark h-fit grow rounded-t-xl border bg-white font-sans lg:rounded-xl max-w-5xl",
                     className
                   )}
                 >
