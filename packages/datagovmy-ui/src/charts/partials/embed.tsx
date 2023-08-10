@@ -95,6 +95,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                         width: "100%",
                         overflow: "hidden",
                       }}
+                      data-testid="catalogue-embed-frame"
                     />
                   </div>
                 </Panel>
@@ -146,7 +147,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
 
               <div className="space-y-2">
                 <h5>{t("embed_code")}</h5>
-                <CodeBlock hidden>
+                <CodeBlock hidden data-testid="catalogue-embed-code">
                   {{
                     html: `<iframe src="${EMBED.url}" width="100%" height="400px" />`,
                   }}
