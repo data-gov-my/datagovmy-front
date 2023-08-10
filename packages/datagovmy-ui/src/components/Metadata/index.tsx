@@ -10,7 +10,7 @@ interface MetadataProps {
 }
 
 const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywords = "" }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     publicRuntimeConfig: {
       APP_NAME,
@@ -32,7 +32,7 @@ const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywor
     keywords: keywords.concat(META_KEYWORDS),
     domain: META_DOMAIN,
     url: META_URL,
-    image: META_IMAGE,
+    image: META_IMAGE.replace("{{lang}}", i18n.language),
   };
 
   return (
