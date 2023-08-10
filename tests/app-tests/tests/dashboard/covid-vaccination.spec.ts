@@ -1,5 +1,5 @@
 import { test, expect } from "utils/playwright";
-import { DashboardPage, HeroParameters } from "@model/dashboard.js";
+import { DashboardPage, HeroParameters } from "utils/model/dashboard";
 import { enumify } from "utils/helper";
 
 /**

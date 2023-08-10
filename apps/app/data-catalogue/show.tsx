@@ -434,6 +434,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 }
                 config={generateTableSchema()}
                 enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 15 : false}
+                data-testid="catalogue-table"
               />
             </div>
           )}
