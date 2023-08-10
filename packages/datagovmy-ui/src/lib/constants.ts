@@ -194,7 +194,7 @@ export const SHORT_PERIOD = {
   MONTHLY: "month",
   QUARTERLY: "quarter",
   YEARLY: "year",
-  INTRADAY: "auto",
+  INTRADAY: "hour",
   INFREQUENT: "auto",
   AS_REQUIRED: "auto",
 } as const;

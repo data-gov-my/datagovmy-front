@@ -1,6 +1,7 @@
-import { expect, Locator, Locators, Page as PlaywrightPage } from "utils/playwright";
-import { Page } from "./page.js";
-import { PATTERN } from "utils/helper";
+import type { Locators } from "../types";
+import { expect, Locator, Page as PlaywrightPage } from "@playwright/test";
+import { Page } from "./page";
+import { PATTERN } from "../helper";
 
 export type HeroParameters = {
   _category: string;

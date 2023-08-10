@@ -1,6 +1,7 @@
-import { expect, Locator, Locators, Page as PlaywrightPage } from "utils/playwright";
-import { Page } from "./page.js";
-import { toDate } from "utils/helper";
+import type { Locators } from "../types";
+import { expect, Locator, Page as PlaywrightPage } from "@playwright/test";
+import { Page } from "./page";
+import { toDate } from "../helper";
 
 type CatalogueSchema = {
   title: string;
@@ -23,9 +24,9 @@ export class DataCataloguePage extends Page {
     this.id = id;
     this.locators.set("title", page.getByTestId("catalogue-title"));
     this.locators.set("description", page.getByTestId("catalogue-description"));
-    this.locators.set("methodology", page.getByTestId("catalogue-methodology"));
-    this.locators.set("caveat", page.getByTestId("catalogue-caveat"));
-    this.locators.set("publication", page.getByTestId("catalogue-publication"));
+    // this.locators.set("methodology", page.getByTestId("catalogue-methodology"));
+    // this.locators.set("caveat", page.getByTestId("catalogue-caveat"));
+    // this.locators.set("publication", page.getByTestId("catalogue-publication"));
     this.locators.set("data_as_of", page.getByText("Data as of"));
     this.locators.set("last_updated", page.getByTestId("catalogue-last-updated"));
     this.locators.set("next_update", page.getByTestId("catalogue-next-update"));

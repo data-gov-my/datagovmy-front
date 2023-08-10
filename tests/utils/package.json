@@ -21,6 +21,10 @@
       "import": "./playwright.ts",
       "types": "./playwright.ts"
     },
+    "./model/*": {
+      "import": "./model/*.ts",
+      "types": "./model/*.ts"
+    },
     "./helper": {
       "import": "./helper.ts",
       "types": "./helper.ts"

@@ -7,6 +7,7 @@ import {
   Card,
   Container,
   Dropdown,
+  Markdown,
   Search,
   Section,
   Slider,
@@ -134,14 +135,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
+      case "INTRADAY":
         return (
           <CatalogueTimeseries
-            config={config}
-            dataset={dataset}
-            filter={filter}
             urls={urls}
+            dataset={dataset}
             translations={translations}
             onDownload={prop => setDownloads(prop)}
+            config={{
+              precision: config.precision,
+              range: filter?.range?.value ?? "INTRADAY",
+            }}
           />
         );
       case "CHOROPLETH":
@@ -354,18 +358,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
-                options={availableDownloads
-                  .map(item => ({
-                    label: item.title as string,
-                    value: item.id,
-                  }))
-                  .concat({ label: t("embed"), value: "embed" })}
+                options={availableDownloads.map(item => ({
+                  label: item.title as string,
+                  value: item.id,
+                }))}
                 onChange={e => {
-                  // embed
-                  if (e.value === "embed") {
-                    embedRef.current?.open();
-                    return;
-                  }
                   // downloads
                   const action = availableDownloads.find(({ id }) => e.value === id);
                   if (!action) return;
@@ -493,12 +490,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_1")}
             className=""
             description={
-              <p
-                className="whitespace-pre-line leading-relaxed text-dim"
-                data-testid="catalogue-methodology"
-              >
-                {interpolate(explanation.methodology)}
-              </p>
+              <Markdown className="markdown" data-testid="catalogue-methodology">
+                {explanation.methodology}
+              </Markdown>
             }
           />
 
@@ -507,12 +501,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_2")}
             className=""
             description={
-              <p
-                className="whitespace-pre-line leading-relaxed text-dim"
-                data-testid="catalogue-caveat"
-              >
-                {interpolate(explanation.caveat)}
-              </p>
+              <Markdown className="markdown" data-testid="catalogue-methodology">
+                {explanation.caveat}
+              </Markdown>
             }
           />
 
@@ -522,12 +513,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               title={t("header_3")}
               className=""
               description={
-                <p
-                  className="whitespace-pre-line leading-relaxed text-dim"
-                  data-testid="catalogue-publication"
-                >
-                  {interpolate(explanation.publication ?? "")}
-                </p>
+                <Markdown className="markdown" data-testid="catalogue-publication">
+                  {explanation.publication!}
+                </Markdown>
               }
             />
           )}

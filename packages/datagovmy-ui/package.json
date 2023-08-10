@@ -133,6 +133,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^12.2.0",
     "react-leaflet": "^4.1.0",
+    "react-markdown": "^8.0.7",
     "react-window": "^1.8.9",
     "sonner": "^0.4.0"
   },
