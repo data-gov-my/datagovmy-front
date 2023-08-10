@@ -266,12 +266,7 @@ export const DEFAULT_THEME: DocsThemeConfig = (() => {
       <>
         <meta name="msapplication-TileColor" content="#fff" />
         <meta httpEquiv="Content-Language" content="en" />
-        <meta name="description" content="Nextra: the next docs builder" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@shuding_" />
-        <meta property="og:title" content="Nextra: the next docs builder" />
-        <meta property="og:description" content="Nextra: the next docs builder" />
-        <meta name="apple-mobile-web-app-title" content="Nextra" />
+        <meta name="apple-mobile-web-app-title" content="Open API Docs" />
       </>
     ),
     i18n: [],
@@ -321,7 +316,7 @@ export const DEFAULT_THEME: DocsThemeConfig = (() => {
         const { t } = useTranslation();
         return (
           <span className="block select-none p-8 text-center text-sm text-gray-400">
-            {t("common:empty-result")}
+            {t("common.empty-result")}
           </span>
         );
       },

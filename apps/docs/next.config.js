@@ -9,7 +9,7 @@ const config = {
 /** @type {import('nextra').NextraConfig} */
 const nextra = require("nextra")({
   theme: "datagovmy-nextra",
-  themeConfig: "./theme.config.jsx",
+  themeConfig: "./theme.config.tsx",
   staticImage: true,
   latex: true,
   flexsearch: {
