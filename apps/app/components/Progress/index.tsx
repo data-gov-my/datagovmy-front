@@ -1,13 +1,8 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-type ProgressProps = {
-  disableOnSameRoute?: boolean;
-};
-
-const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true }) => {
-  const [opacity, setOpacity] = useState<number>(0);
-  const [progress, setProgress] = useState<number>(-1);
+const Progress: FunctionComponent = () => {
+  const [progress, setProgress] = useState<number>(0);
   const { events, route } = useRouter();
 
   useEffect(() => {
@@ -15,35 +10,32 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true 
     let trickle: NodeJS.Timer;
 
     const gradualTimeout = (callback: (progress: number) => void) => {
-      let n = 0;
-      var amount: number;
-      if (n >= 0 && n < 20) {
-        amount = 10;
-      } else if (n >= 20 && n < 40) {
-        amount = 0.01;
-      } else {
-        amount = 0;
-      }
-      trickle = setInterval(() => {
-        n += amount;
+      let n = 0,
+        step = 0;
 
-        if (n > 40) {
+      trickle = setInterval(() => {
+        if (n >= 0 && n < 20) {
+          step = Math.random() * 10;
+        } else if (n >= 20 && n < 70) {
+          step = Math.random() * 0.1;
+        }
+        n += step;
+
+        if (n > 70) {
           clearInterval(trickle);
         } else {
           callback(n);
         }
-      }, 150);
+      }, 100);
     };
 
     const startLoading = (url: string) => {
-        if (disableOnSameRoute && route === url) return;
-
+        if (route === url) return;
         clearTimeout(timeout);
         clearInterval(trickle);
         timeout = setTimeout(() => {
-          setOpacity(1);
-          setProgress(10);
-        }, 0);
+          setProgress(0);
+        }, 400);
 
         gradualTimeout(progress => {
           setProgress(progress);
@@ -52,13 +44,11 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true 
       endLoading = () => {
         clearTimeout(timeout);
         clearInterval(trickle);
-        setProgress(50 + Math.random() * 50);
         setTimeout(() => {
           setProgress(100);
-        }, 50);
+        }, 100);
         setTimeout(() => {
-          setOpacity(0);
-          setProgress(-1);
+          setProgress(0);
         }, 300);
       };
 
@@ -80,7 +70,6 @@ const Progress: FunctionComponent<ProgressProps> = ({ disableOnSameRoute = true 
           className="bg-primary dark:bg-primary-dark h-full transition-[width] duration-300 ease-out"
           style={{
             width: `${progress}%`,
-            opacity: `${opacity}`,
           }}
         />
       )}
