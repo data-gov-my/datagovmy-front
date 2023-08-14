@@ -411,7 +411,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             {t("common:common.no_entries")}.
           </p>
         ) : (
-          <Tabs className="pb-8 pt-8 lg:pt-12" title={t("header")}>
+          <Tabs className="pb-8 pt-8 lg:pt-12" title={<h4>{t("header")}</h4>}>
             <Panel name={t("cards_view")} key={"cards_view"}>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {publications.map((item: Publication, i: number) => (

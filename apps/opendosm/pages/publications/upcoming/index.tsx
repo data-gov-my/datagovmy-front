@@ -1,6 +1,7 @@
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
@@ -15,7 +16,9 @@ const UpcomingPublications: Page = ({ meta }: InferGetStaticPropsType<typeof get
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <PublicationsLayout>
-        <UpcomingPublicationsDashboard />
+        <WindowProvider>
+          <UpcomingPublicationsDashboard />
+        </WindowProvider>
       </PublicationsLayout>
     </AnalyticsProvider>
   );
