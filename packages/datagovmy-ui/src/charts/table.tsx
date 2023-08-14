@@ -22,7 +22,7 @@ import {
   getFilteredRowModel,
   SortDirection,
 } from "@tanstack/react-table";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { CountryAndStates } from "../lib/constants";
 import Image from "next/image";
