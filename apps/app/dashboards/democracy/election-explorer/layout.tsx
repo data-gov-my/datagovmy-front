@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
 import { At, AgencyBadge, Hero } from "datagovmy-ui/components";
@@ -52,7 +51,6 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, 
 
   return (
     <>
-      {/* <Progress /> */}
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}

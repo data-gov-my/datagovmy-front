@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
 import { get } from "datagovmy-ui/api";
 import BarMeter from "datagovmy-ui/charts/bar-meter";
@@ -138,7 +137,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   return (
     <>
-      {/* <Progress /> */}
       <Hero
         background="blue"
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}

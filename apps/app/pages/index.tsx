@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 import { get } from "datagovmy-ui/api";
 import {
@@ -73,7 +72,6 @@ const Home: Page = ({
   return (
     <>
       <Metadata keywords={"data.gov.my data malaysia election prices harga"} />
-      {/* <Progress /> */}
       <Hero
         background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}

@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { routes } from "@lib/routes";
 import { At, AgencyBadge, Hero } from "datagovmy-ui/components";
 import { clx } from "datagovmy-ui/helpers";
@@ -41,7 +40,6 @@ const LabourLayout: FunctionComponent<LabourLayoutProps> = ({ children, last_upd
 
   return (
     <>
-      {/* <Progress /> */}
       <Hero
         background="blue"
         category={[t("common:categories.economy"), "text-primary dark:text-primary-dark"]}

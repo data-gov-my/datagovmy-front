@@ -1,7 +1,7 @@
 import Nexti18NextConfig from "../next-i18next.config";
 import "datagovmy-ui/styles";
 import Layout from "@components/Layout";
-import { Toast } from "datagovmy-ui/components";
+import { Progress, Toast } from "datagovmy-ui/components";
 import { header, body } from "datagovmy-ui/configs/font";
 import mixpanelConfig from "datagovmy-ui/configs/mixpanel";
 import { clx } from "datagovmy-ui/helpers";
@@ -11,7 +11,6 @@ import { appWithTranslation } from "next-i18next";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { useEffect, ReactNode } from "react";
-import Progress from "@components/Progress";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {

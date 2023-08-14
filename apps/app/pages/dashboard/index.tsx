@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import Dashboard from "@dashboards/index";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
@@ -19,7 +18,6 @@ const DashboardIndex: Page = ({
   return (
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
-      {/* <Progress /> */}
       <Dashboard
         agency={agency}
         sources={sources}
