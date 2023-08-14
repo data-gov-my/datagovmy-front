@@ -22,7 +22,7 @@ interface InputProps extends LabelProps {
 const Input: FunctionComponent<InputProps> = ({
   name,
   label,
-  className = "px-4 w-full text-sm md:text-base",
+  className,
   type = "text",
   value,
   placeholder,
@@ -44,13 +44,13 @@ const Input: FunctionComponent<InputProps> = ({
   }, []);
 
   return (
-    <div className="relative flex w-full flex-col gap-2">
+    <div className="relative flex w-full gap-2">
       {label && <Label name={name} label={label} />}
       <div
-        className={[
-          "text-dim absolute left-2 h-full",
-          !label ? "translate-y-[25%]" : "translate-y-[65%]",
-        ].join(" ")}
+        className={clx(
+          "text-dim absolute left-3 h-full",
+          !label ? "translate-y-[25%]" : "translate-y-[65%]"
+        )}
       >
         {icon && icon}
       </div>
@@ -65,8 +65,8 @@ const Input: FunctionComponent<InputProps> = ({
         min={min}
         max={max}
         className={clx(
-          "placeholder:text-dim focus:ring-dim rounded-md outline-none focus:outline-none dark:bg-black",
-          "focus:ring-primary dark:focus:ring-primary-dark",
+          "placeholder:text-dim focus:ring-dim w-full rounded-md px-3 text-sm dark:bg-black dark:text-white",
+          "focus:ring-primary dark:focus:ring-primary-dark focus:outline-none",
           icon ? "pl-10" : "",
           validation ? "border-danger border-2" : "border-outline dark:border-washed-dark",
           className

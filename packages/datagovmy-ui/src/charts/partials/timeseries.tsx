@@ -117,7 +117,8 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
 
   const _datasets = useMemo<ChartDataset<keyof ChartTypeRegistry, any[]>[]>(() => {
     const sets = Object.entries(coordinate).filter(([key, _]) => key !== "x");
-    const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fff8ec", "#fde8e8"]; // [blue, gray, red, yellow]
+    // FIXME: bg colours too bright in dark mode, but dark colours makes it too dark in embed (which only has light mode)
+    const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fff8ec", "#fde8e8"]; // [blue, gray, yellow, red]
     return sets.map(([key, y], index) => ({
       type: "line",
       data: (y as number[]).map(e => numFormat(e, "standard", getPrecision(key, config.precision))),
