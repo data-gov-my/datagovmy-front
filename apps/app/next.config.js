@@ -26,10 +26,10 @@ const nextConfig = {
     APP_NAME: "data.gov.my",
     META_AUTHOR: "Government of Malaysia",
     META_THEME: "#13293D",
-    META_KEYWORDS: "data dosm statistics malaysia",
+    META_KEYWORDS: "open data statistics malaysia",
     META_DOMAIN: "data.gov.my",
-    META_URL: "https://data.gov.my",
-    META_IMAGE: "https://data.gov.my/static/images/jata_512.png",
+    META_URL: process.env.NEXT_PUBLIC_APP_URL,
+    META_IMAGE: `${process.env.NEXT_PUBLIC_APP_URL}/static/images/og_{{lang}}.png`,
   },
   async rewrites() {
     return [

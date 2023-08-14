@@ -59,12 +59,13 @@ const LANGUAGE_OPTIONS = [
 export type Language = (typeof LANGUAGE_OPTIONS)[number]["value"];
 
 interface CodeBlockProps {
-  children: Partial<Record<Language, string>>;
-  hidden?: boolean;
-  event?: Record<string, any>;
+  "children": Partial<Record<Language, string>>;
+  "hidden"?: boolean;
+  "event"?: Record<string, any>;
+  "data-testid"?: string;
 }
 
-const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event }) => {
+const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event, ...props }) => {
   const { t } = useTranslation();
   const { theme = "light" } = useTheme();
   hljs.registerLanguage("python", python);
@@ -131,6 +132,7 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event 
           dangerouslySetInnerHTML={{
             __html: html,
           }}
+          {...props}
         />
       </div>
     </div>

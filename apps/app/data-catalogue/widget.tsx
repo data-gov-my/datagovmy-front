@@ -125,12 +125,15 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
+      case "INTRADAY":
         return (
           <CatalogueTimeseries
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
-            config={config}
+            config={{
+              precision: config.precision,
+              range: filter?.range?.value ?? "INTRADAY",
+            }}
             dataset={dataset}
-            filter={filter}
             urls={urls}
             translations={translations}
           />
@@ -267,7 +270,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
             </span>
           </>
         </div>
-        <Chips data={chips} onRemove={null} />
+        <Chips className="text-sm" data={chips} onRemove={null} onClearAll={null} />
       </div>
 
       {/* Chart */}

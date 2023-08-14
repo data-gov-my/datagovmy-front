@@ -11,6 +11,7 @@ import {
   Section,
   Slider,
   Tooltip,
+  Markdown,
 } from "datagovmy-ui/components";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
@@ -134,14 +135,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
+      case "INTRADAY":
         return (
           <CatalogueTimeseries
-            config={config}
-            dataset={dataset}
-            filter={filter}
             urls={urls}
+            dataset={dataset}
             translations={translations}
             onDownload={prop => setDownloads(prop)}
+            config={{
+              precision: config.precision,
+              range: filter?.range?.value ?? "INTRADAY",
+            }}
           />
         );
       case "CHOROPLETH":
@@ -268,7 +272,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   }, []);
 
   const generateTableSchema = () => {
-    const columns = Object.keys(dataset.table[0]);
+    const columns = Array.isArray(dataset.table) ? Object.keys(dataset.table[0]) : [];
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
@@ -276,7 +280,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           if (key === "x")
             return toDate(
               item[key],
-              SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              "dd MMM yyy", //SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
               i18n.language
             );
           else return item[key];
@@ -430,6 +434,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 }
                 config={generateTableSchema()}
                 enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 15 : false}
+                data-testid="catalogue-table"
               />
             </div>
           )}
@@ -493,12 +498,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_1")}
             className=""
             description={
-              <p
-                className="text-dim whitespace-pre-line leading-relaxed"
-                data-testid="catalogue-methodology"
-              >
-                {interpolate(explanation.methodology)}
-              </p>
+              <Markdown className="markdown" data-testid="catalogue-methodology">
+                {explanation.methodology}
+              </Markdown>
             }
           />
 
@@ -507,12 +509,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             title={t("header_2")}
             className=""
             description={
-              <p
-                className="text-dim whitespace-pre-line leading-relaxed"
-                data-testid="catalogue-caveat"
-              >
-                {interpolate(explanation.caveat)}
-              </p>
+              <Markdown className="markdown" data-testid="catalogue-methodology">
+                {explanation.caveat}
+              </Markdown>
             }
           />
 
@@ -522,12 +521,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               title={t("header_3")}
               className=""
               description={
-                <p
-                  className="text-dim whitespace-pre-line leading-relaxed"
-                  data-testid="catalogue-publication"
-                >
-                  {interpolate(explanation.publication ?? "")}
-                </p>
+                <Markdown className="markdown" data-testid="catalogue-publication">
+                  {explanation.publication!}
+                </Markdown>
               }
             />
           )}
@@ -607,9 +603,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <div className="space-y-3">
                 <h5>{t("meta_source")}</h5>
                 <ul className="text-dim ml-6 list-outside list-disc">
-                  {metadata.source?.map(source => (
-                    <li key={source}>{source}</li>
-                  ))}
+                  {metadata.source?.map(source => <li key={source}>{source}</li>)}
                 </ul>
               </div>
               {/* URLs to dataset */}

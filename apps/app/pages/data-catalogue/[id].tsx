@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       line_variables: data.API.line_variables ?? null,
     };
 
-    const hasTranslations = data.translations && Object.keys(data.translations).length;
+    const hasTranslations = data.translations && Object.keys(data.translations).length > 0;
     const hasQuery = query && Object.keys(query).length > 1;
 
     const assignContext = (item: DCFilter) => {
@@ -100,8 +100,8 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         label = (data.translations[item.default] as string) ?? item.default;
         value = item.default;
       } else {
-        label = data.translations[query[item.key] as string] ?? query[item.key];
-        value = query[item.key] as string;
+        label = data.translations[query[item.key] as string] ?? query[item.key] ?? item.default;
+        value = (query[item.key] as string) ?? item.default;
       }
 
       Object.assign(config.context, { [item.key]: { label, value } });

@@ -54,23 +54,20 @@ export interface TableConfig {
 }
 
 export interface TableProps {
-  className?: string;
-  title?: string;
-  menu?: ReactElement;
-  freeze?: string[];
-  controls?: (
-    setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>
-  ) => ReactElement | ReactElement[];
-  search?: (
-    setGlobalFilter: DebouncedFunc<(query: string) => void>
-  ) => ReactElement | ReactElement[];
-  sorts?: SortingState;
-  cellClass?: string;
-  data?: any;
-  config?: Array<TableConfig>;
-  responsive?: Boolean;
-  enablePagination?: false | number;
-  precision?: number | Precision;
+  "className"?: string;
+  "title"?: string;
+  "menu"?: ReactElement;
+  "freeze"?: string[];
+  "controls"?: (setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>) => ReactNode;
+  "search"?: (setGlobalFilter: DebouncedFunc<(query: string) => void>) => ReactNode;
+  "sorts"?: SortingState;
+  "cellClass"?: string;
+  "data"?: any;
+  "config"?: Array<TableConfig>;
+  "responsive"?: Boolean;
+  "enablePagination"?: false | number;
+  "precision"?: number | Precision;
+  "data-testid"?: string;
 }
 
 const relativeColor = (delta: number, inverse: boolean = false) => {
@@ -113,6 +110,7 @@ const Table: FunctionComponent<TableProps> = ({
   enablePagination = false,
   cellClass,
   precision,
+  ...props
 }) => {
   const columns = useMemo<ColumnDef<Record<string, any>>[]>(() => config as any, [config]);
   const [sorting, setSorting] = useState<SortingState>(sorts);
@@ -185,6 +183,7 @@ const Table: FunctionComponent<TableProps> = ({
             "relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit",
             className
           )}
+          data-testid={props["data-testid"]}
         >
           <thead>
             {table.getHeaderGroups().map(headerGroup => (

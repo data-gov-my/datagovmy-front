@@ -60,7 +60,7 @@ const Line: FunctionComponent<LineProps> = ({
   data = dummy,
   enableGridX = true,
   enableGridY = true,
-  precision = [1, 0],
+  precision = [1, 1],
   minY,
   maxY,
   stats,
@@ -119,6 +119,7 @@ const Line: FunctionComponent<LineProps> = ({
         : false,
       tooltip: {
         enabled: enableTooltip,
+        mode: "index",
         intersect: false,
         callbacks: {
           label: tooltipCallback
@@ -152,7 +153,7 @@ const Line: FunctionComponent<LineProps> = ({
           },
           padding: 6,
           callback: (value: string | number) =>
-            (prefixX ?? "") + numFormat(value as number, "standard", precision) + (unitX ?? ""),
+            (prefixX ?? "") + numFormat(value as number, "compact", precision) + (unitX ?? ""),
         },
       },
       y: {

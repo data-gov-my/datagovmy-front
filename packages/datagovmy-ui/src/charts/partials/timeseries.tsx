@@ -1,22 +1,23 @@
 import { DownloadOptions, Precision } from "../../../types";
-import { Slider, toast } from "../../components";
+import { Slider, Spinner, toast } from "../../components";
 import { SliderProvider } from "../../contexts/slider";
 import { useAnalytics, useData, useSlice, useTranslation, useWatch } from "../../hooks";
 import { CATALOGUE_COLORS, SHORT_PERIOD } from "../../lib/constants";
-import { download, exportAs, numFormat } from "../../lib/helpers";
+import { clx, download, exportAs, numFormat } from "../../lib/helpers";
 import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useMemo } from "react";
+import isEmpty from "lodash/isEmpty";
 
 const Timeseries = dynamic(() => import("../timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {
   config: {
     precision: number | Precision;
+    range: keyof typeof SHORT_PERIOD;
   };
   className?: string;
   dataset: any;
-  filter: any;
   urls: {
     [key: string]: string;
   };
@@ -29,14 +30,13 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   className = "h-[350px] w-full lg:h-[450px]",
   dataset,
   urls,
-  filter,
   translations,
   onDownload,
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const { data, setData } = useData({
     ctx: undefined,
-    minmax: [0, dataset.chart.x.length - 1],
+    minmax: [0, dataset.chart?.x ? dataset.chart?.x.length - 1 : 0],
   });
   const { coordinate } = useSlice(dataset.chart, data.minmax);
   const { track } = useAnalytics(dataset);
@@ -130,47 +130,54 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   }, [coordinate]);
 
   useWatch(() => {
-    setData("minmax", [0, dataset.chart.x.length - 1]);
+    if (dataset.chart.x) setData("minmax", [0, dataset.chart.x.length - 1]);
     if (onDownload) onDownload(availableDownloads);
-  }, [filter.range, dataset.chart.x, data.ctx]);
+  }, [config.range, dataset.chart.x, data.ctx]);
 
   return (
     <SliderProvider>
-      {play => (
-        <>
-          <Timeseries
-            className={className}
-            _ref={ref => setData("ctx", ref)}
-            interval={SHORT_PERIOD[filter.range.value as keyof typeof SHORT_PERIOD]}
-            precision={
-              typeof config.precision === "number"
-                ? config.precision
-                : getPrecisionMinMax(config.precision)
-            }
-            tooltipCallback={function (item: any) {
-              return `${item.dataset.label as string}: ${
-                item.raw !== undefined || item.raw !== null ? item.raw : "-"
-              }`;
-            }}
-            enableAnimation={!play}
-            enableLegend={_datasets.length > 1}
-            mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
-            data={{
-              labels: coordinate.x,
-              datasets: _datasets,
-            }}
-            beginZero={dataset.type === "STACKED_AREA"}
-          />
-          <Slider
-            className="pt-4"
-            type="range"
-            data={dataset.chart.x}
-            value={data.minmax}
-            period={SHORT_PERIOD[filter.range?.value as keyof typeof SHORT_PERIOD] ?? "auto"}
-            onChange={e => setData("minmax", e)}
-          />
-        </>
-      )}
+      {play =>
+        !isEmpty(dataset.chart.x) ? (
+          <>
+            <Timeseries
+              className={className}
+              _ref={ref => setData("ctx", ref)}
+              interval={SHORT_PERIOD[config.range]}
+              round={SHORT_PERIOD[config.range]}
+              precision={
+                typeof config.precision === "number"
+                  ? config.precision
+                  : getPrecisionMinMax(config.precision)
+              }
+              tooltipCallback={function (item: any) {
+                return `${item.dataset.label as string}: ${
+                  item.raw !== undefined || item.raw !== null ? item.raw : "-"
+                }`;
+              }}
+              enableAnimation={!play}
+              enableLegend={_datasets.length > 1}
+              mode={dataset.type === "STACKED_AREA" ? "stacked" : "grouped"}
+              data={{
+                labels: coordinate.x,
+                datasets: _datasets,
+              }}
+              beginZero={["STACKED_AREA", "INTRADAY"].includes(dataset.type)}
+            />
+            <Slider
+              className="pt-4"
+              type="range"
+              data={dataset.chart.x}
+              value={data.minmax}
+              period={SHORT_PERIOD[config.range]}
+              onChange={e => setData("minmax", e)}
+            />
+          </>
+        ) : (
+          <div className={clx(className, "flex items-center justify-center")}>
+            <Spinner loading={isEmpty(dataset.chart.x)} />
+          </div>
+        )
+      }
     </SliderProvider>
   );
 };
