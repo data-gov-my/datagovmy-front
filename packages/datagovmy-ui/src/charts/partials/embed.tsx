@@ -80,9 +80,9 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
     }, [EMBED.params]);
 
     return (
-      <Modal ref={modalRef} title={t("embed")} className="lg:max-w-screen-xl">
+      <Modal ref={modalRef} title={<h4>{t("embed")}</h4>} className="lg:max-w-screen-xl">
         {() => (
-          <div className="grid w-full grid-cols-1 lg:grid-cols-3 ">
+          <div className="grid w-full grid-cols-1 bg-white dark:bg-black lg:grid-cols-3 lg:rounded-b-xl">
             <div className="col-span-2 hidden bg-slate-50 px-6 py-3 dark:bg-black lg:block lg:rounded-bl-xl">
               <Tabs className="h-fit">
                 <Panel name={t("desktop")}>
@@ -132,7 +132,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                       <Dropdown
                         key={item.key}
                         width="w-fit"
-                        anchor={"right"}
+                        anchor="right"
                         options={item.options.map(option => ({
                           label: translations[option] ?? option,
                           value: option,

@@ -162,7 +162,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         <Label label={t("origin")} className="text-sm" />
                         <Label label={t("destination")} className="text-sm" />
                         <Dropdown
-                          anchor="top-start"
+                          anchor="bottom-10"
                           width="w-full"
                           options={ORIGIN_OPTIONS}
                           selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
@@ -174,7 +174,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
                         />
                         <Dropdown
-                          anchor="bottom-end"
+                          anchor="right-0 bottom-10"
                           width="w-full"
                           options={DESTINATION_OPTIONS}
                           selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}

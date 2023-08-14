@@ -263,7 +263,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[105px] flex h-[400px] flex-col divide-y overflow-y-auto">
+              <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[105px] flex h-max flex-col divide-y overflow-y-auto bg-white dark:bg-black">
                 <div className="py-3">
                   <Label label={t("period")} />
                   <Radio
@@ -315,7 +315,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                     onChange={e => setFilter("end", e)}
                   />
                 </div>
-                <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
+                <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3 bg-white dark:bg-black">
                   <Button
                     className="btn-primary w-full justify-center"
                     disabled={!actives.length}
