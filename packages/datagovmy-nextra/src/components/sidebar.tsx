@@ -426,20 +426,25 @@ export function Sidebar({
             )}
             data-toggle-animation={showToggleAnimation ? (showSidebar ? "show" : "hide") : "off"}
           >
-            {/* {hasI18n && (
+            {hasI18n && (
               <LocaleSwitch
                 options={config.i18n}
                 lite={!showSidebar}
-                className={cn(showSidebar ? "grow" : "max-md:grow")}
+                className={cn("block sm:hidden", showSidebar ? "grow" : "max-md:grow")}
               />
             )}
             {config.darkMode && (
-              <div className={showSidebar && !hasI18n ? "flex grow flex-col" : ""}>
+              <div
+                className={cn(
+                  "block sm:hidden",
+                  showSidebar && !hasI18n ? "flex grow flex-col" : ""
+                )}
+              >
                 {renderComponent(config.themeSwitch.component, {
                   lite: !showSidebar || hasI18n,
                 })}
               </div>
-            )} */}
+            )}
             {config.sidebar.toggleButton && (
               <button
                 title={showSidebar ? "Hide sidebar" : "Show sidebar"}
