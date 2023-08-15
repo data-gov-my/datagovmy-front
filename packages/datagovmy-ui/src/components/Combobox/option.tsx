@@ -24,10 +24,10 @@ const ComboOption = <T extends unknown>({
 }: ComboOptionProps<T>) => {
   return (
     <Combobox.Option
-      className={({ selected }) =>
+      className={({ active }) =>
         clx(
           "relative flex w-full cursor-pointer select-none flex-row gap-2 px-4 py-2",
-          selected && "bg-washed dark:bg-washed-dark"
+          active && "bg-washed dark:bg-washed-dark"
         )
       }
       value={option}
