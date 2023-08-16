@@ -251,8 +251,11 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                       </span>
                     </div>
                     {date.pubs &&
-                      date.pubs.map(pub => (
-                        <div className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white">
+                      date.pubs.map((pub, i) => (
+                        <div
+                          key={i}
+                          className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
+                        >
                           {pub}
                         </div>
                       ))}
