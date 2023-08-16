@@ -48,18 +48,6 @@ interface CatalogueChatProps {
   //   sources: string[];
 }
 
-const root = new FileNode("root", FileType.FOLDER);
-const subdir1 = new FileNode("subdir1", FileType.FOLDER, [], root);
-const subdir2 = new FileNode("subdir2", FileType.FOLDER, [], root);
-const file1 = new FileNode("file1.txt", FileType.FILE, [], subdir1);
-const file2 = new FileNode("file2.txt", FileType.FILE, [], subdir1);
-const subsubdir1 = new FileNode("subsubdir1", FileType.FOLDER, [], subdir2);
-const file3 = new FileNode("file3.txt", FileType.FILE, [], subsubdir1);
-root.children.push(subdir1, subdir2, new FileNode("file4.txt", FileType.FILE, [], root));
-subdir1.children.push(file1, file2);
-subdir2.children.push(subsubdir1);
-subsubdir1.children.push(file3);
-
 const CatalogueChat: FunctionComponent<CatalogueChatProps> = () => {
   const { t } = useTranslation(["catalogue", "common"]);
   //   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
@@ -88,7 +76,7 @@ const CatalogueChat: FunctionComponent<CatalogueChatProps> = () => {
           {/* Desktop */}
           <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/4 xl:w-1/5">
             <Filetree
-              root={root}
+              model="chat-directory"
               className="top-14 flex h-[100vh] flex-col gap-2 overflow-auto pt-3"
             />
           </div>

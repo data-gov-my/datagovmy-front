@@ -42,10 +42,10 @@ const TreeNode: FunctionComponent<TreeNodeProps> = ({ node }) => {
 
 interface FiletreeProps {
   className?: string;
-  root: FileNode;
+  model: string;
 }
 
-const Filetree: FunctionComponent<FiletreeProps> = ({ root, className }) => {
+const Filetree: FunctionComponent<FiletreeProps> = ({ className, model }) => {
   const fm = useRef<FileNodeInterface>(null);
   return (
     <>
@@ -63,12 +63,13 @@ const Filetree: FunctionComponent<FiletreeProps> = ({ root, className }) => {
           New folder
         </button>
       </div>
+
       <ul
-        className={clx(className, "flex grow flex-col gap-2 px-3")}
-        onClick={() => fm.current && fm.current.setActive(root)}
+        className={clx(className, "flex grow flex-col gap-2 pr-3")}
+        onClick={() => fm.current && fm.current.tree && fm.current.setActive(fm.current.tree)}
       >
-        <FiletreeProvider ref={fm} root={root}>
-          {tree => <TreeNode node={tree} />}
+        <FiletreeProvider ref={fm} model={model}>
+          {tree => tree && <TreeNode node={tree} />}
         </FiletreeProvider>
       </ul>
     </>

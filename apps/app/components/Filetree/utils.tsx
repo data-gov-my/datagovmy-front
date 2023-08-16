@@ -1,14 +1,15 @@
+import { IndexedDB } from "@lib/idb";
+import { useWatch } from "datagovmy-ui/hooks";
 import {
   ForwardRefExoticComponent,
   ForwardedRef,
   ReactNode,
   createContext,
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useState,
 } from "react";
-
-// export type FileType = "dir" | "file";
 
 export enum FileType {
   FOLDER = "dir",
@@ -29,21 +30,41 @@ export class FileNode {
     public name: string,
     public type: FileType,
     public children: FileNode[] = [],
-    public parent: FileNode | null = null,
+    public parent: FileNode | null,
     id?: string
   ) {
-    this.id = id !== undefined ? id : this.uuid();
+    this.id = id !== undefined ? id : this.uuid(parent === null);
   }
 
-  uuid() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0;
-      const v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
+  public static find(node: FileNode, id: string): FileNode | null {
+    if (node.id === id) {
+      return node;
+    }
+    for (const child of node.children) {
+      const foundNode = this.find(child, id);
+      if (foundNode !== null) return foundNode;
+    }
+    return null;
   }
 
-  clone(): FileNode {
+  private traverse(callback: (node: FileNode) => void) {
+    callback(this);
+    for (const child of this.children) {
+      child.traverse(callback);
+    }
+  }
+
+  private uuid(isRoot?: boolean) {
+    return isRoot
+      ? "root"
+      : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          const r = (Math.random() * 16) | 0;
+          const v = c === "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        });
+  }
+
+  public clone(): FileNode {
     return new FileNode(
       this.name,
       this.type,
@@ -52,14 +73,85 @@ export class FileNode {
       this.id
     );
   }
+
+  public serialize(): Record<string, any> {
+    const serialized_nodes: any[] = [];
+
+    this.traverse(node => {
+      const serialized_node: any = {
+        id: node.id,
+        name: node.name,
+        type: node.type,
+      };
+
+      if (node.parent) {
+        serialized_node.parentId = node.parent.id;
+      } else {
+        serialized_node.parentId = null; // For the root node
+      }
+
+      serialized_nodes.push(serialized_node);
+    });
+
+    const serialized_data = {
+      id: this.id,
+      nodes: serialized_nodes,
+    };
+
+    return serialized_data;
+  }
+
+  public static deserialize(data: Record<string, any>): FileNode | undefined {
+    // Step 1: Deserialize nodes without parent references
+    const nodeMap = new Map<string, FileNode>();
+    for (const serialized_node of data.nodes) {
+      const node = new FileNode(
+        serialized_node.name,
+        serialized_node.type,
+        [],
+        null,
+        serialized_node.id
+      );
+      nodeMap.set(node.id, node);
+    }
+
+    // Step 2: Attach parent references
+    for (const serialized_node of data.nodes) {
+      const node = nodeMap.get(serialized_node.id);
+      if (serialized_node.parentId) {
+        const parent = nodeMap.get(serialized_node.parentId);
+        if (node && parent) {
+          parent.children.push(node);
+          node.parent = parent;
+        }
+      }
+    }
+
+    return nodeMap.get(data.id);
+  }
+
+  // Method only for root node
+  public async save(idb: IndexedDB): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      if (!this.id.includes("root")) return reject("Error: Method must be called from root node");
+
+      const node = await idb.read(this.id);
+
+      if (!node) await idb.write(this.serialize()).catch(e => console.error(e));
+      else await idb.update(this.serialize()).catch(e => console.error(e));
+
+      resolve();
+    });
+  }
 }
 
 interface FiletreeContextProps extends FileNodeInterface {
-  tree: FileNode | null;
-  active: FileNode | null;
+  tree: FileNode | undefined;
+  active: FileNode | undefined;
 }
 
 export interface FileNodeInterface {
+  tree: FileNode | undefined;
   create: (type: FileType) => void;
   destroy: (node: FileNode) => void;
   rename: (node: FileNode, rename: string) => void;
@@ -67,14 +159,14 @@ export interface FileNodeInterface {
 }
 
 interface FiletreeProviderProps {
-  root: FileNode;
-  children: (tree: FileNode) => ReactNode;
+  model: string;
+  children: (tree?: FileNode) => ReactNode;
   ref: ForwardedRef<FileNodeInterface>;
 }
 
 export const FiletreeContext = createContext<FiletreeContextProps>({
-  tree: null,
-  active: null,
+  tree: undefined,
+  active: undefined,
   setActive: () => {},
   create: () => {},
   destroy: () => {},
@@ -87,28 +179,63 @@ export const FiletreeContext = createContext<FiletreeContextProps>({
  * @returns {tree, active, setActive, create, destroy, rename}
  */
 export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> = forwardRef(
-  ({ root, children }, ref) => {
-    const [tree, setTree] = useState<FileNode>(root);
-    const [active, setActive] = useState<FileNode>(root);
+  ({ children, model }, ref) => {
+    const [tree, setTree] = useState<FileNode | undefined>();
+    const [active, setActive] = useState<FileNode | undefined>();
+    const idb = new IndexedDB(model);
+
+    useEffect(() => {
+      const fetchDB = async () => {
+        return await idb.read("root");
+      };
+
+      fetchDB().then(tree => {
+        if (tree) {
+          setTree(FileNode.deserialize(tree));
+          setActive(FileNode.deserialize(tree));
+        } else {
+          const root = new FileNode("root", FileType.FOLDER, [], null);
+          root.children.push(new FileNode("New chat", FileType.FILE, [], root));
+          setTree(root);
+          setActive(root);
+
+          root.save(idb);
+        }
+      });
+    }, []);
+
+    useWatch(() => {
+      if (tree) tree.save(idb);
+    }, [tree]);
 
     /** Public functions */
     const create = (type: FileType) => {
       setTree(_root => {
+        if (!_root || !active) return;
         const _tree = _root.clone();
-        const _node =
-          active.parent === null ? _tree : active.type === FileType.FOLDER ? active : active.parent;
-        const parentNode = findNode(_tree, _node.id);
-        if (parentNode)
-          parentNode.children.push(
-            new FileNode(type === FileType.FOLDER ? "New folder" : "New chat", type, [], parentNode)
-          );
+        let _node: FileNode | null = null;
 
+        switch (active.type) {
+          case FileType.FOLDER:
+            _node = FileNode.find(_tree, active.id);
+            break;
+          case FileType.FILE:
+            _node = FileNode.find(_tree, active.parent?.id || _root.id);
+          default:
+            break;
+        }
+
+        if (!_node || _node === null) return _tree;
+        _node.children.push(
+          new FileNode(type === FileType.FOLDER ? "New folder" : "New chat", type, [], _node)
+        );
         return _tree;
       });
     };
 
     const destroy = (node: FileNode) => {
       setTree(_root => {
+        if (!_root) return;
         const _tree = _root.clone();
         deleteNode(_tree, node.id);
         return _tree;
@@ -117,8 +244,9 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
 
     const rename = (node: FileNode, rename: string) => {
       setTree(_root => {
+        if (!_root) return;
         const _tree = _root.clone();
-        const _node = findNode(_tree, node.id);
+        const _node = FileNode.find(_tree, node.id);
         if (_node) _node.name = rename;
         return _tree;
       });
@@ -126,20 +254,8 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
 
     /** Ref functions */
     useImperativeHandle(ref, () => {
-      return { create, destroy, rename, setActive };
+      return { tree, create, destroy, rename, setActive };
     });
-
-    /** Private functions */
-    const findNode = (node: FileNode, id: string): FileNode | null => {
-      if (node.id === id) {
-        return node;
-      }
-      for (const child of node.children) {
-        const foundNode = findNode(child, id);
-        if (foundNode !== null) return foundNode;
-      }
-      return null;
-    };
 
     const deleteNode = (root: FileNode, id: string) => {
       if (root === null) {

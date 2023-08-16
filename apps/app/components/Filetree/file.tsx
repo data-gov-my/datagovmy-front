@@ -12,10 +12,9 @@ interface FileProps {
 }
 
 const File: FunctionComponent<FileProps> = ({ node, className, enableAction = true }) => {
+  const { active, setActive, destroy, rename } = useContext(FiletreeContext);
   const [editable, setEditable] = useState<boolean>(false);
   const [name, setName] = useState<string>(node.name);
-
-  const { active, setActive, destroy, rename } = useContext(FiletreeContext);
 
   const finishEdit = () => {
     if (name.length <= 0) {

@@ -12,10 +12,9 @@ type FolderProps = {
 };
 
 const Folder: FunctionComponent<FolderProps> = ({ className, node, children }) => {
+  const { setActive, destroy, rename } = useContext(FiletreeContext);
   const [editable, setEditable] = useState<boolean>(false);
   const [name, setName] = useState<string>(node.name);
-
-  const { setActive, destroy, rename } = useContext(FiletreeContext);
 
   const finishEdit = () => {
     if (name.length <= 0) {
