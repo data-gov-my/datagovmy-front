@@ -133,12 +133,14 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     pub_type: query.pub_type
       ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
       : undefined,
+    pub_id: query.pub_id,
   });
 
   const reset = () => {
     setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
+    setFilter("pub_id", undefined);
     setFilter("pub_type", undefined);
     setData("publication_option", undefined);
   };
@@ -151,6 +153,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       })
         .then(({ data }: { data: Resource[] }) => {
           cache.set(publication_id, data);
+          setFilter("pub_id", publication_id);
           resolve(data);
         })
         .catch(e => {
@@ -164,7 +167,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     {
       accessorKey: "title",
       id: "title",
-      header: t("title"),
+      header: t("table.title"),
       enableSorting: false,
       className: "max-sm:max-w-[300px]",
       cell: ({ row, getValue }) => {
@@ -186,13 +189,13 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     {
       accessorKey: "description",
       id: "description",
-      header: t("desc"),
+      header: t("table.desc"),
       enableSorting: false,
     },
     {
       accessorKey: "release_date",
       id: "release_date",
-      header: t("release_date"),
+      header: t("table.release_date"),
       cell: ({ getValue }) => {
         return <>{toDate(getValue(), "dd MMM yyyy", i18n.language)}</>;
       },
@@ -237,6 +240,14 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   ];
 
   useEffect(() => {
+    if (query.pub_id) {
+      setData(
+        "pub_idx",
+        publications.findIndex(e => e.publication_id === query.pub_id)
+      );
+      fetchResource(query.pub_id).then(data => setData("res", data));
+      setShow(true);
+    }
     events.on("routeChangeComplete", () => setData("loading", false));
     return () => {
       events.off("routeChangeComplete", () => setData("loading", false));
@@ -387,7 +398,8 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             }}
           />
           {actives.length > 0 &&
-            actives.findIndex(active => !["page", "page_size"].includes(active[0])) !== -1 && (
+            actives.findIndex(active => !["page", "page_size", "pub_id"].includes(active[0])) !==
+              -1 && (
               <Button
                 className="btn-ghost group text-dim hover:text-black dark:hover:text-white"
                 disabled={!actives.length}
@@ -421,6 +433,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                     onClick={() => {
                       setShow(true);
                       setData("pub_idx", i);
+                      setFilter("pub_type", item.publication_type);
                       fetchResource(item.publication_id).then(data => setData("res", data));
                     }}
                   >
@@ -470,7 +483,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           </Tabs>
         )}
 
-        {publications.length !== 0 && (
+        {publications.length > data.pub_idx && filteredRes && (
           <Transition show={show} as={Fragment}>
             <Dialog as="div" className="relative z-30" onClose={() => setShow(false)}>
               <Transition.Child
@@ -531,15 +544,13 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                           onChange={q => setData("query", q)}
                         />
                       </div>
-                      {filteredRes && (
-                        <Table
-                          className="md:w-full"
-                          data={filteredRes}
-                          enablePagination={filteredRes.length > 10 ? 10 : false}
-                          config={resConfig}
-                          precision={0}
-                        />
-                      )}
+                      <Table
+                        className="md:w-full"
+                        data={filteredRes}
+                        enablePagination={filteredRes.length > 10 ? 10 : false}
+                        config={resConfig}
+                        precision={0}
+                      />
                     </Dialog.Panel>
                   </Transition.Child>
                 </div>
