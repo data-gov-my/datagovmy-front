@@ -195,15 +195,15 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   max={"2017-12-31"}
                 ></input>
                 {data.validation && <p className="text-danger mt-1 text-xs">{data.validation}</p>}
-                <p className="mb-3 mt-6 text-sm font-medium">{t("choose_state")}</p>
+                {/* <p className="mb-3 mt-6 text-sm font-medium">{t("choose_state")}</p>
                 <StateDropdown
                   currentState={data.p_state}
                   onChange={selected => setData("p_state", selected.value)}
                   include={[{ label: t("common:components.ovs"), value: "Overseas" }]}
                   width="w-full"
-                />
+                /> */}
                 <Button
-                  className="btn-primary my-6"
+                  className="btn-primary active:shadow-none my-6"
                   onClick={() => {
                     validateDate()
                       .then(({ birthday, state }) => {
