@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import {
   At,
@@ -177,7 +178,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b py-4 lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b py-4 dark:border-outlineHover-dark lg:pl-2">
       <div className="flex-grow">
         <Search
           className="border-0"
@@ -190,44 +191,41 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
       <div className="block xl:hidden">
         <Modal
           trigger={open => (
-            <Button
-              onClick={open}
-              className="mr-3 block self-center border border-outline px-3 py-1.5 shadow-button"
-            >
-              <span>{t("filter")}</span>
-              <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white">
+            <Button onClick={open} className="btn-default shadow-floating">
+              <span>{t("catalogue:filter")}</span>
+              <span className="h-5 w-4.5 rounded-md bg-primary text-center text-white dark:bg-primary-dark">
                 {actives.length}
               </span>
+              <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
             </Button>
           )}
-          title={
-            <Label label={t("filter") + ":"} className="block text-sm font-medium text-black" />
-          }
+          title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
         >
           {close => (
-            <div className="flex-grow space-y-4 overflow-y-auto pb-20 pt-4 font-sans">
-              <Radio
-                label={t("period")}
-                name="period"
-                className="flex flex-wrap gap-4 px-1 pt-2"
-                options={periods}
-                value={filter.period}
-                onChange={e => setFilter("period", e)}
-              />
-              <Checkbox
-                label={t("geography")}
-                className="flex flex-wrap gap-4 px-1 pt-2"
-                name="geography"
-                options={geographies}
-                value={filter.geography}
-                onChange={e => setFilter("geography", e)}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
+            <div className="mb-[105px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 pb-4.5 dark:divide-washed-dark dark:bg-black">
+              <div className="py-3">
+                <Radio
+                  label={t("period")}
+                  name="period"
+                  options={periods}
+                  value={filter.period}
+                  onChange={e => setFilter("period", e)}
+                />
+              </div>
+              <div className="py-3">
+                <Checkbox
+                  label={t("geography")}
+                  name="geography"
+                  options={geographies}
+                  value={filter.geography}
+                  onChange={e => setFilter("geography", e)}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3 pt-3">
                 <Dropdown
                   width="w-full"
+                  anchor="left-0 bottom-10"
                   label={t("begin")}
-                  sublabel={t("begin") + ":"}
                   options={filterYears(startYear, endYear)}
                   selected={filter.begin}
                   placeholder={t("common:common.select")}
@@ -235,8 +233,8 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
                 />
                 <Dropdown
                   label={t("end")}
-                  sublabel={t("end") + ":"}
                   width="w-full"
+                  anchor="right-0 bottom-10"
                   disabled={!filter.begin}
                   options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
                   selected={filter.end}
@@ -254,19 +252,16 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
                 onChange={e => setFilter("source", e)}
               /> */}
 
-              <div className="fixed bottom-0 left-0 flex w-full gap-2 px-2 py-3">
+              <div className="fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t bg-white p-3 dark:border-washed-dark dark:bg-black">
                 <Button
-                  className="btn-primary w-full justify-center text-white"
+                  className="btn-primary w-full justify-center"
                   disabled={!actives.length}
                   onClick={reset}
                 >
                   {t("common:common.reset")}
                 </Button>
-                <Button
-                  className="w-full justify-center bg-outline py-1.5"
-                  icon={<XMarkIcon className="h-4 w-4" />}
-                  onClick={close}
-                >
+                <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
+                  <XMarkIcon className="h-5 w-5" />
                   {t("common:common.close")}
                 </Button>
               </div>

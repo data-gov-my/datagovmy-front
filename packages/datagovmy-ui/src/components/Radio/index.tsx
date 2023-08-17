@@ -17,7 +17,7 @@ const Radio: FunctionComponent<RadioProps> = ({
   options,
   value,
   onChange,
-  className = "space-y-1 pt-2",
+  className = "flex flex-wrap gap-x-4.5 gap-y-2.5 pt-2",
 }) => {
   return (
     <div>

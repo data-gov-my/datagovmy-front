@@ -265,30 +265,27 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             {close => (
               <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[105px] flex h-max flex-col divide-y overflow-y-auto bg-white dark:bg-black">
                 <div className="py-3">
-                  <Label label={t("period")} />
                   <Radio
                     name="period"
-                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    label={t("period")}
                     options={periods}
                     value={filter.period}
                     onChange={e => setFilter("period", e)}
                   />
                 </div>
                 <div className="py-3">
-                  <Label label={t("geography")} />
                   <Checkbox
-                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
                     name="geography"
+                    label={t("geography")}
                     options={geographies}
                     value={filter.geography}
                     onChange={e => setFilter("geography", e)}
                   />
                 </div>
                 <div className="py-3">
-                  <Label label={t("demography")} />
                   <Checkbox
-                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
                     name="demography"
+                    label={t("demography")}
                     options={demographies}
                     value={filter.demography}
                     onChange={e => setFilter("demography", e)}
