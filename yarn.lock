@@ -2431,10 +2431,17 @@
     "@typescript-eslint/types" "5.59.9"
     eslint-visitor-keys "^3.3.0"
 
-"@vercel/edge@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.npmjs.org/@vercel/edge/-/edge-0.3.4.tgz#4b88bc202e1ba3b70096b588219b57fe82c4a5de"
-  integrity sha512-dFU+yAUDQRwpuRGxRDlEO1LMq0y1LGsBgkyryQWe4w15/Fy2/lCnpvdIoAhHl3QvIGAxCLHzwRHsqfLRdpxgJQ==
+"@vercel/edge-config-fs@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@vercel/edge-config-fs/-/edge-config-fs-0.1.0.tgz#cda8327f611418c1d1cbb28c6bed02d782be928b"
+  integrity sha512-NRIBwfcS0bUoUbRWlNGetqjvLSwgYH/BqKqDN7vK1g32p7dN96k0712COgaz6VFizAm9b0g6IG6hR6+hc0KCPg==
+
+"@vercel/edge-config@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.npmjs.org/@vercel/edge-config/-/edge-config-0.2.1.tgz#d7f16510026fbbebfa5380566e786e9bd3ac297a"
+  integrity sha512-847kYqJEbga4PGgNrctQ9XsD+2Kw/S+UjzZnIFpebQ9VbdtB0MX4anq33WetcYZYPfhZd2L0uXVnY/BcjI5dOw==
+  dependencies:
+    "@vercel/edge-config-fs" "0.1.0"
 
 "@vitejs/plugin-react@^3.0.1":
   version "3.1.0"

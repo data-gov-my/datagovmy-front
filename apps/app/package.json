@@ -21,7 +21,7 @@
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.8.5",
     "@types/react-window": "^1.8.5",
-    "@vercel/edge": "^0.3.4",
+    "@vercel/edge-config": "^0.2.1",
     "axios": "^0.27.2",
     "canvas2svg": "^1.0.16",
     "chart.js": "^3.9.1",
