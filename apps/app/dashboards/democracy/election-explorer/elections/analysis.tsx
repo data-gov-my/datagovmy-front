@@ -117,8 +117,8 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
   return (
     <div className="grid grid-cols-12 py-8 lg:py-12">
       <div className="col-span-full col-start-1 xl:col-span-10 xl:col-start-2">
-        <h4 className="py-4 text-center">{t("header_3")}</h4>
-        <div className="flex justify-end pb-3 lg:pb-6">
+        <h4 className="text-center">{t("header_3")}</h4>
+        <div className="flex justify-end py-3 lg:py-6">
           <List
             options={[t("table"), t("map")]}
             icons={[

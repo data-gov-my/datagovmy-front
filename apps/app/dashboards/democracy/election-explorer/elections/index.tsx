@@ -228,7 +228,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
   return (
     <Container>
       {/* Explore any election from Merdeka to the present! */}
-      <Section>
+      <Section className="pt-8 lg:pt-12">
         <h4 className="text-center">{t("header_1")}</h4>
 
         {/* Mobile */}
@@ -482,20 +482,21 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             </Tabs.Panel>
           ))}
         </Tabs>
+        <hr className="dark:bg-washed-dark bg-outline h-px mt-8 lg:mt-12"></hr>
+        {/* View the full ballot for a specific seat */}
+        <BallotSeat
+          seats={data.seats}
+          state={filter.state ?? "mys"}
+          election={data.election_fullname}
+        />
+        <hr className="dark:bg-washed-dark bg-outline h-px"></hr>
+        {/* Election analysis */}
+        <ElectionAnalysis
+          state={filter.state ?? "mys"}
+          index={data.toggle_index}
+          seats={data.seats}
+        />
       </Section>
-      {/* View the full ballot for a specific seat */}
-      <BallotSeat
-        seats={data.seats}
-        state={filter.state ?? "mys"}
-        election={data.election_fullname}
-      />
-
-      {/* Election analysis */}
-      <ElectionAnalysis
-        state={filter.state ?? "mys"}
-        index={data.toggle_index}
-        seats={data.seats}
-      />
     </Container>
   );
 };

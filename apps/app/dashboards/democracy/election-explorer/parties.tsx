@@ -218,7 +218,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
               title={
                 <span className="text-lg leading-9">
                   <ImageWithFallback
-                    className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
+                    className="border-outline dark:border-washed-dark mr-2 inline-block rounded border"
                     src={`/static/images/parties/${filter.name ?? DEFAULT_PARTY}.png`}
                     width={32}
                     height={18}
