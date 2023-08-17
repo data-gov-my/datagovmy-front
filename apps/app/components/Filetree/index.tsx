@@ -1,15 +1,16 @@
 import Folder from "./folder";
 import { clx } from "datagovmy-ui/helpers";
-import { FunctionComponent, useRef } from "react";
+import { FunctionComponent, useContext, useRef } from "react";
 import File from "./file";
-import { FileNode, FileNodeInterface, FileType, FiletreeProvider } from "./utils";
+import { FileNode, FileNodeInterface, FileType, FiletreeContext, FiletreeProvider } from "./utils";
 
 interface TreeNodeProps {
-  node: FileNode;
+  node?: FileNode;
 }
 
 // Recursive component to render a node and its children
 const TreeNode: FunctionComponent<TreeNodeProps> = ({ node }) => {
+  if (!node) return;
   if (node.name === "root") {
     // Don't render the root node as a selectable item
     return (
@@ -42,37 +43,30 @@ const TreeNode: FunctionComponent<TreeNodeProps> = ({ node }) => {
 
 interface FiletreeProps {
   className?: string;
-  model: string;
 }
 
-const Filetree: FunctionComponent<FiletreeProps> = ({ className, model }) => {
-  const fm = useRef<FileNodeInterface>(null);
+const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
+  const { tree, active, create } = useContext(FiletreeContext);
+
   return (
-    <>
+    <div className="dark:border-r-washed-dark hidden h-[90vh] flex-col justify-between border-r lg:flex lg:w-1/4 xl:w-1/5">
       <div className="flex">
-        <button
-          className="btn-primary"
-          onClick={() => fm.current && fm.current.create(FileType.FILE)}
-        >
+        <button className="btn-primary" onClick={() => create(FileType.FILE)}>
           New chat
         </button>
-        <button
-          className="btn-default"
-          onClick={() => fm.current && fm.current.create(FileType.FOLDER)}
-        >
+        <button className="btn-default" onClick={() => create(FileType.FOLDER)}>
           New folder
         </button>
       </div>
 
-      <ul
-        className={clx(className, "flex grow flex-col gap-2 pr-3")}
-        onClick={() => fm.current && fm.current.tree && fm.current.setActive(fm.current.tree)}
-      >
-        <FiletreeProvider ref={fm} model={model}>
-          {tree => tree && <TreeNode node={tree} />}
-        </FiletreeProvider>
+      <ul className={clx("flex grow flex-col gap-2 overflow-auto pr-3")}>
+        <TreeNode node={tree} />
       </ul>
-    </>
+      <div className="border-t py-3">
+        <p className="py-2">clear conversations</p>
+        <p className="py-2">settings</p>
+      </div>
+    </div>
   );
 };
 

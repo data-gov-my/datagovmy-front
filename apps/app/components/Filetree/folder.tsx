@@ -26,7 +26,7 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node, children }) =
   };
 
   return (
-    <Disclosure>
+    <Disclosure defaultOpen>
       {({ open }) => (
         <>
           <Disclosure.Button

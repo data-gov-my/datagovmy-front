@@ -1,3 +1,4 @@
+import emitter from "@lib/events";
 import { IndexedDB } from "@lib/idb";
 import { useWatch } from "datagovmy-ui/hooks";
 import {
@@ -30,7 +31,7 @@ export class FileNode {
     public name: string,
     public type: FileType,
     public children: FileNode[] = [],
-    public parent: FileNode | null,
+    public parent: FileNode | undefined | null,
     id?: string
   ) {
     this.id = id !== undefined ? id : this.uuid(parent === null);
@@ -152,7 +153,7 @@ interface FiletreeContextProps extends FileNodeInterface {
 
 export interface FileNodeInterface {
   tree: FileNode | undefined;
-  create: (type: FileType) => void;
+  create: (type: FileType) => FileNode | null;
   destroy: (node: FileNode) => void;
   rename: (node: FileNode, rename: string) => void;
   setActive: (node: FileNode) => void;
@@ -160,15 +161,15 @@ export interface FileNodeInterface {
 
 interface FiletreeProviderProps {
   model: string;
-  children: (tree?: FileNode) => ReactNode;
-  ref: ForwardedRef<FileNodeInterface>;
+  children: ReactNode;
+  ref?: ForwardedRef<FileNodeInterface>;
 }
 
 export const FiletreeContext = createContext<FiletreeContextProps>({
   tree: undefined,
   active: undefined,
   setActive: () => {},
-  create: () => {},
+  create: () => null,
   destroy: () => {},
   rename: () => {},
 });
@@ -195,10 +196,12 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
           setActive(FileNode.deserialize(tree));
         } else {
           const root = new FileNode("root", FileType.FOLDER, [], null);
-          root.children.push(new FileNode("New chat", FileType.FILE, [], root));
+          const child = new FileNode("New chat", FileType.FILE, [], root);
+          root.children.push(child);
           setTree(root);
-          setActive(root);
+          setActive(child);
 
+          emitter.emit("chat-create", child.id);
           root.save(idb);
         }
       });
@@ -210,6 +213,12 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
 
     /** Public functions */
     const create = (type: FileType) => {
+      const new_node = new FileNode(
+        type === FileType.FOLDER ? "New folder" : "New chat",
+        type,
+        [],
+        undefined
+      );
       setTree(_root => {
         if (!_root || !active) return;
         const _tree = _root.clone();
@@ -221,16 +230,22 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
             break;
           case FileType.FILE:
             _node = FileNode.find(_tree, active.parent?.id || _root.id);
-          default:
             break;
         }
 
         if (!_node || _node === null) return _tree;
-        _node.children.push(
-          new FileNode(type === FileType.FOLDER ? "New folder" : "New chat", type, [], _node)
-        );
+
+        new_node.parent = _node;
+        _node.children.push(new_node);
+        setActive(new_node);
+        if (new_node.type === FileType.FILE) {
+          console.log("is this running");
+          emitter.emit("chat-create", new_node.id);
+        }
         return _tree;
       });
+
+      return new_node;
     };
 
     const destroy = (node: FileNode) => {
@@ -238,8 +253,11 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
         if (!_root) return;
         const _tree = _root.clone();
         deleteNode(_tree, node.id);
+        setActive(_tree);
         return _tree;
       });
+
+      emitter.emit("chat-delete", node.id);
     };
 
     const rename = (node: FileNode, rename: string) => {
@@ -257,6 +275,7 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
       return { tree, create, destroy, rename, setActive };
     });
 
+    /** Private functions */
     const deleteNode = (root: FileNode, id: string) => {
       if (root === null) {
         return; // Empty tree
@@ -282,7 +301,7 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
           rename,
         }}
       >
-        {children(tree)}
+        {children}
       </FiletreeContext.Provider>
     );
   }

@@ -1,5 +1,6 @@
+import Chat from "@components/Chat";
 import Filetree from "@components/Filetree";
-import { FileNode, FileType } from "@components/Filetree/utils";
+import { FileNode, FileType, FiletreeProvider } from "@components/Filetree/utils";
 import { BuildingLibraryIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import {
   AgencyBadge,
@@ -50,41 +51,16 @@ interface CatalogueChatProps {
 
 const CatalogueChat: FunctionComponent<CatalogueChatProps> = () => {
   const { t } = useTranslation(["catalogue", "common"]);
-  //   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
-  //   const filterRef = useRef<CatalogueFilterRef>(null);
-  //   const { size } = useContext(WindowContext);
-  //   const sourceOptions = sources.map(source => ({
-  //     label: source,
-  //     value: source,
-  //   }));
-
-  //   const _collection = useMemo<Array<[string, any]>>(() => {
-  //     const resultCollection: Array<[string, Catalogue[]]> = [];
-  //     Object.entries(collection).forEach(([category, subcategory]) => {
-  //       Object.entries(subcategory).forEach(([subcategory_title, datasets]) => {
-  //         resultCollection.push([`${category}: ${subcategory_title}`, datasets as Catalogue[]]);
-  //       });
-  //     });
-
-  //     return resultCollection;
-  //   }, [collection]);
 
   return (
-    <>
-      <Container className="min-h-screen">
+    <FiletreeProvider model="chat-directory">
+      <Container>
         <div className="flex w-full flex-row">
-          {/* Desktop */}
-          <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/4 xl:w-1/5">
-            <Filetree
-              model="chat-directory"
-              className="top-14 flex h-[100vh] flex-col gap-2 overflow-auto pt-3"
-            />
-          </div>
-
-          <div></div>
+          <Filetree />
+          <Chat model="chat-history" />
         </div>
       </Container>
-    </>
+    </FiletreeProvider>
   );
 };
 

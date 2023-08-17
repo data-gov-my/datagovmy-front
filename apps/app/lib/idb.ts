@@ -3,12 +3,14 @@
  */
 export class IndexedDB {
   private static DATABASE = "datagovmy-db";
-  private static VERSION = 20230905;
+  private static VERSION = 1;
+  private static MODELS = ["chat-directory", "chat-history"];
   model: string;
   db: IDBDatabase | null = null;
 
   constructor(model: string) {
     this.model = model;
+    this.open();
   }
 
   /** Public methods */
@@ -30,7 +32,7 @@ export class IndexedDB {
     });
   }
 
-  async read(id: string): Promise<Record<string, any>> {
+  async read<T extends Record<string, any>>(id: string): Promise<T | undefined> {
     const db = await this.open();
     const transaction = db.transaction([this.model], "readonly");
     const store = transaction.objectStore(this.model);
@@ -55,6 +57,24 @@ export class IndexedDB {
 
     return new Promise((resolve, reject) => {
       const request = store.put(record);
+
+      request.onsuccess = () => {
+        resolve();
+      };
+
+      request.onerror = event => {
+        reject(request.error);
+      };
+    });
+  }
+
+  async destroy(id: string): Promise<void> {
+    const db = await this.open();
+    const transaction = db.transaction([this.model], "readwrite");
+    const store = transaction.objectStore(this.model);
+
+    return new Promise((resolve, reject) => {
+      const request = store.delete(id);
 
       request.onsuccess = () => {
         resolve();
@@ -100,8 +120,9 @@ export class IndexedDB {
 
       request.onupgradeneeded = event => {
         const db = request.result as IDBDatabase;
-        if (!db.objectStoreNames.contains(this.model)) {
-          db.createObjectStore(this.model, { keyPath: "id" });
+
+        for (const model of IndexedDB.MODELS) {
+          if (!db.objectStoreNames.contains(model)) db.createObjectStore(model, { keyPath: "id" });
         }
       };
     });
