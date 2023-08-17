@@ -4,7 +4,12 @@ import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode } from "react";
-import { BookOpenIcon, CalendarIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import {
+  BookOpenIcon,
+  CalendarIcon,
+  DocumentTextIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/20/solid";
 
 /**
  * Publications Layout
@@ -31,9 +36,14 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
       url: routes.PUBLICATIONS.concat("/upcoming"),
     },
     {
-      name: t("documentation"),
+      name: t("technical_notes"),
+      icon: <DocumentTextIcon className="mr-1 h-5 w-5" />,
+      url: routes.PUBLICATIONS.concat("/technical-notes"),
+    },
+    {
+      name: t("data_dictionaries"),
       icon: <BookOpenIcon className="mr-1 h-5 w-5" />,
-      url: routes.PUBLICATIONS.concat("/documentation"),
+      url: routes.PUBLICATIONS.concat("/data-dictionaries"),
     },
   ];
 

@@ -1,10 +1,13 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { Button, Container, Panel, Section, Tabs } from "datagovmy-ui/components";
+import { get } from "datagovmy-ui/api";
+import { TableConfig } from "datagovmy-ui/charts/table";
+import { Button, Container, Panel, Section, Tabs, Tooltip, toast } from "datagovmy-ui/components";
 import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
-import { clx } from "datagovmy-ui/helpers";
+import { clx, toDate } from "datagovmy-ui/helpers";
 import { useCache, useData, useTranslation } from "datagovmy-ui/hooks";
 import chunk from "lodash/chunk";
+import dynamic from "next/dynamic";
 import { FunctionComponent, useContext, useMemo, useRef } from "react";
 
 /**
@@ -12,7 +15,21 @@ import { FunctionComponent, useContext, useMemo, useRef } from "react";
  * @overview Status: In-development
  */
 
-interface UpcomingPublicationsProps {}
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
+  ssr: false,
+});
+
+type UpcomingPublication = {
+  publication_id: string;
+  publication_title: string;
+  product_type: string;
+  release_date: string;
+  release_series: string;
+};
+
+interface UpcomingPublicationsProps {
+  publications: UpcomingPublication[];
+}
 
 type ScheduledPub = {
   day: number;
@@ -21,8 +38,11 @@ type ScheduledPub = {
   pubs: string[];
 };
 
-const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps> = ({}) => {
+const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps> = ({
+  publications,
+}) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
+  const { cache } = useCache();
   const desktopRef = useRef<Record<string, HTMLElement | null>>({});
   const mobileRef = useRef<Record<string, HTMLElement | null>>({});
   const { size } = useContext(WindowContext);
@@ -33,6 +53,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   const thisYear = today.getFullYear();
   const daysInWeek: string[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const { data, setData } = useData({
+    pubs: publications,
     month: thisMonth,
     year: thisYear,
   });
@@ -54,11 +75,13 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       });
     }
     for (let i = 1; i <= daysInCurrMonth; i++) {
+      const date = `${data.year}-${data.month}-${i.toString().padStart(2, "0")}`;
+      console.log(date);
       const pub: ScheduledPub = {
         day: i,
         month: data.month,
         year: data.year,
-        pubs: [dummy, dummy],
+        pubs: [dummy],
       };
       desktop.push(pub);
       mobile.push(pub);
@@ -75,6 +98,54 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
 
     return { desktop: chunk(desktop, 7), mobile };
   }, [data.month]);
+
+  const fetchUpcoming = async (l: string): Promise<UpcomingPublication[]> => {
+    const identifier = `${l}_${i18n.language}`;
+    return new Promise(resolve => {
+      if (cache.has(identifier)) return resolve(cache.get(identifier));
+      get(`/pub-upcoming/${l}`, {
+        language: i18n.language,
+      })
+        .then(({ data }: { data: UpcomingPublication[] }) => {
+          cache.set(identifier, data);
+          resolve(data);
+        })
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        });
+    });
+  };
+
+  const config: TableConfig[] = [
+    {
+      accessorKey: "publication_title",
+      id: "title",
+      header: t("table.title"),
+      enableSorting: false,
+      className: "max-sm:max-w-[300px]",
+    },
+    {
+      accessorKey: "product_type",
+      id: "product_type",
+      header: t("table.product_type"),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "release_series",
+      id: "release_series",
+      header: t("table.release_series"),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "release_date",
+      id: "release_date",
+      header: t("table.release_date"),
+      cell: ({ getValue }) => {
+        return <>{toDate(getValue(), "dd MMM yyyy", i18n.language)}</>;
+      },
+    },
+  ];
 
   return (
     <Container className="min-h-screen">
@@ -108,14 +179,15 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                     setData("month", thisMonth);
                     setData("year", thisYear);
                     setTimeout(() => {
+                      const today = `${thisYear}-${thisMonth}-${thisDate}`;
                       if (size.width >= BREAKPOINTS.LG)
-                        desktopRef.current[`${thisDate}_${thisMonth}_${thisYear}`]?.scrollIntoView({
+                        desktopRef.current[today]?.scrollIntoView({
                           behavior: "smooth",
                           block: "center",
                           inline: "end",
                         });
                       else
-                        mobileRef.current[`${thisDate}_${thisMonth}_${thisYear}`]?.scrollIntoView({
+                        mobileRef.current[today]?.scrollIntoView({
                           behavior: "smooth",
                           block: "center",
                           inline: "end",
@@ -159,112 +231,124 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 <tbody className="divide-y dark:divide-washed-dark">
                   {calendar.desktop.map((week, i) => (
                     <tr key={i} className="divide-x dark:divide-washed-dark">
-                      {week.map(date => (
-                        <td
-                          key={`${date.day}_${date.month}`}
-                          ref={ref => {
-                            if (date.month === thisMonth && date.day === thisDate) {
-                              desktopRef.current[`${date.day}_${date.month}_${date.year}`] = ref;
-                            }
-                          }}
-                          className={clx(
-                            "min-w-[150px] px-3 py-2 lg:h-32",
-                            date.month !== data.month && "bg-background dark:bg-black",
-                            date.month === thisMonth && date.day === thisDate && "bg-primary/5"
-                          )}
-                        >
-                          <div className="flex h-full flex-col justify-start gap-1.5">
-                            <div className="relative flex items-center justify-between">
-                              <div className="text-primary dark:text-primary-dark">
-                                {date.year === thisYear &&
-                                  date.month === thisMonth &&
-                                  date.day === thisDate &&
-                                  t("today")}
-                              </div>
-                              <span
-                                className={clx(
-                                  date.month !== data.month
-                                    ? "text-dim"
-                                    : "text-black dark:text-white",
-                                  date.year === thisYear &&
-                                    date.month === thisMonth &&
-                                    date.day === thisDate &&
-                                    "absolute right-0 top-0 h-6 rounded-full bg-primary px-2 text-white dark:bg-primary-dark"
-                                )}
-                              >
-                                {date.day}{" "}
-                                {date.day === 1 &&
-                                  new Date(data.year, date.month).toLocaleString(i18n.language, {
-                                    month: "short",
-                                  })}
-                              </span>
-                            </div>
-                            {date.pubs &&
-                              date.pubs.map(pub => (
-                                <div className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white">
-                                  {pub}
+                      {week.map(date => {
+                        const today = `${date.year}-${date.month}-${date.day}`;
+                        const isToday = `${thisYear}-${thisMonth}-${thisDate}` === today;
+                        const notThisMonth = date.month !== data.month;
+                        return (
+                          <td
+                            key={today}
+                            ref={ref => {
+                              if (isToday) {
+                                desktopRef.current[today] = ref;
+                              }
+                            }}
+                            className={clx(
+                              "min-w-[150px] px-3 py-2 lg:h-32",
+                              notThisMonth && "bg-background dark:bg-black",
+                              isToday && "bg-primary/5"
+                            )}
+                          >
+                            <div className="flex h-full flex-col justify-start gap-1.5">
+                              <div className="relative flex items-center justify-between">
+                                <div className="text-primary dark:text-primary-dark">
+                                  {isToday && t("today")}
                                 </div>
-                              ))}
-                          </div>
-                        </td>
-                      ))}
+                                <span
+                                  className={clx(
+                                    notThisMonth ? "text-dim" : "text-black dark:text-white",
+                                    isToday &&
+                                      "absolute right-0 top-0 h-6 rounded-full bg-primary px-2 text-white dark:bg-primary-dark"
+                                  )}
+                                >
+                                  {date.day}{" "}
+                                  {date.day === 1 &&
+                                    new Date(data.year, date.month).toLocaleString(i18n.language, {
+                                      month: "short",
+                                    })}
+                                </span>
+                              </div>
+                              {date.pubs &&
+                                date.pubs.map(pub => (
+                                  <Tooltip tip={pub}>
+                                    {() => (
+                                      <div
+                                        key={i}
+                                        className="h-6 w-full cursor-help truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
+                                      >
+                                        {pub}
+                                      </div>
+                                    )}
+                                  </Tooltip>
+                                ))}
+                            </div>
+                          </td>
+                        );
+                      })}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <div className="grid grid-cols-1 gap-3 md:max-lg:grid-cols-2 lg:hidden">
-              {calendar.mobile.map(date => (
-                <div
-                  key={`${date.day}_${date.month}`}
-                  ref={ref => {
-                    if (date.month === thisMonth && date.day === thisDate) {
-                      mobileRef.current[`${date.day}_${date.month}_${date.year}`] = ref;
-                    }
-                  }}
-                  className={clx(
-                    "h-32 min-w-[150px] rounded-xl border border-outline px-3 py-2 dark:border-washed-dark",
-                    date.year === thisYear &&
-                      date.month === thisMonth &&
-                      date.day === thisDate &&
-                      "bg-primary/5"
-                  )}
-                >
-                  <div className="flex h-full flex-col justify-start gap-1.5">
-                    <div className="relative flex items-center justify-between">
-                      <div className="text-primary dark:text-primary-dark">
-                        {date.year === thisYear &&
-                          date.month === thisMonth &&
-                          date.day === thisDate &&
-                          t("today")}
-                      </div>
-                      <span
-                        className={clx(
-                          "text-black dark:text-white",
-                          date.year === thisYear &&
-                            date.month === thisMonth &&
-                            date.day === thisDate &&
-                            "absolute right-0 top-0 h-6 rounded-full bg-primary px-2 text-white dark:bg-primary-dark"
-                        )}
-                      >
-                        {date.day}
-                      </span>
-                    </div>
-                    {date.pubs &&
-                      date.pubs.map((pub, i) => (
-                        <div
-                          key={i}
-                          className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
-                        >
-                          {pub}
+              {calendar.mobile.map(date => {
+                const today = `${date.year}-${date.month}-${date.day}`;
+                const isToday = `${thisYear}-${thisMonth}-${thisDate}` === today;
+                return (
+                  <div
+                    key={today}
+                    ref={ref => {
+                      if (isToday) {
+                        mobileRef.current[today] = ref;
+                      }
+                    }}
+                    className={clx(
+                      "h-32 min-w-[150px] rounded-xl border border-outline px-3 py-2 dark:border-washed-dark",
+                      isToday && "bg-primary/5"
+                    )}
+                  >
+                    <div className="flex h-full flex-col justify-start gap-1.5">
+                      <div className="relative flex items-center justify-between">
+                        <div className="text-primary dark:text-primary-dark">
+                          {isToday && t("today")}
                         </div>
-                      ))}
+                        <span
+                          className={clx(
+                            "text-black dark:text-white",
+                            isToday &&
+                              "absolute right-0 top-0 h-6 rounded-full bg-primary px-2 text-white dark:bg-primary-dark"
+                          )}
+                        >
+                          {date.day}
+                        </span>
+                      </div>
+                      {date.pubs &&
+                        date.pubs.map((pub, i) => (
+                          <Tooltip tip={pub}>
+                            {() => (
+                              <div
+                                key={i}
+                                className="h-6 w-full cursor-help truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
+                              >
+                                {pub}
+                              </div>
+                            )}
+                          </Tooltip>
+                        ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Panel>
-          <Panel name={t("list_view")} key={"list_view"}></Panel>
+          <Panel name={t("list_view")} key={"list_view"}>
+            <Table
+              className="md:w-full"
+              data={publications}
+              enablePagination={publications.length > 15 ? 15 : false}
+              config={config}
+            />
+          </Panel>
         </Tabs>
       </Section>
     </Container>

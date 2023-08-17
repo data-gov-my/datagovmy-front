@@ -1,10 +1,11 @@
-import { Dialog, Transition } from "@headlessui/react";
+import PublicationCard from "@components/Publication/Card";
+import PublicationModal from "@components/Publication/Modal";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import { routes } from "@lib/routes";
 import { get } from "datagovmy-ui/api";
 import { TableConfig } from "datagovmy-ui/charts/table";
 import {
-  At,
   Button,
   Checkbox,
   ComboBox,
@@ -14,21 +15,18 @@ import {
   Modal,
   Panel,
   Radio,
-  Search,
   Section,
   Spinner,
   Tabs,
   toast,
 } from "datagovmy-ui/components";
-import { body } from "datagovmy-ui/configs/font";
-import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
+import { toDate } from "datagovmy-ui/helpers";
 import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
-import { ExcelIcon, PDFIcon } from "datagovmy-ui/icons";
 import { OptionType } from "datagovmy-ui/types";
 import { matchSorter } from "match-sorter";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { Fragment, FunctionComponent, useEffect, useMemo, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 /**
  * Publications
@@ -47,7 +45,7 @@ export type Publication = {
   title: string;
 };
 
-type Resource = {
+export type Resource = {
   resource_id: number;
   resource_name: string;
   resource_link: string;
@@ -57,6 +55,7 @@ type Resource = {
 interface BrowsePublicationsProps {
   dropdown: Array<{ publication_type: string; publication_type_title: string }>;
   publications: Publication[];
+  params: any;
   query: any;
   total_pubs: number;
 }
@@ -64,26 +63,24 @@ interface BrowsePublicationsProps {
 const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = ({
   dropdown,
   publications,
+  params,
   query,
   total_pubs,
 }) => {
   const { t, i18n } = useTranslation(["publications", "catalogue", "common"]);
   const { cache } = useCache();
-  const { events } = useRouter();
+  const { push, events } = useRouter();
   const [show, setShow] = useState<boolean>(false);
   const ITEMS_PER_PAGE = 15;
   const { data, setData } = useData({
     loading: false,
-    pub_idx: 0,
+    pub: "",
     publication_option: query.pub_type,
-    query: "",
-    res: [],
-    table_page_idx: 0,
   });
 
   const filteredRes = useMemo(
-    () => matchSorter(data.res, data.query, { keys: ["resource_name"] }),
-    [data.res, data.query]
+    () => matchSorter(data.pub ? data.pub.resources : [], data.query, { keys: ["resource_name"] }),
+    [data.pub, data.query]
   );
 
   const PUBLICATION_OPTIONS: OptionType[] = dropdown.map(e => ({
@@ -118,7 +115,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     { label: t("catalogue:filter_options.marital"), value: "MARITAL" },
   ];
 
-  const { filter, setFilter, actives } = useFilter({
+  const { filter, setFilter, actives, queries } = useFilter({
     demography: query.demography
       ? demographies.filter(item => query.demography.split(",").includes(item.value))
       : [],
@@ -128,32 +125,29 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     geography: query.geography
       ? geographies.filter(item => query.geography.split(",").includes(item.value))
       : [],
-    page: query.page ?? "1",
-    // page_size: query.page_size ?? `${ITEMS_PER_PAGE}`,
+    page: query.page ?? "",
     pub_type: query.pub_type
       ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
       : undefined,
-    pub_id: query.pub_id,
   });
 
   const reset = () => {
     setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
-    setFilter("pub_id", undefined);
     setFilter("pub_type", undefined);
     setData("publication_option", undefined);
   };
 
   const fetchResource = async (publication_id: string): Promise<Resource[]> => {
+    const identifier = `${publication_id}_${i18n.language}`;
     return new Promise(resolve => {
-      if (cache.has(publication_id)) return resolve(cache.get(publication_id));
+      if (cache.has(identifier)) return resolve(cache.get(identifier));
       get(`/publication-resource/${publication_id}`, {
         language: i18n.language,
       })
         .then(({ data }: { data: Resource[] }) => {
-          cache.set(publication_id, data);
-          setFilter("pub_id", publication_id);
+          cache.set(identifier, data);
           resolve(data);
         })
         .catch(e => {
@@ -175,10 +169,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           <Button
             className="link-primary font-normal"
             onClick={() => {
-              console.log(row.index);
               setShow(true);
-              setData("pub_idx", row.index);
-              fetchResource(row.original.publication_id).then(data => setData("res", data));
+              push(routes.PUBLICATIONS.concat("/", row.original.publication_id), undefined, {
+                scroll: false,
+              });
             }}
           >
             {getValue()}
@@ -207,45 +201,9 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     },
   ];
 
-  const resConfig: TableConfig[] = [
-    {
-      accessorKey: "resource_name",
-      id: "resource_name",
-      header: t("subject"),
-      enableSorting: false,
-    },
-    {
-      accessorKey: "resource_link",
-      id: "download_link",
-      header: t("file_download"),
-      enableSorting: false,
-      cell: ({ row, getValue }) => {
-        return (
-          <At external href={getValue()} className="link-primary font-normal">
-            {row.original.resource_type === "excel" ? (
-              <ExcelIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
-            ) : (
-              <PDFIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
-            )}
-            {t("download", { context: row.original.resource_type })}
-          </At>
-        );
-      },
-    },
-    {
-      accessorKey: "downloads",
-      id: "downloads",
-      header: t("downloads"),
-    },
-  ];
-
   useEffect(() => {
-    if (query.pub_id) {
-      setData(
-        "pub_idx",
-        publications.findIndex(e => e.publication_id === query.pub_id)
-      );
-      fetchResource(query.pub_id).then(data => setData("res", data));
+    if (params.pub_id) {
+      fetchResource(params.pub_id).then(data => setData("pub", data));
       setShow(true);
     }
     events.on("routeChangeComplete", () => setData("loading", false));
@@ -295,12 +253,11 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             title={<Label label={t("catalogue:filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="mb-[105px] flex h-[400px] flex-col divide-y overflow-y-auto px-4.5 pb-4.5 dark:divide-washed-dark">
+              <div className="mb-[105px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 dark:divide-washed-dark dark:bg-black">
                 <div className="py-3">
-                  <Label label={t("catalogue:frequency")} />
                   <Radio
                     name="frequency"
-                    className="flex flex-wrap gap-x-4.5 gap-y-2.5 py-2"
+                    label={t("catalogue:frequency")}
                     options={frequencies}
                     value={filter.frequency}
                     onChange={e => {
@@ -310,10 +267,9 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   />
                 </div>
                 <div className="py-3">
-                  <Label label={t("catalogue:geography")} />
                   <Checkbox
-                    className="flex flex-wrap gap-x-4.5 gap-y-2.5 py-2"
                     name="geography"
+                    label={t("catalogue:geography")}
                     options={geographies}
                     value={filter.geography}
                     onChange={e => {
@@ -323,10 +279,9 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   />
                 </div>
                 <div className="py-3">
-                  <Label label={t("catalogue:demography")} />
                   <Checkbox
-                    className="flex flex-wrap gap-x-4.5 gap-y-2.5 py-2"
                     name="demography"
+                    label={t("catalogue:demography")}
                     options={demographies}
                     value={filter.demography}
                     onChange={e => {
@@ -335,7 +290,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                     }}
                   />
                 </div>
-                <div className="fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3 dark:border-washed-dark">
+                <div className="fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t bg-white p-3 dark:border-washed-dark dark:bg-black">
                   <Button
                     className="btn-primary w-full justify-center"
                     disabled={!actives.length}
@@ -398,8 +353,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             }}
           />
           {actives.length > 0 &&
-            actives.findIndex(active => !["page", "page_size", "pub_id"].includes(active[0])) !==
-              -1 && (
+            actives.findIndex(active => !["page", "page_size"].includes(active[0])) !== -1 && (
               <Button
                 className="btn-ghost group text-dim hover:text-black dark:hover:text-white"
                 disabled={!actives.length}
@@ -427,48 +381,22 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             <Panel name={t("cards_view")} key={"cards_view"}>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {publications.map((item: Publication, i: number) => (
-                  <Button
-                    key={item.publication_id}
-                    className="btn-border group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition hover:bg-background dark:hover:bg-washed-dark/50"
+                  <PublicationCard
+                    publication={item}
                     onClick={() => {
                       setShow(true);
-                      setData("pub_idx", i);
-                      setFilter("pub_type", item.publication_type);
-                      fetchResource(item.publication_id).then(data => setData("res", data));
+                      push(
+                        routes.PUBLICATIONS.concat(
+                          "/",
+                          item.publication_id,
+                          actives.length ? queries : ""
+                        ),
+                        undefined,
+                        { scroll: false }
+                      );
+                      fetchResource(item.publication_id).then(data => setData("pub", data));
                     }}
-                  >
-                    <div className="relative flex w-full items-center justify-between">
-                      <p className="text-sm uppercase text-dim">
-                        {toDate(item.release_date, "dd MMM yyyy", i18n.language)}
-                      </p>
-                      {Date.now() - Date.parse(item.release_date) < 2529000000 && (
-                        <div className="flex items-center gap-1.5 rounded-full bg-danger px-1.5 py-0.5 text-xs text-white transition-transform group-hover:-translate-x-7 group-hover:duration-300">
-                          <span className="h-2 w-2 rounded-full bg-white" />
-                          {t("new")}!
-                        </div>
-                      )}
-                      <ArrowUpRightIcon className="absolute right-2 h-5 w-5 text-dim opacity-0 transition-[opacity_transform] duration-0 group-hover:translate-x-2 group-hover:opacity-100 group-hover:duration-300" />
-                    </div>
-
-                    <div className="flex grow flex-col gap-3 overflow-hidden text-start">
-                      <div className="grow flex-wrap space-y-3">
-                        <p className="text-lg font-bold">{item.title}</p>
-                        <p className="text-sm">{item.description}</p>
-                      </div>
-                      <div className="relative w-full">
-                        <p className="text-dim transition-transform group-hover:translate-y-6">
-                          {numFormat(100000, "compact")}
-                          {100000 % 10 !== 0 ? "+ " : " "}
-                          {t("common:common.downloads", {
-                            count: 100000,
-                          })}
-                        </p>
-                        <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
-                          {t("common:components.click_to_explore")}
-                        </p>
-                      </div>
-                    </div>
-                  </Button>
+                  />
                 ))}
               </div>
             </Panel>
@@ -483,81 +411,17 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           </Tabs>
         )}
 
-        {publications.length > data.pub_idx && filteredRes && (
-          <Transition show={show} as={Fragment}>
-            <Dialog as="div" className="relative z-30" onClose={() => setShow(false)}>
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <div className="fixed inset-0 bg-black bg-opacity-25" />
-              </Transition.Child>
-
-              <div className="fixed inset-0 overflow-y-auto">
-                <div className="flex min-h-full items-center justify-center p-2 text-center">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 scale-95"
-                    enterTo="opacity-100 scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 scale-100"
-                    leaveTo="opacity-0 scale-95"
-                  >
-                    <Dialog.Panel
-                      className={clx(
-                        body.variable,
-                        "w-full max-w-4xl transform space-y-6 rounded-xl border border-outline bg-white p-6 text-left align-middle font-sans shadow-floating transition-all dark:border-outlineHover-dark dark:bg-black"
-                      )}
-                    >
-                      <Dialog.Title as="div" className="flex flex-col gap-y-1.5">
-                        <p className="pr-8 text-sm uppercase text-dim">
-                          {toDate(
-                            publications[data.pub_idx].release_date,
-                            "dd MMM yyyy",
-                            i18n.language
-                          )}
-                        </p>
-                        <p className="text-lg font-bold text-black dark:text-white">
-                          {publications[data.pub_idx].title}
-                        </p>
-                        <p className="text-sm text-black dark:text-white">
-                          {publications[data.pub_idx].description}
-                        </p>
-                        <Button
-                          className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
-                          onClick={() => setShow(false)}
-                        >
-                          <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
-                        </Button>
-                      </Dialog.Title>
-                      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-                        <h5>{t("download_list")}</h5>
-                        <Search
-                          className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark sm:w-[300px]"
-                          placeholder={t("search_subject")}
-                          onChange={q => setData("query", q)}
-                        />
-                      </div>
-                      <Table
-                        className="md:w-full"
-                        data={filteredRes}
-                        enablePagination={filteredRes.length > 10 ? 10 : false}
-                        config={resConfig}
-                        precision={0}
-                      />
-                    </Dialog.Panel>
-                  </Transition.Child>
-                </div>
-              </div>
-            </Dialog>
-          </Transition>
-        )}
+        <PublicationModal
+          id={params.pub_id}
+          publication={data.pub}
+          show={show}
+          hide={() => {
+            setShow(false);
+            push(routes.PUBLICATIONS.concat("/", actives.length ? queries : ""), undefined, {
+              scroll: false,
+            });
+          }}
+        />
 
         {total_pubs > ITEMS_PER_PAGE && (
           <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">

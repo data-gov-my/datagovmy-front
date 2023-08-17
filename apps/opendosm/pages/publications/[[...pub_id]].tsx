@@ -12,6 +12,7 @@ const BrowsePublications: Page = ({
   dropdown,
   meta,
   publications,
+  params,
   query,
   total_pubs,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -24,6 +25,7 @@ const BrowsePublications: Page = ({
         <BrowsePublicationsDashboard
           dropdown={dropdown}
           publications={publications}
+          params={params}
           query={query}
           total_pubs={total_pubs}
         />
@@ -34,7 +36,7 @@ const BrowsePublications: Page = ({
 
 export const getServerSideProps: GetServerSideProps = withi18n(
   ["publications", "catalogue"],
-  async ({ locale, query }) => {
+  async ({ locale, query, params }) => {
     try {
       const [{ data: dropdown }, { data }] = await Promise.all([
         get("/publication-dropdown", {
@@ -47,6 +49,14 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       ]).catch(e => {
         throw new Error("Invalid filter. Message: " + e);
       });
+
+      // let resource;
+      // console.log(params.pub_id[0])
+      // if (params.pub_id[0]) {
+      //   resource = await get(`/publication-resource/${params.pub_id[0]}`, {
+      //     language: locale,
+      //   });
+      // }
 
       return {
         notFound: false,
@@ -63,6 +73,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
               (a: Publication, b: Publication) =>
                 Date.parse(b.release_date) - Date.parse(a.release_date)
             ) ?? [],
+          params: params,
           query: query ?? {},
           total_pubs: data.count,
         },
