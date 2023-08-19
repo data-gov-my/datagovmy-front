@@ -5,7 +5,7 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "packages/datagovmy-lambda/*",
+    "lambda/*",
     "tests/*"
   ],
   "scripts": {
