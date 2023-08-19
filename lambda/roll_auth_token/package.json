@@ -1,0 +1,16 @@
+{
+  "name": "roll_auth_token",
+  "description": "Lambda function that rolls authentication token for datagovmy services",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "index.mjs"
+  ],
+  "scripts": {
+    "package": "zip -r ./dist/package.zip * -x dist/* -x .env*"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}

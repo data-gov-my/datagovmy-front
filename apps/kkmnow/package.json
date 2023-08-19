@@ -21,6 +21,7 @@
     "@heroicons/react": "^2.0.11",
     "@tanstack/match-sorter-utils": "^8.1.1",
     "@tanstack/react-table": "^8.5.2",
+    "@vercel/edge-config": "^0.2.1",
     "axios": "^0.27.2",
     "datagovmy-ui": "*",
     "i18next-http-backend": "^2.2.0",
