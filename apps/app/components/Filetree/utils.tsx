@@ -274,7 +274,9 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
 
     const reset = () => {
       emitter.emit("chat-reset");
-      setTree(new FileNode("root", FileType.FOLDER, [], null, "root"));
+      const root = new FileNode("root", FileType.FOLDER, [], null, "root");
+      root.save(idb);
+      setTree(root);
     };
 
     /** Ref functions */

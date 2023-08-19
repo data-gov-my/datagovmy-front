@@ -1,7 +1,7 @@
-import { FunctionComponent, useContext, useEffect, useRef } from "react";
+import { FunctionComponent, useContext, useEffect, useRef, useState } from "react";
 import { BoltIcon } from "@heroicons/react/24/outline";
 import { ChatContext, ChatProvider, ChatType } from "./utils";
-import { useData } from "datagovmy-ui/hooks";
+import { clx } from "datagovmy-ui/helpers";
 import ChatBubble from "./bubble";
 import ChatInput from "./input";
 
@@ -12,7 +12,7 @@ interface ChatProps {
 const Chat: FunctionComponent<ChatProps> = ({ model }) => {
   return (
     <ChatProvider model={model}>
-      <div className="mx-auto w-full max-w-screen-md">
+      <div className="mx-auto h-[90vh] w-full max-w-screen-md">
         <ActiveState />
         <EmptyState />
       </div>
@@ -49,6 +49,7 @@ const ActiveState: FunctionComponent = () => {
 
 const EmptyState: FunctionComponent = () => {
   const { session } = useContext(ChatContext);
+  const [show, setShow] = useState<boolean>(false);
 
   const features = {
     examples: [
@@ -68,16 +69,16 @@ const EmptyState: FunctionComponent = () => {
   if (session && session?.chats.length > 0) return;
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8">
+    <div className="flex h-full flex-col items-center justify-center gap-8 py-6">
       <div className="flex flex-row items-center justify-center gap-6">
-        <div className="bg-primary dark:bg-primary-dark shadow-primary flex aspect-square w-12 items-center justify-center rounded-lg shadow-2xl">
-          <BoltIcon className="h-8 w-8 text-white" />
+        <div className="bg-primary dark:bg-primary-dark shadow-primary flex aspect-square w-8 items-center justify-center rounded-lg shadow-2xl lg:w-12">
+          <BoltIcon className="h-5 w-5 text-white lg:h-8 lg:w-8" />
         </div>
         <h3>AI Helper</h3>
       </div>
       <ChatInput />
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="hidden grid-cols-3 gap-3 lg:grid">
         {Object.entries(features).map(([category, descriptions]) => {
           return (
             <div className="flex flex-col items-center gap-3">
@@ -96,17 +97,29 @@ const EmptyState: FunctionComponent = () => {
         })}
       </div>
 
-      <p className="bg-washed dark:bg-background-dark text-washed-dark dark:text-dim rounded-md p-3 text-xs">
-        This is an experimental product that utilizes the OpenAI API. It is provided for testing and
-        educational purposes only. The government and its representatives make no warranties or
-        guarantees regarding the accuracy, completeness, or suitability of the information provided
-        by this product.
-        <br />
-        All conversations are locally stored in your device. We do not collect conversations between
-        you and the AI Helper.
-      </p>
-
-      <p className="text-dim text-center text-xs">AI Helper v1.0.0</p>
+      <div className={clx("flex flex-col gap-2")}>
+        <p className="text-dim space-x-2 text-center text-xs">
+          <span className="cursor-pointer" onClick={() => setShow(!show)}>
+            {show ? "Hide" : "Show "} disclaimer
+          </span>
+          <span>|</span>
+          <span>AI Helper v1.0.0</span>
+        </p>
+        <p
+          className={clx(
+            "bg-washed dark:bg-background-dark text-washed-dark dark:text-dim rounded-md p-3 text-xs",
+            show ? "block" : "hidden"
+          )}
+        >
+          This is an experimental product that utilizes the OpenAI API. It is provided for testing
+          and educational purposes only. The government and its representatives make no warranties
+          or guarantees regarding the accuracy, completeness, or suitability of the information
+          provided by this product.
+          <br />
+          All conversations are locally stored in your device. We do not collect conversations
+          between you and the AI Helper.
+        </p>
+      </div>
     </div>
   );
 };

@@ -4,12 +4,13 @@ import { TreeNode } from ".";
 
 interface BranchProps {
   node: FileNode;
+  onClick?: () => void;
 }
 
-const BranchNode: FunctionComponent<BranchProps> = ({ node }) => (
+const BranchNode: FunctionComponent<BranchProps> = ({ node, onClick }) => (
   <ul>
     {node.children.map(child => (
-      <TreeNode key={child.id} node={child} />
+      <TreeNode key={child.id} node={child} onClick={onClick} />
     ))}
   </ul>
 );

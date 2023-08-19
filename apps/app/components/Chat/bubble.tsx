@@ -25,7 +25,7 @@ const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
       };
     }, []);
     return (
-      <div className="markdown flex items-start gap-2" ref={ref}>
+      <div className="flex items-start gap-2" ref={ref}>
         {
           {
             assistant: (

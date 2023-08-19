@@ -13,9 +13,10 @@ interface FileProps {
   className?: string;
   node: FileNode;
   enableAction?: boolean;
+  onClick?: () => void;
 }
 
-const File: FunctionComponent<FileProps> = ({ node, className, enableAction = true }) => {
+const File: FunctionComponent<FileProps> = ({ node, className, onClick, enableAction = true }) => {
   const { active, setActive, destroy, rename } = useContext(FiletreeContext);
   const [editable, setEditable] = useState<boolean>(false);
   const [name, setName] = useState<string>(node.name);
@@ -33,13 +34,14 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
     <div
       className={clx(
         className,
-        "hover:bg-washed group flex cursor-pointer justify-between px-3 py-2 text-sm",
+        "hover:bg-washed dark:hover:bg-washed-dark group flex cursor-pointer justify-between px-3 py-2 text-sm",
         active?.id === node.id && "bg-washed dark:bg-washed-dark ",
         node?.parent?.parent === null ? "rounded-md" : "rounded-r-md"
       )}
       onClick={e => {
         e.stopPropagation();
         setActive(node);
+        if (onClick) onClick();
       }}
     >
       {!editable ? (
@@ -51,7 +53,7 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
         </div>
       ) : (
         <input
-          className="py-1 text-sm"
+          className="dark:bg-background-dark py-1 text-sm"
           autoFocus
           type="text"
           value={name}
@@ -66,26 +68,32 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
         />
       )}
       {enableAction && !editable && (
-        <div className="text-dim opacity-0 transition group-hover:opacity-100">
+        <div className="text-dim opacity-100 transition group-hover:opacity-100 lg:opacity-0">
           <ul className="flex w-fit flex-row gap-1">
             <li>
               <Button
                 variant="reset"
                 className="transition hover:text-black dark:hover:text-white"
-                onClick={() => setEditable(true)}
+                onClick={e => {
+                  e.stopPropagation();
+                  setEditable(true);
+                }}
                 title="Rename chat"
               >
-                <PencilSquareIcon className="h-5 w-5" />
+                <PencilSquareIcon className="h-4.5 w-4.5 hover:text-black dark:hover:text-white" />
               </Button>
             </li>
             <li>
               <Button
                 variant="reset"
                 className="transition hover:text-black dark:hover:text-white"
-                onClick={() => destroy(node)}
+                onClick={e => {
+                  e.stopPropagation();
+                  destroy(node);
+                }}
                 title="Delete chat"
               >
-                <TrashIcon className="h-5 w-5" />
+                <TrashIcon className="h-4.5 w-4.5 hover:text-black dark:hover:text-white" />
               </Button>
             </li>
           </ul>

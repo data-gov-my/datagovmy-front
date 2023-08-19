@@ -9,9 +9,10 @@ import BranchNode from "./branch";
 type FolderProps = {
   className?: string;
   node: FileNode;
+  onClick?: () => void;
 };
 
-const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
+const Folder: FunctionComponent<FolderProps> = ({ className, node, onClick }) => {
   const { setActive, destroy, rename } = useContext(FiletreeContext);
   const [editable, setEditable] = useState<boolean>(false);
   const [name, setName] = useState<string>(node.name);
@@ -40,6 +41,7 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
               e.stopPropagation();
               setActive(node);
             }}
+            tabIndex={0}
           >
             <div className="flex max-w-[80%] flex-row items-center gap-2">
               <ChevronUpIcon
@@ -54,7 +56,7 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
                 </p>
               ) : (
                 <input
-                  className="py-1 text-sm"
+                  className="dark:bg-background-dark py-1 text-sm"
                   autoFocus
                   type="text"
                   value={name}
@@ -69,7 +71,7 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
                 />
               )}
             </div>
-            <div className="text-dim opacity-0 transition group-hover:opacity-100">
+            <div className="text-dim opacity-0 transition group-hover:opacity-100 group-focus:opacity-100 lg:opacity-0">
               <ul className="flex w-fit flex-row gap-1">
                 <li>
                   <Button
@@ -80,7 +82,7 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
                       setEditable(true);
                     }}
                   >
-                    <PencilSquareIcon className="h-4.5 w-4.5" />
+                    <PencilSquareIcon className="h-4.5 w-4.5 hover:text-black dark:hover:text-white" />
                   </Button>
                 </li>
                 <li>
@@ -89,7 +91,7 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
                     className="transition hover:text-black"
                     onClick={() => destroy(node)}
                   >
-                    <TrashIcon className="h-4.5 w-4.5" />
+                    <TrashIcon className="h-4.5 w-4.5 hover:text-black dark:hover:text-white" />
                   </Button>
                 </li>
               </ul>
@@ -105,7 +107,7 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
             leaveTo="transform scale-95 opacity-0"
           >
             <Disclosure.Panel className="ml-4 border-l">
-              <BranchNode node={node} />
+              <BranchNode node={node} onClick={onClick} />
             </Disclosure.Panel>
           </Transition>
         </>

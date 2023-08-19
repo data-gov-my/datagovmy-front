@@ -30,6 +30,7 @@ export { default as Search } from "./Search";
 export { default as Section } from "./Section";
 export { default as Select } from "./Dropdown/Select";
 export { default as Sidebar } from "./Sidebar";
+export { default as SidebarNew } from "./Sidebar/new";
 export { default as Slider } from "./Slider";
 export { default as Spinner } from "./Spinner";
 export { default as Tabs, Panel, List } from "./Tabs";

@@ -55,7 +55,7 @@ const CatalogueChat: FunctionComponent<CatalogueChatProps> = () => {
   return (
     <FiletreeProvider model="chat-directory">
       <Container>
-        <div className="flex w-full flex-row">
+        <div className="flex w-full flex-col lg:flex-row">
           <Filetree />
           <Chat model="chat-history" />
         </div>
