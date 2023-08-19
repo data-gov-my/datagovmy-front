@@ -20,8 +20,8 @@ const generateToken = (length = 32) => {
  * @param {number} ms     // milliseconds
  * @returns {Promise<void>}
  */
-const wait = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+const wait = ms => {
+  return new Promise(resolve => setTimeout(resolve, ms));
 };
 
 /**
@@ -42,9 +42,7 @@ const post = (url, payload) =>
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Request failed with status: ${JSON.stringify(response)}`
-        );
+        throw new Error(`Request failed with status: ${JSON.stringify(response)}`);
       }
 
       //   const data = await response.json();
@@ -66,7 +64,7 @@ const patch = (url, payload) =>
       const response = await fetch(url, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${VERCEL_ACCESS_TOKEN}`,
+          "Authorization": `Bearer ${VERCEL_ACCESS_TOKEN}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
@@ -98,7 +96,7 @@ const patch = (url, payload) =>
  * @param {Event} event
  * @returns {void}
  */
-export const handler = async (event) => {
+export const handler = async event => {
   let retries = 0;
   const token = generateToken();
 
@@ -150,4 +148,14 @@ export const handler = async (event) => {
       await wait(RETRY_DELAY_MS);
     }
   }
+  if (services_to_update.length > 0)
+    return {
+      statusCode: 400,
+      body: "Error: Failed to update services. Proceed to retry lambda function",
+    };
+  else
+    return {
+      statusCode: 200,
+      body: "Success: Rolling token generated & all services updated",
+    };
 };
