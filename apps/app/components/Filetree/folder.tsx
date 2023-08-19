@@ -3,15 +3,15 @@ import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { FunctionComponent, ReactNode, useContext, useState } from "react";
 import { FileNode, FiletreeContext } from "./utils";
-import { toast } from "datagovmy-ui/components";
+import { Button, toast } from "datagovmy-ui/components";
+import BranchNode from "./branch";
 
 type FolderProps = {
   className?: string;
   node: FileNode;
-  children: ReactNode;
 };
 
-const Folder: FunctionComponent<FolderProps> = ({ className, node, children }) => {
+const Folder: FunctionComponent<FolderProps> = ({ className, node }) => {
   const { setActive, destroy, rename } = useContext(FiletreeContext);
   const [editable, setEditable] = useState<boolean>(false);
   const [name, setName] = useState<string>(node.name);
@@ -72,19 +72,25 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node, children }) =
             <div className="text-dim opacity-0 transition group-hover:opacity-100">
               <ul className="flex w-fit flex-row gap-1">
                 <li>
-                  <button
+                  <Button
+                    variant="reset"
+                    className="transition hover:text-black"
                     onClick={e => {
                       e.stopPropagation();
                       setEditable(true);
                     }}
                   >
-                    <PencilSquareIcon className="h-5 w-5" />
-                  </button>
+                    <PencilSquareIcon className="h-4.5 w-4.5" />
+                  </Button>
                 </li>
                 <li>
-                  <button onClick={() => destroy(node)}>
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
+                  <Button
+                    variant="reset"
+                    className="transition hover:text-black"
+                    onClick={() => destroy(node)}
+                  >
+                    <TrashIcon className="h-4.5 w-4.5" />
+                  </Button>
                 </li>
               </ul>
             </div>
@@ -98,7 +104,9 @@ const Folder: FunctionComponent<FolderProps> = ({ className, node, children }) =
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <Disclosure.Panel className="ml-4 border-l">{children}</Disclosure.Panel>
+            <Disclosure.Panel className="ml-4 border-l">
+              <BranchNode node={node} />
+            </Disclosure.Panel>
           </Transition>
         </>
       )}

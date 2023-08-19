@@ -68,20 +68,21 @@ export class IndexedDB {
     });
   }
 
-  async destroy(id: string): Promise<void> {
+  async destroy(ids: string | string[]): Promise<void> {
     const db = await this.open();
     const transaction = db.transaction([this.model], "readwrite");
     const store = transaction.objectStore(this.model);
 
     return new Promise((resolve, reject) => {
-      const request = store.delete(id);
+      const _ids = Array.isArray(ids) ? ids : [ids];
+      _ids.forEach(id => store.delete(id));
 
-      request.onsuccess = () => {
+      transaction.oncomplete = () => {
         resolve();
       };
 
-      request.onerror = event => {
-        reject(request.error);
+      transaction.onerror = (event: any) => {
+        reject(event.target.error);
       };
     });
   }

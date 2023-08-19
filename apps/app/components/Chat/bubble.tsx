@@ -5,7 +5,7 @@ import { ForwardRefExoticComponent, ForwardedRef, forwardRef, useEffect, useStat
 
 interface ChatInterface {
   ref?: ForwardedRef<HTMLDivElement>;
-  from: "user" | "ai";
+  from: "user" | "assistant";
   children: string;
 }
 
@@ -28,7 +28,7 @@ const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
       <div className="ai flex items-start gap-2" ref={ref}>
         {
           {
-            ai: (
+            assistant: (
               <div className="bg-primary-dgm dark:bg-primary-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg">
                 <BoltIcon className="h-5 w-5 text-white" />
               </div>
@@ -48,7 +48,7 @@ const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
         >
           {
             {
-              ai: children.length > 0 ? <Markdown>{children}</Markdown> : <p>{dots}</p>,
+              assistant: children.length > 0 ? <Markdown>{children}</Markdown> : <p>{dots}</p>,
               user: <p>{children} </p>,
             }[from]
           }

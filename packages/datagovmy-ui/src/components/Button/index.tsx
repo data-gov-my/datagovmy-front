@@ -1,7 +1,7 @@
-import { FunctionComponent, MouseEventHandler, ReactNode } from "react";
+import { ComponentProps, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { clx } from "../../lib/helpers";
 
-interface ButtonProps {
+interface ButtonProps extends ComponentProps<"button"> {
   className?: string;
   type?: "button" | "reset" | "submit";
   variant?: keyof typeof style;
@@ -12,10 +12,10 @@ interface ButtonProps {
 }
 
 const style = {
-  base: "font-medium transition flex items-center gap-1 disabled:opacity-50",
+  base: "flex select-none items-center gap-1.5 rounded-md text-start text-sm font-medium outline-none transition disabled:opacity-50 px-3 py-1.5",
   reset: "",
   default:
-    "border border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark bg-white text-black",
+    "border border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark bg-white text-black dark:bg-black dark:text-white",
   primary:
     "from-primary to-primary-dark shadow-button bg-gradient-to-t text-white hover:to-[#5B8EFF]",
 };
@@ -28,6 +28,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   onClick,
   children,
   disabled = false,
+  ...props
 }) => {
   return (
     <button
@@ -35,6 +36,7 @@ const Button: FunctionComponent<ButtonProps> = ({
       disabled={disabled}
       type={type}
       className={clx(variant !== "reset" && style.base, style[variant], className)}
+      {...props}
     >
       {icon}
       {children}

@@ -50,7 +50,7 @@ const ActiveState: FunctionComponent = () => {
               {session.chats.map((chat: ChatType) => (
                 <ChatBubble from={chat.from}>{chat.text}</ChatBubble>
               ))}
-              {data.fetching && <ChatBubble from="ai">{data.answer}</ChatBubble>}
+              {data.fetching && <ChatBubble from="assistant">{data.answer}</ChatBubble>}
             </div>
           ) : (
             // Chat Bubbles (Empty state)

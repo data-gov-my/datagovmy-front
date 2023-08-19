@@ -32,7 +32,7 @@ interface ChatProviderProps {
 }
 
 export type ChatType = {
-  from: "ai" | "user";
+  from: "assistant" | "user";
   text: string;
 };
 
@@ -103,7 +103,7 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
       setSession(new_session);
     };
 
-    const destroySession = (id: string) => {
+    const destroySession = (id: string | string[]) => {
       idb
         .destroy(id)
         .then(() => setSession(undefined))

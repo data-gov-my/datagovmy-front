@@ -1,9 +1,13 @@
 import { clx } from "datagovmy-ui/helpers";
 import { FunctionComponent, ReactNode, useState, MouseEventHandler, useContext } from "react";
 import { FileNode } from "./utils";
-import { toast } from "datagovmy-ui/components";
+import { Button, toast } from "datagovmy-ui/components";
 import { FiletreeContext } from "./utils";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleBottomCenterTextIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 
 interface FileProps {
   className?: string;
@@ -29,7 +33,7 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
     <div
       className={clx(
         className,
-        "group flex cursor-pointer  justify-between px-3 py-2 text-sm",
+        "hover:bg-washed group flex cursor-pointer justify-between px-3 py-2 text-sm",
         active?.id === node.id && "bg-washed dark:bg-washed-dark ",
         node?.parent?.parent === null ? "rounded-md" : "rounded-r-md"
       )}
@@ -39,7 +43,12 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
       }}
     >
       {!editable ? (
-        <p className="truncate ">{node.name}</p>
+        <div className="flex items-center gap-3">
+          <ChatBubbleBottomCenterTextIcon className="-ml-1 h-4 w-4" />
+          <p className="truncate" title={node.name}>
+            {node.name}
+          </p>
+        </div>
       ) : (
         <input
           className="py-1 text-sm"
@@ -60,14 +69,24 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
         <div className="text-dim opacity-0 transition group-hover:opacity-100">
           <ul className="flex w-fit flex-row gap-1">
             <li>
-              <button onClick={() => setEditable(true)}>
+              <Button
+                variant="reset"
+                className="transition hover:text-black"
+                onClick={() => setEditable(true)}
+                title="Rename chat"
+              >
                 <PencilSquareIcon className="h-5 w-5" />
-              </button>
+              </Button>
             </li>
             <li>
-              <button onClick={() => destroy(node)}>
+              <Button
+                variant="reset"
+                className="transition hover:text-black"
+                onClick={() => destroy(node)}
+                title="Delete chat"
+              >
                 <TrashIcon className="h-5 w-5" />
-              </button>
+              </Button>
             </li>
           </ul>
         </div>

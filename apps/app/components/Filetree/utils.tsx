@@ -48,7 +48,7 @@ export class FileNode {
     return null;
   }
 
-  private traverse(callback: (node: FileNode) => void) {
+  public traverse(callback: (node: FileNode) => void) {
     callback(this);
     for (const child of this.children) {
       child.traverse(callback);
@@ -153,6 +153,7 @@ interface FiletreeContextProps extends FileNodeInterface {
 
 export interface FileNodeInterface {
   tree: FileNode | undefined;
+  reset: () => void;
   create: (type: FileType) => FileNode | null;
   destroy: (node: FileNode) => void;
   rename: (node: FileNode, rename: string) => void;
@@ -172,6 +173,7 @@ export const FiletreeContext = createContext<FiletreeContextProps>({
   create: () => null,
   destroy: () => {},
   rename: () => {},
+  reset: () => {},
 });
 
 /**
@@ -186,9 +188,7 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
     const idb = new IndexedDB(model);
 
     useEffect(() => {
-      const fetchDB = async () => {
-        return await idb.read("root");
-      };
+      const fetchDB = async () => await idb.read("root");
 
       fetchDB().then(tree => {
         if (tree) {
@@ -239,7 +239,6 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
         _node.children.push(new_node);
         setActive(new_node);
         if (new_node.type === FileType.FILE) {
-          console.log("is this running");
           emitter.emit("chat-create", new_node.id);
         }
         return _tree;
@@ -256,8 +255,11 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
         setActive(_tree);
         return _tree;
       });
-
-      emitter.emit("chat-delete", node.id);
+      const ids: string[] = [];
+      node.traverse(node => {
+        if (node.type === FileType.FILE) ids.push(node.id);
+      });
+      emitter.emit("chat-delete", ids);
     };
 
     const rename = (node: FileNode, rename: string) => {
@@ -270,9 +272,15 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
       });
     };
 
+    const reset = () => {
+      if (!tree) return;
+      destroy(tree);
+      setTree(new FileNode("root", FileType.FOLDER, [], null, "root"));
+    };
+
     /** Ref functions */
     useImperativeHandle(ref, () => {
-      return { tree, create, destroy, rename, setActive };
+      return { tree, create, destroy, rename, setActive, reset };
     });
 
     /** Private functions */
@@ -299,6 +307,7 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
           create,
           destroy,
           rename,
+          reset,
         }}
       >
         {children}
