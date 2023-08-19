@@ -26,7 +26,7 @@ export class IndexedDB {
         resolve();
       };
 
-      request.onerror = event => {
+      request.onerror = () => {
         reject(request.error);
       };
     });
@@ -40,11 +40,11 @@ export class IndexedDB {
     return new Promise((resolve, reject) => {
       const request = store.get(id);
 
-      request.onsuccess = event => {
+      request.onsuccess = () => {
         resolve(request.result);
       };
 
-      request.onerror = event => {
+      request.onerror = () => {
         reject(request.error);
       };
     });
@@ -62,7 +62,7 @@ export class IndexedDB {
         resolve();
       };
 
-      request.onerror = event => {
+      request.onerror = () => {
         reject(request.error);
       };
     });
@@ -72,54 +72,47 @@ export class IndexedDB {
     const db = await this.open();
     const transaction = db.transaction([this.model], "readwrite");
     const store = transaction.objectStore(this.model);
-
+    const _ids = Array.isArray(ids) ? ids : [ids];
     return new Promise((resolve, reject) => {
-      const _ids = Array.isArray(ids) ? ids : [ids];
-      _ids.forEach(id => store.delete(id));
-
-      transaction.oncomplete = () => {
-        resolve();
-      };
-
-      transaction.onerror = (event: any) => {
-        reject(event.target.error);
-      };
+      Promise.allSettled(_ids.map(id => store.delete(id)))
+        .then(() => resolve())
+        .catch(e => reject(e));
     });
   }
 
-  //   async destroyAll(id: string): Promise<Record<string, any>> {
-  //     const db = await this.open();
-  //     const transaction = db.transaction([this.model], "readonly");
-  //     const store = transaction.objectStore(this.model);
+  async destroyAll(): Promise<void> {
+    const db = await this.open();
+    const transaction = db.transaction([this.model], "readwrite");
+    const store = transaction.objectStore(this.model);
 
-  //     return new Promise((resolve, reject) => {
-  //       const request = store.get(id);
+    return new Promise((resolve, reject) => {
+      const request = store.clear();
 
-  //       request.onsuccess = event => {
-  //         resolve(request.result);
-  //       };
+      request.onsuccess = () => {
+        resolve();
+      };
 
-  //       request.onerror = event => {
-  //         reject(request.error);
-  //       };
-  //     });
-  //   }
+      request.onerror = () => {
+        reject(request.error);
+      };
+    });
+  }
 
   /** Private methods */
   async open(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(IndexedDB.DATABASE, IndexedDB.VERSION);
 
-      request.onsuccess = event => {
+      request.onsuccess = () => {
         this.db = request.result as IDBDatabase;
         resolve(this.db);
       };
 
-      request.onerror = event => {
+      request.onerror = () => {
         reject(request.error);
       };
 
-      request.onupgradeneeded = event => {
+      request.onupgradeneeded = () => {
         const db = request.result as IDBDatabase;
 
         for (const model of IndexedDB.MODELS) {

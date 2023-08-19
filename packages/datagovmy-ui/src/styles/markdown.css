@@ -1,5 +1,5 @@
 /* Markdown generator */
-.markdown code {
+.markdown code:not(pre code) {
   @apply bg-outline break-words rounded-md border border-black border-opacity-[0.04] px-[.25em] py-0.5 text-[.9em] dark:bg-white/10 dark:text-white;
 }
 

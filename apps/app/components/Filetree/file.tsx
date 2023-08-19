@@ -71,7 +71,7 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
             <li>
               <Button
                 variant="reset"
-                className="transition hover:text-black"
+                className="transition hover:text-black dark:hover:text-white"
                 onClick={() => setEditable(true)}
                 title="Rename chat"
               >
@@ -81,7 +81,7 @@ const File: FunctionComponent<FileProps> = ({ node, className, enableAction = tr
             <li>
               <Button
                 variant="reset"
-                className="transition hover:text-black"
+                className="transition hover:text-black dark:hover:text-white"
                 onClick={() => destroy(node)}
                 title="Delete chat"
               >

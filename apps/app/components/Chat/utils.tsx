@@ -1,5 +1,5 @@
 import { IndexedDB } from "@lib/idb";
-import { useSessionStorage, useWatch } from "datagovmy-ui/hooks";
+import { useData, useSessionStorage } from "datagovmy-ui/hooks";
 import {
   Dispatch,
   ForwardRefExoticComponent,
@@ -14,10 +14,13 @@ import {
 } from "react";
 import emitter from "@lib/events";
 import { FileType, FiletreeContext } from "@components/Filetree/utils";
+import { stream } from "datagovmy-ui/api";
 
 interface ChatContextProps extends ChatInterface {
   prompt: string;
   session?: ChatSession;
+  fetching: boolean;
+  streamingText: string;
 }
 
 export interface ChatInterface {
@@ -32,8 +35,8 @@ interface ChatProviderProps {
 }
 
 export type ChatType = {
-  from: "assistant" | "user";
-  text: string;
+  role: "assistant" | "user";
+  content: string;
 };
 
 type ChatSession = {
@@ -45,6 +48,8 @@ export const ChatContext = createContext<ChatContextProps>({
   prompt: "",
   setPrompt: () => {},
   submitPrompt: () => {},
+  fetching: false,
+  streamingText: "",
 });
 /**
  * Manages Chat operations
@@ -56,6 +61,10 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
     const { active, create: createChatSession } = useContext(FiletreeContext);
     const [prompt, setPrompt] = useSessionStorage<string>("prompt", "");
     const [session, setSession] = useState<ChatSession | undefined>();
+    const { data, setData } = useData({
+      fetching: false,
+      text_stream: "",
+    });
     const idb = new IndexedDB(model);
 
     useEffect(() => {
@@ -70,10 +79,12 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
     useEffect(() => {
       emitter.on("chat-delete", destroySession);
       emitter.on("chat-create", createSession);
+      emitter.on("chat-reset", resetAllSession);
 
       return () => {
         emitter.off("chat-create", createSession);
         emitter.off("chat-delete", destroySession);
+        emitter.off("chat-reset", resetAllSession);
       };
     }, []);
 
@@ -89,17 +100,18 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
 
         _session = {
           id: new_session.id,
-          chats: [{ from: "user", text: text.trim() }],
+          chats: [{ role: "user", content: text.trim() }],
         };
       } else {
-        _session.chats.push({ from: "user", text: text.trim() });
+        _session.chats.push({ role: "user", content: text.trim() });
       }
       setSession({ ..._session });
+      fetchResponse(text);
     };
 
+    // Private functions
     const createSession = (id: string) => {
       const new_session = { id, chats: [] };
-      console.debug("session created:", new_session);
       setSession(new_session);
     };
 
@@ -110,18 +122,72 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
         .catch(e => console.error(e));
     };
 
+    const resetAllSession = () => {
+      idb
+        .destroyAll()
+        .then(() => setSession(undefined))
+        .catch(e => console.error(e));
+    };
+
     const saveSession = async (): Promise<void> => {
       return new Promise(async (resolve, reject) => {
-        if (!session) {
-          return reject("Undefined session");
-        }
-        const node = await idb.read(session.id);
+        if (!session) return reject("Undefined session");
 
+        const node = await idb.read(session.id);
         if (!node) await idb.write(session).catch(e => console.error(e));
         else await idb.update(session).catch(e => console.error(e));
 
         resolve();
       });
+    };
+
+    const fetchResponse = async (prompt: string) => {
+      setData("fetching", true);
+      const payload = {
+        model: "gpt-3.5-turbo",
+        messages: session?.chats.slice(-5) || [{ role: "user", content: prompt }],
+        max_tokens: 1000,
+        temperature: 0,
+      };
+
+      try {
+        const { body, status } = await stream("/chat", payload);
+        if (status !== 200 || !body) {
+          throw new Error("attempt failed");
+        }
+
+        const reader = body.pipeThrough(new TextDecoderStream()).getReader();
+        let _answer = "";
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            setData("fetching", false);
+            setSession((session: ChatSession | undefined) => {
+              if (!session) return;
+
+              return {
+                ...session,
+                ...{ chats: session.chats.concat({ role: "assistant", content: _answer }) },
+              };
+            });
+            setData("text_stream", "");
+
+            break;
+          }
+          _answer += value;
+          setData("text_stream", _answer);
+        }
+      } catch (error: any) {
+        setSession((session: ChatSession | undefined) => {
+          if (!session) return;
+
+          return {
+            ...session,
+            ...{ chats: session.chats.concat({ role: "assistant", content: error.message }) },
+          };
+        });
+        console.error(error.message);
+      }
     };
 
     return (
@@ -131,6 +197,8 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
           session,
           setPrompt,
           submitPrompt,
+          fetching: data.fetching,
+          streamingText: data.text_stream,
         }}
       >
         {children}

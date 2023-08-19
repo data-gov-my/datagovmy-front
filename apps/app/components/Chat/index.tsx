@@ -1,11 +1,9 @@
-import { Button, Textarea } from "datagovmy-ui/components";
 import { FunctionComponent, useContext, useEffect, useRef } from "react";
-import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { BoltIcon } from "@heroicons/react/24/outline";
 import { ChatContext, ChatProvider, ChatType } from "./utils";
 import { useData } from "datagovmy-ui/hooks";
 import ChatBubble from "./bubble";
-import { FiletreeContext } from "@components/Filetree/utils";
+import ChatInput from "./input";
 
 interface ChatProps {
   model: string;
@@ -23,16 +21,12 @@ const Chat: FunctionComponent<ChatProps> = ({ model }) => {
 };
 
 const ActiveState: FunctionComponent = () => {
-  const { prompt, session, setPrompt } = useContext(ChatContext);
+  const { session, fetching, streamingText } = useContext(ChatContext);
   const chatRef = useRef<HTMLDivElement>(null);
-  const { data, setData } = useData({
-    fetching: false,
-    answer: "",
-  });
 
   useEffect(() => {
     scrollToBottom();
-  }, [data.answer]);
+  }, [streamingText]);
 
   const scrollToBottom = () => {
     const element = chatRef.current;
@@ -41,87 +35,20 @@ const ActiveState: FunctionComponent = () => {
 
   if (!session || session.chats.length <= 0) return;
   return (
-    <div>
-      <div className="relative flex h-full w-full grow flex-col overflow-hidden rounded-xl bg-white shadow-lg dark:bg-black">
-        <div className="relative grow overflow-auto px-5" ref={chatRef}>
-          {session.chats.length > 0 ? (
-            // Chat Bubbles
-            <div className="space-y-3 pb-16 pt-5">
-              {session.chats.map((chat: ChatType) => (
-                <ChatBubble from={chat.from}>{chat.text}</ChatBubble>
-              ))}
-              {data.fetching && <ChatBubble from="assistant">{data.answer}</ChatBubble>}
-            </div>
-          ) : (
-            // Chat Bubbles (Empty state)
-            <div className="flex h-full flex-col items-center justify-center space-y-8">
-              <div className="bg-primary-dgm dark:bg-primary-dark shadow-primary-dgm flex aspect-square w-12 items-center justify-center rounded-lg shadow-2xl">
-                <BoltIcon className="h-8 w-8 text-white" />
-              </div>
-              {/* <h3>{t("ai.header")}</h3>
-                        <p className="text-center">{t("ai.description")}</p>
-                        <div className="bg-washed inline space-x-1 rounded p-2 text-xs">
-                          <p className="inline grow">{t("ai.disclaimer")}</p>
-                        </div> */}
-            </div>
-          )}
-        </div>
-
-        {/* Disclaimer (empty state)
-                  {session.chats.length > 0 && (
-                    <div className="absolute bottom-[80px] left-5 ">
-                      <Tooltip
-                        trigger={() => (
-                          <InformationCircleIcon className="text-dim h-5 w-5 text-sm hover:text-black" />
-                        )}
-                        anchor="top-left"
-                      >
-                        <p className="z-50 max-w-[200px] text-xs xl:max-w-[300px]">
-                          {t("ai.disclaimer")}
-                        </p>
-                      </Tooltip>
-                    </div>
-                  )} */}
-
-        {/* Prompt */}
-        {/* <div className="shadow-floating dark:border-outlineHover-dark mx-5 mb-5 flex items-center gap-2 rounded-lg border bg-white">
-                    <Textarea
-                      className="max-h-[30vh] min-h-[40px] w-full grow bg-white pr-12 pt-3 text-sm dark:border-transparent lg:text-sm"
-                      placeholder={t("ai.ask-question")}
-                      value={prompt}
-                      onChange={e => setPrompt(e.target.value)}
-                      onKeyDown={e => {
-                        if (e.key !== "Enter") return;
-                        if (e.key === "Enter" && e.shiftKey) return;
-                        e.preventDefault();
-                        if (e.currentTarget.value.length > 0 && !data.fetching) {
-                          submitPrompt(prompt.trim());
-                          setPrompt("");
-                        }
-                      }}
-                    />
-                    <Button
-                      variant="primary"
-                      className="absolute right-7 aspect-square w-8 justify-center rounded-md"
-                      title={t("ai.submit-prompt")}
-                      disabled={!prompt.length || fetching}
-                      onClick={e => {
-                        if (prompt.length === 0 || fetching) return;
-                        submitPrompt(prompt);
-                        setPrompt("");
-                      }}
-                    >
-                      <PaperAirplaneIcon className="h-4 w-4 text-white" />
-                    </Button>
-                  </div> */}
+    <div className="relative flex h-full max-h-[90vh] w-full grow flex-col justify-between pb-6 dark:bg-black">
+      <div className="relative h-full space-y-3 overflow-auto pb-16 pr-3 pt-6" ref={chatRef}>
+        {session.chats.map((chat: ChatType) => (
+          <ChatBubble from={chat.role}>{chat.content}</ChatBubble>
+        ))}
+        {fetching && <ChatBubble from="assistant">{streamingText}</ChatBubble>}
       </div>
+      <ChatInput />
     </div>
   );
 };
 
 const EmptyState: FunctionComponent = () => {
-  const { active } = useContext(FiletreeContext);
-  const { prompt, setPrompt, submitPrompt, session } = useContext(ChatContext);
+  const { session } = useContext(ChatContext);
 
   const features = {
     examples: [
@@ -148,37 +75,7 @@ const EmptyState: FunctionComponent = () => {
         </div>
         <h3>AI Helper</h3>
       </div>
-      <div className="shadow-floating dark:border-outlineHover-dark relative mx-5 flex w-full items-center gap-2 rounded-lg border bg-white">
-        <Textarea
-          className="max-h-[30vh] w-full bg-white py-3 text-sm dark:border-transparent lg:text-base"
-          placeholder={"Ask a question"}
-          rows={1}
-          value={prompt}
-          onChange={e => setPrompt(e.target.value)}
-          onKeyDown={e => {
-            if (e.key !== "Enter") return;
-            if (e.key === "Enter" && e.shiftKey) return;
-            e.preventDefault();
-            // if (e.currentTarget.value.length > 0 && !fetching) {
-            submitPrompt(prompt.trim());
-            setPrompt("");
-            // }
-          }}
-        />
-        <Button
-          variant="primary"
-          className="absolute right-3 aspect-square w-8 justify-center rounded-md"
-          //   title={t("ai.submit-prompt")}
-          //   disabled={!prompt.length || fetching}
-          onClick={e => {
-            // if (prompt.length === 0 || fetching) return;
-            // submitPrompt(prompt);
-            setPrompt("");
-          }}
-        >
-          <PaperAirplaneIcon className="h-4 w-4 text-white" />
-        </Button>
-      </div>
+      <ChatInput />
 
       <div className="grid grid-cols-3 gap-3">
         {Object.entries(features).map(([category, descriptions]) => {
@@ -204,9 +101,12 @@ const EmptyState: FunctionComponent = () => {
         educational purposes only. The government and its representatives make no warranties or
         guarantees regarding the accuracy, completeness, or suitability of the information provided
         by this product.
+        <br />
+        All conversations are locally stored in your device. We do not collect conversations between
+        you and the AI Helper.
       </p>
 
-      <p className="text-center text-xs">AI Helper v1.0.0</p>
+      <p className="text-dim text-center text-xs">AI Helper v1.0.0</p>
     </div>
   );
 };

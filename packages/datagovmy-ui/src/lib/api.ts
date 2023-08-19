@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { parseCookies } from "./helpers";
 
+type BaseURL = "api" | "app" | string;
+
 /**
  * Base URL builder for AKSARA.
  * @param base "api" | "app"
@@ -10,7 +12,12 @@ import { parseCookies } from "./helpers";
  * @example "api"   -> "https://[NEXT_PUBLIC_API_URL]/"
  * @example "app" -> "https://[NEXT_PUBLIC_APP_URL]/"
  */
-const instance = (base: "api" | "app" | string = "api", headers: Record<string, string> = {}) => {
+const instance = (base: BaseURL, headers: Record<string, string> = {}) => {
+  const urls: Record<BaseURL, string> = {
+    api: process.env.NEXT_PUBLIC_API_URL,
+    app: process.env.NEXT_PUBLIC_APP_URL,
+    // ai: process.env.NEXT_PUBLIC_AI_URL,
+  };
   const BROWSER_RUNTIME = typeof window === "object";
 
   /**
@@ -22,12 +29,7 @@ const instance = (base: "api" | "app" | string = "api", headers: Record<string, 
   //   ? process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN
   //   : parseCookies(document.cookie).nekot;
   const config: AxiosRequestConfig = {
-    baseURL:
-      base === "api"
-        ? process.env.NEXT_PUBLIC_API_URL
-        : base === "app"
-        ? process.env.NEXT_PUBLIC_APP_URL
-        : base,
+    baseURL: urls[base] || base,
     headers: {
       "Authorization": process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
       // Remove below later. For testing only
@@ -48,7 +50,7 @@ const instance = (base: "api" | "app" | string = "api", headers: Record<string, 
 export const get = (
   route: string,
   params?: Record<string, any>,
-  base: "api" | "app" | string = "api"
+  base: BaseURL = "api"
 ): Promise<AxiosResponse> => {
   return new Promise((resolve, reject) => {
     instance(base)
@@ -69,7 +71,7 @@ export const get = (
 export const post = (
   route: string,
   payload?: any,
-  base: "api" | "app" | string = "api",
+  base: BaseURL = "api",
   headers: Record<string, string> = {}
 ): Promise<AxiosResponse> => {
   return new Promise((resolve, reject) => {
@@ -77,5 +79,27 @@ export const post = (
       .post(route, payload)
       .then((response: AxiosResponse) => resolve(response))
       .catch(err => reject(err));
+  });
+};
+
+/**
+ * POST for AI service-based endpoints. Axios does not support text-stream requests. [https://github.com/axios/axios/issues/479]
+ * Might be a good time to move away from axios in the future.
+ * @param route Endpoint
+ * @param payload Body
+ * @returns {string} Text
+ */
+
+export const stream = (route: string, payload?: any) => {
+  // Uncomment when ready
+  // const authorization = parseCookies(document.cookie).nekot;
+  return fetch(process.env.NEXT_PUBLIC_AI_URL + route, {
+    method: "POST",
+    headers: {
+      "Accept": "text/event-stream",
+      "Content-Type": "application/json",
+      "Authorization": process.env.NEXT_PUBLIC_AI_TOKEN,
+    },
+    body: JSON.stringify(payload),
   });
 };

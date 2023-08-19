@@ -49,7 +49,7 @@ const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
 
   return (
     <div className="dark:border-r-washed-dark hidden h-[90vh] flex-col justify-between border-r lg:flex lg:w-1/4 xl:w-1/5">
-      <div className="flex gap-2 border-b py-4 pr-3">
+      <div className="dark:border-washed-dark flex gap-2 border-b py-4 pr-3">
         <Button
           variant="primary"
           className="w-full justify-center"
@@ -70,10 +70,10 @@ const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
       <ul className={clx("flex grow flex-col gap-2 overflow-auto py-3 pr-3")}>
         <TreeNode node={tree} />
       </ul>
-      <div className="border-t py-3 pr-3">
+      <div className="dark:border-washed-dark border-t py-3 pr-3">
         <Button
           variant="base"
-          className="hover:bg-washed w-full gap-3 py-2"
+          className="hover:bg-washed dark:hover:bg-washed-dark w-full gap-3 py-2"
           onClick={() => reset()}
           icon={<TrashIcon className="h-4.5 w-4.5" />}
           title="Clear conversations"
@@ -82,8 +82,10 @@ const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
         </Button>
         <Button
           variant="base"
-          className="hover:bg-washed w-full gap-3 py-2"
-          onClick={() => reset()}
+          className="hover:bg-washed dark:hover:bg-washed-dark w-full gap-3 py-2"
+          onClick={() => {
+            alert("what to do here");
+          }}
           icon={<Cog6ToothIcon className="h-4.5 w-4.5" />}
           title="Settings"
         >

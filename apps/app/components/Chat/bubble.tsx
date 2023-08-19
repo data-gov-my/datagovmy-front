@@ -25,11 +25,11 @@ const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
       };
     }, []);
     return (
-      <div className="ai flex items-start gap-2" ref={ref}>
+      <div className="markdown flex items-start gap-2" ref={ref}>
         {
           {
             assistant: (
-              <div className="bg-primary-dgm dark:bg-primary-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg">
+              <div className="bg-primary dark:bg-primary-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg">
                 <BoltIcon className="h-5 w-5 text-white" />
               </div>
             ),
