@@ -1,5 +1,5 @@
 import { clx } from "datagovmy-ui/helpers";
-import { FunctionComponent, ReactNode, useState, MouseEventHandler, useContext } from "react";
+import { FunctionComponent, useState, useContext } from "react";
 import { FileNode } from "./utils";
 import { Button, toast } from "datagovmy-ui/components";
 import { FiletreeContext } from "./utils";

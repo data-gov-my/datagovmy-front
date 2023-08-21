@@ -5,6 +5,7 @@ const MAX_RETRIES = 5; // Max 5 attempts
 const RETRY_DELAY_MS = 1000; // 1 second
 const EDGE_CONFIG_URL = process.env.EDGE_CONFIG_URL;
 const VERCEL_ACCESS_TOKEN = process.env.VERCEL_ACCESS_TOKEN;
+const WORKFLOW_TOKEN = process.env.WORKFLOW_TOKEN;
 
 /**
  * Token generator.
@@ -37,6 +38,7 @@ const post = (url, payload) =>
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": WORKFLOW_TOKEN,
         },
         body: JSON.stringify(payload),
       });
@@ -86,13 +88,13 @@ const patch = (url, payload) =>
  * Main Lambda entry function.
  * Workflow:
  * 1. Generate a new rolling token.
- * 2. PATCH the new token EdgeConfig (Vercel's token store)
+ * 2. PATCH the new token to EdgeConfig (Vercel's token store)
  * 3. If PATCH fails, exit the lambda function.
  * 4. Else, POST the new token to all relevant services.
  * 5. If any of the POST attempt fails, retry. Maximum retries: 5; Interval between retries: 1s
  * 6. Lambda ends by:
- *    - Successfully POST to all services with max allowed retries
- *    - Max retries reached; if still fail, then gg loh
+ *    - Successfully POST to all services within the allowed retries
+ *    - Max retries reached; if still fail, then ggwp
  * @param {Event} event
  * @returns {void}
  */
@@ -122,8 +124,7 @@ export const handler = async event => {
   const payload = { ROLLING_TOKEN: token };
 
   let services_to_update = [
-    post("http://localhost:3000/api/token-tester", payload),
-    post("http://localhost:3001/api/token-tester", payload),
+    post("https://staging.datagovmy.app/auth-token/", payload), // BE
   ];
 
   while (retries < MAX_RETRIES) {

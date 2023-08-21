@@ -1,5 +1,5 @@
 import Progress from "@components/Progress";
-import AIHelper from "@data-catalogue/ai-helper";
+import CatalogueDataGPT from "@data-catalogue/datagpt";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
@@ -12,18 +12,18 @@ const AIChat: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <>
-      <Metadata title={"AI Helper"} description={""} keywords={""} />
+      <Metadata title={"DataGPT"} description={t("description")} keywords={""} />
       <Progress />
-      <AIHelper />
+      <CatalogueDataGPT />
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("catalogue", async () => {
+export const getStaticProps: GetStaticProps = withi18n("catalogue-datagpt", async () => {
   return {
     props: {
       meta: {
-        id: "catalogue-chat",
+        id: "catalogue-datagpt",
         type: "misc",
         category: null,
         agency: null,

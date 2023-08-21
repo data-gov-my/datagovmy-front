@@ -4,6 +4,7 @@ import { ChatContext, ChatProvider, ChatType } from "./utils";
 import { clx } from "datagovmy-ui/helpers";
 import ChatBubble from "./bubble";
 import ChatInput from "./input";
+import { useTranslation } from "datagovmy-ui/hooks";
 
 interface ChatProps {
   model: string;
@@ -49,21 +50,13 @@ const ActiveState: FunctionComponent = () => {
 
 const EmptyState: FunctionComponent = () => {
   const { session } = useContext(ChatContext);
+  const { t } = useTranslation(["catalogue-gpt", "common"]);
   const [show, setShow] = useState<boolean>(false);
 
   const features = {
-    examples: [
-      `"Generate me a chart of population in Selangor state"`,
-      `"Generate a time series chart for seats win by Pakatan Harapan over the general election since 1957"`,
-    ],
-    capabilities: [
-      "Generate charts based on library in Data Catalogue",
-      "ventore veritatis et quasi architecto beatae vitae dicta",
-    ],
-    limitations: [
-      "sit amet, consectetur, adipisci velit, sed quia non numquam eius",
-      "Your imagination or the sky",
-    ],
+    examples: [t("examples", { context: 1 }), t("examples", { context: 2 })],
+    capabilities: [t("capabilities", { context: 1 }), t("capabilities", { context: 2 })],
+    limitations: [t("limitations", { context: 1 }), t("limitations", { context: 2 })],
   };
 
   if (session && session?.chats.length > 0) return;
@@ -74,7 +67,7 @@ const EmptyState: FunctionComponent = () => {
         <div className="bg-primary dark:bg-primary-dark shadow-primary flex aspect-square w-8 items-center justify-center rounded-lg shadow-2xl lg:w-12">
           <BoltIcon className="h-5 w-5 text-white lg:h-8 lg:w-8" />
         </div>
-        <h3>AI Helper</h3>
+        <h3>DataGPT</h3>
       </div>
       <ChatInput />
 
@@ -100,10 +93,10 @@ const EmptyState: FunctionComponent = () => {
       <div className={clx("flex flex-col gap-2")}>
         <p className="text-dim space-x-2 text-center text-xs">
           <span className="cursor-pointer" onClick={() => setShow(!show)}>
-            {show ? "Hide" : "Show "} disclaimer
+            {show ? t("disclaimer_hide") : t("disclaimer_show")}
           </span>
           <span>|</span>
-          <span>AI Helper v1.0.0</span>
+          <span>DataGPT v1.0.0</span>
         </p>
         <p
           className={clx(
@@ -111,13 +104,9 @@ const EmptyState: FunctionComponent = () => {
             show ? "block" : "hidden"
           )}
         >
-          This is an experimental product that utilizes the OpenAI API. It is provided for testing
-          and educational purposes only. The government and its representatives make no warranties
-          or guarantees regarding the accuracy, completeness, or suitability of the information
-          provided by this product.
+          {t("disclaimer", { context: 1 })}
           <br />
-          All conversations are locally stored in your device. We do not collect conversations
-          between you and the AI Helper.
+          {t("disclaimer", { context: 2 })}
         </p>
       </div>
     </div>

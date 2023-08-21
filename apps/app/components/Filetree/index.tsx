@@ -13,6 +13,7 @@ import {
   MegaphoneIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { useTranslation } from "datagovmy-ui/hooks";
 
 interface TreeNodeProps {
   node?: FileNode;
@@ -20,15 +21,14 @@ interface TreeNodeProps {
 }
 
 export const TreeNode: FunctionComponent<TreeNodeProps> = ({ node, onClick }) => {
+  const { t } = useTranslation(["catalogue-datagpt", "common"]);
   if (!node) return;
 
   if (node.name === "root") {
     return node.children.length <= 0 ? (
       <div className="text-dim flex h-full flex-col items-center justify-center gap-4 ">
         <MegaphoneIcon className="h-5 w-5" />
-        <p className="text-center text-sm italic">
-          Start a conversation to explore the data Malaysia has collected so far.
-        </p>
+        <p className="text-center text-sm italic">{t("empty_chat_placeholder")}</p>
       </div>
     ) : (
       <BranchNode node={node} onClick={onClick} />
@@ -52,6 +52,7 @@ interface FiletreeProps {
 }
 
 const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
+  const { t } = useTranslation(["catalogue-datagpt", "common"]);
   const { tree, create, reset, active } = useContext(FiletreeContext);
 
   return (
@@ -59,7 +60,7 @@ const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
       mobileTrigger={open => (
         <div className="flex items-center gap-3 border-b py-2">
           <Button variant="default" onClick={open} icon={<Bars3Icon className="h-4 w-4" />}>
-            Settings
+            {t("settings")}
           </Button>
 
           <p className="text-sm">{active?.type === FileType.FILE && active.name}</p>
@@ -75,15 +76,15 @@ const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
               className="w-full justify-center"
               onClick={() => create(FileType.FILE)}
               icon={<PlusIcon className="h-4 w-4" />}
-              title="New chat"
+              title={t("new_chat")}
             >
-              New chat
+              {t("new_chat")}
             </Button>
             <Button
               variant="default"
               onClick={() => create(FileType.FOLDER)}
               icon={<FolderPlusIcon className="h-4 w-4" />}
-              title="New folder"
+              title={t("new_folder")}
             />
           </div>
 
@@ -98,9 +99,9 @@ const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
               className="hover:bg-washed dark:hover:bg-washed-dark w-full gap-3 py-2"
               onClick={() => reset()}
               icon={<TrashIcon className="h-4.5 w-4.5" />}
-              title="Clear conversations"
+              title={t("clear_conversations")}
             >
-              Clear conversations
+              {t("clear_conversations")}
             </Button>
             {/* <Button
               variant="base"

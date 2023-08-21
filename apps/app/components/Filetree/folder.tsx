@@ -1,7 +1,7 @@
 import { clx } from "datagovmy-ui/helpers";
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { FunctionComponent, ReactNode, useContext, useState } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 import { FileNode, FiletreeContext } from "./utils";
 import { Button, toast } from "datagovmy-ui/components";
 import BranchNode from "./branch";

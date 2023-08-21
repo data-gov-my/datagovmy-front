@@ -1,5 +1,5 @@
 import { IndexedDB } from "@lib/idb";
-import { useData, useSessionStorage } from "datagovmy-ui/hooks";
+import { useData, useSessionStorage, useTranslation } from "datagovmy-ui/hooks";
 import {
   Dispatch,
   ForwardRefExoticComponent,
@@ -58,6 +58,7 @@ export const ChatContext = createContext<ChatContextProps>({
  */
 export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwardRef(
   ({ model, children }, ref) => {
+    const { t } = useTranslation(["catalogue-gpt"]);
     const { active, create: createChatSession } = useContext(FiletreeContext);
     const [prompt, setPrompt] = useSessionStorage<string>("prompt", "");
     const [session, setSession] = useState<ChatSession | undefined>();
@@ -153,7 +154,7 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
       try {
         const { body, status } = await stream("/chat", payload);
         if (status !== 200 || !body) {
-          throw new Error("attempt failed");
+          throw new Error(t("prompt_error"));
         }
 
         const reader = body.pipeThrough(new TextDecoderStream()).getReader();
