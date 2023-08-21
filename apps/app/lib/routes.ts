@@ -1,6 +1,7 @@
 export const routes = {
   HOME: "/",
   DATA_CATALOGUE: "/data-catalogue",
+  DATA_GPT: "/data-catalogue/datagpt",
   DASHBOARD: "/dashboard",
   COMMUNITY: "/community",
   HELPDESK: "/helpdesk",
