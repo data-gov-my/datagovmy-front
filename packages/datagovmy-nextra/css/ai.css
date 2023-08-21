@@ -18,3 +18,11 @@
 .ai li > p {
   @apply inline;
 }
+
+.ai p {
+  @apply leading-7;
+}
+
+.ai a {
+  @apply text-primary-dgm dark:text-primary-dark [text-underline-position:from-font] hover:underline;
+}
