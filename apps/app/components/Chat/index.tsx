@@ -50,7 +50,7 @@ const ActiveState: FunctionComponent = () => {
 
 const EmptyState: FunctionComponent = () => {
   const { session } = useContext(ChatContext);
-  const { t } = useTranslation(["catalogue-gpt", "common"]);
+  const { t } = useTranslation(["catalogue-datagpt", "common"]);
   const [show, setShow] = useState<boolean>(false);
 
   const features = {
@@ -75,7 +75,7 @@ const EmptyState: FunctionComponent = () => {
         {Object.entries(features).map(([category, descriptions]) => {
           return (
             <div className="flex flex-col items-center gap-3">
-              <p className="font-medium">{category}</p>
+              <p className="font-medium">{t(category)}</p>
               <ul className="flex flex-col gap-3 text-sm">
                 {descriptions.map(description => {
                   return (

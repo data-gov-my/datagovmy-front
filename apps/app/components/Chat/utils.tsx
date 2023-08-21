@@ -58,7 +58,7 @@ export const ChatContext = createContext<ChatContextProps>({
  */
 export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwardRef(
   ({ model, children }, ref) => {
-    const { t } = useTranslation(["catalogue-gpt"]);
+    const { t } = useTranslation(["catalogue-datagpt"]);
     const { active, create: createChatSession } = useContext(FiletreeContext);
     const [prompt, setPrompt] = useSessionStorage<string>("prompt", "");
     const [session, setSession] = useState<ChatSession | undefined>();
@@ -179,6 +179,7 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
           setData("text_stream", _answer);
         }
       } catch (error: any) {
+        setData("fetching", false);
         setSession((session: ChatSession | undefined) => {
           if (!session) return;
 
