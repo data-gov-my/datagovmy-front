@@ -39,7 +39,9 @@ const ActiveState: FunctionComponent = () => {
     <div className="relative flex h-full max-h-[90vh] w-full grow flex-col justify-between pb-6 dark:bg-black">
       <div className="relative h-full space-y-3 overflow-auto pb-16 pr-3 pt-6" ref={chatRef}>
         {session.chats.map((chat: ChatType) => (
-          <ChatBubble from={chat.role}>{chat.content}</ChatBubble>
+          <ChatBubble key={chat.content} from={chat.role}>
+            {chat.content}
+          </ChatBubble>
         ))}
         {fetching && <ChatBubble from="assistant">{streamingText}</ChatBubble>}
       </div>
@@ -74,12 +76,15 @@ const EmptyState: FunctionComponent = () => {
       <div className="hidden grid-cols-3 gap-3 lg:grid">
         {Object.entries(features).map(([category, descriptions]) => {
           return (
-            <div className="flex flex-col items-center gap-3">
+            <div key={category} className="flex flex-col items-center gap-3">
               <p className="font-medium">{t(category)}</p>
               <ul className="flex flex-col gap-3 text-sm">
                 {descriptions.map(description => {
                   return (
-                    <li className="bg-washed dark:bg-background-dark text-washed-dark dark:text-dim rounded-md p-3">
+                    <li
+                      key={description}
+                      className="bg-washed dark:bg-background-dark text-washed-dark dark:text-dim rounded-md p-3"
+                    >
                       {description}
                     </li>
                   );

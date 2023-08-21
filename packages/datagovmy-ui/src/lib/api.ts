@@ -98,7 +98,7 @@ export const stream = (route: string, payload?: any) => {
     headers: {
       "Accept": "text/event-stream",
       "Content-Type": "application/json",
-      "Authorization": process.env.NEXT_PUBLIC_AI_TOKEN,
+      "Authorization": process.env.NEXT_PUBLIC_AI_TOKEN || "",
     },
     body: JSON.stringify(payload),
   });
