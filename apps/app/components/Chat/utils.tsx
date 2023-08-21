@@ -10,6 +10,7 @@ import {
   forwardRef,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import emitter from "@lib/events";
@@ -59,6 +60,7 @@ export const ChatContext = createContext<ChatContextProps>({
 export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwardRef(
   ({ model, children }, ref) => {
     const { t } = useTranslation(["catalogue-datagpt"]);
+    const idb = useRef<IndexedDB>();
     const { active, create: createChatSession } = useContext(FiletreeContext);
     const [prompt, setPrompt] = useSessionStorage<string>("prompt", "");
     const [session, setSession] = useState<ChatSession | undefined>();
@@ -66,10 +68,11 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
       fetching: false,
       text_stream: "",
     });
-    const idb = new IndexedDB(model);
+    // const idb = new IndexedDB(model);
 
     useEffect(() => {
-      const fetchDB = async (id: string) => idb.read<ChatSession>(id);
+      idb.current = new IndexedDB(model);
+      const fetchDB = async (id: string) => idb.current!.read<ChatSession>(id);
 
       if (!active || active.type === FileType.FOLDER) return;
       fetchDB(active.id)
@@ -117,14 +120,16 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
     };
 
     const destroySession = (id: string | string[]) => {
-      idb
+      if (!idb.current) return;
+      idb.current
         .destroy(id)
         .then(() => setSession(undefined))
         .catch(e => console.error(e));
     };
 
     const resetAllSession = () => {
-      idb
+      if (!idb.current) return;
+      idb.current
         .destroyAll()
         .then(() => setSession(undefined))
         .catch(e => console.error(e));
@@ -133,10 +138,11 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
     const saveSession = async (): Promise<void> => {
       return new Promise(async (resolve, reject) => {
         if (!session) return reject("Undefined session");
+        if (!idb.current) return reject("Indexed DB is undefined");
 
-        const node = await idb.read(session.id);
-        if (!node) await idb.write(session).catch(e => console.error(e));
-        else await idb.update(session).catch(e => console.error(e));
+        const node = await idb.current.read(session.id);
+        if (!node) await idb.current.write(session).catch(e => console.error(e));
+        else await idb.current.update(session).catch(e => console.error(e));
 
         resolve();
       });

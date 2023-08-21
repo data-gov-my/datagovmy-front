@@ -9,6 +9,7 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 
@@ -132,8 +133,9 @@ export class FileNode {
   }
 
   // Method only for root node
-  public async save(idb: IndexedDB): Promise<void> {
+  public async save(idb?: IndexedDB): Promise<void> {
     return new Promise(async (resolve, reject) => {
+      if (!idb) return reject("IndexedDB is undefined");
       if (!this.id.includes("root")) return reject("Error: Method must be called from root node");
 
       const node = await idb.read(this.id);
@@ -183,12 +185,13 @@ export const FiletreeContext = createContext<FiletreeContextProps>({
  */
 export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> = forwardRef(
   ({ children, model }, ref) => {
+    const idb = useRef<IndexedDB>();
     const [tree, setTree] = useState<FileNode | undefined>();
     const [active, setActive] = useState<FileNode | undefined>();
-    const idb = new IndexedDB(model);
 
     useEffect(() => {
-      const fetchDB = async () => await idb.read("root");
+      idb.current = new IndexedDB(model);
+      const fetchDB = async () => await idb.current!.read("root");
 
       fetchDB().then(tree => {
         if (tree) {
@@ -202,13 +205,13 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
           setActive(child);
 
           emitter.emit("chat-create", child.id);
-          root.save(idb);
+          root.save(idb.current);
         }
       });
     }, []);
 
     useWatch(() => {
-      if (tree) tree.save(idb);
+      if (tree) tree.save(idb.current);
     }, [tree]);
 
     /** Public functions */
@@ -275,7 +278,7 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
     const reset = () => {
       emitter.emit("chat-reset");
       const root = new FileNode("root", FileType.FOLDER, [], null, "root");
-      root.save(idb);
+      root.save(idb.current);
       setTree(root);
     };
 
