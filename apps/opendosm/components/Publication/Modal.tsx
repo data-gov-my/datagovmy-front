@@ -24,12 +24,14 @@ interface PublicationModalProps {
   id: string;
   publication?: PubResource;
   show: boolean;
+  type: "/browse/" | "/data-dictionaries/" | "/technical-notes/";
 }
 const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   hide,
   id,
   publication,
   show,
+  type,
 }) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
   const { data, setData } = useData({
@@ -125,7 +127,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                       <Button
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            `https://open.dosm.gov.my/publications/${id}`
+                            `https://open.dosm.gov.my/publications${type}${id}`
                           );
                           setData("copied", true);
                           setTimeout(() => setData("copied", false), 1000);

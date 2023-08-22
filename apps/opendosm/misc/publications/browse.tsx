@@ -125,7 +125,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     geography: query.geography
       ? geographies.filter(item => query.geography.split(",").includes(item.value))
       : [],
-    page: query.page ?? "",
+    page: query.page ?? "1",
     pub_type: query.pub_type
       ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
       : undefined,
@@ -135,6 +135,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
+    setFilter("page", undefined);
     setFilter("pub_type", undefined);
     setData("publication_option", undefined);
   };
@@ -170,7 +171,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             className="link-primary font-normal"
             onClick={() => {
               setShow(true);
-              push(routes.PUBLICATIONS.concat("/", row.original.publication_id), undefined, {
+              push(routes.PUBLICATIONS.concat("/browse/", row.original.publication_id), undefined, {
                 scroll: false,
               });
             }}
@@ -353,7 +354,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             }}
           />
           {actives.length > 0 &&
-            actives.findIndex(active => !["page", "page_size"].includes(active[0])) !== -1 && (
+            actives.findIndex(active => !["page"].includes(active[0])) !== -1 && (
               <Button
                 className="btn-ghost group text-dim hover:text-black dark:hover:text-white"
                 disabled={!actives.length}
@@ -380,14 +381,14 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           <Tabs className="pb-8 pt-8 lg:pt-12" title={<h4>{t("header")}</h4>}>
             <Panel name={t("cards_view")} key={"cards_view"}>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {publications.map((item: Publication, i: number) => (
+                {publications.map((item: Publication) => (
                   <PublicationCard
                     publication={item}
                     onClick={() => {
                       setShow(true);
                       push(
                         routes.PUBLICATIONS.concat(
-                          "/",
+                          "/browse/",
                           item.publication_id,
                           actives.length ? queries : ""
                         ),
@@ -412,12 +413,13 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
         )}
 
         <PublicationModal
+          type={"/browse/"}
           id={params.pub_id}
           publication={data.pub}
           show={show}
           hide={() => {
             setShow(false);
-            push(routes.PUBLICATIONS.concat("/", actives.length ? queries : ""), undefined, {
+            push(routes.PUBLICATIONS.concat("/browse/", actives.length ? queries : ""), undefined, {
               scroll: false,
             });
           }}

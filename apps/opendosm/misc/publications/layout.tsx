@@ -28,7 +28,7 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
     {
       name: t("browse"),
       icon: <MagnifyingGlassIcon className="mr-1 h-5 w-5" />,
-      url: routes.PUBLICATIONS,
+      url: routes.PUBLICATIONS.concat("/browse"),
     },
     {
       name: t("upcoming"),
@@ -75,17 +75,17 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
                   <div
                     className={clx(
                       "flex items-center gap-2",
-                      pathname === nav.url ? "text-black dark:text-white" : "text-dim"
+                      pathname.startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
                     )}
                   >
                     <div className="hidden sm:block">{nav.icon}</div>
                     <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
-                    {pathname === nav.url && (
+                    {pathname.startsWith(nav.url) && (
                       <div className="absolute bottom-0 inline-flex h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:hidden"></div>
                     )}
                   </div>
                 </div>
-                {pathname === nav.url && (
+                {pathname.startsWith(nav.url) && (
                   <div className="absolute bottom-0 hidden h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:inline-flex"></div>
                 )}
               </At>

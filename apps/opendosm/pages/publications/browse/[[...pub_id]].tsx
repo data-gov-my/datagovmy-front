@@ -50,14 +50,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         throw new Error("Invalid filter. Message: " + e);
       });
 
-      // let resource;
-      // console.log(params.pub_id[0])
-      // if (params.pub_id[0]) {
-      //   resource = await get(`/publication-resource/${params.pub_id[0]}`, {
-      //     language: locale,
-      //   });
-      // }
-
       return {
         notFound: false,
         props: {

@@ -60,7 +60,7 @@ const OpenDOSMHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
             <Nav.Item
               title={t("common:nav.publications")}
               key="/publications"
-              link="/publications"
+              link="/publications/browse"
               onClick={close}
             />
             {/* DASHBOARD MEGA MENU */}
