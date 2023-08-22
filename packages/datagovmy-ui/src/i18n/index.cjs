@@ -9,7 +9,7 @@ const defineConfig = (namespace, autoloadNs) => {
       backend: {
         loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n/?lang={{lng}}&filename={{ns}}`,
         customHeaders: {
-          Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN}`,
         },
         crossDomain: true,
       },
