@@ -192,7 +192,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
           <div className="xl:col-span-10 xl:col-start-2">
             {/* Explore any party's entire electoral history */}
             <h4 className="text-center">{t("party.header")}</h4>
-            <div className="mx-auto w-full p-6 sm:w-[500px]">
+            <div className="mx-auto w-full py-6 sm:w-[500px]">
               <ComboBox
                 placeholder={t("party.search_party")}
                 imageSource="/static/images/parties/"
@@ -223,7 +223,6 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                     width={32}
                     height={18}
                     alt={t(filter.name ?? DEFAULT_PARTY)}
-                    inline
                   />
                   <Trans>
                     {t("party.title", {

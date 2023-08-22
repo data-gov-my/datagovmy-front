@@ -179,7 +179,7 @@ const ElectionCandidatesDashboard: FunctionComponent<ElectionCandidatesProps> = 
         <div className="xl:grid xl:grid-cols-12">
           <div className="xl:col-span-10 xl:col-start-2">
             <h4 className="text-center">{t("candidate.header")}</h4>
-            <div className="mx-auto w-full p-6 sm:w-[500px]">
+            <div className="mx-auto w-full py-6 sm:w-[500px]">
               <ComboBox
                 placeholder={t("candidate.search_candidate")}
                 options={CANDIDATE_OPTIONS}
