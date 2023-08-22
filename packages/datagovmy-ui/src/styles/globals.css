@@ -47,6 +47,10 @@
   textarea {
     @apply resize-none;
   }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 @layer components {
