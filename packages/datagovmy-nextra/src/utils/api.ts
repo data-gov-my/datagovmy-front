@@ -65,7 +65,7 @@ export const stream = (route: string, payload?: any) => {
     headers: {
       "Accept": "text/event-stream",
       "Content-Type": "application/json",
-      "Authorization": parseCookies(document.cookie).rolling_token,
+      "Authorization": `Bearer ${parseCookies(document.cookie).rolling_token}`,
     },
     body: JSON.stringify(payload),
   });
