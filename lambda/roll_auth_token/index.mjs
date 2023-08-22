@@ -13,7 +13,7 @@ const WORKFLOW_TOKEN = process.env.WORKFLOW_TOKEN;
  * @returns {string}      // new token
  */
 const generateToken = (length = 32) => {
-  return `Bearer ${crypto.randomBytes(length).toString("hex")}`;
+  return crypto.randomBytes(length).toString("hex");
 };
 
 /**
@@ -38,7 +38,7 @@ const post = (url, payload) =>
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": WORKFLOW_TOKEN,
+          "Authorization": `Bearer ${WORKFLOW_TOKEN}`,
         },
         body: JSON.stringify(payload),
       });
@@ -88,13 +88,13 @@ const patch = (url, payload) =>
  * Main Lambda entry function.
  * Workflow:
  * 1. Generate a new rolling token.
- * 2. PATCH the new token to EdgeConfig (Vercel's token store)
+ * 2. PATCH the new token EdgeConfig (Vercel's token store)
  * 3. If PATCH fails, exit the lambda function.
  * 4. Else, POST the new token to all relevant services.
  * 5. If any of the POST attempt fails, retry. Maximum retries: 5; Interval between retries: 1s
  * 6. Lambda ends by:
- *    - Successfully POST to all services within the allowed retries
- *    - Max retries reached; if still fail, then ggwp
+ *    - Successfully POST to all services with max allowed retries
+ *    - Max retries reached; if still fail, then gg loh
  * @param {Event} event
  * @returns {void}
  */
@@ -125,6 +125,7 @@ export const handler = async event => {
 
   let services_to_update = [
     post("https://staging.datagovmy.app/auth-token/", payload), // BE
+    post("https://ai.datagovmy.app/auth-token", payload), // AI
   ];
 
   while (retries < MAX_RETRIES) {

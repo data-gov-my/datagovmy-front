@@ -9,6 +9,6 @@ export const config = {
 export async function middleware(request: NextRequest) {
   const token = await get<string>("ROLLING_TOKEN");
   const response = NextResponse.next();
-  response.cookies.set("nekot", token || "yikes", { path: "/", maxAge: 60 * 60 });
+  response.cookies.set("rolling_token", token || "yikes", { path: "/", maxAge: 60 * 60 });
   return response;
 }
