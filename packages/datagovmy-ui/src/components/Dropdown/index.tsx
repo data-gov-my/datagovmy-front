@@ -243,14 +243,16 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
               {/* Search - optional*/}
               {enableSearch && (
-                <Input
-                  type="search"
-                  icon={<MagnifyingGlassIcon className="h-4 w-4" />}
-                  value={search}
-                  className="rounded-b-none border-b border-x-transparent border-t-transparent focus:ring-transparent"
-                  placeholder={t("common:placeholder.search") + "..."}
-                  onChange={value => setSearch(value)}
-                />
+                <div className="border-b pt-1">
+                  <Input
+                    type="search"
+                    icon={<MagnifyingGlassIcon className="h-4 w-4" />}
+                    value={search}
+                    className="border-none focus:ring-transparent"
+                    placeholder={t("common:placeholder.search") + "..."}
+                    onChange={value => setSearch(value)}
+                  />
+                </div>
               )}
               {/* Options */}
               {availableOptions.length > 100 ? (
@@ -277,7 +279,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               {enableClear && (
                 <button
                   onClick={() => (multiple ? onChange([]) : onChange(undefined))}
-                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark dark:border-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-2 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark dark:border-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-3 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={Array.isArray(selected) && selected.length === 0}
                 >
                   <p>{t("common:common.clear")}</p>
