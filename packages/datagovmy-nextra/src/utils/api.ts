@@ -60,13 +60,12 @@ export const post = (
 
 export const stream = (route: string, payload?: any) => {
   // Uncomment when ready
-  // const authorization = parseCookies(document.cookie).nekot;
   return fetch(process.env.NEXT_PUBLIC_AI_URL + route, {
     method: "POST",
     headers: {
       "Accept": "text/event-stream",
       "Content-Type": "application/json",
-      "Authorization": process.env.NEXT_PUBLIC_AI_TOKEN,
+      "Authorization": parseCookies(document.cookie).rolling_token,
     },
     body: JSON.stringify(payload),
   });
