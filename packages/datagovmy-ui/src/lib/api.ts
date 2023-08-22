@@ -16,24 +16,17 @@ const instance = (base: BaseURL, headers: Record<string, string> = {}) => {
   const urls: Record<BaseURL, string> = {
     api: process.env.NEXT_PUBLIC_API_URL,
     app: process.env.NEXT_PUBLIC_APP_URL,
-    // ai: process.env.NEXT_PUBLIC_AI_URL,
   };
   const BROWSER_RUNTIME = typeof window === "object";
 
-  /**
-   * Uncomment & pass to Authorization header once BE supports the rollling token
-   */
-  // const authorization = !BROWSER_RUNTIME
-  //   ? process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN
-  //   : process.env.APP_ENV === "development"
-  //   ? process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN
-  //   : parseCookies(document.cookie).nekot;
+  const authorization = !BROWSER_RUNTIME
+    ? process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN
+    : parseCookies(document.cookie).rolling_token;
+
   const config: AxiosRequestConfig = {
     baseURL: urls[base] || base,
     headers: {
-      "Authorization": process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
-      // Remove below later. For testing only
-      "x-csrftoken": BROWSER_RUNTIME ? parseCookies(document.cookie).nekot : "master token",
+      Authorization: `Bearer ${authorization}`,
       ...headers,
     },
   };
@@ -92,13 +85,13 @@ export const post = (
 
 export const stream = (route: string, payload?: any) => {
   // Uncomment when ready
-  // const authorization = parseCookies(document.cookie).nekot;
+  // const authorization = parseCookies(document.cookie).rolling_token;
   return fetch(process.env.NEXT_PUBLIC_AI_URL + route, {
     method: "POST",
     headers: {
       "Accept": "text/event-stream",
       "Content-Type": "application/json",
-      "Authorization": process.env.NEXT_PUBLIC_AI_TOKEN || "",
+      "Authorization": `Bearer ${parseCookies(document.cookie).rolling_token}`,
     },
     body: JSON.stringify(payload),
   });
