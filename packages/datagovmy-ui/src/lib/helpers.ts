@@ -328,6 +328,23 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
   }) as ReactElement[];
 };
 
+/**
+ * Parses to a cookie map.
+ * @param {string} cookie Cookie string
+ * @returns {Record<string, string>} Cookie map
+ */
+export const parseCookies = (cookie: string) => {
+  const cookies = cookie.split(";");
+  const parsedCookies: Record<string, string> = {};
+
+  cookies.forEach(cookie => {
+    const [name, value] = cookie.trim().split("=");
+    parsedCookies[name] = decodeURIComponent(value);
+  });
+
+  return parsedCookies;
+};
+
 // MATH helpers
 export const average = (values: number[]): number => values.reduce((a, b) => a + b) / values.length;
 

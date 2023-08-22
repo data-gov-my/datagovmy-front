@@ -72,7 +72,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
       get(
         "/api/embed",
         { id: uid, lang: i18n.language, ...Object.fromEntries(EMBED.params) },
-        "local"
+        "app"
       ).then(res => {
         const { options } = res.data;
         if (options && options !== null) setFilters(options);

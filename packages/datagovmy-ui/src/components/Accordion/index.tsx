@@ -19,7 +19,7 @@ const Accordion: FunctionComponent<AccordionProps> = ({
   return (
     <Disclosure>
       {({ open }) => (
-        <div>
+        <>
           <Disclosure.Button
             as="div"
             className={clx(
@@ -54,7 +54,7 @@ const Accordion: FunctionComponent<AccordionProps> = ({
               </div>
             </Disclosure.Panel>
           </Transition>
-        </div>
+        </>
       )}
     </Disclosure>
   );
