@@ -38,7 +38,7 @@ const DataDictionariesDashboard: FunctionComponent<DataDictionariesProps> = ({
     pub: "",
   });
 
-  const { filter, setFilter, queries } = useFilter({
+  const { filter, setFilter, actives, queries } = useFilter({
     page: query.page ?? "",
     search: query.search ?? "",
   });
@@ -107,7 +107,11 @@ const DataDictionariesDashboard: FunctionComponent<DataDictionariesProps> = ({
                 onClick={() => {
                   setShow(true);
                   push(
-                    routes.PUBLICATIONS.concat("/data-dictionaries/", item.publication_id, queries),
+                    routes.PUBLICATIONS.concat(
+                      "/data-dictionaries/",
+                      item.publication_id,
+                      actives.length ? queries : ""
+                    ),
                     undefined,
                     {
                       scroll: false,
@@ -121,10 +125,20 @@ const DataDictionariesDashboard: FunctionComponent<DataDictionariesProps> = ({
         )}
 
         <PublicationModal
+          type={"/data-dictionaries/"}
           id={params.pub_id}
           publication={data.pub}
           show={show}
-          hide={() => setShow(false)}
+          hide={() => {
+            setShow(false);
+            push(
+              routes.PUBLICATIONS.concat("/data-dictionaries/", actives.length ? queries : ""),
+              undefined,
+              {
+                scroll: false,
+              }
+            );
+          }}
         />
 
         {total_pubs > ITEMS_PER_PAGE && (

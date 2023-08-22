@@ -38,8 +38,8 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
     pub: "",
   });
 
-  const { filter, setFilter, queries } = useFilter({
-    page: query.page ?? "1",
+  const { filter, setFilter, actives, queries } = useFilter({
+    page: query.page ?? "",
     search: query.search ?? "",
   });
 
@@ -106,7 +106,11 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
                 onClick={() => {
                   setShow(true);
                   push(
-                    routes.PUBLICATIONS.concat("/technical-notes/", item.publication_id, queries),
+                    routes.PUBLICATIONS.concat(
+                      "/technical-notes/",
+                      item.publication_id,
+                      actives.length ? queries : ""
+                    ),
                     undefined,
                     {
                       scroll: false,
@@ -120,10 +124,20 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
         )}
 
         <PublicationModal
+          type={"/technical-notes/"}
           id={params.pub_id}
           publication={data.pub}
           show={show}
-          hide={() => setShow(false)}
+          hide={() => {
+            setShow(false);
+            push(
+              routes.PUBLICATIONS.concat("/technical-notes/", actives.length ? queries : ""),
+              undefined,
+              {
+                scroll: false,
+              }
+            );
+          }}
         />
 
         {total_pubs > ITEMS_PER_PAGE && (
