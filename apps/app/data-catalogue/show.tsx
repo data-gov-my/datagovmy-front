@@ -124,7 +124,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
   const embedRef = useRef<EmbedInterface>(null);
-  const { filter, setFilter } = useFilter(config.context, { id: params.id });
+  const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
   const { result, track } = useAnalytics(dataset);
   const availableDownloads = useMemo<DownloadOption[]>(
     () => Object.values(downloads).flatMap(option => option),
@@ -603,7 +603,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <div className="space-y-3">
                 <h5>{t("meta_source")}</h5>
                 <ul className="text-dim ml-6 list-outside list-disc">
-                  {metadata.source?.map(source => <li key={source}>{source}</li>)}
+                  {metadata.source?.map(source => (
+                    <li key={source}>{source}</li>
+                  ))}
                 </ul>
               </div>
               {/* URLs to dataset */}

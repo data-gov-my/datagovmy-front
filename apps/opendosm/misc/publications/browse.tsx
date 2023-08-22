@@ -211,7 +211,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     return () => {
       events.off("routeChangeComplete", () => setData("loading", false));
     };
-  }, []);
+  }, [params.pub_id]);
 
   return (
     <Container>
