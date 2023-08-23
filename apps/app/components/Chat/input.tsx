@@ -41,7 +41,7 @@ const ChatInput: FunctionComponent<ChatInputProps> = () => {
       />
       <Button
         variant="primary"
-        className="absolute right-3 aspect-square w-8 justify-center rounded-md"
+        className="absolute right-3 aspect-square w-8 justify-center rounded-md p-0"
         title={t("prompt_submit")}
         disabled={!prompt.length || fetching}
         onClick={e => {

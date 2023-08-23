@@ -191,7 +191,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
       <div className="block xl:hidden">
         <Modal
           trigger={open => (
-            <Button onClick={open} className="btn-default shadow-floating">
+            <Button onClick={open} variant="default" className="shadow-floating">
               <span>{t("catalogue:filter")}</span>
               <span className="h-5 w-4.5 rounded-md bg-primary text-center text-white dark:bg-primary-dark">
                 {actives.length}
@@ -242,25 +242,16 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
                   onChange={e => setFilter("end", e)}
                 />
               </div>
-
-              {/* <Checkbox
-                label={t("source")}
-                className="space-y-4 px-1 pt-4"
-                name="source"
-                options={filterSources}
-                value={filter.source}
-                onChange={e => setFilter("source", e)}
-              /> */}
-
-              <div className="fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t bg-white p-3 dark:border-washed-dark dark:bg-black">
+              <div className="fixed bottom-0 left-0 flex w-full flex-col border-t bg-white p-3 dark:border-washed-dark dark:bg-black">
                 <Button
-                  className="btn-primary w-full justify-center"
+                  variant="primary"
+                  className="w-full justify-center"
                   disabled={!actives.length}
                   onClick={reset}
                 >
                   {t("common:common.reset")}
                 </Button>
-                <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
+                <Button variant="reset" className="w-full justify-center p-0" onClick={close}>
                   <XMarkIcon className="h-5 w-5" />
                   {t("common:common.close")}
                 </Button>
@@ -273,15 +264,14 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
       {/* Desktop */}
       <div className="hidden gap-2 pr-6 xl:flex">
         {actives.length > 0 && (
-          <div>
-            <Button
-              icon={<XMarkIcon className="h-4 w-4" />}
-              disabled={!actives.length}
-              onClick={reset}
-            >
-              {t("common:common.clear_all")}
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            icon={<XMarkIcon className="h-4 w-4" />}
+            disabled={!actives.length}
+            onClick={reset}
+          >
+            {t("common:common.clear_all")}
+          </Button>
         )}
         <Dropdown
           options={periods}

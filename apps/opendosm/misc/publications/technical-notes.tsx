@@ -100,8 +100,9 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {publications.map((item: Publication, i: number) => (
+            {publications.map((item: Publication) => (
               <PublicationCard
+                key={item.publication_id}
                 publication={item}
                 onClick={() => {
                   setShow(true);
@@ -143,7 +144,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
         {total_pubs > ITEMS_PER_PAGE && (
           <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
             <Button
-              className="btn-disabled btn-default"
+              variant="default"
               onClick={() => setFilter("page", `${+filter.page - 1}`)}
               disabled={filter.page === "1"}
             >
@@ -158,7 +159,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
               })}
             </span>
             <Button
-              className="btn-disabled btn-default"
+              variant="default"
               onClick={() => {
                 setFilter("page", `${+filter.page + 1}`);
               }}

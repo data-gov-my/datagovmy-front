@@ -243,7 +243,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
         <div className="flex w-full justify-end md:hidden">
           <Modal
             trigger={open => (
-              <Button onClick={open} className="btn-default shadow-floating">
+              <Button onClick={open} variant="default" className="shadow-floating">
                 <span>{t("catalogue:filter")}</span>
                 <span className="h-5 w-4.5 rounded-md bg-primary text-center text-white dark:bg-primary-dark">
                   {actives.length}
@@ -293,7 +293,8 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                 </div>
                 <div className="fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t bg-white p-3 dark:border-washed-dark dark:bg-black">
                   <Button
-                    className="btn-primary w-full justify-center"
+                    variant="primary"
+                    className="w-full justify-center"
                     disabled={!actives.length}
                     onClick={() => {
                       setData("loading", true);
@@ -356,7 +357,8 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           {actives.length > 0 &&
             actives.findIndex(active => !["page"].includes(active[0])) !== -1 && (
               <Button
-                className="btn-ghost group text-dim hover:text-black dark:hover:text-white"
+                variant="ghost"
+                className="group"
                 disabled={!actives.length}
                 onClick={() => {
                   setData("loading", true);
@@ -383,6 +385,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {publications.map((item: Publication) => (
                   <PublicationCard
+                    key={item.publication_id}
                     publication={item}
                     onClick={() => {
                       setShow(true);
@@ -428,7 +431,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
         {total_pubs > ITEMS_PER_PAGE && (
           <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
             <Button
-              className="btn-disabled btn-default"
+              variant="default"
               onClick={() => setFilter("page", `${+filter.page - 1}`)}
               disabled={filter.page === "1"}
             >
@@ -443,7 +446,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
               })}
             </span>
             <Button
-              className="btn-disabled btn-default"
+              variant="default"
               onClick={() => {
                 setFilter("page", `${+filter.page + 1}`);
               }}

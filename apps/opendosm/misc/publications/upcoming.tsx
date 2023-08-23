@@ -253,7 +253,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
               </h5>
               <div className="flex items-center gap-1.5">
                 <Button
-                  className="btn-default btn-disabled"
+                  variant="default"
                   onClick={() => {
                     setData("loading", true);
                     setData("month", data.month - 1);
@@ -267,7 +267,8 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                   <ChevronLeftIcon className="h-4.5 w-4.5" />
                 </Button>
                 <Button
-                  className="btn-primary w-[100px] justify-center whitespace-nowrap shadow-button"
+                  variant="primary"
+                  className="shadow-button"
                   onClick={() => {
                     if (data.month !== thisMonth) {
                       setData("loading", true);
@@ -281,7 +282,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                   {t("today")}
                 </Button>
                 <Button
-                  className="btn-default btn-disabled"
+                  variant="default"
                   onClick={() => {
                     setData("loading", true);
                     setData("month", data.month + 1);
@@ -361,15 +362,12 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
 
                                   <div className="flex h-full flex-col justify-start gap-1.5">
                                     {pubs.has(id) &&
-                                      pubs.get(id).map(pub => (
-                                        <Tooltip tip={pub}>
+                                      pubs.get(id).map((pub, i) => (
+                                        <Tooltip key={`desktop_${pub}_${d.date}_${i}`} tip={pub}>
                                           {() => (
-                                            <div
-                                              key={`desktop_${pub}_${d.date}`}
-                                              className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
-                                            >
+                                            <p className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white">
                                               {pub}
-                                            </div>
+                                            </p>
                                           )}
                                         </Tooltip>
                                       ))}
@@ -417,10 +415,9 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                           </div>
                           {pubs.has(id) &&
                             pubs.get(id).map((pub, i) => (
-                              <Tooltip tip={pub}>
+                              <Tooltip tip={pub} key={`mobile_${pub}_${d.date}_${i}`}>
                                 {open => (
                                   <div
-                                    key={`mobile_${pub}_${d.date}`}
                                     className="h-6 w-full cursor-help truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
                                     onClick={open}
                                   >
@@ -474,7 +471,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
             {total_pubs > ITEMS_PER_PAGE && (
               <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
                 <Button
-                  className="btn-disabled btn-default"
+                  variant="default"
                   onClick={() => {
                     setData("loading", true);
                     setFilter("page", `${+filter.page - 1}`);
@@ -492,7 +489,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                   })}
                 </span>
                 <Button
-                  className="btn-disabled btn-default"
+                  variant="default"
                   onClick={() => {
                     setData("loading", true);
                     setFilter("page", `${+filter.page + 1}`);

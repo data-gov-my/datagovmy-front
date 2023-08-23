@@ -69,16 +69,17 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
                     className
                   )}
                 >
-                  <div onClick={close} className="grow lg:hidden min-h-[15vh]"></div>
+                  <div onClick={close} className="min-h-[15vh] grow lg:hidden"></div>
                   <div className="dark:border-washed-dark relative flex w-full items-center justify-between rounded-t-xl border bg-white p-3 dark:bg-black">
                     <Dialog.Title as="div" className="mr-9 flex grow">
                       {title}
                     </Dialog.Title>
                     <Button
-                      className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-3 h-8 w-8 rounded-full"
+                      variant="ghost"
+                      className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-3 rounded-full p-0"
                       onClick={() => setShow(false)}
                     >
-                      <XMarkIcon className="text-dim mx-auto h-6 w-6 group-hover:text-black group-hover:dark:text-white" />
+                      <XMarkIcon className="text-dim mx-auto h-5 w-5 group-hover:text-black group-hover:dark:text-white" />
                     </Button>
                   </div>
                   <>{children(close)}</>

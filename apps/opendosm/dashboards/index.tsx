@@ -87,8 +87,9 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, onSear
           />
           {data.search && (
             <Button
-              className="btn-ghost text-dim max-md:rounded-full max-md:p-2"
-              icon={<XMarkIcon className="h-5 w-5" />}
+              variant="ghost"
+              className="max-md:rounded-full"
+              icon={<XMarkIcon className="h-4 w-4" />}
               onClick={reset}
             >
               <p className="hidden md:block">{t("common:common.clear")}</p>

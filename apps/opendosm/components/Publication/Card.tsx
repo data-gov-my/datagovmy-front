@@ -15,12 +15,13 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, pub
 
   return (
     <Button
+      variant="reset"
       key={publication.publication_id}
-      className="btn-border group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition hover:bg-background dark:hover:bg-washed-dark/50"
+      className="group flex w-full flex-col space-y-3 rounded-xl border p-6 transition hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50"
       onClick={onClick}
     >
       <div className="relative flex w-full items-center justify-between">
-        <p className="text-sm uppercase text-dim">
+        <p className="text-sm font-medium uppercase text-dim">
           {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
         </p>
         {/* If release date is less than 30 days from today */}
@@ -36,9 +37,9 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, pub
       <div className="flex grow flex-col gap-3 overflow-hidden text-start">
         <div className="grow flex-wrap space-y-3">
           <p className="text-lg font-bold">{publication.title}</p>
-          <p className="text-sm">{publication.description}</p>
+          <p className="text-sm font-normal text-dim">{publication.description}</p>
         </div>
-        <div className="relative w-full">
+        <div className="relative w-full text-base font-normal">
           <p className="text-dim transition-transform group-hover:translate-y-6">
             {numFormat(100000, "compact")}
             {100000 % 10 !== 0 ? "+ " : " "}
