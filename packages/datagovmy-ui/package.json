@@ -100,6 +100,7 @@
     }
   },
   "dependencies": {
+    "@floating-ui/react": "^0.25.1",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.11",
     "@nivo/core": "^0.79.0",
@@ -107,6 +108,7 @@
     "@radix-ui/react-slider": "^1.1.1",
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.8.5",
+    "@tanstack/react-virtual": "^3.0.0-beta.54",
     "axios": "^0.27.2",
     "canvas2svg": "^1.0.16",
     "chart.js": "^3.9.1",
