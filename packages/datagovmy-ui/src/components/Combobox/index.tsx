@@ -203,7 +203,7 @@ const ComboBox = <T extends unknown>({
                   ) : (
                     filteredOptions.map((option, i) => {
                       return (
-                        <ComboOption
+                        <ComboOption<T>
                           {...getItemProps({
                             key: i,
                             ref(node) {
