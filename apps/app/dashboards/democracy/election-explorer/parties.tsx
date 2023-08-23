@@ -223,6 +223,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                     width={32}
                     height={18}
                     alt={t(filter.name ?? DEFAULT_PARTY)}
+                    inline
                   />
                   <Trans>
                     {t("party.title", {
