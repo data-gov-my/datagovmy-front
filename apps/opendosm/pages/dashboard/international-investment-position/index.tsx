@@ -5,7 +5,7 @@ import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
-import InternationalInvestmentPositionDashboard from "@dashboards/national-accounts/iip";
+import InternationalInvestmentPositionDashboard from "@dashboards/iip";
 
 const InternationalInvestmentPosition: Page = ({
   last_updated,
