@@ -1,7 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { get } from "datagovmy-ui/api";
 import { Page } from "datagovmy-ui/types";
-import { Hero, Metadata } from "datagovmy-ui/components";
+import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
@@ -14,14 +14,14 @@ const InternationalInvestmentPosition: Page = ({
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation([""]);
-  console.log(last_updated);
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={"HELLO WORLD"} description={"huhuhuhuh"} keywords={""} />
+      <Metadata title={"Internation Investment Position"} description={"huhuhuhuh"} keywords={""} />
       <InternationalInvestmentPositionDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
+        meta={meta}
       />
     </AnalyticsProvider>
   );
@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps = withi18n("", async () => {
         id: "dashboard-iip",
         type: "dashboard",
         category: "national-accounts",
-        agency: "bnm",
+        agency: "dosm",
       },
       last_updated: data.data_last_updated,
       timeseries: data.timeseries,
