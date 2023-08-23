@@ -13,10 +13,10 @@ const InternationalInvestmentPosition: Page = ({
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation([""]);
+  const { t } = useTranslation(["dashboard-iip", "common"]);
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={"Internation Investment Position"} description={"huhuhuhuh"} keywords={""} />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternationalInvestmentPositionDashboard
         last_updated={last_updated}
         timeseries={timeseries}
@@ -27,7 +27,7 @@ const InternationalInvestmentPosition: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-iip", async () => {
   const { data } = await get("/dashboard", { dashboard: "iip" });
 
   return {

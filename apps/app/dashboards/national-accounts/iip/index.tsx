@@ -2,7 +2,7 @@ import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { numFormat } from "datagovmy-ui/helpers";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { MetaPage, OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
@@ -42,16 +42,16 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
   timeseries_callout,
   meta,
 }) => {
-  const { t } = useTranslation("");
+  const { t, i18n } = useTranslation(["dashboard-iip", "common"]);
 
   const INDEX_OPTIONS: Array<OptionType> = [
-    { label: "Net", value: "net" },
-    { label: "Assets", value: "assets" },
-    { label: "Liabilities", value: "liabilities" },
+    { label: t("keys.net"), value: "net" },
+    { label: t("keys.assets"), value: "assets" },
+    { label: t("keys.liabilities"), value: "liabilities" },
   ];
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: "No shading", value: "no_shade" },
-    { label: "Recession", value: "recession" },
+    { label: t("keys.no_shade"), value: "no_shade" },
+    { label: t("keys.recession"), value: "recession" },
   ];
 
   const { data, setData } = useData({
@@ -59,14 +59,15 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
     index_type: INDEX_OPTIONS[0],
     shade_type: SHADE_OPTIONS[0],
   });
-
+  const LATEST_TIMESTAMP =
+    timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
   const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
 
   const formatToBillions = (number: number) => {
     if (number >= 1e12) {
-      return `${numFormat(number / 1e9, "standard", 1, "long")} bil`;
+      return `${numFormat(number / 1e9, "standard", 1, "long", i18n.language)} bil`;
     }
-    return numFormat(number, "compact", [1, 1], "long", undefined, true);
+    return numFormat(number, "compact", [1, 1], "long", i18n.language, true);
   };
 
   const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
@@ -91,7 +92,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
 
   const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
     sectionHeaders.map(chartName => ({
-      title: chartName,
+      title: t(`keys.${chartName}`),
       prefix: "RM ",
       unitY: "",
       label: t(`keys.${chartName}`),
@@ -142,24 +143,19 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
     <>
       <Hero
         background="blue"
-        category={["National Accounts", "text-primary dark:text-primary-dark"]}
-        header={["International Investment Position"]}
-        description={[
-          "How much money is the world investing in Malaysia? And how much money is Malaysia investing overseas? These are two critical questions for our policymakers, answered through data on what is called our International Investment Position (IIP). The IIP is one of 3 primary national accounts that convey Malaysia's economic performance, the other two being Gross Domestic Product (GDP) and the Balance of Payments (BOP). This dashboard gives you an easy way to explore key IIP trends and patterns. Enjoy!",
-        ]}
+        category={[t("common:categories.national_accounts"), "text-primary dark:text-primary-dark"]}
+        header={[t("header")]}
+        description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={<AgencyBadge agency={meta.agency} />}
       />
 
       <Container className="min-h-screen">
         <Section
-          title={"How is Malaysia’s International Investment Position (IIP) trending?"}
+          title={t("section_1.title")}
           description={
             <div className="flex flex-col gap-4">
-              <p className={"whitespace-pre-line text-base"}>
-                Net figures are derived by subtracting liabilities from assets. A positive number
-                indicates net assets, while a negative number indicates net liabilities.
-              </p>
+              <p className={"whitespace-pre-line text-base"}>{t("section_1.description")}</p>
               <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                 <Dropdown
                   anchor="left"
@@ -205,7 +201,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                       {
                         type: "line",
                         data: coordinate.total,
-                        label: "Total",
+                        label: t("keys.total"),
                         fill: data.shade_type.value === "no_shade",
                         backgroundColor: AKSARA_COLOR.PRIMARY_H,
                         borderColor: AKSARA_COLOR.PRIMARY,
@@ -216,7 +212,9 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                   }}
                   stats={[
                     {
-                      title: "Latest (2Q 2023)",
+                      title: t("common:common.latest", {
+                        date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                      }),
                       value: `${
                         timeseries_callout.data[data.index_type.value].total.latest > 0 ? "+" : "-"
                       }RM ${formatToBillions(
@@ -224,7 +222,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                       )}`,
                     },
                     {
-                      title: "QoQ change",
+                      title: t("keys.qoq_change"),
                       value: `${
                         timeseries_callout.data[data.index_type.value].total.change > 0 ? "+" : "-"
                       }RM ${formatToBillions(
@@ -235,7 +233,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                 />
                 <Slider
                   type="range"
-                  period={"month"}
+                  period={"quarter"}
                   value={data.minmax}
                   onChange={e => setData("minmax", e)}
                   data={timeseries.data[data.index_type.value].x}
@@ -282,11 +280,13 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                         }}
                         stats={[
                           {
-                            title: "Latest (2Q 2023)",
+                            title: t("common:common.latest", {
+                              date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                            }),
                             value: chartData.callout.latest,
                           },
                           {
-                            title: "QoQ change",
+                            title: t("keys.qoq_change"),
                             value: chartData.callout.change,
                           },
                         ]}
