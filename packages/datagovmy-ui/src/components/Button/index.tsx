@@ -18,6 +18,8 @@ const style = {
     "border border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark bg-white text-black dark:bg-black dark:text-white",
   primary:
     "from-primary to-primary-dark shadow-button bg-gradient-to-t text-white hover:to-[#5B8EFF]",
+  ghost:
+    "hover:bg-washed dark:hover:bg-washed-dark text-dim hover:text-black dark:hover:text-white",
 };
 
 const Button: FunctionComponent<ButtonProps> = ({

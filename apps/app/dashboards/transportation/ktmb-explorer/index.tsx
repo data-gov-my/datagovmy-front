@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import { routes } from "@lib/routes";
@@ -115,7 +114,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
 
   return (
     <>
-      <Progress />
       <Hero
         background="blue"
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
@@ -145,11 +143,11 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
                 >
                   {close => (
-                    <div className="space-y-4 p-3">
+                    <div className="space-y-4 p-3 bg-white dark:bg-black">
                       <div className="space-y-2">
                         <Label label={t("service")} className="text-sm" />
                         <Dropdown
-                          anchor="left"
+                          anchor="bottom"
                           width="w-full"
                           options={SERVICE_OPTIONS}
                           selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
@@ -164,7 +162,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         <Label label={t("origin")} className="text-sm" />
                         <Label label={t("destination")} className="text-sm" />
                         <Dropdown
-                          anchor="left-0 bottom-10"
+                          anchor="bottom-10"
                           width="w-full"
                           options={ORIGIN_OPTIONS}
                           selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}

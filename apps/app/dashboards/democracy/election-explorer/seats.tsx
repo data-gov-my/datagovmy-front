@@ -191,7 +191,7 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
         <div className="xl:grid xl:grid-cols-12">
           <div className="xl:col-span-10 xl:col-start-2">
             <h4 className="text-center">{t("seat.header")}</h4>
-            <div className="mx-auto w-full p-6 sm:w-[500px]">
+            <div className="mx-auto w-full py-6 sm:w-[500px]">
               <ComboBox<SeatOption>
                 placeholder={t("seat.search_seat")}
                 options={SEAT_OPTIONS}
@@ -213,7 +213,11 @@ const ElectionSeatsDashboard: FunctionComponent<ElectionSeatsProps> = ({
                     </span>
                   </>
                 )}
-                selected={data.seat_option ?? null}
+                selected={
+                  data.seat_option
+                    ? SEAT_OPTIONS.find(e => e.value === data.seat_option.value)
+                    : null
+                }
                 onChange={selected => {
                   if (selected) {
                     fetchResult(selected).then(elections => {

@@ -8,4 +8,5 @@ export const routes = {
   INDUSTRIAL_PRODUCTION: "/dashboard/industrial-production",
   CONSUMER_PRICES: "/dashboard/consumer-prices",
   PRODUCER_PRICES: "/dashboard/producer-prices",
+  PUBLICATIONS: "/publications",
 } as const;

@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { routes } from "@lib/routes";
 import {
   AgencyBadge,
@@ -106,7 +105,6 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
 
   return (
     <>
-      <Progress />
       <Hero
         background="green"
         category={[t("common:categories.demography"), "text-green-600"]}

@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import DataCatalogue, { Catalogue } from "@data-catalogue/index";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
@@ -18,7 +17,6 @@ const CatalogueIndex: Page = ({
 
   return (
     <>
-      <Progress />
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <DataCatalogue query={query} collection={collection} sources={sources} />
     </>

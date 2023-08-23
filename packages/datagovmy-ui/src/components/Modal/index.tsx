@@ -8,9 +8,10 @@ import {
   useState,
 } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/20/solid";
 import { clx } from "../../lib/helpers";
-import { body } from "datagovmy-ui/configs/font";
+import { body, header } from "datagovmy-ui/configs/font";
+import Button from "../Button";
 
 export interface ModalInterface {
   open: () => void;
@@ -62,16 +63,26 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
               >
                 <Dialog.Panel
                   className={clx(
+                    header.variable,
                     body.variable,
-                    "dark:border-washed-dark dark:bg-background-dark h-fit grow rounded-t-xl border bg-white font-sans lg:rounded-xl",
+                    "flex h-full w-full max-w-5xl flex-col overflow-auto rounded-t-xl font-sans lg:h-fit lg:justify-center lg:rounded-xl",
                     className
                   )}
                 >
-                  <div className="dark:border-washed-dark flex w-full justify-between border-b p-3">
-                    <Dialog.Title as="h5">{title}</Dialog.Title>
-                    <XMarkIcon onClick={close} className="text-dim h-5 w-5 self-center" />
+                  <div onClick={close} className="min-h-[15vh] grow lg:hidden"></div>
+                  <div className="dark:border-washed-dark relative flex w-full items-center justify-between rounded-t-xl border bg-white p-3 dark:bg-black">
+                    <Dialog.Title as="div" className="mr-9 flex grow">
+                      {title}
+                    </Dialog.Title>
+                    <Button
+                      variant="ghost"
+                      className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-3 rounded-full p-0"
+                      onClick={() => setShow(false)}
+                    >
+                      <XMarkIcon className="text-dim mx-auto h-5 w-5 group-hover:text-black group-hover:dark:text-white" />
+                    </Button>
                   </div>
-                  <div className="max-h-[85vh] overflow-auto">{children(close)}</div>
+                  <>{children(close)}</>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

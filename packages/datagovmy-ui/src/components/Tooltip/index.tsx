@@ -32,16 +32,16 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, className, tip }) 
           )}
         </>
       )}
-      <div className="invisible absolute bottom-7 left-1/2 z-10 hidden w-max max-w-[200px] -translate-x-1/2 transform flex-col items-center group-hover:visible group-hover:flex lg:flex">
+      <div className="invisible absolute bottom-7 left-1/2 z-10 hidden -translate-x-1/2 transform flex-col items-center group-hover:visible group-hover:flex lg:flex">
         <span
           className={clx(
-            "shadow-floating relative rounded-lg bg-black px-3 py-2 text-sm font-normal text-white dark:bg-white dark:text-black",
+            "shadow-floating absolute bottom-1 w-max max-w-[200px] rounded-lg bg-black px-3 py-2 text-sm font-normal text-white dark:bg-white dark:text-black",
             className
           )}
         >
           {tip}
         </span>
-        <div className="absolute -bottom-1 h-2 w-2 rotate-45 bg-black dark:bg-white"></div>
+        <div className=" h-2 w-2 rotate-45 bg-black dark:bg-white"></div>
       </div>
 
       <Transition.Root show={isOpen} as={Fragment}>
