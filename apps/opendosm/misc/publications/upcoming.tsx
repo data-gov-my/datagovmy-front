@@ -305,7 +305,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 <div className="hidden w-full rounded-lg border dark:border-washed-dark lg:flex">
                   <table className="w-full table-fixed divide-y dark:divide-washed-dark">
                     <thead>
-                      <tr className="divide-x dark:divide-washed-dark">
+                      <tr className="divide-x divide-outline dark:divide-washed-dark">
                         {daysInWeek.map(day => {
                           return (
                             <th
@@ -320,7 +320,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                     </thead>
                     <tbody className="divide-y dark:divide-washed-dark">
                       {calendar.desktop.map((week, i) => (
-                        <tr key={i} className="divide-x dark:divide-washed-dark">
+                        <tr key={i} className="divide-x divide-outline dark:divide-washed-dark">
                           {week.map(d => {
                             const isToday = todayISO === d.date;
                             const notThisMonth = d.month !== data.month;
@@ -335,7 +335,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                                   }
                                 }}
                                 className={clx(
-                                  "relative h-max min-h-[128px] min-w-[150px] px-3 pb-2 pt-10",
+                                  "relative h-max min-h-[128px] min-w-[150px] px-3 pb-2 pt-[38px] align-top",
                                   notThisMonth && "bg-background dark:bg-black",
                                   isToday && "bg-primary/5"
                                 )}
