@@ -12,6 +12,7 @@ const namespaces = [
   "dashboard-labour-market",
   "dashboard-producer-prices",
   "dashboard-wholesale-retail",
+  "dashboard-iip",
 ];
 
 module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);

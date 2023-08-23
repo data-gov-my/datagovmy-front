@@ -63,11 +63,11 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
     timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
   const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
 
-  const formatToBillions = (number: number) => {
+  const formatToBillions = (number: number, dp: number = 1) => {
     if (number >= 1e12) {
-      return `${numFormat(number / 1e9, "standard", 1, "long", i18n.language)} bil`;
+      return `${numFormat(number / 1e9, "standard", dp, "long", i18n.language)} bil`;
     }
-    return numFormat(number, "compact", [1, 1], "long", i18n.language, true);
+    return numFormat(number, "compact", dp, "long", i18n.language, true);
   };
 
   const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
@@ -124,20 +124,16 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
     }));
 
   const detailsChartData = getChartData([
-    "derivatives",
-    "direct_debt",
-    "direct_equity",
     "direct_total",
-    "other",
+    "direct_equity",
+    "direct_debt",
+    "portfolio_total",
     "porfolio_equity",
     "portfolio_debt",
-    "portfolio_total",
+    "derivatives",
+    "other",
     "reserve",
   ]);
-
-  useWatch(() => {
-    setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
-  }, [data.index_type]);
 
   return (
     <>
@@ -181,7 +177,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                   enableAnimation={!play}
                   className="h-[350px] w-full"
                   interval="quarter"
-                  displayNumFormat={value => formatToBillions(value)}
+                  displayNumFormat={value => formatToBillions(value, 0)}
                   axisY={{
                     y2: {
                       display: false,
@@ -207,7 +203,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                         borderColor: AKSARA_COLOR.PRIMARY,
                         borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
                       },
-                      // shader(data.shade_type.value),
+                      shader(data.shade_type.value),
                     ],
                   }}
                   stats={[
@@ -247,7 +243,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                         className="h-[350px] w-full"
                         interval="quarter"
                         enableAnimation={!play}
-                        displayNumFormat={value => formatToBillions(value)}
+                        displayNumFormat={value => formatToBillions(value, 0)}
                         prefixY={chartData.prefix}
                         unitY={chartData.unitY}
                         axisY={{
@@ -275,7 +271,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                               fill: chartData.fill,
                               borderWidth: 1.5,
                             },
-                            // shader(data.shade_type.value),
+                            shader(data.shade_type.value),
                           ],
                         }}
                         stats={[
