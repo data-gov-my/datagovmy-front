@@ -103,7 +103,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   const { filter, setFilter } = useFilter({
     start: query.start ?? "",
     end: query.end ?? "",
-    page: query.page ?? "1",
+    page: query.page ?? "",
     pub_type: query.pub_type
       ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
       : undefined,
@@ -335,43 +335,45 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                                   }
                                 }}
                                 className={clx(
-                                  "min-w-[150px] px-3 py-2 lg:h-32",
+                                  "relative h-max min-h-[128px] min-w-[150px] px-3 pb-2 pt-10",
                                   notThisMonth && "bg-background dark:bg-black",
                                   isToday && "bg-primary/5"
                                 )}
                               >
-                                <div className="flex h-full flex-col justify-start gap-1.5">
-                                  <div className="relative flex items-center justify-between">
-                                    <div className="text-primary dark:text-primary-dark">
-                                      {isToday && t("today")}
-                                    </div>
-                                    <span
-                                      className={clx(
-                                        notThisMonth ? "text-dim" : "text-black dark:text-white",
-                                        isToday &&
-                                          "absolute right-0 top-0 h-6 rounded-full bg-primary px-2 text-white dark:bg-primary-dark"
-                                      )}
-                                    >
-                                      {d.day}{" "}
-                                      {d.day === 1 &&
-                                        new Date(data.year, d.month).toLocaleString(i18n.language, {
-                                          month: "short",
-                                        })}
-                                    </span>
+                                <div className="flex h-full flex-col justify-start">
+                                  <div className="absolute left-3 top-2 text-primary dark:text-primary-dark">
+                                    {isToday && t("today")}
                                   </div>
-                                  {pubs.has(id) &&
-                                    pubs.get(id).map((pub, i) => (
-                                      <Tooltip tip={pub}>
-                                        {() => (
-                                          <div
-                                            key={i}
-                                            className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
-                                          >
-                                            {pub}
-                                          </div>
-                                        )}
-                                      </Tooltip>
-                                    ))}
+                                  <span
+                                    className={clx(
+                                      "absolute right-3 top-2",
+                                      notThisMonth ? "text-dim" : "text-black dark:text-white",
+                                      isToday &&
+                                        "h-6 rounded-full bg-primary px-2 text-white dark:bg-primary-dark"
+                                    )}
+                                  >
+                                    {d.day}{" "}
+                                    {d.day === 1 &&
+                                      new Date(data.year, d.month).toLocaleString(i18n.language, {
+                                        month: "short",
+                                      })}
+                                  </span>
+
+                                  <div className="flex h-full flex-col justify-start gap-1.5">
+                                    {pubs.has(id) &&
+                                      pubs.get(id).map(pub => (
+                                        <Tooltip tip={pub}>
+                                          {() => (
+                                            <div
+                                              key={`desktop_${pub}_${d.date}`}
+                                              className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
+                                            >
+                                              {pub}
+                                            </div>
+                                          )}
+                                        </Tooltip>
+                                      ))}
+                                  </div>
                                 </div>
                               </td>
                             );
@@ -394,7 +396,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                           }
                         }}
                         className={clx(
-                          "min-h-[32px] min-w-[150px] rounded-xl border border-outline px-3 py-2 dark:border-washed-dark",
+                          "flex min-h-[32px] min-w-[150px] flex-col rounded-xl border border-outline px-3 py-2 dark:border-washed-dark",
                           isToday && "bg-primary/5"
                         )}
                       >
@@ -418,7 +420,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                               <Tooltip tip={pub}>
                                 {open => (
                                   <div
-                                    key={`mob_${pub}_${i}`}
+                                    key={`mobile_${pub}_${d.date}`}
                                     className="h-6 w-full cursor-help truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white"
                                     onClick={open}
                                   >
