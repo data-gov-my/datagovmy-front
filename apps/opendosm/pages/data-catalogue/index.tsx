@@ -45,8 +45,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       ...query,
     });
 
-    const collection = recurSort(data.dataset);
-
     return {
       props: {
         meta: {
@@ -58,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         query: query ?? {},
         total: data.total_all,
         sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
-        collection,
+        collection: data.dataset ? recurSort(data.dataset) : {},
       },
     };
   }

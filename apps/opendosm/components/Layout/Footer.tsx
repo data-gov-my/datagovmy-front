@@ -7,7 +7,7 @@ const OpenDOSMFooter: FunctionComponent = () => {
   return (
     <Footer title={<p>{t("agencies:dosm.full")}</p>}>
       {/* OPEN SOURCE REPOS */}
-      <div className="flex w-full flex-col gap-2 md:w-auto">
+      <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("nav.open_source")}</p>
 
         <At className="link-dim" external href="https://github.com/dosm-malaysia/aksara-front">
@@ -19,11 +19,11 @@ const OpenDOSMFooter: FunctionComponent = () => {
       </div>
 
       {/* OPEN DATA */}
-      <div className="flex w-full flex-col gap-2 md:w-auto">
+      <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("nav.open_data")}</p>
 
         <At className="link-dim" external href="https://github.com/dosm-malaysia/">
-          Github
+          Github DOSM
         </At>
       </div>
     </Footer>

@@ -1,4 +1,7 @@
-import { ArrowTopRightOnSquareIcon as ExternalLinkIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowTopRightOnSquareIcon as ExternalLinkIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 import { Chips, Slider, Tooltip } from "datagovmy-ui/components";
 import { BREAKPOINTS, SHORT_PERIOD } from "datagovmy-ui/constants";
 import { WindowContext, WindowProvider } from "datagovmy-ui/contexts/window";
@@ -256,19 +259,27 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
             {dataset.meta.title}
           </h4>
 
-          <>
+          <div>
             <Tooltip
-              className="block md:hidden"
               tip={t("common:common.data_of", {
                 date: toDate(metadata.data_as_of, "dd MMM yyyy", i18n.language),
               })}
-            />
+            >
+              {open => (
+                <>
+                  <InformationCircleIcon
+                    className="text-outlineHover mb-1 inline-block h-4 w-4 md:hidden"
+                    onClick={() => open}
+                  />
+                </>
+              )}
+            </Tooltip>
             <span className="text-dim hidden text-right text-sm md:block">
               {t("common:common.data_of", {
                 date: toDate(metadata.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
               })}
             </span>
-          </>
+          </div>
         </div>
         <Chips className="text-sm" data={chips} onRemove={null} onClearAll={null} />
       </div>

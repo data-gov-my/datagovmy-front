@@ -165,8 +165,18 @@ export function Navbar({ flatDirectories, items }: NavBarProps): ReactElement {
             </Anchor>
           ) : null} */}
 
-          {config.darkMode && renderComponent(config.themeSwitch.component)}
-          {config.i18n.length > 0 && <LocaleSwitch options={config.i18n} />}
+          {config.darkMode && (
+            <div className="hidden sm:block">
+              {renderComponent(config.themeSwitch.component, {
+                lite: true,
+              })}
+            </div>
+          )}
+          {config.i18n.length > 0 && (
+            <div className="hidden sm:block">
+              <LocaleSwitch options={config.i18n} />
+            </div>
+          )}
 
           {config.chat.link ? (
             <Anchor className="p-2 text-current" href={config.chat.link} newWindow>

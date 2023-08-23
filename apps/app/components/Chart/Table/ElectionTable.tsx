@@ -100,7 +100,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           <div className="flex items-center gap-1.5">
             <div className="relative flex h-auto w-8 justify-center">
               <ImageWithFallback
-                className="border-outline dark:border-outlineHover-dark  rounded border"
+                className="border-outline dark:border-washed-dark  rounded border"
                 src={`/static/images/parties/${value}.png`}
                 width={32}
                 height={18}
@@ -170,7 +170,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           <div className="flex items-center gap-1.5">
             <div className="relative flex h-auto w-8 justify-center">
               <ImageWithFallback
-                className="border-outline dark:border-outlineHover-dark rounded border"
+                className="border-outline dark:border-washed-dark rounded border"
                 src={`/static/images/parties/${value}.png`}
                 width={32}
                 height={18}

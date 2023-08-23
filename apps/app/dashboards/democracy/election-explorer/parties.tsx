@@ -192,12 +192,16 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
           <div className="xl:col-span-10 xl:col-start-2">
             {/* Explore any party's entire electoral history */}
             <h4 className="text-center">{t("party.header")}</h4>
-            <div className="mx-auto w-full p-6 sm:w-[500px]">
+            <div className="mx-auto w-full py-6 sm:w-[500px]">
               <ComboBox
                 placeholder={t("party.search_party")}
                 imageSource="/static/images/parties/"
                 options={PARTY_OPTIONS}
-                selected={data.party_option ?? null}
+                selected={
+                  data.party_option
+                    ? PARTY_OPTIONS.find(e => e.value === data.party_option.value)
+                    : null
+                }
                 onChange={selected => {
                   if (selected) {
                     fetchResult(selected, filter.state ?? "mys").then(({ parlimen, dun }) => {
@@ -214,7 +218,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
               title={
                 <span className="text-lg leading-9">
                   <ImageWithFallback
-                    className="border-outline dark:border-outlineHover-dark mr-2 inline-block rounded border"
+                    className="border-outline dark:border-washed-dark mr-2 inline-block rounded border"
                     src={`/static/images/parties/${filter.name ?? DEFAULT_PARTY}.png`}
                     width={32}
                     height={18}

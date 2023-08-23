@@ -124,7 +124,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const [show, setShow] = useState<OptionType>(options[0]);
   const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
   const embedRef = useRef<EmbedInterface>(null);
-  const { filter, setFilter } = useFilter(config.context, { id: params.id });
+  const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
   const { result, track } = useAnalytics(dataset);
   const availableDownloads = useMemo<DownloadOption[]>(
     () => Object.values(downloads).flatMap(option => option),
@@ -280,7 +280,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           if (key === "x")
             return toDate(
               item[key],
-              "dd MMM yyy", //SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              "dd MMM yyyy", //SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
               i18n.language
             );
           else return item[key];
@@ -562,7 +562,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     </ul>
                     <div className="hidden md:block">
                       <Table
-                        className="table-slate table-default-slate"
+                        className="table-slate table-default-slate md:w-full"
                         data={metadata.definitions.map((item: any) => {
                           const raw = item.desc;
                           const [type, definition] = [

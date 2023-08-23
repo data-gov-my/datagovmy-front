@@ -209,7 +209,7 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
 
   const filterSources: OptionType[] = sources.map(source => ({
     label: t(`agencies:${source}.abbr`),
-    value: t(`agencies:${source}.abbr`),
+    value: source,
   }));
 
   const reset = () => onSearch("");
@@ -225,8 +225,9 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, source
             anchor="left"
             options={filterSources}
             selected={filterSources.find(item => data.source === item.value)}
-            onChange={e => {
-              if (e?.value) push(`/dashboard/agency/${e.value}`, undefined, { scroll: false });
+            onChange={(e?: OptionType) => {
+              if (e)
+                push(`/dashboard/agency/${e.value.toUpperCase()}`, undefined, { scroll: false });
               else push("/dashboard", undefined, { scroll: false });
             }}
             enableSearch

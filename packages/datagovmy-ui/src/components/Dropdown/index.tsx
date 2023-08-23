@@ -80,9 +80,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const { t } = useTranslation();
   const isSelected = (option: OptionType): boolean => {
     return (
-      multiple &&
-      option &&
-      (selected as OptionType[]).some((item: OptionType) => item.value === option.value)
+      multiple && (selected as OptionType[]).some((item: OptionType) => item.value === option.value)
     );
   };
 
@@ -118,57 +116,53 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
     <Listbox.Option
       key={index}
       style={style}
-      className={clx(
-        "hover:bg-washed dark:hover:bg-washed-dark relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
-        multiple ? "pl-10" : "pl-4",
-        multiple &&
-          selected &&
-          Array.isArray(selected) &&
-          selected.some((item: OptionType) => item.value == option.value)
-          ? "bg-washed dark:bg-washed-dark"
-          : "bg-inherit"
-      )}
+      className={({ active }) =>
+        clx(
+          "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
+          multiple ? "pl-10" : "pl-4",
+          active && "bg-washed dark:bg-washed-dark"
+        )
+      }
       onClick={() => (multiple ? handleChange(option) : null)}
       value={option}
     >
       {/* State flag - optional */}
-      <div className="flex w-full items-center justify-between gap-2">
-        {enableFlag && (
-          <Image
-            src={`/static/images/states/${option.value}.jpeg`}
-            width={20}
-            height={12}
-            alt={option.label as string}
+      {enableFlag && (
+        <Image
+          src={`/static/images/states/${option.value}.jpeg`}
+          width={20}
+          height={12}
+          alt={option.label as string}
+        />
+      )}
+
+      {/* Option label */}
+      <span
+        className={clx(
+          "block flex-grow truncate",
+          option === selected ? "font-medium" : "font-normal"
+        )}
+      >
+        {option.label}
+      </span>
+
+      {/* Checkbox (multiple mode) */}
+      {multiple && (
+        <span className="absolute inset-y-0 left-3 flex items-center">
+          <input
+            type="checkbox"
+            checked={
+              selected && (selected as OptionType[]).some(item => item.value === option.value)
+            }
+            className="border-outline text-primary dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark h-4 w-4 rounded focus:ring-0"
           />
-        )}
-        {/* Option label */}
-        <span
-          className={clx(
-            "block flex-grow truncate",
-            option === selected ? "font-medium" : "font-normal"
-          )}
-        >
-          {option.label}
         </span>
+      )}
 
-        {/* Checkbox (multiple mode) */}
-        {multiple && (
-          <span className="absolute inset-y-0 left-3 flex items-center">
-            <input
-              type="checkbox"
-              checked={
-                selected && (selected as OptionType[]).some(item => item.value === option.value)
-              }
-              className="border-outline text-primary dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark h-4 w-4 rounded focus:ring-0"
-            />
-          </span>
-        )}
-
-        {/* Checkmark */}
-        {!multiple && selected && (selected as OptionType).value === option.value && (
-          <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
-        )}
-      </div>
+      {/* Checkmark */}
+      {!multiple && selected && (selected as OptionType).value === option.value && (
+        <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
+      )}
     </Listbox.Option>
   );
 
@@ -184,13 +178,14 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         <div className="relative text-sm">
           <Listbox.Button
             className={clx(
-              "shadow-button flex items-center gap-1.5 rounded-md px-3 py-1.5 text-start text-sm font-medium text-black dark:text-white",
+              "shadow-button flex items-center gap-1.5 rounded-md px-3 py-1.5",
+              "text-start text-sm font-medium text-black dark:text-white",
               "active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark select-none bg-white dark:bg-black",
               "border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark border outline-none",
               disabled &&
                 "disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline dark:disabled:border-washed-dark disabled:text-outlineHover dark:disabled:text-outlineHover-dark disabled:pointer-events-none disabled:cursor-not-allowed",
-              className,
-              width
+              width,
+              className
             )}
           >
             <>
@@ -239,6 +234,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               ref={optionsRef}
               className={clx(
                 "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 min-w-full rounded-md bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black dark:text-white",
+                availableOptions.length <= 100 && "max-h-60 overflow-auto",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
               )}
             >
@@ -247,14 +243,16 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
               {/* Search - optional*/}
               {enableSearch && (
-                <Input
-                  type="search"
-                  icon={<MagnifyingGlassIcon className="h-4 w-4" />}
-                  value={search}
-                  className="border-outline dark:border-washed-dark w-full rounded-b-none border-0 border-b text-sm dark:text-white"
-                  placeholder={t("common:placeholder.search") + " ..."}
-                  onChange={value => setSearch(value)}
-                />
+                <div className="border-b pt-1">
+                  <Input
+                    type="search"
+                    icon={<MagnifyingGlassIcon className="h-4 w-4" />}
+                    value={search}
+                    className="border-none focus:ring-transparent"
+                    placeholder={t("common:placeholder.search") + "..."}
+                    onChange={value => setSearch(value)}
+                  />
+                </div>
               )}
               {/* Options */}
               {availableOptions.length > 100 ? (
@@ -270,18 +268,18 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                   }}
                 </FixedSizeList>
               ) : (
-                <div className="max-h-60 overflow-auto">
+                <>
                   {availableOptions.map((option, index) => (
                     <ListboxOption key={index} option={option} index={index} style={null} />
                   ))}
-                </div>
+                </>
               )}
 
               {/* Clear / Reset */}
               {enableClear && (
                 <button
                   onClick={() => (multiple ? onChange([]) : onChange(undefined))}
-                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark dark:border-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-2 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark dark:border-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-3 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={Array.isArray(selected) && selected.length === 0}
                 >
                   <p>{t("common:common.clear")}</p>

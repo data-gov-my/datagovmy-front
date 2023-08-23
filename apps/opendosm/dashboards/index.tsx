@@ -1,10 +1,10 @@
 import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
-
 import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-
 import { numFormat } from "datagovmy-ui/helpers";
 import { FunctionComponent, useMemo } from "react";
+import { AgencyIcon } from "datagovmy-ui/icons/agency";
+import { Agency } from "datagovmy-ui/types";
 
 /**
  * Dashboard Index
@@ -13,7 +13,7 @@ import { FunctionComponent, useMemo } from "react";
 
 type Dashboard = {
   name: string;
-  agency: string;
+  agency: Agency;
   route: string;
 };
 
@@ -44,8 +44,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[`DOSM: ${t("header")}`]}
         description={[t("description", { agency: t("agencies:dosm.abbr"), context: "agency" })]}
-        // TODO: Add when @lenny updated datagovmy-ui
-        // agencyBadge={<AgencyBadge agency="govt" />}
+        agencyBadge={<AgencyBadge agency="govt" />}
       />
       <DashboardFilter
         data={{
@@ -88,8 +87,9 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, onSear
           />
           {data.search && (
             <Button
-              className="btn-ghost text-dim max-md:rounded-full max-md:p-2"
-              icon={<XMarkIcon className="h-5 w-5" />}
+              variant="ghost"
+              className="max-md:rounded-full"
+              icon={<XMarkIcon className="h-4 w-4" />}
               onClick={reset}
             >
               <p className="hidden md:block">{t("common:common.clear")}</p>
@@ -117,7 +117,7 @@ const Ranking = ({ ranks }: RankingProps) => {
           <At href={item.route} locale={i18n.language} key={i} prefetch={false}>
             <div className="group flex h-full w-full flex-col space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
               <div className="relative flex items-center gap-3">
-                <span className="text-sm font-bold text-primary">#{i + 1}</span>
+                <AgencyIcon agency={item.agency} className="h-6 w-6" />
                 <p className="text-sm text-dim">{t(`agencies:${item.agency}.abbr`)}</p>
                 <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
               </div>

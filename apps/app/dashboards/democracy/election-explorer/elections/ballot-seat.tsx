@@ -165,7 +165,7 @@ const BallotSeat: FunctionComponent<BallotSeatProps> = ({ seats, state, election
         </div>
         <div className="flex h-8 items-center gap-1.5">
           <ImageWithFallback
-            className="border-outline dark:border-outlineHover-dark rounded border"
+            className="border-outline dark:border-washed-dark rounded border"
             src={`/static/images/parties/${seat.party}.png`}
             width={32}
             height={18}

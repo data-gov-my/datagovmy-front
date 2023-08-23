@@ -11,6 +11,7 @@ import {
   TimeSeriesScale,
   Filler,
   Legend,
+  TooltipItem,
 } from "chart.js";
 import AnnotationPlugin from "chartjs-plugin-annotation";
 import { Line as LineCanvas } from "react-chartjs-2";
@@ -41,6 +42,7 @@ type LineProps = ChartHeaderProps & {
   enableTooltip?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   _ref?: ForwardedRef<ChartJSOrUndefined<"line", any[], unknown>>;
 };
 
@@ -67,6 +69,7 @@ const Line: FunctionComponent<LineProps> = ({
   enableTooltip = false,
   enableCrosshair = false,
   enableLegend = false,
+  tooltipCallback,
   _ref,
 }) => {
   ChartJS.register(
@@ -119,12 +122,16 @@ const Line: FunctionComponent<LineProps> = ({
         mode: "index",
         intersect: false,
         callbacks: {
-          label: item =>
-            `${item.dataset.label as string}: ${
-              item.parsed.y !== undefined || item.parsed.y !== null
-                ? (prefixY ?? "") + numFormat(item.parsed.y, "standard", precision) + (unitY ?? "")
-                : "-"
-            }`,
+          label: tooltipCallback
+            ? tooltipCallback
+            : item =>
+                `${item.dataset.label as string}: ${
+                  item.parsed.y !== undefined || item.parsed.y !== null
+                    ? (prefixY ?? "") +
+                      numFormat(item.parsed.y, "standard", precision) +
+                      (unitY ?? "")
+                    : "-"
+                }`,
         },
       },
       annotation: {

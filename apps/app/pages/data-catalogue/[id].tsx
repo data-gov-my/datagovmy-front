@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import DataCatalogueShow from "@data-catalogue/show";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
@@ -42,7 +41,6 @@ const CatalogueShow: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Progress />
       <Metadata
         title={dataset.meta.title}
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}

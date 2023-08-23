@@ -29,8 +29,8 @@ interface ListProps {
   onChange: (index: number) => void;
 }
 
-const Panel: FunctionComponent<PanelProps> = ({ children, name }) => {
-  return <>{children}</>;
+const Panel: FunctionComponent<PanelProps> = ({ children, className, name }) => {
+  return <div className={className}>{children}</div>;
 };
 
 const List: FunctionComponent<ListProps> = ({ options, current, onChange, icons, className }) => {
