@@ -369,7 +369,7 @@ const Ranking = ({ ranks }: RankingProps) => {
               <div className="relative flex items-center gap-3">
                 <AgencyIcon agency={item.agency_abbr} className="h-6 w-6" />
                 <p className="text-sm text-dim">{t(`agencies:${item.agency_abbr}.abbr`)}</p>
-                <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+                <ArrowUpRightIcon className="absolute right-2 h-5 w-5 text-dim opacity-0 transition-[opacity_transform] duration-0 group-hover:translate-x-2 group-hover:opacity-100 group-hover:duration-300" />
               </div>
               <div className="relative overflow-hidden">
                 <p
@@ -383,7 +383,7 @@ const Ranking = ({ ranks }: RankingProps) => {
                     count: item.count,
                   })}`}
                 </p>
-                <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
+                <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
                   {t("components.click_to_explore")}
                 </p>
               </div>
