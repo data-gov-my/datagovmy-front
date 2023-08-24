@@ -83,10 +83,8 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       const transform = (input: Record<string, UpcomingPublication[]>) => {
         const result: Record<string, string[]> = {};
         for (const oldKey in input) {
-          if (input.hasOwnProperty(oldKey)) {
-            const newKey = `${oldKey}_${locale}`;
-            result[newKey] = input[oldKey].map(e => e.publication_title);
-          }
+          const newKey = `${oldKey}_${locale}`;
+          result[newKey] = input[oldKey].map(e => e.publication_title);
         }
         return result;
       };

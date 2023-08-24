@@ -6,18 +6,23 @@ import { Publication } from "misc/publications/browse";
 import { FunctionComponent } from "react";
 
 interface PublicationCardProps {
+  downloads?: number;
   onClick: () => void;
   publication: Publication;
 }
 
-const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, publication }) => {
+const PublicationCard: FunctionComponent<PublicationCardProps> = ({
+  downloads = 100000,
+  onClick,
+  publication,
+}) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
 
   return (
     <Button
       variant="reset"
       key={publication.publication_id}
-      className="group flex w-full flex-col space-y-3 rounded-xl border p-6 transition hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50"
+      className="group flex w-full flex-col space-y-3 rounded-xl border p-6 transition hover:border-outlineHover hover:bg-background dark:border-washed-dark dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50"
       onClick={onClick}
     >
       <div className="relative flex w-full items-center justify-between">
@@ -41,10 +46,10 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, pub
         </div>
         <div className="relative w-full text-base font-normal">
           <p className="text-dim transition-transform group-hover:translate-y-6">
-            {numFormat(100000, "compact")}
-            {100000 % 10 !== 0 ? "+ " : " "}
+            {numFormat(downloads, "compact")}
+            {downloads % 10 !== 0 ? "+ " : " "}
             {t("common:common.downloads", {
-              count: 100000,
+              count: downloads,
             })}
           </p>
           <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
