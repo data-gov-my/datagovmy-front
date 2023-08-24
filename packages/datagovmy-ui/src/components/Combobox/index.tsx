@@ -220,7 +220,6 @@ const ComboBox = <T extends unknown>({
                           enableFlag={enableFlag}
                           imageSource={imageSource}
                           fallback={fallback}
-                          style={{}}
                           isSelected={selected?.value === option.value}
                           active={i === activeIndex}
                           index={i}
