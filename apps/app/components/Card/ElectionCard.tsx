@@ -76,6 +76,7 @@ const ElectionCard = <T extends Candidate | Party | Seat>({
   return (
     <>
       <Button
+        variant="reset"
         className="btn text-dim hover:text-black dark:hover:text-white"
         onClick={() => {
           setData("loading", true);

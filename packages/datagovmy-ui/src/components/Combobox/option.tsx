@@ -2,7 +2,7 @@ import { clx } from "../../lib/helpers";
 import ImageWithFallback from "../ImageWithFallback";
 import { OptionType } from "../../../types";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { CSSProperties, ReactNode } from "react";
+import { ForwardedRef, forwardRef, ReactNode } from "react";
 import { useId } from "@floating-ui/react";
 
 export type ComboOptionProp<T extends unknown> = OptionType & T;
@@ -14,33 +14,34 @@ export type ComboOptionProps<T> = {
   enableFlag?: boolean;
   imageSource?: string;
   fallback?: ReactNode;
-  style?: CSSProperties;
   isSelected: boolean;
   active: boolean;
   index: number;
   total: number;
 };
 
-const ComboOption = <T extends unknown>({
-  option,
-  format,
-  enableFlag,
-  imageSource,
-  fallback,
-  style,
-  onClick,
-  isSelected,
-  active,
-  index,
-  total,
-  ...rest
-}: ComboOptionProps<ComboOptionProp<T>>) => {
+function ComboOptionInner<T>(
+  {
+    option,
+    format,
+    enableFlag,
+    imageSource,
+    fallback,
+    onClick,
+    isSelected,
+    active,
+    index,
+    total,
+    ...rest
+  }: ComboOptionProps<T>,
+  ref: ForwardedRef<HTMLDivElement>
+) {
   const id = useId();
 
   return (
     <div
       id={id}
-      style={style}
+      ref={ref}
       role="option"
       aria-selected={active}
       onClick={onClick}
@@ -94,6 +95,12 @@ const ComboOption = <T extends unknown>({
       </>
     </div>
   );
-};
+}
+
+// Solution variant #2: Wrapping to make forwardRef work with generics
+// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
+const ComboOption = forwardRef(ComboOptionInner) as <T>(
+  props: ComboOptionProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
+) => ReturnType<typeof ComboOptionInner>;
 
 export default ComboOption;

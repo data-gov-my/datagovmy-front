@@ -125,6 +125,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                       <p className="text-sm">{publication.description}</p>
 
                       <Button
+                        variant="reset"
                         onClick={() => {
                           navigator.clipboard.writeText(
                             `https://open.dosm.gov.my/publications${type}${id}`
@@ -150,6 +151,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                         )}
                       </Button>
                       <Button
+                        variant="reset"
                         className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
                         onClick={hide}
                       >

@@ -158,7 +158,7 @@ const Home: Page = ({
               <>
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                   <Timeseries
-                    className="h-[200px] w-full"
+                    className="h-[300px] w-full"
                     title={t("common:home.keys.views")}
                     enableAnimation={!play}
                     data={{
@@ -178,7 +178,7 @@ const Home: Page = ({
                     stats={yieldCallout("views")}
                   />
                   <Timeseries
-                    className="h-[200px] w-full"
+                    className="h-[300px] w-full"
                     title={t("common:home.keys.users")}
                     enableAnimation={!play}
                     data={{
@@ -198,7 +198,7 @@ const Home: Page = ({
                     stats={yieldCallout("users")}
                   />
                   <Timeseries
-                    className="h-[200px] w-full"
+                    className="h-[300px] w-full"
                     title={t("common:home.keys.downloads")}
                     enableAnimation={!play}
                     data={{
@@ -254,11 +254,11 @@ const Ranking = ({ ranks }: RankingProps) => {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         {ranks.map((item: RankItem) => (
           <At href={item.id} key={item.id}>
-            <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
+            <Card className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
               <div className="relative flex items-center gap-3">
                 <AgencyIcon agency={item.agency_abbr} className="h-6 w-6" />
                 <p className="text-dim text-sm">{t(`agencies:${item.agency_abbr}.abbr`)}</p>
-                <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+                <ArrowUpRightIcon className="text-dim absolute right-2 h-5 w-5 opacity-0 transition-[opacity_transform] duration-0 group-hover:translate-x-2 group-hover:opacity-100 group-hover:duration-300" />
               </div>
               <div className="relative overflow-hidden">
                 <p
@@ -272,7 +272,7 @@ const Ranking = ({ ranks }: RankingProps) => {
                     count: item.count,
                   })}`}
                 </p>
-                <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6 group-hover:duration-300">
                   {t("common:components.click_to_explore")}
                 </p>
               </div>
