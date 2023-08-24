@@ -188,7 +188,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
         .then(
           ([{ data: _seats }, { data: _table }]: [
             { data: { data: OverallSeat[] } },
-            { data: { data: Party[] } },
+            { data: { data: Party[] } }
           ]) => {
             const elections = {
               seats: _seats.data,
@@ -482,7 +482,7 @@ const ElectionExplorer: FunctionComponent<ElectionExplorerProps> = ({
             </Tabs.Panel>
           ))}
         </Tabs>
-        <hr className="dark:bg-washed-dark bg-outline h-px mt-8 lg:mt-12"></hr>
+        <hr className="dark:bg-washed-dark bg-outline mt-8 h-px lg:mt-12"></hr>
         {/* View the full ballot for a specific seat */}
         <BallotSeat
           seats={data.seats}

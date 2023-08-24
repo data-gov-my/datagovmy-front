@@ -9,4 +9,5 @@ export const routes = {
   CONSUMER_PRICES: "/dashboard/consumer-prices",
   PRODUCER_PRICES: "/dashboard/producer-prices",
   PUBLICATIONS: "/publications",
+  IIP: "/dashboard/international-investment-position",
 } as const;

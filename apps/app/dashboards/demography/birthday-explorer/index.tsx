@@ -203,7 +203,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   width="w-full"
                 /> */}
                 <Button
-                  className="btn-primary active:shadow-none my-6"
+                  className="btn-primary my-6 active:shadow-none"
                   onClick={() => {
                     validateDate()
                       .then(({ birthday, state }) => {

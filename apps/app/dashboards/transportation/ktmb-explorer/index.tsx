@@ -143,7 +143,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
                 >
                   {close => (
-                    <div className="space-y-4 p-3 bg-white dark:bg-black">
+                    <div className="space-y-4 bg-white p-3 dark:bg-black">
                       <div className="space-y-2">
                         <Label label={t("service")} className="text-sm" />
                         <Dropdown

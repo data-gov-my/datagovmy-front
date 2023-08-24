@@ -12,7 +12,7 @@
 }
 
 .table tbody tr {
-  @apply bg-white dark:bg-black border-outline dark:border-washed-dark border-b;
+  @apply border-outline dark:border-washed-dark border-b bg-white dark:bg-black;
 }
 
 /* .table thead tr th {
