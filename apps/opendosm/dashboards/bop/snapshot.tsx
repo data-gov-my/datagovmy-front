@@ -120,16 +120,16 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
                     </th>
                   </tr>
                 </thead>
-                <thead className="border-y-2 border-l-2 dark:border-washed-dark">
+                <thead className="border-y-2 border-l-2 border-gray-300 dark:border-washed-dark">
                   <tr>
-                    <th className="border-r-2 px-4 py-3 text-sm font-medium"></th>
-                    <th className="border-r-2 px-4 py-3 text-center text-sm font-medium">
+                    <th className="border-r-2 border-gray-300 px-4 py-3 text-sm font-medium"></th>
+                    <th className="border-r-2 border-gray-300 px-4 py-3 text-center text-sm font-medium">
                       {t("keys.net")}
                     </th>
-                    <th className="border-r-2 px-4 py-3 text-center text-sm font-medium">
+                    <th className="border-r-2 border-gray-300 px-4 py-3 text-center text-sm font-medium">
                       {t("keys.credit")}
                     </th>
-                    <th className="border-r-2 px-4 py-3 text-center text-sm font-medium">
+                    <th className="border-r-2 border-gray-300 px-4 py-3 text-center text-sm font-medium">
                       {t("keys.debit")}
                     </th>
                   </tr>
@@ -139,25 +139,25 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
                     <tr
                       key={i}
                       className={clx(
-                        "border-b border-l dark:border-washed-dark",
-                        !item.isSubHeader && "bg-background"
+                        "border-b border-l-2 border-gray-300 dark:border-washed-dark",
+                        !item.isSubHeader && "bg-outline"
                       )}
                     >
                       <td
                         className={clx(
-                          "w-2/5 border-r-2 px-3 py-2 text-sm font-medium",
+                          "w-2/5 border-r-2 border-gray-300 px-3 py-2 text-sm font-medium",
                           item.isSubHeader && "pl-10 font-normal"
                         )}
                       >
                         {item.component}
                       </td>
-                      <td className="w-1/5 border-r-2 px-3 py-2 text-end text-sm capitalize tabular-nums">
+                      <td className="w-1/5 border-r-2 border-gray-300 px-3 py-2 text-end text-sm capitalize tabular-nums">
                         {item.net}
                       </td>
-                      <td className="w-1/5 border-r-2 px-3 py-2 text-end text-sm tabular-nums">
+                      <td className="w-1/5 border-r-2 border-gray-300 px-3 py-2 text-end text-sm tabular-nums">
                         {item.credit}
                       </td>
-                      <td className="w-1/5 border-r-2 px-3 py-2 text-end text-sm tabular-nums">
+                      <td className="w-1/5 border-r-2 border-gray-300 px-3 py-2 text-end text-sm tabular-nums">
                         {item.debit}
                       </td>
                     </tr>
