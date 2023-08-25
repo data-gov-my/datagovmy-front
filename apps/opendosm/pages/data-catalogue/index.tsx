@@ -37,7 +37,7 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["catalogue", "common"],
+  ["catalogue", "common", "opendosm-home"],
   async ({ locale, query }) => {
     const { data } = await get("/data-catalog/", {
       lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],

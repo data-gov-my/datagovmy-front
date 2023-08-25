@@ -19,69 +19,72 @@ const DashboardIndex: Page = ({ dashboards }: InferGetStaticPropsType<typeof get
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboards", async () => {
-  const data = {
-    data_as_of: "2023-06-19 23:59",
-    data: [
-      {
-        name: "composite-index",
-        agency: "dosm",
-        route: routes.COMPOSITE_INDEX,
-      },
-      {
-        name: "consumer-prices",
-        agency: "dosm",
-        route: routes.CONSUMER_PRICES,
-      },
-      {
-        name: "gdp",
-        agency: "dosm",
-        route: routes.GDP,
-      },
-      {
-        name: "industrial-production",
-        agency: "dosm",
-        route: routes.INDUSTRIAL_PRODUCTION,
-      },
-      {
-        name: "kawasanku",
-        agency: "dosm",
-        route: routes.KAWASANKU,
-      },
-      {
-        name: "labour-market",
-        agency: "dosm",
-        route: routes.LABOUR_MARKET,
-      },
-      {
-        name: "producer-prices",
-        agency: "dosm",
-        route: routes.PRODUCER_PRICES,
-      },
-      {
-        name: "wholesale-retail",
-        agency: "dosm",
-        route: routes.WHOLESALE_RETAIL,
-      },
-      {
-        name: "iip",
-        agency: "dosm",
-        route: routes.IIP,
-      },
-    ],
-  };
+export const getStaticProps: GetStaticProps = withi18n(
+  ["dashboards", "opendosm-home"],
+  async () => {
+    const data = {
+      data_as_of: "2023-06-19 23:59",
+      data: [
+        {
+          name: "composite-index",
+          agency: "dosm",
+          route: routes.COMPOSITE_INDEX,
+        },
+        {
+          name: "consumer-prices",
+          agency: "dosm",
+          route: routes.CONSUMER_PRICES,
+        },
+        {
+          name: "gdp",
+          agency: "dosm",
+          route: routes.GDP,
+        },
+        {
+          name: "industrial-production",
+          agency: "dosm",
+          route: routes.INDUSTRIAL_PRODUCTION,
+        },
+        {
+          name: "kawasanku",
+          agency: "dosm",
+          route: routes.KAWASANKU,
+        },
+        {
+          name: "labour-market",
+          agency: "dosm",
+          route: routes.LABOUR_MARKET,
+        },
+        {
+          name: "producer-prices",
+          agency: "dosm",
+          route: routes.PRODUCER_PRICES,
+        },
+        {
+          name: "wholesale-retail",
+          agency: "dosm",
+          route: routes.WHOLESALE_RETAIL,
+        },
+        {
+          name: "iip",
+          agency: "dosm",
+          route: routes.IIP,
+        },
+      ],
+    };
 
-  return {
-    props: {
-      meta: {
-        id: "dashboard-index",
-        type: "misc",
-        category: null,
-        agency: null,
+    return {
+      props: {
+        meta: {
+          id: "dashboard-index",
+          type: "misc",
+          category: null,
+          agency: null,
+        },
+        dashboards: data,
       },
-      dashboards: data,
-    },
-  };
-});
+    };
+  }
+);
 
 export default DashboardIndex;
