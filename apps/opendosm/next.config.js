@@ -20,7 +20,7 @@ const nextConfig = {
       "dosm kawasanku open data stats statistics malaysia cpi index labor market money supply demand reserve gdp currency",
     META_DOMAIN: "open.dosm.gov.my",
     META_URL: "https://open.dosm.gov.my",
-    META_IMAGE: "https://open.dosm.gov.my/static/images/jata_512.png",
+    META_IMAGE: `${process.env.NEXT_PUBLIC_APP_URL}/static/images/og_{{lang}}.png`,
   },
   async rewrites() {
     return [
