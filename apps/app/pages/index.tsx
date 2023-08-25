@@ -251,7 +251,7 @@ const Ranking = ({ ranks }: RankingProps) => {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {ranks.map((item: RankItem) => (
           <At href={item.id} key={item.id}>
             <Card className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border p-3 transition-colors">
@@ -272,7 +272,7 @@ const Ranking = ({ ranks }: RankingProps) => {
                     count: item.count,
                   })}`}
                 </p>
-                <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6 group-hover:duration-300">
+                <p className="text-primary dark:text-primary-dark absolute -bottom-6 whitespace-nowrap transition-transform group-hover:-translate-y-6 group-hover:duration-300">
                   {t("common:components.click_to_explore")}
                 </p>
               </div>
