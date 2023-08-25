@@ -40,7 +40,7 @@ const BalanceOfPayments: Page = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency={meta.agency} />}
+        agencyBadge={<AgencyBadge agency={meta.agency} noRedirect={true} />}
       />
 
       <nav className="sticky top-14 z-20 flex overflow-hidden border-b border-b-outline bg-white dark:border-b-washed-dark dark:bg-black min-[350px]:justify-center lg:static">

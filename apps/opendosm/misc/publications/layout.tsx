@@ -54,7 +54,7 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
         category={[t("nso"), "text-dim"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={<AgencyBadge agency="dosm" noRedirect={true} />}
       />
 
       {/* Navigations */}

@@ -133,7 +133,7 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency={meta.agency} />}
+        agencyBadge={<AgencyBadge agency={meta.agency} noRedirect={true} />}
       />
 
       <Container className="min-h-screen">

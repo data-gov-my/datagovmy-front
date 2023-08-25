@@ -125,7 +125,7 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={<AgencyBadge agency="dosm" noRedirect={true} />}
       />
 
       <Container className="min-h-screen">

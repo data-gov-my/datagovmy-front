@@ -8,11 +8,31 @@ import { Agency } from "../../../types";
 export interface AgencyBadgeProps {
   agency: Agency;
   icon?: ReactNode;
+  noRedirect?: boolean;
 }
 
-const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon }) => {
+const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon, noRedirect = false }) => {
   const { t } = useTranslation();
   const isGovt = agency === "govt";
+
+  if (noRedirect) {
+    return (
+      <div className="border-outline dark:border-washed-dark flex w-screen items-center gap-2 border-y bg-white px-3 py-1.5 dark:bg-black lg:w-fit lg:rounded-full lg:border lg:py-1 lg:pl-2 lg:pr-6">
+        {icon ? icon : <AgencyIcon agency={agency} />}
+        <div className="relative overflow-hidden">
+          {/* Brought to you by */}
+          <p className="text-dim text-xs">
+            {!isGovt ? t("common:components.brought_by") : t("common:components.brought_by_the")}
+          </p>
+          {/* Agency name */}
+          <p className="truncate text-sm font-medium dark:text-white" data-testid="hero-agency">
+            {t(`agencies:${agency}.full`)}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <a href={AgencyLink[agency]} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
       <div className="border-outline lg:hover:border-outlineHover dark:border-washed-dark lg:dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark group relative flex w-screen items-center border-y bg-white px-3 py-1.5 transition-[padding] duration-200 hover:pr-10 dark:bg-black lg:w-fit lg:rounded-full lg:border lg:py-1 lg:pl-2 lg:pr-6">
