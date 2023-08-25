@@ -22,7 +22,7 @@ interface DashboardIndexProps {
 }
 
 const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) => {
-  const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
+  const { t } = useTranslation(["dashboards", "opendosm-home", "agencies", "common"]);
 
   const { data, setData } = useData({ search: "" });
 
@@ -41,7 +41,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
     <>
       <Hero
         background="gray"
-        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
+        category={[t("opendosm-home:category"), "text-primary dark:text-primary-dark"]}
         header={[`DOSM: ${t("header")}`]}
         description={[t("description", { agency: t("agencies:dosm.abbr"), context: "agency" })]}
         agencyBadge={<AgencyBadge agency="govt" />}
