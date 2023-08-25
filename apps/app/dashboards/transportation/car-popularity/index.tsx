@@ -22,13 +22,15 @@ import { FunctionComponent, useMemo } from "react";
  * @overview Status: Live
  */
 
+type Vehicle = "bus" | "car" | "lorry" | "motorcycle" | "other" | "van";
+
 interface CarPopularityProps {
   last_updated: string;
-  model: WithData<Record<string, number[]>>;
+  model: WithData<Record<"x" | "cars", number[]>>;
   queryOptions: Record<string, any>;
   tableData: Record<string, any>;
-  timeseries: WithData<Record<string, Record<string, number[]>>>;
-  timeseries_callout: WithData<Record<string, Record<string, number>>>;
+  timeseries: WithData<Record<string, Record<Vehicle | "x", number[]>>>;
+  timeseries_callout: WithData<Record<Vehicle | "x", Record<"latest" | "alltime", number>>>;
 }
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
@@ -101,6 +103,8 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
   const since_2000 = useMemo<number>(() => {
     return data.y.reduce((a: number, b: number) => a + b);
   }, [data.y]);
+
+  const VEHICLES: Vehicle[] = ["car", "motorcycle", "lorry", "van", "bus", "other"];
 
   const filterMakers = useMemo<Array<OptionType>>(() => {
     const _makers = Object.keys(queryOptions).map(maker => {
@@ -356,10 +360,10 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
             {play => (
               <>
                 <div className="grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
-                  {["car", "motorcycle", "lorry", "van", "bus", "other"].map((key: string) => (
+                  {VEHICLES.map(vehicle => (
                     <Timeseries
-                      key={key}
-                      title={t(key)}
+                      key={vehicle}
+                      title={t(vehicle)}
                       className="h-[300px] w-full"
                       enableAnimation={!play}
                       interval={data.period}
@@ -368,7 +372,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                         datasets: [
                           {
                             type: "line",
-                            data: coordinate[key],
+                            data: coordinate[vehicle],
                             label: t(`common:time.${data.periodly}`),
                             fill: true,
                             backgroundColor: AKSARA_COLOR.PRIMARY_H,
@@ -382,11 +386,14 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                           title: t("this_year", {
                             date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                           }),
-                          value: `+${numFormat(timeseries_callout.data[key].latest, "standard")}`,
+                          value: `+${numFormat(
+                            timeseries_callout.data[vehicle].latest,
+                            "standard"
+                          )}`,
                         },
                         {
                           title: t("alltime"),
-                          value: numFormat(timeseries_callout.data[key].alltime, "standard"),
+                          value: numFormat(timeseries_callout.data[vehicle].alltime, "standard"),
                         },
                       ]}
                     />
