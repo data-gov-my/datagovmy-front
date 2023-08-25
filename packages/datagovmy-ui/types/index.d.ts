@@ -144,6 +144,7 @@ export type MetaPage = Record<string, any> & {
     id: string;
     type: "misc" | "dashboard" | "data-catalogue";
     category:
+      | "construction"
       | "democracy"
       | "demography"
       | "digitalisation"
@@ -153,10 +154,10 @@ export type MetaPage = Record<string, any> & {
       | "financial-sector"
       | "government-programs"
       | "healthcare"
+      | "national-accounts"
       | "public-finances"
       | "public-safety"
       | "transportation"
-      | "national-accounts"
       | null;
     agency: string | null;
   };
