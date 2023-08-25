@@ -13,6 +13,7 @@ const namespaces = [
   "dashboard-producer-prices",
   "dashboard-wholesale-retail",
   "dashboard-iip",
+  "dashboard-bop",
   "publications",
 ];
 

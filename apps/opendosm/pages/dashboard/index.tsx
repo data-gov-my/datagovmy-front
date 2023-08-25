@@ -68,6 +68,11 @@ export const getStaticProps: GetStaticProps = withi18n("dashboards", async () =>
         agency: "dosm",
         route: routes.IIP,
       },
+      {
+        name: "bop",
+        agency: "dosm",
+        route: routes.BOP,
+      },
     ],
   };
 

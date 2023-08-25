@@ -10,4 +10,5 @@ export const routes = {
   PRODUCER_PRICES: "/dashboard/producer-prices",
   PUBLICATIONS: "/publications",
   IIP: "/dashboard/international-investment-position",
+  BOP: "/dashboard/balance-of-payments",
 } as const;
