@@ -1,3 +1,4 @@
+import { ExcelIcon, PDFIcon } from "../../icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/solid";
@@ -7,7 +8,6 @@ import { At, Button, Search } from "datagovmy-ui/components";
 import { body } from "datagovmy-ui/configs/font";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { ExcelIcon, PDFIcon } from "datagovmy-ui/icons";
 import { matchSorter } from "match-sorter";
 import { Resource } from "misc/publications/browse";
 import { Fragment, FunctionComponent, useMemo } from "react";
