@@ -36,7 +36,7 @@ const DataDictionaries: Page = ({
 export const getServerSideProps: GetServerSideProps = withi18n(
   ["publications"],
   async ({ locale, params, query }) => {
-    const { data } = await get("/pub-docs/data-dictionary", { language: locale });
+    const { data } = await get("/pub-docs/data-dictionary/", { language: locale });
 
     return {
       notFound: false,

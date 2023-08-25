@@ -39,10 +39,10 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   async ({ locale, query, params }) => {
     try {
       const [{ data: dropdown }, { data }] = await Promise.all([
-        get("/publication-dropdown", {
+        get("/publication-dropdown/", {
           language: locale,
         }),
-        get("/publication", {
+        get("/publication/", {
           language: locale,
           ...query,
         }),
