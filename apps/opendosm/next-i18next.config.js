@@ -7,6 +7,7 @@ const namespaces = [
   "dashboard-composite-index",
   "dashboard-consumer-prices",
   "dashboard-industrial-production",
+  "dashboard-manufacturing-statistics",
   "dashboard-gdp",
   "dashboard-kawasanku",
   "dashboard-labour-market",

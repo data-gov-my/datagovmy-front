@@ -138,10 +138,12 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
     <>
       <Container className="min-h-screen">
         <Section
-          title={t("section_1.title")}
+          title={t("section_timeseries.title")}
           description={
             <div className="flex flex-col gap-4">
-              <p className={"whitespace-pre-line text-base"}>{t("section_1.description")}</p>
+              <p className={"whitespace-pre-line text-base"}>
+                {t("section_timeseries.description")}
+              </p>
               <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                 <Dropdown
                   anchor="left"

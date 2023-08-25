@@ -141,7 +141,6 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
           title={t("section_1.title")}
           description={
             <div className="flex flex-col gap-4">
-              <p className={"whitespace-pre-line text-base"}>{t("section_1.description")}</p>
               <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                 <Dropdown
                   anchor="left"

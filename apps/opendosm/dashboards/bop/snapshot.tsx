@@ -79,7 +79,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
           if (row.variable === "bop") {
             return {
               index: itemSorts(row.variable, row.index),
-              component: t(`keys.${row.variable}`),
+              component: t(`table.${row.variable}`),
               net: row.data.net !== "None" ? formatToMillions(row.data.net, 0) : "-",
               credit: row.data.credit !== "None" ? formatToMillions(row.data.credit, 0) : "-",
               debit: row.data.debit !== "None" ? formatToMillions(row.data.debit, 0) : "-",
@@ -89,7 +89,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
 
           return {
             index: itemSorts(row.variable, row.index),
-            component: t(`keys.${row.variable}`),
+            component: t(`table.${row.variable}`),
             net: row.data.net !== "None" ? formatToMillions(row.data.net, 1) : "-",
             credit: row.data.credit !== "None" ? formatToMillions(row.data.credit, 1) : "-",
             debit: row.data.debit !== "None" ? formatToMillions(row.data.debit, 1) : "-",
@@ -105,8 +105,8 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
     <>
       <Container className="min-h-screen">
         <Section
-          title={t("section_1.title")}
-          description={t("section_1.description")}
+          title={t("section_snapshot.title")}
+          description={t("section_snapshot.description")}
           date={bop_snapshot.data_as_of}
         >
           <div className="mx-auto lg:max-w-screen-md">
