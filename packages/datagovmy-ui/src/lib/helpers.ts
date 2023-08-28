@@ -345,6 +345,18 @@ export const parseCookies = (cookie: string) => {
   return parsedCookies;
 };
 
+export const enumify = <T extends string>(strings: T[]): KeyValueType<T> => {
+  const keyValuePair = {} as KeyValueType<T>;
+  for (const str of strings) {
+    keyValuePair[toSnakeCase<T>(str)] = str;
+  }
+  return keyValuePair;
+};
+
+export const toSnakeCase = <T extends string>(str: T) => {
+  return str.replace(/-/g, "_").toUpperCase() as Uppercase<SnakeCase<T>>;
+};
+
 // MATH helpers
 export const average = (values: number[]): number => values.reduce((a, b) => a + b) / values.length;
 
@@ -356,3 +368,11 @@ export const standardDeviation = (values: number[]): number => {
 
 export const normalize = (value: number, min: number, max: number): number =>
   (value - min) / (max - min);
+
+type KeyValueType<T extends string> = {
+  [K in Uppercase<SnakeCase<T>>]: T;
+};
+
+type SnakeCase<S extends string> = S extends `${infer T}-${infer U}`
+  ? `${Lowercase<T>}_${SnakeCase<U>}`
+  : Lowercase<S>;
