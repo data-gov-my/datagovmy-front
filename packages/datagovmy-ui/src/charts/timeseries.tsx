@@ -422,7 +422,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           <Spinner loading={isLoading} />
         </div>
       ) : (
-        <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col gap-y-3">
           {[menu, title, controls, stats, subheader].some(Boolean) && (
             <div className="flex flex-col gap-y-3">
               <ChartHeader title={title} menu={menu} controls={controls} />
