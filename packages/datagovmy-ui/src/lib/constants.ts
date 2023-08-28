@@ -322,6 +322,4 @@ export const AgencyLink: Record<Agency, string> = {
   "phcorp": "https://protecthealth.com.my",
   "spr": "https://www.spr.gov.my/",
   "unhcr": "https://www.unhcr.org/my/",
-  "bpan": "",
-  "bppib": "",
 } as const;
