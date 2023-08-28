@@ -12,8 +12,8 @@ const ConstructionStatistics: Page = ({
   last_updated,
   timeseries,
   timeseries_callout,
-  projowner,
-  projowner_callout,
+  project,
+  project_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-construction-statistics", "common"]);
 
@@ -24,8 +24,8 @@ const ConstructionStatistics: Page = ({
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
-        projowner={projowner}
-        projowner_callout={projowner_callout}
+        project={project}
+        project_callout={project_callout}
       />
     </AnalyticsProvider>
   );
@@ -47,8 +47,8 @@ export const getStaticProps: GetStaticProps = withi18n(
         last_updated: data.data_last_updated,
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,
-        projowner: data.timeseries_projowner,
-        projowner_callout: data.timeseries_projowner_callout,
+        project: data.timeseries_projowner,
+        project_callout: data.timeseries_projowner_callout,
       },
     };
   }

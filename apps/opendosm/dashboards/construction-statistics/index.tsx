@@ -34,13 +34,13 @@ interface ConstructionStatisticsDashboardProps {
     growth_qoq: Record<StatKeys, Callout>;
     growth_yoy: Record<StatKeys, Callout>;
   }>;
-  projowner: WithData<
+  project: WithData<
     Record<
       SectorKeys,
       Record<"growth_qoq" | "growth_yoy" | "value", Record<ProjectKeys | "x", number[]>>
     >
   >;
-  projowner_callout: WithData<
+  project_callout: WithData<
     Record<SectorKeys, Record<"growth_qoq" | "growth_yoy" | "value", Record<ProjectKeys, Callout>>>
   >;
 }
@@ -49,8 +49,8 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
   last_updated,
   timeseries,
   timeseries_callout,
-  projowner,
-  projowner_callout,
+  project,
+  project_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-construction-statistics", "common"]);
 
@@ -91,16 +91,16 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
     sector: SECTOR_OPTIONS[0].value,
     shade: SHADE_OPTIONS[0].value,
     minmax: [0, timeseries.data.actual.x.length - 1],
-    projowner_minmax: [0, projowner.data.government.value.x.length - 1],
+    project_minmax: [0, project.data.government.value.x.length - 1],
     tab_index: 0,
   });
 
   const LATEST_TIMESTAMP = timeseries.data[data.index].x[timeseries.data[data.index].x.length - 1];
   const PROJOWNER_LATEST_TIMESTAMP =
-    projowner.data[data.sector][data.value].x[projowner.data[data.sector][data.value].x.length - 1];
+    project.data[data.sector][data.value].x[project.data[data.sector][data.value].x.length - 1];
   const { coordinate } = useSlice(timeseries.data[data.index], data.minmax);
-  const { coordinate: projowner_coords } = useSlice(
-    projowner.data.government[data.value],
+  const { coordinate: project_coords } = useSlice(
+    project.data[data.sector][data.value],
     data.minmax
   );
 
@@ -309,11 +309,11 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                   displayNumFormat={value => displayNumFormat(value)}
                   axisY={AXIS_Y}
                   data={{
-                    labels: projowner_coords.x,
+                    labels: project_coords.x,
                     datasets: [
                       {
                         type: "line",
-                        data: projowner_coords.total,
+                        data: project_coords.total,
                         label: t(`${data.value}`),
                         borderColor: AKSARA_COLOR.DANGER,
                         borderWidth: 1.5,
@@ -329,7 +329,7 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                         date: toDate(PROJOWNER_LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
                       }),
                       value: getCallout(
-                        projowner_callout.data[data.sector][data.value].total.latest,
+                        project_callout.data[data.sector][data.value].total.latest,
                         isValue
                       ),
                     },
@@ -338,9 +338,9 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                 <Slider
                   type="range"
                   period="quarter"
-                  value={data.projowner_minmax}
-                  data={projowner.data[data.sector][data.value].x}
-                  onChange={e => setData("projowner_minmax", e)}
+                  value={data.project_minmax}
+                  data={project.data[data.sector][data.value].x}
+                  onChange={e => setData("project_minmax", e)}
                 />
                 <div className="grid grid-cols-1 gap-12 pt-12 sm:grid-cols-2 lg:grid-cols-3">
                   {["residential", "non_residential", "civileng"].map((key: string) => (
@@ -355,11 +355,11 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                       displayNumFormat={value => displayNumFormat(value)}
                       axisY={AXIS_Y}
                       data={{
-                        labels: projowner_coords.x,
+                        labels: project_coords.x,
                         datasets: [
                           {
                             type: "line",
-                            data: projowner_coords[key],
+                            data: project_coords[key],
                             label: t(`${data.value}`),
                             borderColor: AKSARA_COLOR.DANGER,
                             borderWidth: 1.5,
@@ -375,7 +375,7 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                             date: toDate(PROJOWNER_LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
                           }),
                           value: getCallout(
-                            projowner_callout.data[data.sector][data.value][key].latest,
+                            project_callout.data[data.sector][data.value][key].latest,
                             isValue
                           ),
                         },
