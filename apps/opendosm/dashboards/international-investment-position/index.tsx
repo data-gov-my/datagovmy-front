@@ -3,7 +3,7 @@ import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagov
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
-import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { MetaPage, OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";

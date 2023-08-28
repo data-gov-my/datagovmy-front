@@ -1,7 +1,6 @@
 import { FunctionComponent, useMemo } from "react";
-import { MetaPage } from "datagovmy-ui/types";
+import { MetaPage, WithData } from "datagovmy-ui/types";
 import { Container, Section, Slider } from "datagovmy-ui/components";
-import dynamic from "next/dynamic";
 import { clx, numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 
@@ -9,8 +8,6 @@ import { useData, useTranslation } from "datagovmy-ui/hooks";
  * Balance Of Payments Snapshot Table
  * @overview Status: Live
  */
-
-const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 
 interface TableSummaryData {
   data: {
@@ -22,14 +19,9 @@ interface TableSummaryData {
   index: number;
 }
 
-interface BopSnaphot {
-  data_as_of: string;
-  data: Record<string, TableSummaryData[]>;
-}
-
 interface BOPProps {
   last_updated: string;
-  bop_snapshot: BopSnaphot;
+  bop_snapshot: WithData<TableSummaryData>;
   meta: MetaPage;
 }
 
