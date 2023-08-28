@@ -11,4 +11,6 @@ export const routes = {
   PUBLICATIONS: "/publications",
   IIP: "/dashboard/international-investment-position",
   LABOUR_PRODUCTIVITY: "dashboard/labour-productivity",
+  BOP: "/dashboard/balance-of-payments",
+  MANUFACTURING_STATISTICS: "/dashboard/manufacturing-statistics",
 } as const;
