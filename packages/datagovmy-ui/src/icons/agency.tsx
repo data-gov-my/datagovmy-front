@@ -1331,8 +1331,6 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency, classNa
     "phcorp": PHCorpIcon,
     "spr": SPRIcon,
     "unhcr": UNHCRIcon,
-    "bpan": MOTIcon,
-    "bppib": BOMBAIcon,
   };
 
   const Icon = Components[agency];

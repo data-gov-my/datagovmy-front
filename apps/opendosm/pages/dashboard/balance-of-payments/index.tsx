@@ -21,24 +21,20 @@ const BalanceOfPayments: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <BalanceOfPaymentsLayout last_updated={last_updated} meta={meta}>
+      <BalanceOfPaymentsLayout last_updated={last_updated}>
         {tab_index => (
           <>
-            {tab_index.value === "snapshot" && (
-              <BalanceOfPaymentsSnapshot
-                last_updated={last_updated}
-                bop_snapshot={bop_snapshot}
-                meta={meta}
-              />
-            )}
-            {tab_index.value === "timeseries" && (
-              <BalanceOfPaymentsTimeseries
-                last_updated={last_updated}
-                timeseries={timeseries}
-                timeseries_callout={timeseries_callout}
-                meta={meta}
-              />
-            )}
+            {
+              {
+                snapshot: <BalanceOfPaymentsSnapshot bop_snapshot={bop_snapshot} />,
+                timeseries: (
+                  <BalanceOfPaymentsTimeseries
+                    timeseries={timeseries}
+                    timeseries_callout={timeseries_callout}
+                  />
+                ),
+              }[tab_index]
+            }
           </>
         )}
       </BalanceOfPaymentsLayout>
@@ -56,7 +52,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-bop", async ()
         id: "dashboard-bop",
         type: "dashboard",
         category: "national-accounts",
-        agency: "bpan",
+        agency: "dosm",
       },
       last_updated: data.data_last_updated,
       timeseries: data.timeseries,

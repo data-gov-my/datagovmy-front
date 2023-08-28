@@ -21,7 +21,6 @@ const InternationalInvestmentPosition: Page = ({
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
-        meta={meta}
       />
     </AnalyticsProvider>
   );
@@ -37,7 +36,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-iip", async ()
         id: "dashboard-iip",
         type: "dashboard",
         category: "national-accounts",
-        agency: "bpan",
+        agency: "dosm",
       },
       last_updated: data.data_last_updated,
       timeseries: data.timeseries,

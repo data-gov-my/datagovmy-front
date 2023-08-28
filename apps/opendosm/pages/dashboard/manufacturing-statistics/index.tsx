@@ -21,7 +21,6 @@ const ManufacturingStatistics: Page = ({
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
-        meta={meta}
       />
     </AnalyticsProvider>
   );
@@ -39,7 +38,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           id: "dashboard-manufacturing-statistics",
           type: "dashboard",
           category: "services",
-          agency: "bppib",
+          agency: "dosm",
         },
         last_updated: data.data_last_updated,
         timeseries: data.timeseries,

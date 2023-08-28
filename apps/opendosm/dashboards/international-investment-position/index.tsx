@@ -4,7 +4,8 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { MetaPage, OptionType } from "datagovmy-ui/types";
+import { MOTIcon } from "datagovmy-ui/icons/agency";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -15,16 +16,10 @@ import { FunctionComponent, useCallback } from "react";
 
 interface TimeseriesChartData {
   title: string;
-  unitY: string;
   label: string;
   data: number[];
   fill: boolean;
-  callout: {
-    latest: string;
-    change: string;
-  };
-  prefix: string;
-  chartName: string;
+  stats: Array<{ title: string; value: string }>;
 }
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
@@ -33,16 +28,14 @@ interface IIPProps {
   last_updated: string;
   timeseries: any;
   timeseries_callout: any;
-  meta: MetaPage;
 }
 
 const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
   last_updated,
   timeseries,
   timeseries_callout,
-  meta,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-iip", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-iip", "agencies", "common"]);
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.net"), value: "net" },
@@ -56,12 +49,11 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
 
   const { data, setData } = useData({
     minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
-    index_type: INDEX_OPTIONS[0],
-    shade_type: SHADE_OPTIONS[0],
+    index: INDEX_OPTIONS[0].value,
+    shade: SHADE_OPTIONS[0].value,
   });
-  const LATEST_TIMESTAMP =
-    timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
-  const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
+  const LATEST_TIMESTAMP = timeseries.data[data.index].x[timeseries.data[data.index].x.length - 1];
+  const { coordinate } = useSlice(timeseries.data[data.index], data.minmax);
 
   const formatToBillions = (number: number, dp: number = 1) => {
     if (number >= 1e12) {
@@ -89,51 +81,48 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
     },
     [data]
   );
+  const prefixRM = (value: number) => (value > 0 ? "+RM " : "-RM ");
 
-  const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
-    sectionHeaders.map(chartName => ({
-      title: t(`keys.${chartName}`),
-      prefix: "RM ",
-      unitY: "",
-      label: t(`keys.${chartName}`),
-      data: coordinate[chartName],
-      fill: data.shade_type.value === "no_shade",
-      callout: {
-        latest:
-          timeseries_callout.data[data.index_type.value][chartName].latest > 0
-            ? `RM ${formatToBillions(
-                timeseries_callout.data[data.index_type.value][chartName].latest
-              )}`
-            : `-RM ${
-                formatToBillions(
-                  timeseries_callout.data[data.index_type.value][chartName].latest
-                ).split("-")[1]
-              }`,
-        change:
-          timeseries_callout.data[data.index_type.value][chartName].change > 0
-            ? `+RM ${formatToBillions(
-                timeseries_callout.data[data.index_type.value][chartName].change
-              )}`
-            : `-RM ${
-                formatToBillions(
-                  timeseries_callout.data[data.index_type.value][chartName].change
-                ).split("-")[1]
-              }`,
-      },
-      chartName,
+  const getChartData = (charts: string[]): TimeseriesChartData[] => {
+    return charts.map(name => ({
+      title: t(`keys.${name}`),
+      label: t(`keys.${name}`),
+      data: coordinate[name],
+      fill: data.shade === "no_shade",
+      stats: [
+        {
+          title: t("common:common.latest", {
+            date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+          }),
+          value: [
+            prefixRM(timeseries_callout.data[data.index][name].latest),
+            numFormat(
+              Math.abs(timeseries_callout.data[data.index][name].latest),
+              "compact",
+              1,
+              "long",
+              i18n.language,
+              false
+            ),
+          ].join(""),
+        },
+        {
+          title: t("keys.qoq_change"),
+          value: [
+            prefixRM(timeseries_callout.data[data.index][name].change),
+            numFormat(
+              Math.abs(timeseries_callout.data[data.index][name].change),
+              "compact",
+              1,
+              "long",
+              i18n.language,
+              false
+            ),
+          ].join(""),
+        },
+      ],
     }));
-
-  const detailsChartData = getChartData([
-    "direct_total",
-    "direct_equity",
-    "direct_debt",
-    "portfolio_total",
-    "porfolio_equity",
-    "portfolio_debt",
-    "derivatives",
-    "other",
-    "reserve",
-  ]);
+  };
 
   return (
     <>
@@ -143,7 +132,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency={meta.agency} noRedirect={true} />}
+        agencyBadge={<AgencyBadge name={t("agencies:bpan.full")} icon={<MOTIcon />} />}
       />
 
       <Container className="min-h-screen">
@@ -155,15 +144,15 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
               <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                 <Dropdown
                   anchor="left"
-                  selected={data.index_type}
+                  selected={INDEX_OPTIONS.find(option => data.index === option.value)}
                   options={INDEX_OPTIONS}
-                  onChange={e => setData("index_type", e)}
+                  onChange={e => setData("index", e.value)}
                 />
                 <Dropdown
                   anchor="left"
                   options={SHADE_OPTIONS}
-                  selected={data.shade_type}
-                  onChange={e => setData("shade_type", e)}
+                  selected={SHADE_OPTIONS.find(option => data.shade === option.value)}
+                  onChange={e => setData("shade", e.value)}
                 />
               </div>
             </div>
@@ -177,7 +166,23 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                   enableAnimation={!play}
                   className="h-[350px] w-full"
                   interval="quarter"
-                  displayNumFormat={value => formatToBillions(value, 0)}
+                  displayNumFormat={value =>
+                    numFormat(value, "compact", [1, 0], "long", i18n.language, true)
+                  }
+                  tooltipCallback={item =>
+                    [
+                      item.dataset.label + ": ",
+                      prefixRM(item.parsed.y),
+                      numFormat(
+                        Math.abs(item.parsed.y),
+                        "compact",
+                        1,
+                        "long",
+                        i18n.language,
+                        false
+                      ),
+                    ].join("")
+                  }
                   axisY={{
                     y2: {
                       display: false,
@@ -198,12 +203,12 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                         type: "line",
                         data: coordinate.total,
                         label: t("keys.total"),
-                        fill: data.shade_type.value === "no_shade",
+                        fill: data.shade === "no_shade",
                         backgroundColor: AKSARA_COLOR.PRIMARY_H,
                         borderColor: AKSARA_COLOR.PRIMARY,
                         borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
                       },
-                      shader(data.shade_type.value),
+                      shader(data.shade),
                     ],
                   }}
                   stats={[
@@ -211,19 +216,31 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                       title: t("common:common.latest", {
                         date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
                       }),
-                      value: `${
-                        timeseries_callout.data[data.index_type.value].total.latest > 0 ? "+" : "-"
-                      }RM ${formatToBillions(
-                        timeseries_callout.data[data.index_type.value].total.latest
-                      )}`,
+                      value: [
+                        prefixRM(timeseries_callout.data[data.index].total.latest),
+                        numFormat(
+                          Math.abs(timeseries_callout.data[data.index].total.latest),
+                          "compact",
+                          1,
+                          "long",
+                          i18n.language,
+                          false
+                        ),
+                      ].join(""),
                     },
                     {
                       title: t("keys.qoq_change"),
-                      value: `${
-                        timeseries_callout.data[data.index_type.value].total.change > 0 ? "+" : "-"
-                      }RM ${formatToBillions(
-                        timeseries_callout.data[data.index_type.value].total.change
-                      )}`,
+                      value: [
+                        prefixRM(timeseries_callout.data[data.index].total.change),
+                        numFormat(
+                          Math.abs(timeseries_callout.data[data.index].total.change),
+                          "compact",
+                          1,
+                          "long",
+                          i18n.language,
+                          false
+                        ),
+                      ].join(""),
                     },
                   ]}
                 />
@@ -232,20 +249,46 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                   period={"quarter"}
                   value={data.minmax}
                   onChange={e => setData("minmax", e)}
-                  data={timeseries.data[data.index_type.value].x}
+                  data={timeseries.data[data.index].x}
                 />
                 <Section>
                   <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    {detailsChartData.map(chartData => (
+                    {getChartData([
+                      "direct_total",
+                      "direct_equity",
+                      "direct_debt",
+                      "portfolio_total",
+                      "porfolio_equity",
+                      "portfolio_debt",
+                      "derivatives",
+                      "other",
+                      "reserve",
+                    ]).map(({ title, label, fill, data: datum, stats }) => (
                       <Timeseries
-                        key={chartData.title}
-                        title={chartData.title}
+                        key={title}
+                        title={title}
                         className="h-[350px] w-full"
                         interval="quarter"
                         enableAnimation={!play}
-                        displayNumFormat={value => formatToBillions(value, 0)}
-                        prefixY={chartData.prefix}
-                        unitY={chartData.unitY}
+                        displayNumFormat={value =>
+                          [
+                            prefixRM(value),
+                            numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                          ].join("")
+                        }
+                        tooltipCallback={item =>
+                          [
+                            prefixRM(item.parsed.y),
+                            numFormat(
+                              Math.abs(item.parsed.y),
+                              "compact",
+                              1,
+                              "long",
+                              i18n.language,
+                              false
+                            ),
+                          ].join("")
+                        }
                         axisY={{
                           y2: {
                             display: false,
@@ -264,28 +307,17 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                           datasets: [
                             {
                               type: "line",
-                              label: chartData.label,
-                              data: chartData.data,
+                              label: label,
+                              data: datum,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,
-                              fill: chartData.fill,
+                              fill: fill,
                               borderWidth: 1.5,
                             },
-                            shader(data.shade_type.value),
+                            shader(data.shade),
                           ],
                         }}
-                        stats={[
-                          {
-                            title: t("common:common.latest", {
-                              date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
-                            }),
-                            value: chartData.callout.latest,
-                          },
-                          {
-                            title: t("keys.qoq_change"),
-                            value: chartData.callout.change,
-                          },
-                        ]}
+                        stats={stats}
                       />
                     ))}
                   </div>

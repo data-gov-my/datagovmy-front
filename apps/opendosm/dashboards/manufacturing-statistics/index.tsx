@@ -1,10 +1,11 @@
-import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import type { ChartDataset } from "chart.js";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
-import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
-import { MetaPage, OptionType } from "datagovmy-ui/types";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { BOMBAIcon } from "datagovmy-ui/icons/agency";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -19,11 +20,8 @@ interface TimeseriesChartData {
   label: string;
   data: number[];
   fill: boolean;
-  callout: {
-    latest: string;
-  };
+  stats: Array<{ title: string; value: string }>;
   prefix: string;
-  chartName: string;
 }
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
@@ -32,16 +30,14 @@ interface ManufacturingStatisticsProps {
   last_updated: string;
   timeseries: any;
   timeseries_callout: any;
-  meta: MetaPage;
 }
 
 const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> = ({
   last_updated,
   timeseries,
   timeseries_callout,
-  meta,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-manufacturing-statistics", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-manufacturing-statistics", "agencies", "common"]);
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.actual"), value: "actual" },
@@ -56,21 +52,13 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
 
   const { data, setData } = useData({
     minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
-    index_type: INDEX_OPTIONS[0],
-    shade_type: SHADE_OPTIONS[0],
+    index: INDEX_OPTIONS[0].value,
+    shade: SHADE_OPTIONS[0].value,
   });
-  const LATEST_TIMESTAMP =
-    timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
-  const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
+  const LATEST_TIMESTAMP = timeseries.data[data.index].x[timeseries.data[data.index].x.length - 1];
+  const { coordinate } = useSlice(timeseries.data[data.index], data.minmax);
 
-  const formatToBillions = (number: number, dp: number = 1) => {
-    if (number >= 1e12) {
-      return `${numFormat(number / 1e9, "standard", dp, "long", i18n.language)} bil`;
-    }
-    return numFormat(number, "compact", dp, "long", i18n.language, true);
-  };
-
-  const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
+  const shader = useCallback<(key: string) => ChartDataset<"line", any[]>>(
     (key: string) => {
       if (key === "no_shade")
         return {
@@ -87,43 +75,43 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
         stepped: true,
       };
     },
-    [data]
+    [data.shade]
   );
 
-  const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
-    sectionHeaders.map(chartName => {
-      const isPercentage: boolean = ["growth_momsa", "growth_yoy"].includes(data.index_type.value);
+  const getChartData = (charts: string[]): TimeseriesChartData[] => {
+    return charts.map(name => {
+      const isPerc = ["growth_momsa", "growth_yoy"].includes(data.index);
+      const prefix: string = name === "employees" ? "" : isPerc ? "" : "RM ";
+      const unitY: string = isPerc ? "%" : "";
       return {
-        title: t(`keys.${chartName}`),
-        prefix: chartName === "employees" ? "" : isPercentage ? "" : "RM",
-        unitY: isPercentage ? "%" : "",
-        label: t(`keys.${chartName}`),
-        data: coordinate[chartName],
-        fill: data.shade_type.value === "no_shade",
-        callout: {
-          latest: isPercentage
-            ? `${formatToBillions(
-                timeseries_callout.data[data.index_type.value][chartName].latest
-              )}%`
-            : chartName === "employees"
-            ? `${formatToBillions(
-                timeseries_callout.data[data.index_type.value][chartName].latest
-              )} people`
-            : timeseries_callout.data[data.index_type.value][chartName].latest > 0
-            ? `RM ${formatToBillions(
-                timeseries_callout.data[data.index_type.value][chartName].latest
-              )}`
-            : `-RM ${
-                formatToBillions(
-                  timeseries_callout.data[data.index_type.value][chartName].latest
-                ).split("-")[1]
-              }`,
-        },
-        chartName,
+        title: t(`keys.${name}`),
+        prefix: prefix,
+        unitY: unitY,
+        label: t(`keys.${name}`),
+        data: coordinate[name],
+        fill: data.shade === "no_shade",
+        stats: [
+          {
+            title: t("common:common.latest", {
+              date: toDate(LATEST_TIMESTAMP, "MMMM yyyy", i18n.language),
+            }),
+            value: [
+              prefix,
+              numFormat(
+                timeseries_callout.data[data.index][name].latest,
+                "compact",
+                1,
+                "long",
+                i18n.language,
+                false
+              ),
+              unitY,
+            ].join(""),
+          },
+        ],
       };
     });
-
-  const detailsChartData = getChartData(["sales", "employees", "wages"]);
+  };
 
   return (
     <>
@@ -133,10 +121,10 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency={meta.agency} noRedirect={true} />}
+        agencyBadge={<AgencyBadge name={t("agencies:bppib.full")} icon={<BOMBAIcon />} />}
       />
 
-      <Container className="min-h-screen">
+      <Container>
         <Section
           title={t("section_1.title")}
           description={
@@ -144,15 +132,15 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
               <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                 <Dropdown
                   anchor="left"
-                  selected={data.index_type}
                   options={INDEX_OPTIONS}
-                  onChange={e => setData("index_type", e)}
+                  selected={INDEX_OPTIONS.find(option => data.index === option.value)}
+                  onChange={e => setData("index", e.value)}
                 />
                 <Dropdown
                   anchor="left"
                   options={SHADE_OPTIONS}
-                  selected={data.shade_type}
-                  onChange={e => setData("shade_type", e)}
+                  selected={SHADE_OPTIONS.find(option => data.shade === option.value)}
+                  onChange={e => setData("shade", e.value)}
                 />
               </div>
             </div>
@@ -163,61 +151,66 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
             {play => (
               <>
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                  {detailsChartData.map(chartData => (
-                    <Timeseries
-                      key={chartData.title}
-                      title={chartData.title}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      displayNumFormat={value => formatToBillions(value, 0)}
-                      prefixY={chartData.prefix}
-                      unitY={chartData.unitY}
-                      axisY={{
-                        y2: {
-                          display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
+                  {getChartData(["sales", "employees", "wages"]).map(
+                    ({ title, prefix, unitY, label, data: datum, fill, stats }) => (
+                      <Timeseries
+                        key={title}
+                        title={title}
+                        className="h-[350px] w-full"
+                        interval="month"
+                        enableAnimation={!play}
+                        displayNumFormat={value =>
+                          numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true)
+                        }
+                        tooltipCallback={item =>
+                          [
+                            item.dataset.label,
+                            prefix +
+                              numFormat(item.parsed.y, "compact", 1, "long", i18n.language, false) +
+                              unitY,
+                          ].join(": ")
+                        }
+                        prefixY={prefix}
+                        unitY={unitY}
+                        axisY={{
+                          y2: {
                             display: false,
+                            grid: {
+                              drawTicks: false,
+                              drawBorder: false,
+                              lineWidth: 0.5,
+                            },
+                            ticks: {
+                              display: false,
+                            },
                           },
-                        },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: chartData.label,
-                            data: chartData.data,
-                            backgroundColor: AKSARA_COLOR.DANGER_H,
-                            borderColor: AKSARA_COLOR.DANGER,
-                            fill: chartData.fill,
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
-                        {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMMM yyyy", i18n.language),
-                          }),
-                          value: chartData.callout.latest,
-                        },
-                      ]}
-                    />
-                  ))}
+                        }}
+                        data={{
+                          labels: coordinate.x,
+                          datasets: [
+                            {
+                              type: "line",
+                              label: label,
+                              data: datum,
+                              backgroundColor: AKSARA_COLOR.DANGER_H,
+                              borderColor: AKSARA_COLOR.DANGER,
+                              fill: fill,
+                              borderWidth: 1.5,
+                            },
+                            shader(data.shade),
+                          ],
+                        }}
+                        stats={stats}
+                      />
+                    )
+                  )}
                 </div>
                 <Slider
                   type="range"
                   period={"month"}
                   value={data.minmax}
                   onChange={e => setData("minmax", e)}
-                  data={timeseries.data[data.index_type.value].x}
+                  data={timeseries.data[data.index].x}
                 />
               </>
             )}

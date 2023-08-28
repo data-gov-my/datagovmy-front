@@ -4,7 +4,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { MetaPage, OptionType } from "datagovmy-ui/types";
+import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -15,34 +15,53 @@ import { FunctionComponent, useCallback } from "react";
 
 interface TimeseriesChartData {
   title: string;
-  unitY: string;
   label: string;
   data: number[];
   fill: boolean;
-  callout: {
-    latest: string;
-    change: string;
-  };
+  stats: Array<{ title: string; value: string }>;
   prefix: string;
-  chartName: string;
 }
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-interface BOPProps {
-  last_updated: string;
-  timeseries: any;
-  timeseries_callout: any;
-  meta: MetaPage;
+const Balances = [
+  "x",
+  "bop",
+  "ca",
+  "fa",
+  "ka",
+  "ca_goods",
+  "ca_services",
+  "ca_primary",
+  "ca_secondary",
+  "fa_dia",
+  "fa_pi",
+  "fa_derivatives",
+  "fa_other",
+  "neo",
+  "recession",
+];
+
+const BalancesExtra = ["bop_forex", "bop_imf", "bop_sdr", "ka_nfa", "ka_transfer"];
+
+interface BalanceOfPaymentsProps {
+  timeseries: WithData<{
+    credit: Record<(typeof Balances)[number], number[]>;
+    debit: Record<(typeof Balances)[number], number[]>;
+    net: Record<(typeof Balances)[number], number[]>;
+  }>;
+  timeseries_callout: WithData<{
+    credit: Record<(typeof Balances)[number] & (typeof BalancesExtra)[number], number[]>;
+    debit: Record<(typeof Balances)[number] & (typeof BalancesExtra)[number], number[]>;
+    net: Record<(typeof Balances)[number] & (typeof BalancesExtra)[number], number[]>;
+  }>;
 }
 
-const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
-  last_updated,
+const BalanceOfPaymentsTimeseries: FunctionComponent<BalanceOfPaymentsProps> = ({
   timeseries,
   timeseries_callout,
-  meta,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-bop", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-bop", "agencies", "common"]);
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.net"), value: "net" },
@@ -55,19 +74,11 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
   ];
   const { data, setData } = useData({
     minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
-    index_type: INDEX_OPTIONS[0],
-    shade_type: SHADE_OPTIONS[0],
+    index: INDEX_OPTIONS[0].value,
+    shade: SHADE_OPTIONS[0].value,
   });
-  const LATEST_TIMESTAMP =
-    timeseries.data[data.index_type.value].x[timeseries.data[data.index_type.value].x.length - 1];
-  const { coordinate } = useSlice(timeseries.data[data.index_type.value], data.minmax);
-
-  const formatToMillions = (number: number, dp: number = 1) => {
-    if (number >= 1e9 || number <= -1e9) {
-      return `${numFormat(number / 1e6, "standard", dp, "long", i18n.language)} mil`;
-    }
-    return numFormat(number, "compact", dp, "long", i18n.language, true);
-  };
+  const LATEST_TIMESTAMP = timeseries.data[data.index].x[timeseries.data[data.index].x.length - 1];
+  const { coordinate } = useSlice(timeseries.data[data.index], data.minmax);
 
   const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
@@ -88,51 +99,49 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
     },
     [data]
   );
+  const prefixRM = (value: number) => (value > 0 ? "+RM " : "-RM ");
 
-  const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
-    sectionHeaders.map(chartName => ({
-      title: t(`keys.${chartName}`),
+  const getChartData = (charts: string[]): TimeseriesChartData[] => {
+    return charts.map(name => ({
+      title: t(`keys.${name}`),
       prefix: "RM ",
-      unitY: "",
-      label: t(`keys.${chartName}`),
-      data: coordinate[chartName],
-      fill: data.shade_type.value === "no_shade",
-      callout: {
-        latest:
-          timeseries_callout.data[data.index_type.value]?.[chartName].latest >= 0
-            ? `RM ${formatToMillions(
-                timeseries_callout.data[data.index_type.value]?.[chartName].latest
-              )}`
-            : `-RM ${
-                formatToMillions(
-                  timeseries_callout.data[data.index_type.value]?.[chartName].latest
-                ).split("-")[1]
-              }`,
-        change:
-          timeseries_callout.data[data.index_type.value]?.[chartName].change >= 0
-            ? `+RM ${formatToMillions(
-                timeseries_callout.data[data.index_type.value]?.[chartName].change
-              )}`
-            : `-RM ${
-                formatToMillions(
-                  timeseries_callout.data[data.index_type.value]?.[chartName].change
-                ).split("-")[1]
-              }`,
-      },
-      chartName,
+      label: t(`keys.${name}`),
+      data: coordinate[name],
+      fill: data.shade === "no_shade",
+      stats: [
+        {
+          title: t("common:common.latest", {
+            date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+          }),
+          value: [
+            prefixRM(timeseries_callout.data[data.index].bop.latest),
+            numFormat(
+              Math.abs(timeseries_callout.data[data.index].bop.latest),
+              "compact",
+              1,
+              "long",
+              i18n.language,
+              false
+            ),
+          ].join(""),
+        },
+        {
+          title: t("keys.qoq_change"),
+          value: [
+            prefixRM(timeseries_callout.data[data.index][name].change),
+            numFormat(
+              Math.abs(timeseries_callout.data[data.index][name].change),
+              "compact",
+              1,
+              "long",
+              i18n.language,
+              false
+            ),
+          ].join(""),
+        },
+      ],
     }));
-
-  const detailsChartData = getChartData([
-    "ca",
-    "fa",
-    "ka",
-    "ca_goods",
-    "ca_services",
-    "ca_primary",
-    "ca_secondary",
-    "fa_dia",
-    "fa_pi",
-  ]);
+  };
 
   return (
     <>
@@ -147,15 +156,15 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
               <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
                 <Dropdown
                   anchor="left"
-                  selected={data.index_type}
                   options={INDEX_OPTIONS}
-                  onChange={e => setData("index_type", e)}
+                  selected={INDEX_OPTIONS.find(option => data.index === option.value)}
+                  onChange={e => setData("index", e.value)}
                 />
                 <Dropdown
                   anchor="left"
                   options={SHADE_OPTIONS}
-                  selected={data.shade_type}
-                  onChange={e => setData("shade_type", e)}
+                  selected={SHADE_OPTIONS.find(option => data.shade === option.value)}
+                  onChange={e => setData("shade", e.value)}
                 />
               </div>
             </div>
@@ -169,7 +178,12 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
                   enableAnimation={false}
                   className="h-[350px] w-full"
                   interval="quarter"
-                  displayNumFormat={value => formatToMillions(value, 0)}
+                  displayNumFormat={value =>
+                    [
+                      prefixRM(value),
+                      numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                    ].join("")
+                  }
                   axisY={{
                     y2: {
                       display: false,
@@ -190,12 +204,12 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
                         type: "line",
                         data: coordinate.bop,
                         label: t("keys.bop"),
-                        fill: data.shade_type.value === "no_shade",
+                        fill: data.shade === "no_shade",
                         backgroundColor: AKSARA_COLOR.PRIMARY_H,
                         borderColor: AKSARA_COLOR.PRIMARY,
                         borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
                       },
-                      shader(data.shade_type.value),
+                      shader(data.shade),
                     ],
                   }}
                   stats={[
@@ -203,19 +217,31 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
                       title: t("common:common.latest", {
                         date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
                       }),
-                      value: `${
-                        timeseries_callout.data[data.index_type.value].bop.latest >= 0 ? "+" : "-"
-                      }RM ${formatToMillions(
-                        timeseries_callout.data[data.index_type.value].bop.latest
-                      )}`,
+                      value: [
+                        prefixRM(timeseries_callout.data[data.index].bop.latest),
+                        numFormat(
+                          Math.abs(timeseries_callout.data[data.index].bop.latest),
+                          "compact",
+                          1,
+                          "long",
+                          i18n.language,
+                          false
+                        ),
+                      ].join(""),
                     },
                     {
                       title: t("keys.qoq_change"),
-                      value: `${
-                        timeseries_callout.data[data.index_type.value].bop.change >= 0 ? "+" : "-"
-                      }RM ${formatToMillions(
-                        timeseries_callout.data[data.index_type.value].bop.change
-                      )}`,
+                      value: [
+                        prefixRM(timeseries_callout.data[data.index].bop.change),
+                        numFormat(
+                          Math.abs(timeseries_callout.data[data.index].bop.change),
+                          "compact",
+                          1,
+                          "long",
+                          i18n.language,
+                          false
+                        ),
+                      ].join(""),
                     },
                   ]}
                 />
@@ -224,20 +250,47 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
                   period={"quarter"}
                   value={data.minmax}
                   onChange={e => setData("minmax", e)}
-                  data={timeseries.data[data.index_type.value].x}
+                  data={timeseries.data[data.index].x}
                 />
                 <Section>
                   <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    {detailsChartData.map(chartData => (
+                    {getChartData([
+                      "ca",
+                      "fa",
+                      "ka",
+                      "ca_goods",
+                      "ca_services",
+                      "ca_primary",
+                      "ca_secondary",
+                      "fa_dia",
+                      "fa_pi",
+                    ]).map(({ title, prefix, label, data: datum, fill, stats }) => (
                       <Timeseries
-                        key={chartData.title}
-                        title={chartData.title}
+                        key={title}
+                        title={title}
                         className="h-[350px] w-full"
                         interval="quarter"
                         enableAnimation={!play}
-                        displayNumFormat={value => formatToMillions(value, 0)}
-                        prefixY={chartData.prefix}
-                        unitY={chartData.unitY}
+                        displayNumFormat={value =>
+                          [
+                            prefixRM(value),
+                            numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                          ].join("")
+                        }
+                        tooltipCallback={item =>
+                          [
+                            item.dataset.label + ": ",
+                            prefixRM(item.parsed.y),
+                            numFormat(
+                              Math.abs(item.parsed.y),
+                              "compact",
+                              1,
+                              "long",
+                              i18n.language,
+                              false
+                            ),
+                          ].join("")
+                        }
                         axisY={{
                           y2: {
                             display: false,
@@ -256,28 +309,17 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BOPProps> = ({
                           datasets: [
                             {
                               type: "line",
-                              label: chartData.label,
-                              data: chartData.data,
+                              label: label,
+                              data: datum,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,
-                              fill: chartData.fill,
+                              fill: fill,
                               borderWidth: 1.5,
                             },
-                            shader(data.shade_type.value),
+                            shader(data.shade),
                           ],
                         }}
-                        stats={[
-                          {
-                            title: t("common:common.latest", {
-                              date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
-                            }),
-                            value: chartData.callout.latest,
-                          },
-                          {
-                            title: t("keys.qoq_change"),
-                            value: chartData.callout.change,
-                          },
-                        ]}
+                        stats={stats}
                       />
                     ))}
                   </div>
