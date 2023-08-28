@@ -3,6 +3,11 @@
   background-size: cover;
   background-position: center right;
 }
+.home-banner-dark {
+  background: url("/static/images/banner/home-hero-dark.jpg") no-repeat;
+  background-size: cover;
+  background-position: center right;
+}
 .data-catalogue-banner {
   background: url("/static/images/banner/data-catalogue.jpg") no-repeat;
   background-size: cover;

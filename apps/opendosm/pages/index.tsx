@@ -16,7 +16,7 @@ import {
 import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
-import { numFormat } from "datagovmy-ui/helpers";
+import { clx, numFormat } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import {
   UsersIcon,
@@ -31,6 +31,7 @@ import {
 import { AgencyIcon } from "datagovmy-ui/icons/agency";
 import { Agency, Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { ReactNode, useContext, useMemo } from "react";
 
@@ -46,7 +47,7 @@ const Home: Page = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { size } = useContext(WindowContext);
   const { t, i18n } = useTranslation("opendosm-home");
-
+  const { theme } = useTheme();
   const { data, setData } = useData({
     minmax: [0, timeseries.data.x.length - 1],
     tabs_section_1: 0,
@@ -208,7 +209,7 @@ const Home: Page = ({
       <Metadata keywords={"opendosm data negara inflasi"} />
 
       <Hero
-        background="blue"
+        background={clx(theme === "light" ? "home-banner" : "home-banner-dark")}
         category={[t("category"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
