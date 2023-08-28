@@ -184,7 +184,7 @@ const Home: Page = ({
         category={[t("opendosm.category"), "text-primary dark:text-primary-dark"]}
         header={[t("opendosm.header")]}
         description={[t("opendosm.description")]}
-        agencyBadge={<AgencyBadge agency="dosm" noRedirect={true} />}
+        agencyBadge={<AgencyBadge agency="dosm" />}
         action={
           <div className="flex flex-wrap gap-3">
             <At className="btn-primary text-sm shadow-button" href="/dashboard" enableIcon>

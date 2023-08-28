@@ -200,7 +200,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" noRedirect={true} />}
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
 
       <Container className="min-h-screen">
