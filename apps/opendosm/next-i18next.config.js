@@ -17,6 +17,7 @@ const namespaces = [
   "dashboard-bop",
   "publications",
   "dashboard-labour-productivity",
+  "dashboard-formal-sector-wages",
 ];
 
 module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);

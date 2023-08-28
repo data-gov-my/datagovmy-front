@@ -51,12 +51,12 @@ interface LabourProductivityProp {
   timeseries_callout: WithData<LabourProductivityOptions>;
 }
 
-const InternationalInvestmentPosition: FunctionComponent<LabourProductivityProp> = ({
+const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
   timeseries,
   timeseries_callout,
   last_updated,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-labour-productivity", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-labour-productivity", "agencies", "common"]);
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.growth_yoy_vah"), value: "growth_yoy_vah" },
@@ -115,7 +115,6 @@ const InternationalInvestmentPosition: FunctionComponent<LabourProductivityProp>
 
   const getChartData = (charts: string[]): TimeseriesChartData[] =>
     charts.map(name => {
-      console.log(name);
       const isPercentage: boolean = [
         "growth_yoy_vah",
         "growth_yoy_vae",
@@ -336,4 +335,4 @@ const InternationalInvestmentPosition: FunctionComponent<LabourProductivityProp>
   );
 };
 
-export default InternationalInvestmentPosition;
+export default LaborProductivity;

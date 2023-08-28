@@ -13,4 +13,5 @@ export const routes = {
   LABOUR_PRODUCTIVITY: "dashboard/labour-productivity",
   BOP: "/dashboard/balance-of-payments",
   MANUFACTURING_STATISTICS: "/dashboard/manufacturing-statistics",
+  FORMAL_SECTOR_WAGES: "/dashboard/formal-sector-wages",
 } as const;
