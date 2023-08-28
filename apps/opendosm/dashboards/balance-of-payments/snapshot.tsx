@@ -1,5 +1,5 @@
 import { FunctionComponent, useMemo } from "react";
-import { MetaPage, WithData } from "datagovmy-ui/types";
+import { WithData } from "datagovmy-ui/types";
 import { Container, Section, Slider } from "datagovmy-ui/components";
 import { clx, numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -20,9 +20,7 @@ interface TableSummaryData {
 }
 
 interface BOPProps {
-  last_updated: string;
   bop_snapshot: WithData<TableSummaryData>;
-  meta: MetaPage;
 }
 
 const itemSorts = (variable: string, index: number) => {
@@ -43,11 +41,7 @@ const itemSorts = (variable: string, index: number) => {
       return index;
   }
 };
-const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
-  last_updated,
-  bop_snapshot,
-  meta,
-}) => {
+const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }) => {
   const { t, i18n } = useTranslation(["dashboard-bop", "common"]);
 
   const xValues = Object.keys(bop_snapshot.data);
@@ -58,10 +52,11 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
   });
 
   const formatToMillions = (number: number, dp: number = 1) => {
-    // if (number >= 1e9 || number <= -1e9) {
-    return `${numFormat(number / 1e6, "standard", dp, "long", i18n.language, false)}`;
-    // }
-    // return numFormat(number, "compact", dp, "short", i18n.language, false);
+    return (
+      (number < 0 ? "(" : "") +
+      numFormat(Math.abs(number) / 1e6, "standard", dp, "long", i18n.language, false) +
+      (number < 0 ? ")" : "")
+    );
   };
 
   const tableData = useMemo(
@@ -93,6 +88,11 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
     [data.snapshot_index]
   );
 
+  const className = {
+    td: "w-1/5 px-3 py-2 text-end tabular-nums text-black dark:text-white",
+    th: "px-3 py-2 text-center text-sm font-medium text-black dark:text-white",
+  };
+
   return (
     <>
       <Container className="min-h-screen">
@@ -101,57 +101,45 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({
           description={t("section_snapshot.description")}
           date={bop_snapshot.data_as_of}
         >
-          <div className="mx-auto lg:max-w-screen-md">
-            <div className="flex flex-col lg:grid lg:grid-cols-12">
-              <table className="lg:col-start-0 lg:col-span-12">
-                <thead className="dark:border-washed-dark">
+          <div className="mx-auto overflow-auto lg:max-w-screen-md">
+            <div className="flex flex-col">
+              <table>
+                <thead className="border-b border-outline dark:border-washed-dark">
                   <tr>
-                    <th className="w-2/5 px-4 py-3 text-sm font-medium"></th>
-                    <th colSpan={3} className="px-4 py-3 text-center text-sm font-medium">
+                    <th></th>
+                    <th colSpan={3} className={className.th}>
                       {t("table.unit")}
                     </th>
                   </tr>
                 </thead>
-                <thead className="border-y-2 border-l-2 border-gray-300 dark:border-washed-dark">
+                <thead>
                   <tr>
-                    <th className="border-r-2 border-gray-300 px-4 py-3 text-sm font-medium"></th>
-                    <th className="border-r-2 border-gray-300 px-4 py-3 text-center text-sm font-medium">
-                      {t("keys.net")}
-                    </th>
-                    <th className="border-r-2 border-gray-300 px-4 py-3 text-center text-sm font-medium">
-                      {t("keys.credit")}
-                    </th>
-                    <th className="border-r-2 border-gray-300 px-4 py-3 text-center text-sm font-medium">
-                      {t("keys.debit")}
-                    </th>
+                    <th></th>
+                    <th className={className.th}>{t("keys.net")}</th>
+                    <th className={className.th}>{t("keys.credit")}</th>
+                    <th className={className.th}>{t("keys.debit")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData.map((item, i) => (
+                  {tableData.map((item, i: number) => (
                     <tr
                       key={i}
                       className={clx(
-                        "border-b border-l-2 border-gray-300 dark:border-washed-dark",
-                        !item.isSubHeader && "bg-outline"
+                        "border-b border-outline text-sm dark:border-washed-dark",
+                        !item.isSubHeader && "border-none bg-outline dark:bg-washed-dark"
                       )}
                     >
                       <td
                         className={clx(
-                          "w-2/5 border-r-2 border-gray-300 px-3 py-2 text-sm font-medium",
-                          item.isSubHeader && "pl-10 font-normal"
+                          "w-2/5 px-3 py-2 font-medium",
+                          item.isSubHeader && "pl-8 font-normal"
                         )}
                       >
                         {item.component}
                       </td>
-                      <td className="w-1/5 border-r-2 border-gray-300 px-3 py-2 text-end text-sm capitalize tabular-nums">
-                        {item.net}
-                      </td>
-                      <td className="w-1/5 border-r-2 border-gray-300 px-3 py-2 text-end text-sm tabular-nums">
-                        {item.credit}
-                      </td>
-                      <td className="w-1/5 border-r-2 border-gray-300 px-3 py-2 text-end text-sm tabular-nums">
-                        {item.debit}
-                      </td>
+                      <td className={className.td}>{item.net}</td>
+                      <td className={className.td}>{item.credit}</td>
+                      <td className={className.td}>{item.debit}</td>
                     </tr>
                   ))}
                 </tbody>
