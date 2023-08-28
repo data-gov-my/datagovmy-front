@@ -89,7 +89,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
   );
 
   const className = {
-    td: "w-1/5 px-3 py-2 text-end tabular-nums text-black dark:text-white",
+    td: "w-1/5 px-3 py-2 text-end text-sm tabular-nums text-black dark:text-white",
     th: "px-3 py-2 text-center text-sm font-medium text-black dark:text-white",
   };
 
@@ -125,13 +125,15 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
                     <tr
                       key={i}
                       className={clx(
-                        "border-b border-outline text-sm dark:border-washed-dark",
-                        !item.isSubHeader && "border-none bg-outline dark:bg-washed-dark"
+                        !item.isSubHeader
+                          ? "bg-outline dark:bg-washed-dark"
+                          : "border-b border-outline dark:border-washed-dark",
+                        "last:border-t last:border-t-white last:dark:border-t-outlineHover-dark"
                       )}
                     >
                       <td
                         className={clx(
-                          "w-2/5 px-3 py-2 font-medium",
+                          "w-2/5 px-3 py-2 text-sm font-medium",
                           item.isSubHeader && "pl-8 font-normal"
                         )}
                       >
