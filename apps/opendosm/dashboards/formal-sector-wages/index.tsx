@@ -95,6 +95,7 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
                 ],
               }}
               enableGridX={true}
+              enableGridY={false}
             />
 
             <Bar
@@ -118,6 +119,7 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
                 ],
               }}
               enableGridX={true}
+              enableGridY={false}
             />
           </div>
           <Slider
