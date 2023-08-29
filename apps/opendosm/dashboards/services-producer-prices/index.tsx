@@ -135,7 +135,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
     <>
       <Hero
         background="orange"
-        category={[t("common:categories.producer_price"), "text-orange"]}
+        category={[t("common:categories.producer_price"), `text-[${AKSARA_COLOR.ORANGE}]`]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
