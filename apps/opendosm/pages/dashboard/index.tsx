@@ -65,17 +65,17 @@ export const getStaticProps: GetStaticProps = withi18n("dashboards", async () =>
       },
       {
         name: "iip",
-        agency: "bpan",
+        agency: "dosm",
         route: routes.IIP,
       },
       {
         name: "bop",
-        agency: "bpan",
+        agency: "dosm",
         route: routes.BOP,
       },
       {
         name: "manufacturing-statistics",
-        agency: "bppib",
+        agency: "dosm",
         route: routes.MANUFACTURING_STATISTICS,
       },
       {
