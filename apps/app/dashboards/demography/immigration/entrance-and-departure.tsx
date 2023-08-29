@@ -140,7 +140,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
                   {
                     type: "line",
                     data: coordinate.in,
-                    label: t("entrances"),
+                    label: t("keys.entrances"),
                     fill: true,
                     backgroundColor: AKSARA_COLOR.PURPLE_H,
                     borderColor: AKSARA_COLOR.PURPLE,
@@ -149,7 +149,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
                   {
                     type: "line",
                     data: coordinate.out,
-                    label: t("departures"),
+                    label: t("keys.departures"),
                     fill: true,
                     backgroundColor: AKSARA_COLOR.DIM_H,
                     borderColor: AKSARA_COLOR.DIM,
@@ -158,7 +158,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
                   {
                     type: "line",
                     data: coordinate.net,
-                    label: t("net_migration"),
+                    label: t("keys.net_migration"),
                     fill: true,
                     backgroundColor:
                       theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WHITE_H,
@@ -170,21 +170,21 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
               }}
               stats={[
                 {
-                  title: t("keys.entrances", {
-                    year: new Date(timeseries.data[config.key].x.at(-1)!).getFullYear(),
-                  }),
+                  title: `${t("keys.entrances")} (${new Date(
+                    timeseries.data[config.key].x.at(-1)!
+                  ).getFullYear()})`,
                   value: `+${numFormat(timeseries_callout.data.in, "standard")}`,
                 },
                 {
-                  title: t("keys.departures", {
-                    year: new Date(timeseries.data[config.key].x.at(-1)!).getFullYear(),
-                  }),
+                  title: `${t("keys.departures")} (${new Date(
+                    timeseries.data[config.key].x.at(-1)!
+                  ).getFullYear()})`,
                   value: `-${numFormat(timeseries_callout.data.out, "standard")}`,
                 },
                 {
-                  title: t("keys.net_migration", {
-                    year: new Date(timeseries.data[config.key].x.at(-1)!).getFullYear(),
-                  }),
+                  title: `${t("keys.net_migration")} (${new Date(
+                    timeseries.data[config.key].x.at(-1)!
+                  ).getFullYear()})`,
                   value: numFormat(timeseries_callout.data.net, "standard"),
                 },
               ]}

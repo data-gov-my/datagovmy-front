@@ -195,7 +195,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
             <div className="mx-auto w-full py-6 sm:w-[500px]">
               <ComboBox
                 placeholder={t("party.search_party")}
-                imageSource="/static/images/parties/"
+                imageSource="/static/images/parties"
                 options={PARTY_OPTIONS}
                 selected={
                   data.party_option

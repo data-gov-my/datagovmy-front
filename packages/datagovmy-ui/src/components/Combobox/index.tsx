@@ -1,5 +1,5 @@
 import ComboOption, { ComboOptionProp, ComboOptionProps } from "./option";
-import { Button, Spinner } from "..";
+import { Button, ImageWithFallback, Spinner } from "..";
 import { useTranslation } from "../../hooks/useTranslation";
 import { clx } from "../../lib/helpers";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -129,7 +129,10 @@ const ComboBox = <T extends unknown>({
     >
       <input
         ref={refs.setReference}
-        className="focus:dark:bg-washed-dark w-full truncate border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
+        className={clx(
+          "focus:dark:bg-washed-dark w-full truncate border-none bg-white py-3 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black",
+          !imageSource ? "pl-12" : "pl-14"
+        )}
         spellCheck={false}
         {...getReferenceProps({
           "onChange": (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +160,22 @@ const ComboBox = <T extends unknown>({
         })}
       />
       <span className="absolute left-4 top-3.5">
-        <MagnifyingGlassIcon className="dark:text-dim h-5 w-5 text-black" />
+        {!imageSource ? (
+          <MagnifyingGlassIcon className="dark:text-dim h-5 w-5 text-black" />
+        ) : (
+          <ImageWithFallback
+            className="border-outline dark:border-outlineHover-dark aspect-4/3 rounded border"
+            src={
+              typeof imageSource === "string"
+                ? `${imageSource}/${selected?.value}.png`
+                : imageSource(selected?.value ?? "bad")
+            }
+            fallback={fallback}
+            width={28}
+            height={18}
+            alt={selected?.value as string}
+          />
+        )}
       </span>
       {(query.length > 0 || selected) && (
         <Button
