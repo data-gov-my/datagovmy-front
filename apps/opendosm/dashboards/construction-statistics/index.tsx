@@ -8,6 +8,7 @@ import { BOMBAIcon } from "datagovmy-ui/icons/agency";
 import { WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import ProjectOwner, { ProjectOwnerProps } from "./project-owner";
 
 /**
  * Construction Statistics Dashboard
@@ -18,11 +19,9 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
 });
 
 type StatKeys = "projects" | "value";
-type SectorKeys = "government" | "private" | "publiccorp";
-type ProjectKeys = "civileng" | "non_residential" | "residential" | "total";
-type Callout = { latest: number };
+export type Callout = { latest: number };
 
-interface ConstructionStatisticsDashboardProps {
+interface ConstructionStatisticsDashboardProps extends ProjectOwnerProps {
   last_updated: string;
   timeseries: WithData<{
     actual: Record<StatKeys | "x" | "recession", number[]>;
@@ -34,15 +33,6 @@ interface ConstructionStatisticsDashboardProps {
     growth_qoq: Record<StatKeys, Callout>;
     growth_yoy: Record<StatKeys, Callout>;
   }>;
-  project: WithData<
-    Record<
-      SectorKeys,
-      Record<"growth_qoq" | "growth_yoy" | "value", Record<ProjectKeys | "x", number[]>>
-    >
-  >;
-  project_callout: WithData<
-    Record<SectorKeys, Record<"growth_qoq" | "growth_yoy" | "value", Record<ProjectKeys, Callout>>>
-  >;
 }
 
 const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsDashboardProps> = ({
@@ -55,14 +45,6 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
   const { t, i18n } = useTranslation(["dashboard-construction-statistics", "common"]);
 
   const INDEX_OPTIONS = ["actual", "growth_qoq", "growth_yoy"].map((key: string) => ({
-    label: t(key) as string,
-    value: key,
-  }));
-  const SECTOR_OPTIONS = ["government", "private", "publiccorp"].map((key: string) => ({
-    label: t(key) as string,
-    value: key,
-  }));
-  const VALUE_OPTIONS = ["value", "growth_qoq", "growth_yoy"].map((key: string) => ({
     label: t(key) as string,
     value: key,
   }));
@@ -87,8 +69,6 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
 
   const { data, setData } = useData({
     index: INDEX_OPTIONS[0].value,
-    value: VALUE_OPTIONS[0].value,
-    sector: SECTOR_OPTIONS[0].value,
     shade: SHADE_OPTIONS[0].value,
     minmax: [0, timeseries.data.actual.x.length - 1],
     project_minmax: [0, project.data.government.value.x.length - 1],
@@ -96,13 +76,7 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
   });
 
   const LATEST_TIMESTAMP = timeseries.data[data.index].x[timeseries.data[data.index].x.length - 1];
-  const PROJOWNER_LATEST_TIMESTAMP =
-    project.data[data.sector][data.value].x[project.data[data.sector][data.value].x.length - 1];
   const { coordinate } = useSlice(timeseries.data[data.index], data.minmax);
-  const { coordinate: project_coords } = useSlice(
-    project.data[data.sector][data.value],
-    data.minmax
-  );
 
   const shader = useCallback<(key: string) => ChartDataset<keyof ChartTypeRegistry, any[]>>(
     (key: string) => {
@@ -126,14 +100,10 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
 
   const fill = data.shade === "no_shade";
   const isActual = data.index === "actual";
-  const isValue = data.value === "value";
-  const displayNumFormat = (value: number) =>
-    numFormat(value, "compact", 1, "long", i18n.language, true);
-
-  const getCallout = (value: number, isNotGrowth: boolean) => {
-    const prefix = isNotGrowth ? "RM " : "";
-    const unit = isNotGrowth ? "" : "%";
-    const callout = isNotGrowth
+  const getCallout = (value: number, isActual: boolean) => {
+    const prefix = isActual ? "RM " : "";
+    const unit = isActual ? "" : "%";
+    const callout = isActual
       ? `${prefix} ${numFormat(value, "compact", 1, "long", i18n.language, false)}${unit}`
       : `${prefix} ${numFormat(value, "standard", 1)}${unit}`;
     return callout;
@@ -221,7 +191,9 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                     enableAnimation={!play}
                     prefixY={isActual ? "RM " : ""}
                     unitY={isActual ? "" : "%"}
-                    displayNumFormat={value => displayNumFormat(value)}
+                    displayNumFormat={value =>
+                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    }
                     axisY={AXIS_Y}
                     data={{
                       labels: coordinate.x,
@@ -264,127 +236,14 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
         </Section>
 
         {/* A deeper look at construction activity by project owner and sub-sector */}
-        <Section
-          title={t("section_2.title")}
-          description={
-            <div className="flex flex-wrap gap-2 sm:gap-3">
-              <Dropdown
-                width="w-fit"
-                anchor="left"
-                selected={SECTOR_OPTIONS.find(e => e.value === data.sector)}
-                options={SECTOR_OPTIONS}
-                onChange={e => setData("sector", e.value)}
-              />
-              <Dropdown
-                width="w-fit"
-                anchor="left"
-                selected={VALUE_OPTIONS.find(e => e.value === data.value)}
-                options={VALUE_OPTIONS}
-                onChange={e => setData("value", e.value)}
-              />
-              <Dropdown
-                width="w-fit"
-                anchor="right"
-                selected={SHADE_OPTIONS.find(e => e.value === data.shade)}
-                options={SHADE_OPTIONS}
-                onChange={e => setData("shade", e.value)}
-              />
-            </div>
-          }
-          date={timeseries.data_as_of}
-        >
-          <SliderProvider>
-            {play => (
-              <>
-                {/* All Construction Activity */}
-                <Timeseries
-                  className="h-[300px]"
-                  title={t("section_2.total")}
-                  enableAnimation={!play}
-                  interval="quarter"
-                  prefixY={isValue ? "RM " : ""}
-                  unitY={isValue ? "" : "%"}
-                  displayNumFormat={value => displayNumFormat(value)}
-                  axisY={AXIS_Y}
-                  data={{
-                    labels: project_coords.x,
-                    datasets: [
-                      {
-                        type: "line",
-                        data: project_coords.total,
-                        label: t(`${data.value}`),
-                        borderColor: AKSARA_COLOR.DANGER,
-                        borderWidth: 1.5,
-                        backgroundColor: AKSARA_COLOR.DANGER_H,
-                        fill: fill,
-                      },
-                      shader(data.shade),
-                    ],
-                  }}
-                  stats={[
-                    {
-                      title: t("common:common.latest", {
-                        date: toDate(PROJOWNER_LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
-                      }),
-                      value: getCallout(
-                        project_callout.data[data.sector][data.value].total.latest,
-                        isValue
-                      ),
-                    },
-                  ]}
-                />
-                <Slider
-                  type="range"
-                  period="quarter"
-                  value={data.project_minmax}
-                  data={project.data[data.sector][data.value].x}
-                  onChange={e => setData("project_minmax", e)}
-                />
-                <div className="grid grid-cols-1 gap-12 pt-12 sm:grid-cols-2 lg:grid-cols-3">
-                  {["residential", "non_residential", "civileng"].map((key: string) => (
-                    <Timeseries
-                      key={key}
-                      title={t(`section_2.${key}`)}
-                      className="h-[300px]"
-                      enableAnimation={!play}
-                      interval="quarter"
-                      prefixY={isValue ? "RM " : ""}
-                      unitY={isValue ? "" : "%"}
-                      displayNumFormat={value => displayNumFormat(value)}
-                      axisY={AXIS_Y}
-                      data={{
-                        labels: project_coords.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            data: project_coords[key],
-                            label: t(`${data.value}`),
-                            borderColor: AKSARA_COLOR.DANGER,
-                            borderWidth: 1.5,
-                            backgroundColor: AKSARA_COLOR.DANGER_H,
-                            fill: fill,
-                          },
-                          shader(data.shade),
-                        ],
-                      }}
-                      stats={[
-                        {
-                          title: t("common:common.latest", {
-                            date: toDate(PROJOWNER_LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
-                          }),
-                          value: getCallout(
-                            project_callout.data[data.sector][data.value][key].latest,
-                            isValue
-                          ),
-                        },
-                      ]}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </SliderProvider>
-        </Section>
+        <ProjectOwner
+          axisY={AXIS_Y}
+          getCallout={getCallout}
+          project={project}
+          project_callout={project_callout}
+          shader={shader}
+          shadeOptions={SHADE_OPTIONS}
+        />
       </Container>
     </>
   );
