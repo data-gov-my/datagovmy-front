@@ -14,4 +14,5 @@ export const routes = {
   BOP: "/dashboard/balance-of-payments",
   MANUFACTURING_STATISTICS: "/dashboard/manufacturing-statistics",
   FORMAL_SECTOR_WAGES: "/dashboard/formal-sector-wages",
+  SERVICES_PRODUCER_PRICES: "/dashboard/services-producer-prices",
 } as const;
