@@ -195,7 +195,6 @@ const InflationTrends: FunctionComponent = ({}) => {
             <Timeseries
               className="h-[500px] w-full"
               interval="month"
-              tooltipFormat="MMM yyyy"
               mode="grouped"
               unitY="%"
               enableAnimation={!play}

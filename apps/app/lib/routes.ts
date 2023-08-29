@@ -35,6 +35,7 @@ export const routes = {
   NAME_POPULARITY: "/dashboard/name-popularity",
   ORANG_ASLI: "/dashboard/orang-asli",
   ORGAN_DONATION: "/dashboard/organ-donation",
+  PASSPORT_AND_PASSES: "/dashboard/passport-and-passes",
   PEKA_B40: "/dashboard/peka-b40",
   POVERTY: "/dashboard/poverty",
   PUBLIC_CONTRACTING: "/dashboard/public-contracting",
