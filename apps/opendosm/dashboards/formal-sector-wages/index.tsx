@@ -39,7 +39,7 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
   bar_bracket,
   bar_percentile,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-labour-productivity", "agencies", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-formal-sector-wages", "agencies", "common"]);
   const { theme } = useTheme();
 
   const barBracketDates = Object.keys(bar_bracket.data);

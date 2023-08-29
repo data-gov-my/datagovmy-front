@@ -32,7 +32,7 @@ const LaborProductivityData = [
   "mining",
   "mfg",
   "construction",
-  "services",
+  "sevices",
   "recession",
 ];
 
@@ -153,7 +153,7 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
     "mining",
     "mfg",
     "construction",
-    "services",
+    "sevices",
   ]);
 
   return (
