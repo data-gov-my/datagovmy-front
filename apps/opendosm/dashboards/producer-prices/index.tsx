@@ -132,7 +132,7 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
     <>
       <Hero
         background="orange"
-        category={[t("common:categories.economy"), `text-[${AKSARA_COLOR.ORANGE}]`]}
+        category={[t("common:categories.economy"), `text-orange-500`]}
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}

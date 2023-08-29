@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
 /**
- * Labour Productivity Dashboard
+ * Services Producer Prices Dashboard
  * @overview Status: Live
  */
 
@@ -25,24 +25,23 @@ interface TimeseriesChartData {
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-const ServicesPPIData = [
-  "x",
-  "total",
-  "infocomm",
-  "transport",
-  "accom",
-  "arts",
-  "professional",
-  "health",
-  "education",
-  "realestate",
-  "recession",
-];
+type ServicesPPIData =
+  | "x"
+  | "total"
+  | "infocomm"
+  | "transport"
+  | "accom"
+  | "arts"
+  | "professional"
+  | "health"
+  | "education"
+  | "realestate"
+  | "recession";
 
 interface LabourProductivityOptions {
-  growth_qoq: Record<(typeof ServicesPPIData)[number], number>;
-  growth_yoy: Record<(typeof ServicesPPIData)[number], number>;
-  index: Record<(typeof ServicesPPIData)[number], number>;
+  growth_qoq: Record<ServicesPPIData, number[]>;
+  growth_yoy: Record<ServicesPPIData, number[]>;
+  index: Record<ServicesPPIData, number[]>;
 }
 
 interface ServicesPPIProp {
@@ -96,10 +95,21 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
     [data]
   );
 
-  const getChartData = (charts: string[]): TimeseriesChartData[] =>
-    charts.map(name => {
+  const plotTimeseries = (
+    charts: Exclude<ServicesPPIData, "x" | "total" | "recession">[],
+    play: boolean
+  ) => {
+    return charts.map(name => {
       const isPercentage: boolean = ["growth_qoq", "growth_yoy"].includes(data.index);
-      return {
+
+      const {
+        title,
+        prefix,
+        label,
+        data: datum,
+        fill,
+        stats,
+      }: TimeseriesChartData = {
         title: t(`keys.${name}`),
         prefix: isPercentage ? "" : "RM ",
         label: t(`keys.${name}`),
@@ -125,17 +135,68 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
           },
         ],
       };
-    });
 
-  const detailsChartData = getChartData(
-    ServicesPPIData.filter(data => data !== "x" && data !== "total" && data !== "recession")
-  );
+      return (
+        <Timeseries
+          key={title}
+          title={title}
+          className="h-[350px] w-full"
+          interval="quarter"
+          enableAnimation={!play}
+          displayNumFormat={value => {
+            const isPercentage = ["growth_qoq", "growth_yoy"].includes(data.index);
+            return [
+              isPercentage ? "" : "RM",
+              numFormat(
+                Math.abs(value),
+                "compact",
+                isPercentage ? 1 : 0,
+                "long",
+                i18n.language,
+                true
+              ),
+              isPercentage ? "%" : "",
+            ].join("");
+          }}
+          axisY={{
+            y2: {
+              display: false,
+              grid: {
+                drawTicks: false,
+                drawBorder: false,
+                lineWidth: 0.5,
+              },
+              ticks: {
+                display: false,
+              },
+            },
+          }}
+          data={{
+            labels: coordinate.x,
+            datasets: [
+              {
+                type: "line",
+                label: label,
+                data: datum,
+                backgroundColor: AKSARA_COLOR.ORANGE_H,
+                borderColor: AKSARA_COLOR.ORANGE,
+                fill: fill,
+                borderWidth: 1.5,
+              },
+              shader(data.shade),
+            ],
+          }}
+          stats={stats}
+        />
+      );
+    });
+  };
 
   return (
     <>
       <Hero
         background="orange"
-        category={[t("common:categories.producer_price"), `text-[${AKSARA_COLOR.ORANGE}]`]}
+        category={[t("common:categories.producer_price"), `text-orange-500`]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
@@ -255,59 +316,19 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
                 />
                 <Section>
                   <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    {detailsChartData.map(({ title, prefix, label, data: datum, fill, stats }) => (
-                      <Timeseries
-                        key={title}
-                        title={title}
-                        className="h-[350px] w-full"
-                        interval="quarter"
-                        enableAnimation={!play}
-                        displayNumFormat={value => {
-                          const isPercentage = ["growth_qoq", "growth_yoy"].includes(data.index);
-                          return [
-                            isPercentage ? "" : "RM",
-                            numFormat(
-                              Math.abs(value),
-                              "compact",
-                              isPercentage ? 1 : 0,
-                              "long",
-                              i18n.language,
-                              true
-                            ),
-                            isPercentage ? "%" : "",
-                          ].join("");
-                        }}
-                        axisY={{
-                          y2: {
-                            display: false,
-                            grid: {
-                              drawTicks: false,
-                              drawBorder: false,
-                              lineWidth: 0.5,
-                            },
-                            ticks: {
-                              display: false,
-                            },
-                          },
-                        }}
-                        data={{
-                          labels: coordinate.x,
-                          datasets: [
-                            {
-                              type: "line",
-                              label: label,
-                              data: datum,
-                              backgroundColor: AKSARA_COLOR.ORANGE_H,
-                              borderColor: AKSARA_COLOR.ORANGE,
-                              fill: fill,
-                              borderWidth: 1.5,
-                            },
-                            shader(data.shade),
-                          ],
-                        }}
-                        stats={stats}
-                      />
-                    ))}
+                    {plotTimeseries(
+                      [
+                        "infocomm",
+                        "transport",
+                        "accom",
+                        "arts",
+                        "professional",
+                        "health",
+                        "education",
+                        "realestate",
+                      ],
+                      play
+                    )}
                   </div>
                 </Section>
               </>
