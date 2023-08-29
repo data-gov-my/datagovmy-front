@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         meta: {
           id: "services-producer-prices",
           type: "dashboard",
-          category: "producer_price",
+          category: "producer-price",
           agency: "dosm",
         },
         last_updated: data.data_last_updated,
