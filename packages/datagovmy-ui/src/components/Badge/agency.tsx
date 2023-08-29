@@ -10,7 +10,6 @@ type AgencyBadge = {
   agency: Agency;
   name?: never;
   url?: never;
-  prefix?: never;
 };
 
 type ConditionalBadgeProps = AgencyBadge | (BaseBadgeProps & { url?: string });
@@ -19,7 +18,7 @@ export type AgencyBadgeProps = ConditionalBadgeProps & {
   icon?: ReactNode;
 };
 
-const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon, name, prefix, url }) => {
+const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon, name, url }) => {
   const { t } = useTranslation();
 
   const wrap = (children: ReactNode, _url?: string) =>
@@ -36,24 +35,22 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon, name, 
       <BaseBadge
         name={t(`agencies:${agency}.full`)}
         icon={icon ? icon : <AgencyIcon agency={agency} />}
-        prefix={agency === "govt"}
         external
       />,
       AgencyLink[agency]
     );
 
-  return wrap(<BaseBadge name={name} icon={icon} prefix={prefix} />, url);
+  return wrap(<BaseBadge name={name} icon={icon} />, url);
 };
 
 interface BaseBadgeProps {
   name: string;
   agency?: never;
   icon?: ReactNode;
-  prefix?: boolean;
   external?: boolean;
 }
 
-const BaseBadge: FunctionComponent<BaseBadgeProps> = ({ external, name, icon, prefix }) => {
+const BaseBadge: FunctionComponent<BaseBadgeProps> = ({ external, name, icon }) => {
   const { t } = useTranslation();
   return (
     <div
@@ -68,14 +65,14 @@ const BaseBadge: FunctionComponent<BaseBadgeProps> = ({ external, name, icon, pr
         {icon}
 
         <div className="relative overflow-hidden">
-          {/* Brought to you by */}
+          {/* Brought to you by the */}
           <p
             className={clx(
               "text-dim text-xs",
               external && "transition-transform duration-200 group-hover:-translate-y-6"
             )}
           >
-            {!prefix ? t("common:components.brought_by") : t("common:components.brought_by_the")}
+            {t("common:components.brought_by_the")}
           </p>
           {/* Visit our portal */}
           {external && (
