@@ -43,11 +43,16 @@ interface LabourProductivityOptions {
   growth_yoy: Record<ServicesPPIData, number[]>;
   index: Record<ServicesPPIData, number[]>;
 }
+interface LabourProductivityOptionsCallout {
+  growth_qoq: Record<ServicesPPIData, { latest: number }>;
+  growth_yoy: Record<ServicesPPIData, { latest: number }>;
+  index: Record<ServicesPPIData, { latest: number }>;
+}
 
 interface ServicesPPIProp {
   last_updated: string;
   timeseries: WithData<LabourProductivityOptions>;
-  timeseries_callout: WithData<LabourProductivityOptions>;
+  timeseries_callout: WithData<LabourProductivityOptionsCallout>;
 }
 
 const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({

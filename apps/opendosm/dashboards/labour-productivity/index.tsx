@@ -25,30 +25,37 @@ interface TimeseriesChartData {
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-const LaborProductivityData = [
-  "x",
-  "overall",
-  "agriculture",
-  "mining",
-  "mfg",
-  "construction",
-  "sevices",
-  "recession",
-];
+type LaborProductivityData =
+  | "x"
+  | "overall"
+  | "agriculture"
+  | "mining"
+  | "mfg"
+  | "construction"
+  | "sevices"
+  | "recession";
 
 interface LabourProductivityOptions {
-  growth_yoy_vah: Record<(typeof LaborProductivityData)[number], number>;
-  growth_yoy_vae: Record<(typeof LaborProductivityData)[number], number>;
-  growth_yoy_hours: Record<(typeof LaborProductivityData)[number], number>;
-  vah: Record<(typeof LaborProductivityData)[number], number>;
-  vae: Record<(typeof LaborProductivityData)[number], number>;
-  hours: Record<(typeof LaborProductivityData)[number], number>;
+  growth_yoy_vah: Record<LaborProductivityData, number[]>;
+  growth_yoy_vae: Record<LaborProductivityData, number[]>;
+  growth_yoy_hours: Record<LaborProductivityData, number[]>;
+  vah: Record<LaborProductivityData, number[]>;
+  vae: Record<LaborProductivityData, number[]>;
+  hours: Record<LaborProductivityData, number[]>;
+}
+interface LabourProductivityOptionsCallout {
+  growth_yoy_vah: Record<LaborProductivityData, { latest: number }>;
+  growth_yoy_vae: Record<LaborProductivityData, { latest: number }>;
+  growth_yoy_hours: Record<LaborProductivityData, { latest: number }>;
+  vah: Record<LaborProductivityData, { latest: number }>;
+  vae: Record<LaborProductivityData, { latest: number }>;
+  hours: Record<LaborProductivityData, { latest: number }>;
 }
 
 interface LabourProductivityProp {
   last_updated: string;
   timeseries: WithData<LabourProductivityOptions>;
-  timeseries_callout: WithData<LabourProductivityOptions>;
+  timeseries_callout: WithData<LabourProductivityOptionsCallout>;
 }
 
 const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
@@ -113,14 +120,25 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
     [data]
   );
 
-  const getChartData = (charts: string[]): TimeseriesChartData[] =>
-    charts.map(name => {
+  const plotTimeseries = (
+    charts: Exclude<LaborProductivityData, "x" | "overall" | "recession">[],
+    play: boolean
+  ) => {
+    return charts.map(name => {
       const isPercentage: boolean = [
         "growth_yoy_vah",
         "growth_yoy_vae",
         "growth_yoy_hours",
       ].includes(data.index);
-      return {
+
+      const {
+        title,
+        prefix,
+        label,
+        data: datum,
+        fill,
+        stats,
+      }: TimeseriesChartData = {
         title: t(`keys.${name}`),
         prefix: isPercentage ? "" : data.index === "hours" ? "" : "RM ",
         label: t(`keys.${name}`),
@@ -146,15 +164,56 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
           },
         ],
       };
+      return (
+        <Timeseries
+          key={title}
+          title={title}
+          className="h-[350px] w-full"
+          interval="quarter"
+          enableAnimation={!play}
+          displayNumFormat={value => {
+            const isPercentage = ["growth_yoy_vah", "growth_yoy_vae", "growth_yoy_hours"].includes(
+              data.index
+            );
+            return [
+              isPercentage ? "" : "RM",
+              numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+              isPercentage ? "%" : "",
+            ].join("");
+          }}
+          axisY={{
+            y2: {
+              display: false,
+              grid: {
+                drawTicks: false,
+                drawBorder: false,
+                lineWidth: 0.5,
+              },
+              ticks: {
+                display: false,
+              },
+            },
+          }}
+          data={{
+            labels: coordinate.x,
+            datasets: [
+              {
+                type: "line",
+                label: label,
+                data: datum,
+                backgroundColor: AKSARA_COLOR.PURPLE_H,
+                borderColor: AKSARA_COLOR.PURPLE,
+                fill: fill,
+                borderWidth: 1.5,
+              },
+              shader(data.shade),
+            ],
+          }}
+          stats={stats}
+        />
+      );
     });
-
-  const detailsChartData = getChartData([
-    "agriculture",
-    "mining",
-    "mfg",
-    "construction",
-    "sevices",
-  ]);
+  };
 
   return (
     <>
@@ -274,56 +333,10 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
                 />
                 <Section>
                   <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    {detailsChartData.map(({ title, prefix, label, data: datum, fill, stats }) => (
-                      <Timeseries
-                        key={title}
-                        title={title}
-                        className="h-[350px] w-full"
-                        interval="quarter"
-                        enableAnimation={!play}
-                        displayNumFormat={value => {
-                          const isPercentage = [
-                            "growth_yoy_vah",
-                            "growth_yoy_vae",
-                            "growth_yoy_hours",
-                          ].includes(data.index);
-                          return [
-                            isPercentage ? "" : "RM",
-                            numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
-                            isPercentage ? "%" : "",
-                          ].join("");
-                        }}
-                        axisY={{
-                          y2: {
-                            display: false,
-                            grid: {
-                              drawTicks: false,
-                              drawBorder: false,
-                              lineWidth: 0.5,
-                            },
-                            ticks: {
-                              display: false,
-                            },
-                          },
-                        }}
-                        data={{
-                          labels: coordinate.x,
-                          datasets: [
-                            {
-                              type: "line",
-                              label: label,
-                              data: datum,
-                              backgroundColor: AKSARA_COLOR.PURPLE_H,
-                              borderColor: AKSARA_COLOR.PURPLE,
-                              fill: fill,
-                              borderWidth: 1.5,
-                            },
-                            shader(data.shade),
-                          ],
-                        }}
-                        stats={stats}
-                      />
-                    ))}
+                    {plotTimeseries(
+                      ["agriculture", "mining", "mfg", "construction", "sevices"],
+                      play
+                    )}
                   </div>
                 </Section>
               </>
