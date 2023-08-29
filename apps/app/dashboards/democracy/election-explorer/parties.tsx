@@ -211,7 +211,6 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                   }
                   setData("party_option", selected);
                 }}
-                enableFlag
               />
             </div>
             <Tabs

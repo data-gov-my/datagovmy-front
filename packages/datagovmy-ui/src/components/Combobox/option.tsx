@@ -11,8 +11,7 @@ export type ComboOptionProps<T> = {
   option: ComboOptionProp<T>;
   format?: (option: ComboOptionProp<T>) => ReactNode;
   onClick?: () => void;
-  enableFlag?: boolean;
-  imageSource?: string;
+  imageSource?: string | ((value: string) => string);
   fallback?: ReactNode;
   isSelected: boolean;
   active: boolean;
@@ -24,7 +23,6 @@ function ComboOptionInner<T>(
   {
     option,
     format,
-    enableFlag,
     imageSource,
     fallback,
     onClick,
@@ -62,11 +60,15 @@ function ComboOptionInner<T>(
           </p>
         ) : (
           <>
-            {enableFlag && (
+            {imageSource && (
               <div className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
                 <ImageWithFallback
                   className="border-outline dark:border-outlineHover-dark rounded border"
-                  src={`${imageSource}${option.value}.png`}
+                  src={
+                    typeof imageSource === "string"
+                      ? `${imageSource}${option.value}.png`
+                      : imageSource(option.value)
+                  }
                   fallback={fallback}
                   width={28}
                   height={18}

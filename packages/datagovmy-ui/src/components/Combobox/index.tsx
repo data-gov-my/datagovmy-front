@@ -40,7 +40,6 @@ const ComboBox = <T extends unknown>({
   onSearch,
   format,
   placeholder,
-  enableFlag = false,
   imageSource,
   fallback,
   loading = false,
@@ -217,7 +216,6 @@ const ComboBox = <T extends unknown>({
                           total={ITEMS_COUNT}
                           option={option}
                           format={format}
-                          enableFlag={enableFlag}
                           imageSource={imageSource}
                           fallback={fallback}
                           isSelected={selected?.value === option.value}
@@ -273,7 +271,6 @@ const ComboBox = <T extends unknown>({
                           total={ITEMS_COUNT}
                           option={option}
                           format={format}
-                          enableFlag={enableFlag}
                           imageSource={imageSource}
                           fallback={fallback}
                           isSelected={selected?.value === option.value}
