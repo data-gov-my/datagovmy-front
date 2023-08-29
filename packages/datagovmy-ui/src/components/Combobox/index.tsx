@@ -48,7 +48,6 @@ const ComboBox = <T extends unknown>({
   const { t } = useTranslation();
   const [query, setQuery] = useState<string>(selected?.label ?? "");
 
-  const sortedOptions = options.sort((a, b) => a.label.localeCompare(b.label));
   const filteredOptions = useMemo<ComboOptionProp<T>[]>(
     () => matchSorter(options, query, config),
     [options, query, config]
@@ -110,9 +109,8 @@ const ComboBox = <T extends unknown>({
     listNav,
   ]);
 
-  const handleSelect = (selected: ComboOptionProp<T>) => {
+  const handleSelect = () => {
     if (activeIndex !== null) {
-      setSelectedIndex(sortedOptions.findIndex(e => e === selected));
       onChange(filteredOptions[activeIndex]);
       setQuery(filteredOptions[activeIndex].label);
       setActiveIndex(null);
@@ -151,7 +149,7 @@ const ComboBox = <T extends unknown>({
           "aria-autocomplete": "list",
           "onKeyDown"(event) {
             if (event.key === "Enter" && activeIndex != null && filteredOptions[activeIndex]) {
-              handleSelect(filteredOptions[activeIndex]);
+              handleSelect();
             }
           },
         })}
@@ -209,7 +207,7 @@ const ComboBox = <T extends unknown>({
                               listRef.current[i] = node;
                             },
                             onClick() {
-                              handleSelect(filteredOptions[i]);
+                              handleSelect();
                               refs.domReference.current?.focus();
                             },
                           })}
@@ -238,7 +236,7 @@ const ComboBox = <T extends unknown>({
                   {...getFloatingProps({
                     onKeyDown(e) {
                       if (e.key === "Enter" && activeIndex !== null) {
-                        handleSelect(filteredOptions[activeIndex]);
+                        handleSelect();
                       }
                     },
                   })}
@@ -264,7 +262,7 @@ const ComboBox = <T extends unknown>({
                               listRef.current[virtualItem.index] = node;
                             },
                             onClick() {
-                              handleSelect(filteredOptions[virtualItem.index]);
+                              handleSelect();
                               refs.domReference.current?.focus();
                             },
                           })}
