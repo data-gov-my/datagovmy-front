@@ -162,6 +162,8 @@ export type MetaPage = Record<string, any> & {
       | "public-safety"
       | "services"
       | "transportation"
+      | "labour-markets"
+      | "producer-price"
       | null;
     agency: string | null;
   };

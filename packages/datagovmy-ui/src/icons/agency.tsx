@@ -356,7 +356,7 @@ export const JAKOAIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns JIMIcon
  */
-export const JIMIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const JIMIcon: FunctionComponent<IconProps> = ({ className, fillColor = "#7C3AED" }) => {
   return (
     <svg
       width="32"
@@ -367,7 +367,7 @@ export const JIMIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1208_15454)">
-        <circle cx="16" cy="16" r="16" fill="#7C3AED" />
+        <circle cx="16" cy="16" r="16" fill={fillColor} />
         <path
           d="M10.2134 8.81394L18.216 5.54014C18.7094 5.33829 19.25 5.7012 19.25 6.2343V9.5C19.25 9.91421 18.9142 10.25 18.5 10.25H10.4958C10.0839 10.25 9.75 9.9161 9.75 9.5042C9.75 9.20137 9.93312 8.9286 10.2134 8.81394Z"
           stroke="white"
