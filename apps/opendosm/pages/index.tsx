@@ -244,7 +244,7 @@ const Home: Page = ({
                 <div>
                   <At
                     href={url}
-                    className="relative flex flex-wrap items-start gap-x-2 text-sm font-medium uppercase text-dim transition-all hover:text-black hover:underline"
+                    className="relative flex flex-wrap items-start gap-x-2 text-sm font-medium uppercase text-dim transition-all [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white"
                   >
                     <span>{title}</span>
                     <ArrowTopRightOnSquareIcon className="absolute -right-6 h-4 w-4" />
