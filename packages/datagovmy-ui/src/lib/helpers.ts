@@ -348,12 +348,12 @@ export const parseCookies = (cookie: string) => {
 export const enumify = <T extends string>(strings: T[]): KeyValueType<T> => {
   const keyValuePair = {} as KeyValueType<T>;
   for (const str of strings) {
-    keyValuePair[toSnakeCase<T>(str)] = str;
+    keyValuePair[snakeCase<T>(str)] = str;
   }
   return keyValuePair;
 };
 
-export const toSnakeCase = <T extends string>(str: T) => {
+export const snakeCase = <T extends string>(str: T) => {
   return str.replace(/-/g, "_").toUpperCase() as Uppercase<SnakeCase<T>>;
 };
 
