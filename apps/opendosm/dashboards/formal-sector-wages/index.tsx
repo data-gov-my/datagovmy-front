@@ -102,6 +102,7 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
               className="h-[550px]"
               title={t("keys.bar_percentile_title")}
               layout="horizontal"
+              prefixY="RM "
               data={{
                 labels: barPercentileItem[data.barChart_index]?.x,
                 datasets: [
