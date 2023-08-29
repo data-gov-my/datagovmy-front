@@ -65,7 +65,9 @@ export const getStaticProps: GetStaticProps = withi18n(
             category: "demography",
             agency: "imigresen",
           },
-          params,
+          params: {
+            country: country || "ALL",
+          },
           last_updated: data.data_last_updated,
           countries: dropdown,
           timeseries: data.timeseries_country,
