@@ -53,6 +53,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   isLoading?: boolean;
   interval?: Periods;
   tooltipFormat?: string;
+  displayType?: "compact" | "standard" | "scientific" | "engineering";
   round?: Periods;
   prefixY?: string;
   unitY?: string;
@@ -104,6 +105,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   isLoading = false,
   interval = "auto",
   tooltipFormat,
+  displayType = "standard",
   prefixY,
   unitY,
   round = "day",
@@ -157,7 +159,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
 
   const display = (
     value: number,
-    type: "compact" | "standard",
+    type: typeof displayType,
     precision: number | [min: number, max: number]
   ): string => {
     return (prefixY ?? "") + displayNumFormat(value, type, precision) + (unitY ?? "");
@@ -216,7 +218,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
               : function (item) {
                   return `${item.dataset.label as string}: ${
                     item.parsed.y !== undefined || item.parsed.y !== null
-                      ? display(item.parsed.y, "standard", precision)
+                      ? display(item.parsed.y, displayType, precision)
                       : "-"
                   }`;
                 },
@@ -325,7 +327,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
                   quarter: "qQ yyyy",
                   month: "MMM yyyy",
                   year: "yyyy",
-                  day: "dd MMM",
+                  day: "dd MMM yyyy",
                   minute: "dd MMM yyyy HH:mm",
                   hour: "dd MMM yyyy HH:mm",
                 }[interval as string]

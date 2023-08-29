@@ -1,4 +1,4 @@
-import { Chart as ChartJS } from "chart.js";
+import { Chart as ChartJS, Tooltip } from "chart.js";
 import { ChoroplethController, GeoFeature, ColorScale, ProjectionScale } from "chartjs-chart-geo";
 import { ChartHeaderProps, default as ChartHeader } from "./chart-header";
 // import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
@@ -54,7 +54,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
 }) => {
   const [desktopMap, setDesktopMap] = useState<FeatureCollection | undefined>(undefined);
   const [mobileMap, setMobileMap] = useState<FeatureCollection | undefined>(undefined);
-  ChartJS.register(ChoroplethController, ProjectionScale, ColorScale, GeoFeature);
+  ChartJS.register(ChoroplethController, ProjectionScale, ColorScale, GeoFeature, Tooltip);
 
   useEffect(() => {
     const fetchMaps = async () => {

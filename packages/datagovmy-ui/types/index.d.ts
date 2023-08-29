@@ -42,6 +42,8 @@ export type TimeseriesOption = {
   periodly: "daily_7d" | "daily" | "monthly" | "yearly";
 };
 
+export type DashboardPeriod = "daily_7d" | "daily" | "monthly" | "yearly";
+
 export type DownloadOption = {
   id: string;
   image: string | null | false | undefined;
@@ -155,6 +157,7 @@ export type MetaPage = Record<string, any> & {
       | "government-programs"
       | "healthcare"
       | "national-accounts"
+      | "public-administration"
       | "public-finances"
       | "public-safety"
       | "services"
