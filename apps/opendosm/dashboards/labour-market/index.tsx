@@ -58,8 +58,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
   return (
     <>
       <Hero
-        background="orange"
-        category={[t("common:categories.economy"), "text-orange-700"]}
+        background="purple"
+        category={[t("common:categories.economy"), "text-purple"]}
         header={[t("header")]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
@@ -90,8 +90,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                           type: "line",
                           data: coordinate.unemployment_rate,
                           label: t("keys.unemployment_rate"),
-                          borderColor: AKSARA_COLOR.LABOUR,
-                          backgroundColor: AKSARA_COLOR.LABOUR_H,
+                          borderColor: AKSARA_COLOR.PURPLE,
+                          backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderWidth: 1.5,
                           fill: true,
                         },
@@ -137,8 +137,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                           type: "line",
                           data: coordinate.labour_force_participation,
                           label: t("keys.labour_force_participation"),
-                          borderColor: AKSARA_COLOR.LABOUR,
-                          backgroundColor: AKSARA_COLOR.LABOUR_H,
+                          borderColor: AKSARA_COLOR.PURPLE,
+                          backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderWidth: 1.5,
                           fill: true,
                         },
@@ -170,8 +170,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                           type: "line",
                           data: coordinate.under_employment_rate,
                           label: t("keys.under_employment_rate"),
-                          borderColor: AKSARA_COLOR.LABOUR,
-                          backgroundColor: AKSARA_COLOR.LABOUR_H,
+                          borderColor: AKSARA_COLOR.PURPLE,
+                          backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderWidth: 1.5,
                           fill: true,
                         },
@@ -201,8 +201,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                           type: "line",
                           data: coordinate.employment_population_ratio,
                           label: t("keys.employment_population_ratio"),
-                          borderColor: AKSARA_COLOR.LABOUR,
-                          backgroundColor: AKSARA_COLOR.LABOUR_H,
+                          borderColor: AKSARA_COLOR.PURPLE,
+                          backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderWidth: 1.5,
                           fill: true,
                         },
@@ -235,8 +235,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                           type: "line",
                           data: coordinate.unemployed_persons,
                           label: t("keys.unemployed_persons"),
-                          borderColor: AKSARA_COLOR.LABOUR,
-                          backgroundColor: AKSARA_COLOR.LABOUR_H,
+                          borderColor: AKSARA_COLOR.PURPLE,
+                          backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderWidth: 1.5,
                           fill: true,
                         },
@@ -266,8 +266,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                           type: "line",
                           data: coordinate.own_account_workers,
                           label: t("keys.own_account_workers"),
-                          borderColor: AKSARA_COLOR.LABOUR,
-                          backgroundColor: AKSARA_COLOR.LABOUR_H,
+                          borderColor: AKSARA_COLOR.PURPLE,
+                          backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderWidth: 1.5,
                           fill: true,
                         },
@@ -297,8 +297,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                           type: "line",
                           data: coordinate.outside_labour_force,
                           label: t("keys.outside_labour_force"),
-                          borderColor: AKSARA_COLOR.LABOUR,
-                          backgroundColor: AKSARA_COLOR.LABOUR_H,
+                          borderColor: AKSARA_COLOR.PURPLE,
+                          backgroundColor: AKSARA_COLOR.PURPLE_H,
                           borderWidth: 1.5,
                           fill: true,
                         },

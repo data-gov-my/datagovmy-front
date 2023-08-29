@@ -161,6 +161,8 @@ export type MetaPage = Record<string, any> & {
       | "national-accounts"
       | "services"
       | "public-administration"
+      | "labour-markets"
+      | "producer-price"
       | null;
     agency: string | null;
   };
