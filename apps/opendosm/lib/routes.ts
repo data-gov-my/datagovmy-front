@@ -12,4 +12,5 @@ export const routes = {
   IIP: "/dashboard/international-investment-position",
   BOP: "/dashboard/balance-of-payments",
   MANUFACTURING_STATISTICS: "/dashboard/manufacturing-statistics",
+  CONSTRUCTION_STATISTICS: "/dashboard/construction-statistics",
 } as const;
