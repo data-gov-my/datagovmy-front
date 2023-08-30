@@ -134,7 +134,7 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
         background="orange"
         category={[t("common:categories.economy"), `text-orange-500`]}
         header={[t("header")]}
-        description={[t("description"), "dark:text-white"]}
+        description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={<AgencyBadge agency="dosm" />}
       />
