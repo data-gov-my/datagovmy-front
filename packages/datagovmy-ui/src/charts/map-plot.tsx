@@ -3,7 +3,7 @@ import { GeoJsonObject } from "geojson";
 import { LatLng, LatLngBounds, LatLngTuple } from "leaflet";
 import { useTheme } from "next-themes";
 import { ForwardedRef, FunctionComponent, useImperativeHandle, useRef } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import Markercluster from "./markercluster";
 
 type MapPlotProps = {
@@ -60,6 +60,13 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
     return text;
   };
 
+  // https://stackoverflow.com/questions/64665827/
+  const ChangeView = ({ center, zoom }: { center: LatLngTuple; zoom: number }) => {
+    const map = useMap();
+    map.setView(center, zoom);
+    return null;
+  };
+
   return (
     <MapContainer
       id={id}
@@ -72,6 +79,7 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
       maxBounds={new LatLngBounds(new LatLng(1, 97), new LatLng(10, 122))}
       maxBoundsViscosity={1}
     >
+      <ChangeView center={position} zoom={zoom} />
       <MapControl ref={controlRef} />
 
       <TileLayer
