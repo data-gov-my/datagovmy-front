@@ -25,7 +25,7 @@ const Button: FunctionComponent<ButtonProps> = ({
     base: "font-medium transition flex items-center gap-1 disabled:opacity-50",
     reset: "",
     default:
-      "border border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark bg-white text-black",
+      "border border-outline hover:border-outlineHover active:bg-washed dark:active:border-outlineHover-dark bg-white text-black dark:bg-black dark:text-white",
     primary:
       "from-primary-dgm to-primary-dark shadow-button bg-gradient-to-t text-white hover:to-[#5B8EFF]",
   };

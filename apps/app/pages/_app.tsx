@@ -1,7 +1,7 @@
 import Nexti18NextConfig from "../next-i18next.config";
 import "datagovmy-ui/styles";
 import Layout from "@components/Layout";
-import { Toast } from "datagovmy-ui/components";
+import { Progress, Toast } from "datagovmy-ui/components";
 import { header, body } from "datagovmy-ui/configs/font";
 import mixpanelConfig from "datagovmy-ui/configs/mixpanel";
 import { clx } from "datagovmy-ui/helpers";
@@ -49,6 +49,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
     <div className={clx(body.variable, header.variable, "font-sans dark:bg-black")}>
       <ThemeProvider attribute="class" enableSystem={false} forcedTheme={Component.theme}>
         {layout(<Component {...pageProps} />, pageProps)}
+        <Progress />
         <Toast />
       </ThemeProvider>
     </div>

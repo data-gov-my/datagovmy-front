@@ -4,42 +4,93 @@ import ArrowUpRightIcon from "@heroicons/react/24/solid/ArrowUpRightIcon";
 import { useTranslation } from "next-i18next";
 import { FunctionComponent, ReactNode } from "react";
 import { Agency } from "../../../types";
+import { clx } from "../../lib/helpers";
 
-export interface AgencyBadgeProps {
+type AgencyBadge = {
   agency: Agency;
+  name?: never;
+  url?: never;
+};
+
+type ConditionalBadgeProps = AgencyBadge | (BaseBadgeProps & { url?: string });
+
+export type AgencyBadgeProps = ConditionalBadgeProps & {
   icon?: ReactNode;
+};
+
+const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon, name, url }) => {
+  const { t } = useTranslation();
+
+  const wrap = (children: ReactNode, _url?: string) =>
+    _url ? (
+      <a href={_url} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
+        {children}
+      </a>
+    ) : (
+      children
+    );
+
+  if (agency)
+    return wrap(
+      <BaseBadge
+        name={t(`agencies:${agency}.full`)}
+        icon={icon ? icon : <AgencyIcon agency={agency} />}
+        external
+      />,
+      AgencyLink[agency]
+    );
+
+  return wrap(<BaseBadge name={name} icon={icon} />, url);
+};
+
+interface BaseBadgeProps {
+  name: string;
+  agency?: never;
+  icon?: ReactNode;
+  external?: boolean;
 }
 
-const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon }) => {
+const BaseBadge: FunctionComponent<BaseBadgeProps> = ({ external, name, icon }) => {
   const { t } = useTranslation();
-  const isGovt = agency === "govt";
   return (
-    <a href={AgencyLink[agency]} target="_blank" referrerPolicy="strict-origin-when-cross-origin">
-      <div className="border-outline lg:hover:border-outlineHover dark:border-washed-dark lg:dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark group relative flex w-screen items-center border-y bg-white px-3 py-1.5 transition-[padding] duration-200 hover:pr-10 dark:bg-black lg:w-fit lg:rounded-full lg:border lg:py-1 lg:pl-2 lg:pr-6">
-        <div className="relative flex w-full items-center gap-2 max-lg:pr-6">
-          {/* Agency icon */}
-          {icon ? icon : <AgencyIcon agency={agency} />}
+    <div
+      className={clx(
+        "border-outline dark:border-washed-dark group relative flex w-screen items-center border-y bg-white px-3 py-1.5 dark:bg-black lg:w-fit lg:rounded-full lg:border lg:py-1 lg:pl-2 lg:pr-6",
+        external &&
+          "lg:dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark lg:hover:border-outlineHover transition-[padding] duration-200 hover:pr-10"
+      )}
+    >
+      <div className="relative flex w-full items-center gap-2 max-lg:pr-6">
+        {/* Agency icon */}
+        {icon}
 
-          <div className="relative overflow-hidden">
-            {/* Brought to you by */}
-            <p className="text-dim text-xs transition-transform duration-200 group-hover:-translate-y-6">
-              {!isGovt ? t("common:components.brought_by") : t("common:components.brought_by_the")}
-            </p>
-            {/* Visit our portal */}
+        <div className="relative overflow-hidden">
+          {/* Brought to you by the */}
+          <p
+            className={clx(
+              "text-dim text-xs",
+              external && "transition-transform duration-200 group-hover:-translate-y-6"
+            )}
+          >
+            {t("common:components.brought_by_the")}
+          </p>
+          {/* Visit our portal */}
+          {external && (
             <p className="text-primary dark:text-primary-dark absolute -top-6 text-xs transition-transform group-hover:translate-y-6">
               {t("common:components.visit_portal")}
             </p>
-
-            {/* Agency name */}
-            <p className="truncate text-sm font-medium dark:text-white" data-testid="hero-agency">
-              {t(`agencies:${agency}.full`)}
-            </p>
-          </div>
+          )}
+          {/* Agency name */}
+          <p className="truncate text-sm font-medium dark:text-white" data-testid="hero-agency">
+            {name}
+          </p>
         </div>
-        {/* On hover: RightArrow icon */}
-        <ArrowUpRightIcon className="text-dim right-4.5 absolute h-4 w-4 opacity-100 transition duration-200 group-hover:translate-x-1 lg:opacity-0 lg:group-hover:opacity-100 " />
       </div>
-    </a>
+      {/* On hover: RightArrow icon */}
+      {external && (
+        <ArrowUpRightIcon className="text-dim right-4.5 absolute h-4 w-4 opacity-100 transition duration-200 group-hover:translate-x-1 lg:opacity-0 lg:group-hover:opacity-100 " />
+      )}
+    </div>
   );
 };
 

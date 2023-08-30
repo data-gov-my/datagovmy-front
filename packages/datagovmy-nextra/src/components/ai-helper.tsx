@@ -228,6 +228,8 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                       </Button>
                     </div>
                   )}
+
+                  {/* Disclaimer (empty state) */}
                   {chats.length > 0 && (
                     <div className="absolute bottom-[80px] left-5 ">
                       <Tooltip

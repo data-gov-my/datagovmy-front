@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { routes } from "@lib/routes";
 import {
   AgencyBadge,
@@ -106,7 +105,6 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
 
   return (
     <>
-      <Progress />
       <Hero
         background="green"
         category={[t("common:categories.demography"), "text-green-600"]}
@@ -204,7 +202,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
           <div className="space-y-12 xl:grid xl:grid-cols-12">
             <div className="flex flex-col gap-6 lg:flex-row xl:col-span-10 xl:col-start-2">
               <div className="flex flex-col justify-center space-y-6 lg:w-1/3">
-                <h4 className="text-center lg:text-start">{t("title")}</h4>
+                <h4 className="text-center [text-wrap:balance] lg:text-start">{t("title")}</h4>
                 <div className="mx-auto w-full max-w-[400px]">
                   <ComboBox<Kampung>
                     placeholder={t("search_kampung")}

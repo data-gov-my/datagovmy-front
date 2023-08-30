@@ -28,7 +28,7 @@ type HeroDefault = {
 };
 
 type HeroProps = {
-  background?: "gray" | "blue" | "red" | "purple" | "green" | "orange";
+  background?: "gray" | "blue" | "red" | "purple" | "green" | "orange" | string;
   className?: string;
 } & ConditionalHeroProps;
 
@@ -58,8 +58,10 @@ const Hero: FunctionComponent<HeroProps> = ({
         return "bg-gradient-radial from-[#CFFCCC] to-background dark:from-[#1B2C1A] dark:to-black";
       case "orange":
         return "bg-gradient-radial from-[#FFE5CD] to-background dark:from-[#2E2014] dark:to-black";
-      default: // gray
+      case "gray":
         return "bg-gradient-radial from-[#E2E8F0] to-background dark:from-[#3F3F46] dark:to-black";
+      default:
+        return background;
     }
   }, [background]);
 

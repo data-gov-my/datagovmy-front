@@ -14,7 +14,11 @@ const Fallback: FunctionComponent<FallbackProps> = ({ children, inline = false }
         inline && "mr-2 inline-block"
       )}
     >
-      {children ?? <div className="leading-4.5 text-center font-black text-black">?</div>}
+      {children ?? (
+        <div className="flex h-full items-center justify-center text-sm font-black text-black">
+          ?
+        </div>
+      )}
     </div>
   );
 };

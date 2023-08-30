@@ -1,4 +1,6 @@
 import { BuildingLibraryIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { SparklesIcon } from "@heroicons/react/24/outline";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   At,
@@ -80,17 +82,26 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
           }),
         ]}
         action={
-          <Dropdown
-            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-            width="w-64"
-            placeholder={t("placeholder.source")}
-            anchor="left"
-            options={sourceOptions}
-            selected={query.source ? { label: query.source, value: query.source } : undefined}
-            onChange={e => filterRef.current?.setFilter("source", e)}
-            enableSearch
-            enableClear
-          />
+          <div className="flex flex-wrap items-center gap-6">
+            <Dropdown
+              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+              width="w-64"
+              placeholder={t("placeholder.source")}
+              anchor="left"
+              options={sourceOptions}
+              selected={query.source ? { label: query.source, value: query.source } : undefined}
+              onChange={e => filterRef.current?.setFilter("source", e)}
+              enableSearch
+              enableClear
+            />
+            <At
+              href={routes.DATA_GPT}
+              className="text-primary group flex items-center gap-2 text-sm font-medium"
+            >
+              <SparklesIcon className="h-5 w-5" />
+              <span className="group-hover:underline">{t("try_datagpt")}</span>
+            </At>
+          </div>
         }
         agencyBadge={
           <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : "govt"} />
@@ -241,7 +252,8 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         </div>
         {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
           <Button
-            className="btn hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
+            variant="reset"
+            className="hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
             disabled={!actives.length}
             onClick={reset}
           >
@@ -263,32 +275,29 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[105px] flex h-[400px] flex-col divide-y overflow-y-auto">
+              <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[84px] flex h-max flex-col divide-y overflow-y-auto bg-white dark:bg-black">
                 <div className="py-3">
-                  <Label label={t("period")} />
                   <Radio
                     name="period"
-                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
+                    label={t("period")}
                     options={periods}
                     value={filter.period}
                     onChange={e => setFilter("period", e)}
                   />
                 </div>
                 <div className="py-3">
-                  <Label label={t("geography")} />
                   <Checkbox
-                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
                     name="geography"
+                    label={t("geography")}
                     options={geographies}
                     value={filter.geography}
                     onChange={e => setFilter("geography", e)}
                   />
                 </div>
                 <div className="py-3">
-                  <Label label={t("demography")} />
                   <Checkbox
-                    className="gap-x-4.5 flex flex-wrap gap-y-2.5 py-2"
                     name="demography"
+                    label={t("demography")}
                     options={demographies}
                     value={filter.demography}
                     onChange={e => setFilter("demography", e)}
@@ -315,16 +324,17 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                     onChange={e => setFilter("end", e)}
                   />
                 </div>
-                <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
+                <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col border-t bg-white p-3 dark:bg-black">
                   <Button
-                    className="btn-primary w-full justify-center"
+                    variant="primary"
+                    className="justify-center"
                     disabled={!actives.length}
                     onClick={reset}
                   >
                     {t("common:common.reset")}
                   </Button>
-                  <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
-                    <XMarkIcon className="h-5 w-5" />
+                  <Button variant="base" className="justify-center" onClick={close}>
+                    {/* <XMarkIcon className="h-4 w-4" /> */}
                     {t("common:common.close")}
                   </Button>
                 </div>

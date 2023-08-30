@@ -14,9 +14,7 @@ export const useSlice = (state: Record<string, number[]>, minmax?: [number, numb
     ]);
   }, [state, minmax]);
 
-  const slice = () => Object.fromEntries(sliced);
-
   return {
-    coordinate: slice(),
+    coordinate: Object.fromEntries(sliced),
   } as const;
 };

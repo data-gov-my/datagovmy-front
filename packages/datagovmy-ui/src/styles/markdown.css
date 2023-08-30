@@ -1,5 +1,13 @@
 /* Markdown generator */
-.markdown code {
+.markdown {
+  @apply space-y-6;
+}
+
+.markdown p {
+  @apply leading-7;
+}
+
+.markdown code:not(pre code) {
   @apply bg-outline break-words rounded-md border border-black border-opacity-[0.04] px-[.25em] py-0.5 text-[.9em] dark:bg-white/10 dark:text-white;
 }
 
@@ -8,11 +16,11 @@
 }
 
 .markdown ul {
-  @apply my-5 list-inside list-disc space-y-2;
+  @apply my-5 list-inside list-disc space-y-3;
 }
 
 .markdown ol {
-  @apply ml-5 list-outside list-decimal space-y-2;
+  @apply ml-5 list-outside list-decimal space-y-6;
 }
 
 .markdown li > p {

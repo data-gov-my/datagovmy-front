@@ -3,14 +3,15 @@ import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
 import canvasToSvg from "canvas2svg";
+import { twMerge, ClassNameValue } from "tailwind-merge";
 
 /**
  * Conditional class joiner.
  * @param args classNames
  * @returns string
  */
-export const clx = (...args: any[]): string => {
-  return args.filter(Boolean).join(" ");
+export const clx = (...args: ClassNameValue[]): string => {
+  return twMerge(args);
 };
 
 /**
@@ -327,6 +328,35 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
   }) as ReactElement[];
 };
 
+/**
+ * Parses to a cookie map.
+ * @param {string} cookie Cookie string
+ * @returns {Record<string, string>} Cookie map
+ */
+export const parseCookies = (cookie: string) => {
+  const cookies = cookie.split(";");
+  const parsedCookies: Record<string, string> = {};
+
+  cookies.forEach(cookie => {
+    const [name, value] = cookie.trim().split("=");
+    parsedCookies[name] = decodeURIComponent(value);
+  });
+
+  return parsedCookies;
+};
+
+export const enumify = <T extends string>(strings: T[]): KeyValueType<T> => {
+  const keyValuePair = {} as KeyValueType<T>;
+  for (const str of strings) {
+    keyValuePair[snakeCase<T>(str)] = str;
+  }
+  return keyValuePair;
+};
+
+export const snakeCase = <T extends string>(str: T) => {
+  return str.replace(/-/g, "_").toUpperCase() as Uppercase<SnakeCase<T>>;
+};
+
 // MATH helpers
 export const average = (values: number[]): number => values.reduce((a, b) => a + b) / values.length;
 
@@ -338,3 +368,11 @@ export const standardDeviation = (values: number[]): number => {
 
 export const normalize = (value: number, min: number, max: number): number =>
   (value - min) / (max - min);
+
+type KeyValueType<T extends string> = {
+  [K in Uppercase<SnakeCase<T>>]: T;
+};
+
+type SnakeCase<S extends string> = S extends `${infer T}-${infer U}`
+  ? `${Lowercase<T>}_${SnakeCase<U>}`
+  : Lowercase<S>;

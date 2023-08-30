@@ -9,10 +9,13 @@ import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const CarPopularity: Page = ({
-  meta,
   last_updated,
+  meta,
+  model,
   queryOptions,
   tableData,
+  timeseries,
+  timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
 
@@ -21,23 +24,33 @@ const CarPopularity: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CarPopularityDashboard
         last_updated={last_updated}
+        model={model}
         queryOptions={queryOptions}
         tableData={tableData}
+        timeseries={timeseries}
+        timeseries_callout={timeseries_callout}
       />
     </AnalyticsProvider>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
   try {
-    const [dropdown, tableData] = await Promise.all([
+    const [{ data: dropdown }, { data }, { data: model }] = await Promise.all([
       get("/dropdown", {
         dashboard: "car_popularity",
       }),
       get("/dashboard", { dashboard: "car_popularity" }),
+      get("chart/", {
+        dashboard: "car_popularity",
+        chart_name: "timeseries",
+        maker: "Perodua",
+        model: "Myvi",
+      }),
     ]).catch(e => {
       throw new Error("Error: " + e);
     });
+
     return {
       notFound: false,
       props: {
@@ -47,9 +60,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
           category: "transportation",
           agency: "JPJ",
         },
-        queryOptions: dropdown.data.data,
-        last_updated: tableData.data.data_last_updated,
-        tableData: tableData.data,
+        last_updated: data.data_last_updated,
+        model: model,
+        queryOptions: dropdown.data,
+        tableData: data,
+        timeseries: data.vehicle_timeseries,
+        timeseries_callout: data.vehicle_timeseries_callout,
       },
     };
   } catch (error) {

@@ -37,15 +37,13 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["catalogue", "common"],
+  ["catalogue", "common", "opendosm-home"],
   async ({ locale, query }) => {
     const { data } = await get("/data-catalog/", {
       lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
       source: "DOSM",
       ...query,
     });
-
-    const collection = recurSort(data.dataset);
 
     return {
       props: {
@@ -58,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         query: query ?? {},
         total: data.total_all,
         sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
-        collection,
+        collection: data.dataset ? recurSort(data.dataset) : {},
       },
     };
   }

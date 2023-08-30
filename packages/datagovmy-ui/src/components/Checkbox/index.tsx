@@ -1,6 +1,7 @@
 import Label, { LabelProps } from "../Label";
 import { OptionType } from "../../../types";
 import { FunctionComponent } from "react";
+import { clx } from "../../lib/helpers";
 
 interface CheckboxProps extends LabelProps {
   className?: string;
@@ -17,7 +18,7 @@ const Checkbox: FunctionComponent<CheckboxProps> = ({
   options,
   value,
   onChange,
-  className = "space-y-1 pt-2",
+  className = "flex flex-wrap gap-x-4.5 gap-y-2.5 pt-2",
 }) => {
   const isSelected = (option: OptionType): boolean => {
     return option && value.some((item: OptionType) => item.value === option.value);
@@ -38,7 +39,7 @@ const Checkbox: FunctionComponent<CheckboxProps> = ({
   return (
     <div>
       <Label label={label} />
-      <ul className={className}>
+      <ul className={clx(className)}>
         {options.map((option: OptionType, index) => (
           <li key={index}>
             <label htmlFor={option.value} className="flex items-center gap-2">

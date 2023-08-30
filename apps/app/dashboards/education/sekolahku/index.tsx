@@ -1,4 +1,3 @@
-import Progress from "@components/Progress";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
 import { get } from "datagovmy-ui/api";
 import BarMeter from "datagovmy-ui/charts/bar-meter";
@@ -80,22 +79,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
     }).then(() => setData("loading", false));
   };
 
-  const fetchSelection = useCallback(
-    debounce(query => {
-      setData("dropdownLoading", true);
-      get("/dropdown", { dashboard: "sekolahku", query: query, limit: 15 })
-        .then((res: any) => {
-          setData("selection", res.data.data);
-          setData("dropdownLoading", false);
-        })
-        .catch(e => {
-          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-          console.error(e);
-        });
-    }, 300),
-    []
-  );
-
   const formatCallout = (type: string, value: number): string => {
     switch (type) {
       case "gpa":
@@ -138,7 +121,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
 
   return (
     <>
-      <Progress />
       <Hero
         background="blue"
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}
@@ -165,7 +147,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                           : undefined
                       }
                       onChange={navigateToSchool}
-                      onSearch={fetchSelection}
                       loading={data.dropdownLoading}
                     />
                   </div>

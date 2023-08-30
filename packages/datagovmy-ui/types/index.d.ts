@@ -42,6 +42,8 @@ export type TimeseriesOption = {
   periodly: "daily_7d" | "daily" | "monthly" | "yearly";
 };
 
+export type DashboardPeriod = "daily_7d" | "daily" | "monthly" | "yearly";
+
 export type DownloadOption = {
   id: string;
   image: string | null | false | undefined;
@@ -144,6 +146,7 @@ export type MetaPage = Record<string, any> & {
     id: string;
     type: "misc" | "dashboard" | "data-catalogue";
     category:
+      | "construction"
       | "democracy"
       | "demography"
       | "digitalisation"
@@ -153,9 +156,14 @@ export type MetaPage = Record<string, any> & {
       | "financial-sector"
       | "government-programs"
       | "healthcare"
+      | "national-accounts"
+      | "public-administration"
       | "public-finances"
       | "public-safety"
+      | "services"
       | "transportation"
+      | "labour-markets"
+      | "producer-price"
       | null;
     agency: string | null;
   };

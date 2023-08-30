@@ -28,7 +28,7 @@ export default async function handler(
     const { route: _route }: { route: string } = req.body;
     if (!_route) throw new Error("Route(s) missing");
 
-    let routes: string[] = _route.split(",");
+    const routes: string[] = _route.split(",");
 
     await Promise.all(
       routes.map(async route =>

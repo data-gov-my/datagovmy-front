@@ -5,12 +5,13 @@ import { useWatch } from "../../hooks/useWatch";
 import { clx, toDate } from "../../lib/helpers";
 import { Root, Track, Range, Thumb } from "@radix-ui/react-slider";
 import { SliderContext } from "../../contexts/slider";
+import { Periods } from "../../charts/timeseries";
 
 type BaseProps = {
   className?: string;
   data?: Array<number | string>;
   parseAsDate?: boolean;
-  period?: "year" | "month" | "day" | "auto" | "quarter" | "hour";
+  period?: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week">;
 };
 
 type RangeProps = BaseProps & {
@@ -46,7 +47,7 @@ const Slider: FunctionComponent<SliderProps> = ({
   const timer = useRef<NodeJS.Timeout | null>(null);
   const [minmax, setMinmax] = useState(value);
 
-  const dateFormat = {
+  const dateFormat: Record<typeof period, string> = {
     auto: "dd MMM yyyy",
     day: "dd MMM yyyy",
     month: "MMM yyyy",
@@ -64,6 +65,14 @@ const Slider: FunctionComponent<SliderProps> = ({
     if (type === "single") return;
     setMinmax(value);
   }, [value]);
+
+  // Auto-resets slider if period changes
+  useWatch(() => {
+    if (data) {
+      setMinmax([0, data.length - 1]);
+      onChange([0, data.length - 1] as number[] & number);
+    }
+  }, [period]);
 
   if (type === "single")
     return (

@@ -131,10 +131,10 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
   return (
     <>
       <Hero
-        background="blue"
-        category={[t("common:categories.economy"), "text-blue-700"]}
+        background="orange"
+        category={[t("common:categories.economy"), `text-orange-500`]}
         header={[t("header")]}
-        description={[t("description"), "dark:text-white"]}
+        description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={<AgencyBadge agency="dosm" />}
       />
@@ -190,8 +190,8 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
                         type: "line",
                         data: coordinate.overall,
                         label: t("keys.overall"),
-                        borderColor: AKSARA_COLOR.PRIMARY,
-                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                        borderColor: AKSARA_COLOR.ORANGE,
+                        backgroundColor: AKSARA_COLOR.ORANGE_H,
                         borderWidth: 1.5,
                         fill: configs("overall").fill,
                       },
@@ -246,8 +246,8 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
                             type: "line",
                             label: chartData.label,
                             data: chartData.data,
-                            borderColor: AKSARA_COLOR.PRIMARY,
-                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            borderColor: AKSARA_COLOR.ORANGE,
+                            backgroundColor: AKSARA_COLOR.ORANGE_H,
                             fill: chartData.fill,
                             borderWidth: 1.5,
                           },
