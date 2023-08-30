@@ -21,7 +21,8 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
 type StatKeys = "projects" | "value";
 export type Callout = { latest: number };
 
-interface ConstructionStatisticsDashboardProps extends ProjectOwnerProps {
+interface ConstructionStatisticsDashboardProps
+  extends Pick<ProjectOwnerProps, "project" | "project_callout"> {
   last_updated: string;
   timeseries: WithData<{
     actual: Record<StatKeys | "x" | "recession", number[]>;
