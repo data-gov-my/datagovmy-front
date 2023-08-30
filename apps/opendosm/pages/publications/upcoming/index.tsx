@@ -62,15 +62,15 @@ export const getServerSideProps: GetServerSideProps = withi18n(
 
       const { start, end, ...rest } = query;
       const [{ data: dropdown }, { data: calendar }, { data: list }] = await Promise.all([
-        get("/pub-upcoming-dropdown", {
+        get("/pub-upcoming-dropdown/", {
           language: locale,
         }),
-        get("/pub-upcoming/calendar", {
+        get("/pub-upcoming/calendar/", {
           language: locale,
           start: start ?? startDay,
           end: end ?? endDay,
         }),
-        get("/pub-upcoming/list", {
+        get("/pub-upcoming/list/", {
           language: locale,
           start: todayISO,
           ...rest,

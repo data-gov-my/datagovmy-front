@@ -94,6 +94,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
 
   const { data, setData } = useData({
     loading: false,
+    scrollToToday: false,
     publication_option: "",
     tab_index: params.tab_index,
     month: query.start ? getMonthAndYear(query.start)[1] : thisMonth,
@@ -205,21 +206,21 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     if (size.width >= BREAKPOINTS.LG) desktopRef.current[todayISO]?.scrollIntoView(scrollOptions);
     else mobileRef.current[todayISO]?.scrollIntoView(scrollOptions);
   };
-  const handleComplete = () => {
-    setData("loading", false);
-
-    setTimeout(() => {
-      if (data.month === thisMonth && data.year === thisYear) {
-        scrollToToday();
-        setData("scrollToToday", false);
-      }
-    }, 100);
-  };
 
   useEffect(() => {
-    events.on("routeChangeComplete", handleComplete);
+    if (data.scrollToToday)
+      setTimeout(() => {
+        if (data.month === thisMonth && data.year === thisYear) {
+          scrollToToday();
+          setData("scrollToToday", false);
+        }
+      }, 1000);
+  }, [data.scrollToToday]);
+
+  useEffect(() => {
+    events.on("routeChangeComplete", () => setData("loading", false));
     return () => {
-      events.off("routeChangeComplete", handleComplete);
+      events.off("routeChangeComplete", () => setData("loading", false));
     };
   }, []);
 
@@ -272,6 +273,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                   onClick={() => {
                     if (data.month !== thisMonth) {
                       setData("loading", true);
+                      setData("scrollToToday", true);
                     } else {
                       scrollToToday();
                     }
@@ -448,6 +450,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                   if (selected) {
                     setData("loading", true);
                     setFilter("pub_type", selected.value);
+                    setFilter("page", "1");
                     setData("publication_option", selected.value);
                   } else {
                     setFilter("pub_type", null);

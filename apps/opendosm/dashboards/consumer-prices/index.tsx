@@ -198,7 +198,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         background="gray"
         category={[t("common:categories.economy"), "text-green-700"]}
         header={[t("header")]}
-        description={[t("description"), "dark:text-white"]}
+        description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={<AgencyBadge agency="dosm" />}
       />

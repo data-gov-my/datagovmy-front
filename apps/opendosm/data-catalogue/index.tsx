@@ -37,7 +37,7 @@ interface CatalogueIndexProps {
 }
 
 const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
+  const { t } = useTranslation(["catalogue", "opendosm-home", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const { size } = useContext(WindowContext);
 
@@ -56,7 +56,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
     <div>
       <Hero
         background="blue"
-        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
+        category={[t("opendosm-home:category"), "text-primary dark:text-primary-dark"]}
         header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
         description={[
           t("description", {
