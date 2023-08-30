@@ -154,12 +154,12 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BalanceOfPaymentsProps> = (
                 {t("section_timeseries.description")}
               </p>
               <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
-                <Dropdown
+                {/* <Dropdown
                   anchor="left"
                   options={INDEX_OPTIONS}
                   selected={INDEX_OPTIONS.find(option => data.index === option.value)}
                   onChange={e => setData("index", e.value)}
-                />
+                /> */}
                 <Dropdown
                   anchor="left"
                   options={SHADE_OPTIONS}
