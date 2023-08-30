@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useMemo } from "react";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { WithData } from "datagovmy-ui/types";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * Composite Index Dashboard
@@ -120,12 +121,12 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   return (
     <>
       <Hero
-        background="gray"
-        category={[t("common:categories.economy"), "text-green-700"]}
+        background="blue"
+        category={[t("common:categories.economy"), "text-primary"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
       />
 
       <Container className="min-h-screen">
@@ -155,14 +156,6 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                     />
                   </div>
 
-                  <Slider
-                    className=""
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries.data[data.index_type.value].x}
-                    period="month"
-                    onChange={e => setData("minmax", e)}
-                  />
                   <Timeseries
                     className="h-[300px] w-full"
                     title={t("keys.leading")}
@@ -298,6 +291,14 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                         )}%`,
                       },
                     ]}
+                  />
+                  <Slider
+                    className=""
+                    type="range"
+                    value={data.minmax}
+                    data={timeseries.data[data.index_type.value].x}
+                    period="month"
+                    onChange={e => setData("minmax", e)}
                   />
                 </div>
               </Section>

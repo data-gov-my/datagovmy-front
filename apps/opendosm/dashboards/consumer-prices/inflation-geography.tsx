@@ -93,12 +93,20 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                       data: sortStateData(period).y,
                       backgroundColor(ctx) {
                         return ctx.dataIndex === data.active_index
-                          ? "#22C55E80"
+                          ? AKSARA_COLOR.ORANGE_H
                           : AKSARA_COLOR.OUTLINE;
                       },
                       hoverBackgroundColor(ctx) {
-                        return ctx.dataIndex === data.active_index ? "#22C55E80" : AKSARA_COLOR.DIM;
+                        return ctx.dataIndex === data.active_index
+                          ? AKSARA_COLOR.ORANGE
+                          : AKSARA_COLOR.DIM;
                       },
+                      borderColor(ctx) {
+                        return ctx.dataIndex === data.active_index
+                          ? AKSARA_COLOR.ORANGE
+                          : AKSARA_COLOR.DIM;
+                      },
+                      borderWidth: 0.5,
                     },
                   ],
                 }}
@@ -136,11 +144,17 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                       }),
                       data: sortCategoryData(period).y,
                       backgroundColor(ctx) {
-                        return ctx.dataIndex === 0 ? "#22C55E80" : AKSARA_COLOR.OUTLINE;
+                        return ctx.dataIndex === 0 ? AKSARA_COLOR.ORANGE_H : AKSARA_COLOR.OUTLINE;
                       },
                       hoverBackgroundColor(ctx) {
-                        return ctx.dataIndex === 0 ? "#22C55E80" : AKSARA_COLOR.DIM;
+                        return ctx.dataIndex === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.DIM;
                       },
+                      borderColor(ctx) {
+                        return ctx.dataIndex === data.active_index
+                          ? AKSARA_COLOR.ORANGE
+                          : AKSARA_COLOR.DIM;
+                      },
+                      borderWidth: 0.5,
                     },
                   ],
                 }}

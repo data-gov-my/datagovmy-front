@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           id: "dashboard-indusrial-production",
           type: "dashboard",
           category: "economy",
-          agency: "DOSM",
+          agency: "dosm",
         },
         last_updated: data.data_last_updated,
         timeseries: data.timeseries,
