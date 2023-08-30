@@ -1,8 +1,9 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo } from "react";
 import { WithData } from "datagovmy-ui/types";
 import { Container, Section, Slider } from "datagovmy-ui/components";
 import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 
 /**
  * Balance Of Payments Snapshot Table
@@ -43,6 +44,7 @@ const itemSorts = (variable: string, index: number) => {
 };
 const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }) => {
   const { t, i18n } = useTranslation(["dashboard-bop", "common"]);
+  const { size } = useContext(WindowContext);
 
   const xValues = Object.keys(bop_snapshot.data);
   const item = Object.values(bop_snapshot.data);
@@ -66,7 +68,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
       const date = toDate(xValues[i], "qQ yyyy", i18n.language);
       datesData[date] = item[i];
     }
-    const dates = Object.keys(datesData);
+    const dates = size.width < 640 ? Object.keys(datesData).reverse() : Object.keys(datesData);
     return item[data.snapshot_index]
       .map(row => {
         const final = dates.map(date => {
@@ -93,7 +95,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
         };
       })
       .sort((a, b) => a.index - b.index);
-  }, [data.snapshot_index]);
+  }, [data.snapshot_index, size]);
 
   const className = {
     td: "w-1/5 px-3 py-2 text-end text-sm tabular-nums text-black dark:text-white",
