@@ -78,7 +78,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
         if (row.variable === "bop") {
           return {
             index: itemSorts(row.variable, row.index),
-            component: t(`table.${row.variable}`),
+            component: row.variable,
             dates: dates,
             net: final,
 
@@ -88,7 +88,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
 
         return {
           index: itemSorts(row.variable, row.index),
-          component: t(`table.${row.variable}`),
+          component: row.variable,
           dates: dates,
           net: final,
           isSubHeader: row.variable.includes("_"),
@@ -149,7 +149,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
                             item.isSubHeader && "pl-8 font-normal"
                           )}
                         >
-                          {item.component}
+                          {t(`table.${item.component}`)}
                         </td>
 
                         {item.net.map((net: number, index: number) => (
