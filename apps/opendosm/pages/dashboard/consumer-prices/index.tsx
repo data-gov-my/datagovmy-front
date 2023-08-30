@@ -39,7 +39,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-consumer-price
         id: "dashboard-consumer-prices",
         type: "dashboard",
         category: "economy",
-        agency: "dosm",
+        agency: "DOSM",
       },
       last_updated: new Date().valueOf(),
       bar: data.bar_chart,

@@ -40,7 +40,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-labour-market"
         id: "dashboard-labour-market",
         type: "dashboard",
         category: "economy",
-        agency: "dosm",
+        agency: "DOSM",
       },
       last_updated: data.data_last_updated,
       bar: data.bar_chart,
