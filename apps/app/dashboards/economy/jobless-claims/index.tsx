@@ -163,21 +163,21 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
             <div className="lg:w-1/2 xl:w-1/3">
               <Pyramid
                 title={t("job_loss_by_sex_age", { agency: data.agency })}
-                className="h-[550px] pb-6 lg:h-[600px]"
+                className="h-[400px] pb-6"
                 data={{
                   labels: pyramid.data.x,
                   datasets: [
                     {
                       label: t("female"),
                       data: pyramid.data.female,
-                      backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
+                      backgroundColor: AKSARA_COLOR.DANGER,
                       barThickness: 12,
                       borderRadius: 12,
                     },
                     {
                       label: t("male"),
                       data: pyramid.data.male,
-                      backgroundColor: AKSARA_COLOR.DANGER,
+                      backgroundColor: theme === "light" ? "#18181B" : "#FFFFFF",
                       barThickness: 12,
                       borderRadius: 12,
                     },
