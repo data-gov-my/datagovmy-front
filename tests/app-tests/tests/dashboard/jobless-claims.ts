@@ -33,29 +33,8 @@ const mainTestSuite = async (board: DashboardPage) => {};
 
 /************************** TEST SUITE **************************/
 
-test("high-frequency-labour-data/job-losses", async ({ page }) => {
-  const board = new DashboardPage(page, "high-frequency-labour-data/job-losses");
-  await board.goto();
-  await board.validateHero(parameters);
-  await board.execute(mainTestSuite);
-});
-
-test.skip("high-frequency-labour-data/job-placements", async ({ page }) => {
-  const board = new DashboardPage(page, "high-frequency-labour-data/job-placements");
-  await board.goto();
-  await board.validateHero(parameters);
-  await board.execute(mainTestSuite);
-});
-
-test.skip("high-frequency-labour-data/job-seekers", async ({ page }) => {
-  const board = new DashboardPage(page, "high-frequency-labour-data/job-seekers");
-  await board.goto();
-  await board.validateHero(parameters);
-  await board.execute(mainTestSuite);
-});
-
-test.skip("high-frequency-labour-data/job-vacancies", async ({ page }) => {
-  const board = new DashboardPage(page, "high-frequency-labour-data/job-vacancies");
+test("jobless-claims", async ({ page }) => {
+  const board = new DashboardPage(page, "jobless-claims");
   await board.goto();
   await board.validateHero(parameters);
   await board.execute(mainTestSuite);
