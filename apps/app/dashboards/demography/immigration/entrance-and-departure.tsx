@@ -50,6 +50,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
 
   const { data, setData } = useData({
     tab: 0,
+    country: params?.country,
     minmax: [0, timeseries.data.daily_7d.x.length - 1],
     loading: false,
   });
@@ -75,6 +76,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
 
   const navigateToCountry = (country: string) => {
     setData("loading", true);
+    setData("country", country);
     push(`${routes.IMMIGRATION}/${country}`, undefined, {
       scroll: false,
       locale: i18n.language,
@@ -97,11 +99,10 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
               fallback={<GlobeAltIcon className="w-4.5 h-4.5 mx-auto text-black" />}
               placeholder={t("section_1.search_placeholder")}
               options={COUNTRY_OPTIONS}
-              selected={
-                params?.country ? COUNTRY_OPTIONS.find(e => e.value === params.country) : null
-              }
+              selected={data.country ? COUNTRY_OPTIONS.find(e => e.value === data.country) : null}
               onChange={selected => {
                 if (selected) navigateToCountry(selected.value);
+                else setData("country", null);
               }}
             />
           </div>
