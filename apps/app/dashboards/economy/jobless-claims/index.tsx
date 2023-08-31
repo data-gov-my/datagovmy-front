@@ -146,7 +146,7 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
                 />
                 <Slider
                   type="range"
-                  period={data.period}
+                  period={config.period}
                   value={data.minmax}
                   onChange={e => setData("minmax", e)}
                   data={timeseries.data[config.key].x}
@@ -159,8 +159,8 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
           title={t("job_loss_by_state", { state: CountryAndStates[params.state] })}
           date={pyramid.data_as_of}
         >
-          <div className="flex flex-col items-stretch gap-6 lg:flex-row">
-            <div className="lg:w-1/2 xl:w-1/3">
+          <div className="flex flex-col gap-6 lg:flex-row">
+            <div className="lg:w-1/3">
               <Pyramid
                 title={t("job_loss_by_sex_age", { agency: data.agency })}
                 className="h-[400px] pb-6"
@@ -185,7 +185,7 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
                 }}
               />
             </div>
-            <div className="grid grid-cols-1 gap-12 lg:w-1/2 lg:grid-cols-2 xl:w-2/3 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:w-2/3">
               {DEMOGRAPHY.map(k => {
                 return (
                   <div className="flex flex-col space-y-6" key={k}>
