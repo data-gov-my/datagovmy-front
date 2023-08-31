@@ -63,7 +63,7 @@ function ComboOptionInner<T>(
             {imageSource && (
               <div className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
                 <ImageWithFallback
-                  className="border-outline dark:border-outlineHover-dark aspect-4/3 rounded border"
+                  className="border-outline dark:border-outlineHover-dark rounded border"
                   src={
                     typeof imageSource === "string"
                       ? `${imageSource}/${option.value}.png`
@@ -73,6 +73,12 @@ function ComboOptionInner<T>(
                   width={28}
                   height={18}
                   alt={option.value as string}
+                  style={{
+                    width: "auto",
+                    maxWidth: "28px",
+                    height: "auto",
+                    maxHeight: "28px",
+                  }}
                 />
               </div>
             )}
