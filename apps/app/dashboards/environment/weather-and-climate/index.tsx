@@ -1,4 +1,5 @@
 import { routes } from "@lib/routes";
+import { MarkerData } from "datagovmy-ui/charts/map-plot";
 import { Periods } from "datagovmy-ui/charts/timeseries";
 import {
   AgencyBadge,
@@ -78,6 +79,21 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({
     }
   }, [data.tab]);
 
+  const markers = useMemo<MarkerData>(() => {
+    const _markers: MarkerData = dropdown.map(s => {
+      const marker = {
+        position: [s.lat, s.lon] as [number, number],
+        tooltip: { Station: s.station },
+        onMarkerClick: () => navigateToStation(s.slug),
+      };
+
+      if (s.slug === data.station) Object.assign(marker, { icon: "red" });
+      return marker;
+    });
+
+    return _markers;
+  }, [data.station]);
+
   const { coordinate } = useSlice(timeseries.data[config.key], data.minmax);
   const LATEST_TIMESTAMP = timeseries.data[config.key].x[timeseries.data[config.key].x.length - 1];
 
@@ -108,7 +124,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({
           <div className="space-y-12 xl:grid xl:grid-cols-12">
             <div className="flex flex-col gap-6 lg:flex-row xl:col-span-10 xl:col-start-2">
               <div className="flex flex-col justify-center space-y-6 lg:w-1/3">
-                <h4 className="text-center [text-wrap:balance] lg:text-start">{t("title")}</h4>
+                <h4 className="text-center [text-wrap:balance]">{t("title")}</h4>
                 <div className="mx-auto w-full max-w-[400px]">
                   <ComboBox
                     placeholder={t("search_station")}
@@ -118,6 +134,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({
                     }
                     onChange={selected => {
                       if (selected) navigateToStation(selected.value);
+                      else setData("station", null);
                     }}
                     config={{
                       baseSort: (a, b) => (a.index < b.index ? -1 : 1), // no sort
@@ -132,12 +149,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({
                   tileTheme="terrain"
                   position={[params.lat, params.lon]}
                   zoom={13}
-                  markers={[
-                    {
-                      position: [params.lat, params.lon],
-                      Station: params.station,
-                    },
-                  ]}
+                  markers={markers}
                 />
                 <p className="text-dim pt-3 text-center text-sm">{t("map_desc")}</p>
               </div>

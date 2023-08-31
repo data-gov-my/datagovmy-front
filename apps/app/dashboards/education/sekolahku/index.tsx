@@ -208,7 +208,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   markers={[
                     {
                       position: [sekolahku_info.lat, sekolahku_info.lon],
-                      school: sekolahku_info.school,
+                      tooltip: { school: sekolahku_info.school },
                     },
                   ]}
                 />
@@ -217,7 +217,10 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
           </div>
         </Section>
 
-        <Section title={t("section_2.title", { school: sekolahku_info.school })} date={Date.now()}>
+        <Section
+          title={t("section_2.title", { school: sekolahku_info.school })}
+          date={sekolahku_barmeter.data_as_of}
+        >
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
             {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any], i) => {
               return (
@@ -293,7 +296,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
               onChange={index => setData("tabs_section3", index)}
             />
           }
-          date={Date.now()}
+          date={bellcurve_school.data_as_of}
         >
           <Tabs hidden current={data.tabs_section3}>
             {KEY_VARIABLES_SCHEMA.map(({ name, data: lineData, callout: lineCallout }) => {
