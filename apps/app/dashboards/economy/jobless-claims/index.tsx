@@ -51,8 +51,6 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
   const { theme } = useTheme();
   const { data, setData } = useData({
     minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
-    period: "auto",
-    periodly: "daily",
     tab: 0,
   });
 
@@ -163,7 +161,7 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
             <div className="lg:w-1/3">
               <Pyramid
                 title={t("job_loss_by_sex_age", { agency: data.agency })}
-                className="h-[400px] pb-6"
+                className="h-[450px] pb-6"
                 data={{
                   labels: pyramid.data.x,
                   datasets: [
