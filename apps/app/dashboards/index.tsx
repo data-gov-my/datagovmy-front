@@ -88,7 +88,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   return (
     <>
       <Hero
-        background="blue"
+        background="gray"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[
           `${agency !== null ? t(`agencies:${agency}.abbr`).concat(":") : ""} ${t("header")}`,
