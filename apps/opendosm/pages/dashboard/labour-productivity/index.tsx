@@ -38,7 +38,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           id: "labour-productivity",
           type: "dashboard",
           category: "labour-markets",
-          agency: "dosm",
+          agency: "DOSM",
         },
         last_updated: data.data_last_updated,
         timeseries: data.timeseries,
