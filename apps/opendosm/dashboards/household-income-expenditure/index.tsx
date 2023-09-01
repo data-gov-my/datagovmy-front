@@ -13,7 +13,7 @@ import {
 import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
-import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { Color, useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { MOTIcon } from "datagovmy-ui/icons/agency";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
@@ -83,6 +83,21 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
     value: key,
   }));
 
+  const getChoroColour = (type: FilterKeys): { colour: Color; textColour: string } => {
+    switch (type) {
+      case "gini":
+      case "poverty":
+      case "poverty_relative":
+        return { colour: "reds", textColour: "text-danger" };
+      case "access_electricity":
+        return { colour: "viridis", textColour: "text-purple" };
+      case "expenditure_mean":
+        return { colour: "purples", textColour: "text-purple" };
+      default:
+        return { colour: "blues", textColour: "text-primary dark:text-primary-dark" };
+    }
+  };
+
   const STATS = ["mean", "median", "gini"] as StatsKeys[];
   const { coordinate } = useSlice(timeseries.data, data.minmax);
 
@@ -144,7 +159,7 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
                   id="household-indicators-by-area"
                   title={t("common:common.ranking", { count: choropleth[data.area].data.x.length })}
                   data={choropleth[data.area].data.y[data.filter]}
-                  color="text-primary dark:text-primary-dark"
+                  color={getChoroColour(data.filter).textColour}
                   threshold={choropleth[data.area].data.x.length}
                   format={(position: number) => {
                     const area = choropleth[data.area].data.x[position];
@@ -167,7 +182,7 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
             right={
               <Choropleth
                 className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
-                color="blues"
+                color={getChoroColour(data.filter).colour}
                 data={{
                   labels: choropleth[data.area].data.x.map((area: string) =>
                     data.area === "state" ? CountryAndStates[area] : area
