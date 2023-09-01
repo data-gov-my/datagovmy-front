@@ -76,7 +76,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     const state = params?.state ? params.state[0] : "mys";
     const { data } = await get("/dashboard", { dashboard: "perkeso", state });
-    console.log(data.barmeter.data, "ASD");
+
     return {
       notFound: false,
       props: {

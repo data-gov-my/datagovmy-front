@@ -87,7 +87,7 @@ const CatalogueMapPlot: FunctionComponent<CatalogueMapPlotProps> = ({
       };
     });
     return _markers;
-  }, []);
+  }, [dataset.chart]);
 
   return <MapPlot _ref={ctx} id={dataset.meta.unique_id} className={className} markers={markers} />;
 };
