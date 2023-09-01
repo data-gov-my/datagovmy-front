@@ -49,7 +49,8 @@ function App({ Component, pageProps }: any) {
         {layout(
           <div className={clx(body.variable, header.variable, "font-sans")}>
             <Component {...pageProps} />
-          </div>
+          </div>,
+          pageProps
         )}
       </WindowProvider>
     </ThemeProvider>
