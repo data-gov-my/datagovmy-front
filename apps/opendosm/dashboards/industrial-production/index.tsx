@@ -124,12 +124,17 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
   return (
     <>
       <Hero
-        background="green"
-        category={[t("common:categories.economy"), "text-green-700"]}
+        background="red"
+        category={[t("common:categories.economy"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={
+          <AgencyBadge
+            name={t("agencies:dosm.full")}
+            icon={<DOSMIcon fillColor={AKSARA_COLOR.DANGER} />}
+          />
+        }
       />
 
       <Container className="min-h-screen">
@@ -168,9 +173,9 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                           type: "line",
                           data: coordinate.overall,
                           label: t("keys.overall"),
-                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderColor: AKSARA_COLOR.DANGER,
                           borderWidth: 1.5,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
                           fill: configs("overall").fill,
                         },
                         shader(data.shade_type.value),
@@ -210,8 +215,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mining"),
                             data: coordinate.mining,
-                            borderColor: AKSARA_COLOR.PRIMARY,
-                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mining").fill,
                             borderWidth: 1.5,
                           },
@@ -241,8 +246,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mfg"),
                             data: coordinate.mfg,
-                            borderColor: AKSARA_COLOR.PRIMARY,
-                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mfg").fill,
                             borderWidth: 1.5,
                           },
@@ -272,8 +277,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.electric"),
                             data: coordinate.electric,
-                            borderColor: AKSARA_COLOR.PRIMARY,
-                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("electric").fill,
                             borderWidth: 1.5,
                           },
@@ -311,8 +316,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mfg_food"),
                             data: coordinate.mining,
-                            borderColor: AKSARA_COLOR.DIM,
-                            backgroundColor: AKSARA_COLOR.DIM_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mfg_food").fill,
                             borderWidth: 1.5,
                           },
@@ -342,8 +347,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mfg_textiles"),
                             data: coordinate.mfg_textiles,
-                            borderColor: AKSARA_COLOR.DIM,
-                            backgroundColor: AKSARA_COLOR.DIM_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mfg_textiles").fill,
                             borderWidth: 1.5,
                           },
@@ -373,8 +378,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mfg_wood"),
                             data: coordinate.mfg_wood,
-                            borderColor: AKSARA_COLOR.DIM,
-                            backgroundColor: AKSARA_COLOR.DIM_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mfg_wood").fill,
                             borderWidth: 1.5,
                           },
@@ -404,8 +409,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mfg_petroleum"),
                             data: coordinate.mfg_petroleum,
-                            borderColor: AKSARA_COLOR.DIM,
-                            backgroundColor: AKSARA_COLOR.DIM_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mfg_petroleum").fill,
                             borderWidth: 1.5,
                           },
@@ -435,8 +440,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mfg_electric"),
                             data: coordinate.mfg_electric,
-                            borderColor: AKSARA_COLOR.DIM,
-                            backgroundColor: AKSARA_COLOR.DIM_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mfg_petroleum").fill,
                             borderWidth: 1.5,
                           },
@@ -466,8 +471,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
                             type: "line",
                             label: t("keys.mfg_transport"),
                             data: coordinate.mfg_transport,
-                            borderColor: AKSARA_COLOR.DIM,
-                            backgroundColor: AKSARA_COLOR.DIM_H,
+                            borderColor: AKSARA_COLOR.DANGER,
+                            backgroundColor: AKSARA_COLOR.DANGER_H,
                             fill: configs("mfg_transport").fill,
                             borderWidth: 1.5,
                           },

@@ -7,6 +7,7 @@ import { OptionType, WithData } from "datagovmy-ui/types";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * GDP Dashboard
@@ -176,12 +177,12 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
   return (
     <>
       <Hero
-        background="gray"
+        background="blue"
         category={[t("common:categories.economy"), "text-primary"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
       />
       <SliderProvider>
         {play => (
@@ -308,8 +309,8 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                           type: "line",
                           label: chartData.label,
                           data: chartData.data,
-                          borderColor: AKSARA_COLOR.GREY,
-                          backgroundColor: AKSARA_COLOR.GREY_H,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
                           fill: chartData.fill,
                           borderWidth: 1.5,
                         },

@@ -63,7 +63,12 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={
+          <AgencyBadge
+            name={t("agencies:dosm.full")}
+            icon={<DOSMIcon fillColor={AKSARA_COLOR.PURPLE} />}
+          />
+        }
       />
 
       <Container className="min-h-screen">

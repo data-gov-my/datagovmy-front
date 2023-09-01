@@ -129,12 +129,17 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
   return (
     <>
       <Hero
-        background="green"
-        category={[t("common:categories.economy"), "text-green-700"]}
+        background="red"
+        category={[t("common:categories.economy"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={
+          <AgencyBadge
+            name={t("agencies:dosm.full")}
+            icon={<DOSMIcon fillColor={AKSARA_COLOR.DANGER} />}
+          />
+        }
       />
 
       <Container className="min-h-screen">
@@ -158,14 +163,6 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                   />
                 </div>
 
-                <Slider
-                  className=""
-                  type="range"
-                  value={data.minmax}
-                  data={timeseries.data[data.index_type.value].x}
-                  period="month"
-                  onChange={e => setData("minmax", e)}
-                />
                 <Timeseries
                   className="h-[300px] w-full"
                   title={t("keys.total")}
@@ -184,9 +181,9 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                         type: "line",
                         data: coordinate.total,
                         label: t("keys.total"),
-                        borderColor: AKSARA_COLOR.GREEN,
+                        borderColor: AKSARA_COLOR.DANGER,
                         borderWidth: 1.5,
-                        backgroundColor: AKSARA_COLOR.GREEN_H,
+                        backgroundColor: AKSARA_COLOR.DANGER_H,
                         fill: configs("total").fill,
                       },
                       shader(data.shade_type.value),
@@ -200,6 +197,15 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                       value: configs("total").callout,
                     },
                   ]}
+                />
+
+                <Slider
+                  className=""
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data[data.index_type.value].x}
+                  period="month"
+                  onChange={e => setData("minmax", e)}
                 />
 
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -221,8 +227,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                           type: "line",
                           label: t("keys.wholesale"),
                           data: coordinate.wholesale,
-                          borderColor: AKSARA_COLOR.GREEN,
-                          backgroundColor: AKSARA_COLOR.GREEN_H,
+                          borderColor: AKSARA_COLOR.DANGER,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
                           fill: configs("wholesale").fill,
                           borderWidth: 1.5,
                         },
@@ -256,8 +262,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                           type: "line",
                           label: t("keys.retail"),
                           data: coordinate.retail,
-                          borderColor: AKSARA_COLOR.GREEN,
-                          backgroundColor: AKSARA_COLOR.GREEN_H,
+                          borderColor: AKSARA_COLOR.DANGER,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
                           fill: configs("retail").fill,
                           borderWidth: 1.5,
                         },
@@ -291,8 +297,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                           type: "line",
                           label: t("keys.motor"),
                           data: coordinate.motor,
-                          borderColor: AKSARA_COLOR.GREEN,
-                          backgroundColor: AKSARA_COLOR.GREEN_H,
+                          borderColor: AKSARA_COLOR.DANGER,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
                           fill: configs("motor").fill,
                           borderWidth: 1.5,
                         },
