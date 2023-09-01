@@ -11,8 +11,7 @@ export type ComboOptionProps<T> = {
   option: ComboOptionProp<T>;
   format?: (option: ComboOptionProp<T>) => ReactNode;
   onClick?: () => void;
-  imageSource?: string | ((value: string) => string);
-  fallback?: ReactNode;
+  image?: (value: string) => ReactNode;
   isSelected: boolean;
   active: boolean;
   index: number;
@@ -23,8 +22,7 @@ function ComboOptionInner<T>(
   {
     option,
     format,
-    imageSource,
-    fallback,
+    image,
     onClick,
     isSelected,
     active,
@@ -60,28 +58,7 @@ function ComboOptionInner<T>(
           </p>
         ) : (
           <>
-            {imageSource && (
-              <div className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
-                <ImageWithFallback
-                  className="border-outline dark:border-outlineHover-dark rounded border"
-                  src={
-                    typeof imageSource === "string"
-                      ? `${imageSource}/${option.value}.png`
-                      : imageSource(option.value)
-                  }
-                  fallback={fallback}
-                  width={28}
-                  height={18}
-                  alt={option.value as string}
-                  style={{
-                    width: "auto",
-                    maxWidth: "28px",
-                    height: "auto",
-                    maxHeight: "28px",
-                  }}
-                />
-              </div>
-            )}
+            {image && image(option.value)}
             <p
               className={clx("block grow self-center", isSelected ? "font-medium" : "font-normal")}
             >

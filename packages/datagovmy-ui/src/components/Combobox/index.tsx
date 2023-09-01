@@ -18,7 +18,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { body } from "../../configs/font";
 import { matchSorter, MatchSorterOptions } from "match-sorter";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 type ComboBoxProps<T> = Omit<
   ComboOptionProps<T>,
@@ -40,8 +40,7 @@ const ComboBox = <T extends unknown>({
   onSearch,
   format,
   placeholder,
-  imageSource,
-  fallback,
+  image,
   loading = false,
   config = { keys: ["label"] },
 }: ComboBoxProps<T>) => {
@@ -131,25 +130,8 @@ const ComboBox = <T extends unknown>({
       className="border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark shadow-button relative flex w-full select-none overflow-hidden rounded-full border focus:outline-none focus-visible:ring-0"
     >
       <span className="ml-4 flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
-        {imageSource && selected ? (
-          <ImageWithFallback
-            className="border-outline dark:border-outlineHover-dark rounded border"
-            src={
-              typeof imageSource === "string"
-                ? `${imageSource}/${selected?.value}.png`
-                : imageSource(selected?.value ?? "bad")
-            }
-            fallback={fallback}
-            width={28}
-            height={18}
-            alt={selected?.value as string}
-            style={{
-              width: "auto",
-              maxWidth: "28px",
-              height: "auto",
-              maxHeight: "28px",
-            }}
-          />
+        {image && selected ? (
+          image(selected.value)
         ) : (
           <MagnifyingGlassIcon className="dark:text-dim h-5 w-5 text-black" />
         )}
@@ -242,8 +224,7 @@ const ComboBox = <T extends unknown>({
                           total={ITEMS_COUNT}
                           option={option}
                           format={format}
-                          imageSource={imageSource}
-                          fallback={fallback}
+                          image={image}
                           isSelected={selected?.value === option.value}
                           active={i === activeIndex}
                           index={i}
@@ -297,8 +278,7 @@ const ComboBox = <T extends unknown>({
                           total={ITEMS_COUNT}
                           option={option}
                           format={format}
-                          imageSource={imageSource}
-                          fallback={fallback}
+                          image={image}
                           isSelected={selected?.value === option.value}
                           active={virtualItem.index === activeIndex}
                           index={virtualItem.index}

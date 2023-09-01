@@ -195,7 +195,23 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
             <div className="mx-auto w-full py-6 sm:w-[500px]">
               <ComboBox
                 placeholder={t("party.search_party")}
-                imageSource="/static/images/parties"
+                image={value => (
+                  <div className="flex h-auto max-h-8 w-8 justify-center self-center">
+                    <ImageWithFallback
+                      className="border-outline dark:border-outlineHover-dark rounded border"
+                      src={`/static/images/parties/${value.toLowerCase()}.png`}
+                      width={28}
+                      height={18}
+                      alt={value}
+                      style={{
+                        width: "auto",
+                        maxWidth: "28px",
+                        height: "auto",
+                        maxHeight: "28px",
+                      }}
+                    />
+                  </div>
+                )}
                 options={PARTY_OPTIONS}
                 selected={
                   data.party_option
