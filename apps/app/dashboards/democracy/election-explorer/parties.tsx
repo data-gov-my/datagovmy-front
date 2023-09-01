@@ -199,7 +199,7 @@ const ElectionPartiesDashboard: FunctionComponent<ElectionPartiesProps> = ({
                   <div className="flex h-auto max-h-8 w-8 justify-center self-center">
                     <ImageWithFallback
                       className="border-outline dark:border-outlineHover-dark rounded border"
-                      src={`/static/images/parties/${value.toLowerCase()}.png`}
+                      src={`/static/images/parties/${value}.png`}
                       width={28}
                       height={18}
                       alt={value}
