@@ -21,6 +21,7 @@ const namespaces = [
   "dashboard-labour-productivity",
   "dashboard-formal-sector-wages",
   "dashboard-services-producer-prices",
+  "dashboard-population",
 ];
 
 module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
