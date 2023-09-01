@@ -126,7 +126,7 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
+        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} isDivision />}
       />
 
       <Container className="min-h-screen">

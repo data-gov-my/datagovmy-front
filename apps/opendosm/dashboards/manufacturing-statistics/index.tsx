@@ -121,7 +121,9 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:bppib.full")} icon={<BOMBAIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:bppib.full")} icon={<BOMBAIcon />} isDivision />
+        }
       />
 
       <Container>

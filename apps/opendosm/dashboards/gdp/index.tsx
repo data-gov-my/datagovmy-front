@@ -182,7 +182,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
+        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} isDivision />}
       />
       <SliderProvider>
         {play => (

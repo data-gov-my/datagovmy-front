@@ -67,6 +67,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
           <AgencyBadge
             name={t("agencies:dosm.full")}
             icon={<DOSMIcon fillColor={AKSARA_COLOR.PURPLE} />}
+            isDivision
           />
         }
       />

@@ -133,6 +133,7 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
           <AgencyBadge
             name={t("agencies:dosm.full")}
             icon={<DOSMIcon fillColor={AKSARA_COLOR.DANGER} />}
+            isDivision
           />
         }
       />

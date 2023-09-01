@@ -97,7 +97,7 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
         action={
           <StateDropdown url={routes.HOUSEHOLD_INCOME_EXPENDITURE} currentState={params.state} />
         }
-        agencyBadge={<AgencyBadge icon={<MOTIcon />} name={t("agencies:piesd.full")} />}
+        agencyBadge={<AgencyBadge icon={<MOTIcon />} name={t("agencies:piesd.full")} isDivision />}
       />
       <Container>
         {/* How is key income and expenditure indicators distributed? */}

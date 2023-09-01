@@ -118,7 +118,9 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge icon={<BOMBAIcon />} name={t(`agencies:bppib.full`)} />}
+        agencyBadge={
+          <AgencyBadge icon={<BOMBAIcon />} name={t(`agencies:bppib.full`)} isDivision />
+        }
       />
 
       <Container className="min-h-screen">
