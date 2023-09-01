@@ -130,7 +130,7 @@ const Bar: FunctionComponent<BarProps> = ({
                   ? display(item.parsed.x, "standard", precision)
                   : "-",
             };
-            return `${item.dataset.label} : ${tip[layout]}`;
+            return `${item.dataset.label}: ${tip[layout]}`;
           },
           title(item) {
             return formatX ? formatX(item[0].label) : item[0].label;
