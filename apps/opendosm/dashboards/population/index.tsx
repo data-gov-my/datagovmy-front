@@ -12,7 +12,7 @@ import { AKSARA_COLOR, MALAYSIA, STATES } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { JIMIcon } from "datagovmy-ui/icons/agency";
+import { DOSMPeopleIcon } from "datagovmy-ui/icons/departments/dosm";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -258,12 +258,7 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
         description={[t("description")]}
         last_updated={last_updated}
         action={<StateDropdown url={routes.POPULATION} currentState={params.state} />}
-        agencyBadge={
-          <AgencyBadge
-            name={t("agencies:pdsd.full")}
-            icon={<JIMIcon fillColor={AKSARA_COLOR.PRIMARY} />}
-          />
-        }
+        agencyBadge={<AgencyBadge name={t("agencies:pdsd.full")} icon={<DOSMPeopleIcon />} />}
       />
       <Container className="min-h-screen">
         <Section
