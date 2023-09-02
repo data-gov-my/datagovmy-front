@@ -209,7 +209,11 @@ const Home: Page = ({
       <Metadata keywords={"opendosm data negara inflasi"} />
 
       <Hero
-        background={clx(theme === "light" ? "home-banner" : "home-banner-dark")}
+        background={clx(
+          theme === undefined && "blue",
+          theme === "light" && "home-banner",
+          theme === "dark" && "home-banner-dark"
+        )}
         category={[t("category"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}

@@ -248,7 +248,12 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
           menu={
             <Tabs.List
               className="grow"
-              options={[t("common:time.daily"), t("common:time.monthly"), t("common:time.yearly")]}
+              options={[
+                // t("common:time.daily_7d"),
+                t("common:time.daily"),
+                t("common:time.monthly"),
+                t("common:time.yearly"),
+              ]}
               current={data.tab_index}
               onChange={index => {
                 setData("tab_index", index);
