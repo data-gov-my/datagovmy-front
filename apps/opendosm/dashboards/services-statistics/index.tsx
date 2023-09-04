@@ -115,7 +115,7 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
     return charts.map(name => ({
       title: t(`keys.${name}`),
       prefix: name !== "employees" && data.trend === "actual" ? "RM " : "",
-      unitY: data.trend !== "actual" ? "%" : name === "employees" ? " employees" : "",
+      unitY: data.trend !== "actual" ? "%" : "",
       label: t(`keys.${name}`),
       data: coordinate[name],
       fill: data.shade === "no_shade",
