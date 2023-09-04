@@ -387,6 +387,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                   {calendar.mobile.map(d => {
                     const isToday = todayISO === d.date;
                     const id = `${d.date}_${i18n.language}`;
+                    if (!pubs.has(id)) return;
                     return (
                       <div
                         key={d.date}
