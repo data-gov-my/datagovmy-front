@@ -23,6 +23,7 @@
     "./helpers": "./src/lib/helpers.ts",
     "./hooks": "./src/hooks/index.ts",
     "./i18n": "./src/i18n/index.cjs",
+    "./icons": "./src/icons/index.tsx",
     "./icons/*": "./src/icons/*.tsx",
     "./mixpanel": "./src/lib/mixpanel.ts",
     "./options": "./src/lib/options.ts",
@@ -54,8 +55,11 @@
       "i18n": [
         "./types/i18n.d.ts"
       ],
+      "icons": [
+        "./src/icons/index.tsx"
+      ],
       "icons/*": [
-        "./src/icons/*"
+        "./src/icons/*.tsx"
       ],
       "constants": [
         "./types/constants.d.ts"
