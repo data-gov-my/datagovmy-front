@@ -3422,6 +3422,26 @@ input[type="search"]::-webkit-search-results-decoration {
   --tw-border-opacity: 1;
   border-color: rgba(38, 38, 38, var(--tw-border-opacity));
 }
+:is(html[class~="dark"] .dark\:hover\:border-washed-dark:hover) {
+  --tw-border-opacity: 1;
+  border-color: rgba(39, 39, 42, var(--tw-border-opacity));
+}
+:is(html[class~="dark"] .dark\:hover\:border-white:hover) {
+  --tw-border-opacity: 1;
+  border-color: rgba(255, 255, 255, var(--tw-border-opacity));
+}
+:is(html[class~="dark"] .dark\:hover\:border-primary-100:hover) {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--nextra-primary-hue) 100% 94% / var(--tw-border-opacity));
+}
+:is(html[class~="dark"] .dark\:hover\:border-primary-300:hover) {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--nextra-primary-hue) 100% 77% / var(--tw-border-opacity));
+}
+:is(html[class~="dark"] .dark\:hover\:border-primary-200:hover) {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--nextra-primary-hue) 100% 86% / var(--tw-border-opacity));
+}
 :is(html[class~="dark"] .dark\:hover\:bg-gray-100\/5:hover) {
   background-color: rgba(243, 244, 246, 0.05);
 }

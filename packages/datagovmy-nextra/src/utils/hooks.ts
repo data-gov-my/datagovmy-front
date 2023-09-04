@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { en, ms } from "./i18n";
 import { useRouter } from "next/router";
-const useLocalStorage = (key: string, defaultValue: {}) => {
-  const [value, setValue] = useState(() => {
+const useLocalStorage = <T>(key: string, defaultValue: {}): [T, Dispatch<SetStateAction<T>>] => {
+  const [value, setValue] = useState<T>(() => {
     let currentValue;
 
     try {

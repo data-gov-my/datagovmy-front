@@ -26,14 +26,14 @@ import { stream } from "../utils/api";
 import { useTranslation, useLocalStorage, useSessionStorage } from "../utils/hooks";
 import Tooltip from "./tooltip";
 
-type ChatType = {
-  from: "user" | "ai";
-  text: string;
+export type ChatType = {
+  role: "assistant" | "user";
+  content: string;
 };
 
 interface ChatInterface {
   ref?: ForwardedRef<HTMLDivElement>;
-  from: "user" | "ai";
+  from: "user" | "assistant";
   children: string;
 }
 
@@ -56,7 +56,7 @@ const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
       <div className="ai flex items-start gap-2" ref={ref}>
         {
           {
-            ai: (
+            assistant: (
               <div className="bg-primary-dgm dark:bg-primary-dark flex aspect-square min-w-[32px] items-center justify-center rounded-lg">
                 <BoltIcon className="h-5 w-5 text-white" />
               </div>
@@ -76,7 +76,7 @@ const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
         >
           {
             {
-              ai: children.length > 0 ? <Markdown>{children}</Markdown> : <p>{dots}</p>,
+              assistant: children.length > 0 ? <Markdown>{children}</Markdown> : <p>{dots}</p>,
               user: <p>{children} </p>,
             }[from]
           }
@@ -95,7 +95,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
   const [fetching, setFetching] = useState<boolean>(false);
   const [answer, setAnswer] = useState<string>("");
   const [prompt, setPrompt] = useSessionStorage("prompt");
-  const [chats, setChats] = useLocalStorage("chats", []);
+  const [chats, setChats] = useLocalStorage<ChatType[]>("chats", []);
   const { t } = useTranslation();
 
   const fetchResponse = async (prompt: string) => {
@@ -104,15 +104,8 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
     const payload = {
       model: "gpt-3.5-turbo",
       chain_type: "docs",
-      messages: [
-        {
-          role: "system",
-          content: "systemPrompt",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
+      messages: chats?.slice(-5).concat([{ role: "user", content: prompt }]) || [
+        { role: "user", content: prompt },
       ],
       max_tokens: 1000,
       temperature: 0,
@@ -131,7 +124,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
         const { value, done } = await reader.read();
         if (done) {
           setFetching(false);
-          setChats((chats: ChatType[]) => chats.concat({ from: "ai", text: _answer }));
+          setChats((chats: ChatType[]) => chats.concat({ role: "assistant", content: _answer }));
           setAnswer("");
           break;
         }
@@ -139,7 +132,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
         _answer += value;
       }
     } catch (error: any) {
-      setChats((chats: ChatType[]) => chats.concat({ from: "ai", text: error.message }));
+      setChats((chats: ChatType[]) => chats.concat({ role: "assistant", content: error.message }));
       console.error(error.message);
     }
   };
@@ -154,7 +147,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
   };
 
   const submitPrompt = (prompt: string) => {
-    setChats([...chats, { from: "user", text: prompt }]);
+    setChats([...chats, { role: "user", content: prompt }]);
     fetchResponse(prompt);
   };
 
@@ -196,9 +189,9 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                       // Chat Bubbles
                       <div className="space-y-3 pb-16 pt-5">
                         {chats.map((chat: ChatType) => (
-                          <ChatBubble from={chat.from}>{chat.text}</ChatBubble>
+                          <ChatBubble from={chat.role}>{chat.content}</ChatBubble>
                         ))}
-                        {fetching && <ChatBubble from="ai">{answer}</ChatBubble>}
+                        {fetching && <ChatBubble from="assistant">{answer}</ChatBubble>}
                       </div>
                     ) : (
                       // Chat Bubbles (Empty state)
@@ -235,7 +228,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                     <div className="absolute bottom-[80px] left-5 ">
                       <Tooltip
                         trigger={() => (
-                          <InformationCircleIcon className="text-dim h-5 w-5 text-sm hover:text-black" />
+                          <InformationCircleIcon className="text-dim h-5 w-5 text-sm transition hover:text-black dark:hover:text-white" />
                         )}
                         anchor="top-left"
                       >
