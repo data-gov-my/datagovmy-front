@@ -38,10 +38,11 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   ["publications", "catalogue"],
   async ({ locale, query, params }) => {
     try {
-      const [{ data: dropdown }, { data }] = await Promise.all([
-        get("/publication-dropdown/", {
-          language: locale,
-        }),
+      const [{ data }] = await Promise.all([
+        // const [{ data: dropdown }, { data }] = await Promise.all([
+        // get("/publication-dropdown/", {
+        //   language: locale,
+        // }),
         get("/publication/", {
           language: locale,
           ...query,
@@ -59,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             category: null,
             agency: "DOSM",
           },
-          dropdown: dropdown,
+          dropdown: [], //dropdown,
           publications:
             data.results.sort(
               (a: Publication, b: Publication) =>

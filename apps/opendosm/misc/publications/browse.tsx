@@ -21,7 +21,7 @@ import {
   toast,
 } from "datagovmy-ui/components";
 import { toDate } from "datagovmy-ui/helpers";
-import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { useCache, useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import { matchSorter } from "match-sorter";
 import dynamic from "next/dynamic";
@@ -84,7 +84,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     [data.pub, data.query]
   );
 
-  const PUBLICATION_OPTIONS: OptionType[] = dropdown.map(e => ({
+  const PUBLICATION_OPTIONS: OptionType[] = data.dropdown.map(e => ({
     label: e.publication_type_title,
     value: e.publication_type,
   }));
@@ -194,6 +194,23 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       className: "w-[150px]",
     },
   ];
+
+  const fetchData = () => {
+    get("/publication-dropdown/", {
+      language: i18n.language,
+    })
+      .then(({ data }) => {
+        setData("dropdown", data.data);
+      })
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      });
+  };
+
+  useWatch(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (params.pub_id) {
@@ -441,6 +458,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
         {total_pubs > ITEMS_PER_PAGE && (
           <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
             <Button
+              className="btn-disabled"
               variant="default"
               onClick={() => {
                 setData("loading", true);
@@ -460,6 +478,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             </span>
             <Button
               variant="default"
+              className="btn-disabled"
               onClick={() => {
                 setData("loading", true);
                 setFilter("page", `${+filter.page + 1}`);
