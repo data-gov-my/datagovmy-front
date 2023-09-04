@@ -51,7 +51,7 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
     <>
       <Hero
         background="gray"
-        category={[t("nso"), "text-dim"]}
+        category={[t("nso"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="dosm" />}

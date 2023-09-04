@@ -89,14 +89,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   }));
 
   const frequencies: OptionType[] = [
-    { label: t("catalogue:filter_options.daily"), value: "DAILY" },
-    { label: t("catalogue:filter_options.weekly"), value: "WEEKLY" },
     { label: t("catalogue:filter_options.monthly"), value: "MONTHLY" },
     { label: t("catalogue:filter_options.quarterly"), value: "QUARTERLY" },
     { label: t("catalogue:filter_options.yearly"), value: "YEARLY" },
-    { label: t("catalogue:filter_options.intraday"), value: "INTRADAY" },
-    { label: t("catalogue:filter_options.infrequent"), value: "INFREQUENT" },
-    { label: t("catalogue:filter_options.as_required"), value: "AS_REQUIRED" },
+    { label: t("catalogue:filter_options.one_off"), value: "ONE_OFF" },
   ];
   const geographies: OptionType[] = [
     { label: t("catalogue:filter_options.national"), value: "NATIONAL" },
@@ -180,12 +176,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           </Button>
         );
       },
-    },
-    {
-      accessorKey: "description",
-      id: "description",
-      header: t("table.desc"),
-      enableSorting: false,
     },
     {
       accessorKey: "release_date",
