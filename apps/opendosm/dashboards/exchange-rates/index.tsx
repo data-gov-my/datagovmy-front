@@ -71,7 +71,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            name={t("agencies:bipd.full")}
+            name={t("division:bipd.full")}
             icon={<DOSMIntegrationDataIcon />}
             isDivision
           />
@@ -193,6 +193,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                         interval={data.active_trend < 2 ? "day" : "auto"}
                         prefixY={timeseries_callouts.data[index].tooltip_unit}
                         precision={3}
+                        beginZero={false}
                         data={{
                           labels: timeseries.data[key].x,
                           datasets: [

@@ -165,8 +165,10 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
             }),
             value: [
               ["growth_yoy"].includes(data.index)
-                ? prefixPercentage(timeseries_callout.data[data.index][name].latest)
-                : prefixRM(timeseries_callout.data[data.index][name].latest),
+                ? timeseries_callout.data[data.index][name].latest > 0
+                  ? ""
+                  : "-"
+                : "RM",
               numFormat(
                 Math.abs(timeseries_callout.data[data.index][name].latest),
                 "compact",
@@ -191,7 +193,7 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
             const isPercentage = ["growth_yoy"].includes(data.index);
             return [
               value < 0 ? "-" : "",
-              numFormat(Math.abs(value), "compact", 1, "long", i18n.language, true),
+              numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
               isPercentage ? "%" : "",
             ].join("");
           }}
@@ -291,7 +293,7 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
             const isPercentage = ["growth_yoy"].includes(data.index);
             return [
               value < 0 ? "-" : "",
-              numFormat(Math.abs(value), "compact", 1, "long", i18n.language, true),
+              numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
               isPercentage ? "%" : "",
             ].join("");
           }}
@@ -400,7 +402,7 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
                     const isPercentage = ["growth_yoy"].includes(data.index);
                     return [
                       value < 0 ? "-" : "",
-                      numFormat(Math.abs(value), "compact", 1, "long", i18n.language, true),
+                      numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
                       isPercentage ? "%" : "",
                     ].join("");
                   }}
@@ -513,7 +515,7 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
                     const isPercentage = ["growth_yoy"].includes(data.indices_index);
                     return [
                       value < 0 ? "-" : "",
-                      numFormat(Math.abs(value), "compact", 1, "long", i18n.language, true),
+                      numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
                       isPercentage ? "%" : "",
                     ].join("");
                   }}

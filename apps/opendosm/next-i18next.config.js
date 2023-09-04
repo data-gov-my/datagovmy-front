@@ -27,4 +27,4 @@ const namespaces = [
   "dashboard-external-trade",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "division"]);
