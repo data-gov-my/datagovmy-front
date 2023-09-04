@@ -39,7 +39,9 @@ const BalanceOfPaymentsLayout: FunctionComponent<BalanceOfPaymentsLayoutProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:bpan.full")} icon={<DOSMAccountingIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:bpan.full")} icon={<DOSMAccountingIcon />} isDivision />
+        }
       />
 
       <nav className="sticky top-14 z-20 flex overflow-hidden border-b border-b-outline bg-white dark:border-b-washed-dark dark:bg-black min-[350px]:justify-center lg:static">

@@ -136,7 +136,11 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:ssd.full")} icon={<DOSMCustomerServiceIcon />} />
+          <AgencyBadge
+            name={t("agencies:ssd.full")}
+            icon={<DOSMCustomerServiceIcon />}
+            isDivision
+          />
         }
       />
 

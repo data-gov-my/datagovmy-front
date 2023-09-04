@@ -130,7 +130,9 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:bppib.full")} icon={<DOSMToolsIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:bppib.full")} icon={<DOSMToolsIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">

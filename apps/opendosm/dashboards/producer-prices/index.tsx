@@ -138,7 +138,7 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:piesd.full")} icon={<DOSMPricesIncomeIcon />} />
+          <AgencyBadge name={t("agencies:piesd.full")} icon={<DOSMPricesIncomeIcon />} isDivision />
         }
       />
 

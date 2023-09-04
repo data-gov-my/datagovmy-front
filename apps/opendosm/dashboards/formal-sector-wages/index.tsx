@@ -67,7 +67,9 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:mbls.full")} icon={<DOSMWorkerIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:mbls.full")} icon={<DOSMWorkerIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">

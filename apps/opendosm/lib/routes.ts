@@ -17,4 +17,5 @@ export const routes = {
   FORMAL_SECTOR_WAGES: "/dashboard/formal-sector-wages",
   SERVICES_PRODUCER_PRICES: "/dashboard/services-producer-prices",
   POPULATION: "/dashboard/population",
+  HOUSEHOLD_INCOME_EXPENDITURE: "/dashboard/household-income-expenditure",
 } as const;
