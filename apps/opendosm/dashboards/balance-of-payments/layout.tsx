@@ -40,7 +40,7 @@ const BalanceOfPaymentsLayout: FunctionComponent<BalanceOfPaymentsLayoutProps> =
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:bpan.full")} icon={<DOSMAccountingIcon />} isDivision />
+          <AgencyBadge name={t("agencies:bpib.full")} icon={<DOSMAccountingIcon />} isDivision />
         }
       />
 

@@ -112,7 +112,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         {
           name: "household-income-expenditure",
-          agency: "piesd",
+          agency: "dosm",
           route: routes.HOUSEHOLD_INCOME_EXPENDITURE,
         },
       ],
