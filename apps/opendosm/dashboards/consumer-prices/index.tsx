@@ -12,6 +12,7 @@ import InflationGeography from "./inflation-geography";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationTrends from "./inflation-trends";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { DOSMPricesIncomeIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -202,10 +203,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge
-            name={t("agencies:dosm.full")}
-            icon={<DOSMIcon fillColor={AKSARA_COLOR.ORANGE} />}
-          />
+          <AgencyBadge name={t("agencies:piesd.full")} icon={<DOSMPricesIncomeIcon />} />
         }
       />
 

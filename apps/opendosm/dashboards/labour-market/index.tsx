@@ -7,6 +7,7 @@ import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import dynamic from "next/dynamic";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
 import { WithData } from "datagovmy-ui/types";
+import { DOSMWorkerIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Labour Market Dashboard
@@ -63,12 +64,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            name={t("agencies:dosm.full")}
-            icon={<DOSMIcon fillColor={AKSARA_COLOR.PURPLE} />}
-          />
-        }
+        agencyBadge={<AgencyBadge name={t("agencies:mbls.full")} icon={<DOSMWorkerIcon />} />}
       />
 
       <Container className="min-h-screen">

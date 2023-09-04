@@ -8,6 +8,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { DOSMAccountingIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * GDP Dashboard
@@ -182,7 +183,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
+        agencyBadge={<AgencyBadge name={t("agencies:bpan.full")} icon={<DOSMAccountingIcon />} />}
       />
       <SliderProvider>
         {play => (
