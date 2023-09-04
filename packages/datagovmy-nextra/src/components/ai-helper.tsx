@@ -103,6 +103,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
     setFetching(true);
     const payload = {
       model: "gpt-3.5-turbo",
+      chain_type: "docs",
       messages: [
         {
           role: "system",
@@ -207,7 +208,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                         </div>
                         <h3>{t("ai.header")}</h3>
                         <p className="text-center">{t("ai.description")}</p>
-                        <div className="bg-washed inline space-x-1 rounded p-2 text-xs">
+                        <div className="bg-washed dark:bg-washed-dark inline space-x-1 rounded p-2 text-xs">
                           <p className="inline grow">{t("ai.disclaimer")}</p>
                         </div>
                       </div>
@@ -246,9 +247,9 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
                   )}
 
                   {/* Prompt */}
-                  <div className="shadow-floating dark:border-outlineHover-dark mx-5 mb-5 flex items-center gap-2 rounded-lg border bg-white">
+                  <div className="shadow-floating dark:border-outlineHover-dark  mx-5 mb-5 flex items-center gap-2 rounded-lg border bg-white dark:bg-black">
                     <Textarea
-                      className="max-h-[30vh] min-h-[40px] w-full grow bg-white pr-12 pt-3 text-sm dark:border-transparent lg:text-sm"
+                      className="max-h-[30vh] min-h-[40px] w-full grow bg-white pr-12 pt-3 text-sm lg:text-sm"
                       placeholder={t("ai.ask-question")}
                       value={prompt}
                       onChange={e => setPrompt(e.target.value)}
