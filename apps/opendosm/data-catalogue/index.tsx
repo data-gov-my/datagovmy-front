@@ -13,6 +13,7 @@ import {
   Sidebar,
   Label,
   Search,
+  Daterange,
 } from "datagovmy-ui/components";
 import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
@@ -139,10 +140,15 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
     { label: t("filter_options.parlimen"), value: "PARLIMEN" },
     { label: t("filter_options.dun"), value: "DUN" },
   ];
-  // const filterSources: Array<OptionType> = sources.map(source => ({
-  //   label: source,
-  //   value: source,
-  // }));
+  const demographies: OptionType[] = [
+    { label: t("filter_options.sex"), value: "SEX" },
+    { label: t("filter_options.ethnicity"), value: "ETHNICITY" },
+    { label: t("filter_options.age"), value: "AGE" },
+    { label: t("filter_options.religion"), value: "RELIGION" },
+    { label: t("filter_options.nationality"), value: "NATIONALITY" },
+    { label: t("filter_options.disability"), value: "DISABILITY" },
+    { label: t("filter_options.marital"), value: "MARITAL" },
+  ];
   const startYear: number = 1982;
   const endYear: number = new Date().getFullYear();
 
@@ -162,9 +168,9 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
     end: query.end
       ? filterYears(startYear, endYear).find(item => item.value === query.end)
       : undefined,
-    // source: query.source
-    //   ? filterSources.filter(item => query.source.split(",").includes(item.value))
-    //   : [],
+    demography: query.demography
+      ? demographies.filter(item => query.demography.split(",").includes(item.value))
+      : [],
     search: query.search ?? "",
   });
 
@@ -172,6 +178,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
     setFilter("search", "");
     setFilter("period", undefined);
     setFilter("geography", []);
+    setFilter("demography", []);
     setFilter("begin", undefined);
     setFilter("end", undefined);
     // setFilter("source", []);
@@ -286,29 +293,30 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
           selected={filter.geography}
           onChange={e => setFilter("geography", e)}
         />
-
         <Dropdown
-          sublabel={t("begin") + ":"}
-          options={filterYears(startYear, endYear)}
-          selected={filter.begin}
-          placeholder={t("common:common.select")}
-          onChange={e => setFilter("begin", e)}
-        />
-        <Dropdown
-          disabled={!filter.begin}
-          sublabel={t("end") + ":"}
-          options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
-          selected={filter.end}
-          placeholder={t("common:common.select")}
-          onChange={e => setFilter("end", e)}
-        />
-        {/* <Dropdown
           multiple
-          title={t("source")}
-          options={filterSources}
-          selected={filter.source}
-          onChange={e => setFilter("source", e)}
-        /> */}
+          enableClear
+          title={t("demography")}
+          description={t("placeholder.demography") + ":"}
+          options={demographies}
+          selected={filter.demography}
+          onChange={e => setFilter("demography", e)}
+        />
+
+        <Daterange
+          startYear={startYear}
+          endYear={endYear}
+          selectedStart={query.begin}
+          selectedEnd={query.end}
+          onChange={([begin, end]) => {
+            if (begin) setFilter("begin", { label: begin, value: begin });
+            if (end) setFilter("end", { label: end, value: end });
+          }}
+          onReset={() => {
+            setFilter("begin", undefined);
+            setFilter("end", undefined);
+          }}
+        />
       </div>
     </div>
   );
