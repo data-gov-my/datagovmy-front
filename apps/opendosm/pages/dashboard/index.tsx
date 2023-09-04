@@ -100,6 +100,16 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "dosm",
           route: routes.SERVICES_PRODUCER_PRICES,
         },
+        {
+          name: "construction-statistics",
+          agency: "dosm",
+          route: routes.CONSTRUCTION_STATISTICS,
+        },
+        {
+          name: "household-income-expenditure",
+          agency: "piesd",
+          route: routes.HOUSEHOLD_INCOME_EXPENDITURE,
+        },
       ],
     };
 
