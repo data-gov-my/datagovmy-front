@@ -1,10 +1,14 @@
-import { FunctionComponent, ReactNode } from "react";
+import { AccountingIcon } from "@icons/division";
 import { AgencyBadge, Hero } from "datagovmy-ui/components";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
-import { DOSMAccountingIcon } from "datagovmy-ui/icons/departments/dosm";
+import { FunctionComponent, ReactNode } from "react";
 
+/**
+ * Balance Of Payments Layout
+ * @overview Status: Live
+ */
 interface BalanceOfPaymentsLayoutProps {
   children: (tab_index: string) => ReactNode;
   last_updated: string;
@@ -40,7 +44,7 @@ const BalanceOfPaymentsLayout: FunctionComponent<BalanceOfPaymentsLayoutProps> =
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:bpib.full")} icon={<DOSMAccountingIcon />} isDivision />
+          <AgencyBadge name={t("division:bpib.full")} icon={<AccountingIcon />} isDivision />
         }
       />
 

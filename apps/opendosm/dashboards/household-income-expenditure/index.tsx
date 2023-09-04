@@ -1,3 +1,4 @@
+import { PricesIncomeIcon } from "@icons/division";
 import { routes } from "@lib/routes";
 import {
   AgencyBadge,
@@ -14,7 +15,6 @@ import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { Color, useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { MOTIcon } from "datagovmy-ui/icons/agency";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -112,7 +112,9 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
         action={
           <StateDropdown url={routes.HOUSEHOLD_INCOME_EXPENDITURE} currentState={params.state} />
         }
-        agencyBadge={<AgencyBadge icon={<MOTIcon />} name={t("agencies:piesd.full")} isDivision />}
+        agencyBadge={
+          <AgencyBadge icon={<PricesIncomeIcon />} name={t("division:bphpp.full")} isDivision />
+        }
       />
       <Container>
         {/* How is key income and expenditure indicators distributed? */}

@@ -1,10 +1,9 @@
-import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
 import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useData, useTranslation } from "datagovmy-ui/hooks";
+import DivisionIcon, { Division } from "@icons/division";
+import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
 import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useMemo } from "react";
-import { AgencyIcon } from "datagovmy-ui/icons/agency";
-import { Agency } from "datagovmy-ui/types";
 
 /**
  * Dashboard Index
@@ -13,7 +12,7 @@ import { Agency } from "datagovmy-ui/types";
 
 type Dashboard = {
   name: string;
-  agency: Agency;
+  division: Division;
   route: string;
 };
 
@@ -108,18 +107,18 @@ interface RankingProps {
 }
 
 const Ranking = ({ ranks }: RankingProps) => {
-  const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
+  const { t, i18n } = useTranslation(["dashboards", "agencies", "common", "division"]);
 
   return (
     <>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item, i) => (
           <At href={item.route} locale={i18n.language} key={i} prefetch={false}>
-            <div className="group flex h-full w-full flex-col space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark">
+            <div className="group flex h-full w-full flex-col space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 motion-reduce:transition-none dark:border-washed-dark dark:hover:border-outlineHover-dark">
               <div className="relative flex items-center gap-3">
-                <AgencyIcon agency={item.agency} className="h-6 w-6" />
-                <p className="text-sm text-dim">{t(`agencies:${item.agency}.abbr`)}</p>
-                <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+                <DivisionIcon division={item.division} className="h-6 w-6" />
+                <p className="text-sm text-dim">{t(`division:${item.division}.abbr`)}</p>
+                <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none" />
               </div>
               <div className="flex grow flex-col items-start gap-3 overflow-hidden">
                 <div className="grow space-y-3">

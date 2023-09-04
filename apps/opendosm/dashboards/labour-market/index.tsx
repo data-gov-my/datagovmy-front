@@ -1,13 +1,12 @@
+import { WorkerIcon } from "@icons/division";
 import { Container, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
-import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { FunctionComponent } from "react";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
-import dynamic from "next/dynamic";
-import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { WithData } from "datagovmy-ui/types";
-import { DOSMWorkerIcon } from "datagovmy-ui/icons/departments/dosm";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 
 /**
  * Labour Market Dashboard
@@ -65,7 +64,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:mbls.full")} icon={<DOSMWorkerIcon />} isDivision />
+          <AgencyBadge name={t("division:mbls.full")} icon={<WorkerIcon />} isDivision />
         }
       />
 

@@ -1,3 +1,4 @@
+import { LineChartIcon } from "@icons/division";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
@@ -7,8 +8,6 @@ import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useMemo } from "react";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { WithData } from "datagovmy-ui/types";
-import { DOSMIcon } from "datagovmy-ui/icons/agency";
-import { DOSMLineChartIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Composite Index Dashboard
@@ -128,7 +127,7 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:eid.full")} icon={<DOSMLineChartIcon />} isDivision />
+          <AgencyBadge name={t("division:bpe.full")} icon={<LineChartIcon />} isDivision />
         }
       />
 

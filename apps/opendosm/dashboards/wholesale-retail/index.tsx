@@ -1,17 +1,13 @@
-import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
-import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
-import dynamic from "next/dynamic";
-import { numFormat, toDate } from "datagovmy-ui/helpers";
-import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
-import { OptionType } from "datagovmy-ui/types";
-import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { CustomerServiceIcon } from "@icons/division";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
-
-import { track } from "datagovmy-ui/mixpanel";
-import { routes } from "@lib/routes";
-import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { DOSMCustomerServiceIcon } from "datagovmy-ui/icons/departments/dosm";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback, useMemo } from "react";
 
 /**
  * Wholesale & Retail Trade Dashboard
@@ -136,11 +132,7 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge
-            name={t("agencies:ssd.full")}
-            icon={<DOSMCustomerServiceIcon />}
-            isDivision
-          />
+          <AgencyBadge name={t("division:bpp.full")} icon={<CustomerServiceIcon />} isDivision />
         }
       />
 

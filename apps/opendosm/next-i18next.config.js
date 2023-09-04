@@ -17,6 +17,7 @@ const namespaces = [
   "dashboard-manufacturing-statistics",
   "dashboard-producer-prices",
   "dashboard-wholesale-retail",
+  "division",
   "opendosm-home",
   "publications",
   "dashboard-labour-productivity",
@@ -25,4 +26,4 @@ const namespaces = [
   "dashboard-population",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "division"]);
