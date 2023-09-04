@@ -96,6 +96,11 @@ export const getStaticProps: GetStaticProps = withi18n(
           route: routes.FORMAL_SECTOR_WAGES,
         },
         {
+          name: "services-statistics",
+          agency: "dosm",
+          route: routes.SERVICES_STATISTICS,
+        },
+        {
           name: "services-producer-prices",
           agency: "dosm",
           route: routes.SERVICES_PRODUCER_PRICES,

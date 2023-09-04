@@ -4,7 +4,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { BOMBAIcon, DOSMIcon } from "datagovmy-ui/icons/agency";
 import { MetaPage, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
@@ -66,9 +66,8 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
   last_updated,
   timeseries,
   timeseries_callout,
-  meta,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-services-statistics", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-services-statistics", "division", "common"]);
 
   const TYPE_OPTIONS: Array<OptionType> = ServiceType.map(type => {
     return { label: t(`keys.${type}`), value: type };
@@ -113,11 +112,10 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
   );
 
   const getChartData = (charts: string[]): TimeseriesChartData[] => {
-    const unitY = data.trend !== "actual" ? "%" : "";
     return charts.map(name => ({
       title: t(`keys.${name}`),
       prefix: name !== "employees" && data.trend === "actual" ? "RM " : "",
-      unitY: name !== "employees" ? "" : unitY,
+      unitY: data.trend !== "actual" ? "%" : name === "employees" ? " employees" : "",
       label: t(`keys.${name}`),
       data: coordinate[name],
       fill: data.shade === "no_shade",
@@ -154,10 +152,10 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={"agencies:dosm.full"} icon={<DOSMIcon />} isDivision />} // TODO: update when AgencyBadge is fixed
+        agencyBadge={<AgencyBadge name={t("division:bpp.full")} icon={<BOMBAIcon />} isDivision />}
       />
 
-      <Container className="">
+      <Container>
         <Section
           title={t("section_1.title")}
           description={

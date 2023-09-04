@@ -3,6 +3,7 @@ const defineConfig = require("datagovmy-ui/i18n");
 const namespaces = [
   "common",
   "agencies",
+  "division",
   "dashboards",
   "dashboard-bop",
   "dashboard-composite-index",
@@ -21,8 +22,9 @@ const namespaces = [
   "publications",
   "dashboard-labour-productivity",
   "dashboard-formal-sector-wages",
+  "dashboard-services-statistics",
   "dashboard-services-producer-prices",
   "dashboard-population",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
+module.exports = defineConfig(namespaces, ["common", "agencies", "division", "dashboards"]);
