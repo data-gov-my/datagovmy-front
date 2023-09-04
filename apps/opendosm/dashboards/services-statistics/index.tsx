@@ -4,7 +4,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { BOMBAIcon, DOSMIcon } from "datagovmy-ui/icons/agency";
+import { BOMBAIcon } from "datagovmy-ui/icons/agency";
 import { MetaPage, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
@@ -126,16 +126,16 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
           }),
           value: [
             name !== "employees" && data.trend === "actual" ? "RM " : "",
-            timeseries_callout.data[data.type][data.trend][name].latest > 1_000_000
-              ? numFormat(
-                  timeseries_callout.data[data.type][data.trend][name].latest,
-                  "compact",
-                  1,
-                  "long",
-                  i18n.language,
-                  false
-                )
-              : numFormat(timeseries_callout.data[data.type][data.trend][name].latest, "standard"),
+            numFormat(
+              timeseries_callout.data[data.type][data.trend][name].latest,
+              timeseries_callout.data[data.type][data.trend][name].latest > 1_000_000
+                ? "compact"
+                : "standard",
+              name === "employees" && data.trend === "actual" ? [1, 0] : [1, 1],
+              "long",
+              i18n.language,
+              false
+            ),
             data.trend !== "actual" ? "%" : name === "employees" ? " employees" : "",
             ,
           ].join(""),
@@ -198,7 +198,14 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
                         interval="quarter"
                         enableAnimation={!play}
                         displayNumFormat={value =>
-                          numFormat(value, "compact", [1, 0], "long", i18n.language, true)
+                          numFormat(
+                            value,
+                            "compact",
+                            data.trend === "actual" ? [1, 0] : [1, 1],
+                            "long",
+                            i18n.language,
+                            true
+                          )
                         }
                         prefixY={prefix}
                         unitY={unitY}
