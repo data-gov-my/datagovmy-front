@@ -84,7 +84,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     [data.pub, data.query]
   );
 
-  const PUBLICATION_OPTIONS: OptionType[] = data.dropdown.map(e => ({
+  const PUBLICATION_OPTIONS: OptionType[] = dropdown.map(e => ({
     label: e.publication_type_title,
     value: e.publication_type,
   }));
