@@ -24,7 +24,7 @@ interface PublicationModalProps {
   id: string;
   publication?: PubResource;
   show: boolean;
-  type: "/browse/" | "/data-dictionaries/" | "/technical-notes/";
+  type: "/" | "/data-dictionaries/" | "/technical-notes/";
 }
 const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   hide,

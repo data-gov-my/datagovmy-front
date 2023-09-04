@@ -230,7 +230,7 @@ const Home: Page = ({
             >
               {t("common:nav.catalogue")}
             </At>
-            <At className="btn px-3 py-1.5 text-sm" href="/publications/browse" enableIcon>
+            <At className="btn px-3 py-1.5 text-sm" href="/publications" enableIcon>
               {t("common:nav.publications")}
             </At>
           </div>
