@@ -209,7 +209,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
           title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
         >
           {close => (
-            <div className="mb-[105px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 pb-4.5 dark:divide-washed-dark dark:bg-black">
+            <div className="mb-[84px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 pb-4.5 dark:divide-washed-dark dark:bg-black">
               <div className="py-3">
                 <Radio
                   label={t("period")}
@@ -226,6 +226,15 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
                   options={geographies}
                   value={filter.geography}
                   onChange={e => setFilter("geography", e)}
+                />
+              </div>
+              <div className="py-3">
+                <Checkbox
+                  name="demography"
+                  label={t("demography")}
+                  options={demographies}
+                  value={filter.demography}
+                  onChange={e => setFilter("demography", e)}
                 />
               </div>
               <div className="grid grid-cols-2 gap-3 pt-3">
@@ -252,14 +261,13 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
               <div className="fixed bottom-0 left-0 flex w-full flex-col border-t bg-white p-3 dark:border-washed-dark dark:bg-black">
                 <Button
                   variant="primary"
-                  className="w-full justify-center"
+                  className="justify-center"
                   disabled={!actives.length}
                   onClick={reset}
                 >
                   {t("common:common.reset")}
                 </Button>
-                <Button variant="reset" className="w-full justify-center p-0" onClick={close}>
-                  <XMarkIcon className="h-5 w-5" />
+                <Button variant="base" className="justify-center" onClick={close}>
                   {t("common:common.close")}
                 </Button>
               </div>
