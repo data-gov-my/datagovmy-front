@@ -38,3 +38,7 @@ declare module "canvas2svg" {
   export default (width: number, height: number) => any;
   getSerializedSvg();
 }
+
+declare module "geojson-bbox" {
+  export default function (geojson: GeoJSONObject): [number, number, number, number] {}
+}

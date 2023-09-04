@@ -191,7 +191,7 @@ export const sortAlpha = (array: Array<Record<string, any>>, key: string): Array
 export const sortMulti = (
   object: Record<string, any[]>,
   index: string,
-  sort: (a: number, b: number) => number
+  sort: (a: number | string, b: number | string) => number
 ) => {
   const indexed = Array.from(object[index].keys()).sort((a, b) =>
     sort(object[index][a], object[index][b])

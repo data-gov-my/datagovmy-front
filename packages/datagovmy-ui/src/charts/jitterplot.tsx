@@ -1,4 +1,4 @@
-import { ScriptableContext } from "chart.js";
+import type { ScriptableContext } from "chart.js";
 import { FunctionComponent, ReactNode, useCallback, useMemo } from "react";
 import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } from "chart.js";
 import { Bubble } from "react-chartjs-2";
@@ -11,7 +11,7 @@ import { ChartCrosshairOption } from "../../types";
 type JitterDatum = {
   x: number;
   y: number;
-  id: string;
+  area: string;
   tooltip: string | number;
 };
 export type JitterData = {
@@ -97,12 +97,13 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
 
         callbacks: {
           label: function (item: any) {
-            if (!item.raw.id) return "";
-            if (!formatTooltip) return `${item.raw.id}: ${item.raw.tooltip}`;
+            if (!item.raw.area) return "";
+            if (!formatTooltip) return `${item.raw.area}: ${item.raw.tooltip}`;
 
+            console.log(data.key);
             return formatTooltip(data.key, item.raw.tooltip)
-              ? `${item.raw.id}: ${formatTooltip(data.key, item.raw.tooltip)}`
-              : item.raw.id;
+              ? `${item.raw.area}: ${formatTooltip(data.key, item.raw.tooltip)}`
+              : item.raw.area;
           },
         },
       },
@@ -134,11 +135,11 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
     }
   >(
     ({ raw }: ScriptableContext<"bubble">) => {
-      if (active.toLowerCase().includes((raw as JitterDatum)?.id.toLowerCase()))
+      if (active.toLowerCase().includes((raw as JitterDatum)?.area.toLowerCase()))
         return { backgroundColor: AKSARA_COLOR.BLACK, radius: 6, hoverRadius: 1 };
 
       const index = actives.findIndex(item =>
-        item.toLowerCase().includes((raw as JitterDatum).id.toLowerCase())
+        item.toLowerCase().includes((raw as JitterDatum).area.toLowerCase())
       );
 
       switch (index) {
@@ -162,7 +163,7 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
     };
 
     data.data.forEach(item => {
-      if ([active, ...actives].some(raw => raw.split(",")[0].includes(item.id))) {
+      if ([active, ...actives].some(raw => raw.split(",")[0].includes(item.area))) {
         result.actives.push(item);
       } else {
         result.default.push(item);
@@ -175,9 +176,9 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
   return (
     <>
       {data.data[0].x !== null && (
-        <div className="grid w-full grid-cols-1 items-center gap-1 lg:grid-cols-5">
-          <p className="bg-white">{formatTitle ? formatTitle(data.key) : data.key}</p>
-          <div className="col-span-1 overflow-visible lg:col-span-4">
+        <div className="grid w-full grid-cols-1 items-center gap-1 lg:grid-cols-4">
+          <div className=" bg-white">{formatTitle ? formatTitle(data.key) : data.key}</div>
+          <div className="col-span-1 overflow-visible lg:col-span-3">
             <Bubble
               className="bg-outline/20 h-10 overflow-visible rounded-full border px-4"
               options={options}
@@ -223,7 +224,7 @@ const dummy: JitterDatum[] = Array(Object.keys(CountryAndStates).length)
     (_, index): JitterDatum => ({
       x: Math.floor(Math.random() * 100 + 0),
       y: Math.floor(Math.random() * 100 + 0),
-      id: Object.values(CountryAndStates)[index],
+      area: Object.values(CountryAndStates)[index],
       tooltip: 1,
     })
   );
