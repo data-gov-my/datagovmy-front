@@ -227,9 +227,16 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
                       title={t(`${key}_title`)}
                       enableAnimation={!play}
                       interval="year"
-                      precision={key === "gini" ? 3 : 0}
-                      prefixY={key !== "gini" ? "RM" : ""}
-                      unitY={key !== "gini" ? `/${t("month")}` : ""}
+                      precision={key === "gini" ? 1 : 0}
+                      prefixY={key !== "gini" ? "RM " : ""}
+                      tooltipCallback={item =>
+                        key !== "gini"
+                          ? [
+                              item.dataset.label,
+                              "RM" + numFormat(item.parsed.y, "standard", 0) + `/${t("month")}`,
+                            ].join(": ")
+                          : [item.dataset.label, numFormat(item.parsed.y, "standard", 3)].join(": ")
+                      }
                       data={{
                         labels: coordinate.x,
                         datasets: [
