@@ -228,6 +228,8 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
                       enableAnimation={!play}
                       interval="year"
                       precision={key === "gini" ? 3 : 0}
+                      prefixY={key !== "gini" ? "RM" : ""}
+                      unitY={key !== "gini" ? `/${t("month")}` : ""}
                       data={{
                         labels: coordinate.x,
                         datasets: [
