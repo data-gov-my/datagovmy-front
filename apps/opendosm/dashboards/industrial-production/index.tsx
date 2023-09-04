@@ -11,6 +11,7 @@ import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { WithData } from "datagovmy-ui/types";
+import { DOSMToolsIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Industrial Production Dashboard
@@ -130,11 +131,7 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge
-            name={t("agencies:dosm.full")}
-            icon={<DOSMIcon fillColor={AKSARA_COLOR.DANGER} />}
-            isDivision
-          />
+          <AgencyBadge name={t("agencies:bppib.full")} icon={<DOSMToolsIcon />} isDivision />
         }
       />
 

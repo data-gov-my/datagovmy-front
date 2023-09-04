@@ -8,6 +8,7 @@ import { FunctionComponent, useCallback, useMemo } from "react";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { WithData } from "datagovmy-ui/types";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { DOSMLineChartIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Composite Index Dashboard
@@ -126,7 +127,9 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} isDivision />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:eid.full")} icon={<DOSMLineChartIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">

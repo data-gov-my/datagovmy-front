@@ -11,6 +11,7 @@ import { track } from "datagovmy-ui/mixpanel";
 import { routes } from "@lib/routes";
 import { DOSMIcon } from "datagovmy-ui/icons/agency";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { DOSMCustomerServiceIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Wholesale & Retail Trade Dashboard
@@ -136,8 +137,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
         last_updated={last_updated}
         agencyBadge={
           <AgencyBadge
-            name={t("agencies:dosm.full")}
-            icon={<DOSMIcon fillColor={AKSARA_COLOR.DANGER} />}
+            name={t("agencies:ssd.full")}
+            icon={<DOSMCustomerServiceIcon />}
             isDivision
           />
         }

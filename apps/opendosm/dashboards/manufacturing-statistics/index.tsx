@@ -4,7 +4,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { BOMBAIcon } from "datagovmy-ui/icons/agency";
+import { DOSMToolsIcon } from "datagovmy-ui/icons/departments/dosm";
 import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
@@ -122,7 +122,7 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:bppib.full")} icon={<BOMBAIcon />} isDivision />
+          <AgencyBadge name={t("agencies:bppib.full")} icon={<DOSMToolsIcon />} isDivision />
         }
       />
 
