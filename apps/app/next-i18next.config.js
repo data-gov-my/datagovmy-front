@@ -18,7 +18,6 @@ const namespaces = [
   "dashboard-currency-in-circulation",
   "dashboard-election-explorer",
   "dashboard-emergency-response",
-  "dashboard-exchange-rates",
   "dashboard-fire-and-rescue",
   "dashboard-flood-warning",
   "dashboard-gdp",
