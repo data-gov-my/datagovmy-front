@@ -115,6 +115,11 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "dosm",
           route: routes.HOUSEHOLD_INCOME_EXPENDITURE,
         },
+        {
+          name: "exchange-rates",
+          agency: "dosm",
+          route: routes.EXCHANGE_RATE,
+        },
       ],
     };
 

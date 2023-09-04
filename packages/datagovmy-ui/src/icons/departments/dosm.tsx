@@ -154,7 +154,7 @@ export const DOSMTrainingIcon: FunctionComponent<IconProps> = ({
 
 export const DOSMIntegrationDataIcon: FunctionComponent<IconProps> = ({
   className,
-  fillColor = AKSARA_COLOR.PRIMARY,
+  fillColor = AKSARA_COLOR.BLACK,
 }) => {
   return (
     <svg

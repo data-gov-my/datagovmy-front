@@ -18,4 +18,5 @@ export const routes = {
   SERVICES_PRODUCER_PRICES: "/dashboard/services-producer-prices",
   POPULATION: "/dashboard/population",
   HOUSEHOLD_INCOME_EXPENDITURE: "/dashboard/household-income-expenditure",
+  EXCHANGE_RATE: "/dashboard/exchange-rates",
 } as const;
