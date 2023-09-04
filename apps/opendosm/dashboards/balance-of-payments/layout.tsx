@@ -3,7 +3,7 @@ import { AgencyBadge, Hero } from "datagovmy-ui/components";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
-import { MOTIcon } from "datagovmy-ui/icons/agency";
+import { DOSMAccountingIcon } from "datagovmy-ui/icons/departments/dosm";
 
 interface BalanceOfPaymentsLayoutProps {
   children: (tab_index: string) => ReactNode;
@@ -39,7 +39,9 @@ const BalanceOfPaymentsLayout: FunctionComponent<BalanceOfPaymentsLayoutProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:bpan.full")} icon={<MOTIcon />} isDivision />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:bpib.full")} icon={<DOSMAccountingIcon />} isDivision />
+        }
       />
 
       <nav className="sticky top-14 z-20 flex overflow-hidden border-b border-b-outline bg-white dark:border-b-washed-dark dark:bg-black min-[350px]:justify-center lg:static">
