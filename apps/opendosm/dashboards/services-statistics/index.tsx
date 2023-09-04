@@ -113,12 +113,11 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
   );
 
   const getChartData = (charts: string[]): TimeseriesChartData[] => {
-    const prefix = data.trend !== "actual" ? "" : "RM ";
     const unitY = data.trend !== "actual" ? "%" : "";
     return charts.map(name => ({
       title: t(`keys.${name}`),
-      prefix,
-      unitY,
+      prefix: name !== "employees" && data.trend === "actual" ? "RM " : "",
+      unitY: name !== "employees" ? "" : unitY,
       label: t(`keys.${name}`),
       data: coordinate[name],
       fill: data.shade === "no_shade",
@@ -128,16 +127,19 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
             date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
           }),
           value: [
-            prefix,
-            numFormat(
-              timeseries_callout.data[data.type][data.trend][name].latest,
-              "compact",
-              1,
-              "long",
-              i18n.language,
-              false
-            ),
-            unitY,
+            name !== "employees" && data.trend === "actual" ? "RM " : "",
+            timeseries_callout.data[data.type][data.trend][name].latest > 1_000_000
+              ? numFormat(
+                  timeseries_callout.data[data.type][data.trend][name].latest,
+                  "compact",
+                  1,
+                  "long",
+                  i18n.language,
+                  false
+                )
+              : numFormat(timeseries_callout.data[data.type][data.trend][name].latest, "standard"),
+            data.trend !== "actual" ? "%" : name === "employees" ? " employees" : "",
+            ,
           ].join(""),
         },
       ],
@@ -198,7 +200,7 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
                         interval="quarter"
                         enableAnimation={!play}
                         displayNumFormat={value =>
-                          numFormat(value, "compact", 1, "long", i18n.language, true)
+                          numFormat(value, "compact", [1, 0], "long", i18n.language, true)
                         }
                         prefixY={prefix}
                         unitY={unitY}
