@@ -14,6 +14,7 @@ type Dashboard = {
   name: string;
   division: Division;
   route: string;
+  colour?: string;
 };
 
 interface DashboardIndexProps {
@@ -116,7 +117,11 @@ const Ranking = ({ ranks }: RankingProps) => {
           <At href={item.route} locale={i18n.language} key={i} prefetch={false}>
             <div className="group flex h-full w-full flex-col space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 motion-reduce:transition-none dark:border-washed-dark dark:hover:border-outlineHover-dark">
               <div className="relative flex items-center gap-3">
-                <DivisionIcon division={item.division} className="h-6 w-6" />
+                <DivisionIcon
+                  division={item.division}
+                  className="h-6 w-6"
+                  fillColor={item.colour}
+                />
                 <p className="text-sm text-dim">{t(`division:${item.division}.abbr`)}</p>
                 <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none" />
               </div>

@@ -6,6 +6,7 @@ import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 import { routes } from "@lib/routes";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 
 const DashboardIndex: Page = ({ dashboards }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboards", "common"]);
@@ -26,29 +27,20 @@ export const getStaticProps: GetStaticProps = withi18n(
       data_as_of: "2023-06-19 23:59",
       data: [
         {
-          name: "bop",
-          division: "bpib",
-          route: routes.BOP,
+          name: "population",
+          division: "bppd",
+          route: routes.POPULATION,
         },
         {
-          name: "composite-index",
-          division: "bpe",
-          route: routes.COMPOSITE_INDEX,
+          name: "kawasanku",
+          division: "bipd",
+          route: routes.KAWASANKU,
         },
         {
-          name: "construction-statistics",
-          division: "bppib",
-          route: routes.CONSTRUCTION_STATISTICS,
-        },
-        {
-          name: "consumer-prices",
+          name: "household-income-expenditure",
           division: "bphpp",
-          route: routes.CONSUMER_PRICES,
-        },
-        {
-          name: "formal-sector-wages",
-          division: "mbls",
-          route: routes.FORMAL_SECTOR_WAGES,
+          route: routes.HOUSEHOLD_INCOME_EXPENDITURE,
+          colour: AKSARA_COLOR.PRIMARY,
         },
         {
           name: "gdp",
@@ -56,44 +48,24 @@ export const getStaticProps: GetStaticProps = withi18n(
           route: routes.GDP,
         },
         {
-          name: "household-income-expenditure",
-          division: "bphpp",
-          route: routes.HOUSEHOLD_INCOME_EXPENDITURE,
-        },
-        {
-          name: "industrial-production",
-          division: "bppib",
-          route: routes.INDUSTRIAL_PRODUCTION,
-        },
-        {
           name: "iip",
           division: "bpan",
           route: routes.IIP,
         },
         {
-          name: "kawasanku",
-          division: "bpm",
-          route: routes.KAWASANKU,
+          name: "bop",
+          division: "bpib",
+          route: routes.BOP,
         },
         {
-          name: "labour-market",
-          division: "mbls",
-          route: routes.LABOUR_MARKET,
+          name: "external-trade",
+          division: "bppa",
+          route: routes.EXCHANGE_RATES,
         },
         {
-          name: "labour-productivity",
-          division: "mbls",
-          route: routes.LABOUR_PRODUCTIVITY,
-        },
-        {
-          name: "manufacturing-statistics",
-          division: "bppib",
-          route: routes.MANUFACTURING_STATISTICS,
-        },
-        {
-          name: "population",
-          division: "bppd",
-          route: routes.POPULATION,
+          name: "consumer-prices",
+          division: "bphpp",
+          route: routes.CONSUMER_PRICES,
         },
         {
           name: "producer-prices",
@@ -106,9 +78,54 @@ export const getStaticProps: GetStaticProps = withi18n(
           route: routes.SERVICES_PRODUCER_PRICES,
         },
         {
+          name: "labour-market",
+          division: "mbls",
+          route: routes.LABOUR_MARKET,
+        },
+        {
+          name: "formal-sector-wages",
+          division: "mbls",
+          route: routes.FORMAL_SECTOR_WAGES,
+        },
+        {
+          name: "labour-productivity",
+          division: "mbls",
+          route: routes.LABOUR_PRODUCTIVITY,
+        },
+        {
+          name: "services-statistics",
+          division: "bpp",
+          route: routes.SERVICES_STATISTICS,
+        },
+        {
           name: "wholesale-retail",
           division: "bpp",
           route: routes.WHOLESALE_RETAIL,
+        },
+        {
+          name: "manufacturing-statistics",
+          division: "bppib",
+          route: routes.MANUFACTURING_STATISTICS,
+        },
+        {
+          name: "industrial-production",
+          division: "bppib",
+          route: routes.INDUSTRIAL_PRODUCTION,
+        },
+        {
+          name: "construction-statistics",
+          division: "bppib",
+          route: routes.CONSTRUCTION_STATISTICS,
+        },
+        {
+          name: "composite-index",
+          division: "bpe",
+          route: routes.COMPOSITE_INDEX,
+        },
+        {
+          name: "exchange-rates",
+          division: "bipd",
+          route: routes.EXCHANGE_RATES,
         },
       ],
     };

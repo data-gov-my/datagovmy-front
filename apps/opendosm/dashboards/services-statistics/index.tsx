@@ -153,7 +153,7 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={"division:bpp.full"} icon={<CustomerServiceIcon />} isDivision />
+          <AgencyBadge name={t("division:bpp.full")} icon={<CustomerServiceIcon />} isDivision />
         }
       />
 

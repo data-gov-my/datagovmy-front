@@ -653,9 +653,14 @@ export type Division =
 interface DivisionIconProps {
   division: Division;
   className?: string;
+  fillColor?: string;
 }
 
-export const DivisionIcon: FunctionComponent<DivisionIconProps> = ({ division, className }) => {
+export const DivisionIcon: FunctionComponent<DivisionIconProps> = ({
+  division,
+  className,
+  fillColor,
+}) => {
   const Components: Record<Division, FunctionComponent<IconProps>> = {
     bipd: IntegrationDataIcon,
     bkp: CorporateIcon,
@@ -679,7 +684,7 @@ export const DivisionIcon: FunctionComponent<DivisionIconProps> = ({ division, c
   const Icon = Components[division];
 
   if (typeof Icon !== "undefined") {
-    return createElement(Icon, { className });
+    return createElement(Icon, { className, fillColor });
   }
   return createElement(JataNegara, { className });
 };

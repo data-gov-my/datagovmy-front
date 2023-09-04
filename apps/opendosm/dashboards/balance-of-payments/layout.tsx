@@ -1,4 +1,4 @@
-import { AccountingIcon } from "@icons/division";
+import { GlobeIcon } from "@icons/division";
 import { AgencyBadge, Hero } from "datagovmy-ui/components";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -43,9 +43,7 @@ const BalanceOfPaymentsLayout: FunctionComponent<BalanceOfPaymentsLayoutProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge name={t("division:bpib.full")} icon={<AccountingIcon />} isDivision />
-        }
+        agencyBadge={<AgencyBadge name={t("division:bpib.full")} icon={<GlobeIcon />} isDivision />}
       />
 
       <nav className="sticky top-14 z-20 flex overflow-hidden border-b border-b-outline bg-white dark:border-b-washed-dark dark:bg-black min-[350px]:justify-center lg:static">

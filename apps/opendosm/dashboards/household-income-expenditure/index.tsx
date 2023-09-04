@@ -113,7 +113,11 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
           <StateDropdown url={routes.HOUSEHOLD_INCOME_EXPENDITURE} currentState={params.state} />
         }
         agencyBadge={
-          <AgencyBadge icon={<PricesIncomeIcon />} name={t("division:bphpp.full")} isDivision />
+          <AgencyBadge
+            icon={<PricesIncomeIcon fillColor={AKSARA_COLOR.PRIMARY} />}
+            name={t("division:bphpp.full")}
+            isDivision
+          />
         }
       />
       <Container>
