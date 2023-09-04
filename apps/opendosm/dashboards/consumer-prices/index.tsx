@@ -205,6 +205,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
           <AgencyBadge
             name={t("agencies:dosm.full")}
             icon={<DOSMIcon fillColor={AKSARA_COLOR.ORANGE} />}
+            isDivision
           />
         }
       />

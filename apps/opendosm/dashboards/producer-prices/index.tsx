@@ -140,6 +140,7 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
           <AgencyBadge
             name={t("agencies:dosm.full")}
             icon={<DOSMIcon fillColor={AKSARA_COLOR.ORANGE} />}
+            isDivision
           />
         }
       />

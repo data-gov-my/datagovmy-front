@@ -209,6 +209,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
           <AgencyBadge
             name={t("agencies:piesd.full")}
             icon={<JIMIcon fillColor={AKSARA_COLOR.ORANGE} />}
+            isDivision
           />
         }
       />

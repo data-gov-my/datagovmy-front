@@ -132,7 +132,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:bpan.full")} icon={<MOTIcon />} />}
+        agencyBadge={<AgencyBadge name={t("agencies:bpan.full")} icon={<MOTIcon />} isDivision />}
       />
 
       <Container className="min-h-screen">
