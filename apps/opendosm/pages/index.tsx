@@ -40,10 +40,10 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
 });
 
 const Home: Page = ({
-  // highlights,
-  timeseries,
-  timeseries_callouts,
   analytics,
+  keystats,
+  timeseries,
+  timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { size } = useContext(WindowContext);
   const { t, i18n } = useTranslation("opendosm-home");
@@ -62,12 +62,12 @@ const Home: Page = ({
       {
         title: t("daily"),
         value:
-          yieldPrefix(timeseries_callouts.data[key].callout1) +
-          numFormat(timeseries_callouts.data[key].callout1, "standard"),
+          yieldPrefix(timeseries_callout.data[key].callout1) +
+          numFormat(timeseries_callout.data[key].callout1, "standard"),
       },
       {
         title: t("total"),
-        value: numFormat(timeseries_callouts.data[key].callout2, "standard"),
+        value: numFormat(timeseries_callout.data[key].callout2, "standard"),
       },
     ];
   };
@@ -97,7 +97,7 @@ const Home: Page = ({
         title: t("stats.population"),
         url: routes.KAWASANKU,
         value: numFormat(
-          33_400_000, //highlights.data.population.callout,
+          keystats.data.population.callout,
           "compact",
           1,
           "long",
@@ -109,12 +109,7 @@ const Home: Page = ({
         icon: <EconomicGrowthIcon className="h-5 w-5" />,
         title: t("stats.economic_growth"),
         url: routes.GDP,
-        value:
-          numFormat(
-            2.9, //highlights.data.growth.callout,
-            "compact",
-            1
-          ) + "%",
+        value: numFormat(keystats.data.growth.callout, "compact", 1) + "%",
       },
       {
         icon: <BankIcon className="h-4 w-4" />,
@@ -122,46 +117,27 @@ const Home: Page = ({
         url: `https://data.gov.my/${
           i18n.language === "ms-MY" ? "ms-MY/" : ""
         }dashboard/interest-rates`,
-        value:
-          numFormat(
-            3, //highlights.data.opr.callout,
-            "compact",
-            2
-          ) + "%",
+        value: numFormat(keystats.data.opr.callout, "compact", 2) + "%",
       },
       {
         icon: <UnemploymentIcon className="h-5 w-5" />,
         title: t("stats.unemployment"),
         url: routes.LABOUR_MARKET,
-        value:
-          numFormat(
-            3.4, //highlights.data.unemployment.callout,
-            "compact",
-            1
-          ) + "%",
+        value: numFormat(keystats.data.unemployment.callout, "compact", 1) + "%",
       },
       {
         icon: <InflationIcon className="h-5 w-5" />,
         title: t("stats.inflation"),
         url: routes.CONSUMER_PRICES,
-        value:
-          numFormat(
-            2.4, //highlights.data.inflation.callout,
-            "compact",
-            1
-          ) + "%",
+        value: numFormat(keystats.data.inflation.callout, "compact", 1) + "%",
       },
       {
         icon: <ProductionIcon className="h-5 w-5" />,
         title: t("stats.production_cost"),
         url: routes.PRODUCER_PRICES,
         value:
-          yieldPrefix(-4.8) + //highlights.data.ppi.callout) +
-          numFormat(
-            -4.8, //highlights.data.ppi.callout,
-            "compact",
-            1
-          ) +
+          yieldPrefix(keystats.data.ppi.callout) +
+          numFormat(keystats.data.ppi.callout, "compact", 1) +
           "%",
       },
       {
@@ -169,12 +145,8 @@ const Home: Page = ({
         title: t("stats.industrial_production"),
         url: routes.INDUSTRIAL_PRODUCTION,
         value:
-          yieldPrefix(-2.2) + //highlights.data.ipi.callout) +
-          numFormat(
-            -2.2, //highlights.data.ipi.callout,
-            "compact",
-            1
-          ) +
+          yieldPrefix(keystats.data.ipi.callout) +
+          numFormat(keystats.data.ipi.callout, "compact", 1) +
           "%",
       },
       {
@@ -182,27 +154,13 @@ const Home: Page = ({
         title: t("stats.wholesale_retail"),
         url: routes.WHOLESALE_RETAIL,
         value:
-          yieldPrefix(3.1) + //highlights.data.iowrt.callout) +
-          numFormat(
-            3.1, //highlights.data.iowrt.callout,
-            "compact",
-            1
-          ) +
+          yieldPrefix(keystats.data.iowrt.callout) +
+          numFormat(keystats.data.iowrt.callout, "compact", 1) +
           "%",
       },
     ],
     []
   );
-
-  // useEffect(() => {
-  //   track("page_view", {
-  //     type: "dashboard",
-  //     id: "home",
-  //     name_en: "Home",
-  //     name_bm: "Utama",
-  //     route: routes.HOME,
-  //   });
-  // }, []);
 
   return (
     <>
@@ -210,7 +168,7 @@ const Home: Page = ({
 
       <Hero
         background={clx(
-          theme === undefined && "blue",
+          theme === undefined && "gray",
           theme === "light" && "home-banner",
           theme === "dark" && "home-banner-dark"
         )}
@@ -230,7 +188,7 @@ const Home: Page = ({
             >
               {t("common:nav.catalogue")}
             </At>
-            <At className="btn px-3 py-1.5 text-sm" href="/publications/browse" enableIcon>
+            <At className="btn px-3 py-1.5 text-sm" href="/publications" enableIcon>
               {t("common:nav.publications")}
             </At>
           </div>
@@ -279,7 +237,7 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                <Ranking ranks={panel.data.dashboard_views} />
+                <Ranking ranks={panel.data.dashboard} />
               </Tabs.Panel>
             ))}
           </Tabs>
@@ -303,7 +261,7 @@ const Home: Page = ({
           >
             {PANELS.map((panel, index) => (
               <Tabs.Panel name={panel.name as string} key={index}>
-                <Ranking ranks={panel.data.dataset_views} />
+                <Ranking ranks={panel.data.dataset} />
               </Tabs.Panel>
             ))}
           </Tabs>
@@ -432,7 +390,7 @@ const Ranking = ({ ranks }: RankingProps) => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n("opendosm-home", async () => {
-  const { data } = await get("/dashboard/", { dashboard: "homepage" });
+  const { data } = await get("/dashboard/", { dashboard: "opendosm_homepage" });
 
   return {
     props: {
@@ -442,14 +400,24 @@ export const getStaticProps: GetStaticProps = withi18n("opendosm-home", async ()
         category: null,
         agency: null,
       },
-      timeseries_callouts: data.statistics,
-      timeseries: data.timeseries,
-      // highlights: data.highlight,
       analytics: {
         data_as_of: data.table_summary.data_as_of,
-        today: data.table_summary.data.today,
-        all_time: data.table_summary.data.all_time,
+        today: {
+          dataset: data.table_summary.data.dataset_views.today,
+          dashboard: data.table_summary.data.dashboard_views.today,
+        },
+        last_month: {
+          dataset: data.table_summary.data.dataset_views.last_month,
+          dashboard: data.table_summary.data.dashboard_views.last_month,
+        },
+        all_time: {
+          dataset: data.table_summary.data.dataset_views.all_time,
+          dashboard: data.table_summary.data.dashboard_views.all_time,
+        },
       },
+      keystats: data.keystats,
+      timeseries: data.timeseries,
+      timeseries_callout: data.timeseries_callout,
     },
   };
 });

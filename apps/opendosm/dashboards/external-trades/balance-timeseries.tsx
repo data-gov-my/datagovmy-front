@@ -14,6 +14,11 @@ import {
   TimeseriesOptionsCallout,
 } from ".";
 
+/**
+ * External Trade Statistics - Balance
+ * @overview Status: Live
+ */
+
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface TradeBalanceTimeseriesProps {

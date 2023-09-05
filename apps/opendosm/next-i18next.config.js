@@ -18,6 +18,7 @@ const namespaces = [
   "dashboard-manufacturing-statistics",
   "dashboard-producer-prices",
   "dashboard-wholesale-retail",
+  "division",
   "opendosm-home",
   "publications",
   "dashboard-labour-productivity",

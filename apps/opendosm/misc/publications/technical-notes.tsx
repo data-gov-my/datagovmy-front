@@ -71,6 +71,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
       events.off("routeChangeComplete", () => setData("loading", false));
     };
   }, []);
+
   return (
     <Container className="min-h-screen">
       <Section>
@@ -112,7 +113,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
                       item.publication_id,
                       actives.length ? queries : ""
                     ),
-                    undefined,
+                    routes.PUBLICATIONS.concat("/technical-notes/", item.publication_id),
                     {
                       scroll: false,
                     }

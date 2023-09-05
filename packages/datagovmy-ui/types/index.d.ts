@@ -205,4 +205,5 @@ export type Agency =
   | "phcorp"
   | "perkeso"
   | "spr"
+  | "ssm"
   | "unhcr";

@@ -1,8 +1,7 @@
+import { ShippingIcon } from "@icons/division";
 import { AgencyBadge, Container, Hero } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { DOSMShippingIcon } from "datagovmy-ui/icons/departments/dosm";
 import { OptionType, WithData } from "datagovmy-ui/types";
-import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 import TradeBalanceTimeseries from "./balance-timeseries";
 import IndicesTimeseries from "./indices-timeseries";
@@ -20,8 +19,6 @@ export interface TimeseriesChartData {
   stats: Array<{ title: string; value: string }>;
   prefix: string;
 }
-
-const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 export type TimeseriesData = "x" | "balance" | "exports" | "imports" | "total" | "recession";
 
@@ -108,7 +105,7 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("division:bppa.full")} icon={<DOSMShippingIcon />} />}
+        agencyBadge={<AgencyBadge name={t("division:bppa.full")} icon={<ShippingIcon />} />}
       />
       <Container className="min-h-screen">
         <TradeBalanceTimeseries

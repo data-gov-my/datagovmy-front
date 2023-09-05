@@ -1,3 +1,4 @@
+import { PricesIncomeIcon } from "@icons/division";
 import { routes } from "@lib/routes";
 import {
   AgencyBadge,
@@ -14,7 +15,6 @@ import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { Color, useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { MOTIcon } from "datagovmy-ui/icons/agency";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -112,7 +112,13 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
         action={
           <StateDropdown url={routes.HOUSEHOLD_INCOME_EXPENDITURE} currentState={params.state} />
         }
-        agencyBadge={<AgencyBadge icon={<MOTIcon />} name={t("agencies:piesd.full")} isDivision />}
+        agencyBadge={
+          <AgencyBadge
+            icon={<PricesIncomeIcon fillColor={AKSARA_COLOR.PRIMARY} />}
+            name={t("division:bphpp.full")}
+            isDivision
+          />
+        }
       />
       <Container>
         {/* How is key income and expenditure indicators distributed? */}
@@ -227,9 +233,16 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
                       title={t(`${key}_title`)}
                       enableAnimation={!play}
                       interval="year"
-                      precision={key === "gini" ? 3 : 0}
-                      prefixY={key !== "gini" ? "RM" : ""}
-                      unitY={key !== "gini" ? `/${t("month")}` : ""}
+                      precision={key === "gini" ? 1 : 0}
+                      prefixY={key !== "gini" ? "RM " : ""}
+                      tooltipCallback={item =>
+                        key !== "gini"
+                          ? [
+                              item.dataset.label,
+                              "RM" + numFormat(item.parsed.y, "standard", 0) + `/${t("month")}`,
+                            ].join(": ")
+                          : [item.dataset.label, numFormat(item.parsed.y, "standard", 3)].join(": ")
+                      }
                       data={{
                         labels: coordinate.x,
                         datasets: [
