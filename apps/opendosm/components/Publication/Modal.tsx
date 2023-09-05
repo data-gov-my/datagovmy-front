@@ -43,6 +43,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   const filteredRes = useMemo(
     () =>
       matchSorter(publication ? publication.resources : [], data.query, {
+        baseSort: (a, b) => (a.index < b.index ? -1 : 1), // no sort
         keys: ["resource_name"],
       }),
     [publication, data.query]
