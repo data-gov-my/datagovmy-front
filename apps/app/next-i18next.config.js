@@ -16,6 +16,7 @@ const namespaces = [
   "dashboard-covid-19",
   "dashboard-covid-vaccination",
   "dashboard-currency-in-circulation",
+  "dashboard-drug-addiction",
   "dashboard-election-explorer",
   "dashboard-emergency-response",
   "dashboard-fire-and-rescue",
