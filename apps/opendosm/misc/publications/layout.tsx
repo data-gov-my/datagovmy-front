@@ -86,12 +86,12 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
                     <div className="hidden sm:block">{nav.icon}</div>
                     <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
                     {startsWith(nav.url) && (
-                      <div className="absolute bottom-0 inline-flex h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:hidden"></div>
+                      <div className="absolute bottom-0 inline-flex h-[2px] w-full rounded-full bg-primary dark:bg-primary-dark sm:hidden"></div>
                     )}
                   </div>
                 </div>
                 {startsWith(nav.url) && (
-                  <div className="absolute bottom-0 hidden h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:inline-flex"></div>
+                  <div className="absolute bottom-0 hidden h-[2px] w-full rounded-full bg-primary dark:bg-primary-dark sm:inline-flex"></div>
                 )}
               </At>
             </div>
