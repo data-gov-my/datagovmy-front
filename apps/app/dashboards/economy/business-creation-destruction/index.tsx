@@ -28,7 +28,6 @@ export interface TimeseriesChartData {
   data: number[];
   fill: boolean;
   stats: Array<{ title: string; value: string }>;
-  prefix: string;
   colors: {
     backgroundColor?: string;
     borderColor?: string;
@@ -126,7 +125,6 @@ const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDe
     return charts.map(name => {
       const {
         title,
-        prefix,
         label,
         data: datum,
         fill,
@@ -134,7 +132,6 @@ const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDe
         colors,
       }: TimeseriesChartData = {
         title: t(`keys.${name}`),
-        prefix: "",
         label: t(`keys.${name}`),
         data: coordinate[name],
         fill: true,
