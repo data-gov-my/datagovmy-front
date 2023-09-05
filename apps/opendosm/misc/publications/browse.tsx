@@ -168,9 +168,18 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             className="link-primary font-normal"
             onClick={() => {
               setShow(true);
-              push(routes.PUBLICATIONS.concat("/", row.original.publication_id), undefined, {
-                scroll: false,
-              });
+              push(
+                routes.PUBLICATIONS.concat(
+                  "/",
+                  row.original.publication_id,
+                  actives.length ? queries : ""
+                ),
+                routes.PUBLICATIONS.concat("/", row.original.publication_id),
+                {
+                  scroll: false,
+                }
+              );
+              fetchResource(row.original.publication_id).then(data => setData("pub", data));
             }}
           >
             {getValue()}
@@ -405,7 +414,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                           item.publication_id,
                           actives.length ? queries : ""
                         ),
-                        undefined,
+                        routes.PUBLICATIONS.concat("/", item.publication_id),
                         { scroll: false }
                       );
                       fetchResource(item.publication_id).then(data => setData("pub", data));
@@ -432,7 +441,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           show={show}
           hide={() => {
             setShow(false);
-            push(routes.PUBLICATIONS.concat("/", actives.length ? queries : ""), undefined, {
+            push(routes.PUBLICATIONS.concat(actives.length ? queries : ""), undefined, {
               scroll: false,
             });
           }}
