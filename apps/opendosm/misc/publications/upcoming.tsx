@@ -478,6 +478,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
               <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setFilter("page", `${+filter.page - 1}`);
@@ -496,6 +497,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 </span>
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setFilter("page", `${+filter.page + 1}`);
