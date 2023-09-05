@@ -92,7 +92,11 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
             onChange={(index: number) => setData("active_snapshot", index)}
           >
             {SNAPSHOT_TAB.map((key: string) => {
-              const sorted_data = sortMulti(bar.data[key], "y", (a: number, b: number) => b - a);
+              const sorted_data = sortMulti<number>(
+                bar.data[key],
+                "y",
+                (a: number, b: number) => b - a
+              );
               const zero_index = closestIndex(sorted_data.y, 0);
               return (
                 <Panel name={t(`keys.${key}`)} key={key}>

@@ -1,0 +1,18 @@
+export default {
+  "johor": import("./johor").then(module => module.default),
+  "kedah": import("./kedah").then(module => module.default),
+  "kelantan": import("./kelantan").then(module => module.default),
+  "melaka": import("./melaka").then(module => module.default),
+  "negeri_sembilan": import("./negeri_sembilan").then(module => module.default),
+  "pahang": import("./pahang").then(module => module.default),
+  "perak": import("./perak").then(module => module.default),
+  "perlis": import("./perlis").then(module => module.default),
+  "pulau_pinang": import("./pulau_pinang").then(module => module.default),
+  "sabah": import("./sabah").then(module => module.default),
+  "sarawak": import("./sarawak").then(module => module.default),
+  "selangor": import("./selangor").then(module => module.default),
+  "terengganu": import("./terengganu").then(module => module.default),
+  "w.p._kuala_lumpur": import("./w.p._kuala_lumpur").then(module => module.default),
+  "w.p._labuan": import("./w.p._labuan").then(module => module.default),
+  "w.p._putrajaya": import("./w.p._putrajaya").then(module => module.default),
+};

@@ -8,9 +8,11 @@ import { Page } from "datagovmy-ui/types";
 import { GeoJsonObject } from "geojson";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useState } from "react";
+import getGeojson from "datagovmy-ui/geojson/dun";
 
 const KawasankuDun: Page = ({
-  ctx,
+  params,
+  geojson,
   bar,
   jitterplot,
   jitterplot_options,
@@ -19,35 +21,22 @@ const KawasankuDun: Page = ({
   population_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation();
-  const [geo, setGeo] = useState<undefined | GeoJsonObject>(undefined);
-
-  // useWatch(
-  //   () => {
-  //     // @ts-ignore module-not-found on dynamic imports with string literal
-  //     import(`datagovmy-ui/geojson/dun/${ctx.id}`).then(item => {
-  //       setGeo(item.default as unknown as GeoJsonObject);
-  //     });
-  //   },
-  //   [ctx.id],
-  //   true
-  // );
 
   return (
     <>
       <Metadata
-        title={`${t("header")} • 
-        ${DUNS[ctx.state].find(dun => dun.value === ctx.id)?.label}`}
+        title={t("title_area", { area: params.id })}
         description={t("description")}
         keywords={""}
       />
       <KawasankuDashboard
-        area_type="dun"
+        params={params}
         bar={bar}
         jitterplot={jitterplot}
         pyramid={pyramid}
         jitterplot_options={jitterplot_options}
         population_callout={population_callout}
-        geojson={geo}
+        geojson={geojson}
         choropleth={choropleth}
       />
     </>
@@ -61,54 +50,66 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", async () => {
-  // const { data } = await get("/dashboard/", {
-  //   "dashboard": "kawasanku_electoral",
-  //   "area": params!.id,
-  //   "area-type": "dun",
-  // });
+export const getStaticProps: GetStaticProps = withi18n(
+  "dashboard-kawasanku",
+  async ({ params }) => {
+    if (typeof params.id !== "string") throw new Error("Incorrect param type: id. Must be string");
 
-  // const options = Object.entries(DUNS)
-  //   .sort((a: [string, unknown], b: [string, unknown]) =>
-  //     a[0] === params!.state ? -1 : a[0].localeCompare(b[0])
-  //   )
-  //   .flatMap(([key, duns]) =>
-  //     duns.map(({ label, value }) => ({
-  //       label: `${label}, ${STATE_MAP[key]}`,
-  //       value: value,
-  //     }))
-  //   );
+    const [{ data }, geojson] = await Promise.all([
+      get("/dashboard/", {
+        dashboard: "kawasanku_electoral",
+        area: params.id,
+        area_type: "dun",
+      }),
+      getGeojson[params.id.toLowerCase().replaceAll(" ", "_")],
+    ]);
 
-  return {
-    notFound: true,
-    props: {
-      meta: {
-        id: "dashboard-kawasanku",
-        type: "dashboard",
-        category: "demography",
-        agency: "DOSM",
+    const options = Object.entries(DUNS)
+      .sort((a: [string, unknown], b: [string, unknown]) =>
+        a[0] === params!.state ? -1 : a[0].localeCompare(b[0])
+      )
+      .flatMap(([key, duns]) =>
+        duns.map(({ label, value }) => ({
+          label: `${label}, ${STATE_MAP[key]}`,
+          value: value,
+        }))
+      );
+
+    return {
+      props: {
+        meta: {
+          id: "dashboard-kawasanku",
+          type: "dashboard",
+          category: "demography",
+          agency: "DOSM",
+        },
+        params: {
+          state: params.state,
+          geofilter: "dun",
+          id: params.id,
+        },
+        geojson,
+        bar: data.bar_chart,
+        jitterplot: data.jitter_chart,
+        pyramid: data.pyramid_data,
+        jitterplot_options: options,
+        population_callout: {
+          total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")
+            ?.y,
+          male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
+          female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
+            ?.y,
+        },
+        choropleth: {
+          data_as_of: data.choropleth_parlimen.data_as_of,
+          data: {
+            dun: data.choropleth_dun.data,
+            parlimen: data.choropleth_parlimen.data,
+          },
+        },
       },
-      // ctx: params,
-      // bar: data.bar_chart,
-      // jitterplot: data.jitter_chart,
-      // pyramid: data.pyramid_chart,
-      // jitterplot_options: options,
-      // population_callout: {
-      //   total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
-      //   male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
-      //   female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
-      //     ?.y,
-      // },
-      // choropleth: {
-      //   data_as_of: data.choropleth_parlimen.data_as_of,
-      //   data: {
-      //     dun: data.choropleth_dun.data,
-      //     parlimen: data.choropleth_parlimen.data,
-      //   },
-      // },
-    },
-    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
-  };
-});
+    };
+  }
+);
 
 export default KawasankuDun;
