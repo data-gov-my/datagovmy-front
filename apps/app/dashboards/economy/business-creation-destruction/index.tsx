@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { routes } from "@lib/routes";
+import { LHDNIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * Business Creation Destruction Dashboard
@@ -215,7 +216,9 @@ const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDe
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="ssm" />}
+        agencyBadge={
+          <AgencyBadge agency="ssm" icon={<LHDNIcon fillColor={AKSARA_COLOR.BLACK} />} />
+        }
         action={
           <StateDropdown url={routes.BUSINESS_CREATION_DESTRUCTION} currentState={params.state} />
         }
