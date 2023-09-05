@@ -151,7 +151,7 @@ export const TrainingIcon: FunctionComponent<IconProps> = ({
  */
 export const IntegrationDataIcon: FunctionComponent<IconProps> = ({
   className,
-  fillColor = AKSARA_COLOR.PRIMARY,
+  fillColor = AKSARA_COLOR.BLACK,
 }) => {
   return (
     <svg

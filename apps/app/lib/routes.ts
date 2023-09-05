@@ -17,7 +17,6 @@ export const routes = {
   CRIME: "/dashboard/crime",
   CURRENCY_IN_CIRCULATION: "/dashboard/currency-in-circulation",
   ELECTION_EXPLORER: "/dashboard/election-explorer",
-  EXCHANGE_RATE: "/dashboard/exchange-rates",
   FIRE_RESCUE: "/dashboard/fire-and-rescue",
   FLOOD_WARNING: "/dashboard/flood-warning",
   GDP: "/dashboard/gdp",
