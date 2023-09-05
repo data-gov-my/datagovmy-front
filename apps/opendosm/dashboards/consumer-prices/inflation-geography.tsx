@@ -46,7 +46,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       }
     });
 
-    _data = sortMulti(_data, "y", (a: number, b: number) => b - a);
+    _data = sortMulti<number>(_data, "y", (a: number, b: number) => b - a);
     _data.x.unshift("mys");
     _data.y.unshift(mys_overall);
 
@@ -60,7 +60,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       };
       const state_overall = bar.data[period][data.active_state].y[0];
 
-      _data = sortMulti(_data, "y", (a: number, b: number) => b - a);
+      _data = sortMulti<number>(_data, "y", (a: number, b: number) => b - a);
       _data.x.unshift("overall");
       _data.y.unshift(state_overall);
 
