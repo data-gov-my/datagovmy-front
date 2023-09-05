@@ -127,11 +127,6 @@ export const getStaticProps: GetStaticProps = withi18n(
           division: "bipd",
           route: routes.EXCHANGE_RATES,
         },
-        {
-          name: "external-trade",
-          division: "bppa",
-          route: routes.EXTERNAL_TRADE,
-        },
       ],
     };
 
