@@ -210,7 +210,7 @@ const Home: Page = ({
 
       <Hero
         background={clx(
-          theme === undefined && "blue",
+          theme === undefined && "gray",
           theme === "light" && "home-banner",
           theme === "dark" && "home-banner-dark"
         )}
