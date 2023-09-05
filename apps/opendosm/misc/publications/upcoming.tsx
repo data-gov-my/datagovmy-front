@@ -255,6 +255,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
               <div className="flex items-center gap-1.5">
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setData("month", data.month - 1);
@@ -285,6 +286,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 </Button>
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setData("month", data.month + 1);
@@ -387,6 +389,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                   {calendar.mobile.map(d => {
                     const isToday = todayISO === d.date;
                     const id = `${d.date}_${i18n.language}`;
+                    if (!pubs.has(id)) return;
                     return (
                       <div
                         key={d.date}
@@ -475,6 +478,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
               <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setFilter("page", `${+filter.page - 1}`);
@@ -493,6 +497,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 </span>
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setFilter("page", `${+filter.page + 1}`);

@@ -2,7 +2,6 @@ import Chat from "@components/Chat";
 import Filetree from "@components/Filetree";
 import { FiletreeProvider } from "@components/Filetree/utils";
 import { Container } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
 
 /**

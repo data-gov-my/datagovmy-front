@@ -1,18 +1,17 @@
-import { numFormat, toDate } from "datagovmy-ui/helpers";
-import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
-import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback } from "react";
-import { OptionType } from "datagovmy-ui/types";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { AKSARA_COLOR } from "datagovmy-ui/constants";
-import { ChartDataset, ChartTypeRegistry } from "chart.js";
-import { WithData } from "datagovmy-ui/types";
+import { PricesIncomeIcon } from "@icons/division";
 import InflationGeography from "./inflation-geography";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationTrends from "./inflation-trends";
-import { DOSMIcon } from "datagovmy-ui/icons/agency";
-import { DOSMPricesIncomeIcon } from "datagovmy-ui/icons/departments/dosm";
+
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType, WithData } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -203,7 +202,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("agencies:piesd.full")} icon={<DOSMPricesIncomeIcon />} isDivision />
+          <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
         }
       />
 

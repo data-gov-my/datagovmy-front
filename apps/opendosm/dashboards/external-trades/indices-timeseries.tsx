@@ -15,6 +15,11 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { Dropdown, Section, Slider } from "datagovmy-ui/components";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 
+/**
+ * External Trade Statistics - Indices
+ * @overview Status: Live
+ */
+
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface IndicesTimeseriesProps {

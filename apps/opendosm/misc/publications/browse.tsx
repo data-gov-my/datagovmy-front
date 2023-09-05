@@ -76,6 +76,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     loading: false,
     pub: "",
     publication_option: query.pub_type,
+    tab: 0,
   });
 
   const filteredRes = useMemo(
@@ -89,14 +90,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   }));
 
   const frequencies: OptionType[] = [
-    { label: t("catalogue:filter_options.daily"), value: "DAILY" },
-    { label: t("catalogue:filter_options.weekly"), value: "WEEKLY" },
     { label: t("catalogue:filter_options.monthly"), value: "MONTHLY" },
     { label: t("catalogue:filter_options.quarterly"), value: "QUARTERLY" },
     { label: t("catalogue:filter_options.yearly"), value: "YEARLY" },
-    { label: t("catalogue:filter_options.intraday"), value: "INTRADAY" },
-    { label: t("catalogue:filter_options.infrequent"), value: "INFREQUENT" },
-    { label: t("catalogue:filter_options.as_required"), value: "AS_REQUIRED" },
+    { label: t("catalogue:filter_options.one_off"), value: "ONE_OFF" },
   ];
   const geographies: OptionType[] = [
     { label: t("catalogue:filter_options.national"), value: "NATIONAL" },
@@ -135,7 +132,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
-    setFilter("page", undefined);
+    setFilter("page", "1");
     setFilter("pub_type", undefined);
     setData("publication_option", undefined);
   };
@@ -168,12 +165,21 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       cell: ({ row, getValue }) => {
         return (
           <Button
-            className="link-primary font-normal"
+            className="link-primary p-0 font-normal"
             onClick={() => {
               setShow(true);
-              push(routes.PUBLICATIONS.concat("/browse/", row.original.publication_id), undefined, {
-                scroll: false,
-              });
+              push(
+                routes.PUBLICATIONS.concat(
+                  "/",
+                  row.original.publication_id,
+                  actives.length ? queries : ""
+                ),
+                routes.PUBLICATIONS.concat("/", row.original.publication_id),
+                {
+                  scroll: false,
+                }
+              );
+              fetchResource(row.original.publication_id).then(data => setData("pub", data));
             }}
           >
             {getValue()}
@@ -182,15 +188,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       },
     },
     {
-      accessorKey: "description",
-      id: "description",
-      header: t("table.desc"),
-      enableSorting: false,
-    },
-    {
       accessorKey: "release_date",
       id: "release_date",
       header: t("table.release_date"),
+      className: "w-[150px]",
       cell: ({ getValue }) => {
         return <>{toDate(getValue(), "dd MMM yyyy", i18n.language)}</>;
       },
@@ -199,6 +200,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       accessorKey: "downloads",
       id: "downloads",
       header: t("downloads"),
+      className: "w-[150px]",
     },
   ];
 
@@ -207,11 +209,14 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       fetchResource(params.pub_id).then(data => setData("pub", data));
       setShow(true);
     }
+    if (cache.has("tab")) {
+      setData("tab", cache.get("tab"));
+    }
     events.on("routeChangeComplete", () => setData("loading", false));
     return () => {
       events.off("routeChangeComplete", () => setData("loading", false));
     };
-  }, [params.pub_id]);
+  }, []);
 
   return (
     <Container>
@@ -246,7 +251,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
               <Button onClick={open} variant="default" className="shadow-floating">
                 <span>{t("catalogue:filter")}</span>
                 <span className="h-5 w-4.5 rounded-md bg-primary text-center text-white dark:bg-primary-dark">
-                  {actives.length}
+                  {actives.filter(e => !e.includes("page")).length}
                 </span>
                 <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
               </Button>
@@ -254,7 +259,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             title={<Label label={t("catalogue:filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="mb-[105px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 dark:divide-washed-dark dark:bg-black">
+              <div className="mb-[100px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 dark:divide-washed-dark dark:bg-black">
                 <div className="py-3">
                   <Radio
                     name="frequency"
@@ -295,7 +300,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   <Button
                     variant="primary"
                     className="w-full justify-center"
-                    disabled={!actives.length}
+                    disabled={!actives.filter(e => !e.includes("page")).length}
                     onClick={() => {
                       setData("loading", true);
                       reset();
@@ -325,6 +330,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             onChange={e => {
               setData("loading", true);
               setFilter("frequency", e);
+              setFilter("page", "1");
             }}
           />
           <Dropdown
@@ -338,6 +344,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             onChange={e => {
               setData("loading", true);
               setFilter("geography", e);
+              setFilter("page", "1");
             }}
           />
           <Dropdown
@@ -352,6 +359,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             onChange={e => {
               setData("loading", true);
               setFilter("demography", e);
+              setFilter("page", "1");
             }}
           />
           {actives.length > 0 &&
@@ -380,8 +388,16 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             {t("common:common.no_entries")}.
           </p>
         ) : (
-          <Tabs className="pb-8 pt-8 lg:pt-12" title={<h4>{t("header")}</h4>}>
-            <Panel name={t("cards_view")} key={"cards_view"}>
+          <Tabs
+            className="pb-8 pt-8 lg:pt-12"
+            title={<h4>{t("header")}</h4>}
+            current={data.tab}
+            onChange={index => {
+              setData("tab", index);
+              cache.set("tab", index);
+            }}
+          >
+            <Panel name={t("card_view")} key={"card_view"}>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {publications.map((item: Publication) => (
                   <PublicationCard
@@ -391,11 +407,11 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                       setShow(true);
                       push(
                         routes.PUBLICATIONS.concat(
-                          "/browse/",
+                          "/",
                           item.publication_id,
                           actives.length ? queries : ""
                         ),
-                        undefined,
+                        routes.PUBLICATIONS.concat("/", item.publication_id),
                         { scroll: false }
                       );
                       fetchResource(item.publication_id).then(data => setData("pub", data));
@@ -406,7 +422,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             </Panel>
             <Panel name={t("list_view")} key={"list_view"}>
               <Table
-                className="md:w-full"
+                className="md:mx-auto md:w-4/5 lg:w-3/4 xl:w-3/5"
                 data={publications}
                 enablePagination={filteredRes.length > ITEMS_PER_PAGE ? ITEMS_PER_PAGE : false}
                 config={pubConfig}
@@ -416,13 +432,13 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
         )}
 
         <PublicationModal
-          type={"/browse/"}
+          type={"/"}
           id={params.pub_id}
           publication={data.pub}
           show={show}
           hide={() => {
             setShow(false);
-            push(routes.PUBLICATIONS.concat("/browse/", actives.length ? queries : ""), undefined, {
+            push(routes.PUBLICATIONS.concat(actives.length ? queries : ""), undefined, {
               scroll: false,
             });
           }}
@@ -431,8 +447,12 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
         {total_pubs > ITEMS_PER_PAGE && (
           <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
             <Button
+              className="btn-disabled"
               variant="default"
-              onClick={() => setFilter("page", `${+filter.page - 1}`)}
+              onClick={() => {
+                setData("loading", true);
+                setFilter("page", `${+filter.page - 1}`);
+              }}
               disabled={filter.page === "1"}
             >
               <ChevronLeftIcon className="h-4.5 w-4.5" />
@@ -447,7 +467,9 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             </span>
             <Button
               variant="default"
+              className="btn-disabled"
               onClick={() => {
+                setData("loading", true);
                 setFilter("page", `${+filter.page + 1}`);
               }}
               disabled={filter.page === `${Math.ceil(total_pubs / ITEMS_PER_PAGE)}`}

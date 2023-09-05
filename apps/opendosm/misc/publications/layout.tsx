@@ -28,7 +28,7 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
     {
       name: t("browse"),
       icon: <MagnifyingGlassIcon className="mr-1 h-5 w-5" />,
-      url: routes.PUBLICATIONS.concat("/browse"),
+      url: routes.PUBLICATIONS,
     },
     {
       name: t("upcoming"),
@@ -47,11 +47,16 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
     },
   ];
 
+  const startsWith = (url: string) => {
+    const path = pathname.split("/[")[0];
+    return path === url;
+  };
+
   return (
     <>
       <Hero
         background="gray"
-        category={[t("nso"), "text-dim"]}
+        category={[t("nso"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="dosm" />}
@@ -75,18 +80,18 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
                   <div
                     className={clx(
                       "flex items-center gap-2",
-                      pathname.startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
+                      startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
                     )}
                   >
                     <div className="hidden sm:block">{nav.icon}</div>
                     <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
-                    {pathname.startsWith(nav.url) && (
-                      <div className="absolute bottom-0 inline-flex h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:hidden"></div>
+                    {startsWith(nav.url) && (
+                      <div className="absolute bottom-0 inline-flex h-[2px] w-full rounded-full bg-primary dark:bg-primary-dark sm:hidden"></div>
                     )}
                   </div>
                 </div>
-                {pathname.startsWith(nav.url) && (
-                  <div className="absolute bottom-0 hidden h-1 w-full rounded-full bg-primary dark:bg-primary-dark sm:inline-flex"></div>
+                {startsWith(nav.url) && (
+                  <div className="absolute bottom-0 hidden h-[2px] w-full rounded-full bg-primary dark:bg-primary-dark sm:inline-flex"></div>
                 )}
               </At>
             </div>
