@@ -1,11 +1,11 @@
-import { closestIndex, getColor } from "datagovmy-ui/schema/exchange-rates";
+import { IntegrationDataIcon } from "@icons/division";
 import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "datagovmy-ui/components";
 import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
 import { sortMulti } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { closestIndex, getColor } from "datagovmy-ui/schema/exchange-rates";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
-import { DOSMIntegrationDataIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Exchange Rates Dashboard
@@ -70,11 +70,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge
-            name={t("division:bipd.full")}
-            icon={<DOSMIntegrationDataIcon />}
-            isDivision
-          />
+          <AgencyBadge name={t("division:bipd.full")} icon={<IntegrationDataIcon />} isDivision />
         }
       />
 
