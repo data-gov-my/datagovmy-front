@@ -112,7 +112,7 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
 
       {markers && (
         <Markercluster chunkedLoading removeOutsideVisibleBounds chunkDelay={0} chunkInterval={50}>
-          {markers?.map((item: MarkerDatum, index) => {
+          {markers.map((item: MarkerDatum, index) => {
             return (
               <Marker
                 key={index}
@@ -148,7 +148,7 @@ const GeoJSONControl: FunctionComponent<GeoJSONControl> = ({ geojson }) => {
         [bound[3], bound[2]],
       ]);
       setTimeout(() => {
-        map.panBy([-100, 0]);
+        map.panBy([-50, 0]);
       }, 150);
     }
   }, [geojson]);

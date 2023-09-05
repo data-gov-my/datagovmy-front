@@ -68,7 +68,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
           <div className="space-y-2" key={item.x.concat(`_${index}`)}>
             <div className="flex justify-between">
               <p className="text-sm">{formatX ? formatX(item.x) : item.x}</p>
-              <div className="text-dim text-sm dark:text-white">
+              <div className="text-dim flex text-sm dark:text-white">
                 {formatY ? (
                   formatY(item.y, item.x)
                 ) : (

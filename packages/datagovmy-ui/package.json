@@ -16,7 +16,7 @@
     "./contexts/*": "./src/contexts/*.tsx",
     "./dc-charts/*": "./src/charts/partials/*.tsx",
     "./decorators": "./src/lib/decorators.ts",
-    "./geojson/district": "./src/lib/geojson/state/index.ts",
+    "./geojson/district": "./src/lib/geojson/district/index.ts",
     "./geojson/district/*": "./src/lib/geojson/district/*.ts",
     "./geojson/dun": "./src/lib/geojson/dun/index.ts",
     "./geojson/dun/*": "./src/lib/geojson/dun/*.ts",

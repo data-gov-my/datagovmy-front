@@ -27,7 +27,6 @@ const KawasankuState: Page = ({
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <KawasankuDashboard
-        // area_type="state"
         params={params}
         bar={bar}
         jitterplot={jitterplot}
@@ -69,16 +68,17 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         params: {
           state: params.state,
+          geofilter: "state",
         },
         geojson,
         bar: data.bar_chart,
-        // population_callout: {
-        //   total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
-        //   male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
-        //   female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
-        //     ?.y,
-        // },
-
+        population_callout: {
+          total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")
+            ?.y,
+          male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
+          female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
+            ?.y,
+        },
         jitterplot: data.jitter_chart,
         pyramid: data.pyramid_data,
         choropleth: {

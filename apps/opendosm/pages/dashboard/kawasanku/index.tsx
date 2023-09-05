@@ -54,14 +54,15 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", as
       },
       params: {
         state: "Malaysia",
+        geofilter: "state",
       },
       bar: data.bar_chart,
-      // population_callout: {
-      //   total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
-      //   male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
-      //   female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
-      //     ?.y,
-      // },
+      population_callout: {
+        total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
+        male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
+        female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
+          ?.y,
+      },
       jitterplot: data.jitter_chart,
       pyramid: data.pyramid_data,
       choropleth: {

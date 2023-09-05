@@ -5,7 +5,6 @@ import { Color } from "datagovmy-ui/hooks";
 import { GeoJsonObject } from "geojson";
 import { FunctionComponent, useEffect, useMemo } from "react";
 import {
-  Hero,
   Button,
   Chips,
   Container,
@@ -21,8 +20,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
-import { numFormat } from "datagovmy-ui/helpers";
-import { track } from "datagovmy-ui/mixpanel";
+import { clx, numFormat } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import { DISTRICTS, DUNS, PARLIMENS, STATES, jitterTooltipFormats } from "@lib/schema/kawasanku";
 import { useRouter } from "next/router";
@@ -93,7 +91,7 @@ interface KawasankuDashboardProps {
   geojson?: GeoJsonObject;
 }
 
-type AreaType = "district" | "dun" | "parlimen";
+type AreaType = "district" | "dun" | "parlimen" | "state";
 
 const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
   params,
@@ -190,9 +188,9 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
 
   return (
     <>
-      <div className="kawasanku-banner relative">
+      <div className="relative bg-gradient-to-r from-[#c9ecc9] from-0% via-[#EDF8ED] via-60% to-transparent to-100% dark:from-black dark:via-background-dark dark:to-transparent ">
         <div className="mx-auto max-w-screen-2xl px-3 py-12 lg:px-6">
-          <div className=" w-2/3 space-y-4">
+          <div className=" space-y-4 lg:w-2/3">
             <span className="text-sm font-bold uppercase tracking-widest text-dim">Kawasanku</span>
             <h3 className="text-black"> {t("header")}</h3>
             <p className="whitespace-pre-line text-dim">{t("description")}</p>
@@ -207,7 +205,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                 options={STATES}
                 selected={{ label: params.state, value: params.state }}
                 width="w-full lg:w-fit"
-                sublabel={!isMalaysia ? t("common.state") + ":" : ""}
+                sublabel={!isMalaysia ? t("common:common.state") + ":" : ""}
                 onChange={(e: OptionType) => {
                   setData("loading", true);
                   router.push(routes.KAWASANKU.concat("/", e.value !== "Malaysia" ? e.value : ""));
@@ -224,17 +222,20 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                 }}
                 disabled={isMalaysia}
                 sublabel={`${t("geofilter")}:`}
-                placeholder={t("common.select")}
+                placeholder={t("common:common.select")}
                 width="w-full lg:w-fit"
               />
               <Dropdown
                 anchor="left"
                 options={
-                  data.geofilter && !isMalaysia ? AREA_OPTIONS[data.geofilter][params.state] : []
+                  data?.geofilter !== "state" && !isMalaysia
+                    ? AREA_OPTIONS[data.geofilter][params.state]
+                    : []
                 }
                 disabled={!data.geofilter || isMalaysia}
+                enableSearch
                 selected={
-                  data.geofilter
+                  data?.geofilter !== "state"
                     ? AREA_OPTIONS[data.geofilter][params.state].find(
                         area => area.value === data.area
                       )
@@ -247,17 +248,19 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                     routes.KAWASANKU.concat("/", params.state, "/", data.geofilter, "/", e.value)
                   );
                 }}
-                placeholder={t("common.select")}
+                placeholder={t("common:common.select")}
                 width="w-full lg:w-fit"
               />
               <div className="flex items-center">
                 <Spinner loading={data.loading} className="hidden place-self-center lg:block" />
-                {(data.geofilter || data.area) && (
+                {(data.geofilter !== "state" || data.area) && (
                   <Button
+                    variant="ghost"
+                    className="hover:shadow-button"
                     icon={<XMarkIcon className="h-4 w-4" />}
                     onClick={() => router.push(routes.KAWASANKU)}
                   >
-                    {t("common.clear_all")}
+                    {t("common:common.clear_all")}
                   </Button>
                 )}
               </div>
@@ -278,21 +281,23 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
         <Section
           title={t("section_1.title", {
             area: data.area?.label ?? params.state,
-            // size: numFormat(population_callout.total!, "standard"),
+            size: numFormat(population_callout.total, "standard"),
           })}
           date={"MyCensus 2020"}
         >
           <div
-            className={[
+            className={clx(
               "grid gap-12",
-              !Boolean(params.geofilter) ? "grid-cols-1 xl:grid-cols-5" : "",
-            ].join(" ")}
+              params.geofilter === "state" ? "grid-cols-1 xl:grid-cols-5" : ""
+            )}
           >
-            {!Boolean(params.geofilter) && pyramid && (
+            {params.geofilter === "state" && pyramid && (
               <div className="col-span-1 w-full lg:col-span-2">
                 <Pyramid
                   data={{
-                    labels: pyramid.data.x,
+                    labels: pyramid.data.x.map((x: string) =>
+                      x.replace("_above", "+").replace("_", "-")
+                    ),
                     datasets: [
                       {
                         label: t("keys.male"),
@@ -326,23 +331,23 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
                   sort="desc"
                   unit="%"
                   formatX={key => t(`keys.${key}`)}
-                  // formatY={
-                  //   key === "sex"
-                  //     ? (value, key) => (
-                  //         <>
-                  //           <Tooltip
-                  //             tip={t("section_1.number_people", {
-                  //               size: numFormat(
-                  //                 population_callout[key as keyof typeof population_callout]!,
-                  //                 "standard"
-                  //               ),
-                  //             })}
-                  //           />
-                  //           <span className="pl-1">{numFormat(value, "compact", [1, 1])}</span>
-                  //         </>
-                  //       )
-                  //     : undefined
-                  // }
+                  formatY={
+                    key === "sex"
+                      ? (value, key) => (
+                          <>
+                            <Tooltip
+                              tip={t("section_1.number_people", {
+                                size: numFormat(
+                                  population_callout[key as keyof typeof population_callout]!,
+                                  "standard"
+                                ),
+                              })}
+                            />
+                            <span className="pl-1">{numFormat(value, "compact", [1, 1])}</span>
+                          </>
+                        )
+                      : undefined
+                  }
                 />
               ))}
             </div>
@@ -356,21 +361,22 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
           })}
           date={"MyCensus 2020"}
         >
-          <div className="flex w-full flex-wrap gap-2 pb-12 lg:flex-row">
+          <div className="flex w-full flex-wrap gap-2 pb-12 lg:flex-row lg:pb-8">
             <Dropdown
               anchor="left"
-              width="w-fit"
-              sublabel="Spotlight:"
+              width="min-w-[200px]"
+              enableSearch
+              sublabel={t("spotlight") + ":"}
               disabled={data.comparator.length >= 3}
-              placeholder="Select "
+              placeholder={t("common:common.select")}
               options={jitterplot_options}
               onChange={handleComparator}
             />
 
-            {params?.id && (
+            {!isMalaysia && (
               <p className="flex items-center gap-2 px-2 py-1 text-sm font-medium leading-6">
-                {params?.id}
-                <span className="block h-2 w-2 rounded-full bg-black" />
+                {params.geofilter === "state" ? params.state : params?.id}
+                <span className="block h-2 w-2 rounded-full bg-black dark:bg-green-500" />
               </p>
             )}
 
@@ -387,18 +393,23 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
             />
           </div>
           <div className="relative space-y-10">
-            <JitterplotOverlay areaType={data.geofilter} />
+            <JitterplotOverlay
+              labels={[
+                t("below_median"),
+                t("median", { type: t(`area_types.${params.geofilter}s`) }),
+                t("above_median"),
+              ]}
+            />
             {Object.entries(jitterplot.data).map(([key, dataset]) => (
               <Jitterplot
                 key={key}
                 title={t(`${key}`)}
                 data={dataset as JitterData[]}
-                active={params?.id as string}
+                active={params.geofilter === "state" ? params.state : params?.id}
                 actives={data.comparator}
                 formatTitle={key => (
                   <div className="flex items-center gap-1.5 ">
                     <span className="inline">{t(`keys.${key}`)}</span>
-
                     <Tooltip tip={t(`tips.${key}`)} />
                   </div>
                 )}
@@ -412,18 +423,15 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
         </Section>
 
         {/* A geographic visualisation of selected indicators */}
-        <Section
-          title={"A geographic visualisation of selected indicators"}
-          date={choropleth.data_as_of}
-        >
+        <Section title={t("section_3.title")} date={choropleth.data_as_of}>
           <Tabs
             title={
               <Dropdown
                 anchor="left"
                 selected={INDICATOR_OPTIONS.find(item => item.value === data.indicator_type)}
-                sublabel={t("common.indicator") + ":"}
+                sublabel={t("common:common.indicator") + ":"}
                 options={INDICATOR_OPTIONS}
-                onChange={(e: any) => setData("indicator_type", e.value)}
+                onChange={(e: OptionType) => setData("indicator_type", e.value)}
               />
             }
             onChange={index => setData("indicator_index", index)}

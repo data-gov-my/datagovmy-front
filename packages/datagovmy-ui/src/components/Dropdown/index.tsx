@@ -243,7 +243,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
               {/* Search - optional*/}
               {enableSearch && (
-                <div className="border-b pt-1">
+                <div className="dark:border-outlineHover-dark border-b pt-1">
                   <Input
                     type="search"
                     icon={<MagnifyingGlassIcon className="h-4 w-4" />}

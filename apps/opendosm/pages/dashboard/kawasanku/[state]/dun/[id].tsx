@@ -93,12 +93,13 @@ export const getStaticProps: GetStaticProps = withi18n(
         jitterplot: data.jitter_chart,
         pyramid: data.pyramid_data,
         jitterplot_options: options,
-        // population_callout: {
-        //   total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")?.y,
-        //   male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
-        //   female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
-        //     ?.y,
-        // },
+        population_callout: {
+          total: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "total")
+            ?.y,
+          male: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "male")?.y,
+          female: data.bar_chart_callout.data.tooltip.find(({ x }: { x: string }) => x === "female")
+            ?.y,
+        },
         choropleth: {
           data_as_of: data.choropleth_parlimen.data_as_of,
           data: {
