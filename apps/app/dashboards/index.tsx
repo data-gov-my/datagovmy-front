@@ -12,6 +12,7 @@ import {
   Section,
   Tabs,
 } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { AgencyIcon } from "datagovmy-ui/icons/agency";
@@ -28,6 +29,7 @@ type Dashboard = {
   name: string;
   agency: Agency;
   views: number;
+  fillColor: string;
 };
 
 interface DashboardIndexProps {
@@ -73,6 +75,8 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
     for (const [category, dbs] of Object.entries(dashboards)) {
       const dashboards = dbs
         .filter(d => {
+          if (d.name === "covid-vaccination") Object.assign(d, { fillColor: AKSARA_COLOR.GREEN });
+          else if (d.agency === "aadk") Object.assign(d, { fillColor: AKSARA_COLOR.DANGER });
           return (
             (!agency || d.agency === agency) &&
             (!data.search ||
@@ -155,24 +159,28 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                           locale={i18n.language}
                           prefetch={false}
                         >
-                          <Card className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
+                          <Card className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                             <div className="relative flex items-center gap-4">
-                              <AgencyIcon agency={item.agency} className="h-6 w-6" />
+                              <AgencyIcon
+                                agency={item.agency}
+                                className="h-6 w-6"
+                                fillColor={item.fillColor}
+                              />
                               <p className="text-dim text-sm">
                                 {t(`agencies:${item.agency}.abbr`)}
                               </p>
-                              <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+                              <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-transform group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transform-none" />
                             </div>
                             <div className="relative overflow-hidden">
                               <p className="truncate font-medium dark:text-white">
                                 {t(`dashboards.${item.name}.name`)}
                               </p>
-                              <p className="text-dim transition-transform group-hover:translate-y-6">
+                              <p className="text-dim transition-transform group-hover:translate-y-6 motion-reduce:transform-none">
                                 {`${numFormat(item.views, "compact")} ${t("common:common.views", {
                                   count: item.views,
                                 })}`}
                               </p>
-                              <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                              <p className="text-primary dark:text-primary-dark absolute -bottom-6 whitespace-nowrap transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
                                 {t("common:components.click_to_explore")}
                               </p>
                             </div>
@@ -274,11 +282,11 @@ const Ranking = ({ ranks, dashboards_route }: RankingProps) => {
             key={i}
             prefetch={false}
           >
-            <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
+            <div className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
               <div className="relative flex items-center gap-3">
                 <span className="text-primary text-sm font-bold">#{i + 1}</span>
                 <p className="text-dim text-sm">{t(`agencies:${item.agency}.abbr`)}</p>
-                <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+                <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-transform group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transform-none" />
               </div>
               <div className="flex grow flex-col items-start gap-3 overflow-hidden">
                 <div className="grow space-y-3">
@@ -290,12 +298,12 @@ const Ranking = ({ ranks, dashboards_route }: RankingProps) => {
                   </p>
                 </div>
                 <div className="relative w-full">
-                  <p className="text-dim transition-transform group-hover:translate-y-6">
+                  <p className="text-dim transition-transform group-hover:translate-y-6 motion-reduce:transform-none">
                     {`${numFormat(item.views, "compact")} ${t("common:common.views", {
                       count: item.views,
                     })}`}
                   </p>
-                  <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
+                  <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
                     {t("common:components.click_to_explore")}
                   </p>
                 </div>
