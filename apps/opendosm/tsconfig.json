@@ -1,4 +1,5 @@
 {
+  "extends": "tsconfig/nextjs.json",
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],

@@ -1336,6 +1336,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({
     "perkeso": SOCSOIcon,
     "phcorp": PHCorpIcon,
     "spr": SPRIcon,
+    "ssm": LHDNIcon,
     "unhcr": UNHCRIcon,
   };
 
