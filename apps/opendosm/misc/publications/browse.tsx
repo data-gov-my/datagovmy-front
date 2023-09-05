@@ -21,7 +21,7 @@ import {
   toast,
 } from "datagovmy-ui/components";
 import { toDate } from "datagovmy-ui/helpers";
-import { useCache, useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
+import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import { matchSorter } from "match-sorter";
 import dynamic from "next/dynamic";
