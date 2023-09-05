@@ -73,11 +73,6 @@ export const getStaticProps: GetStaticProps = withi18n(
           route: routes.PRODUCER_PRICES,
         },
         {
-          name: "services-statistics",
-          agency: "dosm",
-          route: routes.SERVICES_STATISTICS,
-        },
-        {
           name: "services-producer-prices",
           division: "bphpp",
           route: routes.SERVICES_PRODUCER_PRICES,
