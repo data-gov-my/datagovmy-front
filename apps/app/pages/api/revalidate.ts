@@ -77,7 +77,7 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
       case "/ms-MY/dashboard/crime":
       case "/ms-MY/dashboard/fire-and-rescue":
       case "/ms-MY/dashboard/ipr":
-      case "/dashboard/business-creation-destruction":
+      case "/ms-MY/dashboard/business-creation-destruction":
         await res.revalidate(route);
         const result = revalidateWithStates(res, route);
         routes.push.apply(routes, result);
