@@ -400,7 +400,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
               cache.set("tab", index);
             }}
           >
-            <Panel name={t("cards_view")} key={"cards_view"}>
+            <Panel name={t("card_view")} key={"card_view"}>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {publications.map((item: Publication) => (
                   <PublicationCard
