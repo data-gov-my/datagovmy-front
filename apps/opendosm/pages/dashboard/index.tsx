@@ -49,7 +49,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         {
           name: "iip",
-          division: "bpan",
+          division: "bpib",
           route: routes.IIP,
         },
         {
@@ -60,7 +60,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         {
           name: "external-trade",
           division: "bppa",
-          route: routes.EXCHANGE_RATES,
+          route: routes.EXTERNAL_TRADE,
         },
         {
           name: "consumer-prices",
