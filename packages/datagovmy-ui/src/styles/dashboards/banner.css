@@ -1,12 +1,12 @@
 .home-banner {
   background: url("/static/images/home-hero.jpg") no-repeat;
   background-size: cover;
-  background-position: center right;
+  background-position: center;
 }
 .home-banner-dark {
   background: url("/static/images/banner/home-hero-dark.jpg") no-repeat;
   background-size: cover;
-  background-position: center right;
+  background-position: center;
 }
 .data-catalogue-banner {
   background: url("/static/images/banner/data-catalogue.jpg") no-repeat;

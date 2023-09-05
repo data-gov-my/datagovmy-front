@@ -115,7 +115,7 @@ const Ranking = ({ ranks }: RankingProps) => {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {ranks.map((item, i) => (
           <At href={item.route} locale={i18n.language} key={i} prefetch={false}>
-            <div className="group flex h-full w-full flex-col space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-primary hover:bg-primary/5 motion-reduce:transition-none dark:border-washed-dark dark:hover:border-outlineHover-dark">
+            <div className="group flex h-full w-full flex-col space-y-3 rounded-xl border border-outline p-6 transition-colors hover:border-outlineHover hover:bg-background motion-reduce:transition-none dark:border-washed-dark dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50">
               <div className="relative flex items-center gap-3">
                 <DivisionIcon
                   division={item.division}
@@ -140,7 +140,7 @@ const Ranking = ({ ranks }: RankingProps) => {
                       count: 100,
                     })}`}
                   </p>
-                  <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
+                  <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
                     {t("common:components.click_to_explore")}
                   </p>
                 </div>
