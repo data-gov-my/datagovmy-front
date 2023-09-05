@@ -361,7 +361,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                       ) : (
                         <div className="relative flex h-full w-full flex-col">
                           <h5>
-                            {t(`ridership_${data.period}`, {
+                            {t(`ridership_${config.period}`, {
                               from: params.destination,
                               to: params.origin,
                             })}
