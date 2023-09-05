@@ -255,6 +255,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
               <div className="flex items-center gap-1.5">
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setData("month", data.month - 1);
@@ -285,6 +286,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 </Button>
                 <Button
                   variant="default"
+                  className="btn-disabled"
                   onClick={() => {
                     setData("loading", true);
                     setData("month", data.month + 1);
