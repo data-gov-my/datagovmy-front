@@ -209,9 +209,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       fetchResource(params.pub_id).then(data => setData("pub", data));
       setShow(true);
     }
-  }, [params.pub_id]);
-
-  useEffect(() => {
     if (cache.has("tab")) {
       setData("tab", cache.get("tab"));
     }
@@ -219,7 +216,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     return () => {
       events.off("routeChangeComplete", () => setData("loading", false));
     };
-  }, [data.loading]);
+  }, []);
 
   return (
     <Container>
