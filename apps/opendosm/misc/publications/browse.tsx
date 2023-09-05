@@ -165,7 +165,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       cell: ({ row, getValue }) => {
         return (
           <Button
-            className="link-primary font-normal"
+            className="link-primary p-0 font-normal"
             onClick={() => {
               setShow(true);
               push(
