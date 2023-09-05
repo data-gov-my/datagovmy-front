@@ -132,7 +132,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
-    setFilter("page", undefined);
+    setFilter("page", "1");
     setFilter("pub_type", undefined);
     setData("publication_option", undefined);
   };
@@ -195,23 +195,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     },
   ];
 
-  const fetchData = () => {
-    get("/publication-dropdown/", {
-      language: i18n.language,
-    })
-      .then(({ data }) => {
-        setData("dropdown", data.data);
-      })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      });
-  };
-
-  useWatch(() => {
-    fetchData();
-  }, []);
-
   useEffect(() => {
     if (params.pub_id) {
       fetchResource(params.pub_id).then(data => setData("pub", data));
@@ -262,7 +245,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
               <Button onClick={open} variant="default" className="shadow-floating">
                 <span>{t("catalogue:filter")}</span>
                 <span className="h-5 w-4.5 rounded-md bg-primary text-center text-white dark:bg-primary-dark">
-                  {actives.length}
+                  {actives.filter(e => !e.includes("page")).length}
                 </span>
                 <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
               </Button>
@@ -270,7 +253,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             title={<Label label={t("catalogue:filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="mb-[105px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 dark:divide-washed-dark dark:bg-black">
+              <div className="mb-[100px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 dark:divide-washed-dark dark:bg-black">
                 <div className="py-3">
                   <Radio
                     name="frequency"
@@ -311,7 +294,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   <Button
                     variant="primary"
                     className="w-full justify-center"
-                    disabled={!actives.length}
+                    disabled={!actives.filter(e => !e.includes("page")).length}
                     onClick={() => {
                       setData("loading", true);
                       reset();
