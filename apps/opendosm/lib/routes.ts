@@ -16,7 +16,6 @@ export const routes = {
   CONSTRUCTION_STATISTICS: "/dashboard/construction-statistics",
   SERVICES_STATISTICS: "/dashboard/services-statistics",
   FORMAL_SECTOR_WAGES: "/dashboard/formal-sector-wages",
-  SERVICES_STATISTICS: "/dashboard/services-statistics",
   SERVICES_PRODUCER_PRICES: "/dashboard/services-producer-prices",
   POPULATION: "/dashboard/population",
   HOUSEHOLD_INCOME_EXPENDITURE: "/dashboard/household-income-expenditure",
