@@ -83,6 +83,7 @@ const DrugAddictionDashboard: FunctionComponent<DrugAddictionDashboardProps> = (
                       key={key}
                       title={t(key)}
                       interval="year"
+                      enableAnimation={!play}
                       data={{
                         labels: coordinate.x,
                         datasets: [
