@@ -296,7 +296,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                             {
                               type: A_to_B_coords.x.length === 1 ? "bar" : "line",
                               data: A_to_B_coords.passengers,
-                              label: t(data.period),
+                              label: t(`common:time.${config.key}`),
                               fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
                               borderColor: AKSARA_COLOR.PRIMARY,
@@ -335,7 +335,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               {
                                 type: B_to_A_coords.x.length === 1 ? "bar" : "line",
                                 data: B_to_A_coords.passengers,
-                                label: t(data.period),
+                                label: t(`common:time.${config.key}`),
                                 fill: true,
                                 backgroundColor: AKSARA_COLOR.PRIMARY_H,
                                 borderColor: AKSARA_COLOR.PRIMARY,
