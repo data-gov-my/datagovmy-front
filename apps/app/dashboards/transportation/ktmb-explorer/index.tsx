@@ -32,7 +32,6 @@ import { FunctionComponent, useMemo } from "react";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-type Service = "ets" | "intercity" | "komuter" | "tebrau";
 interface KTMBExplorerProps {
   A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
   A_to_B_callout: Record<DashboardPeriod, number>;
