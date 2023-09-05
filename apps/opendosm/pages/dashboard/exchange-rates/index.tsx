@@ -4,7 +4,7 @@ import { get } from "datagovmy-ui/api";
 import { Page } from "datagovmy-ui/types";
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
-import ExchangeRatesDashboard from "@dashboards/financial-sector/exchange-rates";
+import ExchangeRatesDashboard from "@dashboards/exchange-rates";
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
@@ -38,8 +38,8 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rates
       meta: {
         id: "dashboard-exchange-rates",
         type: "dashboard",
-        category: "economy",
-        agency: "MAMPU",
+        category: "financial-sector",
+        agency: "DOSM",
       },
       last_updated: data.data_last_updated,
       bar: data.bar_chart,
