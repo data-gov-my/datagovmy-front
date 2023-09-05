@@ -40,16 +40,16 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer"
   try {
     const [service, origin, destination] = ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
 
-    const [dropdown, A_to_B, B_to_A] = await Promise.all([
-      get("/dropdown", { dashboard: "ktmb" }),
-      get("/dashboard", {
-        dashboard: "ktmb",
+    const [{ data: dropdown }, { data: A_to_B }, { data: B_to_A }] = await Promise.all([
+      get("/explorer", { explorer: "KTMB", dropdown: true }),
+      get("/explorer", {
+        explorer: "KTMB",
         service,
         origin,
         destination,
       }),
-      get("/dashboard", {
-        dashboard: "ktmb",
+      get("/explorer", {
+        explorer: "KTMB",
         service,
         origin: destination,
         destination: origin,
@@ -67,12 +67,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-ktmb-explorer"
           category: "transportation",
           agency: "MoT",
         },
-        A_to_B: A_to_B.data.timeseries.data,
-        A_to_B_callout: A_to_B.data.timeseries_callout.data,
-        B_to_A: B_to_A.data.timeseries.data,
-        B_to_A_callout: B_to_A.data.timeseries_callout.data,
-        dropdown: dropdown.data.data,
-        last_updated: A_to_B.data.data_last_updated,
+        A_to_B: A_to_B.timeseries,
+        A_to_B_callout: A_to_B.timeseries_callout.data,
+        B_to_A: B_to_A.timeseries.data,
+        B_to_A_callout: B_to_A.timeseries_callout.data,
+        dropdown: dropdown,
+        last_updated: A_to_B.data_last_updated,
         params: {},
       },
     };

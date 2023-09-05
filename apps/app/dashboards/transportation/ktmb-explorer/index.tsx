@@ -1,6 +1,7 @@
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import { routes } from "@lib/routes";
+import { Periods } from "datagovmy-ui/charts/timeseries";
 import {
   AgencyBadge,
   Button,
@@ -19,7 +20,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { OptionType } from "datagovmy-ui/types";
+import { DashboardPeriod, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
@@ -31,12 +32,13 @@ import { FunctionComponent, useMemo } from "react";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
+type Service = "ets" | "intercity" | "komuter" | "tebrau";
 interface KTMBExplorerProps {
-  A_to_B: any;
-  A_to_B_callout: any;
-  B_to_A?: any;
-  B_to_A_callout?: any;
-  dropdown: any;
+  A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
+  A_to_B_callout: Record<DashboardPeriod, number>;
+  B_to_A?: Record<DashboardPeriod, Record<"x" | "passengers", number[]>>;
+  B_to_A_callout?: Record<DashboardPeriod, number>;
+  dropdown: Record<string, Record<string, string[]>>;
   last_updated: string;
   params: any;
 }
@@ -53,22 +55,34 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const { t, i18n } = useTranslation(["dashboard-ktmb-explorer", "common"]);
   const { push } = useRouter();
   const { data, setData } = useData({
-    tab_index: 0,
-    period: "day",
-    minmax: [0, A_to_B.day.x.length - 1],
+    loading: false,
+    minmax: [0, A_to_B.data.daily.x.length - 1],
     service: params.service,
     origin: params.origin,
     destination: params.destination,
-    loading: false,
+    tab: 0,
   });
-  const period: { [key: number]: "day" | "month" | "year" } = {
-    0: "day",
-    1: "month",
-    2: "year",
-  };
-  const { coordinate: A_to_B_coords } = useSlice(A_to_B[data.period], data.minmax);
+  const PERIODS: Array<DashboardPeriod> = ["daily_7d", "daily", "monthly", "yearly"];
+  const config = useMemo<{
+    key: DashboardPeriod;
+    period: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week">;
+  }>(() => {
+    const key = PERIODS[data.tab];
+    setData("minmax", [0, A_to_B.data[key].x.length - 1]);
+    switch (key) {
+      case "daily":
+      case "daily_7d":
+        return { key: key, period: "day" };
+      case "monthly":
+        return { key: key, period: "month" };
+      case "yearly":
+        return { key: key, period: "year" };
+    }
+  }, [data.tab]);
+
+  const { coordinate: A_to_B_coords } = useSlice(A_to_B.data[config.key], data.minmax);
   const { coordinate: B_to_A_coords } = useSlice(
-    B_to_A ? B_to_A[data.period] : A_to_B[data.period],
+    B_to_A ? B_to_A[config.key] : A_to_B.data[config.key],
     data.minmax
   );
 
@@ -247,18 +261,14 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
           }
           menu={
             <Tabs.List
-              className="grow"
               options={[
-                // t("common:time.daily_7d"),
+                t("common:time.daily_7d"),
                 t("common:time.daily"),
                 t("common:time.monthly"),
                 t("common:time.yearly"),
               ]}
-              current={data.tab_index}
-              onChange={index => {
-                setData("tab_index", index);
-                setData("period", period[index]);
-              }}
+              current={data.tab}
+              onChange={index => setData("tab", index)}
             />
           }
         >
@@ -274,18 +284,18 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                       <Timeseries
                         className="h-[300px] w-full"
-                        title={t(`ridership_${data.period}`, {
+                        title={t(`ridership_${config.period}`, {
                           from: params.origin ?? "JB SENTRAL",
                           to: params.destination ?? "WOODLANDS CIQ",
                         })}
                         enableAnimation={!play}
-                        interval={data.period === "day" ? "auto" : data.period}
+                        interval={config.period}
                         data={{
                           labels: A_to_B_coords.x,
                           datasets: [
                             {
                               type: A_to_B_coords.x.length === 1 ? "bar" : "line",
-                              data: A_to_B_coords.y,
+                              data: A_to_B_coords.passengers,
                               label: t(data.period),
                               fill: true,
                               backgroundColor: AKSARA_COLOR.PRIMARY_H,
@@ -298,33 +308,33 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         stats={[
                           {
                             title: t("common:time.daily"),
-                            value: `+${numFormat(A_to_B_callout.day.passengers, "standard")}`,
+                            value: `+${numFormat(A_to_B_callout.daily, "standard")}`,
                           },
                           {
                             title: t("past_month"),
-                            value: `${numFormat(A_to_B_callout.month.passengers, "standard")}`,
+                            value: `${numFormat(A_to_B_callout.monthly, "standard")}`,
                           },
                           {
                             title: t("past_year"),
-                            value: `${numFormat(A_to_B_callout.year.passengers, "standard")}`,
+                            value: `${numFormat(A_to_B_callout.yearly, "standard")}`,
                           },
                         ]}
                       />
-                      {B_to_A ? (
+                      {B_to_A && B_to_A_callout ? (
                         <Timeseries
                           className="h-[300px] w-full"
-                          title={t(`ridership_${data.period}`, {
+                          title={t(`ridership_${config.period}`, {
                             from: params.destination ?? "WOODLANDS CIQ",
                             to: params.origin ?? "JB SENTRAL",
                           })}
                           enableAnimation={!play}
-                          interval={data.period === "day" ? "auto" : data.period}
+                          interval={config.period}
                           data={{
                             labels: B_to_A_coords.x,
                             datasets: [
                               {
                                 type: B_to_A_coords.x.length === 1 ? "bar" : "line",
-                                data: B_to_A_coords.y,
+                                data: B_to_A_coords.passengers,
                                 label: t(data.period),
                                 fill: true,
                                 backgroundColor: AKSARA_COLOR.PRIMARY_H,
@@ -337,15 +347,15 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           stats={[
                             {
                               title: t("common:time.daily"),
-                              value: `+${numFormat(B_to_A_callout.day.passengers, "standard")}`,
+                              value: `+${numFormat(B_to_A_callout.daily, "standard")}`,
                             },
                             {
                               title: t("past_month"),
-                              value: `${numFormat(B_to_A_callout.month.passengers, "standard")}`,
+                              value: `${numFormat(B_to_A_callout.monthly, "standard")}`,
                             },
                             {
                               title: t("past_year"),
-                              value: `${numFormat(B_to_A_callout.year.passengers, "standard")}`,
+                              value: `${numFormat(B_to_A_callout.yearly, "standard")}`,
                             },
                           ]}
                         />
@@ -386,9 +396,9 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                     </div>
                     <Slider
                       type="range"
-                      period={data.period}
+                      period={config.period}
                       value={data.minmax}
-                      data={A_to_B[data.period].x}
+                      data={A_to_B.data[config.key].x}
                       onChange={e => setData("minmax", e)}
                     />
                   </>

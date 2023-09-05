@@ -55,15 +55,15 @@ export const getStaticProps: GetStaticProps = withi18n(
       ? (params.service as string[])
       : [undefined, undefined, undefined];
 
-    const { data: dropdown } = await get("/dropdown", { dashboard: "ktmb" });
-    const { data: A_to_B } = await get("/dashboard", {
-      dashboard: "ktmb",
+    const { data: dropdown } = await get("/explorer", { explorer: "KTMB", dropdown: true });
+    const { data: A_to_B } = await get("/explorer", {
+      explorer: "KTMB",
       service,
       origin,
       destination,
     });
-    const B_to_A = await get("/dashboard", {
-      dashboard: "ktmb",
+    const B_to_A = await get("/explorer", {
+      explorer: "KTMB",
       service,
       origin: destination,
       destination: origin,
@@ -78,13 +78,13 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "transportation",
           agency: "MoT",
         },
-        A_to_B: A_to_B.timeseries.data,
+        A_to_B: A_to_B.timeseries,
         A_to_B_callout: A_to_B.timeseries_callout.data,
         B_to_A: B_to_A ? B_to_A.data.timeseries.data : null,
         B_to_A_callout: B_to_A ? B_to_A.data.timeseries_callout.data : null,
-        dropdown: dropdown.data,
+        dropdown: dropdown,
         last_updated: A_to_B.data_last_updated,
-        params: { service: service, origin: origin, destination: destination },
+        params: { service, origin, destination },
       },
     };
   }
