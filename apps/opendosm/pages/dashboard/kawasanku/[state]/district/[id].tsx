@@ -23,7 +23,7 @@ const KawasankuDistrict: Page = ({
   return (
     <>
       <Metadata
-        title={`${t("header")} • ${params.id}`}
+        title={t("title_area", { area: params.id })}
         description={t("description")}
         keywords={""}
       />

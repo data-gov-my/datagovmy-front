@@ -25,7 +25,11 @@ const KawasankuState: Page = ({
 
   return (
     <>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={t("title_area", { area: params.state })}
+        description={t("description")}
+        keywords={""}
+      />
       <KawasankuDashboard
         params={params}
         bar={bar}

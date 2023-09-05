@@ -22,7 +22,7 @@ const KawasankuIndex: Page = ({
 
   return (
     <>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata title={t("title")} description={t("description")} keywords={""} />
       <KawasankuDashboard
         params={params}
         bar={bar}
@@ -73,7 +73,6 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", as
         },
       },
     },
-    // revalidate: 60 * 60 * 24, // 1 day (in seconds)
   };
 });
 
