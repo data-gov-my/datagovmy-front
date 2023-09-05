@@ -1,7 +1,7 @@
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { routes } from "@lib/routes";
 import type { Periods } from "datagovmy-ui/charts/timeseries";
-import { ComboBox, Section, Slider, Tabs } from "datagovmy-ui/components";
+import { ComboBox, ImageWithFallback, Section, Slider, Tabs } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
@@ -50,6 +50,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
 
   const { data, setData } = useData({
     tab: 0,
+    country: params?.country,
     minmax: [0, timeseries.data.daily_7d.x.length - 1],
     loading: false,
   });
@@ -75,6 +76,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
 
   const navigateToCountry = (country: string) => {
     setData("loading", true);
+    setData("country", country);
     push(`${routes.IMMIGRATION}/${country}`, undefined, {
       scroll: false,
       locale: i18n.language,
@@ -93,15 +95,30 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
         <div className="flex flex-col items-center justify-center space-y-3">
           <div className="mx-auto w-full md:w-96">
             <ComboBox
-              imageSource={value => `https://flagcdn.com/h40/${value.toLowerCase()}.png`}
-              fallback={<GlobeAltIcon className="w-4.5 h-4.5 mx-auto text-black" />}
+              image={value => (
+                <div className="flex h-auto max-h-8 w-8 justify-center self-center">
+                  <ImageWithFallback
+                    className="border-outline dark:border-outlineHover-dark rounded border"
+                    src={`https://flagcdn.com/h40/${value.toLowerCase()}.png`}
+                    fallback={<GlobeAltIcon className="w-4.5 h-4.5 mx-auto text-black" />}
+                    width={28}
+                    height={18}
+                    alt={value}
+                    style={{
+                      width: "auto",
+                      maxWidth: "28px",
+                      height: "auto",
+                      maxHeight: "28px",
+                    }}
+                  />
+                </div>
+              )}
               placeholder={t("section_1.search_placeholder")}
               options={COUNTRY_OPTIONS}
-              selected={
-                params?.country ? COUNTRY_OPTIONS.find(e => e.value === params.country) : null
-              }
+              selected={data.country ? COUNTRY_OPTIONS.find(e => e.value === data.country) : null}
               onChange={selected => {
                 if (selected) navigateToCountry(selected.value);
+                else setData("country", null);
               }}
             />
           </div>

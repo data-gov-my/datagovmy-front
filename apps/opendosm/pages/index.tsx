@@ -28,7 +28,7 @@ import {
   UnemploymentIcon,
   InflationIcon,
 } from "../icons";
-import { AgencyIcon } from "datagovmy-ui/icons/agency";
+import { AgencyIcon, DOSMIcon } from "datagovmy-ui/icons/agency";
 import { Agency, Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { useTheme } from "next-themes";
@@ -209,11 +209,15 @@ const Home: Page = ({
       <Metadata keywords={"opendosm data negara inflasi"} />
 
       <Hero
-        background={clx(theme === "light" ? "home-banner" : "home-banner-dark")}
+        background={clx(
+          theme === undefined && "blue",
+          theme === "light" && "home-banner",
+          theme === "dark" && "home-banner-dark"
+        )}
         category={[t("category"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
         action={
           <div className="flex flex-wrap gap-3">
             <At className="btn-primary text-sm shadow-button" href="/dashboard" enableIcon>

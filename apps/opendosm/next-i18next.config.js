@@ -8,6 +8,7 @@ const namespaces = [
   "dashboard-composite-index",
   "dashboard-consumer-prices",
   "dashboard-construction-statistics",
+  "dashboard-household-income-expenditure",
   "dashboard-iip",
   "dashboard-industrial-production",
   "dashboard-gdp",
@@ -21,6 +22,9 @@ const namespaces = [
   "dashboard-labour-productivity",
   "dashboard-formal-sector-wages",
   "dashboard-services-producer-prices",
+  "dashboard-population",
+  "dashboard-exchange-rates",
+  "dashboard-external-trade",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "division"]);

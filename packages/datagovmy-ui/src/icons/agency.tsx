@@ -70,7 +70,7 @@ export const BOMBAIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns DOSMIcon
  */
-export const DOSMIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const DOSMIcon: FunctionComponent<IconProps> = ({ className, fillColor = "#2563EB" }) => {
   return (
     <svg
       width="32"
@@ -81,7 +81,7 @@ export const DOSMIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1295_31464)">
-        <circle cx="16" cy="16" r="16" fill="#2563EB" />
+        <circle cx="16" cy="16" r="16" fill={fillColor} />
         <g clipPath="url(#clip1_1295_31464)">
           <path
             d="M19.6807 19.6797L22.6807 22.6797"

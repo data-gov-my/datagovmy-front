@@ -8,6 +8,7 @@ import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const NamePopularity: Page = ({
+  last_updated,
   meta,
   top_names,
   yearDropdown,
@@ -19,6 +20,7 @@ const NamePopularity: Page = ({
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <NamePopularityDashboard
+        last_updated={last_updated}
         top_names={top_names}
         yearDropdown={yearDropdown}
         ethnicityDropdown={ethnicityDropdown}
@@ -41,6 +43,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-name-popularit
         category: "demography",
         agency: "JPN",
       },
+      last_updated: data.data_last_updated,
       top_names: data.top_names.data,
       yearDropdown: data.year_dropdown.data.data,
       ethnicityDropdown: data.ethnicity_dropdown.data.data,

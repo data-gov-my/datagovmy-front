@@ -5,6 +5,7 @@ import { sortMulti } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { DOSMIntegrationDataIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Exchange Rates Dashboard
@@ -68,7 +69,13 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="mampu" />}
+        agencyBadge={
+          <AgencyBadge
+            name={t("division:bipd.full")}
+            icon={<DOSMIntegrationDataIcon />}
+            isDivision
+          />
+        }
       />
 
       <Container className="start-h-screen">
@@ -186,6 +193,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                         interval={data.active_trend < 2 ? "day" : "auto"}
                         prefixY={timeseries_callouts.data[index].tooltip_unit}
                         precision={3}
+                        beginZero={false}
                         data={{
                           labels: timeseries.data[key].x,
                           datasets: [

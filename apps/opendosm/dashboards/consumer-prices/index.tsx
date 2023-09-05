@@ -11,6 +11,8 @@ import { WithData } from "datagovmy-ui/types";
 import InflationGeography from "./inflation-geography";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationTrends from "./inflation-trends";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { DOSMPricesIncomeIcon } from "datagovmy-ui/icons/departments/dosm";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -195,12 +197,14 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   return (
     <>
       <Hero
-        background="gray"
-        category={[t("common:categories.economy"), "text-green-700"]}
+        background="orange"
+        category={[t("common:categories.economy"), "text-orange-500"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:piesd.full")} icon={<DOSMPricesIncomeIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">
@@ -243,14 +247,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               />
             </div>
 
-            <Slider
-              className=""
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
             <Timeseries
               title={t("keys.overall")}
               className="h-[300px] w-full"
@@ -279,8 +275,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                     type: "line",
                     data: coordinate.overall,
                     label: t("keys.overall"),
-                    borderColor: AKSARA_COLOR.TURQUOISE,
-                    backgroundColor: AKSARA_COLOR.TURQUOISE_H,
+                    borderColor: AKSARA_COLOR.ORANGE,
+                    backgroundColor: AKSARA_COLOR.ORANGE_H,
                     borderWidth: 1.5,
                     fill: configs("overall").fill,
                   },
@@ -289,12 +285,20 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               }}
               stats={[
                 {
-                  title: t("common.latest", {
+                  title: t("common:common.latest", {
                     date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                   }),
                   value: configs("overall").callout,
                 },
               ]}
+            />
+
+            <Slider
+              type="range"
+              value={data.minmax}
+              data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
+              period="month"
+              onChange={e => setData("minmax", e)}
             />
 
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -328,8 +332,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                         type: "line",
                         label: chartData.label,
                         data: chartData.data,
-                        borderColor: AKSARA_COLOR.GREY,
-                        backgroundColor: AKSARA_COLOR.GREY_H,
+                        borderColor: AKSARA_COLOR.ORANGE,
+                        backgroundColor: AKSARA_COLOR.ORANGE_H,
                         fill: chartData.fill,
                         borderWidth: 1.5,
                       },

@@ -31,12 +31,14 @@ import { FunctionComponent, ReactNode } from "react";
 const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface NamePopularityDashboardProps {
+  last_updated: string;
   top_names: Record<string, any>;
   yearDropdown: number[];
   ethnicityDropdown: string[];
 }
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({
+  last_updated,
   top_names,
   yearDropdown,
   ethnicityDropdown,
@@ -86,14 +88,10 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
   }));
   const { theme } = useTheme();
 
-  const filterTypes: Array<OptionType> = [
-    { label: t("first_name"), value: "first" },
-    { label: t("last_name"), value: "last" },
-  ];
+  const filterTypes: Array<OptionType> = [{ label: t("first_name"), value: "first" }];
 
   const compareFilterTypes: Array<OptionType> = [
     { label: t("first_name"), value: "compare_first" },
-    { label: t("last_name"), value: "compare_last" },
   ];
 
   const processName = (input: string): string => {
@@ -111,12 +109,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
       compare_name: "false",
     };
     if (!params.name.length) {
-      setSearchData(
-        "validation",
-        searchData.type.value === "first"
-          ? t("search_validation_first")
-          : t("search_validation_last")
-      );
+      setSearchData("validation", t("search_validation_first"));
       return;
     }
 
@@ -157,7 +150,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
     if (compareData.names.length > 1) {
       const params = {
         explorer: "NAME_POPULARITY",
-        type: compareData.type.value === "compare_first" ? "first" : "last",
+        type: "first",
         name: compareData.names
           .map((name: { label: string; value: string }) => name.value)
           .join(","),
@@ -253,14 +246,16 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={last_updated}
         agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
         <Section>
           <div className="space-y-6">
-            <div className="flex flex-col place-content-center place-items-center gap-3 sm:flex-row">
-              <h4 className="text-center">{t("section1_title1")}</h4>
+            <span className="flex flex-wrap justify-center gap-1.5">
+              <h4 className="leading-9">{t("section1_title1")}</h4>
               <Dropdown
+                className="inline-flex"
                 width="w-fit"
                 selected={tableData.selectedEthnicity}
                 onChange={e => {
@@ -268,8 +263,9 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 }}
                 options={ethnicityOptions}
               />
-              <h4 className="text-center">{t("section1_title2")}</h4>
+              <h4 className="text-center leading-9">{t("section1_title2")}</h4>
               <Dropdown
+                className="inline-flex"
                 width="w-fit"
                 selected={tableData.selectedYear}
                 onChange={e => {
@@ -277,7 +273,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 }}
                 options={yearOptions}
               />
-            </div>
+            </span>
             <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12">
               <table className="lg:col-span-4 lg:col-start-3">
                 <thead className="dark:border-washed-dark border-b-2">
@@ -342,13 +338,13 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         key={i}
                         className={clx(
                           "dark:border-washed-dark border-b",
-                          i < 3 ? "bg-background dark:bg-background-dark" : ""
+                          i < 3 && "bg-background dark:bg-background-dark"
                         )}
                       >
                         <td
                           className={clx(
                             "px-1 py-2 text-center text-sm font-medium",
-                            i < 3 ? "text-primary dark:text-primary-dark" : ""
+                            i < 3 && "text-primary dark:text-primary-dark"
                           )}
                         >
                           {i + 1}
@@ -369,7 +365,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         <Section title={t("section2_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
-              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col	justify-start gap-6 rounded-xl border p-6">
+              <Card className="border-outline bg-background dark:border-washed-dark dark:bg-washed-dark/50 shadow-button flex flex-col justify-start gap-6 rounded-xl border p-6">
                 <div className="flex flex-row gap-4">
                   <span className="text-sm font-medium">{t("search_radio_label")}</span>
                   <Radio
@@ -390,11 +386,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                       ? "border-danger dark:border-danger border-2"
                       : "border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
                   )}
-                  placeholder={
-                    searchData.type.value === "last"
-                      ? "E.g. Ibrahim, Loke, Veerapan"
-                      : "E.g. Anwar, Siew Fook, Sivakumar"
-                  }
+                  placeholder={"E.g. Anwar, Siew Fook, Sivakumar"}
                   autoFocus
                   value={searchData.name}
                   onChange={e => {
@@ -531,11 +523,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                         ? "border-outline bg-outline text-dim border opacity-30 dark:border-black dark:bg-black"
                         : "border-outline border-2 dark:border-zinc-800 dark:bg-zinc-900"
                     )}
-                    placeholder={
-                      compareData.type.value === "compare_last"
-                        ? "E.g. Ibrahim, Loke, Veerapan"
-                        : "E.g. Anwar, Siew Fook, Sivakumar"
-                    }
+                    placeholder={"E.g. Anwar, Siew Fook, Sivakumar"}
                     value={compareData.name}
                     onChange={e => {
                       setCompareData("validation", false);
@@ -575,7 +563,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                     {t("compare_button")}
                   </Button>
                 </div>
-
+                <p className="text-dim text-sm">{t("search_details")}</p>
                 <p className="text-dim text-sm">{t("search_disclaimer")}</p>
               </Card>
             </div>
@@ -601,7 +589,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                 <thead>
                   <tr className="md:text-md border-b-outline dark:border-washed-dark max-w-full border-b-2 text-left text-sm [&>*]:p-2">
                     <th className="w-5 md:w-[50px]">#</th>
-                    <th>{compareData.params.type === "last" ? t("last_name") : t("first_name")}</th>
+                    <th>{t("first_name")}</th>
                     <th>{t("table_total")}</th>
                     <th>{t("table_most_popular")}</th>
                   </tr>
@@ -655,7 +643,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
                                 "N/A"
                               ) : (
                                 <div className="flex">
-                                  <Tooltip tip={t("privacy_prompt2")} className="left-1/3">
+                                  <Tooltip tip={t("privacy_prompt2")}>
                                     {open => (
                                       <div
                                         className="cursor-help whitespace-nowrap underline decoration-dashed [text-underline-position:from-font]"

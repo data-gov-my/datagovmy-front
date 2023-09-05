@@ -4,7 +4,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { JIMIcon } from "datagovmy-ui/icons/agency";
+import { DOSMWorkerIcon } from "datagovmy-ui/icons/departments/dosm";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
@@ -223,7 +223,9 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:mbls.full")} icon={<JIMIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("agencies:mbls.full")} icon={<DOSMWorkerIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">

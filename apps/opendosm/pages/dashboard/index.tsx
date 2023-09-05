@@ -67,12 +67,12 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         {
           name: "iip",
-          agency: "bpan",
+          agency: "dosm",
           route: routes.IIP,
         },
         {
           name: "bop",
-          agency: "bpan",
+          agency: "dosm",
           route: routes.BOP,
         },
         {
@@ -101,9 +101,29 @@ export const getStaticProps: GetStaticProps = withi18n(
           route: routes.SERVICES_PRODUCER_PRICES,
         },
         {
+          name: "population",
+          agency: "dosm",
+          route: routes.POPULATION,
+        },
+        {
           name: "construction-statistics",
           agency: "dosm",
           route: routes.CONSTRUCTION_STATISTICS,
+        },
+        {
+          name: "household-income-expenditure",
+          agency: "dosm",
+          route: routes.HOUSEHOLD_INCOME_EXPENDITURE,
+        },
+        {
+          name: "exchange-rates",
+          agency: "dosm",
+          route: routes.EXCHANGE_RATE,
+        },
+        {
+          name: "external-trade",
+          agency: "dosm",
+          route: routes.EXTERNAL_TRADE,
         },
       ],
     };

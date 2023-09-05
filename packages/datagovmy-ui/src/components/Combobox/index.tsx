@@ -18,7 +18,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { body } from "../../configs/font";
 import { matchSorter, MatchSorterOptions } from "match-sorter";
-import { useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 type ComboBoxProps<T> = Omit<
   ComboOptionProps<T>,
@@ -40,13 +40,16 @@ const ComboBox = <T extends unknown>({
   onSearch,
   format,
   placeholder,
-  imageSource,
-  fallback,
+  image,
   loading = false,
   config = { keys: ["label"] },
 }: ComboBoxProps<T>) => {
   const { t } = useTranslation();
-  const [query, setQuery] = useState<string>(selected?.label ?? "");
+  const [query, setQuery] = useState<string>(selected ? selected.label : "");
+
+  useEffect(() => {
+    setQuery(selected ? selected.label : "");
+  }, [selected]);
 
   const filteredOptions = useMemo<ComboOptionProp<T>[]>(
     () => matchSorter(options, query, config),
@@ -122,14 +125,20 @@ const ComboBox = <T extends unknown>({
 
   return (
     <div
+      ref={refs.setReference}
       onClick={() => setOpen(!open)}
-      className="border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark shadow-button relative w-full select-none overflow-hidden rounded-full border focus:outline-none focus-visible:ring-0"
+      className="border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark shadow-button relative flex w-full select-none overflow-hidden rounded-full border focus:outline-none focus-visible:ring-0"
     >
+      <span className="ml-4 flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
+        {image && selected ? (
+          image(selected.value)
+        ) : (
+          <MagnifyingGlassIcon className="dark:text-dim h-5 w-5 text-black" />
+        )}
+      </span>
       <input
-        ref={refs.setReference}
         className={clx(
-          "focus:dark:bg-washed-dark w-full truncate border-none bg-white py-3 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black",
-          !imageSource ? "pl-12" : "pl-14"
+          "focus:dark:bg-washed-dark w-full truncate border-none bg-white py-3 pl-2 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
         )}
         spellCheck={false}
         {...getReferenceProps({
@@ -157,24 +166,7 @@ const ComboBox = <T extends unknown>({
           },
         })}
       />
-      <span className="absolute left-4 top-3.5">
-        {!imageSource ? (
-          <MagnifyingGlassIcon className="dark:text-dim h-5 w-5 text-black" />
-        ) : (
-          <ImageWithFallback
-            className="border-outline dark:border-outlineHover-dark aspect-4/3 rounded border"
-            src={
-              typeof imageSource === "string"
-                ? `${imageSource}/${selected?.value}.png`
-                : imageSource(selected?.value ?? "bad")
-            }
-            fallback={fallback}
-            width={28}
-            height={18}
-            alt={selected?.value as string}
-          />
-        )}
-      </span>
+
       {(query.length > 0 || selected) && (
         <Button
           className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-2 top-2 flex h-8 w-8 items-center rounded-full"
@@ -232,8 +224,7 @@ const ComboBox = <T extends unknown>({
                           total={ITEMS_COUNT}
                           option={option}
                           format={format}
-                          imageSource={imageSource}
-                          fallback={fallback}
+                          image={image}
                           isSelected={selected?.value === option.value}
                           active={i === activeIndex}
                           index={i}
@@ -287,8 +278,7 @@ const ComboBox = <T extends unknown>({
                           total={ITEMS_COUNT}
                           option={option}
                           format={format}
-                          imageSource={imageSource}
-                          fallback={fallback}
+                          image={image}
                           isSelected={selected?.value === option.value}
                           active={virtualItem.index === activeIndex}
                           index={virtualItem.index}

@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           station,
         }),
       ]).catch(e => {
-        console.log(e);
+        console.error(e);
         throw new Error("Invalid station. Message: " + e);
       });
       const station_info: Station = dropdown.data.find((e: Station) => e.slug === station);

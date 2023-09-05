@@ -28,7 +28,7 @@
     "./hooks": "./src/hooks/index.ts",
     "./i18n": "./src/i18n/index.cjs",
     "./icons": "./src/icons/index.tsx",
-    "./icons/agency": "./src/icons/agency.tsx",
+    "./icons/*": "./src/icons/*.tsx",
     "./mixpanel": "./src/lib/mixpanel.ts",
     "./options": "./src/lib/options.ts",
     "./schema/*": "./src/lib/schema/*.tsx",
@@ -62,8 +62,8 @@
       "icons": [
         "./src/icons/index.tsx"
       ],
-      "icons/agency": [
-        "./src/icons/agency.tsx"
+      "icons/*": [
+        "./src/icons/*.tsx"
       ],
       "constants": [
         "./types/constants.d.ts"
