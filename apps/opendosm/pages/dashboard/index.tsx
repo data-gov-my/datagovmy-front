@@ -129,7 +129,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         {
           name: "external-trade",
-          agency: "bppa",
+          division: "bppa",
           route: routes.EXTERNAL_TRADE,
         },
       ],
