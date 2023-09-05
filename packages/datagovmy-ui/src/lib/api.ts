@@ -80,12 +80,10 @@ export const post = (
  * Might be a good time to move away from axios in the future.
  * @param route Endpoint
  * @param payload Body
- * @returns {string} Text
+ * @returns {Promise<Response>} Text
  */
 
-export const stream = (route: string, payload?: any) => {
-  // Uncomment when ready
-  // const authorization = parseCookies(document.cookie).rolling_token;
+export const stream = (route: string, payload?: any): Promise<Response> => {
   return fetch(process.env.NEXT_PUBLIC_AI_URL + route, {
     method: "POST",
     headers: {

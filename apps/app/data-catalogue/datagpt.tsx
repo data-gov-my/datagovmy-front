@@ -16,7 +16,7 @@ const CatalogueDataGPT: FunctionComponent<CatalogueDataGPTProps> = () => {
       <Container>
         <div className="flex w-full flex-col lg:flex-row">
           <Filetree />
-          <Chat model="chat-history" />
+          <Chat model="chat-history" chain="main" />
         </div>
       </Container>
     </FiletreeProvider>

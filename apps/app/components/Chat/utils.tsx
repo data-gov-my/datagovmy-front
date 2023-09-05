@@ -32,6 +32,7 @@ export interface ChatInterface {
 interface ChatProviderProps {
   model: string;
   children: ReactNode;
+  chain: "main" | "docs";
   ref?: ForwardedRef<ChatInterface>;
 }
 
@@ -58,17 +59,13 @@ export const ChatContext = createContext<ChatContextProps>({
  * @returns {prompt, session, setPrompt}
  */
 export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwardRef(
-  ({ model, children }, ref) => {
+  ({ model, children, chain }, ref) => {
     const { t } = useTranslation(["catalogue-datagpt"]);
     const idb = useRef<IndexedDB>();
     const { active, create: createChatSession } = useContext(FiletreeContext);
     const [prompt, setPrompt] = useSessionStorage<string>("prompt", "");
     const [session, setSession] = useState<ChatSession | undefined>();
-    const { data, setData } = useData({
-      fetching: false,
-      text_stream: "",
-    });
-    // const idb = new IndexedDB(model);
+    const { data, setData } = useData({ fetching: false, text_stream: "" });
 
     useEffect(() => {
       idb.current = new IndexedDB(model);
@@ -151,6 +148,7 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
     const fetchResponse = async (prompt: string) => {
       setData("fetching", true);
       const payload = {
+        chain_type: chain,
         model: "gpt-3.5-turbo",
         messages: session?.chats.slice(-5) || [{ role: "user", content: prompt }],
         max_tokens: 1000,
