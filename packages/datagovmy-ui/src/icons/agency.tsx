@@ -2,6 +2,7 @@ import { FunctionComponent, createElement } from "react";
 import { IconProps } from ".";
 import Image from "next/image";
 import { Agency } from "../../types";
+import { AKSARA_COLOR } from "../lib/constants";
 
 /**
  * BNM Icon
@@ -658,9 +659,13 @@ export const MAMPUIcon: FunctionComponent<IconProps> = ({ className }) => {
 /**
  * MCMC Icon
  * @param className
+ * @param fillColor
  * @returns MCMCIcon
  */
-export const MCMCIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const MCMCIcon: FunctionComponent<IconProps> = ({
+  className,
+  fillColor = AKSARA_COLOR.PURPLE,
+}) => {
   return (
     <svg
       width="32"
@@ -671,7 +676,7 @@ export const MCMCIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1208_15507)">
-        <circle cx="16" cy="16" r="16" fill="#2563EB" />
+        <circle cx="16" cy="16" r="16" fill={fillColor} />
         <circle cx="16" cy="16" r="9" stroke="white" strokeWidth="1.5" />
         <mask
           id="mask0_1208_15507"
