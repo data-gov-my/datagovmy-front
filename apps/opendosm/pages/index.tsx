@@ -92,35 +92,35 @@ const Home: Page = ({
     () => [
       {
         icon: <UsersIcon className="h-6 w-6" />,
-        title: t("stats.population"),
+        title: "stats.population",
         url: routes.POPULATION,
         value: numFormat(keystats.population.callout, "compact", 1, "long", i18n.language, true),
         data_as_of: toDate(keystats.population.data_as_of, "Qq yyyy"),
       },
       {
         icon: <EconomicGrowthIcon className="h-5 w-5" />,
-        title: t("stats.economic_growth"),
+        title: "stats.economic_growth",
         url: routes.GDP,
         value: numFormat(keystats.growth.callout, "compact", 1) + "%",
         data_as_of: toDate(keystats.growth.data_as_of, "Qq yyyy"),
       },
       {
         icon: <UnemploymentIcon className="h-5 w-5" />,
-        title: t("stats.unemployment"),
+        title: "stats.unemployment",
         url: routes.LABOUR_MARKET,
         value: numFormat(keystats.unemployment.callout, "compact", 1) + "%",
         data_as_of: toDate(keystats.unemployment.data_as_of, "MMM yyyy"),
       },
       {
         icon: <InflationIcon className="h-5 w-5" />,
-        title: t("stats.inflation"),
+        title: "stats.inflation",
         url: routes.CONSUMER_PRICES,
         value: numFormat(keystats.inflation.callout, "compact", 1) + "%",
         data_as_of: toDate(keystats.inflation.data_as_of, "MMM yyyy"),
       },
       {
         icon: <ProductionIcon className="h-5 w-5" />,
-        title: t("stats.production_cost"),
+        title: "stats.production_cost",
         url: routes.PRODUCER_PRICES,
         value:
           yieldPrefix(keystats.ppi.callout) + numFormat(keystats.ppi.callout, "compact", 1) + "%",
@@ -128,7 +128,7 @@ const Home: Page = ({
       },
       {
         icon: <ProductionIcon className="h-5 w-5" />,
-        title: t("stats.manufacturing_output"),
+        title: "stats.manufacturing_output",
         url: routes.MANUFACTURING_STATISTICS,
         value:
           yieldPrefix(keystats.mfg.callout) + numFormat(keystats.mfg.callout, "compact", 1) + "%",
@@ -136,7 +136,7 @@ const Home: Page = ({
       },
       {
         icon: <IndustryIcon className="h-4 w-4" />,
-        title: t("stats.industrial_production"),
+        title: "stats.industrial_production",
         url: routes.INDUSTRIAL_PRODUCTION,
         value:
           yieldPrefix(keystats.ipi.callout) + numFormat(keystats.ipi.callout, "compact", 1) + "%",
@@ -144,7 +144,7 @@ const Home: Page = ({
       },
       {
         icon: <RetailTradeIcon className="h-5 w-5" />,
-        title: t("stats.wholesale_retail"),
+        title: "stats.wholesale_retail",
         url: routes.WHOLESALE_RETAIL,
         value:
           yieldPrefix(keystats.iowrt.callout) +
@@ -202,7 +202,7 @@ const Home: Page = ({
                     href={url}
                     className="relative flex flex-wrap items-start gap-x-2 text-sm font-medium uppercase text-dim transition-all [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white"
                   >
-                    <span>{title}</span>
+                    <span>{t(title)}</span>
                     <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                   </At>
                   <span className="flex items-baseline gap-x-3">
