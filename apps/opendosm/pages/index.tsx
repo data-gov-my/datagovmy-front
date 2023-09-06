@@ -26,12 +26,13 @@ import {
   UnemploymentIcon,
   InflationIcon,
 } from "../icons";
-import { AgencyIcon, DOSMIcon } from "datagovmy-ui/icons/agency";
-import { Agency, Page } from "datagovmy-ui/types";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { ReactNode, useMemo } from "react";
+import DivisionIcon, { Division } from "@icons/division";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -340,7 +341,7 @@ type RankItem = {
   count: number;
   name_bm: string;
   name_en: string;
-  agency_abbr: Agency;
+  agency_abbr: Division;
 };
 interface RankingProps {
   ranks: RankItem[];
@@ -357,8 +358,8 @@ const Ranking = ({ ranks }: RankingProps) => {
           <At href={item.id} key={item.id}>
             <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50">
               <div className="relative flex items-center gap-3">
-                <AgencyIcon agency={item.agency_abbr} className="h-6 w-6" />
-                <p className="text-sm text-dim">{t(`agencies:${item.agency_abbr}.abbr`)}</p>
+                <DivisionIcon division={item.agency_abbr} className="h-6 w-6" />
+                <p className="text-sm text-dim">{t(`division:${item.agency_abbr}.abbr`)}</p>
                 <ArrowUpRightIcon className="absolute right-2 h-5 w-5 text-dim opacity-0 transition-[opacity_transform] duration-0 group-hover:translate-x-2 group-hover:opacity-100 group-hover:duration-300" />
               </div>
               <div className="relative overflow-hidden">
@@ -401,10 +402,6 @@ export const getStaticProps: GetStaticProps = withi18n("opendosm-home", async ()
         today: {
           dataset: data.table_summary.data.dataset_views.today,
           dashboard: data.table_summary.data.dashboard_views.today,
-        },
-        last_month: {
-          dataset: data.table_summary.data.dataset_views.last_month,
-          dashboard: data.table_summary.data.dashboard_views.last_month,
         },
         all_time: {
           dataset: data.table_summary.data.dataset_views.all_time,
