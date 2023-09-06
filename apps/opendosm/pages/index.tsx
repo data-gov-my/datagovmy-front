@@ -14,14 +14,12 @@ import {
   Tabs,
 } from "datagovmy-ui/components";
 import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
-import { WindowContext } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import {
   UsersIcon,
   EconomicGrowthIcon,
-  BankIcon,
   IndustryIcon,
   ProductionIcon,
   RetailTradeIcon,
@@ -33,7 +31,7 @@ import { Agency, Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { ReactNode, useContext, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -45,7 +43,6 @@ const Home: Page = ({
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { size } = useContext(WindowContext);
   const { t, i18n } = useTranslation("opendosm-home");
   const { theme } = useTheme();
   const { data, setData } = useData({
@@ -210,7 +207,7 @@ const Home: Page = ({
                   </At>
                   <span className="flex items-baseline gap-x-3">
                     <p className="text-2xl font-medium">{value}</p>
-                    <p className="text-sm text-dim">{data_as_of}</p>
+                    <p className="text-sm text-dim">{`(${data_as_of})`}</p>
                   </span>
                 </div>
               </div>
