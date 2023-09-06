@@ -1,20 +1,21 @@
-import { Container, Section, Tabs } from "datagovmy-ui/components";
+import { Section, Tabs } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
+
 /**
- * Income Taxation Dashboard
+ * Income Taxation - Overview
  * @overview Status: In-development
  */
 
-interface IncomeTaxationProps {
+interface IncomeOverviewProps {
   stacked_bar: any;
 }
 
-const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar }) => {
+const IncomeOverview: FunctionComponent<IncomeOverviewProps> = ({ stacked_bar }) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
   const { theme } = useTheme();
 
@@ -67,52 +68,50 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ stacked_bar })
       : []),
   ];
   return (
-    <Container className="min-h-screen">
-      <Section
-        title={t("section2.title")}
-        description={t("section2.description")}
-        date={stacked_bar.data_as_of}
-        menu={
-          <Tabs.List
-            options={[t("absolute"), t("relative")]}
-            current={data.tab_index}
-            onChange={index => {
-              setData("tab_index", index);
-              setData("tab_type", TABS[index]);
-            }}
-          />
-        }
-      >
-        <Timeseries
-          className="h-96"
-          enableLegend={true}
-          generateLabels={chart => {
-            return chart.data.datasets.map((dataset: any, i: number) => {
-              return {
-                text: dataset.label,
-                fillStyle: dataset.backgroundColor,
-                strokeStyle: dataset.borderColor,
-                pointStyle: dataset.type === "line" ? "line" : "rect",
-                hidden: !chart.isDatasetVisible(i),
-                datasetIndex: i,
-              };
-            });
-          }}
-          data={{
-            labels: stacked_bar.data[data.tab_type.value].x,
-            datasets: _datasets,
-          }}
-          prefixY={data.tab_index == 0 ? "RM" : ""}
-          unitY={data.tab_index == 0 ? "bil" : "%"}
-          maxY={data.tab_index == 0 ? undefined : 100}
-          interval={"year"}
-          tooltipItemSort={(a, b) => {
-            return b.datasetIndex - a.datasetIndex;
+    <Section
+      title={t("section2.title")}
+      description={t("section2.description")}
+      date={stacked_bar.data_as_of}
+      menu={
+        <Tabs.List
+          options={[t("absolute"), t("relative")]}
+          current={data.tab_index}
+          onChange={index => {
+            setData("tab_index", index);
+            setData("tab_type", TABS[index]);
           }}
         />
-      </Section>
-    </Container>
+      }
+    >
+      <Timeseries
+        className="h-96"
+        enableLegend={true}
+        generateLabels={chart => {
+          return chart.data.datasets.map((dataset: any, i: number) => {
+            return {
+              text: dataset.label,
+              fillStyle: dataset.backgroundColor,
+              strokeStyle: dataset.borderColor,
+              pointStyle: dataset.type === "line" ? "line" : "rect",
+              hidden: !chart.isDatasetVisible(i),
+              datasetIndex: i,
+            };
+          });
+        }}
+        data={{
+          labels: stacked_bar.data[data.tab_type.value].x,
+          datasets: _datasets,
+        }}
+        prefixY={data.tab_index == 0 ? "RM" : ""}
+        unitY={data.tab_index == 0 ? "bil" : "%"}
+        maxY={data.tab_index == 0 ? undefined : 100}
+        interval={"year"}
+        tooltipItemSort={(a, b) => {
+          return b.datasetIndex - a.datasetIndex;
+        }}
+      />
+    </Section>
   );
 };
 
-export default IncomeTaxation;
+export default IncomeOverview;
