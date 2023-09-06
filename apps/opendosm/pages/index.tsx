@@ -14,14 +14,12 @@ import {
   Tabs,
 } from "datagovmy-ui/components";
 import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
-import { WindowContext } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
-import { clx, numFormat } from "datagovmy-ui/helpers";
+import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import {
   UsersIcon,
   EconomicGrowthIcon,
-  BankIcon,
   IndustryIcon,
   ProductionIcon,
   RetailTradeIcon,
@@ -33,7 +31,7 @@ import { Agency, Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps } from "next";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { ReactNode, useContext, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -45,7 +43,6 @@ const Home: Page = ({
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { size } = useContext(WindowContext);
   const { t, i18n } = useTranslation("opendosm-home");
   const { theme } = useTheme();
   const { data, setData } = useData({
@@ -88,75 +85,72 @@ const Home: Page = ({
     title: string;
     url: string;
     value: string;
+    data_as_of: string;
   }
 
   const STATS = useMemo<StatProps[]>(
     () => [
       {
         icon: <UsersIcon className="h-6 w-6" />,
-        title: t("stats.population"),
-        url: routes.KAWASANKU,
-        value: numFormat(
-          keystats.data.population.callout,
-          "compact",
-          1,
-          "long",
-          i18n.language,
-          true
-        ),
+        title: "stats.population",
+        url: routes.POPULATION,
+        value: numFormat(keystats.population.callout, "compact", 1, "long", i18n.language, true),
+        data_as_of: toDate(keystats.population.data_as_of, "Qq yyyy"),
       },
       {
         icon: <EconomicGrowthIcon className="h-5 w-5" />,
-        title: t("stats.economic_growth"),
+        title: "stats.economic_growth",
         url: routes.GDP,
-        value: numFormat(keystats.data.growth.callout, "compact", 1) + "%",
-      },
-      {
-        icon: <BankIcon className="h-4 w-4" />,
-        title: t("stats.bnm_opr"),
-        url: `https://data.gov.my/${
-          i18n.language === "ms-MY" ? "ms-MY/" : ""
-        }dashboard/interest-rates`,
-        value: numFormat(keystats.data.opr.callout, "compact", 2) + "%",
+        value: numFormat(keystats.growth.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.growth.data_as_of, "Qq yyyy"),
       },
       {
         icon: <UnemploymentIcon className="h-5 w-5" />,
-        title: t("stats.unemployment"),
+        title: "stats.unemployment",
         url: routes.LABOUR_MARKET,
-        value: numFormat(keystats.data.unemployment.callout, "compact", 1) + "%",
+        value: numFormat(keystats.unemployment.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.unemployment.data_as_of, "MMM yyyy"),
       },
       {
         icon: <InflationIcon className="h-5 w-5" />,
-        title: t("stats.inflation"),
+        title: "stats.inflation",
         url: routes.CONSUMER_PRICES,
-        value: numFormat(keystats.data.inflation.callout, "compact", 1) + "%",
+        value: numFormat(keystats.inflation.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.inflation.data_as_of, "MMM yyyy"),
       },
       {
         icon: <ProductionIcon className="h-5 w-5" />,
-        title: t("stats.production_cost"),
+        title: "stats.production_cost",
         url: routes.PRODUCER_PRICES,
         value:
-          yieldPrefix(keystats.data.ppi.callout) +
-          numFormat(keystats.data.ppi.callout, "compact", 1) +
-          "%",
+          yieldPrefix(keystats.ppi.callout) + numFormat(keystats.ppi.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.ppi.data_as_of, "MMM yyyy"),
+      },
+      {
+        icon: <ProductionIcon className="h-5 w-5" />,
+        title: "stats.manufacturing_output",
+        url: routes.MANUFACTURING_STATISTICS,
+        value:
+          yieldPrefix(keystats.mfg.callout) + numFormat(keystats.mfg.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.mfg.data_as_of, "MMM yyyy"),
       },
       {
         icon: <IndustryIcon className="h-4 w-4" />,
-        title: t("stats.industrial_production"),
+        title: "stats.industrial_production",
         url: routes.INDUSTRIAL_PRODUCTION,
         value:
-          yieldPrefix(keystats.data.ipi.callout) +
-          numFormat(keystats.data.ipi.callout, "compact", 1) +
-          "%",
+          yieldPrefix(keystats.ipi.callout) + numFormat(keystats.ipi.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.ipi.data_as_of, "MMM yyyy"),
       },
       {
         icon: <RetailTradeIcon className="h-5 w-5" />,
-        title: t("stats.wholesale_retail"),
+        title: "stats.wholesale_retail",
         url: routes.WHOLESALE_RETAIL,
         value:
-          yieldPrefix(keystats.data.iowrt.callout) +
-          numFormat(keystats.data.iowrt.callout, "compact", 1) +
+          yieldPrefix(keystats.iowrt.callout) +
+          numFormat(keystats.iowrt.callout, "compact", 1) +
           "%",
+        data_as_of: toDate(keystats.iowrt.data_as_of, "MMM yyyy"),
       },
     ],
     []
@@ -198,7 +192,7 @@ const Home: Page = ({
       <Container className="min-h-screen">
         <Section title={t("at_a_glance")}>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {STATS.map(({ icon, title, value, url }: StatProps) => (
+            {STATS.map(({ data_as_of, icon, title, value, url }: StatProps) => (
               <div className="flex gap-5" key={url}>
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-outline dark:bg-washed-dark">
                   {icon}
@@ -208,11 +202,13 @@ const Home: Page = ({
                     href={url}
                     className="relative flex flex-wrap items-start gap-x-2 text-sm font-medium uppercase text-dim transition-all [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white"
                   >
-                    <span>{title}</span>
-                    <ArrowTopRightOnSquareIcon className="absolute -right-6 h-4 w-4" />
+                    <span>{t(title)}</span>
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                   </At>
-
-                  <p className="text-2xl font-medium">{value}</p>
+                  <span className="flex items-baseline gap-x-3">
+                    <p className="text-2xl font-medium">{value}</p>
+                    <p className="text-sm text-dim">{`(${data_as_of})`}</p>
+                  </span>
                 </div>
               </div>
             ))}
@@ -415,7 +411,7 @@ export const getStaticProps: GetStaticProps = withi18n("opendosm-home", async ()
           dashboard: data.table_summary.data.dashboard_views.all_time,
         },
       },
-      keystats: data.keystats,
+      keystats: data.keystats.data,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
     },
