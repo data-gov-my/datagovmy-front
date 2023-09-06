@@ -291,6 +291,7 @@ export const PoliticalPartyColours: Record<string, string> = (() => {
 })();
 
 export const AgencyLink: Record<Agency, string> = {
+  "aadk": "https://www.adk.gov.my/",
   "bnm": "https://www.bnm.gov.my/publications/mhs",
   "bomba": "https://www.bomba.gov.my/",
   "dosm": "https://open.dosm.gov.my/",
@@ -321,5 +322,6 @@ export const AgencyLink: Record<Agency, string> = {
   "perkeso": "https://www.perkeso.gov.my/en/",
   "phcorp": "https://protecthealth.com.my",
   "spr": "https://www.spr.gov.my/",
+  "ssm": "https://www.ssm.com.my/Pages/Home.aspx",
   "unhcr": "https://www.unhcr.org/my/",
 } as const;

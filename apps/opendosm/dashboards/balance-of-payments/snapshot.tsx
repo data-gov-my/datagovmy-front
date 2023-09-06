@@ -1,8 +1,9 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo } from "react";
 import { WithData } from "datagovmy-ui/types";
 import { Container, Section, Slider } from "datagovmy-ui/components";
-import { clx, numFormat } from "datagovmy-ui/helpers";
+import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 
 /**
  * Balance Of Payments Snapshot Table
@@ -43,12 +44,14 @@ const itemSorts = (variable: string, index: number) => {
 };
 const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }) => {
   const { t, i18n } = useTranslation(["dashboard-bop", "common"]);
+  const { size } = useContext(WindowContext);
 
   const xValues = Object.keys(bop_snapshot.data);
   const item = Object.values(bop_snapshot.data);
+  const sliderRange = xValues.slice(4);
 
   const { data, setData } = useData({
-    snapshot_index: xValues.length - 1,
+    snapshot_index: sliderRange.length - 1,
   });
 
   const formatToMillions = (number: number, dp: number = 1) => {
@@ -59,37 +62,43 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
     );
   };
 
-  const tableData = useMemo(
-    () =>
-      item[data.snapshot_index]
-        .map(row => {
-          if (row.variable === "bop") {
-            return {
-              index: itemSorts(row.variable, row.index),
-              component: t(`table.${row.variable}`),
-              net: row.data.net !== "None" ? formatToMillions(row.data.net, 0) : "-",
-              credit: row.data.credit !== "None" ? formatToMillions(row.data.credit, 0) : "-",
-              debit: row.data.debit !== "None" ? formatToMillions(row.data.debit, 0) : "-",
-              isSubHeader: row.variable.includes("_"),
-            };
-          }
-
+  const tableData = useMemo(() => {
+    const datesData = {};
+    for (let i = data.snapshot_index; i <= data.snapshot_index + 4; i++) {
+      const date = toDate(xValues[i], "qQ yyyy", i18n.language);
+      datesData[date] = item[i];
+    }
+    const dates = size.width < 640 ? Object.keys(datesData).reverse() : Object.keys(datesData);
+    return item[data.snapshot_index]
+      .map(row => {
+        const final = dates.map(date => {
+          const netValue = datesData[date]?.find(el => el.variable === row.variable).data.net;
+          return netValue !== "None" ? formatToMillions(netValue, 0) : "-";
+        });
+        if (row.variable === "bop") {
           return {
             index: itemSorts(row.variable, row.index),
-            component: t(`table.${row.variable}`),
-            net: row.data.net !== "None" ? formatToMillions(row.data.net, 1) : "-",
-            credit: row.data.credit !== "None" ? formatToMillions(row.data.credit, 1) : "-",
-            debit: row.data.debit !== "None" ? formatToMillions(row.data.debit, 1) : "-",
+            component: row.variable,
+            dates: dates,
+            net: final,
+
             isSubHeader: row.variable.includes("_"),
           };
-        })
-        .sort((a, b) => a.index - b.index),
+        }
 
-    [data.snapshot_index]
-  );
+        return {
+          index: itemSorts(row.variable, row.index),
+          component: row.variable,
+          dates: dates,
+          net: final,
+          isSubHeader: row.variable.includes("_"),
+        };
+      })
+      .sort((a, b) => a.index - b.index);
+  }, [data.snapshot_index, size]);
 
   const className = {
-    td: "w-1/5 px-3 py-2 text-end text-sm tabular-nums text-black dark:text-white",
+    td: "flex-1 px-3 py-2 text-end text-sm tabular-nums text-black dark:text-white",
     th: "px-3 py-2 text-center text-sm font-medium text-black dark:text-white",
   };
 
@@ -107,7 +116,7 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
                 <thead className="border-b border-outline dark:border-washed-dark">
                   <tr>
                     <th></th>
-                    <th colSpan={3} className={className.th}>
+                    <th colSpan={5} className={className.th}>
                       {t("table.unit")}
                     </th>
                   </tr>
@@ -115,35 +124,42 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
                 <thead>
                   <tr>
                     <th></th>
-                    <th className={className.th}>{t("keys.net")}</th>
-                    <th className={className.th}>{t("keys.credit")}</th>
-                    <th className={className.th}>{t("keys.debit")}</th>
+                    {tableData[0].dates.map(date => (
+                      <th key={date} className={className.th}>
+                        {date}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {tableData.map((item, i: number) => (
-                    <tr
-                      key={i}
-                      className={clx(
-                        !item.isSubHeader
-                          ? "bg-outline dark:bg-washed-dark"
-                          : "border-b border-outline dark:border-washed-dark",
-                        "last:border-t last:border-t-white last:dark:border-t-outlineHover-dark"
-                      )}
-                    >
-                      <td
+                  {tableData.map((item, i: number) => {
+                    return (
+                      <tr
+                        key={i}
                         className={clx(
-                          "w-2/5 px-3 py-2 text-sm font-medium",
-                          item.isSubHeader && "pl-8 font-normal"
+                          !item.isSubHeader
+                            ? "bg-outline dark:bg-washed-dark"
+                            : "border-b border-outline dark:border-washed-dark",
+                          "last:border-t last:border-t-white last:dark:border-t-outlineHover-dark"
                         )}
                       >
-                        {item.component}
-                      </td>
-                      <td className={className.td}>{item.net}</td>
-                      <td className={className.td}>{item.credit}</td>
-                      <td className={className.td}>{item.debit}</td>
-                    </tr>
-                  ))}
+                        <td
+                          className={clx(
+                            "w-1/3 px-3 py-2 text-sm font-medium",
+                            item.isSubHeader && "pl-8 font-normal"
+                          )}
+                        >
+                          {t(`table.${item.component}`)}
+                        </td>
+
+                        {item.net.map((net: number, index: number) => (
+                          <td key={index} className={className.td}>
+                            {net}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -151,9 +167,11 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
           <Slider
             type="single"
             value={data.snapshot_index}
-            data={xValues}
+            data={sliderRange}
             period="quarter"
-            onChange={e => setData("snapshot_index", e)}
+            onChange={e => {
+              setData("snapshot_index", e[0][0]);
+            }}
           />
         </Section>
       </Container>

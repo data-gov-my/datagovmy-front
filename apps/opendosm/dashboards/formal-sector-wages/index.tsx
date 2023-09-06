@@ -1,13 +1,13 @@
+import { WorkerIcon } from "@icons/division";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
 import { AKSARA_COLOR, MALAYSIA, STATES } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { JIMIcon } from "datagovmy-ui/icons/agency";
 import { OptionType, WithData } from "datagovmy-ui/types";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
-import { useTheme } from "next-themes";
 
 /**
  * Formal Sector Wages Dashboard
@@ -67,7 +67,9 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:mbls.full")} icon={<JIMIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("division:mbls.full")} icon={<WorkerIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">

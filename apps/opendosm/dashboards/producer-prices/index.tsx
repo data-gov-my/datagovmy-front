@@ -1,15 +1,13 @@
+import { PricesIncomeIcon } from "@icons/division";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
-import { FunctionComponent, useCallback, useEffect } from "react";
-import dynamic from "next/dynamic";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
-import { OptionType } from "datagovmy-ui/types";
-import { AKSARA_COLOR } from "datagovmy-ui/constants";
-import { ChartDataset, ChartTypeRegistry } from "chart.js";
-
-import { DOSMIcon } from "datagovmy-ui/icons/agency";
-import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { WithData } from "datagovmy-ui/types";
+import { OptionType, WithData } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Producer Proces (PPI) Dashboard
@@ -136,7 +134,9 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={
+          <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">

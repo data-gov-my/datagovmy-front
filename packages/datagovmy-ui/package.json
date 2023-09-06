@@ -16,15 +16,19 @@
     "./contexts/*": "./src/contexts/*.tsx",
     "./dc-charts/*": "./src/charts/partials/*.tsx",
     "./decorators": "./src/lib/decorators.ts",
+    "./geojson/district": "./src/lib/geojson/district/index.ts",
     "./geojson/district/*": "./src/lib/geojson/district/*.ts",
+    "./geojson/dun": "./src/lib/geojson/dun/index.ts",
     "./geojson/dun/*": "./src/lib/geojson/dun/*.ts",
+    "./geojson/parlimen": "./src/lib/geojson/parlimen/index.ts",
     "./geojson/parlimen/*": "./src/lib/geojson/parlimen/*.ts",
+    "./geojson/state": "./src/lib/geojson/state/index.ts",
     "./geojson/state/*": "./src/lib/geojson/state/*.ts",
     "./helpers": "./src/lib/helpers.ts",
     "./hooks": "./src/hooks/index.ts",
     "./i18n": "./src/i18n/index.cjs",
     "./icons": "./src/icons/index.tsx",
-    "./icons/agency": "./src/icons/agency.tsx",
+    "./icons/*": "./src/icons/*.tsx",
     "./mixpanel": "./src/lib/mixpanel.ts",
     "./options": "./src/lib/options.ts",
     "./schema/*": "./src/lib/schema/*.tsx",
@@ -58,8 +62,8 @@
       "icons": [
         "./src/icons/index.tsx"
       ],
-      "icons/agency": [
-        "./src/icons/agency.tsx"
+      "icons/*": [
+        "./src/icons/*.tsx"
       ],
       "constants": [
         "./types/constants.d.ts"
@@ -73,14 +77,26 @@
       "hooks": [
         "./types/hooks.d.ts"
       ],
+      "geojson/district": [
+        "./src/lib/geojson/district/index.ts"
+      ],
       "geojson/district/*": [
         "./src/lib/geojson/district/*.ts"
+      ],
+      "geojson/dun": [
+        "./src/lib/geojson/dun/index.ts"
       ],
       "geojson/dun/*": [
         "./src/lib/geojson/dun/*.ts"
       ],
+      "geojson/parlimen": [
+        "./src/lib/geojson/parlimen/index.ts"
+      ],
       "geojson/parlimen/*": [
         "./src/lib/geojson/parlimen/*.ts"
+      ],
+      "geojson/state": [
+        "./src/lib/geojson/state/index.ts"
       ],
       "geojson/state/*": [
         "./src/lib/geojson/state/*.ts"
@@ -120,6 +136,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "d3-scale-chromatic": "^3.0.0",
     "dom-to-image": "^2.6.0",
+    "geojson-bbox": "^0.0.1",
     "highlight.js": "^11.6.0",
     "i18next": "^22.4.14",
     "i18next-http-backend": "^2.2.0",

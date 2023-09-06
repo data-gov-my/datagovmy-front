@@ -8,11 +8,12 @@ import { useTranslation } from "datagovmy-ui/hooks";
 
 interface ChatProps {
   model: string;
+  chain: "main" | "docs";
 }
 
-const Chat: FunctionComponent<ChatProps> = ({ model }) => {
+const Chat: FunctionComponent<ChatProps> = ({ model, chain }) => {
   return (
-    <ChatProvider model={model}>
+    <ChatProvider model={model} chain={chain}>
       <div className="mx-auto h-[90vh] w-full max-w-screen-md">
         <ActiveState />
         <EmptyState />

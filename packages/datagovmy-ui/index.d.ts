@@ -6,7 +6,6 @@ declare namespace NodeJS {
     NEXT_PUBLIC_APP_URL: string;
     NEXT_PUBLIC_API_URL: string;
     NEXT_PUBLIC_AI_URL: string;
-    NEXT_PUBLIC_AI_TOKEN: string;
     NEXT_PUBLIC_AUTHORIZATION_TOKEN: string;
 
     REVALIDATE_TOKEN: string;
@@ -37,4 +36,8 @@ declare module "chartjs-plugin-crosshair" {
 declare module "canvas2svg" {
   export default (width: number, height: number) => any;
   getSerializedSvg();
+}
+
+declare module "geojson-bbox" {
+  export default function (geojson: GeoJSONObject): [number, number, number, number] {}
 }

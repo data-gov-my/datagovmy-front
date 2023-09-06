@@ -226,7 +226,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                   markers={[
                     {
                       position: [village_info.lat, village_info.lon],
-                      Village: village_info.village,
+                      tooltip: { Village: village_info.village },
                     },
                   ]}
                 />

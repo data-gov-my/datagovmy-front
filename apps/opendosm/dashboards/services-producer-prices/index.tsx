@@ -4,7 +4,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { JIMIcon } from "datagovmy-ui/icons/agency";
+import { PricesIncomeIcon } from "@icons/division";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
@@ -206,10 +206,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge
-            name={t("agencies:piesd.full")}
-            icon={<JIMIcon fillColor={AKSARA_COLOR.ORANGE} />}
-          />
+          <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
         }
       />
 

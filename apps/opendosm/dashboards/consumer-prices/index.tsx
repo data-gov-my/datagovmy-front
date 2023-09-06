@@ -1,16 +1,17 @@
-import { numFormat, toDate } from "datagovmy-ui/helpers";
-import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
-import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback } from "react";
-import { OptionType } from "datagovmy-ui/types";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { AKSARA_COLOR } from "datagovmy-ui/constants";
-import { ChartDataset, ChartTypeRegistry } from "chart.js";
-import { WithData } from "datagovmy-ui/types";
+import { PricesIncomeIcon } from "@icons/division";
 import InflationGeography from "./inflation-geography";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationTrends from "./inflation-trends";
+
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType, WithData } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Consumer Prices (CPI) Dashboard
@@ -195,12 +196,14 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   return (
     <>
       <Hero
-        background="gray"
-        category={[t("common:categories.economy"), "text-green-700"]}
+        background="orange"
+        category={[t("common:categories.economy"), "text-orange-500"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={
+          <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">
@@ -243,14 +246,6 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               />
             </div>
 
-            <Slider
-              className=""
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
             <Timeseries
               title={t("keys.overall")}
               className="h-[300px] w-full"
@@ -279,8 +274,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                     type: "line",
                     data: coordinate.overall,
                     label: t("keys.overall"),
-                    borderColor: AKSARA_COLOR.TURQUOISE,
-                    backgroundColor: AKSARA_COLOR.TURQUOISE_H,
+                    borderColor: AKSARA_COLOR.ORANGE,
+                    backgroundColor: AKSARA_COLOR.ORANGE_H,
                     borderWidth: 1.5,
                     fill: configs("overall").fill,
                   },
@@ -289,12 +284,20 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               }}
               stats={[
                 {
-                  title: t("common.latest", {
+                  title: t("common:common.latest", {
                     date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                   }),
                   value: configs("overall").callout,
                 },
               ]}
+            />
+
+            <Slider
+              type="range"
+              value={data.minmax}
+              data={timeseries.data[data.cpi_type.value][data.index_type.value].x}
+              period="month"
+              onChange={e => setData("minmax", e)}
             />
 
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -328,8 +331,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                         type: "line",
                         label: chartData.label,
                         data: chartData.data,
-                        borderColor: AKSARA_COLOR.GREY,
-                        backgroundColor: AKSARA_COLOR.GREY_H,
+                        borderColor: AKSARA_COLOR.ORANGE,
+                        backgroundColor: AKSARA_COLOR.ORANGE_H,
                         fill: chartData.fill,
                         borderWidth: 1.5,
                       },

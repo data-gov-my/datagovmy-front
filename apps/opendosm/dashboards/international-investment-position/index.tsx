@@ -1,10 +1,10 @@
+import { GlobeIcon } from "@icons/division";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { MOTIcon } from "datagovmy-ui/icons/agency";
 import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
@@ -132,7 +132,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("agencies:bpan.full")} icon={<MOTIcon />} />}
+        agencyBadge={<AgencyBadge name={t("division:bpib.full")} icon={<GlobeIcon />} isDivision />}
       />
 
       <Container className="min-h-screen">

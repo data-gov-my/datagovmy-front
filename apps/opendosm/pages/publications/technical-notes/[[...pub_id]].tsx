@@ -36,7 +36,7 @@ const TechnicalNotes: Page = ({
 export const getServerSideProps: GetServerSideProps = withi18n(
   ["publications"],
   async ({ locale, params, query }) => {
-    const { data } = await get("/pub-docs/technical-note/", { language: locale });
+    const { data } = await get("/pub-docs/technical-note", { language: locale });
 
     return {
       notFound: false,

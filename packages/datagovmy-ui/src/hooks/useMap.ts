@@ -88,3 +88,25 @@ export const MapControl: ForwardRefExoticComponent<MapControlProps> = forwardRef
 });
 
 MapControl.displayName = "MapControl";
+
+export const redMarker = L.icon({
+  iconUrl: "/static/images/icons/marker-red.png",
+  iconRetinaUrl: "/static/images/icons/marker-red-2x.png",
+  shadowUrl: "/static/images/icons/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41],
+});
+
+export const blueMarker = L.icon({
+  iconUrl: "/static/images/icons/marker-icon.png",
+  iconRetinaUrl: "/static/images/icons/marker-icon-2x.png",
+  shadowUrl: "/static/images/icons/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41],
+});

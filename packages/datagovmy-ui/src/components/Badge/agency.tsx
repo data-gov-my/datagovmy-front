@@ -10,6 +10,7 @@ type AgencyBadge = {
   agency: Agency;
   name?: never;
   url?: never;
+  isDivision?: never;
 };
 
 type ConditionalBadgeProps = AgencyBadge | (BaseBadgeProps & { url?: string });
@@ -18,7 +19,13 @@ export type AgencyBadgeProps = ConditionalBadgeProps & {
   icon?: ReactNode;
 };
 
-const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon, name, url }) => {
+const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({
+  agency,
+  icon,
+  name,
+  url,
+  isDivision,
+}) => {
   const { t } = useTranslation();
 
   const wrap = (children: ReactNode, _url?: string) =>
@@ -40,7 +47,7 @@ const AgencyBadge: FunctionComponent<AgencyBadgeProps> = ({ agency, icon, name, 
       AgencyLink[agency]
     );
 
-  return wrap(<BaseBadge name={name} icon={icon} />, url);
+  return wrap(<BaseBadge name={name} icon={icon} isDivision={isDivision} />, url);
 };
 
 interface BaseBadgeProps {
@@ -48,9 +55,10 @@ interface BaseBadgeProps {
   agency?: never;
   icon?: ReactNode;
   external?: boolean;
+  isDivision?: boolean;
 }
 
-const BaseBadge: FunctionComponent<BaseBadgeProps> = ({ external, name, icon }) => {
+const BaseBadge: FunctionComponent<BaseBadgeProps> = ({ external, name, icon, isDivision }) => {
   const { t } = useTranslation();
   return (
     <div
@@ -72,7 +80,9 @@ const BaseBadge: FunctionComponent<BaseBadgeProps> = ({ external, name, icon }) 
               external && "transition-transform duration-200 group-hover:-translate-y-6"
             )}
           >
-            {t("common:components.brought_by_the")}
+            {isDivision
+              ? t("common:components.product_by_division")
+              : t("common:components.brought_by_the")}
           </p>
           {/* Visit our portal */}
           {external && (

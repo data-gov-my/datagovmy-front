@@ -12,6 +12,7 @@ type BarMeterProps = ChartHeaderProps & {
   relative?: boolean;
   sort?: "asc" | "desc" | ((a: BarMeterData, b: BarMeterData) => number);
   layout?: "horizontal" | "vertical" | "state-horizontal";
+  precision?: number | [max: number, min: number];
   formatY?: (value: number, key?: string) => ReactNode;
   formatX?: (key: string) => string;
 };
@@ -32,6 +33,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
   unit = "",
   sort = undefined,
   relative = false,
+  precision = 1,
   formatY,
   formatX,
 }) => {
@@ -66,8 +68,12 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
           <div className="space-y-2" key={item.x.concat(`_${index}`)}>
             <div className="flex justify-between">
               <p className="text-sm">{formatX ? formatX(item.x) : item.x}</p>
-              <div className="text-dim text-sm dark:text-white">
-                {formatY ? formatY(item.y, item.x) : <p>{numFormat(item.y, "standard", 1)}</p>}
+              <div className="text-dim flex text-sm dark:text-white">
+                {formatY ? (
+                  formatY(item.y, item.x)
+                ) : (
+                  <p>{numFormat(item.y, "standard", precision)}</p>
+                )}
                 {unit}
               </div>
             </div>
@@ -106,7 +112,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
 
             <div className="flex flex-grow items-center gap-2">
               <p className="text-dim w-[40px] text-sm">
-                {numFormat(item.y, "standard", 1)}
+                {numFormat(item.y, "standard", precision)}
                 {unit}
               </p>
               <div className="bg-washed dark:bg-washed-dark flex h-3 w-full overflow-x-hidden rounded-full">
@@ -131,7 +137,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
               key={item.x.concat(`_${index}`)}
             >
               <p>
-                {numFormat(item.y, "standard", 1)}
+                {numFormat(item.y, "standard", precision)}
                 {unit}
               </p>
               <div className="bg-washed dark:bg-washed-dark relative flex h-[80%] w-6 overflow-x-hidden rounded-full">
@@ -151,7 +157,7 @@ const BarMeter: FunctionComponent<BarMeterProps> = ({
               <div className="flex justify-between">
                 <p>{formatX ? formatX(item.x) : item.x}</p>
                 <div className="text-dim dark:text-white">
-                  {formatY ? formatY(item.y, item.x) : numFormat(item.y, "standard", 1)}
+                  {formatY ? formatY(item.y, item.x) : numFormat(item.y, "standard", precision)}
                   {unit}
                 </div>
               </div>

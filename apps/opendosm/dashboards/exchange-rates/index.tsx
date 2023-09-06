@@ -1,8 +1,9 @@
-import { closestIndex, getColor } from "datagovmy-ui/schema/exchange-rates";
+import { IntegrationDataIcon } from "@icons/division";
 import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "datagovmy-ui/components";
 import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
 import { sortMulti } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { closestIndex, getColor } from "datagovmy-ui/schema/exchange-rates";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -68,7 +69,9 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="mampu" />}
+        agencyBadge={
+          <AgencyBadge name={t("division:bipd.full")} icon={<IntegrationDataIcon />} isDivision />
+        }
       />
 
       <Container className="start-h-screen">
@@ -85,7 +88,11 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
             onChange={(index: number) => setData("active_snapshot", index)}
           >
             {SNAPSHOT_TAB.map((key: string) => {
-              const sorted_data = sortMulti(bar.data[key], "y", (a: number, b: number) => b - a);
+              const sorted_data = sortMulti<number>(
+                bar.data[key],
+                "y",
+                (a: number, b: number) => b - a
+              );
               const zero_index = closestIndex(sorted_data.y, 0);
               return (
                 <Panel name={t(`keys.${key}`)} key={key}>
@@ -186,6 +193,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                         interval={data.active_trend < 2 ? "day" : "auto"}
                         prefixY={timeseries_callouts.data[index].tooltip_unit}
                         precision={3}
+                        beginZero={false}
                         data={{
                           labels: timeseries.data[key].x,
                           datasets: [

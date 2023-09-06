@@ -113,7 +113,7 @@ const DataDictionariesDashboard: FunctionComponent<DataDictionariesProps> = ({
                       item.publication_id,
                       actives.length ? queries : ""
                     ),
-                    undefined,
+                    routes.PUBLICATIONS.concat("/data-dictionaries/", item.publication_id),
                     {
                       scroll: false,
                     }

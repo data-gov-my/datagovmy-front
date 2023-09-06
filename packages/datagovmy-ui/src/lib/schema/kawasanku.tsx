@@ -1,5 +1,5 @@
 import { OptionType } from "../../../types";
-import { numFormat } from "..//helpers";
+import { numFormat } from "../helpers";
 
 export const STATES: Array<OptionType> = [
   {

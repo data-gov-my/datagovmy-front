@@ -1,3 +1,4 @@
+import { LineChartIcon } from "@icons/division";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
@@ -120,12 +121,14 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   return (
     <>
       <Hero
-        background="gray"
-        category={[t("common:categories.economy"), "text-green-700"]}
+        background="blue"
+        category={[t("common:categories.economy"), "text-primary"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency="dosm" />}
+        agencyBadge={
+          <AgencyBadge name={t("division:bpe.full")} icon={<LineChartIcon />} isDivision />
+        }
       />
 
       <Container className="min-h-screen">
@@ -155,14 +158,6 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                     />
                   </div>
 
-                  <Slider
-                    className=""
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries.data[data.index_type.value].x}
-                    period="month"
-                    onChange={e => setData("minmax", e)}
-                  />
                   <Timeseries
                     className="h-[300px] w-full"
                     title={t("keys.leading")}
@@ -298,6 +293,14 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                         )}%`,
                       },
                     ]}
+                  />
+                  <Slider
+                    className=""
+                    type="range"
+                    value={data.minmax}
+                    data={timeseries.data[data.index_type.value].x}
+                    period="month"
+                    onChange={e => setData("minmax", e)}
                   />
                 </div>
               </Section>

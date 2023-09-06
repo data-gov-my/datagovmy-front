@@ -1,10 +1,12 @@
-import { MapControl, MapControlRef } from "../hooks/useMap";
-import { GeoJsonObject } from "geojson";
+import { MapControl, MapControlRef, blueMarker, redMarker } from "../hooks/useMap";
+import type { GeoJsonObject } from "geojson";
 import { LatLng, LatLngBounds, LatLngTuple } from "leaflet";
 import { useTheme } from "next-themes";
-import { ForwardedRef, FunctionComponent, useImperativeHandle, useRef } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { ForwardedRef, FunctionComponent, useEffect, useImperativeHandle, useRef } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap, GeoJSON } from "react-leaflet";
 import Markercluster from "./markercluster";
+import bbox from "geojson-bbox";
+import L from "leaflet";
 
 type MapPlotProps = {
   id?: string;
@@ -23,8 +25,12 @@ export interface MapPlotRef {
 }
 
 type MarkerDatum = {
-  position: LatLngTuple;
-  [key: string]: string | number | LatLngTuple;
+  onMarkerClick?: () => void;
+  position: [number, number];
+  icon?: "red";
+  tooltip: {
+    [key: string]: string | number;
+  };
 };
 
 export type MarkerData = MarkerDatum[];
@@ -37,6 +43,7 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
   enableZoom = true,
   zoom = 5,
   markers,
+  geojson,
   _ref,
 }) => {
   const { theme } = useTheme();
@@ -61,9 +68,9 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
   };
 
   // https://stackoverflow.com/questions/64665827/
-  const ChangeView = ({ center, zoom }: { center: LatLngTuple; zoom: number }) => {
+  const ChangeView = ({ center }: { center: LatLngTuple }) => {
     const map = useMap();
-    map.setView(center, zoom);
+    map.setView(center);
     return null;
   };
 
@@ -79,23 +86,48 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
       maxBounds={new LatLngBounds(new LatLng(1, 97), new LatLng(10, 122))}
       maxBoundsViscosity={1}
     >
-      <ChangeView center={position} zoom={zoom} />
       <MapControl ref={controlRef} />
+      {geojson ? (
+        <>
+          <GeoJSONControl geojson={geojson} position={position} />
+          <GeoJSON
+            key={Math.random() * 10} // random uid required to refresh change in geojson
+            data={geojson}
+            style={{
+              color: "#000",
+              fill: false,
+              weight: 1,
+            }}
+          />
+        </>
+      ) : (
+        <ChangeView center={position} />
+      )}
 
       <TileLayer
         key={_theme}
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url={`${process.env.NEXT_PUBLIC_TILESERVER_URL}/styles/${_theme}/{z}/{x}/{y}.png`}
       />
-      <Markercluster chunkedLoading removeOutsideVisibleBounds chunkDelay={0} chunkInterval={50}>
-        {markers?.map((item: MarkerDatum, index) => {
-          return (
-            <Marker key={index} position={item.position}>
-              <Popup>{printMarker(item)}</Popup>
-            </Marker>
-          );
-        })}
-      </Markercluster>
+
+      {markers && (
+        <Markercluster chunkedLoading removeOutsideVisibleBounds chunkDelay={0} chunkInterval={50}>
+          {markers.map((item: MarkerDatum, index) => {
+            return (
+              <Marker
+                key={index}
+                position={item.position}
+                eventHandlers={{
+                  click: item.onMarkerClick,
+                }}
+                icon={item.icon === "red" ? redMarker : blueMarker}
+              >
+                <Popup>{printMarker(item)}</Popup>
+              </Marker>
+            );
+          })}
+        </Markercluster>
+      )}
     </MapContainer>
   );
 };
@@ -107,31 +139,31 @@ interface GeoJSONControl {
 }
 
 const GeoJSONControl: FunctionComponent<GeoJSONControl> = ({ geojson }) => {
-  //   const map = useMap();
-  //   useEffect(() => {
-  //     if (geojson) {
-  //       const bound: [number, number, number, number] = bbox(geojson);
-  //       map.fitBounds([
-  //         [bound[1], bound[0]],
-  //         [bound[3], bound[2]],
-  //       ]);
-  //       setTimeout(() => {
-  //         map.panBy([-100, 0]);
-  //       }, 150);
-  //     }
-  //   }, [geojson]);
+  const map = useMap();
+  useEffect(() => {
+    if (geojson) {
+      const bound: [number, number, number, number] = bbox(geojson);
+      map.fitBounds([
+        [bound[1], bound[0]],
+        [bound[3], bound[2]],
+      ]);
+      setTimeout(() => {
+        map.panBy([-50, 0]);
+      }, 150);
+    }
+  }, [geojson]);
 
   return null;
 };
 
 const dummy: MarkerData = [
   {
-    position: [51.505, -0.09],
-    name: "A pretty CSS3 popup. <br> Easily customizable.",
+    position: [5.1420589, 109.618149],
+    tooltip: { name: "A pretty CSS3 popup. <br> Easily customizable." },
   },
   {
-    position: [51.51, -0.1],
-    name: "Another pretty CSS3 popup. <br> Easily customizable.",
+    position: [5.1420589, 109.618149],
+    tooltip: { name: "Another pretty CSS3 popup. <br> Easily customizable." },
   },
 ];
 

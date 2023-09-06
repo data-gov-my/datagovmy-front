@@ -46,7 +46,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       }
     });
 
-    _data = sortMulti(_data, "y", (a: number, b: number) => b - a);
+    _data = sortMulti<number>(_data, "y", (a: number, b: number) => b - a);
     _data.x.unshift("mys");
     _data.y.unshift(mys_overall);
 
@@ -60,7 +60,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       };
       const state_overall = bar.data[period][data.active_state].y[0];
 
-      _data = sortMulti(_data, "y", (a: number, b: number) => b - a);
+      _data = sortMulti<number>(_data, "y", (a: number, b: number) => b - a);
       _data.x.unshift("overall");
       _data.y.unshift(state_overall);
 
@@ -93,12 +93,20 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                       data: sortStateData(period).y,
                       backgroundColor(ctx) {
                         return ctx.dataIndex === data.active_index
-                          ? "#22C55E80"
+                          ? AKSARA_COLOR.ORANGE_H
                           : AKSARA_COLOR.OUTLINE;
                       },
                       hoverBackgroundColor(ctx) {
-                        return ctx.dataIndex === data.active_index ? "#22C55E80" : AKSARA_COLOR.DIM;
+                        return ctx.dataIndex === data.active_index
+                          ? AKSARA_COLOR.ORANGE
+                          : AKSARA_COLOR.DIM;
                       },
+                      borderColor(ctx) {
+                        return ctx.dataIndex === data.active_index
+                          ? AKSARA_COLOR.ORANGE
+                          : AKSARA_COLOR.DIM;
+                      },
+                      borderWidth: 0.5,
                     },
                   ],
                 }}
@@ -136,11 +144,17 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
                       }),
                       data: sortCategoryData(period).y,
                       backgroundColor(ctx) {
-                        return ctx.dataIndex === 0 ? "#22C55E80" : AKSARA_COLOR.OUTLINE;
+                        return ctx.dataIndex === 0 ? AKSARA_COLOR.ORANGE_H : AKSARA_COLOR.OUTLINE;
                       },
                       hoverBackgroundColor(ctx) {
-                        return ctx.dataIndex === 0 ? "#22C55E80" : AKSARA_COLOR.DIM;
+                        return ctx.dataIndex === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.DIM;
                       },
+                      borderColor(ctx) {
+                        return ctx.dataIndex === data.active_index
+                          ? AKSARA_COLOR.ORANGE
+                          : AKSARA_COLOR.DIM;
+                      },
+                      borderWidth: 0.5,
                     },
                   ],
                 }}

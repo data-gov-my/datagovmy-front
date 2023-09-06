@@ -1,7 +1,6 @@
-import Progress from "@components/Progress";
 import CatalogueDataGPT from "@data-catalogue/datagpt";
 import { get } from "datagovmy-ui/api";
-import { Metadata } from "datagovmy-ui/components";
+import { Metadata, Progress } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";

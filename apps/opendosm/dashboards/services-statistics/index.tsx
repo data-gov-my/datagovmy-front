@@ -1,3 +1,4 @@
+import { CustomerServiceIcon } from "@icons/division";
 import type { ChartDataset } from "chart.js";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
@@ -65,9 +66,8 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
   last_updated,
   timeseries,
   timeseries_callout,
-  meta,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-services-statistics", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-services-statistics", "division", "common"]);
 
   const TYPE_OPTIONS: Array<OptionType> = ServiceType.map(type => {
     return { label: t(`keys.${type}`), value: type };
@@ -112,12 +112,10 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
   );
 
   const getChartData = (charts: string[]): TimeseriesChartData[] => {
-    const prefix = data.trend !== "actual" ? "" : "RM ";
-    const unitY = data.trend !== "actual" ? "%" : "";
     return charts.map(name => ({
       title: t(`keys.${name}`),
-      prefix,
-      unitY,
+      prefix: name !== "employees" && data.trend === "actual" ? "RM " : "",
+      unitY: data.trend !== "actual" ? "%" : "",
       label: t(`keys.${name}`),
       data: coordinate[name],
       fill: data.shade === "no_shade",
@@ -127,16 +125,19 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
             date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
           }),
           value: [
-            prefix,
+            name !== "employees" && data.trend === "actual" ? "RM " : "",
             numFormat(
               timeseries_callout.data[data.type][data.trend][name].latest,
-              "compact",
-              1,
+              timeseries_callout.data[data.type][data.trend][name].latest > 1_000_000
+                ? "compact"
+                : "standard",
+              name === "employees" && data.trend === "actual" ? [1, 0] : [1, 1],
               "long",
               i18n.language,
               false
             ),
-            unitY,
+            data.trend !== "actual" ? "%" : name === "employees" ? " employees" : "",
+            ,
           ].join(""),
         },
       ],
@@ -151,10 +152,12 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge agency={"dosm"} />} // TODO: update when AgencyBadge is fixed
+        agencyBadge={
+          <AgencyBadge name={t("division:bpp.full")} icon={<CustomerServiceIcon />} isDivision />
+        }
       />
 
-      <Container className="">
+      <Container>
         <Section
           title={t("section_1.title")}
           description={
@@ -197,7 +200,14 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
                         interval="quarter"
                         enableAnimation={!play}
                         displayNumFormat={value =>
-                          numFormat(value, "compact", 1, "long", i18n.language, true)
+                          numFormat(
+                            value,
+                            "compact",
+                            data.trend === "actual" ? [1, 0] : [1, 1],
+                            "long",
+                            i18n.language,
+                            true
+                          )
                         }
                         prefixY={prefix}
                         unitY={unitY}

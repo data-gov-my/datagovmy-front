@@ -62,7 +62,7 @@ const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
           icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
           href: () => {
             download(urls[Object.keys(urls)[0]], dataset.meta.unique_id.concat(".geojson"));
-            track("csv");
+            track("parquet");
           },
         },
       ],

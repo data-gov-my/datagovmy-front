@@ -70,7 +70,7 @@ export const BOMBAIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns DOSMIcon
  */
-export const DOSMIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const DOSMIcon: FunctionComponent<IconProps> = ({ className, fillColor = "#2563EB" }) => {
   return (
     <svg
       width="32"
@@ -81,7 +81,7 @@ export const DOSMIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1295_31464)">
-        <circle cx="16" cy="16" r="16" fill="#2563EB" />
+        <circle cx="16" cy="16" r="16" fill={fillColor} />
         <g clipPath="url(#clip1_1295_31464)">
           <path
             d="M19.6807 19.6797L22.6807 22.6797"
@@ -1008,7 +1008,7 @@ export const MOTIcon: FunctionComponent<IconProps> = ({ className }) => {
  * @param className
  * @returns NTRCIcon
  */
-export const NTRCIcon: FunctionComponent<IconProps> = ({ className }) => {
+export const NTRCIcon: FunctionComponent<IconProps> = ({ className, fillColor = "#16A34A" }) => {
   return (
     <svg
       width="32"
@@ -1019,7 +1019,7 @@ export const NTRCIcon: FunctionComponent<IconProps> = ({ className }) => {
       className={className}
     >
       <g clipPath="url(#clip0_1208_11571)">
-        <circle cx="16" cy="16" r="16" fill="#16A34A" />
+        <circle cx="16" cy="16" r="16" fill={fillColor} />
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -1296,10 +1296,16 @@ export const JataNegara: FunctionComponent<IconProps> = ({ className }) => {
 interface AgencyIconProps {
   agency: Agency;
   className?: string;
+  fillColor?: string;
 }
 
-export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency, className }) => {
+export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({
+  agency,
+  className,
+  fillColor,
+}) => {
   const Components: Record<Agency, FunctionComponent<IconProps>> = {
+    "aadk": NTRCIcon,
     "bnm": BNMIcon,
     "bomba": BOMBAIcon,
     "dosm": DOSMIcon,
@@ -1330,13 +1336,14 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({ agency, classNa
     "perkeso": SOCSOIcon,
     "phcorp": PHCorpIcon,
     "spr": SPRIcon,
+    "ssm": LHDNIcon,
     "unhcr": UNHCRIcon,
   };
 
   const Icon = Components[agency];
 
   if (typeof Icon !== "undefined") {
-    return createElement(Icon, { className });
+    return createElement(Icon, { className, fillColor });
   }
   return createElement(Components["govt"], { className });
 };

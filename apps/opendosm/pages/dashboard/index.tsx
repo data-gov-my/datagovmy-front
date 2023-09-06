@@ -6,6 +6,7 @@ import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 import { routes } from "@lib/routes";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 
 const DashboardIndex: Page = ({ dashboards }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboards", "common"]);
@@ -26,84 +27,105 @@ export const getStaticProps: GetStaticProps = withi18n(
       data_as_of: "2023-06-19 23:59",
       data: [
         {
-          name: "composite-index",
-          agency: "dosm",
-          route: routes.COMPOSITE_INDEX,
-        },
-        {
-          name: "consumer-prices",
-          agency: "dosm",
-          route: routes.CONSUMER_PRICES,
-        },
-        {
-          name: "gdp",
-          agency: "dosm",
-          route: routes.GDP,
-        },
-        {
-          name: "industrial-production",
-          agency: "dosm",
-          route: routes.INDUSTRIAL_PRODUCTION,
+          name: "population",
+          division: "bppd",
+          route: routes.POPULATION,
         },
         {
           name: "kawasanku",
-          agency: "dosm",
+          division: "bipd",
           route: routes.KAWASANKU,
         },
         {
-          name: "labour-market",
-          agency: "dosm",
-          route: routes.LABOUR_MARKET,
+          name: "household-income-expenditure",
+          division: "bphpp",
+          route: routes.HOUSEHOLD_INCOME_EXPENDITURE,
+          colour: AKSARA_COLOR.PRIMARY,
         },
         {
-          name: "producer-prices",
-          agency: "dosm",
-          route: routes.PRODUCER_PRICES,
-        },
-        {
-          name: "wholesale-retail",
-          agency: "dosm",
-          route: routes.WHOLESALE_RETAIL,
+          name: "gdp",
+          division: "bpan",
+          route: routes.GDP,
         },
         {
           name: "iip",
-          agency: "bpan",
+          division: "bpib",
           route: routes.IIP,
         },
         {
           name: "bop",
-          agency: "bpan",
+          division: "bpib",
           route: routes.BOP,
         },
         {
-          name: "manufacturing-statistics",
-          agency: "dosm",
-          route: routes.MANUFACTURING_STATISTICS,
+          name: "external-trade",
+          division: "bppa",
+          route: routes.EXTERNAL_TRADE,
         },
         {
-          name: "construction-statistics",
-          agency: "dosm",
-          route: routes.CONSTRUCTION_STATISTICS,
+          name: "consumer-prices",
+          division: "bphpp",
+          route: routes.CONSUMER_PRICES,
         },
         {
-          name: "labour-productivity",
-          agency: "dosm",
-          route: routes.LABOUR_PRODUCTIVITY,
-        },
-        {
-          name: "formal-sector-wages",
-          agency: "dosm",
-          route: routes.FORMAL_SECTOR_WAGES,
+          name: "producer-prices",
+          division: "bphpp",
+          route: routes.PRODUCER_PRICES,
         },
         {
           name: "services-producer-prices",
-          agency: "dosm",
+          division: "bphpp",
           route: routes.SERVICES_PRODUCER_PRICES,
         },
         {
+          name: "labour-market",
+          division: "mbls",
+          route: routes.LABOUR_MARKET,
+        },
+        {
+          name: "formal-sector-wages",
+          division: "mbls",
+          route: routes.FORMAL_SECTOR_WAGES,
+        },
+        {
+          name: "labour-productivity",
+          division: "mbls",
+          route: routes.LABOUR_PRODUCTIVITY,
+        },
+        {
+          name: "services-statistics",
+          division: "bpp",
+          route: routes.SERVICES_STATISTICS,
+        },
+        {
+          name: "wholesale-retail",
+          division: "bpp",
+          route: routes.WHOLESALE_RETAIL,
+        },
+        {
+          name: "manufacturing-statistics",
+          division: "bppib",
+          route: routes.MANUFACTURING_STATISTICS,
+        },
+        {
+          name: "industrial-production",
+          division: "bppib",
+          route: routes.INDUSTRIAL_PRODUCTION,
+        },
+        {
           name: "construction-statistics",
-          agency: "dosm",
+          division: "bppib",
           route: routes.CONSTRUCTION_STATISTICS,
+        },
+        {
+          name: "composite-index",
+          division: "bpe",
+          route: routes.COMPOSITE_INDEX,
+        },
+        {
+          name: "exchange-rates",
+          division: "bipd",
+          route: routes.EXCHANGE_RATES,
         },
       ],
     };
