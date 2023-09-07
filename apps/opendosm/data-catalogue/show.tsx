@@ -563,37 +563,42 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         </Section>
 
         {/* API Request Code */}
-        <Section
-          title={t("sample_query.section_title")}
-          description={
-            <>
-              {t("sample_query.desc1")}
-              <At
-                className="link-dim text-base underline"
-                href={`https://developer.data.gov.my${
-                  i18n.language === "en-GB" ? "" : "/ms"
-                }/data-catalogue/request-query`}
-                external
-              >
-                {t("sample_query.link1")}
-              </At>
-              <span>{`. ${t("sample_query.desc2")}`}</span>
-              <At
-                className="link-dim text-base underline"
-                href={`https://developer.data.gov.my/${
-                  i18n.language == "en-GB" ? "" : "/ms"
-                }/data-catalogue/example-requests?id=${catalogueId}`}
-                external
-              >
-                {t("sample_query.link2")}
-              </At>
-              .
-            </>
-          }
-          className="mx-auto w-full py-12"
-        >
-          <SampleCode catalogueId={catalogueId} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
-        </Section>
+        {!config.exclude_openapi && (
+          <Section
+            title={t("sample_query.section_title")}
+            description={
+              <>
+                {t("sample_query.desc1")}
+                <At
+                  className="link-dim text-base underline"
+                  href={`https://developer.data.gov.my${
+                    i18n.language === "en-GB" ? "" : "/ms"
+                  }/data-catalogue/request-query`}
+                  external
+                >
+                  {t("sample_query.link1")}
+                </At>
+                <span>{`. ${t("sample_query.desc2")}`}</span>
+                <At
+                  className="link-dim text-base underline"
+                  href={`https://developer.data.gov.my/${
+                    i18n.language == "en-GB" ? "" : "/ms"
+                  }/data-catalogue/example-requests?id=${catalogueId}`}
+                  external
+                >
+                  {t("sample_query.link2")}
+                </At>
+                .
+              </>
+            }
+            className="mx-auto w-full py-12"
+          >
+            <SampleCode
+              catalogueId={catalogueId}
+              url={urls?.parquet || urls[Object.keys(urls)[0]]}
+            />
+          </Section>
+        )}
       </Container>
     </div>
   );

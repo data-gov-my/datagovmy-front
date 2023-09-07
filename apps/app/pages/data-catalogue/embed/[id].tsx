@@ -84,6 +84,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       color: data.API.colour ?? "blues",
       geojson: data.API.file_json ?? null,
       line_variables: data.API.line_variables ?? null,
+      exclude_openapi: data.exclude_openapi,
     };
 
     const hasTranslations = data.translations && Object.keys(data.translations).length;

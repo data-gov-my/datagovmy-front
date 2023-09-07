@@ -62,7 +62,7 @@ const Slider: FunctionComponent<SliderProps> = ({
   }, [data]);
 
   useWatch(() => {
-    // if (type === "single") return;
+    if (type === "single") return;
     setMinmax(value);
   }, [value]);
 
