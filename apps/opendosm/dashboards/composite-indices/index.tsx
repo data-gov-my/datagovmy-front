@@ -124,8 +124,8 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   return (
     <>
       <Hero
-        background="blue"
-        category={[t("common:categories.economy"), "text-primary"]}
+        background="gray"
+        category={[t("common:categories.economy"), "text-black"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}

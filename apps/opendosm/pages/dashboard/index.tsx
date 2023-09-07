@@ -27,14 +27,14 @@ export const getStaticProps: GetStaticProps = withi18n(
       data_as_of: "2023-06-19 23:59",
       data: [
         {
-          name: "population",
-          division: "bppd",
-          route: routes.POPULATION,
-        },
-        {
           name: "kawasanku",
           division: "bipd",
           route: routes.KAWASANKU,
+        },
+        {
+          name: "population",
+          division: "bppd",
+          route: routes.POPULATION,
         },
         {
           name: "household-income-expenditure",
