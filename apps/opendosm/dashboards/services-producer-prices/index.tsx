@@ -8,6 +8,7 @@ import { PricesIncomeIcon } from "@icons/division";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { useTheme } from "next-themes";
 
 /**
  * Services Producer Prices Dashboard
@@ -61,6 +62,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
   last_updated,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-services-producer-prices", "agencies", "common"]);
+  const { theme } = useTheme();
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.growth_yoy"), value: "growth_yoy" },
@@ -90,14 +92,14 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const plotTimeseries = (
@@ -126,11 +128,10 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
               date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
             }),
             value: [
-              isPercentage ? "" : "RM ",
               numFormat(
                 Math.abs(timeseries_callout.data[data.index][name]?.latest),
                 "compact",
-                isPercentage ? 1 : 0,
+                1,
                 "short",
                 i18n.language,
                 false
@@ -148,21 +149,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
           className="h-[350px] w-full"
           interval="quarter"
           enableAnimation={!play}
-          displayNumFormat={value => {
-            const isPercentage = ["growth_qoq", "growth_yoy"].includes(data.index);
-            return [
-              isPercentage ? "" : "RM",
-              numFormat(
-                Math.abs(value),
-                "compact",
-                isPercentage ? 1 : 0,
-                "long",
-                i18n.language,
-                true
-              ),
-              isPercentage ? "%" : "",
-            ].join("");
-          }}
+          unitY={["growth_qoq", "growth_yoy"].includes(data.index) ? "%" : ""}
           axisY={{
             y2: {
               display: false,
@@ -241,21 +228,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
                   className="h-[350px] w-full"
                   title={t(`keys.total`)}
                   interval="quarter"
-                  displayNumFormat={value => {
-                    const isPercentage = ["growth_qoq", "growth_yoy"].includes(data.index);
-                    return [
-                      isPercentage ? "" : "RM",
-                      numFormat(
-                        Math.abs(value),
-                        "compact",
-                        isPercentage ? 1 : 0,
-                        "long",
-                        i18n.language,
-                        true
-                      ),
-                      isPercentage ? "%" : "",
-                    ].join("");
-                  }}
+                  unitY={["growth_qoq", "growth_yoy"].includes(data.index) ? "%" : ""}
                   axisY={{
                     y2: {
                       display: false,
@@ -298,10 +271,10 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
                             i18n.language,
                             false
                           )}%`
-                        : `${data.index === "hours" ? "" : "RM"} ${numFormat(
+                        : `${numFormat(
                             Math.abs(timeseries_callout.data[data.index].total.latest),
                             "compact",
-                            0,
+                            1,
                             "short",
                             i18n.language,
                             false

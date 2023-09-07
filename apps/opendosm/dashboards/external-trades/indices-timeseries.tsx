@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
 import {
   IndicesTimeseriesData,
   IndicesTimeseriesOptions,
@@ -41,6 +42,7 @@ const IndicesTimeseries: FunctionComponent<IndicesTimeseriesProps> = ({
   SHADE_OPTIONS,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-external-trade"]);
+  const { theme } = useTheme();
 
   const OPTIONS: Array<OptionType> = [
     { label: t("keys.tot"), value: "tot" },
@@ -72,14 +74,14 @@ const IndicesTimeseries: FunctionComponent<IndicesTimeseriesProps> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const plotTimeseries = (
@@ -145,6 +147,15 @@ const IndicesTimeseries: FunctionComponent<IndicesTimeseriesProps> = ({
             return [
               value < 0 ? "-" : "",
               numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+              isPercentage ? "%" : "",
+            ].join("");
+          }}
+          tooltipCallback={item => {
+            const isPercentage = ["growth_yoy"].includes(data.index);
+            return [
+              item.dataset.label + ": ",
+              item.parsed.y < 0 ? "-" : "",
+              numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
               isPercentage ? "%" : "",
             ].join("");
           }}
@@ -226,6 +237,15 @@ const IndicesTimeseries: FunctionComponent<IndicesTimeseriesProps> = ({
                   return [
                     value < 0 ? "-" : "",
                     numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                    isPercentage ? "%" : "",
+                  ].join("");
+                }}
+                tooltipCallback={item => {
+                  const isPercentage = ["growth_yoy"].includes(data.index);
+                  return [
+                    item.dataset.label + ": ",
+                    item.parsed.y < 0 ? "-" : "",
+                    numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
                     isPercentage ? "%" : "",
                   ].join("");
                 }}

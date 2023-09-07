@@ -191,9 +191,15 @@ const InflationTrends: FunctionComponent = () => {
         tooltipFormat="MMM yyyy"
         mode="grouped"
         unitY="%"
-        displayNumFormat={value =>
-          numFormat(value, "compact", [1, 1], "short", i18n.language, true)
-        }
+        displayNumFormat={value => numFormat(value, "compact", 0, "short", i18n.language, true)}
+        tooltipCallback={item => {
+          return [
+            item.dataset.label + ": ",
+            item.parsed.y < 0 ? "-" : "",
+            numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
+            "%",
+          ].join("");
+        }}
         enableCallout
         data={{
           labels: coordinate.x,
