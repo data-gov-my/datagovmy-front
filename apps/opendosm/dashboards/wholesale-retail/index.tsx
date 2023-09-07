@@ -8,6 +8,7 @@ import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useMemo } from "react";
+import { useTheme } from "next-themes";
 
 /**
  * Wholesale & Retail Trade Dashboard
@@ -30,6 +31,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-wholesale-retail", "common"]);
+  const { theme } = useTheme();
+
   const INDICES = [
     "growth_index_yoy",
     "growth_sales_yoy",
@@ -84,14 +87,14 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<
@@ -113,7 +116,7 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
             prefix ? [1, 1] : 1,
             "long",
             i18n.language,
-            true
+            false
           ),
           unit,
         ].join(""),
@@ -164,8 +167,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                   unitY={configs("total").unit}
                   enableAnimation={!play}
                   prefixY={configs("total").prefix}
-                  displayNumFormat={value =>
-                    numFormat(value, "compact", 1, "long", i18n.language, true)
+                  displayNumFormat={(value, _, precision) =>
+                    numFormat(value, "compact", precision, "long", i18n.language, true)
                   }
                   axisY={AXIS_Y}
                   data={{
@@ -211,8 +214,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                     unitY={configs("wholesale").unit}
                     prefixY={configs("wholesale").prefix}
                     axisY={AXIS_Y}
-                    displayNumFormat={value =>
-                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    displayNumFormat={(value, _, precision) =>
+                      numFormat(value, "compact", precision, "long", i18n.language, true)
                     }
                     data={{
                       labels: coordinate.x,
@@ -246,8 +249,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                     unitY={configs("retail").unit}
                     prefixY={configs("retail").prefix}
                     axisY={AXIS_Y}
-                    displayNumFormat={value =>
-                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    displayNumFormat={(value, _, precision) =>
+                      numFormat(value, "compact", precision, "long", i18n.language, true)
                     }
                     data={{
                       labels: coordinate.x,
@@ -281,8 +284,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
                     unitY={configs("motor").unit}
                     prefixY={configs("motor").prefix}
                     axisY={AXIS_Y}
-                    displayNumFormat={value =>
-                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    displayNumFormat={(value, _, precision) =>
+                      numFormat(value, "compact", precision, "long", i18n.language, true)
                     }
                     data={{
                       labels: coordinate.x,

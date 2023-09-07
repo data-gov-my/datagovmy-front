@@ -8,6 +8,7 @@ import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { useTheme } from "next-themes";
 
 /**
  * Labour Productivity Dashboard
@@ -64,6 +65,7 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
   last_updated,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-labour-productivity", "agencies", "common"]);
+  const { theme } = useTheme();
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.growth_yoy_vah"), value: "growth_yoy_vah" },
@@ -110,14 +112,14 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const plotTimeseries = (
@@ -153,7 +155,7 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
               isPercentage ? "" : data.index === "hours" ? "" : "RM ",
               numFormat(
                 Math.abs(timeseries_callout.data[data.index][name]?.latest),
-                "compact",
+                "standard",
                 isPercentage ? 1 : 0,
                 "short",
                 i18n.language,
@@ -171,16 +173,16 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
           className="h-[350px] w-full"
           interval="quarter"
           enableAnimation={!play}
-          displayNumFormat={value => {
-            const isPercentage = ["growth_yoy_vah", "growth_yoy_vae", "growth_yoy_hours"].includes(
-              data.index
-            );
-            return [
-              isPercentage ? "" : "RM",
-              numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
-              isPercentage ? "%" : "",
-            ].join("");
-          }}
+          prefixY={
+            ["growth_yoy_vah", "growth_yoy_vae", "growth_yoy_hours"].includes(data.index)
+              ? ""
+              : ["hours"].includes(data.index)
+              ? ""
+              : "RM"
+          }
+          unitY={
+            ["growth_yoy_vah", "growth_yoy_vae", "growth_yoy_hours"].includes(data.index) ? "%" : ""
+          }
           axisY={{
             y2: {
               display: false,
@@ -259,18 +261,18 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
                   className="h-[350px] w-full"
                   title={t(`keys.overall`)}
                   interval="quarter"
-                  displayNumFormat={value => {
-                    const isPercentage = [
-                      "growth_yoy_vah",
-                      "growth_yoy_vae",
-                      "growth_yoy_hours",
-                    ].includes(data.index);
-                    return [
-                      isPercentage ? "" : data.index === "hours" ? "" : "RM",
-                      numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
-                      isPercentage ? "%" : "",
-                    ].join("");
-                  }}
+                  prefixY={
+                    ["growth_yoy_vah", "growth_yoy_vae", "growth_yoy_hours"].includes(data.index)
+                      ? ""
+                      : ["hours"].includes(data.index)
+                      ? ""
+                      : "RM"
+                  }
+                  unitY={
+                    ["growth_yoy_vah", "growth_yoy_vae", "growth_yoy_hours"].includes(data.index)
+                      ? "%"
+                      : ""
+                  }
                   axisY={{
                     y2: {
                       display: false,
@@ -317,7 +319,7 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
                           )}%`
                         : `${data.index === "hours" ? "" : "RM"} ${numFormat(
                             Math.abs(timeseries_callout.data[data.index].overall.latest),
-                            "compact",
+                            "standard",
                             0,
                             "short",
                             i18n.language,

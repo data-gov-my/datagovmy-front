@@ -8,6 +8,7 @@ import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { MetaPage, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { useTheme } from "next-themes";
 
 /**
  * Services Statistics
@@ -68,6 +69,7 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-services-statistics", "division", "common"]);
+  const { theme } = useTheme();
 
   const TYPE_OPTIONS: Array<OptionType> = ServiceType.map(type => {
     return { label: t(`keys.${type}`), value: type };
@@ -101,14 +103,14 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data.shade]
+    [data.shade, theme]
   );
 
   const getChartData = (charts: string[]): TimeseriesChartData[] => {
@@ -203,7 +205,7 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
                           numFormat(
                             value,
                             "compact",
-                            data.trend === "actual" ? [1, 0] : [1, 1],
+                            data.trend === "actual" ? [1, 0] : [1, 0],
                             "long",
                             i18n.language,
                             true
