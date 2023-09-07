@@ -178,6 +178,7 @@ const ElectronicPaymentsTimeseries: FunctionComponent<ElectronicPaymentsProps> =
               date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
             }),
             value: [
+              index === "value" ? "RM" : "",
               numFormat(
                 Math.abs(timeseries_callout.data[index][name].latest),
                 timeseries_callout.data[index][name].latest < 1e6 ? "standard" : "compact",
@@ -197,6 +198,7 @@ const ElectronicPaymentsTimeseries: FunctionComponent<ElectronicPaymentsProps> =
           className="h-[350px] w-full"
           interval="month"
           enableAnimation={!play}
+          prefixY={index === "value" ? "RM" : ""}
           displayNumFormat={(value, _, precision) => {
             return [
               numFormat(Math.abs(value), "compact", precision, "long", i18n.language, true),
