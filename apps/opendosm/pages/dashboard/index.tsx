@@ -31,6 +31,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           division: "bipd",
           route: routes.KAWASANKU,
         },
+
         {
           name: "population",
           division: "bppd",
