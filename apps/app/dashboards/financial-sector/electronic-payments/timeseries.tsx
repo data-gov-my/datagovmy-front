@@ -80,15 +80,7 @@ type SystemsProps = {
   >;
 };
 
-type ElectronicPaymentsProps =
-  | InstrumentsProps
-  | ChannelsProps
-  | SystemsProps
-  | {
-      series: any;
-      timeseries: any;
-      timeseries_callout: any;
-    };
+type ElectronicPaymentsProps = InstrumentsProps | ChannelsProps | SystemsProps;
 
 const ElectronicPaymentsTimeseries: FunctionComponent<ElectronicPaymentsProps> = ({
   timeseries,
@@ -137,106 +129,177 @@ const ElectronicPaymentsTimeseries: FunctionComponent<ElectronicPaymentsProps> =
     [data, theme]
   );
 
-  const getCharts = (series: "systems" | "instruments" | "channels") => {
-    switch (series) {
-      case "instruments":
-        return [
-          "credit_f2f",
-          "credit_online",
-          "debit_f2f",
-          "debit_online",
-          "charge_f2f",
-          "charge_online",
-          "emoney",
-          "cheque",
-        ];
-
-      case "systems":
-        return ["rentas", "ibg", "fpx", "dd", "jompay", "rpp"];
-
-      case "channels":
-        return ["atm_cwd", "atm_fin", "mobile", "internet_indiv", "internet_corp"];
+  const plotTimeseries = (play: boolean) => {
+    if (series === "instruments") {
+      const callout = timeseries_callout.data[index];
+      const arr: Exclude<InstrumentsType, "x" | "recession">[] = [
+        "credit_f2f",
+        "credit_online",
+        "debit_f2f",
+        "debit_online",
+        "charge_f2f",
+        "charge_online",
+        "emoney",
+        "cheque",
+      ];
+      return arr.map(name => {
+        const chartData: TimeseriesChartData = {
+          title: t(`keys.${name}`),
+          label: t(`keys.${name}`),
+          data: coordinate[name],
+          fill: data.shade === "no_shade",
+          stats: [
+            {
+              title: t("common:common.latest", {
+                date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+              }),
+              value: [
+                index === "value" ? "RM" : "",
+                numFormat(
+                  Math.abs(callout[name].latest),
+                  callout[name].latest < 1e6 ? "standard" : "compact",
+                  callout[name].latest < 1e6 ? 0 : 1,
+                  "long",
+                  i18n.language,
+                  false
+                ),
+              ].join(""),
+            },
+          ],
+        };
+        return <_Timeseries play={play} {...chartData} />;
+      });
+    }
+    if (series === "channels") {
+      const callout = timeseries_callout.data[index];
+      const arr: Exclude<ChannelsType, "x" | "recession">[] = [
+        "atm_cwd",
+        "atm_fin",
+        "mobile",
+        "internet_indiv",
+        "internet_corp",
+      ];
+      return arr.map(name => {
+        const chartData: TimeseriesChartData = {
+          title: t(`keys.${name}`),
+          label: t(`keys.${name}`),
+          data: coordinate[name],
+          fill: data.shade === "no_shade",
+          stats: [
+            {
+              title: t("common:common.latest", {
+                date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+              }),
+              value: [
+                index === "value" ? "RM" : "",
+                numFormat(
+                  Math.abs(callout[name].latest),
+                  callout[name].latest < 1e6 ? "standard" : "compact",
+                  callout[name].latest < 1e6 ? 0 : 1,
+                  "long",
+                  i18n.language,
+                  false
+                ),
+              ].join(""),
+            },
+          ],
+        };
+        return <_Timeseries play={play} {...chartData} />;
+      });
+    }
+    if (series === "systems") {
+      const callout = timeseries_callout.data[index];
+      const arr: Exclude<SystemsType, "x" | "recession">[] = [
+        "rentas",
+        "ibg",
+        "fpx",
+        "dd",
+        "jompay",
+        "rpp",
+      ];
+      return arr.map(name => {
+        const chartData: TimeseriesChartData = {
+          title: t(`keys.${name}`),
+          label: t(`keys.${name}`),
+          data: coordinate[name],
+          fill: data.shade === "no_shade",
+          stats: [
+            {
+              title: t("common:common.latest", {
+                date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+              }),
+              value: [
+                index === "value" ? "RM" : "",
+                numFormat(
+                  Math.abs(callout[name].latest),
+                  callout[name].latest < 1e6 ? "standard" : "compact",
+                  callout[name].latest < 1e6 ? 0 : 1,
+                  "long",
+                  i18n.language,
+                  false
+                ),
+              ].join(""),
+            },
+          ],
+        };
+        return <_Timeseries play={play} {...chartData} />;
+      });
     }
   };
 
-  const plotTimeseries = (charts: any, play: boolean) => {
-    return charts.map((name: string) => {
-      const {
-        title,
-        label,
-        data: datum,
-        fill,
-        stats,
-      }: TimeseriesChartData = {
-        title: t(`keys.${name}`),
-        label: t(`keys.${name}`),
-        data: coordinate[name],
-        fill: data.shade === "no_shade",
-        stats: [
-          {
-            title: t("common:common.latest", {
-              date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-            }),
-            value: [
-              index === "value" ? "RM" : "",
-              numFormat(
-                Math.abs(timeseries_callout.data[index][name].latest),
-                timeseries_callout.data[index][name].latest < 1e6 ? "standard" : "compact",
-                timeseries_callout.data[index][name].latest < 1e6 ? 0 : 1,
-                "long",
-                i18n.language,
-                false
-              ),
-            ].join(""),
-          },
-        ],
-      };
-      return (
-        <Timeseries
-          key={title}
-          title={title}
-          className="h-[350px] w-full"
-          interval="month"
-          enableAnimation={!play}
-          prefixY={index === "value" ? "RM" : ""}
-          displayNumFormat={(value, _, precision) => {
-            return [
-              numFormat(Math.abs(value), "compact", precision, "long", i18n.language, true),
-            ].join("");
-          }}
-          axisY={{
-            y2: {
-              display: false,
-              grid: {
-                drawTicks: false,
-                drawBorder: false,
-                lineWidth: 0.5,
-              },
-              ticks: {
-                display: false,
-              },
+  const _Timeseries = ({
+    title,
+    play,
+    label,
+    data: datum,
+    fill,
+    stats,
+  }: TimeseriesChartData & { play: boolean }) => (
+    <>
+      <Timeseries
+        key={title}
+        title={title}
+        className="h-[350px] w-full"
+        interval="month"
+        enableAnimation={!play}
+        prefixY={index === "value" ? "RM" : ""}
+        displayNumFormat={(value, _, precision) => {
+          return [
+            numFormat(Math.abs(value), "compact", precision, "long", i18n.language, true),
+          ].join("");
+        }}
+        axisY={{
+          y2: {
+            display: false,
+            grid: {
+              drawTicks: false,
+              drawBorder: false,
+              lineWidth: 0.5,
             },
-          }}
-          data={{
-            labels: coordinate.x,
-            datasets: [
-              {
-                type: "line",
-                label: label,
-                data: datum,
-                backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                borderColor: AKSARA_COLOR.PRIMARY,
-                fill: fill,
-                borderWidth: 1.5,
-              },
-              shader(data.shade),
-            ],
-          }}
-          stats={stats}
-        />
-      );
-    });
-  };
+            ticks: {
+              display: false,
+            },
+          },
+        }}
+        data={{
+          labels: coordinate.x,
+          datasets: [
+            {
+              type: "line",
+              label: label,
+              data: datum,
+              backgroundColor: AKSARA_COLOR.PRIMARY_H,
+              borderColor: AKSARA_COLOR.PRIMARY,
+              fill: fill,
+              borderWidth: 1.5,
+            },
+            shader(data.shade),
+          ],
+        }}
+        stats={stats}
+      />
+    </>
+  );
 
   return (
     <>
@@ -271,9 +334,7 @@ const ElectronicPaymentsTimeseries: FunctionComponent<ElectronicPaymentsProps> =
           <SliderProvider>
             {play => (
               <>
-                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                  {plotTimeseries(getCharts(series), play)}
-                </div>
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">{plotTimeseries(play)}</div>
                 <Slider
                   type="range"
                   period={"month"}
