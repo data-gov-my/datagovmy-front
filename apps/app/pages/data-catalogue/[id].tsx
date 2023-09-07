@@ -1,4 +1,5 @@
 import DataCatalogueShow from "@data-catalogue/show";
+import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
@@ -46,17 +47,19 @@ const CatalogueShow: Page = ({
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
-      <DataCatalogueShow
-        options={availableOptions}
-        params={params}
-        config={config}
-        dataset={dataset}
-        explanation={explanation}
-        metadata={metadata}
-        urls={urls}
-        translations={translations}
-        catalogueId={catalogueId}
-      />
+      <CatalogueProvider dataset={dataset} urls={urls}>
+        <DataCatalogueShow
+          options={availableOptions}
+          params={params}
+          config={config}
+          dataset={dataset}
+          explanation={explanation}
+          metadata={metadata}
+          urls={urls}
+          translations={translations}
+          catalogueId={catalogueId}
+        />
+      </CatalogueProvider>
     </AnalyticsProvider>
   );
 };

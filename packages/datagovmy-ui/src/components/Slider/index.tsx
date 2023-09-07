@@ -62,13 +62,13 @@ const Slider: FunctionComponent<SliderProps> = ({
   }, [data]);
 
   useWatch(() => {
-    if (type === "single") return;
+    // if (type === "single") return;
     setMinmax(value);
   }, [value]);
 
   // Auto-resets slider if period changes
   useWatch(() => {
-    if (data) {
+    if (data && type === "range") {
       setMinmax([0, data.length - 1]);
       onChange([0, data.length - 1] as number[] & number);
     }
