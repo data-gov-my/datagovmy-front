@@ -171,7 +171,7 @@ const ElectronicPaymentsTimeseries: FunctionComponent<ElectronicPaymentsProps> =
         title: t(`keys.${name}`),
         label: t(`keys.${name}`),
         data: coordinate[name],
-        fill: true,
+        fill: data.shade === "no_shade",
         stats: [
           {
             title: t("common:common.latest", {
@@ -222,8 +222,8 @@ const ElectronicPaymentsTimeseries: FunctionComponent<ElectronicPaymentsProps> =
                 type: "line",
                 label: label,
                 data: datum,
-                backgroundColor: AKSARA_COLOR.PURPLE_H,
-                borderColor: AKSARA_COLOR.PURPLE,
+                backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                borderColor: AKSARA_COLOR.PRIMARY,
                 fill: fill,
                 borderWidth: 1.5,
               },
