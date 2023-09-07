@@ -15,7 +15,6 @@ import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { routes } from "@lib/routes";
-import { LHDNIcon } from "datagovmy-ui/icons/agency";
 
 /**
  * Business Creation Destruction Dashboard
@@ -53,7 +52,7 @@ interface BusinessCreationDestructionProp {
   last_updated: string;
   params: { state: string };
   timeseries: WithData<Record<TimeseriesType, Record<TimeseriesData, number[]>>>;
-  timeseries_callout: WithData<Record<Exclude<TimeseriesData, "x">, number>>;
+  timeseries_callout: WithData<Record<Exclude<TimeseriesData, "x">, { this_year: number }>>;
 }
 
 const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDestructionProp> = ({
@@ -143,7 +142,7 @@ const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDe
             }),
             value: [
               numFormat(
-                Math.abs(timeseries_callout.data[name]),
+                Math.abs(timeseries_callout.data[name].this_year),
                 "standard",
                 0,
                 "long",
@@ -213,9 +212,7 @@ const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDe
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge agency="ssm" icon={<LHDNIcon fillColor={AKSARA_COLOR.BLACK} />} />
-        }
+        agencyBadge={<AgencyBadge agency="ssm" />}
         action={
           <StateDropdown url={routes.BUSINESS_CREATION_DESTRUCTION} currentState={params.state} />
         }
