@@ -102,8 +102,8 @@ const IncomeOverview: FunctionComponent<IncomeOverviewProps> = ({ stacked_bar })
           labels: stacked_bar.data[data.tab_type.value].x,
           datasets: _datasets,
         }}
-        prefixY={data.tab_index == 0 ? "RM" : ""}
-        unitY={data.tab_index == 0 ? "bil" : "%"}
+        prefixY={data.tab_index == 0 ? "RM " : ""}
+        unitY={data.tab_index == 0 ? " bil" : "%"}
         maxY={data.tab_index == 0 ? undefined : 100}
         interval={"year"}
         tooltipItemSort={(a, b) => {

@@ -109,7 +109,7 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({}) => {
 
   return (
     <Section className="py-8 lg:py-12 xl:px-20">
-      <h5 className="pb-8 text-center">{t("rank_header")}</h5>
+      <h4 className="pb-8 text-center">{t("rank_header")}</h4>
       <div className="flex flex-col gap-6 rounded-xl sm:flex-row lg:gap-8">
         <Card className="bg-background dark:bg-background-dark shadow-button h-max w-full space-y-6 p-6 sm:w-5/12 lg:w-1/3">
           <div className="space-y-3">
