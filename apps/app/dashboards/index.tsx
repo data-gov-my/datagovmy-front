@@ -1,5 +1,5 @@
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
-import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { ArrowUpRightIcon, ArrowTopRightOnSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import {
   At,
   AgencyBadge,
@@ -13,7 +13,7 @@ import {
   Tabs,
 } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
-import { numFormat } from "datagovmy-ui/helpers";
+import { isValidURL, numFormat } from "datagovmy-ui/helpers";
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { AgencyIcon } from "datagovmy-ui/icons/agency";
 import { Agency, OptionType } from "datagovmy-ui/types";
@@ -130,6 +130,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                               href={dashboards_route[item.name].route}
                               locale={i18n.language}
                               prefetch={false}
+                              external={isValidURL(dashboards_route[item.name].route)}
                             >
                               <Card className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
                                 <div className="relative flex items-center gap-4">
@@ -144,15 +145,16 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                                   <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-transform group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transform-none" />
                                 </div>
                                 <div className="relative overflow-hidden">
-                                  <p className="truncate font-medium dark:text-white">
+                                  <p className="flex items-center gap-1 truncate font-medium dark:text-white">
                                     {t(`dashboards.${item.name}.name`)}
+                                    {isValidURL(dashboards_route[item.name].route) && (
+                                      <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
+                                    )}
                                   </p>
                                   <p className="text-dim transition-transform group-hover:translate-y-6 motion-reduce:transform-none">
                                     {`${numFormat(item.views, "compact")} ${t(
                                       "common:common.views",
-                                      {
-                                        count: item.views,
-                                      }
+                                      { count: item.views }
                                     )}`}
                                   </p>
                                   <p className="text-primary dark:text-primary-dark absolute -bottom-6 whitespace-nowrap transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">

@@ -329,6 +329,20 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
 };
 
 /**
+ * Check if the URL is correct
+ * @param {string} url URL to validate
+ * @returns {boolean} true | false
+ */
+export const isValidURL = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
  * Parses to a cookie map.
  * @param {string} cookie Cookie string
  * @returns {Record<string, string>} Cookie map
