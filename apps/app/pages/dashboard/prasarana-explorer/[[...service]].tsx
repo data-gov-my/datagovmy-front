@@ -1,4 +1,4 @@
-import KTMBExplorerDashboard from "@dashboards/transportation/ktmb-explorer";
+import PrasaranaExplorerDashboard from "@dashboards/transportation/prasarana-explorer";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
@@ -7,7 +7,7 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
-const KTMBExplorer: Page = ({
+const PrasaranaExplorer: Page = ({
   meta,
   A_to_B,
   A_to_B_callout,
@@ -17,12 +17,12 @@ const KTMBExplorer: Page = ({
   last_updated,
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboard-ktmb-explorer", "common"]);
+  const { t } = useTranslation(["dashboard-prasarana-explorer", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <KTMBExplorerDashboard
+      <PrasaranaExplorerDashboard
         A_to_B={A_to_B}
         A_to_B_callout={A_to_B_callout}
         B_to_A={B_to_A}
@@ -49,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-ktmb-explorer",
+  "dashboard-prasarana-explorer",
   async ({ params }) => {
     try {
       const [service, origin, destination] = params?.service
@@ -57,15 +57,15 @@ export const getStaticProps: GetStaticProps = withi18n(
         : ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
 
       const results = await Promise.allSettled([
-        get("/explorer", { explorer: "KTMB", dropdown: true }),
+        get("/explorer", { explorer: "Prasarana", dropdown: true }),
         get("/explorer", {
-          explorer: "KTMB",
+          explorer: "Prasarana",
           service,
           origin,
           destination,
         }),
         get("/explorer", {
-          explorer: "KTMB",
+          explorer: "Prasarana",
           service,
           origin: destination,
           destination: origin,
@@ -81,7 +81,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         notFound: false,
         props: {
           meta: {
-            id: "dashboard-ktmb-explorer",
+            id: "dashboard-prasarana-explorer",
             type: "dashboard",
             category: "transportation",
             agency: "MoT",
@@ -102,4 +102,4 @@ export const getStaticProps: GetStaticProps = withi18n(
   }
 );
 
-export default KTMBExplorer;
+export default PrasaranaExplorer;
