@@ -675,7 +675,7 @@ export const MCMCIcon: FunctionComponent<IconProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <g clip-path="url(#clip0_1208_15507)">
+      <g clipPath="url(#clip0_1208_15507)">
         <circle cx="16" cy="16" r="16" fill={fillColor} />
         <path
           fillRule="evenodd"
