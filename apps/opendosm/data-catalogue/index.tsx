@@ -14,6 +14,7 @@ import {
   Label,
   Search,
   Daterange,
+  AgencyBadge,
 } from "datagovmy-ui/components";
 import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
@@ -65,6 +66,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             context: query.source ? "agency" : "",
           }),
         ]}
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
 
       <Container className="min-h-screen lg:px-0">
@@ -185,7 +187,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b py-4 dark:border-outlineHover-dark lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 dark:border-outlineHover-dark dark:bg-background-dark lg:pl-2">
       <div className="flex-grow">
         <Search
           className="border-0"
