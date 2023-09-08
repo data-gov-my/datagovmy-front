@@ -101,7 +101,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<(key: string) => { unit: string; callout: string; fill: boolean }>(
@@ -212,8 +212,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                     interval="month"
                     enableAnimation={!play}
                     unitY={configs("overall").unit}
-                    displayNumFormat={value =>
-                      numFormat(value, "compact", 1, "short", i18n.language, true)
+                    displayNumFormat={(value, _, precision) =>
+                      numFormat(value, "compact", precision, "short", i18n.language, true)
                     }
                     axisY={{
                       y2: {
@@ -267,8 +267,8 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                         className="h-[350px] w-full"
                         interval="month"
                         enableAnimation={!play}
-                        displayNumFormat={value =>
-                          numFormat(value, "compact", 1, "short", i18n.language, true)
+                        displayNumFormat={(value, _, precision) =>
+                          numFormat(value, "compact", precision, "short", i18n.language, true)
                         }
                         unitY={chartData.unitY}
                         axisY={{
