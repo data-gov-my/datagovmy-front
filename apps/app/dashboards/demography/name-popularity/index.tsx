@@ -121,7 +121,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         setSearchData("loading", false);
       })
       .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        if (e.response.data.error === "censored_toast")
+          toast.error(t("error.censored_toast"), e.response.data.censored_names.join(","));
+        else
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+
         console.error(e);
       });
   };
@@ -164,7 +168,11 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
           setCompareData("loading", false);
         })
         .catch(e => {
-          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          if (e.response.data.error === "censored_toast")
+            toast.error(t("error.censored_toast"), e.response.data.censored_names.join(","));
+          else
+            toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+
           console.error(e);
         });
     } else {
