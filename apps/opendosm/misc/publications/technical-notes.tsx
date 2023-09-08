@@ -34,6 +34,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
   const ITEMS_PER_PAGE = 15;
   const { data, setData } = useData({
     loading: false,
+    modal_loading: false,
     pub: "",
   });
 
@@ -130,6 +131,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
                 key={item.publication_id}
                 publication={item}
                 onClick={() => {
+                  setData("modal_loading", true);
                   setShow(true);
                   push(
                     routes.PUBLICATIONS.concat(
@@ -142,7 +144,10 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
                       scroll: false,
                     }
                   );
-                  fetchResource(item.publication_id).then(data => setData("pub", data));
+                  fetchResource(item.publication_id).then(data => {
+                    setData("pub", data);
+                    setData("modal_loading", false);
+                  });
                 }}
               />
             ))}
@@ -154,6 +159,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
           pub_id={params.pub_id}
           post={resource_id => postDownload(resource_id)}
           publication={data.pub}
+          loading={data.modal_loading}
           show={show}
           hide={() => {
             setShow(false);

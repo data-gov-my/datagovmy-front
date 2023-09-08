@@ -4,7 +4,7 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import Table, { TableConfig } from "datagovmy-ui/charts/table";
-import { At, Button, Search } from "datagovmy-ui/components";
+import { At, Button, Search, Spinner } from "datagovmy-ui/components";
 import { body } from "datagovmy-ui/configs/font";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -21,6 +21,7 @@ type PubResource = {
 
 interface PublicationModalProps {
   hide: () => void;
+  loading: true;
   post: (resource_id: number) => void;
   pub_id: string;
   publication?: PubResource;
@@ -29,6 +30,7 @@ interface PublicationModalProps {
 }
 const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   hide,
+  loading,
   post,
   pub_id,
   publication,
@@ -40,7 +42,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
     copied: false,
     query: "",
   });
-
+  console.log(loading, "MODAL");
   const filteredRes = useMemo(
     () =>
       matchSorter(publication ? publication.resources : [], data.query, {
@@ -121,67 +123,75 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                       "w-full max-w-4xl transform rounded-xl border border-outline bg-white p-6 text-left align-middle font-sans shadow-floating transition-all dark:border-outlineHover-dark dark:bg-black"
                     )}
                   >
-                    <Dialog.Title
-                      as="div"
-                      className="flex flex-col gap-y-1.5 text-black dark:text-white"
-                    >
-                      <span className="pr-8 text-sm uppercase text-dim">
-                        {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
-                      </span>
-                      <span className="text-lg font-bold">{publication.title}</span>
-                      <p className="text-sm">{publication.description}</p>
+                    {loading ? (
+                      <div className="flex h-[300px] w-full items-center justify-center">
+                        <Spinner loading={loading} />
+                      </div>
+                    ) : (
+                      <>
+                        <Dialog.Title
+                          as="div"
+                          className="flex flex-col gap-y-1.5 text-black dark:text-white"
+                        >
+                          <span className="pr-8 text-sm uppercase text-dim">
+                            {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
+                          </span>
+                          <span className="text-lg font-bold">{publication.title}</span>
+                          <p className="text-sm">{publication.description}</p>
 
-                      <Button
-                        variant="reset"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            `https://open.dosm.gov.my/publications${type}${pub_id}`
-                          );
-                          setData("copied", true);
-                          setTimeout(() => setData("copied", false), 1000);
-                        }}
-                        className={clx(
-                          "flex items-center gap-1.5 pt-1.5 text-sm",
-                          data.copied ? "text-success" : "text-primary dark:text-primary-dark"
-                        )}
-                      >
-                        {data.copied ? (
-                          <>
-                            <CheckCircleIcon className="h-4.5 w-4.5" />
-                            {t("common:common.copied")}
-                          </>
-                        ) : (
-                          <>
-                            <DocumentDuplicateIcon className="h-4.5 w-4.5" />
-                            {t("copy_publication_link")}
-                          </>
-                        )}
-                      </Button>
-                      <Button
-                        variant="reset"
-                        className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
-                        onClick={hide}
-                      >
-                        <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
-                      </Button>
-                    </Dialog.Title>
-                    <div className="flex flex-col justify-between gap-3 pt-6 sm:flex-row sm:items-center">
-                      <h5>{t("download_list")}</h5>
-                      {filteredRes.length > 5 && (
-                        <Search
-                          className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark sm:w-[300px]"
-                          placeholder={t("search_subject")}
-                          onChange={q => setData("query", q)}
+                          <Button
+                            variant="reset"
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                `https://open.dosm.gov.my/publications${type}${pub_id}`
+                              );
+                              setData("copied", true);
+                              setTimeout(() => setData("copied", false), 1000);
+                            }}
+                            className={clx(
+                              "flex items-center gap-1.5 pt-1.5 text-sm",
+                              data.copied ? "text-success" : "text-primary dark:text-primary-dark"
+                            )}
+                          >
+                            {data.copied ? (
+                              <>
+                                <CheckCircleIcon className="h-4.5 w-4.5" />
+                                {t("common:common.copied")}
+                              </>
+                            ) : (
+                              <>
+                                <DocumentDuplicateIcon className="h-4.5 w-4.5" />
+                                {t("copy_publication_link")}
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            variant="reset"
+                            className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
+                            onClick={hide}
+                          >
+                            <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
+                          </Button>
+                        </Dialog.Title>
+                        <div className="flex flex-col justify-between gap-3 pt-6 sm:flex-row sm:items-center">
+                          <h5>{t("download_list")}</h5>
+                          {filteredRes.length > 5 && (
+                            <Search
+                              className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark sm:w-[300px]"
+                              placeholder={t("search_subject")}
+                              onChange={q => setData("query", q)}
+                            />
+                          )}
+                        </div>
+                        <Table
+                          className="pt-3 md:w-full"
+                          data={filteredRes}
+                          enablePagination={filteredRes.length > 10 ? 10 : false}
+                          config={config}
+                          precision={0}
                         />
-                      )}
-                    </div>
-                    <Table
-                      className="pt-3 md:w-full"
-                      data={filteredRes}
-                      enablePagination={filteredRes.length > 10 ? 10 : false}
-                      config={config}
-                      precision={0}
-                    />
+                      </>
+                    )}
                   </Dialog.Panel>
                 </Transition.Child>
               </div>
