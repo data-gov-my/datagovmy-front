@@ -4,22 +4,22 @@ import { Metadata } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const DashboardIndex: Page = ({
   analytics,
   sources,
   dashboards,
-  agency,
+  query,
   dashboards_route,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
       <Dashboard
-        agency={agency}
+        queries={query}
         sources={sources}
         analytics={analytics}
         dashboards={dashboards}
@@ -29,8 +29,8 @@ const DashboardIndex: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"], async () => {
-  const [agencyDropdown, data] = await Promise.all([
+export const getServerSideProps: GetServerSideProps = withi18n("dashboards", async ({ query }) => {
+  const [dropdown, data] = await Promise.all([
     get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
     get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),
   ]).catch(e => {
@@ -45,8 +45,9 @@ export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"
         category: null,
         agency: null,
       },
+      query: query,
       agency: null,
-      sources: agencyDropdown.data,
+      sources: dropdown.data,
       analytics: {
         data_as_of: data.dashboards_top.data_as_of,
         today: data.dashboards_top.data.today,

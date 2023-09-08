@@ -1,10 +1,6 @@
-import { DownloadOptions } from "../../../types";
-import { useAnalytics, useExport, useTranslation } from "../../hooks";
-import { download } from "../../lib/helpers";
-import { GeoChoroplethRef } from "../geochoropleth";
-import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import { CatalogueContext } from "../../contexts/catalogue";
 import { default as dynamic } from "next/dynamic";
-import { FunctionComponent, useEffect, useMemo, useRef, useState } from "react";
+import { FunctionComponent, useContext } from "react";
 
 const GeoChoropleth = dynamic(() => import("../geochoropleth"), {
   ssr: false,
@@ -13,71 +9,22 @@ const GeoChoropleth = dynamic(() => import("../geochoropleth"), {
 interface CatalogueGeojsonProps {
   className?: string;
   config: any;
-  dataset: any;
-  urls: {
-    [key: string]: string;
-  };
-  onDownload?: (prop: DownloadOptions) => void;
 }
 
 const CatalogueGeojson: FunctionComponent<CatalogueGeojsonProps> = ({
   className = "h-[450px] w-full",
-  dataset,
   config,
-  urls,
-  onDownload,
 }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
-  const ctx = useRef<GeoChoroplethRef | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const { png } = useExport(mounted, dataset.meta.unique_id);
-  const { track } = useAnalytics(dataset);
-
-  useEffect(() => {
-    if (onDownload) onDownload(availableDownloads);
-  }, [png, ctx]);
-
-  const availableDownloads = useMemo(() => {
-    return {
-      chart: [
-        {
-          id: "png",
-          image: png,
-          title: t("image.title"),
-          description: t("image.desc"),
-          icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: () => {
-            if (!ctx) return;
-            ctx.current?.print(dataset.meta.unique_id);
-            track("png");
-          },
-        },
-      ],
-      data: [
-        {
-          id: "geojson",
-          image: "/static/images/icons/geojson.png",
-          title: t("geojson.title"),
-          description: t("geojson.desc"),
-          icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-          href: () => {
-            download(urls[Object.keys(urls)[0]], dataset.meta.unique_id.concat(".geojson"));
-            track("parquet");
-          },
-        },
-      ],
-    };
-  }, [png, ctx]);
+  const { bind, dataset } = useContext(CatalogueContext);
 
   return (
     <GeoChoropleth
-      _ref={ctx}
+      _ref={bind.leaflet}
       id={dataset.meta.unique_id}
       className={className}
       type={config.geojson}
       color={config.color}
       enableFill={false}
-      onReady={mounted => setMounted(mounted)}
     />
   );
 };
