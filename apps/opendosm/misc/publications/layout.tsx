@@ -40,11 +40,6 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
       icon: <DocumentTextIcon className="mr-1 h-5 w-5" />,
       url: routes.PUBLICATIONS.concat("/technical-notes"),
     },
-    {
-      name: t("data_dictionaries"),
-      icon: <BookOpenIcon className="mr-1 h-5 w-5" />,
-      url: routes.PUBLICATIONS.concat("/data-dictionaries"),
-    },
   ];
 
   const startsWith = (url: string) => {

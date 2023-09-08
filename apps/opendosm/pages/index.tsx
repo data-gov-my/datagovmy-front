@@ -99,28 +99,28 @@ const Home: Page = ({
         data_as_of: toDate(keystats.population.data_as_of, "Qq yyyy"),
       },
       {
-        icon: <EconomicGrowthIcon className="h-5 w-5" />,
+        icon: <EconomicGrowthIcon className="h-6 w-6" />,
         title: "stats.economic_growth",
         url: routes.GDP,
         value: numFormat(keystats.growth.callout, "compact", 1) + "%",
         data_as_of: toDate(keystats.growth.data_as_of, "Qq yyyy"),
       },
       {
-        icon: <UnemploymentIcon className="h-5 w-5" />,
+        icon: <UnemploymentIcon className="h-6 w-6" />,
         title: "stats.unemployment",
         url: routes.LABOUR_MARKET,
         value: numFormat(keystats.unemployment.callout, "compact", 1) + "%",
         data_as_of: toDate(keystats.unemployment.data_as_of, "MMM yyyy"),
       },
       {
-        icon: <InflationIcon className="h-5 w-5" />,
+        icon: <InflationIcon className="h-6 w-6" />,
         title: "stats.inflation",
         url: routes.CONSUMER_PRICES,
         value: numFormat(keystats.inflation.callout, "compact", 1) + "%",
         data_as_of: toDate(keystats.inflation.data_as_of, "MMM yyyy"),
       },
       {
-        icon: <ProductionIcon className="h-5 w-5" />,
+        icon: <ProductionIcon className="h-6 w-6" />,
         title: "stats.production_cost",
         url: routes.PRODUCER_PRICES,
         value:
@@ -128,7 +128,7 @@ const Home: Page = ({
         data_as_of: toDate(keystats.ppi.data_as_of, "MMM yyyy"),
       },
       {
-        icon: <ProductionIcon className="h-5 w-5" />,
+        icon: <ProductionIcon className="h-6 w-6" />,
         title: "stats.manufacturing_output",
         url: routes.MANUFACTURING_STATISTICS,
         value:
@@ -136,7 +136,7 @@ const Home: Page = ({
         data_as_of: toDate(keystats.mfg.data_as_of, "MMM yyyy"),
       },
       {
-        icon: <IndustryIcon className="h-4 w-4" />,
+        icon: <IndustryIcon className="h-5 w-5" />,
         title: "stats.industrial_production",
         url: routes.INDUSTRIAL_PRODUCTION,
         value:
@@ -144,7 +144,7 @@ const Home: Page = ({
         data_as_of: toDate(keystats.ipi.data_as_of, "MMM yyyy"),
       },
       {
-        icon: <RetailTradeIcon className="h-5 w-5" />,
+        icon: <RetailTradeIcon className="h-6 w-6" />,
         title: "stats.wholesale_retail",
         url: routes.WHOLESALE_RETAIL,
         value:
@@ -192,21 +192,21 @@ const Home: Page = ({
 
       <Container className="min-h-screen">
         <Section title={t("at_a_glance")}>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
             {STATS.map(({ data_as_of, icon, title, value, url }: StatProps) => (
-              <div className="flex gap-5" key={url}>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-outline dark:bg-washed-dark">
+              <div className="flex items-center gap-3" key={url}>
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-outline dark:bg-washed-dark">
                   {icon}
                 </div>
-                <div>
+                <div className="space-y-0.5">
                   <At
                     href={url}
-                    className="relative flex flex-wrap items-start gap-x-2 text-sm font-medium uppercase text-dim transition-all [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white"
+                    className="relative flex flex-wrap items-start gap-1.5 text-sm font-medium uppercase text-dim transition-all [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white"
                   >
                     <span>{t(title)}</span>
                     <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                   </At>
-                  <span className="flex items-baseline gap-x-3">
+                  <span className="flex items-baseline gap-1.5">
                     <p className="text-2xl font-medium">{value}</p>
                     <p className="text-sm text-dim">{`(${data_as_of})`}</p>
                   </span>

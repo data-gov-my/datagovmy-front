@@ -38,6 +38,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   ["publications", "catalogue"],
   async ({ locale, query, params }) => {
     try {
+      const pub_id = params.pub_id ? params.pub_id[0] : "";
       const [{ data: dropdown }, { data }] = await Promise.all([
         get("/publication-dropdown/", {
           language: locale,
@@ -65,7 +66,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
               (a: Publication, b: Publication) =>
                 Date.parse(b.release_date) - Date.parse(a.release_date)
             ) ?? [],
-          params: params,
+          params: { pub_id },
           query: query ?? {},
           total_pubs: data.count,
         },

@@ -180,16 +180,16 @@ export const ExcelIcon: FunctionComponent<IconProps> = ({ className }) => {
       <path
         d="M18.8125 11.6641V9.47656C18.8125 8.73064 18.5014 8.01527 17.9476 7.48782C17.3937 6.96038 16.6426 6.66406 15.8594 6.66406H14.5469C14.2858 6.66406 14.0354 6.56529 13.8508 6.38947C13.6662 6.21366 13.5625 5.9752 13.5625 5.72656V4.47656C13.5625 3.73064 13.2514 3.01527 12.6975 2.48782C12.1437 1.96038 11.3926 1.66406 10.6094 1.66406H8.96875M10.9375 1.66406H6.67188C6.1285 1.66406 5.6875 2.08406 5.6875 2.60156V16.9766C5.6875 17.4941 6.1285 17.9141 6.67188 17.9141H17.8281C18.3715 17.9141 18.8125 17.4941 18.8125 16.9766V9.16406C18.8125 7.17494 17.9828 5.26728 16.506 3.86076C15.0291 2.45424 13.0261 1.66406 10.9375 1.66406Z"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      <path d="M10.5 9.78906L14 9.78906" stroke="currentColor" stroke-width="1.5" />
-      <path d="M14.875 9.78906H16.625" stroke="currentColor" stroke-width="1.5" />
-      <path d="M10.5 12.2891L14 12.2891" stroke="currentColor" stroke-width="1.5" />
-      <path d="M14.875 12.2891H16.625" stroke="currentColor" stroke-width="1.5" />
-      <path d="M10.5 14.7891L14 14.7891" stroke="currentColor" stroke-width="1.5" />
-      <path d="M14.875 14.7891H16.625" stroke="currentColor" stroke-width="1.5" />
+      <path d="M10.5 9.78906L14 9.78906" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M14.875 9.78906H16.625" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M10.5 12.2891L14 12.2891" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M14.875 12.2891H16.625" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M10.5 14.7891L14 14.7891" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M14.875 14.7891H16.625" stroke="currentColor" strokeWidth="1.5" />
       <rect x="1.75" y="7.5" width="10.5" height="9.16667" rx="2" fill="#22A43F" />
       <path
         d="M5.80243 9.78906L6.97446 11.4932H7.01987L8.19757 9.78906H9.58527L7.81162 12.2891L9.625 14.7891H8.21176L7.01987 13.0825H6.97446L5.78257 14.7891H4.375L6.19405 12.2891L4.40905 9.78906H5.80243Z"
@@ -212,9 +212,9 @@ export const PDFIcon: FunctionComponent<IconProps> = ({ className }) => {
       <path
         d="M18.8125 11.6641V9.47656C18.8125 8.73064 18.5014 8.01527 17.9476 7.48782C17.3937 6.96038 16.6426 6.66406 15.8594 6.66406H14.5469C14.2858 6.66406 14.0354 6.56529 13.8508 6.38947C13.6662 6.21366 13.5625 5.9752 13.5625 5.72656V4.47656C13.5625 3.73064 13.2514 3.01527 12.6975 2.48782C12.1437 1.96038 11.3926 1.66406 10.6094 1.66406H8.96875M10.9375 1.66406H6.67188C6.1285 1.66406 5.6875 2.08406 5.6875 2.60156V16.9766C5.6875 17.4941 6.1285 17.9141 6.67188 17.9141H17.8281C18.3715 17.9141 18.8125 17.4941 18.8125 16.9766V9.16406C18.8125 7.17494 17.9828 5.26728 16.506 3.86076C15.0291 2.45424 13.0261 1.66406 10.9375 1.66406Z"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <rect x="1.75" y="8.33594" width="14.875" height="7.5" rx="2" fill="#C22424" />
       <path

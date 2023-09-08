@@ -3,7 +3,7 @@ import PublicationModal from "@components/Publication/Modal";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
-import { get } from "datagovmy-ui/api";
+import { get, post } from "datagovmy-ui/api";
 import { TableConfig } from "datagovmy-ui/charts/table";
 import {
   Button,
@@ -50,6 +50,7 @@ export type Resource = {
   resource_name: string;
   resource_link: string;
   resource_type: string;
+  downloads: number;
 };
 
 interface BrowsePublicationsProps {
@@ -74,6 +75,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   const ITEMS_PER_PAGE = 15;
   const { data, setData } = useData({
     loading: false,
+    modal_loading: false,
     pub: "",
     publication_option: query.pub_type,
     tab: 0,
@@ -138,14 +140,11 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   };
 
   const fetchResource = async (publication_id: string): Promise<Resource[]> => {
-    const identifier = `${publication_id}_${i18n.language}`;
     return new Promise(resolve => {
-      if (cache.has(identifier)) return resolve(cache.get(identifier));
       get(`/publication-resource/${publication_id}`, {
         language: i18n.language,
       })
         .then(({ data }: { data: Resource[] }) => {
-          cache.set(identifier, data);
           resolve(data);
         })
         .catch(e => {
@@ -217,6 +216,34 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       events.off("routeChangeComplete", () => setData("loading", false));
     };
   }, []);
+
+  const postDownload = (resource_id: number) => {
+    post(
+      "/publication-resource/download/",
+      {
+        publication_id: params.pub_id,
+        resource_id,
+      },
+      "api",
+      { "Content-Type": "multipart/form-data" }
+    )
+      .then(({ data: res }) => {
+        setData("pub", {
+          ...data.pub,
+          resources: data.pub.resources.map((pub: Resource) => {
+            if (pub.resource_id === resource_id) {
+              return {
+                ...pub,
+                downloads: res.download,
+              };
+            } else return pub;
+          }),
+        });
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
 
   return (
     <Container>
@@ -404,6 +431,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                     key={item.publication_id}
                     publication={item}
                     onClick={() => {
+                      setData("modal_loading", true);
                       setShow(true);
                       push(
                         routes.PUBLICATIONS.concat(
@@ -414,7 +442,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                         routes.PUBLICATIONS.concat("/", item.publication_id),
                         { scroll: false }
                       );
-                      fetchResource(item.publication_id).then(data => setData("pub", data));
+                      fetchResource(item.publication_id).then(data => {
+                        setData("pub", data);
+                        setData("modal_loading", false);
+                      });
                     }}
                   />
                 ))}
@@ -433,8 +464,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
 
         <PublicationModal
           type={"/"}
-          id={params.pub_id}
+          pub_id={params.pub_id}
+          post={resource_id => postDownload(resource_id)}
           publication={data.pub}
+          loading={data.modal_loading}
           show={show}
           hide={() => {
             setShow(false);

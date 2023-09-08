@@ -28,10 +28,10 @@ const RankList: FunctionComponent<RankListProps> = ({
 
   return (
     <>
-      <div className="dark:border-outlineHover-dark border-t pt-6">
+      <div className="dark:border-outlineHover-dark border-t pb-3 pt-6">
         <p className="font-bold">{title}</p>
       </div>
-      <ul className="space-y-3 overflow-auto pt-3" data-testid={id || title}>
+      <ul className="space-y-3 overflow-auto" data-testid={id || title}>
         {topStateIndices.map((pos, i) => {
           return (
             <li className="mr-4.5 flex space-x-3" key={pos} data-testid={`${id}-li-${i}`}>

@@ -1,26 +1,26 @@
-import { Metadata } from "datagovmy-ui/components";
-import IncomeTaxationLayout from "@dashboards/economy/income-taxation/layout";
-import IncomeRankDashboard from "@dashboards/economy/income-taxation/rank-me";
-import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
-import { useTranslation } from "datagovmy-ui/hooks";
+import IncomeTaxationDashboard from "@dashboards/economy/income-taxation";
 import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
-import { GetStaticProps } from "next";
-import { InferGetStaticPropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
-const IncomeRank: Page = ({
+const IncomeTaxation: Page = ({
   last_updated,
   meta,
+  stacked_bar,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <IncomeTaxationLayout last_updated={last_updated}>
-        <IncomeRankDashboard />
-      </IncomeTaxationLayout>
+      <WindowProvider>
+        <IncomeTaxationDashboard last_updated={last_updated} stacked_bar={stacked_bar} />
+      </WindowProvider>
     </AnalyticsProvider>
   );
 };
@@ -37,8 +37,9 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxatio
         agency: "LHDN",
       },
       last_updated: data.data_last_updated,
+      stacked_bar: data.stacked_bar,
     },
   };
 });
 
-export default IncomeRank;
+export default IncomeTaxation;

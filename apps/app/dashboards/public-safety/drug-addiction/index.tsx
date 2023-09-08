@@ -59,10 +59,7 @@ const DrugAddictionDashboard: FunctionComponent<DrugAddictionDashboardProps> = (
         last_updated={last_updated}
         action={<StateDropdown url={routes.DRUG_ADDICTION} currentState={params.state} />}
         agencyBadge={
-          <AgencyBadge
-            name={t("agencies:aadk.full")}
-            icon={<NTRCIcon fillColor={AKSARA_COLOR.DANGER} />}
-          />
+          <AgencyBadge agency="aadk" icon={<NTRCIcon fillColor={AKSARA_COLOR.DANGER} />} />
         }
       />
 
