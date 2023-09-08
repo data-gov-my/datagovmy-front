@@ -7,9 +7,6 @@ import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import ElectronicPaymentsLayout from "@dashboards/financial-sector/electronic-payments/layout";
 import ElectronicPaymentsTimeseries from "@dashboards/financial-sector/electronic-payments/timeseries";
-// import BalanceOfPaymentsTimeseries from "@dashboards/balance-of-payments/timeseries";
-// import BalanceOfPaymentsSnapshot from "@dashboards/balance-of-payments/snapshot";
-// import BalanceOfPaymentsLayout from "@dashboards/balance-of-payments/layout";
 
 const ElectronicPayments: Page = ({
   last_updated,
