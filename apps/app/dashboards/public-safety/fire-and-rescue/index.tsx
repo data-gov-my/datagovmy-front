@@ -214,7 +214,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
           <LeftRightCard
             left={
               <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
-                <div className="space-y-6">
+                <div className="space-y-6 pb-6">
                   <div className="flex flex-col gap-2">
                     <h4>{t("choro_header")}</h4>
                     <span className="text-dim text-sm">
