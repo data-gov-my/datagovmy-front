@@ -3,9 +3,9 @@ import PublicationModal from "@components/Publication/Modal";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
-import { get } from "datagovmy-ui/api";
+import { get, post } from "datagovmy-ui/api";
 import { Button, Container, Input, Section, Spinner, toast } from "datagovmy-ui/components";
-import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { useRouter } from "next/router";
 import { FunctionComponent, useEffect, useState } from "react";
 import { Publication, Resource } from "./browse";
@@ -29,12 +29,12 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
   total_pubs,
 }) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
-  const { cache } = useCache();
   const { push, events } = useRouter();
   const [show, setShow] = useState<boolean>(false);
   const ITEMS_PER_PAGE = 15;
   const { data, setData } = useData({
     loading: false,
+    modal_loading: false,
     pub: "",
   });
 
@@ -44,14 +44,11 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
   });
 
   const fetchResource = async (publication_id: string): Promise<Resource[]> => {
-    const identifier = `${publication_id}_${i18n.language}`;
     return new Promise(resolve => {
-      if (cache.has(identifier)) return resolve(cache.get(identifier));
       get(`/pub-docs-resource/${publication_id}`, {
         language: i18n.language,
       })
         .then(({ data }: { data: Resource[] }) => {
-          cache.set(identifier, data);
           resolve(data);
         })
         .catch(e => {
@@ -59,6 +56,34 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
           console.error(e);
         });
     });
+  };
+
+  const postDownload = (resource_id: number) => {
+    post(
+      "/publication-resource/download/?documentation_type=true",
+      {
+        publication_id: params.pub_id,
+        resource_id,
+      },
+      "api",
+      { "Content-Type": "multipart/form-data" }
+    )
+      .then(({ data: res }) => {
+        setData("pub", {
+          ...data.pub,
+          resources: data.pub.resources.map((pub: Resource) => {
+            if (pub.resource_id === resource_id) {
+              return {
+                ...pub,
+                downloads: res.download,
+              };
+            } else return pub;
+          }),
+        });
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   useEffect(() => {
@@ -106,6 +131,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
                 key={item.publication_id}
                 publication={item}
                 onClick={() => {
+                  setData("modal_loading", true);
                   setShow(true);
                   push(
                     routes.PUBLICATIONS.concat(
@@ -118,7 +144,10 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
                       scroll: false,
                     }
                   );
-                  fetchResource(item.publication_id).then(data => setData("pub", data));
+                  fetchResource(item.publication_id).then(data => {
+                    setData("pub", data);
+                    setData("modal_loading", false);
+                  });
                 }}
               />
             ))}
@@ -127,8 +156,10 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
 
         <PublicationModal
           type={"/technical-notes/"}
-          id={params.pub_id}
+          pub_id={params.pub_id}
+          post={resource_id => postDownload(resource_id)}
           publication={data.pub}
+          loading={data.modal_loading}
           show={show}
           hide={() => {
             setShow(false);

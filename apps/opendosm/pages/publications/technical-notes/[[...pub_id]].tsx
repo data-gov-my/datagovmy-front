@@ -36,6 +36,7 @@ const TechnicalNotes: Page = ({
 export const getServerSideProps: GetServerSideProps = withi18n(
   ["publications"],
   async ({ locale, params, query }) => {
+    const pub_id = params.pub_id ? params.pub_id[0] : "";
     const { data } = await get("/pub-docs/technical-note", { language: locale, ...query });
 
     return {
@@ -52,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             (a: Publication, b: Publication) =>
               Date.parse(b.release_date) - Date.parse(a.release_date)
           ) ?? [],
-        params: params,
+        params: { pub_id },
         query: query ?? {},
         total_pubs: data.count,
       },

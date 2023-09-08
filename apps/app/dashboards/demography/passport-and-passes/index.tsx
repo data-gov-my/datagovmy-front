@@ -138,8 +138,8 @@ const PassportAndPasses: FunctionComponent<PassportAndPassesProps> = ({
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-[600px] w-full flex-col space-y-3 overflow-hidden p-6 lg:p-8">
-                <div className="space-y-6">
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
+                <div className="space-y-6 pb-6">
                   <div className="flex flex-col gap-2">
                     <h4>{t("section_1.title")}</h4>
                     <span className="text-dim text-sm">

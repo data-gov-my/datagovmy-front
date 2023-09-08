@@ -1,6 +1,6 @@
 import emitter from "@lib/events";
 import { IndexedDB } from "@lib/idb";
-import { useWatch } from "datagovmy-ui/hooks";
+import { useTranslation, useWatch } from "datagovmy-ui/hooks";
 import {
   ForwardRefExoticComponent,
   ForwardedRef,
@@ -185,6 +185,7 @@ export const FiletreeContext = createContext<FiletreeContextProps>({
  */
 export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> = forwardRef(
   ({ children, model }, ref) => {
+    const { t } = useTranslation(["catalogue-datagpt", "common"]);
     const idb = useRef<IndexedDB>();
     const [tree, setTree] = useState<FileNode | undefined>();
     const [active, setActive] = useState<FileNode | undefined>();
@@ -217,7 +218,7 @@ export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> 
     /** Public functions */
     const create = (type: FileType) => {
       const new_node = new FileNode(
-        type === FileType.FOLDER ? "New folder" : "New chat",
+        type === FileType.FOLDER ? t("new_folder") : t("new_chat"),
         type,
         [],
         undefined

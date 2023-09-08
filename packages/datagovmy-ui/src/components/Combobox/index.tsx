@@ -138,7 +138,7 @@ const ComboBox = <T extends unknown>({
       </span>
       <input
         className={clx(
-          "focus:dark:bg-washed-dark w-full truncate border-none bg-white py-3 pl-2 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
+          "w-full truncate border-none bg-white py-3 pl-2 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
         )}
         spellCheck={false}
         {...getReferenceProps({
