@@ -26,7 +26,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
       <div className="flex w-full flex-row">
         {/* Desktop */}
         <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/4 xl:w-1/5">
-          <ul className="sticky top-14 flex h-[90vh] flex-col gap-2 overflow-auto pt-3">
+          <ul className="sticky top-14 flex h-screen flex-col gap-2 overflow-auto pt-3">
             <li>
               <h5 className={styles.base}>{t("category")}</h5>
             </li>

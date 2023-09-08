@@ -52,7 +52,7 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({
               count: downloads,
             })}
           </p>
-          <p className="absolute -bottom-6 text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
+          <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
             {t("common:components.click_to_explore")}
           </p>
         </div>

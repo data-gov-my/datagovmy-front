@@ -37,6 +37,7 @@ export const routes = {
   PASSPORT_AND_PASSES: "/dashboard/passport-and-passes",
   PEKA_B40: "/dashboard/peka-b40",
   POVERTY: "/dashboard/poverty",
+  PRASARANA_EXPLORER: "/dashboard/prasarana-explorer",
   PUBLIC_CONTRACTING: "/dashboard/public-contracting",
   PUBLIC_PENSION: "/dashboard/public-pension",
   PUBLIC_TRANSPORTATION: "/dashboard/public-transportation",
@@ -47,6 +48,7 @@ export const routes = {
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
   HOUSEHOLD_DEBT: "/dashboard/household-debt",
   BUSINESS_CREATION_DESTRUCTION: "/dashboard/business-creation-destruction",
+  ELECTRONIC_PAYMENTS: "/dashboard/electronic-payments",
 };
 
 export const static_routes: string[] = (() => {

@@ -38,6 +38,7 @@ const namespaces = [
   "dashboard-peka-b40",
   "dashboard-ipr",
   "dashboard-poverty",
+  "dashboard-prasarana-explorer",
   "dashboard-public-contracting",
   "dashboard-public-pension",
   "dashboard-public-transportation",
@@ -48,6 +49,7 @@ const namespaces = [
   "dashboard-weather-and-climate",
   "dashboard-household-debt",
   "dashboard-business-creation-destruction",
+  "dashboard-electronic-payments",
   "helpdesk",
 ];
 

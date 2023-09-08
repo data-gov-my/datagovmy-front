@@ -136,8 +136,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
               precision: config.precision,
               range: filter?.range?.value ?? "INTRADAY",
             }}
-            dataset={dataset}
-            urls={urls}
             translations={translations}
           />
         );
@@ -145,8 +143,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
         return (
           <CatalogueChoropleth
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
-            dataset={dataset}
-            urls={urls}
             config={config}
           />
         );
@@ -154,26 +150,18 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
         return (
           <CatalogueGeoChoropleth
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
-            dataset={dataset}
-            urls={urls}
             config={config}
           />
         );
       case "GEOPOINT":
         return (
-          <CatalogueMapPlot
-            className={clx(chips.length ? "h-[80vh]" : "h-[85vh]", "w-full")}
-            dataset={dataset}
-            urls={urls}
-          />
+          <CatalogueMapPlot className={clx(chips.length ? "h-[80vh]" : "h-[85vh]", "w-full")} />
         );
       case "GEOJSON":
         return (
           <CatalogueGeojson
             className={clx(chips.length ? "h-[80vh]" : "h-[85vh]", "w-full")}
             config={config}
-            dataset={dataset}
-            urls={urls}
           />
         );
       case "BAR":
@@ -184,8 +172,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
             <CatalogueBar
               className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
               config={config}
-              dataset={dataset}
-              urls={urls}
               translations={translations}
             />
           </WindowProvider>
@@ -195,8 +181,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CataloguePyramid
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={config}
-            dataset={dataset}
-            urls={urls}
             translations={translations}
           />
         );
@@ -205,8 +189,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CatalogueHeatmap
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={config}
-            dataset={dataset}
-            urls={urls}
             translations={translations}
           />
         );
@@ -214,8 +196,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
         return (
           <CatalogueScatter
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "mx-auto aspect-square")}
-            dataset={dataset}
-            urls={urls}
             translations={translations}
           />
         );
@@ -224,8 +204,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CatalogueLine
             className={clx(chips.length ? "h-[75vh]" : "h-[80vh]", "w-full")}
             config={config}
-            dataset={dataset}
-            urls={urls}
             translations={translations}
           />
         );

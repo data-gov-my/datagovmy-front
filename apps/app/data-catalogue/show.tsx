@@ -13,23 +13,23 @@ import {
   Tooltip,
   Markdown,
 } from "datagovmy-ui/components";
-import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
+import { SHORT_PERIOD } from "datagovmy-ui/constants";
+import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
-import { clx, download, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
+import { clx, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useAnalytics, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
 import {
   DCChartKeys,
   DCConfig,
   DownloadOption,
-  DownloadOptions,
   FilterDefault,
   OptionType,
 } from "datagovmy-ui/types";
 import sum from "lodash/sum";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { FunctionComponent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { FunctionComponent, ReactNode, useContext, useRef, useState } from "react";
 
 /**
  * Catalogue Show
@@ -122,14 +122,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const [show, setShow] = useState<OptionType>(options[0]);
-  const [downloads, setDownloads] = useState<DownloadOptions>({ chart: [], data: [] });
+
   const embedRef = useRef<EmbedInterface>(null);
   const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
+  const { downloads } = useContext(CatalogueContext);
+  const _downloads = Object.values(downloads).flatMap(option => option);
   const { result, track } = useAnalytics(dataset);
-  const availableDownloads = useMemo<DownloadOption[]>(
-    () => Object.values(downloads).flatMap(option => option),
-    [downloads]
-  );
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -138,45 +136,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "INTRADAY":
         return (
           <CatalogueTimeseries
-            urls={urls}
-            dataset={dataset}
             translations={translations}
-            onDownload={prop => setDownloads(prop)}
             config={{
               precision: config.precision,
-              range: filter?.range?.value ?? "INTRADAY",
+              range: filter?.range?.value || "INTRADAY",
             }}
-          />
-        );
-      case "CHOROPLETH":
-        return (
-          <CatalogueChoropleth
-            dataset={dataset}
-            urls={urls}
-            config={config}
-            onDownload={prop => setDownloads(prop)}
-          />
-        );
-      case "GEOCHOROPLETH":
-        return (
-          <CatalogueGeoChoropleth
-            dataset={dataset}
-            urls={urls}
-            config={config}
-            onDownload={prop => setDownloads(prop)}
-          />
-        );
-      case "GEOPOINT":
-        return (
-          <CatalogueMapPlot dataset={dataset} urls={urls} onDownload={prop => setDownloads(prop)} />
-        );
-      case "GEOJSON":
-        return (
-          <CatalogueGeojson
-            config={config}
-            dataset={dataset}
-            urls={urls}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "BAR":
@@ -184,92 +148,35 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "STACKED_BAR":
         return (
           <WindowProvider>
-            <CatalogueBar
-              config={config}
-              dataset={dataset}
-              urls={urls}
-              translations={translations}
-              onDownload={prop => setDownloads(prop)}
-            />
+            <CatalogueBar config={config} translations={translations} />
           </WindowProvider>
         );
+      case "CHOROPLETH":
+        return <CatalogueChoropleth config={config} />;
+      case "GEOCHOROPLETH":
+        return <CatalogueGeoChoropleth config={config} />;
+      case "GEOPOINT":
+        return <CatalogueMapPlot />;
+      case "GEOJSON":
+        return <CatalogueGeojson config={config} />;
       case "PYRAMID":
-        return (
-          <CataloguePyramid
-            config={config}
-            dataset={dataset}
-            urls={urls}
-            translations={translations}
-            onDownload={prop => setDownloads(prop)}
-          />
-        );
+        return <CataloguePyramid config={config} translations={translations} />;
       case "HEATTABLE":
-        return (
-          <CatalogueHeatmap
-            config={config}
-            dataset={dataset}
-            urls={urls}
-            translations={translations}
-            onDownload={prop => setDownloads(prop)}
-          />
-        );
+        return <CatalogueHeatmap config={config} translations={translations} />;
       case "SCATTER":
         return (
           <CatalogueScatter
             className="mx-auto aspect-square w-full lg:h-[512px] lg:w-1/2"
-            dataset={dataset}
-            urls={urls}
             translations={translations}
-            onDownload={prop => setDownloads(prop)}
           />
         );
       case "LINE":
-        return (
-          <CatalogueLine
-            config={config}
-            dataset={dataset}
-            urls={urls}
-            translations={translations}
-            onDownload={prop => setDownloads(prop)}
-          />
-        );
+        return <CatalogueLine config={config} translations={translations} />;
       default:
         break;
     }
     return;
   };
-
-  useEffect(() => {
-    if (dataset.type === "TABLE") {
-      setDownloads({
-        chart: [],
-        data: [
-          {
-            id: "csv",
-            image: "/static/images/icons/csv.png",
-            title: t("csv.title"),
-            description: t("csv.desc"),
-            icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-            href() {
-              download(urls.csv, dataset.meta.unique_id.concat(".csv"));
-              track("csv");
-            },
-          },
-          {
-            id: "parquet",
-            image: "/static/images/icons/parquet.png",
-            title: t("parquet.title"),
-            description: t("parquet.desc"),
-            icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
-            href() {
-              download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
-              track("parquet");
-            },
-          },
-        ],
-      });
-    }
-  }, []);
 
   const generateTableSchema = () => {
     const columns = Array.isArray(dataset.table) ? Object.keys(dataset.table[0]) : [];
@@ -297,36 +204,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze);
     }
   };
-
-  const sampleDescription = (
-    <>
-      {t("sample_query.desc1")}
-      <At
-        external={true}
-        className="link-dim text-base underline"
-        href={
-          i18n.language == "en-GB"
-            ? "https://developer.data.gov.my/data-catalogue/request-query"
-            : "https://developer.data.gov.my/ms/data-catalogue/request-query"
-        }
-      >
-        {t("sample_query.link1")}
-      </At>
-      <span>{`. ${t("sample_query.desc2")}`}</span>
-      <At
-        external={true}
-        className="link-dim text-base underline"
-        href={
-          i18n.language == "en-GB"
-            ? `https://developer.data.gov.my/data-catalogue/example-requests?id=${catalogueId}`
-            : `https://developer.data.gov.my/ms/data-catalogue/example-requests?id=${catalogueId}`
-        }
-      >
-        {t("sample_query.link2")}
-      </At>
-      .
-    </>
-  );
 
   return (
     <div>
@@ -358,7 +235,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
-                options={availableDownloads
+                options={_downloads
                   .map(item => ({
                     label: item.title as string,
                     value: item.id,
@@ -371,7 +248,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     return;
                   }
                   // downloads
-                  const action = availableDownloads.find(({ id }) => e.value === id);
+                  const action = _downloads.find(({ id }) => e.value === id);
                   if (!action) return;
                   return action.href();
                 }}
@@ -444,7 +321,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             <Slider
               type="single"
               value={config.dates?.options.indexOf(
-                filter[config.dates.key].value ?? config.dates.default
+                config.context[config.dates.key]?.value || config.dates.default
               )}
               data={config.dates.options}
               period={SHORT_PERIOD[config.dates.interval]}
@@ -695,13 +572,42 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         </Section>
 
         {/* API Request Code */}
-        <Section
-          title={t("sample_query.section_title")}
-          description={sampleDescription}
-          className="mx-auto w-full py-12"
-        >
-          <SampleCode catalogueId={catalogueId} url={urls?.parquet || urls[Object.keys(urls)[0]]} />
-        </Section>
+        {!config.exclude_openapi && (
+          <Section
+            title={t("sample_query.section_title")}
+            description={
+              <>
+                {t("sample_query.desc1")}
+                <At
+                  className="link-dim text-base underline"
+                  href={`https://developer.data.gov.my${
+                    i18n.language === "en-GB" ? "" : "/ms"
+                  }/data-catalogue/request-query`}
+                  external
+                >
+                  {t("sample_query.link1")}
+                </At>
+                <span>{`. ${t("sample_query.desc2")}`}</span>
+                <At
+                  className="link-dim text-base underline"
+                  href={`https://developer.data.gov.my/${
+                    i18n.language == "en-GB" ? "" : "/ms"
+                  }/data-catalogue/example-requests?id=${catalogueId}`}
+                  external
+                >
+                  {t("sample_query.link2")}
+                </At>
+                .
+              </>
+            }
+            className="mx-auto w-full py-12"
+          >
+            <SampleCode
+              catalogueId={catalogueId}
+              url={urls?.parquet || urls[Object.keys(urls)[0]]}
+            />
+          </Section>
+        )}
       </Container>
     </div>
   );

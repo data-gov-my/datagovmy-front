@@ -321,6 +321,7 @@ export const AgencyLink: Record<Agency, string> = {
   "pdrm": "https://www.rmp.gov.my/",
   "perkeso": "https://www.perkeso.gov.my/en/",
   "phcorp": "https://protecthealth.com.my",
+  "prasarana": "https://www.prasarana.com.my/",
   "spr": "https://www.spr.gov.my/",
   "ssm": "https://www.ssm.com.my/Pages/Home.aspx",
   "unhcr": "https://www.unhcr.org/my/",

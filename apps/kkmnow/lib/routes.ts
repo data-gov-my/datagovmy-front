@@ -8,3 +8,12 @@ export const routes = {
   HOSPITAL_BED_UTILISATION: "/dashboard/hospital-bed-utilisation",
   COVIDNOW_DATA: "/dashboard/covidnow-data",
 };
+
+export const static_routes: string[] = (() => {
+  let s_routes = Object.values(routes).filter(route => !["/data-catalogue"].includes(route));
+
+  s_routes.forEach(route => {
+    s_routes.push(`/ms-MY${route}`);
+  });
+  return s_routes;
+})();
