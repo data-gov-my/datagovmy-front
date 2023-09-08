@@ -68,7 +68,7 @@ const Slider: FunctionComponent<SliderProps> = ({
 
   // Auto-resets slider if period changes
   useWatch(() => {
-    if (data) {
+    if (data && type === "range") {
       setMinmax([0, data.length - 1]);
       onChange([0, data.length - 1] as number[] & number);
     }

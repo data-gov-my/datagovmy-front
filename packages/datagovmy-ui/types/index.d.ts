@@ -123,6 +123,7 @@ export type DCConfig = {
   color?: Color;
   geojson?: Geotype | null;
   line_variables?: Record<string, any>;
+  exclude_openapi: boolean;
 };
 
 /*************************** MIXPANEL ***************************** */
