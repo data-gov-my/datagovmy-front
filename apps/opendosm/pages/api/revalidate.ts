@@ -60,10 +60,8 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
   new Promise(async (resolve, reject) => {
     switch (route) {
       case all_routes.POPULATION:
-      case all_routes.KAWASANKU:
       case all_routes.HOUSEHOLD_INCOME_EXPENDITURE:
       case `/ms-MY${all_routes.POPULATION}`:
-      case `/ms-MY${all_routes.KAWASANKU}`:
       case `/ms-MY${all_routes.HOUSEHOLD_INCOME_EXPENDITURE}`:
         await res.revalidate(route);
         const result = revalidateWithStates(res, route);
