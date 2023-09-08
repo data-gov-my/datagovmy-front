@@ -21,14 +21,16 @@ type PubResource = {
 
 interface PublicationModalProps {
   hide: () => void;
-  id: string;
+  post: (resource_id: number) => void;
+  pub_id: string;
   publication?: PubResource;
   show: boolean;
-  type: "/" | "/data-dictionaries/" | "/technical-notes/";
+  type: "/" | "/technical-notes/";
 }
 const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   hide,
-  id,
+  post,
+  pub_id,
   publication,
   show,
   type,
@@ -37,7 +39,6 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   const { data, setData } = useData({
     copied: false,
     query: "",
-    table_page_idx: 0,
   });
 
   const filteredRes = useMemo(
@@ -63,7 +64,12 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
       enableSorting: false,
       cell: ({ row, getValue }) => {
         return (
-          <At external href={getValue()} className="link-primary font-normal">
+          <At
+            external
+            href={getValue()}
+            className="link-primary font-normal"
+            onClick={() => post(row.original.resource_id)}
+          >
             {row.original.resource_type === "excel" ? (
               <ExcelIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
             ) : (
@@ -129,7 +135,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                         variant="reset"
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            `https://open.dosm.gov.my/publications${type}${id}`
+                            `https://open.dosm.gov.my/publications${type}${pub_id}`
                           );
                           setData("copied", true);
                           setTimeout(() => setData("copied", false), 1000);
@@ -161,7 +167,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                     </Dialog.Title>
                     <div className="flex flex-col justify-between gap-3 pt-6 sm:flex-row sm:items-center">
                       <h5>{t("download_list")}</h5>
-                      {filteredRes.length > 10 && (
+                      {filteredRes.length > 5 && (
                         <Search
                           className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark sm:w-[300px]"
                           placeholder={t("search_subject")}
