@@ -1,7 +1,7 @@
 import { OptionType } from "../../types";
 import debounce from "lodash/debounce";
 import { useRouter } from "next/router";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useData } from "./useData";
 import { useWatch } from "./useWatch";
 
@@ -17,7 +17,8 @@ export const useFilter = (
   params = {},
   sequential: boolean = false
 ) => {
-  const { data, setData } = useData(state);
+  const original = useRef(state);
+  const { data, setData, reset } = useData(state);
   const router = useRouter();
 
   const actives: Array<[string, unknown]> = useMemo(
@@ -70,6 +71,10 @@ export const useFilter = (
     []
   );
 
+  const _reset = () => {
+    reset(original.current);
+  };
+
   const _setData = (key: string, value: any) => {
     if (sequential) {
       let flag = false;
@@ -92,6 +97,7 @@ export const useFilter = (
   return {
     filter: data,
     setFilter: _setData,
+    reset: _reset,
     queries,
     actives,
   };

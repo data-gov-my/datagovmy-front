@@ -49,6 +49,7 @@ const namespaces = [
   "dashboard-weather-and-climate",
   "dashboard-household-debt",
   "dashboard-business-creation-destruction",
+  "dashboard-electronic-payments",
   "helpdesk",
 ];
 

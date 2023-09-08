@@ -48,6 +48,7 @@ export const routes = {
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
   HOUSEHOLD_DEBT: "/dashboard/household-debt",
   BUSINESS_CREATION_DESTRUCTION: "/dashboard/business-creation-destruction",
+  ELECTRONIC_PAYMENTS: "/dashboard/electronic-payments",
 };
 
 export const static_routes: string[] = (() => {

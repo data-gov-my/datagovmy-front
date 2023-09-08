@@ -21,4 +21,13 @@ export const routes = {
   HOUSEHOLD_INCOME_EXPENDITURE: "/dashboard/household-income-expenditure",
   EXCHANGE_RATES: "/dashboard/exchange-rates",
   EXTERNAL_TRADE: "/dashboard/external-trade",
-} as const;
+};
+
+export const static_routes: string[] = (() => {
+  let s_routes = Object.values(routes).filter(route => !["/data-catalogue"].includes(route));
+
+  s_routes.forEach(route => {
+    s_routes.push(`/ms-MY${route}`);
+  });
+  return s_routes;
+})();

@@ -98,7 +98,7 @@ const _locale = (request: NextRequest, token: string) => {
     const url = addBasePath(
       addLocale(`${pathname}.${finalLocale}${nextUrl.search}`, finalLocale, nextUrl.defaultLocale)
     );
-    response = NextResponse.redirect(new URL(url, request.url));
+    response = NextResponse.rewrite(new URL(url, request.url));
     response.cookies.set("rolling_token", token);
     return response;
   }

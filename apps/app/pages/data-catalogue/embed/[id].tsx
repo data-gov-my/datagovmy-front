@@ -3,6 +3,7 @@ import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
@@ -46,15 +47,17 @@ const CatalogueEmbed: Page = ({
         keywords={""}
       />
       <WindowProvider>
-        <DataCatalogueWidget
-          options={availableOptions}
-          params={params}
-          config={config}
-          dataset={dataset}
-          metadata={metadata}
-          urls={urls}
-          translations={translations}
-        />
+        <CatalogueProvider dataset={dataset} urls={urls}>
+          <DataCatalogueWidget
+            options={availableOptions}
+            params={params}
+            config={config}
+            dataset={dataset}
+            metadata={metadata}
+            urls={urls}
+            translations={translations}
+          />
+        </CatalogueProvider>
       </WindowProvider>
     </AnalyticsProvider>
   );
@@ -81,6 +84,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       color: data.API.colour ?? "blues",
       geojson: data.API.file_json ?? null,
       line_variables: data.API.line_variables ?? null,
+      exclude_openapi: data.exclude_openapi,
     };
 
     const hasTranslations = data.translations && Object.keys(data.translations).length;
