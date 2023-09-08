@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         get("/dropdown", { dashboard: "immigration_country" }),
         get("/dashboard", { dashboard: "immigration_country", country }),
       ]).catch(e => {
-        console.log(e);
+        console.error(e);
         throw new Error("Invalid country. Message: " + e);
       });
 
