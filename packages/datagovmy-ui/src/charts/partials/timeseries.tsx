@@ -31,10 +31,10 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   });
   const { coordinate } = useSlice(dataset.chart, data.minmax);
 
-  const getPrecision = (key: string, precision: number | Precision): number | [number, number] => {
+  const getPrecision = (precision: number | Precision, key?: string): number | [number, number] => {
     if (!precision) return [1, 0];
     else if (typeof precision === "number") return precision;
-    else if (precision.columns && key in precision.columns) return precision.columns[key];
+    else if (precision.columns && key && key in precision.columns) return precision.columns[key];
     else return precision.default;
   };
 
@@ -49,7 +49,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     const NON_OVERLAPPING_BGCOLOR = ["#ecf0fd", "#f2f5f7", "#fff8ec", "#fde8e8"]; // [blue, gray, yellow, red]
     return sets.map(([key, y], index) => ({
       type: "line",
-      data: (y as number[]).map(e => numFormat(e, "standard", getPrecision(key, config.precision))),
+      data: y as number[], // (y as number[]).map(e => numFormat(e, "standard", getPrecision(key, config.precision))),
       label: translations[key] ?? key,
       borderColor: CATALOGUE_COLORS[index],
       backgroundColor: NON_OVERLAPPING_BGCOLOR[index],
@@ -79,7 +79,9 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               }
               tooltipCallback={function (item: any) {
                 return `${item.dataset.label as string}: ${
-                  item.raw !== undefined || item.raw !== null ? item.raw : "-"
+                  item.parsed?.y
+                    ? numFormat(item.parsed.y, "standard", getPrecision(config.precision))
+                    : "-"
                 }`;
               }}
               enableAnimation={!play}
