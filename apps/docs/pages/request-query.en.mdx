@@ -136,38 +136,3 @@ Certainly, here's the updated documentation for the `sort` parameter, allowing f
   When both `include` and `exclude` parameters are provided, `include` takes precedence.
 
 ## Response Format
-
-### Valid Response
-
-When your request is successful, you will receive a `200 OK` response. By default, the API returns a list of records.
-If you need more details, you can use the `meta` parameter:
-
-```http
-?meta=true
-```
-
-With `meta=true`, the response will look like this:
-
-```json
-{
-    "meta": {...},
-    "data": [...]
-}
-```
-
-- `meta`: Provides basic information about the requested resource, including any applied filters.
-- `data`: Contains the collection of records you requested.
-
-### Error Response
-
-If there is an error, the API will return an error response in JSON format. The error response includes the following elements:
-
-```json
-{
-    status: <int>,
-    errors: [...],
-}
-```
-
-- `status`: Indicates the response code corresponding to the error.
-- `errors`: Contains error messages or descriptions to help identify issues with the API request.
