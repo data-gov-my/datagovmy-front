@@ -2,6 +2,7 @@ import DataCatalogueShow from "@data-catalogue/show";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
+import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DCConfig, DCFilter, FilterDate, Page, OptionType } from "datagovmy-ui/types";
@@ -43,22 +44,24 @@ const CatalogueShow: Page = ({
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
-      <DataCatalogueShow
-        options={availableOptions}
-        params={params}
-        config={config}
-        dataset={dataset}
-        explanation={explanation}
-        metadata={metadata}
-        urls={urls}
-        translations={translations}
-      />
+      <CatalogueProvider dataset={dataset} urls={urls}>
+        <DataCatalogueShow
+          options={availableOptions}
+          params={params}
+          config={config}
+          dataset={dataset}
+          explanation={explanation}
+          metadata={metadata}
+          urls={urls}
+          translations={translations}
+        />
+      </CatalogueProvider>
     </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["catalogue", "common"],
+  "catalogue",
   async ({ locale, query, params }) => {
     const { data } = await get("/data-variable/", {
       id: params?.id,
