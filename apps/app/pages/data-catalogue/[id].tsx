@@ -150,7 +150,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         },
         urls: data.downloads ?? {},
         translations: data.translations ?? {},
-        catalogueId: params?.id,
+        catalogueId: data.openapi_id,
       },
     };
   }
