@@ -26,7 +26,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
       <div className="flex w-full flex-row">
         {/* Desktop */}
         <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/4 xl:w-1/5">
-          <ul className="sticky top-14 flex h-screen flex-col gap-2 overflow-auto pt-3">
+          <ul className="sticky top-14 flex h-[calc(100vh-56px)] flex-col gap-2 overflow-auto py-3">
             <li>
               <h5 className={styles.base}>{t("category")}</h5>
             </li>
@@ -89,7 +89,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
             <Transition
               show={show}
               as="div"
-              className="dark:border-washed-dark shadow-floating fixed left-0 top-14 z-30 flex h-screen w-2/3 flex-col border border-r bg-white dark:bg-black sm:w-1/3"
+              className="dark:border-washed-dark shadow-floating fixed left-0 top-14 z-30 flex h-[calc(100dvh-56px)] w-2/3 flex-col border border-r bg-white dark:bg-black sm:w-1/3"
               enter="transition-opacity duration-75"
               enterFrom="opacity-0"
               enterTo="opacity-100"
