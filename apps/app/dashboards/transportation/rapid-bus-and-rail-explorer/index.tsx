@@ -26,13 +26,13 @@ import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
 /**
- * Prasarana Explorer
+ * Rapid Bus and Rail Explorer
  * @overview Status: Live
  */
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-interface PrasaranaExplorerProps {
+interface RapidBusRailExplorerProps {
   A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
   A_to_B_callout: Record<DashboardPeriod, number>;
   B_to_A?: Record<DashboardPeriod, Record<"x" | "passengers", number[]>>;
@@ -42,7 +42,7 @@ interface PrasaranaExplorerProps {
   params: any;
 }
 
-const PrasaranaExplorer: FunctionComponent<PrasaranaExplorerProps> = ({
+const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
   A_to_B,
   A_to_B_callout,
   B_to_A,
@@ -411,4 +411,4 @@ const PrasaranaExplorer: FunctionComponent<PrasaranaExplorerProps> = ({
   );
 };
 
-export default PrasaranaExplorer;
+export default RapidBusRailExplorer;
