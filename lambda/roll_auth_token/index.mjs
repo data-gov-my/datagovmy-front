@@ -124,8 +124,8 @@ export const handler = async event => {
   const payload = { ROLLING_TOKEN: token };
 
   let services_to_update = [
-    post("https://staging.datagovmy.app/auth-token/", payload), // BE
-    post("https://ai.datagovmy.app/auth-token", payload), // AI
+    post("insert-url-here", payload), // BE
+    // ...
   ];
 
   while (retries < MAX_RETRIES) {

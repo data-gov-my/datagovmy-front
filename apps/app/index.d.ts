@@ -3,7 +3,7 @@ declare namespace NodeJS {
     APP_URL: string;
     APP_ENV: string;
     NEXT_PUBLIC_APP_URL: string;
-    NEXT_PUBLIC_APP_ENV: string;
+    NEXT_PUBLIC_APP_ENV: "development" | "staging" | "production";
     NEXT_PUBLIC_AI_URL: string;
     REVALIDATE_TOKEN: string;
     AUTH_TOKEN: string;

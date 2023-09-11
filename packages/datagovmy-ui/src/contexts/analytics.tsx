@@ -25,7 +25,7 @@ export type Meta = Omit<MetaPage["meta"], "type"> & { type: "dashboard" | "data-
 type AnalyticsResult<T extends "dashboard" | "data-catalogue"> = {
   id: string;
   type: T;
-  all_time_view: number;
+  view_count: number;
   download_csv: T extends "dashboard" ? never : number;
   download_parquet: T extends "dashboard" ? never : number;
   download_png: T extends "dashboard" ? never : number;

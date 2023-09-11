@@ -1,5 +1,7 @@
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 import { ArrowUpRightIcon, ArrowTopRightOnSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { SparklesIcon } from "@heroicons/react/24/outline";
+import { routes } from "@lib/routes";
 import {
   At,
   AgencyBadge,
@@ -81,6 +83,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             context: queries.source ? "agency" : "",
           }),
         ]}
+        action={
+          <At
+            href={routes.DATA_GPT}
+            className="text-primary group flex items-center gap-2 text-sm font-medium"
+          >
+            <SparklesIcon className="h-5 w-5" />
+            <span className="group-hover:underline">{t("common:components.try_datagpt")}</span>
+          </At>
+        }
         agencyBadge={<AgencyBadge agency={queries.source || "govt"} />}
       />
       <DashboardFilter dashboards={dashboards} sources={sources} queries={queries}>

@@ -8,7 +8,6 @@ import {
   Dropdown,
   Hero,
   Section,
-  StateDropdown,
   Daterange,
   Spinner,
   toast,
@@ -52,12 +51,6 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   ];
   const startYear: number = 1923;
   const endYear: number = 2017;
-
-  const filterYears = (start: number, end: number): Array<OptionType> => {
-    return Array(end - start + 1)
-      .fill(end)
-      .map((year, index) => ({ label: `${year - index}`, value: `${year - index}` }));
-  };
 
   const { data, setData } = useData({
     x: timeseries.x,
@@ -195,13 +188,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   max={"2017-12-31"}
                 ></input>
                 {data.validation && <p className="text-danger mt-1 text-xs">{data.validation}</p>}
-                {/* <p className="mb-3 mt-6 text-sm font-medium">{t("choose_state")}</p>
-                <StateDropdown
-                  currentState={data.p_state}
-                  onChange={selected => setData("p_state", selected.value)}
-                  include={[{ label: t("common:components.ovs"), value: "Overseas" }]}
-                  width="w-full"
-                /> */}
+
                 <Button
                   className="btn-primary my-6 active:shadow-none"
                   onClick={() => {
@@ -237,7 +224,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                           t("day", { count: Math.floor(days!) })}
                       </p>
                     </div>
-                    <div className="flex h-auto flex-col gap-3 self-center text-lg font-bold max-lg:px-4 max-lg:pb-6 lg:col-span-2">
+                    <div className="flex h-auto flex-col gap-6 self-center text-lg font-bold max-lg:px-4 max-lg:pb-6 lg:col-span-2">
                       <p>
                         {t("today", { count: data.state_total })}
                         <span className="text-primary dark:text-primary-dark">
@@ -303,7 +290,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                             })}
                         .
                       </p>
-                      <p className="text-base font-normal">{t("explore")}</p>
+                      <p className="font-dim text-sm font-normal">{t("explore")}</p>
                     </div>
                   </Card>
                 ) : (
