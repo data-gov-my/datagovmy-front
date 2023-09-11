@@ -135,11 +135,14 @@ const Ranking = ({ ranks }: RankingProps) => {
                   </p>
                 </div>
                 <div className="relative w-full">
-                  <p className="text-dim transition-transform group-hover:translate-y-6">
+                  {/* TODO: Remove when view count is readded.It was used to create artificial height for hovering */}
+                  <p className="h-6 text-dim transition-transform group-hover:translate-y-6"></p>
+                  {/* TODO: View counts (add back when ready) */}
+                  {/* <p className="text-dim transition-transform group-hover:translate-y-6 h-6">
                     {`${numFormat(100, "compact")} ${t("common:common.views", {
                       count: 100,
                     })}`}
-                  </p>
+                  </p> */}
                   <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
                     {t("common:components.click_to_explore")}
                   </p>
