@@ -19,7 +19,6 @@ export const routes = {
   DRUG_ADDICTION: "/dashboard/drug-addiction",
   ELECTRONIC_PAYMENTS: "/dashboard/electronic-payments",
   EMERGENCY_RESPONSE: "/dashboard/emergency-response",
-  ELECTION_EXPLORER: "/dashboard/election-explorer",
   FIRE_RESCUE: "/dashboard/fire-and-rescue",
   FLOOD_WARNING: "/dashboard/flood-warning",
   GDP: "/dashboard/gdp",
