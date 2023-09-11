@@ -75,7 +75,7 @@ const Poverty: FunctionComponent<PovertyProps> = ({
     <>
       <Hero
         background="gray"
-        category={[t("common:categories.economy"), "text-black"]}
+        category={[t("common:categories.economy"), "text-black dark:text-white"]}
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="icu-jpm" />}

@@ -173,8 +173,8 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
             }),
             value: `${numFormat(
               Math.abs(vitalstats_timeseries_callout.data.absolute[name].latest),
-              "compact",
-              1,
+              "standard",
+              0,
               "long",
               i18n.language,
               true
@@ -204,8 +204,16 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
           interval="year"
           enableAnimation={!play}
           displayNumFormat={value => {
-            return [numFormat(Math.abs(value), "compact", 1, "long", i18n.language, true)].join("");
+            return [numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true)].join("");
           }}
+          tooltipCallback={item =>
+            [
+              item.dataset.label + ": ",
+              data.vitalstats_tab_index === 0
+                ? numFormat(item.parsed.y, "standard", 0, "short", i18n.language)
+                : numFormat(item.parsed.y, "standard", 1, "short", i18n.language, false),
+            ].join("")
+          }
           axisY={{
             y2: {
               display: false,
@@ -289,10 +297,25 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
                     const isPercentage = ["growth_yoy"].includes(data.population_tab);
                     return [
                       value < 0 ? "-" : "",
-                      numFormat(Math.abs(value), "compact", 1, "long", i18n.language, true),
+                      numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
                       isPercentage ? "%" : "",
                     ].join("");
                   }}
+                  tooltipCallback={item =>
+                    [
+                      item.dataset.label + ": ",
+                      item.parsed.y < 0 ? "-" : "",
+                      numFormat(
+                        Math.abs(item.parsed.y),
+                        "compact",
+                        1,
+                        "long",
+                        i18n.language,
+                        false
+                      ),
+                      ["growth_yoy"].includes(data.population_tab) ? "%" : "",
+                    ].join("")
+                  }
                   axisY={{
                     y2: {
                       display: false,
@@ -331,7 +354,7 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
                         1,
                         "long",
                         i18n.language,
-                        true
+                        false
                       )}`,
                     },
                     {

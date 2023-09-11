@@ -198,8 +198,8 @@ const InflationTrends: FunctionComponent = ({}) => {
               mode="grouped"
               unitY="%"
               enableAnimation={!play}
-              displayNumFormat={value =>
-                numFormat(value, "compact", 1, "short", i18n.language, true)
+              displayNumFormat={(value, _, precision) =>
+                numFormat(value, "compact", precision, "short", i18n.language, true)
               }
               enableCallout
               data={{

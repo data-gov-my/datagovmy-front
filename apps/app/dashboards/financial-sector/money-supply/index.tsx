@@ -6,6 +6,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useMemo } from "react";
 
@@ -56,6 +57,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-money-supply", "common"]);
+  const { theme } = useTheme();
 
   const tableData = table_summary.data.map(row => ({
     index: row.index + 1,
@@ -140,14 +142,14 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<

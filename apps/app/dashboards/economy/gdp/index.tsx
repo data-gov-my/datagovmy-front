@@ -1,8 +1,9 @@
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
-import { smartNumFormat, toDate } from "datagovmy-ui/helpers";
+import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
+import { useTheme } from "next-themes";
 import { OptionType } from "datagovmy-ui/types";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import dynamic from "next/dynamic";
@@ -38,6 +39,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-gdp", "common"]);
+  const { theme } = useTheme();
   const INDEX_OPTIONS: Array<OptionType> = [
     "growth_real_yoy",
     "growth_nominal_yoy",
@@ -74,14 +76,14 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<
@@ -186,13 +188,8 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                 className="h-[350px] w-full"
                 interval="quarter"
                 enableAnimation={!play}
-                displayNumFormat={value =>
-                  smartNumFormat({
-                    value,
-                    type: "compact",
-                    precision: [1, 1],
-                    locale: i18n.language,
-                  })
+                displayNumFormat={(value, _, precision) =>
+                  numFormat(value, "compact", precision, "long", i18n.language, true)
                 }
                 prefixY={configs("overall").prefix}
                 unitY={configs("overall").unit}
@@ -252,13 +249,8 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                     className="h-[350px] w-full"
                     interval="quarter"
                     enableAnimation={!play}
-                    displayNumFormat={value =>
-                      smartNumFormat({
-                        value,
-                        type: "compact",
-                        precision: [1, 1],
-                        locale: i18n.language,
-                      })
+                    displayNumFormat={(value, _, precision) =>
+                      numFormat(value, "compact", precision, "long", i18n.language, true)
                     }
                     prefixY={chartData.prefix}
                     unitY={chartData.unitY}
@@ -313,13 +305,8 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                       className="h-[350px] w-full"
                       interval="quarter"
                       enableAnimation={!play}
-                      displayNumFormat={value =>
-                        smartNumFormat({
-                          value,
-                          type: "compact",
-                          precision: [1, 1],
-                          locale: i18n.language,
-                        })
+                      displayNumFormat={(value, _, precision) =>
+                        numFormat(value, "compact", precision, "long", i18n.language, true)
                       }
                       prefixY={chartData.prefix}
                       unitY={chartData.unitY}

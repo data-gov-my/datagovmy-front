@@ -1,6 +1,7 @@
 import { GlobeIcon } from "@icons/division";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
+import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
@@ -36,6 +37,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-iip", "agencies", "common"]);
+  const { theme } = useTheme();
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.net"), value: "net" },
@@ -72,16 +74,17 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
-  const prefixRM = (value: number) => (value > 0 ? "+RM " : "-RM ");
+  const prefixRM = (value: number, usePositiveSign: boolean = true) =>
+    value > 0 ? (usePositiveSign ? "+RM" : "RM") : "-RM";
 
   const getChartData = (charts: string[]): TimeseriesChartData[] => {
     return charts.map(name => ({
@@ -95,7 +98,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
             date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
           }),
           value: [
-            prefixRM(timeseries_callout.data[data.index][name].latest),
+            prefixRM(timeseries_callout.data[data.index][name].latest, false),
             numFormat(
               Math.abs(timeseries_callout.data[data.index][name].latest),
               "compact",
@@ -167,12 +170,15 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                   className="h-[350px] w-full"
                   interval="quarter"
                   displayNumFormat={value =>
-                    numFormat(value, "compact", [1, 0], "long", i18n.language, true)
+                    [
+                      prefixRM(value, false),
+                      numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                    ].join("")
                   }
                   tooltipCallback={item =>
                     [
                       item.dataset.label + ": ",
-                      prefixRM(item.parsed.y),
+                      prefixRM(item.parsed.y, false),
                       numFormat(
                         Math.abs(item.parsed.y),
                         "compact",
@@ -272,13 +278,13 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                         enableAnimation={!play}
                         displayNumFormat={value =>
                           [
-                            prefixRM(value),
+                            prefixRM(value, false),
                             numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
                           ].join("")
                         }
                         tooltipCallback={item =>
                           [
-                            prefixRM(item.parsed.y),
+                            prefixRM(item.parsed.y, false),
                             numFormat(
                               Math.abs(item.parsed.y),
                               "compact",

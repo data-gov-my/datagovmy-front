@@ -8,6 +8,7 @@ import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { useTheme } from "next-themes";
 
 /**
  * Manufacturing Statistics Dashboard
@@ -38,6 +39,7 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-manufacturing-statistics", "agencies", "common"]);
+  const { theme } = useTheme();
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.actual"), value: "actual" },
@@ -68,14 +70,14 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data.shade]
+    [data.shade, theme]
   );
 
   const getChartData = (charts: string[]): TimeseriesChartData[] => {
