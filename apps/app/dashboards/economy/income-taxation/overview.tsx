@@ -69,8 +69,8 @@ const IncomeOverview: FunctionComponent<IncomeOverviewProps> = ({ stacked_bar })
   ];
   return (
     <Section
-      title={t("section2.title")}
-      description={t("section2.description")}
+      title={t("section3.title")}
+      description={t("section3.description")}
       date={stacked_bar.data_as_of}
       menu={
         <Tabs.List
