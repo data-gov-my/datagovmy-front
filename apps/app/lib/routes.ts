@@ -27,6 +27,7 @@ export const routes = {
   HOUSEHOLD_DEBT: "/dashboard/household-debt",
   IMMIGRATION: "/dashboard/immigration",
   INCOME_TAXATION: "/dashboard/income-taxation",
+  INISIATIF_PENDAPATAN_RAKYAT: "/dashboard/inisiatif-pendapatan-rakyat",
   INTEREST_RATES: "/dashboard/interest-rates",
   INTERNATIONAL_RESERVES: "/dashboard/international-reserves",
   INTERNET_PENETRATION: "/dashboard/internet-penetration",

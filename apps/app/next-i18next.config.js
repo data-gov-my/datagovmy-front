@@ -25,6 +25,7 @@ const namespaces = [
   "dashboard-hospital-bed-utilisation",
   "dashboard-immigration",
   "dashboard-income-taxation",
+  "dashboard-inisiatif-pendapatan-rakyat",
   "dashboard-interest-rates",
   "dashboard-international-reserves",
   "dashboard-internet-penetration",
