@@ -96,14 +96,7 @@ const IPR: FunctionComponent<IPRProps> = ({
           <StateDropdown url={routes.INISIATIF_PENDAPATAN_RAKYAT} currentState={params.state} />
         }
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency="epu"
-            // agency={t("agencies:epu.full")}
-            // link="https://www.epu.gov.my/en"
-            // icon={<IPREPUIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="epu" />}
       />
 
       <Container className="min-h-screen">

@@ -610,6 +610,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             <SampleCode
               catalogueId={catalogueId}
               url={urls?.parquet || urls[Object.keys(urls)[0]]}
+              route="data-catalogue"
             />
           </Section>
         )}
