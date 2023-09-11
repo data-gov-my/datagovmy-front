@@ -89,7 +89,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             className="text-primary group flex items-center gap-2 text-sm font-medium"
           >
             <SparklesIcon className="h-5 w-5" />
-            <span className="group-hover:underline">{t("try_datagpt")}</span>
+            <span className="group-hover:underline">{t("common:components.try_datagpt")}</span>
           </At>
         }
         agencyBadge={<AgencyBadge agency={queries.source || "govt"} />}
