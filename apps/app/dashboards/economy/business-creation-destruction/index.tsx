@@ -244,7 +244,12 @@ const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDe
               <>
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                   {plotTimeseries(
-                    ["reg_roc", "reg_rob", "reg_llp", "death_roc", "death_rob", "death_llp"],
+                    [
+                      "reg_roc",
+                      "reg_rob",
+                      "reg_llp",
+                      // "death_roc", "death_rob", "death_llp"
+                    ],
                     play
                   )}
                 </div>

@@ -83,19 +83,19 @@ const PenetrationTimeseries: FunctionComponent<PenetrationTimeseriesProps> = ({
               ),
             ].join(""),
           },
-          {
-            title: `${t("keys.rate")}  (${t(`keys.${getRateUnit(name)}`)})`,
-            value: [
-              numFormat(
-                Math.abs(timeseries_callout.data[name].rate),
-                "compact",
-                1,
-                "long",
-                i18n.language,
-                true
-              ),
-            ].join(""),
-          },
+          // {
+          //   title: `${t("keys.rate")}  (${t(`keys.${getRateUnit(name)}`)})`,
+          //   value: [
+          //     numFormat(
+          //       Math.abs(timeseries_callout.data[name].rate),
+          //       "compact",
+          //       1,
+          //       "long",
+          //       i18n.language,
+          //       true
+          //     ),
+          //   ].join(""),
+          // },
         ],
       };
       return (
@@ -154,16 +154,16 @@ const PenetrationTimeseries: FunctionComponent<PenetrationTimeseriesProps> = ({
         title={t("section_penetration.title")}
         description={t("section_penetration.description")}
         date={timeseries.data_as_of}
-        menu={
-          <Tabs.List
-            options={[t("keys.actual"), t("keys.pen_rate")]}
-            current={data.tab_index}
-            onChange={index => {
-              setData("tab_index", index);
-              setData("tab", tabs[index]);
-            }}
-          />
-        }
+        // menu={
+        //   <Tabs.List
+        //     options={[t("keys.actual"), t("keys.pen_rate")]}
+        //     current={data.tab_index}
+        //     onChange={index => {
+        //       setData("tab_index", index);
+        //       setData("tab", tabs[index]);
+        //     }}
+        //   />
+        // }
       >
         <SliderProvider>
           {play => (

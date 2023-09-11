@@ -170,7 +170,7 @@ const Home: Page = ({
         category={[t("category"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
+        agencyBadge={<AgencyBadge agency="dosm" />}
         action={
           <div className="flex flex-wrap gap-3">
             <At className="btn-primary text-sm shadow-button" href="/dashboard" enableIcon>
