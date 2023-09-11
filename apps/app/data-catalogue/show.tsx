@@ -13,7 +13,7 @@ import {
   Tooltip,
   Markdown,
 } from "datagovmy-ui/components";
-import { SHORT_PERIOD } from "datagovmy-ui/constants";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
 import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
@@ -187,7 +187,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           if (key === "x")
             return toDate(
               item[key],
-              "dd MMM yyyy", //SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              i18n.language
+            );
+          else return item[key];
+        });
+      case "INTRADAY":
+        return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze, (item, key) => {
+          if (key === "x")
+            return toDate(
+              item[key],
+              SHORT_PERIOD_FORMAT["INTRADAY" as keyof typeof SHORT_PERIOD_FORMAT],
               i18n.language
             );
           else return item[key];
