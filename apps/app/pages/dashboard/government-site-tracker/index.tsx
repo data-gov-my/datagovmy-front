@@ -8,6 +8,11 @@ import GovernmentSiteTrackerDashboard from "@dashboards/digitalisation/governmen
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
+/**
+ * Govt Site Tracker Dashboard
+ * @overview Status: In-development. Slated for future release.
+ */
+
 const GovernmentSiteTracker: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-government-site-tracker", "common"]);
 
@@ -18,14 +23,14 @@ const GovernmentSiteTracker: Page = ({ meta }: InferGetStaticPropsType<typeof ge
     </AnalyticsProvider>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-government-site-tracker",
   async () => {
     //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
     return {
-      notFound: false,
+      notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
         meta: {
           id: "dashboard-government-site-tracker",

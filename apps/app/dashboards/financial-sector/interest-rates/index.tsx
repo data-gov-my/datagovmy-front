@@ -7,6 +7,7 @@ import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { useTheme } from "next-themes";
 
 /**
  * Interest Rates Dashboard
@@ -38,6 +39,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-interest-rates", "common"]);
+  const { theme } = useTheme();
 
   const SHADE_OPTIONS: Array<OptionType> = [
     { label: t("keys.no_shade"), value: "no_shade" },
@@ -63,14 +65,14 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
       return {
         type: "line",
         data: opr_coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
   const oprConfigs = useCallback<(key: string) => { unit: string; callout: string; fill: boolean }>(
     (key: string) => {
@@ -101,14 +103,14 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
       return {
         type: "line",
         data: non_opr_coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
   const configs = useCallback<(key: string) => { unit: string; callout: string; fill: boolean }>(
     (key: string) => {
@@ -172,7 +174,23 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
                   interval="month"
                   enableAnimation={!play}
                   unitY={oprConfigs("opr").unit}
-                  displayNumFormat={value => numFormat(value, "standard", [2, 2])}
+                  displayNumFormat={value =>
+                    numFormat(value, "compact", 0, "long", i18n.language, true)
+                  }
+                  tooltipCallback={item =>
+                    [
+                      item.dataset.label + ": ",
+                      numFormat(
+                        Math.abs(item.parsed.y),
+                        "compact",
+                        2,
+                        "long",
+                        i18n.language,
+                        false
+                      ),
+                      "%",
+                    ].join("")
+                  }
                   axisY={{
                     y2: {
                       display: false,
@@ -231,7 +249,23 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
                       interval="month"
                       enableAnimation={!play}
                       unitY={chartData.unitY}
-                      displayNumFormat={value => numFormat(value, "standard", [2, 1])}
+                      displayNumFormat={value =>
+                        numFormat(value, "compact", 0, "long", i18n.language, true)
+                      }
+                      tooltipCallback={item =>
+                        [
+                          item.dataset.label + ": ",
+                          numFormat(
+                            Math.abs(item.parsed.y),
+                            "compact",
+                            2,
+                            "long",
+                            i18n.language,
+                            false
+                          ),
+                          "%",
+                        ].join("")
+                      }
                       axisY={{
                         y2: {
                           display: false,

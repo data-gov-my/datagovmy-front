@@ -296,7 +296,7 @@ export const AgencyLink: Record<Agency, string> = {
   "bomba": "https://www.bomba.gov.my/",
   "dosm": "https://open.dosm.gov.my/",
   "epf": "https://www.kwsp.gov.my/",
-  // "epu": "https://www.epu.gov.my/en",
+  "epu": "https://www.epu.gov.my/en",
   "govt": "https://www.malaysia.gov.my/portal/index",
   "icu-jpm": "https://www.icu.gov.my/",
   "imigresen": "https://www.imi.gov.my/index.php/en/",

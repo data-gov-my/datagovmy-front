@@ -536,7 +536,7 @@ export const GlobeIcon: FunctionComponent<IconProps> = ({
  */
 export const LineChartIcon: FunctionComponent<IconProps> = ({
   className,
-  fillColor = AKSARA_COLOR.PRIMARY,
+  fillColor = AKSARA_COLOR.BLACK,
 }) => {
   return (
     <svg

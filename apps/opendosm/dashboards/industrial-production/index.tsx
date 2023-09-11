@@ -8,6 +8,7 @@ import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useMemo } from "react";
+import { useTheme } from "next-themes";
 
 /**
  * Industrial Production Dashboard
@@ -47,6 +48,8 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-industrial-production", "common"]);
+  const { theme } = useTheme();
+
   const INDICES = ["growth_yoy", "growth_momsa", "index_sa", "index"];
   const INDEX_OPTIONS: Array<OptionType> = INDICES.map((key: string) => ({
     label: t(`keys.${key}`),
@@ -93,14 +96,14 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<(key: string) => { unit: string; callout: string; fill: boolean }>(

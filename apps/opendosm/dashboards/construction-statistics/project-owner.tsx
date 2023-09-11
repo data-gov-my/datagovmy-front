@@ -108,8 +108,8 @@ const ProjectOwner: FunctionComponent<ProjectOwnerProps> = ({
               interval="quarter"
               prefixY={isValue ? "RM " : ""}
               unitY={isValue ? "" : "%"}
-              displayNumFormat={value =>
-                numFormat(value, "compact", 1, "long", i18n.language, true)
+              displayNumFormat={(value, _, precision) =>
+                numFormat(value, "compact", precision, "long", i18n.language, true)
               }
               axisY={axisY}
               data={{
@@ -156,8 +156,8 @@ const ProjectOwner: FunctionComponent<ProjectOwnerProps> = ({
                   interval="quarter"
                   prefixY={isValue ? "RM " : ""}
                   unitY={isValue ? "" : "%"}
-                  displayNumFormat={value =>
-                    numFormat(value, "compact", 1, "long", i18n.language, true)
+                  displayNumFormat={(value, _, precision) =>
+                    numFormat(value, "compact", precision, "long", i18n.language, true)
                   }
                   axisY={axisY}
                   data={{

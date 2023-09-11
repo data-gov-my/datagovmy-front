@@ -6,6 +6,7 @@ import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
 import { FunctionComponent, useCallback } from "react";
 
 /**
@@ -62,6 +63,7 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BalanceOfPaymentsProps> = (
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-bop", "agencies", "common"]);
+  const { theme } = useTheme();
 
   const INDEX_OPTIONS: Array<OptionType> = [
     { label: t("keys.net"), value: "net" },
@@ -90,16 +92,17 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BalanceOfPaymentsProps> = (
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
-  const prefixRM = (value: number) => (value > 0 ? "+RM " : "-RM ");
+  const prefixRM = (value: number, usePositiveSign: boolean = true) =>
+    value > 0 ? (usePositiveSign ? "+RM" : "RM") : "-RM";
 
   const getChartData = (charts: string[]): TimeseriesChartData[] => {
     return charts.map(name => ({
@@ -114,9 +117,9 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BalanceOfPaymentsProps> = (
             date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
           }),
           value: [
-            prefixRM(timeseries_callout.data[data.index].bop.latest),
+            prefixRM(timeseries_callout.data[data.index][name].latest, false),
             numFormat(
-              Math.abs(timeseries_callout.data[data.index].bop.latest),
+              Math.abs(timeseries_callout.data[data.index][name].latest),
               "compact",
               1,
               "long",
@@ -180,8 +183,22 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BalanceOfPaymentsProps> = (
                   interval="quarter"
                   displayNumFormat={value =>
                     [
-                      prefixRM(value),
+                      prefixRM(value, false),
                       numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                    ].join("")
+                  }
+                  tooltipCallback={item =>
+                    [
+                      item.dataset.label + ": ",
+                      prefixRM(item.parsed.y, false),
+                      numFormat(
+                        Math.abs(item.parsed.y),
+                        "compact",
+                        1,
+                        "long",
+                        i18n.language,
+                        false
+                      ),
                     ].join("")
                   }
                   axisY={{
@@ -273,14 +290,14 @@ const BalanceOfPaymentsTimeseries: FunctionComponent<BalanceOfPaymentsProps> = (
                         enableAnimation={!play}
                         displayNumFormat={value =>
                           [
-                            prefixRM(value),
+                            prefixRM(value, false),
                             numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
                           ].join("")
                         }
                         tooltipCallback={item =>
                           [
                             item.dataset.label + ": ",
-                            prefixRM(item.parsed.y),
+                            prefixRM(item.parsed.y, false),
                             numFormat(
                               Math.abs(item.parsed.y),
                               "compact",

@@ -1353,7 +1353,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({
     "bomba": BOMBAIcon,
     "dosm": DOSMIcon,
     "epf": EPFIcon,
-    // "epu": IPREPUIcon,
+    "epu": IPREPUIcon,
     "govt": JataNegara,
     "icu-jpm": ICUJPMIcon,
     "imigresen": JIMIcon,

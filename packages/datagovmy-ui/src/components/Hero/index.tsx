@@ -94,7 +94,7 @@ const Hero: FunctionComponent<HeroProps> = ({
               </div>
             )}
 
-            {(header || description || result?.all_time_view) && (
+            {(header || description || result?.view_count) && (
               <div className="space-y-3">
                 {header && (
                   <h2 className={clx("text-black", header[1])} data-testid="hero-header">
@@ -112,11 +112,11 @@ const Hero: FunctionComponent<HeroProps> = ({
                 ) : (
                   description
                 )}
-                {result?.all_time_view && (
+                {result?.view_count && (
                   <p className="text-dim flex gap-2 text-sm" data-testid="hero-views">
                     <EyeIcon className="w-4.5 h-4.5 self-center" />
-                    {`${numFormat(result.all_time_view, "standard")} ${t("common:common.views", {
-                      count: result.all_time_view,
+                    {`${numFormat(result.view_count, "standard")} ${t("common:common.views", {
+                      count: result.view_count,
                     })}`}
                   </p>
                 )}

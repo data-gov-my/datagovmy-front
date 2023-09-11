@@ -18,7 +18,7 @@ import { OptionType } from "datagovmy-ui/types";
 import { FunctionComponent } from "react";
 
 /**
- * Helpdesk Dashboard
+ * Helpdesk
  * @overview Status: Live
  */
 

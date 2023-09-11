@@ -5,6 +5,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -27,6 +28,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-international-reserves", "common"]);
+  const { theme } = useTheme();
 
   const SHADE_OPTIONS: Array<OptionType> = [
     { label: t("keys.no_shade"), value: "no_shade" },
@@ -50,14 +52,14 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   return (
@@ -94,7 +96,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                   <Timeseries
                     title={t("keys.reserves_usd")}
                     className="h-[350px] w-full"
-                    precision={[1, 1]}
+                    precision={[1, 0]}
                     interval="month"
                     tooltipFormat="dd MMM yyyy"
                     enableAnimation={!play}
@@ -148,7 +150,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
-                    precision={[1, 1]}
+                    precision={[1, 0]}
                     tooltipFormat="dd MMM yyyy"
                     unitY={t("section_1.months")}
                     axisY={{
@@ -196,7 +198,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                     title={t("keys.ed_scale")}
                     className="h-[350px] w-full"
                     interval="month"
-                    precision={[1, 1]}
+                    precision={[1, 0]}
                     enableAnimation={!play}
                     tooltipFormat="dd MMM yyyy"
                     unitY="x"

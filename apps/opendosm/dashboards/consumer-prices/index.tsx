@@ -3,7 +3,7 @@ import { PricesIncomeIcon } from "@icons/division";
 import InflationGeography from "./inflation-geography";
 import InflationSnapshot from "./inflation-snapshot";
 import InflationTrends from "./inflation-trends";
-
+import { useTheme } from "next-themes";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
@@ -89,6 +89,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
   choropleth,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);
+  const { theme } = useTheme();
   const CPI_OPTIONS: Array<OptionType> = ["headline", "core"].map((key: string) => ({
     label: t(`keys.${key}`),
     value: key,
@@ -134,14 +135,14 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<(key: string) => { unit: string; callout: string; fill: boolean }>(
@@ -252,8 +253,16 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
               interval="month"
               unitY={configs("overall").unit}
               displayNumFormat={value =>
-                numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+                numFormat(value, "compact", 0, "short", i18n.language, true)
               }
+              tooltipCallback={item => {
+                return [
+                  item.dataset.label + ": ",
+                  item.parsed.y < 0 ? "-" : "",
+                  numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
+                  configs("overall").unit,
+                ].join("");
+              }}
               axisY={{
                 y2: {
                   display: false,
@@ -308,8 +317,23 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                   className="h-[300px] w-full"
                   interval="month"
                   displayNumFormat={value =>
-                    numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+                    numFormat(value, "compact", 0, "short", i18n.language, true)
                   }
+                  tooltipCallback={item => {
+                    return [
+                      item.dataset.label + ": ",
+                      item.parsed.y < 0 ? "-" : "",
+                      numFormat(
+                        Math.abs(item.parsed.y),
+                        "compact",
+                        1,
+                        "long",
+                        i18n.language,
+                        false
+                      ),
+                      chartData.unitY,
+                    ].join("");
+                  }}
                   unitY={chartData.unitY}
                   axisY={{
                     y2: {

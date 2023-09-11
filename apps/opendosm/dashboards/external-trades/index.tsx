@@ -3,6 +3,7 @@ import { AgencyBadge, Container, Hero } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import { FunctionComponent } from "react";
+
 import TradeBalanceTimeseries from "./balance-timeseries";
 import IndicesTimeseries from "./indices-timeseries";
 
@@ -105,7 +106,9 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={<AgencyBadge name={t("division:bppa.full")} icon={<ShippingIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("division:bppa.full")} icon={<ShippingIcon />} isDivision={true} />
+        }
       />
       <Container className="min-h-screen">
         <TradeBalanceTimeseries

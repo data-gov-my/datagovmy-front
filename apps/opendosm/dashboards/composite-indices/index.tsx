@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback, useMemo } from "react";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { WithData } from "datagovmy-ui/types";
+import { useTheme } from "next-themes";
 
 /**
  * Composite Index Dashboard
@@ -54,6 +55,8 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-composite-index", "common"]);
+  const { theme } = useTheme();
+
   const INDEX_OPTIONS = ["growth_yoy", "growth_mom", "index"].map((key: string) => ({
     label: t(`keys.${key}`) as string,
     value: key,
@@ -100,14 +103,14 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useMemo<{ unit: string; fill: boolean }>(() => {
@@ -121,8 +124,8 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
   return (
     <>
       <Hero
-        background="blue"
-        category={[t("common:categories.economy"), "text-primary"]}
+        background="gray"
+        category={[t("common:categories.economy"), "text-black dark:text-white"]}
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
@@ -185,20 +188,22 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                         title: t("common:common.latest", {
                           date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                         }),
-                        value: numFormat(timeseries_callouts.data.leading.callout1, "standard"),
+                        value: numFormat(timeseries_callouts.data.leading.callout1, "standard", 1),
                       },
                       {
                         title: t("mom_growth"),
                         value: `${numFormat(
                           timeseries_callouts.data.leading.callout2,
-                          "standard"
+                          "standard",
+                          1
                         )}%`,
                       },
                       {
                         title: t("yoy_growth"),
                         value: `${numFormat(
                           timeseries_callouts.data.leading.callout3,
-                          "standard"
+                          "standard",
+                          1
                         )}%`,
                       },
                     ]}
@@ -231,20 +236,26 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                         title: t("common:common.latest", {
                           date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                         }),
-                        value: numFormat(timeseries_callouts.data.coincident.callout1, "standard"),
+                        value: numFormat(
+                          timeseries_callouts.data.coincident.callout1,
+                          "standard",
+                          1
+                        ),
                       },
                       {
                         title: t("mom_growth"),
                         value: `${numFormat(
                           timeseries_callouts.data.coincident.callout2,
-                          "standard"
+                          "standard",
+                          1
                         )}%`,
                       },
                       {
                         title: t("yoy_growth"),
                         value: `${numFormat(
                           timeseries_callouts.data.coincident.callout3,
-                          "standard"
+                          "standard",
+                          1
                         )}%`,
                       },
                     ]}
@@ -276,20 +287,22 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
                         title: t("common:common.latest", {
                           date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                         }),
-                        value: numFormat(timeseries_callouts.data.lagging.callout1, "standard"),
+                        value: numFormat(timeseries_callouts.data.lagging.callout1, "standard", 1),
                       },
                       {
                         title: t("mom_growth"),
                         value: `${numFormat(
                           timeseries_callouts.data.lagging.callout2,
-                          "standard"
+                          "standard",
+                          1
                         )}%`,
                       },
                       {
                         title: t("yoy_growth"),
                         value: `${numFormat(
                           timeseries_callouts.data.lagging.callout3,
-                          "standard"
+                          "standard",
+                          1
                         )}%`,
                       },
                     ]}
