@@ -1,4 +1,4 @@
-import { At, Container } from "datagovmy-ui/components";
+import { At } from "datagovmy-ui/components";
 import { FunctionComponent } from "react";
 import { useTranslation } from "datagovmy-ui/hooks";
 
@@ -7,8 +7,8 @@ const KTMBExplorerComingSoon: FunctionComponent = () => {
   const event = new Date(Date.UTC(2023, 8, 22, 0, 0, 0));
 
   return (
-    <Container className="flex h-[calc(100dvh-56px)] max-w-prose items-center justify-center">
-      <p className="text-dim mx-auto flex flex-col gap-y-6 rounded-xl border px-3 py-6 lg:px-12">
+    <div className="flex h-[400px] items-center justify-center">
+      <div className="text-dim mx-auto flex max-w-prose flex-col gap-y-6 rounded-xl border px-3 py-6 sm:px-9">
         <h4 className="mx-auto">{t("coming_soon")}</h4>
         <span>
           {t("the")}
@@ -31,8 +31,8 @@ const KTMBExplorerComingSoon: FunctionComponent = () => {
           {t("live")}
         </span>
         <span className="mx-auto">{t("stay_tuned")}</span>
-      </p>
-    </Container>
+      </div>
+    </div>
   );
 };
 

@@ -1,5 +1,4 @@
 import KTMBExplorerDashboard from "@dashboards/transportation/ktmb-explorer";
-import KTMBExplorerComingSoon from "@dashboards/transportation/ktmb-explorer/coming_soon";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
@@ -10,21 +9,20 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
 const KTMBExplorer: Page = ({
   meta,
-}: // A_to_B,
-// A_to_B_callout,
-// B_to_A,
-// B_to_A_callout,
-// dropdown,
-// last_updated,
-// params,
-InferGetStaticPropsType<typeof getStaticProps>) => {
+  A_to_B,
+  A_to_B_callout,
+  B_to_A,
+  B_to_A_callout,
+  dropdown,
+  last_updated,
+  params,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-ktmb-explorer", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <KTMBExplorerComingSoon />
-      {/* <KTMBExplorerDashboard
+      <KTMBExplorerDashboard
         A_to_B={A_to_B}
         A_to_B_callout={A_to_B_callout}
         B_to_A={B_to_A}
@@ -32,7 +30,7 @@ InferGetStaticPropsType<typeof getStaticProps>) => {
         dropdown={dropdown}
         last_updated={last_updated}
         params={params}
-      /> */}
+      />
     </AnalyticsProvider>
   );
 };
@@ -58,26 +56,26 @@ export const getStaticProps: GetStaticProps = withi18n(
         ? (params.service as string[])
         : ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
 
-      // const results = await Promise.allSettled([
-      //   get("/explorer", { explorer: "KTMB", dropdown: true }),
-      //   get("/explorer", {
-      //     explorer: "KTMB",
-      //     service,
-      //     origin,
-      //     destination,
-      //   }),
-      //   get("/explorer", {
-      //     explorer: "KTMB",
-      //     service,
-      //     origin: destination,
-      //     destination: origin,
-      //   }),
-      // ]);
+      const results = await Promise.allSettled([
+        get("/explorer", { explorer: "KTMB", dropdown: true }),
+        get("/explorer", {
+          explorer: "KTMB",
+          service,
+          origin,
+          destination,
+        }),
+        get("/explorer", {
+          explorer: "KTMB",
+          service,
+          origin: destination,
+          destination: origin,
+        }),
+      ]);
 
-      // const [dropdown, A_to_B, B_to_A] = results.map(e => {
-      //   if (e.status === "rejected") return {};
-      //   else return e.value.data;
-      // });
+      const [dropdown, A_to_B, B_to_A] = results.map(e => {
+        if (e.status === "rejected") return {};
+        else return e.value.data;
+      });
 
       return {
         notFound: false,
@@ -88,13 +86,13 @@ export const getStaticProps: GetStaticProps = withi18n(
             category: "transportation",
             agency: "MoT",
           },
-          // A_to_B: A_to_B.timeseries,
-          // A_to_B_callout: A_to_B.timeseries_callout.data,
-          // B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
-          // B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
-          // dropdown: dropdown,
-          // last_updated: A_to_B.data_last_updated,
-          // params: params?.service ? { service, origin, destination } : {},
+          A_to_B: A_to_B.timeseries,
+          A_to_B_callout: A_to_B.timeseries_callout.data,
+          B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
+          B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
+          dropdown: dropdown,
+          last_updated: A_to_B.data_last_updated,
+          params: params?.service ? { service, origin, destination } : {},
         },
         // revalidate: 60 * 60 * 24, // 1 day (in seconds)
       };

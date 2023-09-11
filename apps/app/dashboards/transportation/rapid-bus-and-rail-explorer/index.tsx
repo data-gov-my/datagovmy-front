@@ -24,6 +24,7 @@ import { DashboardPeriod, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
+import RapidBusRailComingSoon from "@dashboards/transportation/rapid-bus-and-rail-explorer/coming_soon";
 
 /**
  * Rapid Bus and Rail Explorer
@@ -51,7 +52,7 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
   last_updated,
   params,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-prasarana-explorer", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-rapid-bus-and-rail-explorer", "common"]);
   const { push } = useRouter();
   const { data, setData } = useData({
     loading: false,
@@ -136,8 +137,10 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
         last_updated={last_updated}
       />
 
-      <Container className="min-h-fit">
-        <Section
+      <Container>
+        <RapidBusRailComingSoon />
+
+        {/* <Section
           title={t("title")}
           date={A_to_B.data_as_of}
           description={
@@ -405,7 +408,7 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
               </>
             )}
           </SliderProvider>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );

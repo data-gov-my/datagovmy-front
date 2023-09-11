@@ -1,5 +1,4 @@
-import RapidBusRailExplorer from "@dashboards/transportation/rapid-bus-and-rail-explorer";
-import RapidBusRailComingSoon from "@dashboards/transportation/rapid-bus-and-rail-explorer/coming_soon";
+import RapidBusRailExplorerDashboard from "@dashboards/transportation/rapid-bus-and-rail-explorer";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
@@ -8,23 +7,22 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
-const PrasaranaExplorer: Page = ({
+const RapidBusRailExplorer: Page = ({
   meta,
-}: // A_to_B,
-// A_to_B_callout,
-// B_to_A,
-// B_to_A_callout,
-// dropdown,
-// last_updated,
-// params,
-InferGetStaticPropsType<typeof getStaticProps>) => {
+  A_to_B,
+  A_to_B_callout,
+  B_to_A,
+  B_to_A_callout,
+  dropdown,
+  last_updated,
+  params,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-rapid-bus-and-rail-explorer", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <RapidBusRailComingSoon />
-      {/* <RapidBusRailExplorer
+      <RapidBusRailExplorerDashboard
         A_to_B={A_to_B}
         A_to_B_callout={A_to_B_callout}
         B_to_A={B_to_A}
@@ -32,7 +30,7 @@ InferGetStaticPropsType<typeof getStaticProps>) => {
         dropdown={dropdown}
         last_updated={last_updated}
         params={params}
-      /> */}
+      />
     </AnalyticsProvider>
   );
 };
@@ -58,26 +56,26 @@ export const getStaticProps: GetStaticProps = withi18n(
         ? (params.service as string[])
         : ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
 
-      // const results = await Promise.allSettled([
-      //   get("/explorer", { explorer: "Prasarana", dropdown: true }),
-      //   get("/explorer", {
-      //     explorer: "Prasarana",
-      //     service,
-      //     origin,
-      //     destination,
-      //   }),
-      //   get("/explorer", {
-      //     explorer: "Prasarana",
-      //     service,
-      //     origin: destination,
-      //     destination: origin,
-      //   }),
-      // ]);
+      const results = await Promise.allSettled([
+        get("/explorer", { explorer: "Prasarana", dropdown: true }),
+        get("/explorer", {
+          explorer: "Prasarana",
+          service,
+          origin,
+          destination,
+        }),
+        get("/explorer", {
+          explorer: "Prasarana",
+          service,
+          origin: destination,
+          destination: origin,
+        }),
+      ]);
 
-      // const [dropdown, A_to_B, B_to_A] = results.map(e => {
-      //   if (e.status === "rejected") return {};
-      //   else return e.value.data;
-      // });
+      const [dropdown, A_to_B, B_to_A] = results.map(e => {
+        if (e.status === "rejected") return {};
+        else return e.value.data;
+      });
 
       return {
         notFound: false,
@@ -88,13 +86,13 @@ export const getStaticProps: GetStaticProps = withi18n(
             category: "transportation",
             agency: "MoT",
           },
-          // A_to_B: A_to_B.timeseries,
-          // A_to_B_callout: A_to_B.timeseries_callout.data,
-          // B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
-          // B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
-          // dropdown: dropdown,
-          // last_updated: A_to_B.data_last_updated,
-          // params: params?.service ? { service, origin, destination } : {},
+          A_to_B: A_to_B.timeseries,
+          A_to_B_callout: A_to_B.timeseries_callout.data,
+          B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
+          B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
+          dropdown: dropdown,
+          last_updated: A_to_B.data_last_updated,
+          params: params?.service ? { service, origin, destination } : {},
         },
       };
     } catch (e: any) {
@@ -104,4 +102,4 @@ export const getStaticProps: GetStaticProps = withi18n(
   }
 );
 
-export default PrasaranaExplorer;
+export default RapidBusRailExplorer;
