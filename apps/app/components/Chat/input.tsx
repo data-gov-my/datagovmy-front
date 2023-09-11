@@ -8,7 +8,7 @@ interface ChatInputProps {}
 
 const ChatInput: FunctionComponent<ChatInputProps> = () => {
   const { prompt, session, setPrompt, submitPrompt, fetching } = useContext(ChatContext);
-  const { t } = useTranslation(["catalogue-datagpt", "common"]);
+  const { t } = useTranslation(["datagpt", "common"]);
   const [placeholder, setPlaceholder] = useState<string>("");
 
   useEffect(() => {
