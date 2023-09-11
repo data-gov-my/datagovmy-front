@@ -333,8 +333,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Views / download count*/}
           <p className="flex justify-end gap-2 py-6 text-sm text-dim">
             <span>
-              {`${numFormat(result?.all_time_view ?? 0, "compact")} ${t("common:common.views", {
-                count: result?.all_time_view ?? 0,
+              {`${numFormat(result?.view_count ?? 0, "compact")} ${t("common:common.views", {
+                count: result?.view_count ?? 0,
               })}`}
             </span>
             <span>&middot;</span>
