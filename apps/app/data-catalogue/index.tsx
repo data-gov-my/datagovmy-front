@@ -1,6 +1,4 @@
 import { BuildingLibraryIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import { SparklesIcon } from "@heroicons/react/24/outline";
-import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   At,
@@ -82,26 +80,17 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
           }),
         ]}
         action={
-          <div className="flex flex-wrap items-center gap-6">
-            <Dropdown
-              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-              width="w-64"
-              placeholder={t("placeholder.source")}
-              anchor="left"
-              options={sourceOptions}
-              selected={query.source ? { label: query.source, value: query.source } : undefined}
-              onChange={e => filterRef.current?.setFilter("source", e)}
-              enableSearch
-              enableClear
-            />
-            <At
-              href={routes.DATA_GPT}
-              className="text-primary group flex items-center gap-2 text-sm font-medium"
-            >
-              <SparklesIcon className="h-5 w-5" />
-              <span className="group-hover:underline">{t("try_datagpt")}</span>
-            </At>
-          </div>
+          <Dropdown
+            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+            width="w-64"
+            placeholder={t("placeholder.source")}
+            anchor="left"
+            options={sourceOptions}
+            selected={query.source ? { label: query.source, value: query.source } : undefined}
+            onChange={e => filterRef.current?.setFilter("source", e)}
+            enableSearch
+            enableClear
+          />
         }
         agencyBadge={
           <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : "govt"} />

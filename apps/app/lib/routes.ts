@@ -2,7 +2,7 @@ export const routes = {
   HOME: "/",
   COMMUNITY: "/community",
   DATA_CATALOGUE: "/data-catalogue",
-  DATA_GPT: "/data-catalogue/datagpt",
+  DATA_GPT: "/datagpt",
   DASHBOARD: "/dashboard",
   HELPDESK: "/helpdesk",
   BIRTHDAY_EXPLORER: "/dashboard/birthday-explorer",
