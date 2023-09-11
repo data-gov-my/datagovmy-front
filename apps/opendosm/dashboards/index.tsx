@@ -44,7 +44,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
         category={[t("opendosm-home:category"), "text-primary dark:text-primary-dark"]}
         header={[`DOSM: ${t("header")}`]}
         description={[t("description", { agency: t("agencies:dosm.abbr"), context: "agency" })]}
-        agencyBadge={<AgencyBadge agency="govt" />}
+        agencyBadge={<AgencyBadge agency="dosm" />}
       />
       <DashboardFilter
         data={{
