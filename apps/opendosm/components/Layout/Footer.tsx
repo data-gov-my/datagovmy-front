@@ -10,11 +10,14 @@ const OpenDOSMFooter: FunctionComponent = () => {
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("nav.open_source")}</p>
 
-        <At className="link-dim" external href="https://github.com/dosm-malaysia/aksara-front">
+        <At className="link-dim" external href="https://github.com/data-gov-my/datagovmy-front">
           {t("nav.frontend")}
         </At>
-        <At className="link-dim" external href="https://github.com/dosm-malaysia/aksara-back">
+        <At className="link-dim" external href="https://github.com/data-gov-my/datagovmy-back/">
           {t("nav.backend")}
+        </At>
+        <At className="link-dim" external href="https://www.figma.com/file/6iNojR8hO5bWvH0c3rvGD4">
+          {t("common:nav.uiux")}
         </At>
       </div>
 
@@ -22,8 +25,8 @@ const OpenDOSMFooter: FunctionComponent = () => {
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("nav.open_data")}</p>
 
-        <At className="link-dim" external href="https://github.com/dosm-malaysia/">
-          Github DOSM
+        <At className="link-dim" external href="https://data.gov.my/">
+          {t("common:nav.open_data_portal")}
         </At>
       </div>
     </Footer>

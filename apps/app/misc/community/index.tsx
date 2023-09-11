@@ -8,7 +8,7 @@ import { OptionType } from "datagovmy-ui/types";
 import { FunctionComponent } from "react";
 
 /**
- * Community Dashboard
+ * Community Signups.
  * @overview Status: Live
  */
 

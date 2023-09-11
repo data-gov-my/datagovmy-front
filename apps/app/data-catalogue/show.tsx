@@ -352,8 +352,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Views / download count*/}
           <p className="text-dim flex justify-end gap-2 py-6 text-sm">
             <span>
-              {`${numFormat(result?.all_time_view ?? 0, "compact")} ${t("common:common.views", {
-                count: result?.all_time_view ?? 0,
+              {`${numFormat(result?.view_count ?? 0, "compact")} ${t("common:common.views", {
+                count: result?.view_count ?? 0,
               })}`}
             </span>
             <span>&middot;</span>
@@ -620,6 +620,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             <SampleCode
               catalogueId={catalogueId}
               url={urls?.parquet || urls[Object.keys(urls)[0]]}
+              route="data-catalogue"
             />
           </Section>
         )}

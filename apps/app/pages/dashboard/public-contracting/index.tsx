@@ -8,6 +8,11 @@ import PublicContractingDashboard from "@dashboards/public-finances/public-contr
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
+/**
+ * Public Contracting Dashboard
+ * @overview Status: In-development. Slated for future release.
+ */
+
 const PublicContracting: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-public-contracting", "common"]);
 
@@ -23,7 +28,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-public-contrac
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {
-    notFound: false,
+    notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
     props: {
       meta: {
         id: "dashboard-public-contracting",

@@ -8,6 +8,11 @@ import SekolahkuDashboard from "@dashboards/education/sekolahku";
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
+/**
+ * Sekolahku Dashboard
+ * @overview Status: In-development. Slated for future release.
+ */
+
 const Sekolahku: Page = ({
   meta,
   dropdown_data,
@@ -46,7 +51,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-sekolahku", as
     ]);
 
     return {
-      notFound: false,
+      notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
         meta: {
           id: "dashboard-sekolahku",
