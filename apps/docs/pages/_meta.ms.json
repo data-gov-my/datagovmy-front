@@ -1,19 +1,18 @@
 {
-    "index": "Pengenalan",
-    "changelog": "Log Perubahan",
-    "quickstart": "Cepat Mula",
-    "rate-limit": "Had",
-    "authentication": "Pengesahan",
-    "response-format": "Format Respons",
-    "static-api": "Static APIs",
-    "realtime-api": "Realtime APIs",
-    "main-site": {
-        "title": "Tapak Utama",
-        "type": "page",
-        "href": "https://staging.data.gov.my/ms-MY",
-        "newWindow": true
-    },
-    "faq": "FAQ",
-    "query-parameters": "Query Parameters",
-    "request-query": "Request Query"
+  "index": "Pengenalan",
+  "changelog": "Log Perubahan",
+  "quickstart": "Panduan Cepat",
+  "rate-limit": "Had Kadar",
+  "authentication": "Pengesahan",
+  "request-query": "Pertanyaan Permintaan",
+  "response-format": "Format Respons",
+  "static-api": "API Statis",
+  "realtime-api": "API Real Masa",
+  "main-site": {
+    "title": "Laman Utama",
+    "type": "halaman",
+    "href": "https://data.gov.my",
+    "newWindow": true
+  },
+  "faq": "Soalan Lazim"
 }
