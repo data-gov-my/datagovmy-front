@@ -67,7 +67,7 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
       case "/dashboard/blood-donation":
       case "/dashboard/crime":
       case "/dashboard/fire-and-rescue":
-      case "/dashboard/ipr":
+      case "/dashboard/inisiatif-pendapatan-rakyat":
       case "/dashboard/business-creation-destruction":
       case "/ms-MY/dashboard/covid-19":
       case "/ms-MY/dashboard/covid-vaccination":
@@ -76,7 +76,7 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
       case "/ms-MY/dashboard/blood-donation":
       case "/ms-MY/dashboard/crime":
       case "/ms-MY/dashboard/fire-and-rescue":
-      case "/ms-MY/dashboard/ipr":
+      case "/ms-MY/dashboard/inisiatif-pendapatan-rakyat":
       case "/ms-MY/dashboard/business-creation-destruction":
         await res.revalidate(route);
         const result = revalidateWithStates(res, route);
