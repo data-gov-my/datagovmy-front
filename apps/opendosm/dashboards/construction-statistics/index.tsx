@@ -9,6 +9,7 @@ import { WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 import ProjectOwner, { ProjectOwnerProps } from "./project-owner";
+import { useTheme } from "next-themes";
 
 /**
  * Construction Statistics Dashboard
@@ -44,6 +45,7 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
   project_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-construction-statistics", "common"]);
+  const { theme } = useTheme();
 
   const INDEX_OPTIONS = ["actual", "growth_qoq", "growth_yoy"].map((key: string) => ({
     label: t(key) as string,
@@ -89,14 +91,14 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.DANGER_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const fill = data.shade === "no_shade";
@@ -156,7 +158,6 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                     interval="quarter"
                     enableAnimation={!play}
                     unitY={isActual ? "" : "%"}
-                    precision={isActual ? 0 : 1}
                     axisY={AXIS_Y}
                     data={{
                       labels: coordinate.x,
@@ -194,8 +195,8 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                     enableAnimation={!play}
                     prefixY={isActual ? "RM " : ""}
                     unitY={isActual ? "" : "%"}
-                    displayNumFormat={value =>
-                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    displayNumFormat={(value, _, precision) =>
+                      numFormat(value, "compact", precision, "long", i18n.language, true)
                     }
                     axisY={AXIS_Y}
                     data={{

@@ -99,7 +99,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
                       <li key={index}>
                         <At
                           href={`/data-catalogue/${item.id}`}
-                          className="text-primary underline hover:no-underline"
+                          className="text-primary no-underline hover:underline"
                         >
                           {item.catalog_name}
                         </At>

@@ -71,8 +71,8 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
     "gini",
     "poverty",
     "poverty_relative",
-    "access_water",
-    "access_electricity",
+    // "access_water",
+    // "access_electricity",
   ].map((key: string) => ({
     label: t(`keys.${key}`),
     value: key,

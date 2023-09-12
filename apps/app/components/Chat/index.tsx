@@ -53,7 +53,7 @@ const ActiveState: FunctionComponent = () => {
 
 const EmptyState: FunctionComponent = () => {
   const { session } = useContext(ChatContext);
-  const { t } = useTranslation(["catalogue-datagpt", "common"]);
+  const { t } = useTranslation(["datagpt", "common"]);
   const [show, setShow] = useState<boolean>(false);
 
   const features = {

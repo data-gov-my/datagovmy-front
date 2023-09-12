@@ -21,7 +21,7 @@ interface TreeNodeProps {
 }
 
 export const TreeNode: FunctionComponent<TreeNodeProps> = ({ node, onClick }) => {
-  const { t } = useTranslation(["catalogue-datagpt", "common"]);
+  const { t } = useTranslation(["datagpt", "common"]);
   if (!node) return;
 
   if (node.name === "root") {
@@ -52,7 +52,7 @@ interface FiletreeProps {
 }
 
 const Filetree: FunctionComponent<FiletreeProps> = ({ className }) => {
-  const { t } = useTranslation(["catalogue-datagpt", "common"]);
+  const { t } = useTranslation(["datagpt", "common"]);
   const { tree, create, reset, active } = useContext(FiletreeContext);
 
   return (

@@ -122,7 +122,7 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
                 }}
                 icon={item.icon === "red" ? redMarker : blueMarker}
               >
-                <Popup>{printMarker(item)}</Popup>
+                <Popup>{printMarker(item.tooltip)}</Popup>
               </Marker>
             );
           })}

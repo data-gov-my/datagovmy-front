@@ -55,9 +55,16 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                 />
                 <Nav.Item
                   title={t("common:nav.helpdesk")}
-                  key="/heldesk"
+                  key="/helpdesk"
                   link="/helpdesk"
                   onClick={close}
+                />
+                <Nav.Item
+                  title={t("common:nav.legacy")}
+                  key="/legacy"
+                  link="https://archive.data.gov.my"
+                  onClick={close}
+                  external
                 />
               </>
             )}

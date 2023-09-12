@@ -185,7 +185,7 @@ export const FiletreeContext = createContext<FiletreeContextProps>({
  */
 export const FiletreeProvider: ForwardRefExoticComponent<FiletreeProviderProps> = forwardRef(
   ({ children, model }, ref) => {
-    const { t } = useTranslation(["catalogue-datagpt", "common"]);
+    const { t } = useTranslation(["datagpt", "common"]);
     const idb = useRef<IndexedDB>();
     const [tree, setTree] = useState<FileNode | undefined>();
     const [active, setActive] = useState<FileNode | undefined>();

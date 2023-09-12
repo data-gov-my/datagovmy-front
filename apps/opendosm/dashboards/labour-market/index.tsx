@@ -186,7 +186,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                         }),
                         value: `${numFormat(
                           timeseries_callouts.data.under_rate.callout1,
-                          "standard"
+                          "standard",
+                          1
                         )}%`,
                       },
                     ]}
@@ -217,7 +218,8 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                         }),
                         value: `${numFormat(
                           timeseries_callouts.data.ep_ratio.callout1,
-                          "standard"
+                          "standard",
+                          1
                         )}`,
                       },
                     ]}

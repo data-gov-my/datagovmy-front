@@ -51,7 +51,7 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({}) => {
     "80-84",
     "85+",
   ].map((key: string) => ({ label: t(key), value: key }));
-  const ASSESSMENT_OPTIONS: OptionType[] = ["self", "joint"].map((key: string) => ({
+  const ASSESSMENT_OPTIONS: OptionType[] = ["solo", "joint"].map((key: string) => ({
     label: t(key),
     value: key,
   }));

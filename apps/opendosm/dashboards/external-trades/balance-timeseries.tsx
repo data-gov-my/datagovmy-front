@@ -6,6 +6,7 @@ import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
+import { useTheme } from "next-themes";
 import { ChartDataset, ChartTypeRegistry } from "chart.js";
 import {
   TimeseriesChartData,
@@ -35,6 +36,7 @@ const TradeBalanceTimeseries: FunctionComponent<TradeBalanceTimeseriesProps> = (
   SHADE_OPTIONS,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-external-trade"]);
+  const { theme } = useTheme();
 
   const { data, setData } = useData({
     minmax: [0, timeseries.data[INDEX_OPTIONS[0].value].x.length - 1],
@@ -54,14 +56,14 @@ const TradeBalanceTimeseries: FunctionComponent<TradeBalanceTimeseriesProps> = (
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const plotTimeseries = (
@@ -96,10 +98,10 @@ const TradeBalanceTimeseries: FunctionComponent<TradeBalanceTimeseriesProps> = (
               numFormat(
                 Math.abs(timeseries_callout.data[data.index][name].latest),
                 "compact",
-                2,
+                1,
                 "long",
                 i18n.language,
-                true
+                false
               ),
               ["growth_yoy"].includes(data.index) ? "%" : "",
             ].join(""),
@@ -116,8 +118,19 @@ const TradeBalanceTimeseries: FunctionComponent<TradeBalanceTimeseriesProps> = (
           displayNumFormat={value => {
             const isPercentage = ["growth_yoy"].includes(data.index);
             return [
-              value < 0 ? "-" : "",
+              isPercentage ? prefixPercentage(value, false) : prefixRM(value, false),
               numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+              isPercentage ? "%" : "",
+            ].join("");
+          }}
+          tooltipCallback={item => {
+            const isPercentage = ["growth_yoy"].includes(data.index);
+            return [
+              item.dataset.label + ": ",
+              isPercentage
+                ? prefixPercentage(item.parsed.y, false)
+                : prefixRM(item.parsed.y, false),
+              numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
               isPercentage ? "%" : "",
             ].join("");
           }}
@@ -157,8 +170,10 @@ const TradeBalanceTimeseries: FunctionComponent<TradeBalanceTimeseriesProps> = (
     });
   };
 
-  const prefixRM = (value: number) => (value > 0 ? "+RM " : "-RM ");
-  const prefixPercentage = (value: number) => (value > 0 ? "+" : "-");
+  const prefixRM = (value: number, usePositiveSign: boolean = true) =>
+    value > 0 ? (usePositiveSign ? "+RM" : "RM") : "-RM";
+  const prefixPercentage = (value: number, usePositiveSign: boolean = true) =>
+    value > 0 ? (usePositiveSign ? "+" : "") : "-";
 
   return (
     <>
@@ -195,8 +210,19 @@ const TradeBalanceTimeseries: FunctionComponent<TradeBalanceTimeseriesProps> = (
                 displayNumFormat={value => {
                   const isPercentage = ["growth_yoy"].includes(data.index);
                   return [
-                    value < 0 ? "-" : "",
+                    isPercentage ? prefixPercentage(value, false) : prefixRM(value, false),
                     numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                    isPercentage ? "%" : "",
+                  ].join("");
+                }}
+                tooltipCallback={item => {
+                  const isPercentage = ["growth_yoy"].includes(data.index);
+                  return [
+                    item.dataset.label + ": ",
+                    isPercentage
+                      ? prefixPercentage(item.parsed.y, false)
+                      : prefixRM(item.parsed.y, false),
+                    numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
                     isPercentage ? "%" : "",
                   ].join("");
                 }}
@@ -240,10 +266,10 @@ const TradeBalanceTimeseries: FunctionComponent<TradeBalanceTimeseriesProps> = (
                       numFormat(
                         Math.abs(timeseries_callout.data[data.index].balance.latest),
                         "compact",
-                        2,
+                        1,
                         "long",
                         i18n.language,
-                        true
+                        false
                       ),
                       ["growth_yoy"].includes(data.index) ? "%" : "",
                     ].join(""),

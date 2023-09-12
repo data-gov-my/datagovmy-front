@@ -5,6 +5,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, smartNumFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
+import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 
@@ -37,10 +38,13 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
   timeseries_callouts,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-reserve-money", "common"]);
-  const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data).map((key: string) => ({
-    label: t(`keys.${key}`),
-    value: key,
-  }));
+  const { theme } = useTheme();
+  const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data)
+    .reverse()
+    .map((key: string) => ({
+      label: t(`keys.${key}`),
+      value: key,
+    }));
   const SHADE_OPTIONS: Array<OptionType> = [
     { label: t("keys.no_shade"), value: "no_shade" },
     { label: t("keys.recession"), value: "recession" },
@@ -65,14 +69,14 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<

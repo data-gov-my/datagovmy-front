@@ -37,10 +37,12 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
 }) => {
   const { t, i18n } = useTranslation(["dashboard-currency-in-circulation", "common"]);
   const { theme } = useTheme();
-  const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data).map((key: string) => ({
-    label: t(`keys.${key}`),
-    value: key,
-  }));
+  const INDEX_OPTIONS: Array<OptionType> = Object.keys(timeseries.data)
+    .reverse()
+    .map((key: string) => ({
+      label: t(`keys.${key}`),
+      value: key,
+    }));
   const SHADE_OPTIONS: Array<OptionType> = [
     { label: t("keys.no_shade"), value: "no_shade" },
     { label: t("keys.recession"), value: "recession" },

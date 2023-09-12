@@ -8,6 +8,11 @@ import FloodWarningDashboard from "@dashboards/environment/flood-warning";
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
+/**
+ * Flood Warning Dashboard
+ * @overview Status: In-development. Slated for future release.
+ */
+
 const FloodWarning: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-flood-warning", "common"]);
 
@@ -23,7 +28,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-flood-warning"
   //   const { data } = await get("/dashboard", { dashboard: "currency" });
 
   return {
-    notFound: false,
+    notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
     props: {
       meta: {
         id: "dashboard-flood-warning",

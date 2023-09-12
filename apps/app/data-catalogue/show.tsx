@@ -13,7 +13,7 @@ import {
   Tooltip,
   Markdown,
 } from "datagovmy-ui/components";
-import { SHORT_PERIOD } from "datagovmy-ui/constants";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
 import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
@@ -187,7 +187,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           if (key === "x")
             return toDate(
               item[key],
-              "dd MMM yyyy", //SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
+              i18n.language
+            );
+          else return item[key];
+        });
+      case "INTRADAY":
+        return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze, (item, key) => {
+          if (key === "x")
+            return toDate(
+              item[key],
+              SHORT_PERIOD_FORMAT["INTRADAY" as keyof typeof SHORT_PERIOD_FORMAT],
               i18n.language
             );
           else return item[key];
@@ -342,8 +352,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           {/* Views / download count*/}
           <p className="text-dim flex justify-end gap-2 py-6 text-sm">
             <span>
-              {`${numFormat(result?.all_time_view ?? 0, "compact")} ${t("common:common.views", {
-                count: result?.all_time_view ?? 0,
+              {`${numFormat(result?.view_count ?? 0, "compact")} ${t("common:common.views", {
+                count: result?.view_count ?? 0,
               })}`}
             </span>
             <span>&middot;</span>
@@ -572,7 +582,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         </Section>
 
         {/* API Request Code */}
-        {!config.exclude_openapi && (
+        {config.exclude_openapi ? (
+          <Section
+            title={t("sample_query.section_title")}
+            description={t("sample_query.unavailable")}
+          />
+        ) : (
           <Section
             title={t("sample_query.section_title")}
             description={
@@ -582,7 +597,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   className="link-dim text-base underline"
                   href={`https://developer.data.gov.my${
                     i18n.language === "en-GB" ? "" : "/ms"
-                  }/data-catalogue/request-query`}
+                  }/data-catalogue`}
                   external
                 >
                   {t("sample_query.link1")}
@@ -592,7 +607,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   className="link-dim text-base underline"
                   href={`https://developer.data.gov.my/${
                     i18n.language == "en-GB" ? "" : "/ms"
-                  }/data-catalogue/example-requests?id=${catalogueId}`}
+                  }/data-catalogue?id=${catalogueId}`}
                   external
                 >
                   {t("sample_query.link2")}
@@ -605,6 +620,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             <SampleCode
               catalogueId={catalogueId}
               url={urls?.parquet || urls[Object.keys(urls)[0]]}
+              route="data-catalogue"
             />
           </Section>
         )}
