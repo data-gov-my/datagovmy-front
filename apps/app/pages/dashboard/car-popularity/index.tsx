@@ -44,8 +44,8 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
       get("chart/", {
         dashboard: "car_popularity",
         chart_name: "timeseries",
-        maker: "Perodua",
-        model: "Myvi",
+        maker: "PERODUA",
+        model: "MYVI",
       }),
     ]).catch(e => {
       throw new Error("Error: " + e);
