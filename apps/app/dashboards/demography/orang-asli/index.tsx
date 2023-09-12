@@ -199,10 +199,13 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
         </Section>
 
         <Section>
-          <div className="space-y-12 xl:grid xl:grid-cols-12">
-            <div className="flex flex-col gap-6 lg:flex-row xl:col-span-10 xl:col-start-2">
-              <div className="flex flex-col justify-center space-y-6 lg:w-1/3">
-                <h4 className="text-center [text-wrap:balance] lg:text-start">{t("title")}</h4>
+          <div className="space-y-12">
+            {/* xl:grid xl:grid-cols-12"> */}
+            <div className="flex flex-col gap-6">
+              {/* lg:flex-row xl:col-span-10 xl:col-start-2"> */}
+              <div className="flex flex-col justify-center space-y-6">
+                {/* lg:w-1/3"> */}
+                <h4 className="text-center [text-wrap:balance]">{t("title")}</h4>
                 <div className="mx-auto w-full max-w-[400px]">
                   <ComboBox<Kampung>
                     placeholder={t("search_kampung")}
@@ -217,7 +220,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                   />
                 </div>
               </div>
-              <div className="lg:w-2/3">
+              {/* <div className="lg:w-2/3">
                 <MapPlot
                   className="shadow-button h-[400px] rounded-xl lg:w-full"
                   tileTheme="terrain"
@@ -231,7 +234,7 @@ const OrangAsli: FunctionComponent<OrangAsliProps> = ({ dropdown, params, villag
                   ]}
                 />
                 <p className="text-dim pt-3 text-center text-sm">{t("map_description")}</p>
-              </div>
+              </div> */}
             </div>
           </div>
           <h4 className="pb-8 pt-12">

@@ -42,7 +42,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
     copied: false,
     query: "",
   });
-  console.log(loading, "MODAL");
+
   const filteredRes = useMemo(
     () =>
       matchSorter(publication ? publication.resources : [], data.query, {

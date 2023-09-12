@@ -60,7 +60,7 @@ export const ChatContext = createContext<ChatContextProps>({
  */
 export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwardRef(
   ({ model, children, chain }, ref) => {
-    const { t } = useTranslation(["catalogue-datagpt"]);
+    const { t } = useTranslation(["datagpt"]);
     const idb = useRef<IndexedDB>();
     const { active, create: createChatSession } = useContext(FiletreeContext);
     const [prompt, setPrompt] = useSessionStorage<string>("prompt", "");
@@ -150,7 +150,9 @@ export const ChatProvider: ForwardRefExoticComponent<ChatProviderProps> = forwar
       const payload = {
         chain_type: chain,
         model: "gpt-3.5-turbo",
-        messages: session?.chats.slice(-5) || [{ role: "user", content: prompt }],
+        messages: session?.chats.filter(chat => chat.content !== t("prompt_error")).slice(-5) || [
+          { role: "user", content: prompt },
+        ],
         max_tokens: 1000,
         temperature: 0,
       };

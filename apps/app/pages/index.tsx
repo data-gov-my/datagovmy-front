@@ -60,10 +60,6 @@ const Home: Page = ({
       data: analytics.today,
     },
     {
-      name: t("common:home.section_2.past_month"),
-      data: analytics.last_month,
-    },
-    {
       name: t("common:home.section_2.all_time"),
       data: analytics.all_time,
     },
@@ -302,10 +298,6 @@ export const getStaticProps: GetStaticProps = withi18n(null, async () => {
         today: {
           dataset: data.table_summary.data.today.dataset_views,
           dashboard: data.table_summary.data.today.dashboard_views,
-        },
-        last_month: {
-          dataset: data.table_summary.data.last_month.dataset_views,
-          dashboard: data.table_summary.data.last_month.dashboard_views,
         },
         all_time: {
           dataset: data.table_summary.data.all_time.dataset_views,
