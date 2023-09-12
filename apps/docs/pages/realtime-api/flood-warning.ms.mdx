@@ -1,31 +1,40 @@
-# Flood Warning
+## Endpoint API Amaran Banjir
 
-Walaupun akses kepada OpenAPI tidak memerlukan token API, kami menyediakan pilihan untuk meminta token jika anda merancang untuk mencapai had penggunaan atau memerlukan penggunaan yang lebih tinggi. Untuk meminta token API, sila ikuti langkah-langkah berikut:
+API Amaran Banjir ini menyediakan maklumat masa sebenar mengenai paras air dan amaran banjir di stesen pemantauan di seluruh negara.
 
-1. Hantar emel kepada [token@dtsa.gov.my](...) dengan butiran berikut:
+```http
+GET https://api.data.gov.my/flood-warning
+```
 
-   - Nama anda
-   - Alamat emel anda
-   - Sebab untuk meminta had penggunaan yang ditingkatkan
-
-2. Pasukan kami akan meninjau permintaan anda dan menilainya secara individu.
-
-3. Jika permintaan anda diluluskan, anda akan menerima token API melalui emel.
-
-Meminta token API membolehkan kami memastikan penggunaan yang adil dan mencegah penyalahgunaan, sambil memberikan anda sumber yang diperlukan untuk memenuhi keperluan aplikasi anda.
-
-## Menggunakan Token API Anda
-
-Setelah anda memperoleh token API, anda perlu menyertakannya dalam permintaan API anda untuk mengesahkan dan mendapatkan akses kepada had penggunaan yang ditingkatkan. Ikuti langkah-langkah berikut untuk menyertakan token API anda dalam permintaan HTTP:
-
-1. Tambahkan tajuk berikut dalam permintaan anda:
-
-   ```
-   Authorization: Bearer <TOKEN_ANDA_DI_SINI>
-   ```
-
-   Gantikan `<TOKEN_ANDA_DI_SINI>` dengan token sebenar yang anda terima.
-
-2. Hantar permintaan HTTP anda dengan tajuk `Authorization` yang ditambahkan.
-
-Dengan menyertakan token API dalam tajuk `Authorization`, anda memastikan bahawa permintaan anda dikenal pasti dan mempunyai keistimewaan yang diperlukan untuk mengakses OpenAPI dengan had penggunaan yang ditingkatkan.
+| Key                           | Jenis   | Penerangan                                                                                         | Nilai Contoh                     |
+| ----------------------------- | ------- | -------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `station_id`                  | string  | Pengenalpasti unik untuk stesen pemantauan                                                         | "26167"                          |
+| `station_name`                | string  | Nama atau penerangan stesen pemantauan                                                             | "Sg. Anak Bukit di Jambatan TAR" |
+| `latitude`                    | float   | Koordinat latitud lokasi stesen pemantauan.                                                        | 6.123722                         |
+| `longitude`                   | float   | Koordinat longitud lokasi stesen pemantauan.                                                       | 100.3599                         |
+| `district`                    | string  | Daerah lokasi stesen pemantauan                                                                    | "Kota Setar"                     |
+| `state`                       | string  | Negeri lokasi stesen pemantauan                                                                    | "KEDAH"                          |
+| `sub_basin`                   | string  | Lembangan sub yang berkaitan dengan stesen pemantauan.                                             | "Sg. Anak Bukit"                 |
+| `main_basin`                  | string  | Lembangan utama yang berkaitan dengan stesen pemantauan.                                           | "Sungai Kedah"                   |
+| `station_type`                | string  | Jenis stesen pemantauan, seperti hujan (RF) atau aras air (WL). Boleh mengandungi kedua-dua jenis. | "WL"                             |
+| `water_level_current`         | float   | Paras air semasa di stesen.                                                                        | 1.73                             |
+| `water_level_indicator`       | string  | Penunjuk keadaan aras air, e.g., `NORMAL`, `ALERT`, `WARNING`, `DANGER` and `ERROR`.               | "DANGER"                         |
+| `water_level_warning_level`   | float   | Aras air tahap bahaya di stesen pemantauan                                                         | 1.7                              |
+| `water_level_increment`       | float   | Peningkatan atau perubahan paras air                                                               | 0.03                             |
+| `water_level_update_datetime` | string  | Tarikh dan masa informasi aras air terakhir di kemaskini                                           | "2023-09-12 13:00:00"            |
+| `water_level_update_date`     | string  | Tarikh informasi aras air terakhir di kemaskini                                                    | "2023-09-12"                     |
+| `water_level_trend`           | string  | Trend aras air, e.g., `RISING`, `RECEDING` or `NO_CHANGE`                                          | "RISING"                         |
+| `rainfall_clean`              | float   | Data hujan bersih (ditapis), jika ada.                                                             | 1.3                              |
+| `rainfall_latest_1hr`         | float   | Pengukuran hujan terkini untuk tempoh 1 jam yang lepas, jika ada.                                  | 2.3                              |
+| `rainfall_total_today`        | float   | Jumlah hujan yang direkodkan untuk hari semasa, jika ada.                                          | 3.1                              |
+| `rainfall_indicator`          | string  | Penunjuk mengenai keadaan hujan, jika ada (e.g., `NO_RAINFALL`, `LIGHT`, `MODERATE` or `ERROR`)    |
+| `rainfall_update_datetime`    | string  | Tarikh dan masa informasi hujan terakhir di kemaskini                                              | "2023-09-12 13:00:00"            |
+| `rainfall_update_date`        | string  | Tarikh informasi hujan terakhir di kemaskini, jika ada                                             | "2023-09-12"                     |
+| `water_level_display`         | integer | Nilai paparan untuk aras air, yang mungkin berbeza daripada nilai mentah.                          | "1"                              |
+| `rainfall_display`            | integer | Nilai paparan untuk hujan, yang mungkin berbeza daripada nilai mentah.                             | "0"                              |
+| `raw_water_level`             | float   | Pengukuran aras air mentah, tanpa diproses.                                                        | 1.73                             |
+| `raw_rainfall`                | float   | Pengukuran hujan mentah, tanpa diproses.                                                           | 1.3                              |
+| `station_status`              | string  | Status stesesn pemantauan (e.g., `ON` or `OFF`).                                                   | "ON"                             |
+| `station_code`                | string  | Kod unik atau pengenalpasti stesen pemantauan                                                      | "JAMBATANTAR"                    |
+| `water_level_status`          | string  | Status pemantauan aras air (e.g., `ON`, `OFF` or `NA`)                                             | "ON"                             |
+| `rainfall_status`             | string  | Status pemantauan hujan, jika ada (e.g., `ON`, `OFF` or `NA`)                                      | "ON"                             |
