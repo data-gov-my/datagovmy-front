@@ -583,16 +583,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 >
                   {t("sample_query.link1")}
                 </At>
-                <span>{`. ${t("sample_query.desc2")}`}</span>
-                <At
-                  className="link-dim text-base underline"
-                  href={`https://developer.data.gov.my/${
-                    i18n.language == "en-GB" ? "" : "/ms"
-                  }/data-catalogue?id=${catalogueId}`}
-                  external
-                >
-                  {t("sample_query.link2")}
-                </At>
                 .
               </>
             }
