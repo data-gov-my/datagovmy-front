@@ -49,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-ktmb-explorer",
+  ["dashboard-ktmb-explorer", "dashboard-public-transportation"],
   async ({ params }) => {
     try {
       const [service, origin, destination] = params?.service

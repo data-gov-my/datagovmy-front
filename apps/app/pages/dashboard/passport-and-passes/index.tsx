@@ -8,6 +8,11 @@ import { Page } from "datagovmy-ui/types";
 import { GetStaticProps } from "next";
 import { InferGetStaticPropsType } from "next";
 
+/**
+ * Passport and Passes Dashboard
+ * @overview Status: In-development. Slated for future release.
+ */
+
 const Immigration: Page = ({
   meta,
   choropleth,
@@ -36,7 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n(
     const { data } = await get("/dashboard", { dashboard: "immigration" });
 
     return {
-      notFound: false,
+      notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
         meta: {
           id: "dashboard-passport-and-passes",
