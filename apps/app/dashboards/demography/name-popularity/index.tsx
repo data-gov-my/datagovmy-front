@@ -22,6 +22,7 @@ import { OptionType } from "datagovmy-ui/types";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
+import ComingSoon from "./coming_soon";
 
 /**
  * Name Popularity Dashboard
@@ -257,8 +258,9 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         last_updated={last_updated}
         agencyBadge={<AgencyBadge agency="jpn" />}
       />
-      <Container className="min-h-screen">
-        <Section>
+      <Container>
+        <ComingSoon />
+        {/* <Section>
           <div className="space-y-6">
             <span className="flex flex-wrap justify-center gap-1.5">
               <h4 className="leading-9">{t("section1_title1")}</h4>
@@ -502,7 +504,6 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
             </div>
           </div>
         </Section>
-
         <Section title={t("section3_title")}>
           <div className="grid grid-cols-3 gap-8">
             <div className="col-span-full lg:col-span-1">
@@ -697,7 +698,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
               )}
             </div>
           </div>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );
