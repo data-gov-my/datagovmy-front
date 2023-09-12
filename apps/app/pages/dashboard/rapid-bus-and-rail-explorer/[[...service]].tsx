@@ -49,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-rapid-bus-and-rail-explorer",
+  ["dashboard-rapid-bus-and-rail-explorer", "dashboard-public-transportation"],
   async ({ params }) => {
     try {
       const [service, origin, destination] = params?.service
