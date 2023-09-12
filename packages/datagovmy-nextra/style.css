@@ -15,24 +15,9 @@ html {
   tab-size: 4;
   font-feature-settings: normal;
   font-variation-settings: normal;
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Noto Sans,
-    Ubuntu,
-    Cantarell,
-    Helvetica Neue,
-    Arial,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   line-height: 1.5;
 }
 body {
@@ -70,14 +55,7 @@ code,
 kbd,
 samp,
 pre {
-  font-family:
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    Liberation Mono,
-    Courier New,
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New,
     monospace;
   font-size: 1em;
 }
@@ -243,47 +221,17 @@ video {
   display: none;
 }
 h1 {
-  font-family:
-    Poppins,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Noto Sans,
-    Ubuntu,
-    Cantarell,
-    Helvetica Neue,
-    Arial,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
+  font-family: Poppins, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   font-size: 2.25rem;
   font-weight: 700;
   line-height: 54px;
 }
 h2 {
-  font-family:
-    Poppins,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Noto Sans,
-    Ubuntu,
-    Cantarell,
-    Helvetica Neue,
-    Arial,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
+  font-family: Poppins, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   font-size: 1.875rem;
   font-weight: 700;
   line-height: 38px;
@@ -293,24 +241,9 @@ h2 {
   color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
 h3 {
-  font-family:
-    Poppins,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Noto Sans,
-    Ubuntu,
-    Cantarell,
-    Helvetica Neue,
-    Arial,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
+  font-family: Poppins, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 32px;
@@ -320,24 +253,9 @@ h3 {
   color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
 h4 {
-  font-family:
-    Poppins,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Noto Sans,
-    Ubuntu,
-    Cantarell,
-    Helvetica Neue,
-    Arial,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
+  font-family: Poppins, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 28px;
@@ -1489,35 +1407,13 @@ input[type="search"]::-webkit-search-results-decoration {
   text-align: center;
 }
 .font-mono {
-  font-family:
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    Liberation Mono,
-    Courier New,
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New,
     monospace;
 }
 .font-sans {
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Noto Sans,
-    Ubuntu,
-    Cantarell,
-    Helvetica Neue,
-    Arial,
-    sans-serif,
-    Apple Color Emoji,
-    Segoe UI Emoji,
-    Segoe UI Symbol,
-    Noto Color Emoji;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 .text-2xl {
   font-size: 1.5rem;
@@ -1792,19 +1688,8 @@ input[type="search"]::-webkit-search-results-decoration {
     var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
 .transition {
-  transition-property:
-    color,
-    background-color,
-    border-color,
-    text-decoration-color,
-    fill,
-    stroke,
-    opacity,
-    box-shadow,
-    transform,
-    filter,
-    -webkit-backdrop-filter,
-    backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke,
+    opacity, box-shadow, transform, filter, -webkit-backdrop-filter, backdrop-filter;
   transition-duration: 0.15s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1996,10 +1881,7 @@ input[type="search"]::-webkit-search-results-decoration {
 code {
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  font-feature-settings:
-    "rlig" 1,
-    "calt" 1,
-    "ss01" 1;
+  font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
 }
 code[data-line-numbers] > .line {
   padding-left: 0.5rem;
@@ -2149,14 +2031,10 @@ span:target + .subheading-anchor:after {
 }
 .nextra-hamburger svg path {
   opacity: 1;
-  transition:
-    transform 0.2s cubic-bezier(0.25, 1, 0.5, 1) 0.2s,
-    opacity 0.2s 0.2s;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1) 0.2s, opacity 0.2s 0.2s;
 }
 .nextra-hamburger svg.open path {
-  transition:
-    transform 0.2s cubic-bezier(0.25, 1, 0.5, 1),
-    opacity 0s 0.2s;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0s 0.2s;
 }
 .nextra-hamburger svg.open g {
   transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1) 0.2s;
@@ -2226,9 +2104,7 @@ span:target + .subheading-anchor:after {
   display: none;
 }
 article.nextra-body-typesetting-article {
-  font-feature-settings:
-    "rlig" 1,
-    "calt" 1;
+  font-feature-settings: "rlig" 1, "calt" 1;
   font-size: 17px;
 }
 article.nextra-body-typesetting-article h1 {
@@ -2349,10 +2225,7 @@ article.nextra-body-typesetting-article .subheading-anchor + a:hover {
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings:
-    "rlig" 1,
-    "calt" 1,
-    "ss01" 1;
+  font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
   -webkit-tap-highlight-color: transparent;
   font-size: 1rem;
 }
@@ -3224,9 +3097,6 @@ input[type="search"]::-webkit-search-results-decoration {
 :is(html[class~="dark"] .dark\:border-red-200\/30) {
   border-color: rgba(254, 202, 202, 0.3);
 }
-:is(html[class~="dark"] .dark\:border-transparent) {
-  border-color: transparent;
-}
 :is(html[class~="dark"] .dark\:border-washed-dark) {
   --tw-border-opacity: 1;
   border-color: rgba(39, 39, 42, var(--tw-border-opacity));
@@ -3422,25 +3292,9 @@ input[type="search"]::-webkit-search-results-decoration {
   --tw-border-opacity: 1;
   border-color: rgba(38, 38, 38, var(--tw-border-opacity));
 }
-:is(html[class~="dark"] .dark\:hover\:border-washed-dark:hover) {
-  --tw-border-opacity: 1;
-  border-color: rgba(39, 39, 42, var(--tw-border-opacity));
-}
-:is(html[class~="dark"] .dark\:hover\:border-white:hover) {
-  --tw-border-opacity: 1;
-  border-color: rgba(255, 255, 255, var(--tw-border-opacity));
-}
-:is(html[class~="dark"] .dark\:hover\:border-primary-100:hover) {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--nextra-primary-hue) 100% 94% / var(--tw-border-opacity));
-}
 :is(html[class~="dark"] .dark\:hover\:border-primary-300:hover) {
   --tw-border-opacity: 1;
   border-color: hsl(var(--nextra-primary-hue) 100% 77% / var(--tw-border-opacity));
-}
-:is(html[class~="dark"] .dark\:hover\:border-primary-200:hover) {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--nextra-primary-hue) 100% 86% / var(--tw-border-opacity));
 }
 :is(html[class~="dark"] .dark\:hover\:bg-gray-100\/5:hover) {
   background-color: rgba(243, 244, 246, 0.05);
@@ -3505,10 +3359,6 @@ input[type="search"]::-webkit-search-results-decoration {
 :is(html[class~="dark"] .focus\:dark\:text-gray-100):focus {
   --tw-text-opacity: 1;
   color: rgba(243, 244, 246, var(--tw-text-opacity));
-}
-:is(html[class~="dark"] .dark\:active\:border-outlineHover-dark:active) {
-  --tw-border-opacity: 1;
-  border-color: rgba(63, 63, 70, var(--tw-border-opacity));
 }
 @media (prefers-contrast: more) {
   :is(html[class~="dark"] .contrast-more\:dark\:border-current) {

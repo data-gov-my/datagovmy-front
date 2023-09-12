@@ -1,13 +1,13 @@
-## Sebelum Anda Memulakan
+## Sebelum Bermula
 
-API Terbuka ini fleksibel dan boleh digunakan dengan atau tanpa token API. Bagi memastikan penggunaan yang bertanggungjawab dan mengelakkan penyalahgunaan, terdapat had pada bilangan permintaan yang pengguna boleh buat.
+OpenAPI ini fleksibel dan boleh digunakan dengan atau tanpa token API. Bagi memastikan penggunaan yang bertanggungjawab dan mengelakkan penyalahgunaan, terdapat had pada bilangan permintaan yang pengguna boleh buat.
 
 Bagi pengguna baru, kami mencadangkan untuk memulakan tanpa pengesahan kerana ia menyederhanakan proses penubuhan awal.
 Walau bagaimanapun, jika anda mendapati diri anda memerlukan lebih banyak fungsi melebihi had akses tanpa pengesahan, anda mempunyai pilihan untuk [meminta token API](authentication).
 
 ## Menghantar Permintaan
 
-Untuk mengakses API Terbuka, sentiasa gunakan URL asas https://api.data.gov.my untuk menghantar permintaan GET HTTP. Apabila membuat permintaan API, tambahkan URL asas ini ke hujung URL API tertentu yang anda ingin akses. Berikut adalah contoh permintaan yang mengembalikan maksimum 3 rekod harga petrol, menggunakan [API Katalog Data](static-api/data-catalogue):
+Untuk mengakses OpenAPI, sentiasa gunakan URL asas https://api.data.gov.my untuk menghantar permintaan GET HTTP. Apabila membuat permintaan API, tambahkan URL asas ini ke hujung URL API tertentu yang anda ingin akses. Berikut adalah contoh permintaan yang mengembalikan maksimum 3 rekod harga petrol, menggunakan [API Katalog Data](static-api/data-catalogue):
 
 ```http
 GET https://api.data.gov.my/data-catalogue?id=fuelprice&limit=3
@@ -15,14 +15,14 @@ GET https://api.data.gov.my/data-catalogue?id=fuelprice&limit=3
 
 Dalam contoh ini:
 
-- URL asas ialah `https://api.data.gov.my`.
-- Titik akhir API tertentu adalah `/data-catalogue`.
+- URL asas adalah `https://api.data.gov.my`.
+- 'Endpoint' API adalah `/data-catalogue`.
 - Parameter pertanyaan yang digunakan adalah `id` dan `limit`.
 
 ## Koleksi Postman
 
-Kami mencadangkan anda memulakan penjelajahan API Terbuka dengan berinteraksi dengan koleksi Postman kami.
-Koleksi ini menyediakan persekitaran interaktif di mana anda boleh menghantar permintaan dan menerima respons secara waktu sebenar.
-Ia menawarkan contoh menyeluruh dari semua titik akhir yang tersedia, membolehkan anda menguji, menggandakan permintaan, dan menyesuaikannya untuk memenuhi keperluan anda yang khusus.
+Kami mencadangkan anda mulakan penerokaan OpenAPI ini dengan berinteraksi dengan koleksi Postman kami.
+Koleksi ini menyediakan persekitaran interaktif di mana anda boleh menghantar permintaan dan menerima respons pada masa nyata.
+Ia menawarkan contoh-contoh yang menyeluruh dari semua 'endpoint' yang tersedia, membolehkan anda menguji permintaan, dan menyesuaikannya untuk memenuhi keperluan anda.
 
 [![Jalankan di Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/27417094-46653022-3966-4fa7-b2fa-45130738d101?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D27417094-46653022-3966-4fa7-b2fa-45130738d101%26entityType%3Dcollection%26workspaceId%3Df874513b-de9a-4370-8063-8a1a6bcf994d)

@@ -1,16 +1,16 @@
 {
   "index": "Pengenalan",
   "changelog": "Log Perubahan",
-  "quickstart": "Panduan Cepat",
-  "rate-limit": "Had Kadar",
+  "quickstart": "Panduan Permulaan",
+  "rate-limit": "Had Kadar Penggunaan",
   "authentication": "Pengesahan",
   "request-query": "Pertanyaan Permintaan",
   "response-format": "Format Respons",
-  "static-api": "API Statis",
-  "realtime-api": "API Real Masa",
+  "static-api": "API Statik",
+  "realtime-api": "API Masa Nyata",
   "main-site": {
     "title": "Laman Utama",
-    "type": "halaman",
+    "type": "page",
     "href": "https://data.gov.my",
     "newWindow": true
   },

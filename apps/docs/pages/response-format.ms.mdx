@@ -1,19 +1,19 @@
 ## Kod Respons
 
-Selepas menghantar permintaan API, anda akan menerima respons dengan kod dan tajuk-tajuk berikut, yang menunjukkan status permintaan anda:
+Selepas menghantar permintaan API, anda akan menerima respons dengan kod dan elemen-elemen berikut, yang menunjukkan status permintaan anda:
 
-| Kod |          Status           | Penerangan                                                                                                                                                                                          |
-| :-: | :-----------------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 200 |            OK             | Permintaan Berjaya.                                                                                                                                                                                 |
-| 400 |     Permintaan Buruk      | Permintaan tidak sah. Semak mesej ralat untuk maklumat lanjut.                                                                                                                                      |
-| 404 |       Tidak Ditemui       | Sumber yang diminta tidak wujud.                                                                                                                                                                    |
-| 429 | Terlalu Banyak Permintaan | Pelayan anda sedang dikenakan had kadar. Mohon token API di [Pengesahan](authentication) untuk meningkatkan had penggunaan.                                                                         |
-| 500 |       Ralat Pelayan       | Ada yang tidak kena dengan OpenAPI! Sila [tinggalkan isu GitHub](https://github.com/data-gov-my/datagovmy-openapi/issues/new?title=500%20Internal%20Server%20Error) jika anda menghadapi ralat ini. |
+| Kod |          Status           | Penerangan                                                                                                                                                                                                  |
+| :-: | :-----------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 200 |            OK             | Permintaan Berjaya.                                                                                                                                                                                         |
+| 400 |     Permintaan Buruk      | Permintaan tidak sah. Semak mesej ralat untuk maklumat lanjut.                                                                                                                                              |
+| 404 |       Tidak Ditemui       | Sumber yang diminta tidak wujud.                                                                                                                                                                            |
+| 429 | Terlalu Banyak Permintaan | Kadar penggunaan anda telah dihadkan. Mohon token API di [Pengesahan](authentication) untuk meningkatkan had penggunaan.                                                                                    |
+| 500 |       Ralat Pelayan       | Ada sesuatu yang tidak kena dengan OpenAPI! Sila [tinggalkan isu GitHub](https://github.com/data-gov-my/datagovmy-openapi/issues/new?title=500%20Internal%20Server%20Error) jika anda menghadapi ralat ini. |
 
 ### Respons Sah
 
-Apabila permintaan anda berjaya, anda akan menerima respons `200 OK`. Secara lalai, API mengembalikan senarai rekod.
-Jika anda memerlukan lebih banyak butiran, anda boleh menggunakan parameter `meta`:
+Anda akan menerima respons `200 OK` jika permintaan anda berjaya. API akan mengembalikan senarai rekod secara lalai.
+Anda juga boleh menggunakan parameter `meta` untuk lebih mendapatkan lebih banyak butiran:
 
 ```http
 ?meta=true

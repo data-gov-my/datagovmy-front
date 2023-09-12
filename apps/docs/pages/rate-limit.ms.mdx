@@ -1,10 +1,10 @@
-## Kadar Penghadan
+## Had Kadar Penggunaan
 
-Untuk memastikan penggunaan yang adil dan prestasi yang konsisten, kami menguatkuasakan had kadar pada bilangan permintaan yang boleh dibuat dalam tempoh masa tertentu. Ini juga memastikan sebanyak mungkin pengguna API mempunyai peluang untuk menggunakan API tanpa sebarang kelambatan.
+Untuk memastikan penggunaan yang adil dan prestasi yang konsisten, kami melaksanakan had kadar penggunaan pada bilangan permintaan yang boleh dibuat dalam suatu tempoh masa. Ia bagi memastikan peluang penggunaan API kepada semua pengguna dan mengelakkan sebarang isu prestasi.
 
-Jika had tersebut diatasi, permintaan berikutnya akan gagal, dan anda akan menerima ralat `429 Terlalu Banyak Permintaan` dalam respons anda.
+Jika had penggunaan anda melebihi yang ditetapkan, permintaan berikutnya akan gagal, dan ralat `429 Terlalu Banyak Permintaan` akan dihantar dalam respons anda.
 
-Jadual berikut menghuraikan had kadar untuk API yang berbeza:
+Jadual berikut menghuraikan had kadar penggunaan untuk API yang disediakan:
 
 | API           | Had Kadar tanpa Token     | Had Kadar dengan Token     |
 | ------------- | ------------------------- | -------------------------- |
@@ -17,4 +17,4 @@ Jadual berikut menghuraikan had kadar untuk API yang berbeza:
 
 <span className="text-sm italic">* API yang belum dikeluarkan lagi ditandai dengan TBD.</span>
 
-Sila ambil perhatian bahawa had kadar berbeza berdasarkan sama ada anda menggunakan token API atau tidak. Jika anda menjangkakan akan melebihi had kadar tanpa token API, kami mencadangkan anda [meminta token API](/authentication).
+Sila ambil perhatian bahawa had kadar penggunaan adalah berbeza bagi pengguna yang mempunyai token pengesahan. Jika anda menjangkakan penggunaan melebihi had kadar tanpa token, kami mencadangkan anda [meminta token API](/authentication).
