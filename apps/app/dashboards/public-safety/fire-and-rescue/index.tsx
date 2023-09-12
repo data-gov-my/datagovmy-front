@@ -139,22 +139,22 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                       },
                     ],
                   }}
-                  stats={[
-                    {
-                      title: t("common:time.daily"),
-                      value: `+${numFormat(
-                        timeseries_callout.data.data[currentState].overall.daily.value,
-                        "standard"
-                      )}`,
-                    },
-                    {
-                      title: t("total"),
-                      value: numFormat(
-                        timeseries_callout.data.data[currentState].overall.cumul.value,
-                        "standard"
-                      ),
-                    },
-                  ]}
+                  // stats={[
+                  //   {
+                  //     title: t("common:time.daily"),
+                  //     value: `+${numFormat(
+                  //       timeseries_callout.data.data[currentState].overall.daily.value,
+                  //       "standard"
+                  //     )}`,
+                  //   },
+                  //   {
+                  //     title: t("total"),
+                  //     value: numFormat(
+                  //       timeseries_callout.data.data[currentState].overall.cumul.value,
+                  //       "standard"
+                  //     ),
+                  //   },
+                  // ]}
                 />
                 <Slider
                   type="range"
@@ -185,22 +185,22 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                           },
                         ],
                       }}
-                      stats={[
-                        {
-                          title: t("common:time.daily"),
-                          value: `+${numFormat(
-                            timeseries_callout.data.data[currentState][key].daily.value,
-                            "standard"
-                          )}`,
-                        },
-                        {
-                          title: t("total"),
-                          value: numFormat(
-                            timeseries_callout.data.data[currentState][key].cumul.value,
-                            "standard"
-                          ),
-                        },
-                      ]}
+                      // stats={[
+                      //   {
+                      //     title: t("common:time.daily"),
+                      //     value: `+${numFormat(
+                      //       timeseries_callout.data.data[currentState][key].daily.value,
+                      //       "standard"
+                      //     )}`,
+                      //   },
+                      //   {
+                      //     title: t("total"),
+                      //     value: numFormat(
+                      //       timeseries_callout.data.data[currentState][key].cumul.value,
+                      //       "standard"
+                      //     ),
+                      //   },
+                      // ]}
                     />
                   ))}
                 </div>
