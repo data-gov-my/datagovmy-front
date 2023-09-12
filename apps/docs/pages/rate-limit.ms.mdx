@@ -1,12 +1,16 @@
-## Had Kadar
+## Had Kadar Throttle
 
-Untuk memastikan penggunaan yang adil dan menjaga prestasi sistem, OpenAPI memperkenalkan had kadar pada bilangan permintaan yang boleh dibuat dalam jangka masa tertentu. Jika had tersebut dilanggar, permintaan seterusnya akan gagal, dan anda akan menerima ralat `429 Too Many Requests` dalam respons anda.
+Bagi memastikan penggunaan yang adil dan prestasi yang konsisten, kami mengenakan had kadar pada bilangan permintaan yang boleh dibuat dalam jangka masa tertentu. Ini juga memastikan sebanyak mungkin pengguna API mempunyai peluang untuk menggunakan API tanpa perlahan.
 
-Jadual berikut menghuraikan had kadar untuk API yang berbeza dalam OpenAPI:
+Jika had ini dilanggar, permintaan seterusnya akan gagal dan anda akan menerima ralat `429 Too Many Requests` dalam respons anda.
 
-| API            | Tanpa Token               | Dengan Token           |
-| -------------- | ------------------------- | ---------------------- |
-| Data Katalog   | 4 permintaan seminit      | 10 permintaan seminit  |
-| GTFS-Static    | 4 permintaan seminit      | 10 permintaan seminit  |
+Jadual berikut menghuraikan had kadar untuk API yang berbeza:
 
-Sila ambil perhatian bahawa had kadar berbeza bergantung kepada sama ada anda menggunakan token API atau tidak. Jika anda merancang untuk melampaui had kadar tanpa menggunakan token API, kami mengesyorkan agar anda [meminta token API](/overview/authentication).
+| API           | Had Kadar tanpa Token     | Had Kadar dengan Token     |
+| ------------- | ------------------------- | -------------------------- |
+| Katalog Data  | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| OpenDOSM      | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| Amaran Banjir | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| Cuaca         | 4 permintaan setiap minit | 10 permintaan setiap minit |
+
+Sila ambil perhatian bahawa had kadar berbeza berdasarkan sama ada anda menggunakan token API atau tidak. Jika anda merancang untuk melebihi had kadar tanpa token API, kami mencadangkan [meminta token API](/authentication).
