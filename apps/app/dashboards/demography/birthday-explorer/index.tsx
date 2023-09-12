@@ -128,7 +128,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
   };
 
-  const validateDate = async (): Promise<{ birthday: string; state: string }> =>
+  const validateDate = async (): Promise<{ birthday: string }> =>
     new Promise((resolve, reject) => {
       const year = Number(data.p_birthday.substring(0, 4));
       if (!data.p_birthday && data.p_birthday.length < 10) {
@@ -146,7 +146,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         setData("state", data.p_state);
         setData("start", data.p_birthday.substring(0, 4));
         setData("end", data.p_birthday.substring(0, 4));
-        resolve({ birthday: data.p_birthday, state: data.p_state });
+        resolve({ birthday: data.p_birthday });
       }
     });
 
@@ -182,9 +182,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   onKeyDown={e => {
                     if (e.key === "Enter") {
                       validateDate()
-                        .then(({ birthday, state }) => {
+                        .then(({ birthday }) => {
                           setData("loading", true);
-                          fetchData(yieldParams(birthday, state));
+                          setData("start", birthday.substring(0, 4));
+                          setData("end", birthday.substring(0, 4));
                         })
                         .catch(e => console.error(e));
                     }
@@ -197,10 +198,14 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 <Button
                   className="btn-primary my-6 active:shadow-none"
                   onClick={() => {
+                    // fetchData(yieldParams(data.birthday, data.state));
+
                     validateDate()
-                      .then(({ birthday, state }) => {
+                      .then(({ birthday }) => {
                         setData("loading", true);
-                        fetchData(yieldParams(birthday, state));
+                        setData("start", birthday.substring(0, 4));
+                        setData("end", birthday.substring(0, 4));
+                        // fetchData(yieldParams(birthday, state));
                       })
                       .catch(e => console.error(e));
                   }}
@@ -336,7 +341,16 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 options={filterPeriods}
                 placeholder={t("period")}
                 selected={filterPeriods.find(period => period.value === data.groupBy)}
-                onChange={({ value }) => setData("groupBy", value)}
+                onChange={({ value }) => {
+                  setData("groupBy", value);
+                  validateDate()
+                    .then(({ birthday }) => {
+                      setData("loading", true);
+                      setData("start", birthday.substring(0, 4));
+                      setData("end", birthday.substring(0, 4));
+                    })
+                    .catch(e => console.error(e));
+                }}
               />
               <Daterange
                 startYear={startYear}
@@ -349,8 +363,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   if (end) setData("end", end);
                 }}
                 onReset={() => {
-                  setData("start", "1923");
-                  setData("end", "2017");
+                  setData("start", startYear);
+                  setData("end", endYear);
                 }}
               />
             </div>
