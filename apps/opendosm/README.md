@@ -1,4 +1,4 @@
-# aksara-front
+# OpenDOSM
 
 ![opendosm-github.png](./public/static/images/opendosm-github.png?raw=true)
 
@@ -11,25 +11,15 @@
 - [Installation](#installation)
   - [Environment Variables](#environment-variables)
 - [Commands to Know](#commands-to-know)
-- [Development Workflow](#development-workflow)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
 
-We recommend to use `yarn` to manage the project's dependencies.
+This application is managed in a monorepo by Turbo. You can go to the root [README](../../README.md#installation) for installation of this workspace.
 
-```bash
-git clone git@github.com:dosm-malaysia/aksara-front.git
-
-# Yarn
-yarn install
-yarn prepare
-
-# NPM
-npm install
-npx prepare
-
+Then ensure to add the environment variable for this workspace by doing:
+```
 cp .env.example .env
 ```
 
@@ -40,6 +30,8 @@ The following are the environment variables (.env) used for OpenDOSM. Please tak
 | Variables                       | Required | Default                             | Description                                     |
 | ------------------------------- | -------- | ----------------------------------- | ----------------------------------------------- |
 | APP_URL                         | ⬜️      | http://localhost:3000 (development) | App domain. Optional                            |
+| REVALIDATE_TOKEN                | ⬜️        |                                     | BE token to revalidate staitc site. Optional    |
+| EDGE_CONFIG                     | ⬜️        |                                     | Add to use rolling token. Optional             |
 | NEXT_PUBLIC_APP_URL             | ⬜️      | $APP_URL                            | App domain, made public. Optional               |
 | NEXT_PUBLIC_AUTHORIZATION_TOKEN | ✅       | _Create own_                        | Authorization token for AKSARA BE communication |
 | NEXT_PUBLIC_API_URL             | ✅       | http://localhost:8000 (development) | AKSARA BE base URL                              |
@@ -56,25 +48,12 @@ The following are the environment variables (.env) used for OpenDOSM. Please tak
 
 ```bash
 # Start development server
-yarn dev
+yarn dev --filter=opendosm
 
 # Build production app
-yarn build
-
-# Start production server
-yarn start
-
-# Setup husky for githook
-yarn prepare
+yarn build --filter=opendosm
 ```
 
-## Development Workflow
-
-1. Branch out from `staging` & give the new branch a descriptive name eg: `feat/covid`, `fix/dropdown-bug` etc.
-2. After you're done developing, `git fetch && git merge origin/staging` to synchronize any new changes & resolve conflicts, if there is any.
-3. Push the branch to remote and create a PR to `staging`. Briefly describe the changes introduced in the PR.
-4. Assign a core developer to review and wait for it to be approved.
-5. That's all. Happy developing!
 
 ## Contributing
 

@@ -58,10 +58,6 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
       data: analytics.today,
     },
     {
-      name: t("common:home.section_2.past_month"),
-      data: analytics.last_month,
-    },
-    {
       name: t("common:home.section_2.all_time"),
       data: analytics.all_time,
     },

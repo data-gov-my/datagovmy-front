@@ -24,15 +24,16 @@ import { DashboardPeriod, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
+import RapidBusRailComingSoon from "@dashboards/transportation/rapid-bus-and-rail-explorer/coming_soon";
 
 /**
- * Prasarana Explorer
+ * Rapid Bus and Rail Explorer
  * @overview Status: Live
  */
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-interface PrasaranaExplorerProps {
+interface RapidBusRailExplorerProps {
   A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
   A_to_B_callout: Record<DashboardPeriod, number>;
   B_to_A?: Record<DashboardPeriod, Record<"x" | "passengers", number[]>>;
@@ -42,7 +43,7 @@ interface PrasaranaExplorerProps {
   params: any;
 }
 
-const PrasaranaExplorer: FunctionComponent<PrasaranaExplorerProps> = ({
+const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
   A_to_B,
   A_to_B_callout,
   B_to_A,
@@ -51,7 +52,7 @@ const PrasaranaExplorer: FunctionComponent<PrasaranaExplorerProps> = ({
   last_updated,
   params,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-prasarana-explorer", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-rapid-bus-and-rail-explorer", "common"]);
   const { push } = useRouter();
   const { data, setData } = useData({
     loading: false,
@@ -136,8 +137,10 @@ const PrasaranaExplorer: FunctionComponent<PrasaranaExplorerProps> = ({
         last_updated={last_updated}
       />
 
-      <Container className="min-h-fit">
-        <Section
+      <Container>
+        <RapidBusRailComingSoon />
+
+        {/* <Section
           title={t("title")}
           date={A_to_B.data_as_of}
           description={
@@ -405,10 +408,10 @@ const PrasaranaExplorer: FunctionComponent<PrasaranaExplorerProps> = ({
               </>
             )}
           </SliderProvider>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );
 };
 
-export default PrasaranaExplorer;
+export default RapidBusRailExplorer;

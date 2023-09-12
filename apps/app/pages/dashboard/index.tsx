@@ -51,7 +51,6 @@ export const getServerSideProps: GetServerSideProps = withi18n("dashboards", asy
       analytics: {
         data_as_of: data.dashboards_top.data_as_of,
         today: data.dashboards_top.data.today,
-        last_month: data.dashboards_top.data.last_month,
         all_time: data.dashboards_top.data.all_time,
       },
       dashboards: data.dashboards_all.data,

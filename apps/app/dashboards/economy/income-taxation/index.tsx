@@ -4,18 +4,24 @@ import { AgencyBadge, Hero, Container } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { LHDNIcon } from "datagovmy-ui/icons/agency";
 import { FunctionComponent } from "react";
+import Taxpayers, { TaxpayersProps } from "./taxpayers";
 
 /**
  * Income Tax Dashboard
  * @overview Status: Live
  */
 
-interface IncomeTaxationProps {
+interface IncomeTaxationProps extends TaxpayersProps {
   last_updated: string;
   stacked_bar: any;
 }
 
-const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ last_updated, stacked_bar }) => {
+const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({
+  last_updated,
+  stacked_bar,
+  timeseries,
+  timeseries_callout,
+}) => {
   const { t } = useTranslation("dashboard-income-taxation");
 
   return (
@@ -32,6 +38,9 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ last_updated, 
       <Container>
         {/* How do I compare to other taxpayers in Malaysia? */}
         <IncomeRank />
+
+        {/* How many people pay tax each year? */}
+        <Taxpayers timeseries={timeseries} timeseries_callout={timeseries_callout} />
 
         {/* What proportion of income taxes come from individuals? */}
         <IncomeOverview stacked_bar={stacked_bar} />

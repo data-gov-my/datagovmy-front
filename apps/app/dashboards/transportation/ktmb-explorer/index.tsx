@@ -24,6 +24,7 @@ import { DashboardPeriod, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
+import KTMBExplorerComingSoon from "./coming_soon";
 
 /**
  * KTMB Explorer
@@ -136,8 +137,10 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         last_updated={last_updated}
       />
 
-      <Container className="min-h-fit">
-        <Section
+      <Container>
+        <KTMBExplorerComingSoon />
+
+        {/* <Section
           title={t("title")}
           date={A_to_B.data_as_of}
           description={
@@ -405,7 +408,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
               </>
             )}
           </SliderProvider>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );

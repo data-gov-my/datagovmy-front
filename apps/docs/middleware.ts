@@ -14,18 +14,7 @@ export const config = {
 export const middleware = async (request: NextRequest) => {
   const token = await get<string>("ROLLING_TOKEN");
 
-  if (process.env.APP_ENV === "development") return _locale(request, token || "missing token");
-  const basicAuth = request.headers.get("authorization");
-  if (basicAuth) {
-    const authValue = basicAuth.split(" ")[1];
-    const [user, password] = atob(authValue).split(":");
-    if (user === "admin" && password === process.env.AUTH_TOKEN)
-      return _locale(request, token || "missing token");
-  }
-  return new NextResponse("Auth required", {
-    status: 401,
-    headers: { "WWW-Authenticate": `Basic realm="Secure Area"` },
-  });
+  return _locale(request, token || "missing token");
 };
 
 // Bug: withLocales (nextra) does not seem work. Cannot set cookies. Modified from source code

@@ -12,6 +12,8 @@ const IncomeTaxation: Page = ({
   last_updated,
   meta,
   stacked_bar,
+  timeseries,
+  timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
 
@@ -19,7 +21,12 @@ const IncomeTaxation: Page = ({
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WindowProvider>
-        <IncomeTaxationDashboard last_updated={last_updated} stacked_bar={stacked_bar} />
+        <IncomeTaxationDashboard
+          last_updated={last_updated}
+          stacked_bar={stacked_bar}
+          timeseries={timeseries}
+          timeseries_callout={timeseries_callout}
+        />
       </WindowProvider>
     </AnalyticsProvider>
   );
@@ -38,6 +45,8 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxatio
       },
       last_updated: data.data_last_updated,
       stacked_bar: data.stacked_bar,
+      timeseries: data.timeseries,
+      timeseries_callout: data.timeseries_callout,
     },
   };
 });

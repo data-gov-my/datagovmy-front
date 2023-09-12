@@ -14,26 +14,7 @@ export async function middleware(request: NextRequest) {
   const purpose = headers.get("purpose");
   if (purpose && purpose.match(/prefetch/i)) headers.delete("x-middleware-prefetch"); // empty json bugfix (in the browser headers still show, but here it is gone)
 
-  /**
-   * @todo Move the code inside production/staging land after finish development
-   */
   const token = await get<string>("ROLLING_TOKEN");
-
-  // If development, proceed as usual
-  if (process.env.NEXT_PUBLIC_APP_ENV === "development") {
-    response = NextResponse.next({ request: { headers } });
-    response.cookies.set("rolling_token", token || "yikes", { path: "/", maxAge: 60 * 60 });
-    return response;
-  }
-
-  // Else, production/staging land
-  const auth_cookie = request.cookies.get("auth");
-  if (!auth_cookie || auth_cookie.value !== process.env.AUTH_TOKEN) {
-    request.nextUrl.pathname = "/login";
-    response = NextResponse.rewrite(request.nextUrl, { headers });
-    response.cookies.set("rolling_token", token || "yikes", { path: "/", maxAge: 60 * 60 });
-    return response;
-  }
 
   // Request authenticated
   response = NextResponse.next({ request: { headers } });

@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
       const [{ data: dropdown }, { data }] = await Promise.all([
         get("/dropdown", { dashboard: "immigration_country" }),
-        get("/dashboard", { dashboard: "immigration_country", country }),
+        get("/dashboard", { dashboard: "immigration_temp", country }),
       ]).catch(e => {
         console.error(e);
         throw new Error("Invalid country. Message: " + e);
@@ -72,8 +72,9 @@ export const getStaticProps: GetStaticProps = withi18n(
           countries: dropdown,
           timeseries: data.timeseries_country,
           timeseries_callout: data.timeseries_country_callout,
-          demography: data.timeseries_demography,
-          demography_callout: data.timeseries_demography_callout,
+          // TODO: to add back later when switch
+          // demography: data.timeseries_demography,
+          // demography_callout: data.timeseries_demography_callout,
         },
       };
     } catch (e: any) {

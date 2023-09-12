@@ -209,7 +209,7 @@ export const SHORT_PERIOD_FORMAT = {
   MONTHLY: "MMM yyyy",
   QUARTERLY: "qQ yyyy",
   YEARLY: "yyyy",
-  INTRADAY: "dd MMM yyyy",
+  INTRADAY: "dd MMM yyyy HH:mm",
   INFREQUENT: "dd MMM yyyy",
   AS_REQUIRED: "dd MMM yyyy",
 } as const;

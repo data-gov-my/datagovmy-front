@@ -49,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-ktmb-explorer",
+  ["dashboard-ktmb-explorer", "dashboard-public-transportation"],
   async ({ params }) => {
     try {
       const [service, origin, destination] = params?.service
@@ -94,6 +94,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           last_updated: A_to_B.data_last_updated,
           params: params?.service ? { service, origin, destination } : {},
         },
+        // revalidate: 60 * 60 * 24, // 1 day (in seconds)
       };
     } catch (e: any) {
       console.error(e.message);

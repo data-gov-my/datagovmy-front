@@ -70,7 +70,7 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
     "expenditure_mean",
     "gini",
     "poverty",
-    "poverty_relative",
+    // "poverty_relative",
     // "access_water",
     // "access_electricity",
   ].map((key: string) => ({

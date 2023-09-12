@@ -1,4 +1,4 @@
-import PrasaranaExplorerDashboard from "@dashboards/transportation/prasarana-explorer";
+import RapidBusRailExplorerDashboard from "@dashboards/transportation/rapid-bus-and-rail-explorer";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
@@ -7,7 +7,7 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
-const PrasaranaExplorer: Page = ({
+const RapidBusRailExplorer: Page = ({
   meta,
   A_to_B,
   A_to_B_callout,
@@ -17,12 +17,12 @@ const PrasaranaExplorer: Page = ({
   last_updated,
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboard-prasarana-explorer", "common"]);
+  const { t } = useTranslation(["dashboard-rapid-bus-and-rail-explorer", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <PrasaranaExplorerDashboard
+      <RapidBusRailExplorerDashboard
         A_to_B={A_to_B}
         A_to_B_callout={A_to_B_callout}
         B_to_A={B_to_A}
@@ -49,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-prasarana-explorer",
+  ["dashboard-rapid-bus-and-rail-explorer", "dashboard-public-transportation"],
   async ({ params }) => {
     try {
       const [service, origin, destination] = params?.service
@@ -81,7 +81,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         notFound: false,
         props: {
           meta: {
-            id: "dashboard-prasarana-explorer",
+            id: "dashboard-rapid-bus-and-rail-explorer",
             type: "dashboard",
             category: "transportation",
             agency: "MoT",
@@ -102,4 +102,4 @@ export const getStaticProps: GetStaticProps = withi18n(
   }
 );
 
-export default PrasaranaExplorer;
+export default RapidBusRailExplorer;

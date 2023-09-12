@@ -26,7 +26,7 @@ const OpenDOSMFooter: FunctionComponent = () => {
         <p className="font-bold">{t("nav.open_data")}</p>
 
         <At className="link-dim" external href="https://data.gov.my/">
-          {t("common:nav.open_data_portal")}
+          data.gov.my
         </At>
       </div>
     </Footer>
