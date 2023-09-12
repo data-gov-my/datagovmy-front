@@ -1,180 +1,298 @@
-import { Fragment, FunctionComponent, ReactNode, useState } from "react";
-import ImageWithFallback from "../ImageWithFallback";
-import { OptionType } from "../types";
-import { Combobox, Transition } from "@headlessui/react";
-import { CheckCircleIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import ComboOption, { ComboOptionProp, ComboOptionProps } from "./option";
+import { Button, ImageWithFallback, Spinner } from "..";
 import { useTranslation } from "../../hooks/useTranslation";
 import { clx } from "../../lib/helpers";
-import { matchSorter } from "match-sorter";
-import Spinner from "../Spinner";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import {
+  autoUpdate,
+  FloatingFocusManager,
+  FloatingPortal,
+  offset,
+  size,
+  useDismiss,
+  useFloating,
+  useInteractions,
+  useListNavigation,
+  useRole,
+} from "@floating-ui/react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { body } from "../../configs/font";
+import { matchSorter, MatchSorterOptions } from "match-sorter";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
-type ComboBoxProps = {
-  options: OptionType[];
-  selected?: OptionType | null;
-  onChange: (option?: OptionType) => void;
+type ComboBoxProps<T> = Omit<
+  ComboOptionProps<T>,
+  "option" | "style" | "isSelected" | "active" | "index" | "setSize" | "total"
+> & {
+  options: ComboOptionProp<T>[];
+  selected?: ComboOptionProp<T> | null;
+  onChange: (option?: ComboOptionProp<T>) => void;
   onSearch?: (query: string) => void;
   placeholder?: string;
-  enableFlag?: boolean;
-  imageSource?: string;
-  fallback?: ReactNode;
-  enableType?: boolean;
   loading?: boolean;
+  config?: MatchSorterOptions<ComboOptionProp<T>>;
 };
 
-const ComboBox: FunctionComponent<ComboBoxProps> = ({
+const ComboBox = <T extends unknown>({
   options,
   selected,
   onChange,
   onSearch,
+  format,
   placeholder,
-  enableFlag = false,
-  imageSource = "/static/images/parties/",
-  fallback,
-  enableType = false,
+  image,
   loading = false,
-}) => {
+  config = { keys: ["label"] },
+}: ComboBoxProps<T>) => {
   const { t } = useTranslation();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState<string>(selected ? selected.label : "");
 
-  const filteredOptions =
-    query === ""
-      ? options.slice(0, 50)
-      : matchSorter(options, query.toLowerCase().replace(/\s+/g, ""), { keys: ["label"] }).slice(
-          0,
-          50
-        );
+  useEffect(() => {
+    setQuery(selected ? selected.label : "");
+  }, [selected]);
+
+  const filteredOptions = useMemo<ComboOptionProp<T>[]>(
+    () => matchSorter(options, query, config),
+    [options, query, config]
+  );
+
+  const ITEMS_COUNT = filteredOptions.length;
+  const ITEM_HEIGHT = 36;
+  const overflowPadding = 10;
+
+  const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  // The initial max-height is what `react-virtual` uses to know how many
+  // items to render. This needs to be a smaller value so it doesn't try
+  // to render every single item on mount.
+  const [maxHeight, setMaxHeight] = useState(240);
+  const listRef = useRef<Array<HTMLElement | null>>([]);
+
+  const { refs, floatingStyles, context } = useFloating<HTMLInputElement>({
+    placement: "bottom-start",
+    whileElementsMounted: autoUpdate,
+    open,
+    onOpenChange: setOpen,
+    middleware: [
+      size({
+        apply({ rects, elements }) {
+          Object.assign(elements.floating.style, {
+            width: `${rects.reference.width}px`,
+          });
+        },
+        padding: overflowPadding,
+      }),
+      offset(4),
+    ],
+  });
+
+  const rowVirtualizer = useVirtualizer({
+    count: ITEMS_COUNT,
+    getScrollElement: () => refs.floating.current,
+    estimateSize: () => ITEM_HEIGHT,
+    overscan: 15,
+  });
+
+  const role = useRole(context, { role: "listbox" });
+  const dismiss = useDismiss(context);
+  const listNav = useListNavigation(context, {
+    listRef,
+    activeIndex,
+    selectedIndex,
+    onNavigate: setActiveIndex,
+    virtual: true,
+    loop: true,
+  });
+
+  const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions([
+    role,
+    dismiss,
+    listNav,
+  ]);
+
+  const handleSelect = () => {
+    if (activeIndex !== null) {
+      onChange(filteredOptions[activeIndex]);
+      setQuery(filteredOptions[activeIndex].label);
+      setActiveIndex(null);
+      setOpen(false);
+    } else {
+      setSelectedIndex(0);
+    }
+  };
 
   return (
-    <Combobox value={selected} onChange={onChange}>
-      <div className="relative w-full overflow-visible rounded-full">
-        <div
-          className="border-outline hover:border-outlineHover dark:border-outlineHover-dark relative w-full select-none 
-        overflow-hidden rounded-full border bg-white text-left text-base shadow-sm focus:outline-none focus-visible:ring-0 dark:bg-black"
-        >
-          <Combobox.Button as={"div"} className="w-full">
-            <Combobox.Input
-              placeholder={placeholder}
-              className="w-full border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
-              displayValue={(option: OptionType) => option?.label}
-              onChange={event => {
-                setQuery(event.target.value);
-                if (onSearch) onSearch(event.target.value);
-              }}
-              spellCheck={false}
-            />
+    <div
+      ref={refs.setReference}
+      onClick={() => setOpen(!open)}
+      className="border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark shadow-button relative flex w-full select-none overflow-hidden rounded-full border focus:outline-none focus-visible:ring-0"
+    >
+      <span className="ml-4 flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
+        {image && selected ? (
+          image(selected.value)
+        ) : (
+          <MagnifyingGlassIcon className="dark:text-dim h-5 w-5 text-black" />
+        )}
+      </span>
+      <input
+        className={clx(
+          "w-full truncate border-none bg-white py-3 pl-2 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
+        )}
+        spellCheck={false}
+        {...getReferenceProps({
+          "onChange": (event: React.ChangeEvent<HTMLInputElement>) => {
+            const value = event.target.value;
+            setQuery(value);
+            if (onSearch) onSearch(value);
+            if (rowVirtualizer.getVirtualItems().length !== 0) rowVirtualizer.scrollToIndex(0);
 
-            <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center pl-1.5">
-              <MagnifyingGlassIcon
-                className="dark:text-dim h-5 w-5 text-black"
-                aria-hidden="true"
-              />
-            </span>
-            {query.length > 0 && (
-              <button
-                className="hover:bg-washed dark:hover:bg-washed-dark group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
-                onClick={() => onChange(undefined)}
-                aria-hidden="true"
-              >
-                <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
-              </button>
-            )}
-            {selected && (
-              <button
-                className="hover:bg-washed dark:hover:bg-washed-dark group absolute inset-y-0 right-2 top-2 flex h-8 w-8 items-center rounded-full"
-                onClick={() => onChange(undefined)}
-                aria-hidden="true"
-              >
-                <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
-              </button>
-            )}
-          </Combobox.Button>
-        </div>
-        <Transition
-          as={Fragment}
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          afterLeave={() => setQuery("")}
+            if (value) {
+              setOpen(true);
+              setActiveIndex(0);
+            } else {
+              onChange(undefined);
+              setOpen(false);
+            }
+          },
+          "value": query,
+          "placeholder": placeholder,
+          "aria-autocomplete": "list",
+          "onKeyDown"(event) {
+            if (event.key === "Enter" && activeIndex != null && filteredOptions[activeIndex]) {
+              handleSelect();
+            }
+          },
+        })}
+      />
+
+      {(query.length > 0 || selected) && (
+        <Button
+          className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-2 top-2 flex h-8 w-8 items-center rounded-full"
+          onClick={() => {
+            setQuery("");
+            setOpen(true);
+            onChange(undefined);
+            setActiveIndex(null);
+            setSelectedIndex(null);
+            (refs.reference.current as HTMLInputElement).focus();
+          }}
         >
-          <Combobox.Options className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-md bg-white text-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black sm:text-sm">
-            {loading ? (
-              <div className="text-dim cursor-deault relative flex select-none flex-row items-center gap-2 px-4 py-2	">
-                <Spinner loading={loading} /> {t("common:placeholder.loading")}
-              </div>
-            ) : filteredOptions.length === 0 && query !== "" ? (
-              <div className="text-dim relative cursor-default select-none px-4 py-2">
-                {t("common:placeholder.no_results")}
-              </div>
-            ) : (
-              filteredOptions.map((option, index) => (
-                <Combobox.Option
-                  key={index}
-                  className={({ active }) =>
-                    clx(
-                      "relative flex w-full cursor-pointer select-none flex-row gap-2 px-4 py-2",
-                      active && "bg-washed dark:bg-washed-dark"
-                    )
-                  }
-                  value={option}
-                >
-                  {({ selected }) => (
-                    <div className="flex w-full items-center gap-2">
-                      {enableFlag ? (
-                        <>
-                          <ImageWithFallback
-                            className="border-outline dark:border-outlineHover-dark absolute rounded border"
-                            src={`${imageSource}${option.value}.png`}
-                            fallback={fallback}
-                            width={32}
-                            height={18}
-                            alt={option.value as string}
-                          />
-                          <span
-                            className={clx(
-                              "relative block truncate pl-10",
-                              selected ? "font-medium" : "font-normal"
-                            )}
-                          >
-                            {option.label}
-                          </span>
-                        </>
-                      ) : enableType ? (
-                        <span
-                          className={clx(
-                            "block truncate",
-                            selected ? "font-medium" : "font-normal",
-                            "flex flex-row gap-1"
-                          )}
-                        >
-                          <>{String(option.label).split("(")[0]}</>
-                          <p className="text-dim normal-case">{` (${
-                            String(option.label).split("(")[1]
-                          }`}</p>
-                        </span>
-                      ) : (
-                        <span
-                          className={clx(
-                            "block truncate",
-                            selected ? "font-medium" : "font-normal"
-                          )}
-                        >
-                          {option.label}
-                        </span>
-                      )}
-                      {selected && (
-                        <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-                          <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
-                        </span>
-                      )}
+          <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+        </Button>
+      )}
+      {open && (
+        <FloatingPortal>
+          <FloatingFocusManager context={context} initialFocus={-1} visuallyHiddenDismiss>
+            <div
+              className={clx(
+                body.variable,
+                "font-body border-outline dark:border-washed-dark shadow-floating absolute z-20 max-h-60 w-full overflow-auto rounded-md border bg-white text-sm focus:outline-none dark:bg-black"
+              )}
+              ref={refs.setFloating}
+              tabIndex={-1}
+              style={{
+                ...floatingStyles,
+                maxHeight,
+              }}
+            >
+              {filteredOptions.length <= 150 ? (
+                <>
+                  {loading ? (
+                    <div className="text-dim flex cursor-default select-none items-center gap-2 px-4 py-2">
+                      <Spinner loading={loading} /> {t("common:placeholder.loading")}
                     </div>
+                  ) : filteredOptions.length === 0 && query !== "" ? (
+                    <p className="text-dim cursor-default select-none px-4 py-2">
+                      {t("common:placeholder.no_results")}
+                    </p>
+                  ) : (
+                    filteredOptions.map((option, i) => {
+                      return (
+                        <ComboOption<T>
+                          {...getItemProps({
+                            key: i,
+                            ref(node) {
+                              listRef.current[i] = node;
+                            },
+                            onClick() {
+                              handleSelect();
+                              refs.domReference.current?.focus();
+                            },
+                          })}
+                          total={ITEMS_COUNT}
+                          option={option}
+                          format={format}
+                          image={image}
+                          isSelected={selected?.value === option.value}
+                          active={i === activeIndex}
+                          index={i}
+                        />
+                      );
+                    })
                   )}
-                </Combobox.Option>
-              ))
-            )}
-          </Combobox.Options>
-        </Transition>
-      </div>
-    </Combobox>
+                </>
+              ) : (
+                <div
+                  className="relative w-full outline-none"
+                  style={{
+                    height: rowVirtualizer.getTotalSize(),
+                  }}
+                  // Some screen readers do not like any wrapper tags inside
+                  // of the element with the role, so we spread it onto the
+                  // virtualizer wrapper.
+                  {...getFloatingProps({
+                    onKeyDown(e) {
+                      if (e.key === "Enter" && activeIndex !== null) {
+                        handleSelect();
+                      }
+                    },
+                  })}
+                  // Ensure this element receives focus upon open so keydowning works.
+                  tabIndex={0}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      transform: `translateY(${rowVirtualizer.getVirtualItems()[0].start}px)`,
+                    }}
+                  >
+                    {rowVirtualizer.getVirtualItems().map((virtualItem: any) => {
+                      const option = filteredOptions[virtualItem.index];
+                      return (
+                        <ComboOption
+                          {...getItemProps({
+                            key: virtualItem.index,
+                            ref(node) {
+                              listRef.current[virtualItem.index] = node;
+                            },
+                            onClick() {
+                              handleSelect();
+                              refs.domReference.current?.focus();
+                            },
+                          })}
+                          total={ITEMS_COUNT}
+                          option={option}
+                          format={format}
+                          image={image}
+                          isSelected={selected?.value === option.value}
+                          active={virtualItem.index === activeIndex}
+                          index={virtualItem.index}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </FloatingFocusManager>
+        </FloatingPortal>
+      )}
+    </div>
   );
 };
 

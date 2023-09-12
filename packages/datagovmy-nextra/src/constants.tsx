@@ -1,19 +1,19 @@
 import type { NextSeoProps } from "next-seo";
-import { useRouter } from "next/router";
 import { DiscordIcon, GitHubIcon } from "nextra/icons";
-import type { Item } from "nextra/normalize-pages";
-import type { FC, ReactNode } from "react";
+import { Item } from "nextra/normalize-pages";
+import { FC, ReactNode } from "react";
 import { isValidElement } from "react";
 import { z } from "zod";
 import { Anchor, Flexsearch, Footer, Navbar, TOC } from "./components";
 import { MatchSorterSearch } from "./components/match-sorter-search";
-import type { NavBarProps } from "./components/navbar";
+import { NavBarProps } from "./components/navbar";
 import { themeOptionsSchema, ThemeSwitch } from "./components/theme-switch";
-import type { TOCProps } from "./components/toc";
+import { TOCProps } from "./components/toc";
 import { useConfig } from "./contexts";
 import { getGitIssueUrl, useGitEditUrl } from "./utils";
+import { useTranslation } from "./utils/hooks";
 
-export const DEFAULT_LOCALE = "en-US";
+export const DEFAULT_LOCALE = "en";
 
 export const IS_BROWSER = typeof window !== "undefined";
 
@@ -62,17 +62,25 @@ export const themeSchema = z.strictObject({
         filePath?: string;
       }>
     >(...fc),
-    text: z.custom<ReactNode | FC>(...reactNode),
+    text: z.function().returns(z.string()),
   }),
   faviconGlyph: z.string().optional(),
   feedback: z.strictObject({
-    content: z.custom<ReactNode | FC>(...reactNode),
+    content: z.function().returns(z.string()),
     labels: z.string(),
     useLink: z.function().returns(z.string()),
   }),
   footer: z.strictObject({
-    component: z.custom<ReactNode | FC<{ menu: boolean }>>(...reactNode),
-    text: z.custom<ReactNode | FC>(...reactNode),
+    component: z.custom<ReactNode | FC>(...reactNode),
+    govMy: z.function().returns(z.string()),
+    dtsa: z.function().returns(z.string()),
+    openSource: z.function().returns(z.string()),
+    fe: z.function().returns(z.string()),
+    be: z.function().returns(z.string()),
+    uiux: z.function().returns(z.string()),
+    openData: z.function().returns(z.string()),
+    guide: z.function().returns(z.string()),
+    tos: z.function().returns(z.string()),
   }),
   gitTimestamp: z.custom<ReactNode | FC<{ timestamp: Date }>>(...reactNode),
   head: z.custom<ReactNode | FC>(...reactNode),
@@ -150,178 +158,208 @@ const publicThemeSchema = themeSchema.deepPartial().extend({
 export type DocsThemeConfig = z.infer<typeof themeSchema>;
 export type PartialDocsThemeConfig = z.infer<typeof publicThemeSchema>;
 
-const LOADING_LOCALES: Record<string, string> = {
-  "en-US": "Loading",
-  "fr": "Сhargement",
-  "ru": "Загрузка",
-  "zh-CN": "正在加载",
-};
-
-const PLACEHOLDER_LOCALES: Record<string, string> = {
-  "en-US": "Search documentation",
-  "fr": "Rechercher documents",
-  "ru": "Поиск документации",
-  "zh-CN": "搜索文档",
-};
-
-export const DEFAULT_THEME: DocsThemeConfig = {
-  banner: {
-    dismissible: true,
-    key: "nextra-banner",
-  },
-  chat: {
-    icon: (
-      <>
-        <DiscordIcon />
-        <span className="sr-only">Discord</span>
-      </>
-    ),
-  },
-  darkMode: true,
-  direction: "ltr",
-  docsRepositoryBase: "https://github.com/shuding/nextra",
-  editLink: {
-    component: function EditLink({ className, filePath, children }) {
-      const editUrl = useGitEditUrl(filePath);
-      if (!editUrl) {
-        return null;
-      }
+export const DEFAULT_THEME: DocsThemeConfig = (() => {
+  // const { t } = useTranslation();
+  return {
+    banner: {
+      dismissible: true,
+      key: "nextra-banner",
+    },
+    chat: {
+      icon: (
+        <>
+          <DiscordIcon />
+          <span className="sr-only">Discord</span>
+        </>
+      ),
+    },
+    darkMode: true,
+    direction: "ltr",
+    docsRepositoryBase: "https://github.com/data-gov-my/datagovmy-front/tree/main/apps/docs",
+    editLink: {
+      component: function EditLink({ className, filePath, children }) {
+        const editUrl = useGitEditUrl(filePath);
+        if (!editUrl) {
+          return null;
+        }
+        return (
+          <Anchor className={className} href={editUrl}>
+            {children}
+          </Anchor>
+        );
+      },
+      text() {
+        const { t } = useTranslation();
+        return t("common.edit-github");
+      },
+    },
+    feedback: {
+      content() {
+        const { t } = useTranslation();
+        return t("common.feedback");
+      },
+      labels: "feedback",
+      useLink() {
+        const config = useConfig();
+        return getGitIssueUrl({
+          labels: config.feedback.labels,
+          repository: config.docsRepositoryBase,
+          title: `Feedback for “${config.title}”`,
+        });
+      },
+    },
+    footer: {
+      component: Footer,
+      govMy() {
+        const { t } = useTranslation();
+        return t("footer.govt");
+      },
+      dtsa() {
+        const { t } = useTranslation();
+        return t("footer.dtsa");
+      },
+      openSource() {
+        const { t } = useTranslation();
+        return t("footer.open-source");
+      },
+      fe() {
+        const { t } = useTranslation();
+        return t("footer.fe");
+      },
+      be() {
+        const { t } = useTranslation();
+        return t("footer.be");
+      },
+      uiux() {
+        const { t } = useTranslation();
+        return t("footer.uiux");
+      },
+      openData() {
+        const { t } = useTranslation();
+        return t("footer.open-data");
+      },
+      guide() {
+        const { t } = useTranslation();
+        return t("footer.guide");
+      },
+      tos() {
+        const { t } = useTranslation();
+        return t("footer.tos");
+      },
+    },
+    gitTimestamp: ({ timestamp }) => {
+      const { t, locale } = useTranslation();
       return (
-        <Anchor className={className} href={editUrl}>
-          {children}
-        </Anchor>
+        <>
+          {t("common.last-updated")}{" "}
+          <time dateTime={timestamp.toISOString()}>
+            {timestamp.toLocaleDateString(locale, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </time>
+        </>
       );
     },
-    text: "Edit this page",
-  },
-  feedback: {
-    content: "Question? Give us feedback →",
-    labels: "feedback",
-    useLink() {
-      const config = useConfig();
-      return getGitIssueUrl({
-        labels: config.feedback.labels,
-        repository: config.docsRepositoryBase,
-        title: `Feedback for “${config.title}”`,
-      });
-    },
-  },
-  footer: {
-    component: Footer,
-    text: `MIT ${new Date().getFullYear()} © Nextra.`,
-  },
-  gitTimestamp: function GitTimestamp({ timestamp }) {
-    const { locale = DEFAULT_LOCALE } = useRouter();
-    return (
+    head: (
       <>
-        Last updated on{" "}
-        <time dateTime={timestamp.toISOString()}>
-          {timestamp.toLocaleDateString(locale, {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </time>
-      </>
-    );
-  },
-  head: (
-    <>
-      <meta name="msapplication-TileColor" content="#fff" />
-      <meta httpEquiv="Content-Language" content="en" />
-      <meta name="description" content="Nextra: the next docs builder" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@shuding_" />
-      <meta property="og:title" content="Nextra: the next docs builder" />
-      <meta property="og:description" content="Nextra: the next docs builder" />
-      <meta name="apple-mobile-web-app-title" content="Nextra" />
-    </>
-  ),
-  i18n: [],
-  logo: (
-    <>
-      <span className="font-extrabold">Nextra</span>
-      <span className="ml-2 hidden font-normal text-gray-600 md:inline">The Next Docs Builder</span>
-    </>
-  ),
-  logoLink: true,
-  navbar: {
-    component: Navbar,
-  },
-  navigation: true,
-  nextThemes: {
-    defaultTheme: "system",
-    storageKey: "theme",
-  },
-  notFound: {
-    content: "Submit an issue about broken link →",
-    labels: "bug",
-  },
-  primaryHue: {
-    dark: 204,
-    light: 212,
-  },
-  project: {
-    icon: (
-      <>
-        <GitHubIcon />
-        <span className="sr-only">GitHub</span>
+        <meta name="msapplication-TileColor" content="#fff" />
+        <meta httpEquiv="Content-Language" content="en" />
+        <meta name="apple-mobile-web-app-title" content="Open API Docs" />
       </>
     ),
-  },
-  search: {
-    component: function Search({ className, directories }) {
-      const config = useConfig();
-      return config.flexsearch ? (
-        <Flexsearch className={className} />
-      ) : (
-        <MatchSorterSearch className={className} directories={directories} />
-      );
-    },
-    emptyResult: (
-      <span className="block select-none p-8 text-center text-sm text-gray-400">
-        No results found.
-      </span>
+    i18n: [],
+    logo: (
+      <>
+        <span className="font-extrabold">data.gov.my-nextra</span>
+      </>
     ),
-    error: "Failed to load search index.",
-    loading: function useLoading() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const text = (locale && LOADING_LOCALES[locale]) || LOADING_LOCALES[defaultLocale];
-      return <>{text}…</>;
+    logoLink: true,
+    navbar: {
+      component: Navbar,
     },
-    placeholder: function usePlaceholder() {
-      const { locale, defaultLocale = DEFAULT_LOCALE } = useRouter();
-      const text = (locale && PLACEHOLDER_LOCALES[locale]) || PLACEHOLDER_LOCALES[defaultLocale];
-      return `${text}…`;
+    navigation: true,
+    nextThemes: {
+      defaultTheme: "system",
+      storageKey: "theme",
     },
-  },
-  serverSideError: {
-    content: "Submit an issue about error in url →",
-    labels: "bug",
-  },
-  sidebar: {
-    defaultMenuCollapseLevel: 2,
-    titleComponent: ({ title }) => <>{title}</>,
-    toggleButton: false,
-  },
-  themeSwitch: {
-    component: ThemeSwitch,
-    useOptions() {
-      const { locale } = useRouter();
-
-      if (locale === "zh-CN") {
-        return { dark: "深色主题", light: "浅色主题", system: "系统默认" };
-      }
-      return { dark: "Dark", light: "Light", system: "System" };
+    notFound: {
+      content: () => {
+        const { t } = useTranslation();
+        return t("common.error-500");
+      },
+      labels: "bug",
     },
-  },
-  toc: {
-    component: TOC,
-    float: true,
-    title: "On This Page",
-  },
-  useNextSeoProps: () => ({ titleTemplate: "%s – Nextra" }),
-};
+    primaryHue: {
+      dark: 204,
+      light: 212,
+    },
+    project: {
+      icon: (
+        <>
+          <GitHubIcon />
+          <span className="sr-only">GitHub</span>
+        </>
+      ),
+    },
+    search: {
+      component: ({ className, directories }) => {
+        const config = useConfig();
+        return config.flexsearch ? (
+          <Flexsearch className={className} />
+        ) : (
+          <MatchSorterSearch className={className} directories={directories} />
+        );
+      },
+      emptyResult: () => {
+        const { t } = useTranslation();
+        return (
+          <span className="block select-none p-8 text-center text-sm text-gray-400">
+            {t("common.empty-result")}
+          </span>
+        );
+      },
+      error: "Failed to load search index.",
+      loading: () => {
+        const { t } = useTranslation();
+        return `${t("common.loading")}...`;
+      },
+      placeholder: () => {
+        const { t } = useTranslation();
+        return `${t("common.search-docs")}...`;
+      },
+    },
+    serverSideError: {
+      content: () => {
+        const { t } = useTranslation();
+        return t("common.error-500");
+      },
+      labels: "bug",
+    },
+    sidebar: {
+      defaultMenuCollapseLevel: 2,
+      titleComponent: ({ title }) => <>{title}</>,
+      toggleButton: true,
+    },
+    themeSwitch: {
+      component: ThemeSwitch,
+      useOptions() {
+        // const { locale } = useRouter();
+        // if (locale === "zh-CN") {
+        //   return { dark: "深色主题", light: "浅色主题", system: "系统默认" };
+        // }
+        return { dark: "Dark", light: "Light", system: "System" };
+      },
+    },
+    toc: {
+      component: TOC,
+      float: true,
+      title: "On This Page",
+    },
+    useNextSeoProps: () => ({ titleTemplate: "%s – OpenAPI" }),
+  };
+})();
 
 export const DEEP_OBJECT_KEYS = Object.entries(DEFAULT_THEME)
   .map(([key, value]) => {

@@ -1,0 +1,27 @@
+## Permohonan Token API
+
+Walaupun mengakses OpenAPI tidak memerlukan token API, kami menyediakan pilihan untuk memohon token jika anda merancang untuk mencapai had kadar atau memerlukan penggunaan yang lebih tinggi. Untuk memohon token API, sila ikuti langkah-langkah di bawah:
+
+1. Hantar emel ke [data.dtsa@mampu.gov.my](mailto:data.dtsa@mampu.gov.my) dengan butiran berikut:
+
+   - Nama anda
+   - Alamat emel anda
+   - Sebab permohonan peningkatan had kadar
+
+2. Pasukan kami akan mengkaji permohonan anda dan menilainya mengikut kes secara individu.
+
+3. Jika permohonan anda diluluskan, anda akan menerima token API melalui emel.
+
+## Menggunakan Token API Anda
+
+Setelah anda mendapatkan token API, anda perlu menyertakannya dalam permintaan API anda untuk pengesahan dan mendapatkan akses kepada had penggunaan yang lebih tinggi. Ikuti langkah-langkah di bawah untuk menyertakan token API anda dalam permintaan HTTP:
+
+1. Tambahkan tajuk berikut ke permintaan anda:
+
+   ```
+   Authorization: Bearer <TOKEN_ANDA_DI_SINI>
+   ```
+
+   Gantikan `<TOKEN_ANDA_DI_SINI>` dengan token sebenar yang anda terima.
+
+2. Hantar permintaan HTTP anda dengan header `Authorization` yang ditambahkan.

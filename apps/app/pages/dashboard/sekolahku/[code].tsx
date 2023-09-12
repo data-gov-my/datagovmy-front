@@ -1,12 +1,12 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { InferGetStaticPropsType } from "next";
+import { get } from "datagovmy-ui/api";
+import { Page } from "datagovmy-ui/types";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import SekolahkuDashboard from "@dashboards/education/sekolahku";
-import { withi18n } from "@lib/decorators";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { withi18n } from "datagovmy-ui/decorators";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const Sekolahku: Page = ({
   meta,
@@ -62,7 +62,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     try {
       const [dropdown, school] = await Promise.all([
-        get("/dropdown", { dashboard: "sekolahku", limit: 15 }),
+        get("/dropdown", { dashboard: "sekolahku" }),
         get("/dashboard", { dashboard: "sekolahku", code: params?.code }),
       ]).catch(e => {
         throw new Error("Invalid school code. Message: " + e);

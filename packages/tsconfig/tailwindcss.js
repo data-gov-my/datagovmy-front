@@ -4,6 +4,7 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 module.exports = {
   darkMode: "class",
   content: [
+    "../../packages/datagovmy-ui/src/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -39,9 +40,13 @@ module.exports = {
         "outline": "#E2E8F0", // Slate 200
         "outlineHover": "#94A3B8", // Slate 400
         "outlineHover-dark": "#3F3F46", // Zinc 700
-        "background": "#F8FAFC", // Slate 500
-        "background-dark": "#121212", // Slate 500
+        "background": "#F8FAFC", // Slate 50
+        "background-dark": "#121212",
         "purple": "#7C3AED", // Violet 600
+      },
+      boxShadow: {
+        button: "0 1px 2px rgba(0, 0, 0, 0.1)",
+        floating: "0 6px 24px rgba(0, 0, 0, 0.1)",
       },
       gridTemplateColumns: {
         13: "repeat(13, minmax(0, 1fr))",
@@ -58,6 +63,10 @@ module.exports = {
         slide: {
           from: { width: "var(--from-width)" },
           to: { width: "var(--to-width)" },
+        },
+        grow: {
+          from: { height: "var(--from-height)" },
+          to: { height: "var(--to-height)" },
         },
       },
       animation: {

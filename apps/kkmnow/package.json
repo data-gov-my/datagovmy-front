@@ -1,0 +1,56 @@
+{
+  "name": "kkmnow",
+  "private": true,
+  "version": "0.0.0",
+  "description": "KKMNOW is a collaboration between the Ministry of Health Malaysia and the Department of Statistics Malaysia to institutionalise transparency and make data accessible for all.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 3003",
+    "build": "next build",
+    "postbuild": "next-sitemap",
+    "start": "next start"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,css,md}": "prettier --write"
+  },
+  "files": [
+    "next-i18next.config.js"
+  ],
+  "dependencies": {
+    "@headlessui/react": "^1.6.5",
+    "@heroicons/react": "^2.0.11",
+    "@tanstack/match-sorter-utils": "^8.1.1",
+    "@tanstack/react-table": "^8.5.2",
+    "@vercel/edge-config": "^0.2.1",
+    "axios": "^0.27.2",
+    "datagovmy-ui": "*",
+    "i18next-http-backend": "^2.2.0",
+    "lodash": "^4.17.21",
+    "luxon": "^3.0.3",
+    "next": "^13.4.3",
+    "next-i18next": "^13.2.2",
+    "next-pwa": "^5.6.0",
+    "next-sitemap": "^3.1.23",
+    "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-dom": "^18.2.0",
+    "react-leaflet": "^4.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.2",
+    "@types/lodash": "^4.14.185",
+    "@types/luxon": "^3.0.1",
+    "@types/node": "17.0.35",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.7",
+    "postcss": "*",
+    "postcss-import": "^14.1.0",
+    "postcss-nesting": "^10.1.10",
+    "prettier": "*",
+    "prettier-plugin-tailwindcss": "^0.1.11",
+    "tailwindcss": "*",
+    "typescript": "*"
+  }
+}

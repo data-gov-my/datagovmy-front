@@ -1,7 +1,12 @@
 .home-banner {
   background: url("/static/images/home-hero.jpg") no-repeat;
   background-size: cover;
-  background-position: center right;
+  background-position: center;
+}
+.home-banner-dark {
+  background: url("/static/images/banner/home-hero-dark.jpg") no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 .data-catalogue-banner {
   background: url("/static/images/banner/data-catalogue.jpg") no-repeat;
@@ -87,15 +92,6 @@
   background: url("/static/images/banner/exchange-rates.jpeg") no-repeat;
   background-size: cover;
   background-position: center right;
-}
-
-.kawasanku-banner {
-  background: linear-gradient(
-    180deg,
-    rgba(237, 248, 237, 1) 0%,
-    rgba(237, 248, 237, 1) 70%,
-    rgba(0, 0, 0, 0) 100%
-  );
 }
 
 @media only screen and (min-width: 768px) {

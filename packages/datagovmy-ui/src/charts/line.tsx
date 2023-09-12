@@ -11,11 +11,12 @@ import {
   TimeSeriesScale,
   Filler,
   Legend,
+  TooltipItem,
 } from "chart.js";
 import AnnotationPlugin from "chartjs-plugin-annotation";
 import { Line as LineCanvas } from "react-chartjs-2";
 import { numFormat } from "../lib/helpers";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "../../types";
 import { Stats, StatProps } from "./timeseries";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
 import { useTheme } from "next-themes";
@@ -41,6 +42,7 @@ type LineProps = ChartHeaderProps & {
   enableTooltip?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   _ref?: ForwardedRef<ChartJSOrUndefined<"line", any[], unknown>>;
 };
 
@@ -50,7 +52,6 @@ const Line: FunctionComponent<LineProps> = ({
   controls,
   subheader,
   title,
-  state,
   type = "linear",
   prefixX,
   prefixY,
@@ -59,7 +60,7 @@ const Line: FunctionComponent<LineProps> = ({
   data = dummy,
   enableGridX = true,
   enableGridY = true,
-  precision = 1,
+  precision = [1, 1],
   minY,
   maxY,
   stats,
@@ -68,6 +69,7 @@ const Line: FunctionComponent<LineProps> = ({
   enableTooltip = false,
   enableCrosshair = false,
   enableLegend = false,
+  tooltipCallback,
   _ref,
 }) => {
   ChartJS.register(
@@ -117,13 +119,19 @@ const Line: FunctionComponent<LineProps> = ({
         : false,
       tooltip: {
         enabled: enableTooltip,
+        mode: "index",
+        intersect: false,
         callbacks: {
-          label: item =>
-            `${item.dataset.label as string}: ${
-              item.parsed.y !== undefined || item.parsed.y !== null
-                ? (prefixY ?? "") + numFormat(item.parsed.y, "standard", precision) + (unitY ?? "")
-                : "-"
-            }`,
+          label: tooltipCallback
+            ? tooltipCallback
+            : item =>
+                `${item.dataset.label as string}: ${
+                  item.parsed.y !== undefined || item.parsed.y !== null
+                    ? (prefixY ?? "") +
+                      numFormat(item.parsed.y, "standard", precision) +
+                      (unitY ?? "")
+                    : "-"
+                }`,
         },
       },
       annotation: {
@@ -145,7 +153,7 @@ const Line: FunctionComponent<LineProps> = ({
           },
           padding: 6,
           callback: (value: string | number) =>
-            (prefixX ?? "") + numFormat(value as number, "standard", precision) + (unitX ?? ""),
+            (prefixX ?? "") + numFormat(value as number, "compact", precision) + (unitX ?? ""),
         },
       },
       y: {
@@ -173,11 +181,14 @@ const Line: FunctionComponent<LineProps> = ({
 
   return (
     <div className="flex flex-col gap-y-6">
-      <div className="flex flex-col gap-y-3">
-        <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-        {subheader && <div className="text-dim text-sm">{subheader}</div>}
-        {stats && <Stats data={stats} />}
-      </div>
+      {[title, menu, controls, subheader, stats].some(Boolean) && (
+        <div className="flex flex-col gap-y-3">
+          <ChartHeader title={title} menu={menu} controls={controls} />
+          {subheader && <div className="text-dim text-sm">{subheader}</div>}
+          {stats && <Stats data={stats} />}
+        </div>
+      )}
+
       <div className={className}>
         <LineCanvas
           ref={_ref}

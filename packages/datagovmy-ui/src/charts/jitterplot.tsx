@@ -4,14 +4,15 @@ import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } fro
 import { Bubble } from "react-chartjs-2";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 import { AKSARA_COLOR, CountryAndStates } from "../lib/constants";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "../../types";
+import { useTheme } from "next-themes";
 
 /** ------------------------GROUPED------------------------------------- */
 
 type JitterDatum = {
   x: number;
   y: number;
-  id: string;
+  area: string;
   tooltip: string | number;
 };
 export type JitterData = {
@@ -73,8 +74,9 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
   formatTooltip,
 }) => {
   ChartJS.register(LinearScale, PointElement, LineElement, Tooltip);
+  const { theme } = useTheme();
   const DEFAULT_STYLE = {
-    backgroundColor: data.data.length < 20 ? "#E0E0E0" : "#EEEEEE",
+    backgroundColor: theme === "dark" ? "#27272A" : data.data.length < 20 ? "#E0E0E0" : "#EEEEEE",
     radius: 5,
     hoverRadius: 1,
   };
@@ -97,12 +99,12 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
 
         callbacks: {
           label: function (item: any) {
-            if (!item.raw.id) return "";
-            if (!formatTooltip) return `${item.raw.id}: ${item.raw.tooltip}`;
+            if (!item.raw.area) return "";
+            if (!formatTooltip) return `${item.raw.area}: ${item.raw.tooltip}`;
 
             return formatTooltip(data.key, item.raw.tooltip)
-              ? `${item.raw.id}: ${formatTooltip(data.key, item.raw.tooltip)}`
-              : item.raw.id;
+              ? `${item.raw.area}: ${formatTooltip(data.key, item.raw.tooltip)}`
+              : item.raw.area;
           },
         },
       },
@@ -134,11 +136,15 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
     }
   >(
     ({ raw }: ScriptableContext<"bubble">) => {
-      if (active.toLowerCase().includes((raw as JitterDatum)?.id.toLowerCase()))
-        return { backgroundColor: AKSARA_COLOR.BLACK, radius: 6, hoverRadius: 1 };
+      if (active.toLowerCase().includes((raw as JitterDatum)?.area.toLowerCase()))
+        return {
+          backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.GREEN,
+          radius: 6,
+          hoverRadius: 1,
+        };
 
       const index = actives.findIndex(item =>
-        item.toLowerCase().includes((raw as JitterDatum).id.toLowerCase())
+        item.toLowerCase().includes((raw as JitterDatum).area.toLowerCase())
       );
 
       switch (index) {
@@ -152,7 +158,7 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
           return DEFAULT_STYLE;
       }
     },
-    [actives, active]
+    [actives, active, theme]
   );
 
   const _data = useMemo<Record<string, JitterDatum[]>>(() => {
@@ -162,7 +168,7 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
     };
 
     data.data.forEach(item => {
-      if ([active, ...actives].some(raw => raw.split(",")[0].includes(item.id))) {
+      if ([active, ...actives].some(raw => raw.split(",")[0].includes(item.area))) {
         result.actives.push(item);
       } else {
         result.default.push(item);
@@ -175,11 +181,13 @@ const Jitterplot: FunctionComponent<JitterplotProps> = ({
   return (
     <>
       {data.data[0].x !== null && (
-        <div className="grid w-full grid-cols-1 items-center gap-1 lg:grid-cols-5">
-          <p className="bg-white">{formatTitle ? formatTitle(data.key) : data.key}</p>
-          <div className="col-span-1 overflow-visible lg:col-span-4">
+        <div className="grid w-full grid-cols-1 items-center gap-1 lg:grid-cols-4">
+          <div className="dark:bg-background-dark z-10 bg-white">
+            {formatTitle ? formatTitle(data.key) : data.key}
+          </div>
+          <div className="col-span-1 overflow-visible lg:col-span-3">
             <Bubble
-              className="bg-outline/20 h-10 overflow-visible rounded-full border px-4"
+              className="bg-outline/20 dark:border-outlineHover-dark h-10 overflow-visible rounded-full border px-4"
               options={options}
               data={{
                 datasets: [
@@ -223,7 +231,7 @@ const dummy: JitterDatum[] = Array(Object.keys(CountryAndStates).length)
     (_, index): JitterDatum => ({
       x: Math.floor(Math.random() * 100 + 0),
       y: Math.floor(Math.random() * 100 + 0),
-      id: Object.values(CountryAndStates)[index],
+      area: Object.values(CountryAndStates)[index],
       tooltip: 1,
     })
   );

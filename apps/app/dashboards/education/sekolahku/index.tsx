@@ -1,26 +1,30 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero, Panel, Section, Tabs, Tooltip } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent, useCallback, useMemo } from "react";
-import Container from "@components/Container";
-import { MOEIcon } from "@components/Icon/agency";
-import ComboBox from "@components/Combobox";
-import BarMeter from "@components/Chart/BarMeter";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
-import dynamic from "next/dynamic";
-import { CountryAndStates } from "@lib/constants";
-import { useData } from "@hooks/useData";
-import { OptionType } from "@components/types";
-import { useRouter } from "next/router";
-import { AKSARA_COLOR } from "@lib/constants";
-import Spinner from "@components/Spinner";
-import { get } from "@lib/api";
+import { get } from "datagovmy-ui/api";
+import BarMeter from "datagovmy-ui/charts/bar-meter";
+import {
+  AgencyBadge,
+  ComboBox,
+  Container,
+  Hero,
+  Panel,
+  Section,
+  Spinner,
+  Tabs,
+  toast,
+  Tooltip,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { clx, numFormat } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import debounce from "lodash/debounce";
-import { numFormat } from "@lib/helpers";
-import { toast } from "@components/Toast";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { FunctionComponent, useCallback, useMemo } from "react";
+
 /**
  * Sekolahku Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 interface SekolahkuProps {
@@ -34,8 +38,8 @@ interface SekolahkuProps {
   bellcurve_linechart: any;
 }
 
-const Line = dynamic(() => import("@components/Chart/Line"), { ssr: false });
-const MapPlot = dynamic(() => import("@components/Chart/MapPlot"), { ssr: false });
+const Line = dynamic(() => import("datagovmy-ui/charts/line"), { ssr: false });
+const MapPlot = dynamic(() => import("datagovmy-ui/charts/map-plot"), { ssr: false });
 
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   dropdown_data,
@@ -74,22 +78,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
       locale: i18n.language,
     }).then(() => setData("loading", false));
   };
-
-  const fetchSelection = useCallback(
-    debounce(query => {
-      setData("dropdownLoading", true);
-      get("/dropdown", { dashboard: "sekolahku", query: query, limit: 15 })
-        .then((res: any) => {
-          setData("selection", res.data.data);
-          setData("dropdownLoading", false);
-        })
-        .catch(e => {
-          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-          console.error(e);
-        });
-    }, 300),
-    []
-  );
 
   const formatCallout = (type: string, value: number): string => {
     switch (type) {
@@ -138,14 +126,8 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         category={[t("common:categories.education"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Ministry of Education (MoE)"}
-            link="https://www.moe.gov.my/"
-            icon={<MOEIcon />}
-          />
-        }
         last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="moe" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen">
@@ -165,7 +147,6 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                           : undefined
                       }
                       onChange={navigateToSchool}
-                      onSearch={fetchSelection}
                       loading={data.dropdownLoading}
                     />
                   </div>
@@ -227,7 +208,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                   markers={[
                     {
                       position: [sekolahku_info.lat, sekolahku_info.lon],
-                      school: sekolahku_info.school,
+                      tooltip: { school: sekolahku_info.school },
                     },
                   ]}
                 />
@@ -236,16 +217,18 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
           </div>
         </Section>
 
-        <Section title={t("section_2.title", { school: sekolahku_info.school })} date={Date.now()}>
+        <Section
+          title={t("section_2.title", { school: sekolahku_info.school })}
+          date={sekolahku_barmeter.data_as_of}
+        >
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 xl:grid-cols-3">
-            {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any]) => {
+            {Object.entries(sekolahku_barmeter.bar).map(([k, v]: [string, any], i) => {
               return (
                 <div className="flex flex-col space-y-6" key={k}>
                   <BarMeter
                     key={k}
                     title={t(`section_2.${k}.title`)}
                     layout="horizontal"
-                    unit="%"
                     data={v}
                     sort={"desc"}
                     formatX={key => t(`section_2.${k}.${key}`)}
@@ -256,13 +239,22 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
                             (object: { x: string; y: number }) => object.x === key
                           ).y,
                         })}`}
+                        className={clx(
+                          i === 5
+                            ? "right-1/3"
+                            : i === 2
+                            ? "max-lg:right-1/3 xl:right-1/3"
+                            : i % 2 === 1 // 1, 3
+                            ? "max-xl:right-1/3"
+                            : "max-lg:right-1/3"
+                        )}
                       >
                         {open => (
                           <p
-                            className="underline decoration-dashed underline-offset-2"
+                            className="underline decoration-dashed [text-underline-position:from-font]"
                             onClick={open}
                           >
-                            {numFormat(value, "standard", [1, 1])}
+                            {numFormat(value, "standard", [1, 1])}%
                           </p>
                         )}
                       </Tooltip>
@@ -304,7 +296,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
               onChange={index => setData("tabs_section3", index)}
             />
           }
-          date={Date.now()}
+          date={bellcurve_school.data_as_of}
         >
           <Tabs hidden current={data.tabs_section3}>
             {KEY_VARIABLES_SCHEMA.map(({ name, data: lineData, callout: lineCallout }) => {

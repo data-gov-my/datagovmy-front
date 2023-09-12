@@ -1,17 +1,16 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
 import DataCatalogue, { Catalogue } from "@data-catalogue/index";
-import { SHORT_LANG } from "@lib/constants";
-import { sortAlpha } from "@lib/helpers";
-import { withi18n } from "@lib/decorators";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { withi18n } from "datagovmy-ui/decorators";
+import { sortAlpha } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const CatalogueIndex: Page = ({
   query,
   collection,
-  total,
   sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["catalogue", "common"]);
@@ -19,7 +18,7 @@ const CatalogueIndex: Page = ({
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
+      <DataCatalogue query={query} collection={collection} sources={sources} />
     </>
   );
 };
@@ -43,6 +42,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     try {
       const { data } = await get("/data-catalog/", {
         lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+        opendosm: false,
         ...query,
       });
 
@@ -57,7 +57,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             agency: null,
           },
           query: query ?? {},
-          total: data.total_all,
           sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
           collection,
         },

@@ -1,4 +1,7 @@
-import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { ChartCrosshairOption } from "../../types";
+import { WindowContext } from "../contexts/window";
+import { numFormat } from "../lib/helpers";
+import { AKSARA_COLOR, BREAKPOINTS } from "../lib/constants";
 import { default as ChartHeader, ChartHeaderProps } from "./chart-header";
 import {
   Chart as ChartJS,
@@ -10,15 +13,13 @@ import {
   ChartData,
   Legend,
 } from "chart.js";
-import { Bar as BarCanvas, getElementAtEvent } from "react-chartjs-2";
-import { numFormat } from "../lib/helpers";
-import { ChartCrosshairOption } from "../lib/types";
-import type { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
-import { WindowContext } from "../hooks/useWindow";
-import { AKSARA_COLOR, BREAKPOINTS } from "../lib/constants";
 import { useTheme } from "next-themes";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
+import { Bar as BarCanvas, getElementAtEvent } from "react-chartjs-2";
+import { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
 
-type BarProps = ChartHeaderProps & {
+interface BarProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   layout?: "vertical" | "horizontal";
   data?: ChartData<"bar", any[], string | number>;
@@ -41,14 +42,14 @@ type BarProps = ChartHeaderProps & {
   interactive?: boolean;
   tooltipEnabled?: boolean;
   _ref?: ForwardedRef<ChartJSOrUndefined<"bar", any[], string | number>>;
-};
+}
 
 const Bar: FunctionComponent<BarProps> = ({
+  id,
   className = "w-full h-full", // manage CSS here
   menu,
   title,
   controls,
-  state,
   type = "category",
   unitX,
   enableStep,
@@ -59,7 +60,7 @@ const Bar: FunctionComponent<BarProps> = ({
   formatX,
   onClick,
   reverse = false,
-  precision = 1,
+  precision = [1, 0],
   enableLegend = false,
   enableStack = false,
   enableGridX = true,
@@ -72,9 +73,9 @@ const Bar: FunctionComponent<BarProps> = ({
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
   const isVertical = useMemo(() => layout === "vertical", [layout]);
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
-  const { theme } = useTheme();
+  const { theme = "light" } = useTheme();
 
   const display = (
     value: number,
@@ -85,12 +86,9 @@ const Bar: FunctionComponent<BarProps> = ({
   };
 
   const displayLabel = (value: string) => {
-    if (breakpoint >= BREAKPOINTS.MD) return formatX ? formatX(value) : value;
-
-    if (formatX) {
-      return formatX(value).length > 25 ? formatX(value).slice(0, 25).concat("..") : formatX(value);
-    }
-    return value.length > 25 ? value.slice(0, 25).concat("..") : value;
+    const label = formatX ? formatX(value) : value;
+    if (label.length > 25 && size.width < BREAKPOINTS.SM) return label.slice(0, 25).concat("..");
+    return label;
   };
 
   const _data = useMemo<ChartData<"bar", any[], string | number>>(() => {
@@ -132,7 +130,7 @@ const Bar: FunctionComponent<BarProps> = ({
                   ? display(item.parsed.x, "standard", precision)
                   : "-",
             };
-            return `${item.dataset.label} : ${tip[layout]}`;
+            return `${item.dataset.label}: ${tip[layout]}`;
           },
           title(item) {
             return formatX ? formatX(item[0].label) : item[0].label;
@@ -150,7 +148,7 @@ const Bar: FunctionComponent<BarProps> = ({
           display: enableGridX,
           borderWidth: 1,
           borderDash: [5, 10],
-          color: theme === "dark" ? AKSARA_COLOR.WASHED_DARK : AKSARA_COLOR.OUTLINE,
+          color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
           drawTicks: true,
           drawBorder: true,
         },
@@ -170,11 +168,11 @@ const Bar: FunctionComponent<BarProps> = ({
             if (!formatX) {
               return isVertical
                 ? this.getLabelForValue(value as number).concat(unitX ?? "")
-                : display(value as number, "compact", 1);
+                : display(value as number, "compact", precision);
             }
             let text = isVertical
               ? formatX(this.getLabelForValue(value as number))
-              : display(value as number, "compact", 1);
+              : display(value as number, "compact", precision);
             if (text.length > 25) text = text.slice(0, 25).concat("..");
             return text;
           },
@@ -190,7 +188,7 @@ const Bar: FunctionComponent<BarProps> = ({
           drawTicks: false,
           drawBorder: false,
           offset: false,
-          color: theme === "dark" ? AKSARA_COLOR.WASHED_DARK : AKSARA_COLOR.OUTLINE,
+          color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
           borderDash(ctx) {
             if (ctx.tick.value === 0) return [0, 0];
             return [5, 5];
@@ -208,7 +206,7 @@ const Bar: FunctionComponent<BarProps> = ({
           callback: function (value: string | number) {
             return displayLabel(
               isVertical
-                ? display(value as number, "compact", 1)
+                ? display(value as number, "compact", precision)
                 : this.getLabelForValue(value as number).concat(unitX ?? "")
             );
           },
@@ -222,9 +220,11 @@ const Bar: FunctionComponent<BarProps> = ({
   };
   return (
     <div className="space-y-4">
-      <ChartHeader title={title} menu={menu} controls={controls} state={state} />
+      <ChartHeader title={title} menu={menu} controls={controls} />
       <div className={className}>
         <BarCanvas
+          id={id}
+          data-testid={id}
           ref={_ref ?? ref}
           onClick={event => {
             if (ref?.current) {

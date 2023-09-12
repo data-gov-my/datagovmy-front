@@ -1,13 +1,13 @@
-import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { SHORT_LANG } from "@lib/constants";
-import { OptionType } from "@components/types";
-import { get } from "@lib/api";
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
 import DataCatalogueShow from "@data-catalogue/show";
-import { useMemo } from "react";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { DCConfig, DCFilter, FilterDate, Page, OptionType } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useMemo } from "react";
 
 const CatalogueShow: Page = ({
   params,
@@ -44,22 +44,24 @@ const CatalogueShow: Page = ({
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
-      <DataCatalogueShow
-        options={availableOptions}
-        params={params}
-        config={config}
-        dataset={dataset}
-        explanation={explanation}
-        metadata={metadata}
-        urls={urls}
-        translations={translations}
-      />
+      <CatalogueProvider dataset={dataset} urls={urls}>
+        <DataCatalogueShow
+          options={availableOptions}
+          params={params}
+          config={config}
+          dataset={dataset}
+          explanation={explanation}
+          metadata={metadata}
+          urls={urls}
+          translations={translations}
+        />
+      </CatalogueProvider>
     </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["catalogue", "common"],
+  "catalogue",
   async ({ locale, query, params }) => {
     const { data } = await get("/data-variable/", {
       id: params?.id,
@@ -75,6 +77,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       color: data.API.colour ?? "blues",
       geojson: data.API.file_json ?? null,
       line_variables: data.API.line_variables ?? null,
+      exclude_openapi: data.exclude_openapi ?? false,
     };
 
     const hasTranslations = data.translations && Object.keys(data.translations).length;
@@ -113,7 +116,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       props: {
         meta: {
           id: data.chart_details.intro.unique_id,
-          type: "catalogue",
+          type: "data-catalogue",
           category: null,
           agency: Array.isArray(data.metadata.data_source)
             ? data.metadata.data_source.join(",")

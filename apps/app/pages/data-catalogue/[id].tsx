@@ -1,15 +1,14 @@
-import type { DCConfig, DCFilter, FilterDate, Page } from "@lib/types";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { withi18n } from "@lib/decorators";
-import { SHORT_LANG } from "@lib/constants";
-import { OptionType } from "@components/types";
-import { useTranslation } from "@hooks/useTranslation";
-import { get } from "@lib/api";
-
-import Metadata from "@components/Metadata";
 import DataCatalogueShow from "@data-catalogue/show";
+import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { DCConfig, DCFilter, FilterDate, OptionType, Page } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo } from "react";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
 
 const CatalogueShow: Page = ({
   meta,
@@ -20,6 +19,7 @@ const CatalogueShow: Page = ({
   metadata,
   urls,
   translations,
+  catalogueId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["catalogue", "common"]);
 
@@ -47,16 +47,19 @@ const CatalogueShow: Page = ({
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
-      <DataCatalogueShow
-        options={availableOptions}
-        params={params}
-        config={config}
-        dataset={dataset}
-        explanation={explanation}
-        metadata={metadata}
-        urls={urls}
-        translations={translations}
-      />
+      <CatalogueProvider dataset={dataset} urls={urls}>
+        <DataCatalogueShow
+          options={availableOptions}
+          params={params}
+          config={config}
+          dataset={dataset}
+          explanation={explanation}
+          metadata={metadata}
+          urls={urls}
+          translations={translations}
+          catalogueId={catalogueId}
+        />
+      </CatalogueProvider>
     </AnalyticsProvider>
   );
 };
@@ -78,9 +81,10 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       color: data.API.colour ?? "blues",
       geojson: data.API.file_json ?? null,
       line_variables: data.API.line_variables ?? null,
+      exclude_openapi: data.exclude_openapi ?? false,
     };
 
-    const hasTranslations = data.translations && Object.keys(data.translations).length;
+    const hasTranslations = data.translations && Object.keys(data.translations).length > 0;
     const hasQuery = query && Object.keys(query).length > 1;
 
     const assignContext = (item: DCFilter) => {
@@ -98,8 +102,8 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         label = (data.translations[item.default] as string) ?? item.default;
         value = item.default;
       } else {
-        label = data.translations[query[item.key] as string] ?? query[item.key];
-        value = query[item.key] as string;
+        label = data.translations[query[item.key] as string] ?? query[item.key] ?? item.default;
+        value = (query[item.key] as string) ?? item.default;
       }
 
       Object.assign(config.context, { [item.key]: { label, value } });
@@ -146,6 +150,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         },
         urls: data.downloads ?? {},
         translations: data.translations ?? {},
+        catalogueId: params?.id,
       },
     };
   }

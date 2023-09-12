@@ -1,5 +1,5 @@
-import { OptionType } from "../types";
-import { WindowContext } from "../../hooks/useWindow";
+import { OptionType } from "../../../types";
+import { WindowContext } from "../../contexts/window";
 import { statesOptions } from "../../lib/options";
 import { useTranslation } from "../../hooks/useTranslation";
 import { useRouter } from "next/router";
@@ -34,7 +34,6 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   sublabel,
   disabled = false,
   hideOnScroll = false,
-  darkMode = false,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -53,7 +52,7 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
   return (
     <div className={clx(!hideOnScroll ? `block ${width}` : show ? "hidden lg:block" : "hidden")}>
       <Dropdown
-        className="flex-row items-center"
+        className={clx("flex-row items-center", className)}
         onChange={selected => (onChange ? onChange(selected) : redirect(selected))}
         disabled={disabled}
         selected={options.find(state => state.value === currentState)}
@@ -61,7 +60,6 @@ const StateDropdown: FunctionComponent<StateDropdownProps> = ({
         placeholder={t("common:placeholder.state")}
         enableFlag
         anchor={anchor}
-        darkMode={darkMode}
         width={width}
         sublabel={sublabel}
       />

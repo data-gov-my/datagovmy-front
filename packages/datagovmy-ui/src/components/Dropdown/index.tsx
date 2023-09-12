@@ -1,6 +1,17 @@
-import type { OptionType } from "../types";
-import { default as Image } from "next/image";
+import Input from "../Input";
 import { default as Label, LabelProps } from "../Label";
+import type { OptionType } from "../../../types";
+import { Listbox, Transition } from "@headlessui/react";
+import {
+  CheckCircleIcon,
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
+import { clx } from "../../lib/helpers";
+import { matchSorter } from "match-sorter";
+import { useTranslation } from "next-i18next";
+import { default as Image } from "next/image";
 import {
   Fragment,
   FunctionComponent,
@@ -10,18 +21,7 @@ import {
   useRef,
   CSSProperties,
 } from "react";
-import { Listbox, Transition } from "@headlessui/react";
-import {
-  CheckCircleIcon,
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from "@heroicons/react/20/solid";
-import Input from "../Input";
-import { useTranslation } from "next-i18next";
-import { clx } from "../../lib/helpers";
 import { FixedSizeList } from "react-window";
-import { matchSorter } from "match-sorter";
 
 type CommonProps = {
   className?: string;
@@ -32,12 +32,10 @@ type CommonProps = {
   width?: string;
   label?: string;
   sublabel?: ReactNode;
-  darkMode?: boolean;
   anchor?: "left" | "right" | string;
   enableSearch?: boolean;
   enableFlag?: boolean;
   enableClear?: boolean;
-  virtualise?: boolean;
 };
 
 type ConditionalProps =
@@ -59,7 +57,7 @@ type ConditionalProps =
 type DropdownProps = CommonProps & ConditionalProps & LabelProps;
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
-  className = "lg:flex-row",
+  className = "",
   disabled = false,
   multiple = false,
   icon,
@@ -74,19 +72,15 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   width = "w-full lg:w-fit",
   label,
   sublabel,
-  darkMode = false,
   enableFlag = false,
   enableClear = false,
-  virtualise = false,
 }) => {
   const [search, setSearch] = useState<string>("");
   const optionsRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const isSelected = (option: OptionType): boolean => {
     return (
-      multiple &&
-      option &&
-      (selected as OptionType[]).some((item: OptionType) => item.value === option.value)
+      multiple && (selected as OptionType[]).some((item: OptionType) => item.value === option.value)
     );
   };
 
@@ -122,60 +116,53 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
     <Listbox.Option
       key={index}
       style={style}
-      className={clx(
-        "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
-        multiple ? "pl-10" : "pl-4",
-        darkMode
-          ? "hover:bg-washed/10 text-white"
-          : "hover:bg-washed dark:hover:bg-washed-dark dark:text-white",
-        multiple &&
-          selected &&
-          Array.isArray(selected) &&
-          selected.some((item: OptionType) => item.value == option.value)
-          ? "bg-washed dark:bg-washed-dark"
-          : "bg-inherit"
-      )}
+      className={({ active }) =>
+        clx(
+          "relative flex w-full cursor-default select-none items-center gap-2 py-2 pr-4",
+          multiple ? "pl-10" : "pl-4",
+          active && "bg-washed dark:bg-washed-dark"
+        )
+      }
       onClick={() => (multiple ? handleChange(option) : null)}
       value={option}
     >
       {/* State flag - optional */}
-      <div className="flex w-full items-center justify-between gap-2">
-        {enableFlag && (
-          <Image
-            src={`/static/images/states/${option.value}.jpeg`}
-            width={20}
-            height={12}
-            alt={option.label as string}
+      {enableFlag && (
+        <Image
+          src={`/static/images/states/${option.value}.jpeg`}
+          width={20}
+          height={12}
+          alt={option.label as string}
+        />
+      )}
+
+      {/* Option label */}
+      <span
+        className={clx(
+          "block flex-grow truncate",
+          option === selected ? "font-medium" : "font-normal"
+        )}
+      >
+        {option.label}
+      </span>
+
+      {/* Checkbox (multiple mode) */}
+      {multiple && (
+        <span className="absolute inset-y-0 left-3 flex items-center">
+          <input
+            type="checkbox"
+            checked={
+              selected && (selected as OptionType[]).some(item => item.value === option.value)
+            }
+            className="border-outline text-primary dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark h-4 w-4 rounded focus:ring-0"
           />
-        )}
-        {/* Option label */}
-        <span
-          className={[
-            "block flex-grow truncate",
-            option === selected ? "font-medium" : "font-normal",
-          ].join(" ")}
-        >
-          {option.label}
         </span>
+      )}
 
-        {/* Checkbox (multiple mode) */}
-        {multiple && (
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-            <input
-              type="checkbox"
-              checked={
-                selected && (selected as OptionType[]).some(item => item.value === option.value)
-              }
-              className="border-outline text-primary dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark h-4 w-4 rounded focus:ring-0"
-            />
-          </span>
-        )}
-
-        {/* Checkmark */}
-        {!multiple && selected && (selected as OptionType).value === option.value && (
-          <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
-        )}
-      </div>
+      {/* Checkmark */}
+      {!multiple && selected && (selected as OptionType).value === option.value && (
+        <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
+      )}
     </Listbox.Option>
   );
 
@@ -188,18 +175,17 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         multiple={multiple}
         disabled={disabled}
       >
-        <div className={`relative text-sm ${disabled ? "cursor-not-allowed" : ""}`}>
+        <div className="relative text-sm">
           <Listbox.Button
             className={clx(
-              "dark:border-washed-dark relative flex gap-[6px] rounded-md border py-[6px] pl-3 pr-8 text-left shadow-sm dark:bg-black lg:items-center",
-              className,
+              "shadow-button flex items-center gap-1.5 rounded-md px-3 py-1.5",
+              "text-start text-sm font-medium text-black dark:text-white",
+              "active:bg-washed hover:dark:bg-washed-dark/50 active:dark:bg-washed-dark select-none bg-white dark:bg-black",
+              "border-outline dark:border-washed-dark hover:border-outlineHover hover:dark:border-outlineHover-dark border outline-none",
+              disabled &&
+                "disabled:bg-outline dark:disabled:bg-washed-dark disabled:border-outline dark:disabled:border-washed-dark disabled:text-outlineHover dark:disabled:text-outlineHover-dark disabled:pointer-events-none disabled:cursor-not-allowed",
               width,
-              darkMode
-                ? "border-outline/10 active:bg-washed/10 bg-black"
-                : "border-outline active:bg-washed bg-white",
-              disabled
-                ? "bg-outline text-dim pointer-events-none"
-                : "hover:border-outlineHover focus:outline-none focus-visible:ring-0"
+              className
             )}
           >
             <>
@@ -224,31 +210,18 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               )}
 
               {/* Label */}
-              <span
-                className={clx(
-                  disabled ? "dark:text-dim" : "dark:text-white",
-                  "block w-full truncate lg:w-auto"
-                )}
-              >
+              <span className="flex flex-grow truncate">
                 {multiple ? title : (selected as OptionType)?.label || placeholder || "Select"}
               </span>
               {/* Label (multiple) */}
               {multiple && (selected as OptionType[])?.length > 0 && (
-                <span className="dark:bg-primary-dark rounded-md bg-black px-1 py-0.5 text-xs text-white ">
+                <span className="dark:bg-primary-dark bg-primary w-4.5 h-5 rounded-md text-center text-white">
                   {selected && (selected as OptionType[]).length}
                 </span>
               )}
 
               {/* ChevronDown Icon */}
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1.5">
-                <ChevronDownIcon
-                  className={clx(
-                    disabled ? "dark:text-dim" : "dark:text-white",
-                    "h-5 w-5 text-black"
-                  )}
-                  aria-hidden="true"
-                />
-              </span>
+              <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
             </>
           </Listbox.Button>
           <Transition
@@ -260,9 +233,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
             <Listbox.Options
               ref={optionsRef}
               className={clx(
-                "dark:ring-washed-dark absolute z-20 mt-1 min-w-full rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black",
-                anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor,
-                darkMode ? "border-outline/10 border bg-black" : "bg-white"
+                "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 min-w-full rounded-md bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black dark:text-white",
+                availableOptions.length <= 100 && "max-h-60 overflow-auto",
+                anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
               )}
             >
               {/* Description - optional*/}
@@ -270,22 +243,24 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
               {/* Search - optional*/}
               {enableSearch && (
-                <Input
-                  type="search"
-                  icon={<MagnifyingGlassIcon className=" h-4 w-4" />}
-                  value={search}
-                  className="border-outline dark:border-washed-dark w-full rounded-b-none border-0 border-b text-sm"
-                  placeholder={t("common:placeholder.search") + " ..."}
-                  onChange={value => setSearch(value)}
-                />
+                <div className="dark:border-outlineHover-dark border-b pt-1">
+                  <Input
+                    type="search"
+                    icon={<MagnifyingGlassIcon className="h-4 w-4" />}
+                    value={search}
+                    className="border-none focus:ring-transparent"
+                    placeholder={t("common:placeholder.search") + "..."}
+                    onChange={value => setSearch(value)}
+                  />
+                </div>
               )}
               {/* Options */}
-              {virtualise ? (
+              {availableOptions.length > 100 ? (
                 <FixedSizeList
                   height={240}
                   width={"100%"}
                   itemCount={availableOptions.length}
-                  itemSize={35}
+                  itemSize={36}
                 >
                   {({ index, style }: { index: number; style: CSSProperties }) => {
                     const option = availableOptions[index];
@@ -293,18 +268,18 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                   }}
                 </FixedSizeList>
               ) : (
-                <div className="max-h-60 overflow-auto">
+                <>
                   {availableOptions.map((option, index) => (
                     <ListboxOption key={index} option={option} index={index} style={null} />
                   ))}
-                </div>
+                </>
               )}
 
               {/* Clear / Reset */}
               {enableClear && (
                 <button
                   onClick={() => (multiple ? onChange([]) : onChange(undefined))}
-                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-2 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="text-dim hover:bg-washed dark:hover:bg-washed-dark dark:border-washed-dark group relative flex w-full cursor-default select-none items-center gap-2 border-t py-3 pl-10 pr-4 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={Array.isArray(selected) && selected.length === 0}
                 >
                   <p>{t("common:common.clear")}</p>

@@ -1,4 +1,6 @@
 {
-  "transport": "Pengangkutan API",
+  "gtfs-static": "Pengangkutan API (GTFS)",
+  "gtfs-realtime": "Pengangkutan API (GTFS-R)",
+  "flood-warning": "Flood Warning",
   "weather": "Cuaca API"
 }

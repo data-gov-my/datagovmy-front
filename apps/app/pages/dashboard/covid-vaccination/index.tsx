@@ -1,17 +1,16 @@
-import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { body } from "datagovmy-ui/configs/font";
 import COVIDVaccinationDashboard from "@dashboards/healthcare/covid-vaccination";
-import { withi18n } from "@lib/decorators";
-import Layout from "@components/Layout";
-import { StateDropdown, StateModal } from "@components/index";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { get } from "datagovmy-ui/api";
+import { withi18n } from "datagovmy-ui/decorators";
+import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
-import { clx } from "@lib/helpers";
-import Fonts from "@config/font";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
+import Layout from "@components/Layout";
 
 const CovidVaccination: Page = ({
   meta,
@@ -40,22 +39,24 @@ const CovidVaccination: Page = ({
 };
 
 CovidVaccination.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown
-        url={routes.COVID_VACCINATION}
-        currentState={props?.params.state}
-        hideOnScroll
-      />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.COVID_VACCINATION} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.COVID_VACCINATION}
+          currentState={props?.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.COVID_VACCINATION} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-// Disabled
 export const getStaticProps: GetStaticProps = withi18n("dashboard-covid-vaccination", async () => {
   const { data } = await get("/dashboard", { dashboard: "covid_vax", state: "mys" });
 

@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { static_routes } from "@lib/routes";
-import { STATES } from "@lib/constants";
+import { STATES } from "datagovmy-ui/constants";
+import { NextApiRequest, NextApiResponse } from "next";
 
 type RevalidateData = {
   revalidated: string[];
@@ -28,7 +28,7 @@ export default async function handler(
     const { route: _route }: { route: string } = req.body;
     if (!_route) throw new Error("Route(s) missing");
 
-    let routes: string[] = _route.split(",");
+    const routes: string[] = _route.split(",");
 
     await Promise.all(
       routes.map(async route =>
@@ -66,12 +66,18 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
       case "/dashboard/organ-donation":
       case "/dashboard/blood-donation":
       case "/dashboard/crime":
+      case "/dashboard/fire-and-rescue":
+      case "/dashboard/ipr":
+      case "/dashboard/business-creation-destruction":
       case "/ms-MY/dashboard/covid-19":
       case "/ms-MY/dashboard/covid-vaccination":
       case "/ms-MY/dashboard/peka-b40":
       case "/ms-MY/dashboard/organ-donation":
       case "/ms-MY/dashboard/blood-donation":
       case "/ms-MY/dashboard/crime":
+      case "/ms-MY/dashboard/fire-and-rescue":
+      case "/ms-MY/dashboard/ipr":
+      case "/ms-MY/dashboard/business-creation-destruction":
         await res.revalidate(route);
         const result = revalidateWithStates(res, route);
         routes.push.apply(routes, result);

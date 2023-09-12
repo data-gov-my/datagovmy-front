@@ -1,6 +1,8 @@
-import Hero from "@components/Hero";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import {
   At,
+  Hero,
   Button,
   Checkbox,
   Container,
@@ -11,13 +13,14 @@ import {
   Sidebar,
   Label,
   Search,
+  Daterange,
+  AgencyBadge,
 } from "datagovmy-ui/components";
-import { ArrowTrendingUpIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { FunctionComponent, useContext, useMemo, useRef } from "react";
-import { useFilter, useTranslation, WindowContext } from "datagovmy-ui/hooks";
-import { OptionType } from "@components/types";
-
-import { BREAKPOINTS } from "@lib/constants";
 
 /**
  * Catalogue Index
@@ -32,19 +35,13 @@ export type Catalogue = {
 interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
-  total: number;
   sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
-  query,
-  collection,
-  total,
-  sources,
-}) => {
-  const { t } = useTranslation();
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
+  const { t } = useTranslation(["catalogue", "opendosm-home", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     let resultCollection: Array<[string, Catalogue[]]> = [];
@@ -59,17 +56,18 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 
   return (
     <div>
-      <Hero background="data-catalogue-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <h3 className="text-black">{t("catalogue.header")}</h3>
-          <p className="text-dim">{t("catalogue.description")}</p>
-
-          <p className="flex items-center gap-2 text-sm text-dim">
-            <ArrowTrendingUpIcon className="h-4 w-4" />
-            <span>{t("catalogue.dataset_count", { count: total })}</span>
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="blue"
+        category={[t("opendosm-home:category"), "text-primary dark:text-primary-dark"]}
+        header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
+        description={[
+          t("description", {
+            agency: query.source ?? "",
+            context: query.source ? "agency" : "",
+          }),
+        ]}
+        agencyBadge={<AgencyBadge agency="dosm" />}
+      />
 
       <Container className="min-h-screen lg:px-0">
         <Sidebar
@@ -80,7 +78,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           onSelect={selected =>
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
-              block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
+              block: size.width <= BREAKPOINTS.LG ? "start" : "center",
               inline: "end",
             })
           }
@@ -112,7 +110,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
               );
             })
           ) : (
-            <p className="p-2 pt-16 text-dim lg:p-8">{t("common.no_entries")}.</p>
+            <p className="p-2 pt-16 text-dim lg:p-8">{t("common:common.no_entries")}.</p>
           )}
         </Sidebar>
       </Container>
@@ -129,25 +127,30 @@ interface CatalogueFilterProps {
 }
 
 const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sources }) => {
-  const { t } = useTranslation();
-  const filterPeriods: Array<OptionType> = [
-    { label: t("catalogue.index_filters.daily"), value: "DAILY" },
-    { label: t("catalogue.index_filters.weekly"), value: "WEEKLY" },
-    { label: t("catalogue.index_filters.monthly"), value: "MONTHLY" },
-    { label: t("catalogue.index_filters.quarterly"), value: "QUARTERLY" },
-    { label: t("catalogue.index_filters.yearly"), value: "YEARLY" },
+  const { t } = useTranslation(["catalogue", "common"]);
+  const periods: OptionType[] = [
+    { label: t("filter_options.daily"), value: "DAILY" },
+    { label: t("filter_options.weekly"), value: "WEEKLY" },
+    { label: t("filter_options.monthly"), value: "MONTHLY" },
+    { label: t("filter_options.quarterly"), value: "QUARTERLY" },
+    { label: t("filter_options.yearly"), value: "YEARLY" },
   ];
-  const filterGeographics: Array<OptionType> = [
-    { label: t("catalogue.index_filters.state"), value: "STATE" },
-    { label: t("catalogue.index_filters.district"), value: "DISTRICT" },
-    { label: t("catalogue.index_filters.parlimen"), value: "PARLIMEN" },
-    { label: t("catalogue.index_filters.dun"), value: "DUN" },
-    { label: t("catalogue.index_filters.national"), value: "NATIONAL" },
+  const geographies: OptionType[] = [
+    { label: t("filter_options.national"), value: "NATIONAL" },
+    { label: t("filter_options.state"), value: "STATE" },
+    { label: t("filter_options.district"), value: "DISTRICT" },
+    { label: t("filter_options.parlimen"), value: "PARLIMEN" },
+    { label: t("filter_options.dun"), value: "DUN" },
   ];
-  const filterSources: Array<OptionType> = sources.map(source => ({
-    label: source,
-    value: source,
-  }));
+  const demographies: OptionType[] = [
+    { label: t("filter_options.sex"), value: "SEX" },
+    { label: t("filter_options.ethnicity"), value: "ETHNICITY" },
+    { label: t("filter_options.age"), value: "AGE" },
+    { label: t("filter_options.religion"), value: "RELIGION" },
+    { label: t("filter_options.nationality"), value: "NATIONALITY" },
+    { label: t("filter_options.disability"), value: "DISABILITY" },
+    { label: t("filter_options.marital"), value: "MARITAL" },
+  ];
   const startYear: number = 1982;
   const endYear: number = new Date().getFullYear();
 
@@ -157,9 +160,9 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
       .map((year, index) => ({ label: `${year + index}`, value: `${year + index}` }));
 
   const { filter, setFilter, actives } = useFilter({
-    period: query.period ? filterPeriods.find(item => item.value === query.period) : undefined,
-    geographic: query.geographic
-      ? filterGeographics.filter(item => query.geographic.split(",").includes(item.value))
+    period: query.period ? periods.find(item => item.value === query.period) : undefined,
+    geography: query.geography
+      ? geographies.filter(item => query.geography.split(",").includes(item.value))
       : [],
     begin: query.begin
       ? filterYears(startYear, endYear).find(item => item.value === query.begin)
@@ -167,8 +170,8 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
     end: query.end
       ? filterYears(startYear, endYear).find(item => item.value === query.end)
       : undefined,
-    source: query.source
-      ? filterSources.filter(item => query.source.split(",").includes(item.value))
+    demography: query.demography
+      ? demographies.filter(item => query.demography.split(",").includes(item.value))
       : [],
     search: query.search ?? "",
   });
@@ -176,18 +179,19 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
   const reset = () => {
     setFilter("search", "");
     setFilter("period", undefined);
-    setFilter("geographic", []);
+    setFilter("geography", []);
+    setFilter("demography", []);
     setFilter("begin", undefined);
     setFilter("end", undefined);
-    setFilter("source", []);
+    // setFilter("source", []);
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 dark:border-outlineHover-dark dark:bg-background-dark lg:pl-2">
       <div className="flex-grow">
         <Search
           className="border-0"
-          placeholder={t("catalogue.search_placeholder")}
+          placeholder={t("placeholder.search")}
           query={filter.search}
           onChange={e => setFilter("search", e)}
         />
@@ -196,87 +200,77 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
       <div className="block xl:hidden">
         <Modal
           trigger={open => (
-            <Button
-              onClick={open}
-              className="mr-3 block self-center border border-outline px-3 py-1.5 shadow-sm"
-            >
-              <span>{t("catalogue.filter")}</span>
-              <span className="rounded-md bg-black px-1 py-0.5 text-xs text-white">
+            <Button onClick={open} variant="default" className="shadow-floating">
+              <span>{t("catalogue:filter")}</span>
+              <span className="h-5 w-4.5 rounded-md bg-primary text-center text-white dark:bg-primary-dark">
                 {actives.length}
               </span>
+              <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
             </Button>
           )}
-          title={
-            <Label
-              label={t("catalogue.filter") + ":"}
-              className="block text-sm font-medium text-black"
-            />
-          }
+          title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
         >
           {close => (
-            <div className="flex-grow space-y-4 divide-y overflow-y-auto pb-28">
-              <Radio
-                label={t("catalogue.period")}
-                name="period"
-                className="flex flex-wrap gap-4 px-1 pt-2"
-                options={filterPeriods}
-                value={filter.period}
-                onChange={e => setFilter("period", e)}
-              />
-              <Checkbox
-                label={t("catalogue.geographic")}
-                className="flex flex-wrap gap-4 px-1 pt-2"
-                name="geographic"
-                options={filterGeographics}
-                value={filter.geographic}
-                onChange={e => setFilter("geographic", e)}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
+            <div className="mb-[84px] flex h-max flex-col divide-y overflow-y-auto bg-white px-4.5 pb-4.5 dark:divide-washed-dark dark:bg-black">
+              <div className="py-3">
+                <Radio
+                  label={t("period")}
+                  name="period"
+                  options={periods}
+                  value={filter.period}
+                  onChange={e => setFilter("period", e)}
+                />
+              </div>
+              <div className="py-3">
+                <Checkbox
+                  label={t("geography")}
+                  name="geography"
+                  options={geographies}
+                  value={filter.geography}
+                  onChange={e => setFilter("geography", e)}
+                />
+              </div>
+              <div className="py-3">
+                <Checkbox
+                  name="demography"
+                  label={t("demography")}
+                  options={demographies}
+                  value={filter.demography}
+                  onChange={e => setFilter("demography", e)}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3 pt-3">
                 <Dropdown
                   width="w-full"
-                  label={t("catalogue.begin")}
-                  sublabel={t("catalogue.begin") + ":"}
+                  anchor="left-0 bottom-10"
+                  label={t("begin")}
                   options={filterYears(startYear, endYear)}
                   selected={filter.begin}
-                  placeholder={t("common.select")}
+                  placeholder={t("common:common.select")}
                   onChange={e => setFilter("begin", e)}
                 />
                 <Dropdown
-                  label={t("catalogue.end")}
-                  sublabel={t("catalogue.end") + ":"}
+                  label={t("end")}
                   width="w-full"
+                  anchor="right-0 bottom-10"
                   disabled={!filter.begin}
                   options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
                   selected={filter.end}
-                  placeholder={t("common.select")}
+                  placeholder={t("common:common.select")}
                   onChange={e => setFilter("end", e)}
                 />
               </div>
-
-              <Checkbox
-                label={t("catalogue.source")}
-                className="space-y-4 px-1 pt-4"
-                name="source"
-                options={filterSources}
-                value={filter.source}
-                onChange={e => setFilter("source", e)}
-              />
-
-              <div className="fixed bottom-0 left-0 w-full space-y-2 bg-white px-2 py-3">
+              <div className="fixed bottom-0 left-0 flex w-full flex-col border-t bg-white p-3 dark:border-washed-dark dark:bg-black">
                 <Button
-                  className="w-full justify-center bg-black text-white"
+                  variant="primary"
+                  className="justify-center"
                   disabled={!actives.length}
                   onClick={reset}
                 >
-                  {t("common.reset")}
+                  {t("common:common.reset")}
                 </Button>
-                <Button
-                  className="w-full justify-center bg-outline py-1.5"
-                  icon={<XMarkIcon className="h-4 w-4" />}
-                  onClick={close}
-                >
-                  {t("common.close")}
+                <Button variant="base" className="justify-center" onClick={close}>
+                  {t("common:common.close")}
                 </Button>
               </div>
             </div>
@@ -287,51 +281,51 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
       {/* Desktop */}
       <div className="hidden gap-2 pr-6 xl:flex">
         {actives.length > 0 && (
-          <div>
-            <Button
-              icon={<XMarkIcon className="h-4 w-4" />}
-              disabled={!actives.length}
-              onClick={reset}
-            >
-              {t("common.clear_all")}
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            icon={<XMarkIcon className="h-4 w-4" />}
+            disabled={!actives.length}
+            onClick={reset}
+          >
+            {t("common:common.clear_all")}
+          </Button>
         )}
         <Dropdown
-          options={filterPeriods}
-          placeholder={t("catalogue.period")}
+          options={periods}
+          placeholder={t("period")}
           selected={filter.period}
           onChange={e => setFilter("period", e)}
         />
         <Dropdown
           multiple
-          title={t("catalogue.geographic")}
-          options={filterGeographics}
-          selected={filter.geographic}
-          onChange={e => setFilter("geographic", e)}
-        />
-
-        <Dropdown
-          sublabel={t("catalogue.begin") + ":"}
-          options={filterYears(startYear, endYear)}
-          selected={filter.begin}
-          placeholder={t("common.select")}
-          onChange={e => setFilter("begin", e)}
-        />
-        <Dropdown
-          disabled={!filter.begin}
-          sublabel={t("catalogue.end") + ":"}
-          options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
-          selected={filter.end}
-          placeholder={t("common.select")}
-          onChange={e => setFilter("end", e)}
+          title={t("geography")}
+          options={geographies}
+          selected={filter.geography}
+          onChange={e => setFilter("geography", e)}
         />
         <Dropdown
           multiple
-          title={t("catalogue.source")}
-          options={filterSources}
-          selected={filter.source}
-          onChange={e => setFilter("source", e)}
+          enableClear
+          title={t("demography")}
+          description={t("placeholder.demography") + ":"}
+          options={demographies}
+          selected={filter.demography}
+          onChange={e => setFilter("demography", e)}
+        />
+
+        <Daterange
+          startYear={startYear}
+          endYear={endYear}
+          selectedStart={query.begin}
+          selectedEnd={query.end}
+          onChange={([begin, end]) => {
+            if (begin) setFilter("begin", { label: begin, value: begin });
+            if (end) setFilter("end", { label: end, value: end });
+          }}
+          onReset={() => {
+            setFilter("begin", undefined);
+            setFilter("end", undefined);
+          }}
         />
       </div>
     </div>

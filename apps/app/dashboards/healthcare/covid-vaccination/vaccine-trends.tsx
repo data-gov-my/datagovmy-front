@@ -1,13 +1,11 @@
-import { Section } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
-import { FunctionComponent } from "react";
+import { Slider, Section, Tabs } from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import Slider from "@components/Chart/Slider";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { numFormat } from "@lib/helpers";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import { FunctionComponent } from "react";
 
 /**
  * COVID Vaccination Trends
@@ -20,7 +18,7 @@ interface COVIDVaccinationTrendsProps {
   statistics: Record<string, any>;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = ({
   currentState,
   timeseries,
@@ -29,12 +27,32 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    period: "auto",
+    periodly: "daily_7d",
+    tab_index: 0,
   });
 
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
+  };
 
-  const TIMESERIES_LIST: string[] = ["primary", "booster", "booster2", "adult", "adol", "child"];
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
 
   return (
     <SliderProvider>
@@ -44,16 +62,35 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
             <Timeseries
               title={t("combine_title", {
                 state: CountryAndStates[currentState],
+                context: data.periodly,
               })}
-              interval="auto"
+              className="h-[300px]"
+              menu={
+                <Tabs.List
+                  options={[
+                    t("common:time.daily_7d"),
+                    t("common:time.daily"),
+                    t("common:time.monthly"),
+                    t("common:time.yearly"),
+                  ]}
+                  current={data.tab_index}
+                  onChange={index => {
+                    setData("tab_index", index);
+                    setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
+                    setData("period", config[index].period);
+                    setData("periodly", config[index].periodly);
+                  }}
+                />
+              }
+              interval={data.period}
               enableAnimation={!play}
               data={{
                 labels: coordinate.x,
                 datasets: [
                   {
                     type: "line",
-                    data: coordinate.line_stacked,
-                    label: t("combine_tooltip1"),
+                    data: coordinate.y,
+                    label: t(`common:time.${data.periodly}`),
                     borderColor: AKSARA_COLOR.GREEN,
                     borderWidth: 1.5,
                     backgroundColor: AKSARA_COLOR.GREEN_H,
@@ -64,8 +101,9 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
             />
             <Slider
               type="range"
+              period={data.period}
               value={data.minmax}
-              data={timeseries.data.x}
+              data={timeseries.data[data.periodly].x}
               onChange={e => setData("minmax", e)}
             />
           </Section>
@@ -74,49 +112,50 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
           <Section
             title={t("area_chart_header", {
               state: CountryAndStates[currentState],
+              context: data.periodly,
             })}
             date={timeseries.data_as_of}
           >
             <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
-              {TIMESERIES_LIST.map((item: string, i: number) => {
-                const title: string = `area_chart_title${i + 1}`;
-                const y_key: string = `line_${item}`;
-                const statistic_key: string = `daily_${item}`;
-                return (
-                  <Timeseries
-                    key={title}
-                    className="h-[250px]"
-                    title={t(title)}
-                    enableGridX={false}
-                    precision={0}
-                    enableAnimation={!play}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
+              {["primary", "booster", "booster2", "adult", "adol", "child"].map(
+                (item: string, idx: number) => {
+                  const title: string = `area_chart_title${idx + 1}`;
+                  const statistic_key: string = `daily_${item}`;
+                  return (
+                    <Timeseries
+                      key={title}
+                      className="h-[300px]"
+                      title={t(title)}
+                      interval={data.period}
+                      enableAnimation={!play}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            data: coordinate[item],
+                            label: t(`common:time.${data.periodly}`),
+                            borderColor: AKSARA_COLOR.GREEN,
+                            borderWidth: 1.5,
+                            backgroundColor: AKSARA_COLOR.GREEN_H,
+                            fill: true,
+                          },
+                        ],
+                      }}
+                      stats={[
                         {
-                          type: "line",
-                          data: coordinate[y_key],
-                          label: t("combine_tooltip1"),
-                          borderColor: AKSARA_COLOR.GREEN,
-                          borderWidth: 1.5,
-                          backgroundColor: AKSARA_COLOR.GREEN_H,
-                          fill: true,
+                          title: t("common:time.daily"),
+                          value: `+${numFormat(statistics.data[statistic_key].latest, "standard")}`,
                         },
-                      ],
-                    }}
-                    stats={[
-                      {
-                        title: t("daily"),
-                        value: `+${numFormat(statistics.data[statistic_key].latest, "standard")}`,
-                      },
-                      {
-                        title: t("total"),
-                        value: `${numFormat(statistics.data[statistic_key].total, "standard")}`,
-                      },
-                    ]}
-                  />
-                );
-              })}
+                        {
+                          title: t("total"),
+                          value: `${numFormat(statistics.data[statistic_key].total, "standard")}`,
+                        },
+                      ]}
+                    />
+                  );
+                }
+              )}
             </div>
           </Section>
         </>

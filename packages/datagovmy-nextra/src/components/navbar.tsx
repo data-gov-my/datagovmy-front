@@ -7,6 +7,7 @@ import type { ReactElement, ReactNode } from "react";
 import { useConfig, useMenu } from "../contexts";
 import { renderComponent } from "../utils";
 import { Anchor } from "./anchor";
+import { LocaleSwitch } from "./locale-switch";
 
 export type NavBarProps = {
   flatDirectories: Item[];
@@ -158,11 +159,24 @@ export function Navbar({ flatDirectories, items }: NavBarProps): ReactElement {
             );
           })}
 
-          {config.project.link ? (
+          {/* {config.project.link ? (
             <Anchor className="p-2 text-current" href={config.project.link} newWindow>
               {renderComponent(config.project.icon)}
             </Anchor>
-          ) : null}
+          ) : null} */}
+
+          {config.darkMode && (
+            <div className="hidden sm:block">
+              {renderComponent(config.themeSwitch.component, {
+                lite: true,
+              })}
+            </div>
+          )}
+          {config.i18n.length > 0 && (
+            <div className="hidden sm:block">
+              <LocaleSwitch options={config.i18n} />
+            </div>
+          )}
 
           {config.chat.link ? (
             <Anchor className="p-2 text-current" href={config.chat.link} newWindow>

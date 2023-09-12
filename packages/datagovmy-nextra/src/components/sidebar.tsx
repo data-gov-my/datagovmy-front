@@ -47,7 +47,7 @@ const classes = {
   border: cn(
     "relative before:absolute before:inset-y-1",
     'before:w-px before:bg-gray-200 before:content-[""] dark:before:bg-neutral-800',
-    "ltr:pl-3 ltr:before:left-0 rtl:pr-3 rtl:before:right-0"
+    "ltr:pl-2 ltr:before:left-0 rtl:pr-2 rtl:before:right-0"
   ),
 };
 
@@ -156,7 +156,7 @@ function FolderImpl({ item, anchors }: FolderProps): ReactElement {
       <Collapse className="pt-1 ltr:pr-0 rtl:pl-0" isOpen={open}>
         {Array.isArray(item.children) ? (
           <Menu
-            className={cn(classes.border, "ltr:ml-3 rtl:mr-3")}
+            className={cn(classes.border, "ltr:ml-2 rtl:mr-2")}
             directories={item.children}
             base={item.route}
             anchors={anchors}
@@ -228,7 +228,8 @@ function File({ item, anchors }: { item: PageItem | Item; anchors: Heading[] }):
         })}
       </Anchor>
       {active && anchors.length > 0 && (
-        <ul className={cn(classes.list, classes.border, "ltr:ml-3 rtl:mr-3")}>
+        // <ul className={cn(classes.list, classes.border, "ltr:ml-3 rtl:mr-3")}>
+        <ul className={cn(classes.list, "ltr:ml-3 rtl:mr-3")}>
           {anchors.map(({ id, value }) => (
             <li key={id}>
               <a
@@ -429,11 +430,16 @@ export function Sidebar({
               <LocaleSwitch
                 options={config.i18n}
                 lite={!showSidebar}
-                className={cn(showSidebar ? "grow" : "max-md:grow")}
+                className={cn("block sm:hidden", showSidebar ? "grow" : "max-md:grow")}
               />
             )}
             {config.darkMode && (
-              <div className={showSidebar && !hasI18n ? "flex grow flex-col" : ""}>
+              <div
+                className={cn(
+                  "block sm:hidden",
+                  showSidebar && !hasI18n ? "flex grow flex-col" : ""
+                )}
+              >
                 {renderComponent(config.themeSwitch.component, {
                   lite: !showSidebar || hasI18n,
                 })}

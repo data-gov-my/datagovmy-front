@@ -1,24 +1,19 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback } from "react";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
-import type { OptionType } from "@components/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
-import AgencyBadge from "@components/Badge/agency";
-import { BNMIcon } from "@components/Icon/agency";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * International Reserves Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface InternationalReservesDashboardProps {
   last_updated: string;
@@ -73,19 +68,14 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bnm.full")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BNMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bnm" />}
       />
 
       <Container className="min-h-screen">
         {/* Key measures of BNM’s international reserves */}
-        <Section title={t("section_1.title")} date={timeseries.data_as_of}>
-          <div className="space-y-8">
+        <Section
+          title={t("section_1.title")}
+          description={
             <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
               <Dropdown
                 anchor="left"
@@ -94,175 +84,174 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
                 onChange={e => setData("shade_type", e)}
               />
             </div>
-
-            <SliderProvider>
-              {play => (
-                <>
-                  <Slider
-                    className=""
-                    type="range"
-                    value={data.minmax}
-                    data={timeseries.data.x}
-                    period="month"
-                    onChange={e => setData("minmax", e)}
+          }
+          date={timeseries.data_as_of}
+        >
+          <SliderProvider>
+            {play => (
+              <>
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                  <Timeseries
+                    title={t("keys.reserves_usd")}
+                    className="h-[350px] w-full"
+                    precision={[1, 1]}
+                    interval="month"
+                    tooltipFormat="dd MMM yyyy"
+                    enableAnimation={!play}
+                    prefixY="$"
+                    unitY=" bil"
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
+                          display: false,
+                        },
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("keys.reserves_usd"),
+                          data: coordinate["reserves_usd"],
+                          borderColor: AKSARA_COLOR.DARK_BLUE,
+                          backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
+                          fill: data.shade_type.value === "no_shade",
+                          borderWidth: 1.5,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
+                        }),
+                        value: `USD ${numFormat(
+                          timeseries_callouts.data["reserves_usd"].callout,
+                          "standard",
+                          [1, 1],
+                          "short",
+                          i18n.language
+                        )} bil`,
+                      },
+                    ]}
                   />
-
-                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    <Timeseries
-                      title={t("keys.reserves_usd")}
-                      className="h-[350px] w-full"
-                      precision={[1, 1]}
-                      interval="month"
-                      tooltipFormat="dd MMM yyyy"
-                      enableAnimation={!play}
-                      prefixY="$"
-                      unitY=" bil"
-                      axisY={{
-                        y2: {
+                  <Timeseries
+                    title={t("keys.import_months")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    precision={[1, 1]}
+                    tooltipFormat="dd MMM yyyy"
+                    unitY={t("section_1.months")}
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.reserves_usd"),
-                            data: coordinate["reserves_usd"],
-                            borderColor: AKSARA_COLOR.DARK_BLUE,
-                            backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
-                            fill: data.shade_type.value === "no_shade",
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
-                          }),
-                          value: `USD ${numFormat(
-                            timeseries_callouts.data["reserves_usd"].callout,
-                            "standard",
-                            [1, 1],
-                            "short",
-                            i18n.language
-                          )} bil`,
+                          type: "line",
+                          label: t("keys.import_months"),
+                          data: coordinate["import_months"],
+                          borderColor: AKSARA_COLOR.DARK_BLUE,
+                          backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
+                          fill: data.shade_type.value === "no_shade",
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.import_months")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      enableAnimation={!play}
-                      precision={[1, 1]}
-                      tooltipFormat="dd MMM yyyy"
-                      unitY={t("section_1.months")}
-                      axisY={{
-                        y2: {
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
+                        }),
+                        value: `${numFormat(
+                          timeseries_callouts.data["import_months"].callout,
+                          "standard",
+                          [1, 1]
+                        )} ${t("section_1.months_of_import")}`,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.ed_scale")}
+                    className="h-[350px] w-full"
+                    interval="month"
+                    precision={[1, 1]}
+                    enableAnimation={!play}
+                    tooltipFormat="dd MMM yyyy"
+                    unitY="x"
+                    axisY={{
+                      y2: {
+                        display: false,
+                        grid: {
+                          drawTicks: false,
+                          drawBorder: false,
+                          lineWidth: 0.5,
+                        },
+                        ticks: {
                           display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
                         },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.import_months"),
-                            data: coordinate["import_months"],
-                            borderColor: AKSARA_COLOR.DARK_BLUE,
-                            backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
-                            fill: data.shade_type.value === "no_shade",
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
+                      },
+                    }}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
                         {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
-                          }),
-                          value: `${numFormat(
-                            timeseries_callouts.data["import_months"].callout,
-                            "standard",
-                            [1, 1]
-                          )} ${t("section_1.months_of_import")}`,
+                          type: "line",
+                          label: t("keys.ed_scale"),
+                          data: coordinate["ed_scale"],
+                          borderColor: AKSARA_COLOR.DARK_BLUE,
+                          backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
+                          fill: data.shade_type.value === "no_shade",
+                          borderWidth: 1.5,
                         },
-                      ]}
-                    />
-                    <Timeseries
-                      title={t("keys.ed_scale")}
-                      className="h-[350px] w-full"
-                      interval="month"
-                      precision={[1, 1]}
-                      enableAnimation={!play}
-                      tooltipFormat="dd MMM yyyy"
-                      unitY="x"
-                      axisY={{
-                        y2: {
-                          display: false,
-                          grid: {
-                            drawTicks: false,
-                            drawBorder: false,
-                            lineWidth: 0.5,
-                          },
-                          ticks: {
-                            display: false,
-                          },
-                        },
-                      }}
-                      data={{
-                        labels: coordinate.x,
-                        datasets: [
-                          {
-                            type: "line",
-                            label: t("keys.ed_scale"),
-                            data: coordinate["ed_scale"],
-                            borderColor: AKSARA_COLOR.DARK_BLUE,
-                            backgroundColor: AKSARA_COLOR.DARK_BLUE_H,
-                            fill: data.shade_type.value === "no_shade",
-                            borderWidth: 1.5,
-                          },
-                          shader(data.shade_type.value),
-                        ],
-                      }}
-                      stats={[
-                        {
-                          title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
-                          }),
-                          value: `${numFormat(
-                            timeseries_callouts.data["ed_scale"].callout,
-                            "standard",
-                            [1, 1]
-                          )}x ${t("section_1.short_term_external_debt")}`,
-                        },
-                      ]}
-                    />
-                  </div>
-                </>
-              )}
-            </SliderProvider>
-          </div>
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "dd MMM yyyy", i18n.language),
+                        }),
+                        value: `${numFormat(
+                          timeseries_callouts.data["ed_scale"].callout,
+                          "standard",
+                          [1, 1]
+                        )}x ${t("section_1.short_term_external_debt")}`,
+                      },
+                    ]}
+                  />
+                </div>
+                <Slider
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data.x}
+                  period="month"
+                  onChange={e => setData("minmax", e)}
+                />
+              </>
+            )}
+          </SliderProvider>
         </Section>
         {/* I want to understand more about BNM’s international reserves */}
         <Section
@@ -273,7 +262,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
               {t("section_2.description_part_1")}
               {
                 <a
-                  className="cursor-pointer underline hover:text-black hover:underline"
+                  className="cursor-pointer underline [text-underline-position:from-font] hover:text-black dark:hover:text-white"
                   href={t("section_2.ir_explainer_url")}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -284,7 +273,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
               {t("section_2.description_part_2")}
               {
                 <a
-                  className="cursor-pointer underline hover:text-black hover:underline"
+                  className="cursor-pointer underline [text-underline-position:from-font] hover:text-black dark:hover:text-white"
                   href="https://www.bnm.gov.my/international-reserves-and-foreign-currency-liquidity"
                   target="_blank"
                   rel="noopener noreferrer"

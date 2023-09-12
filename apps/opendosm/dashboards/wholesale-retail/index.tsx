@@ -1,15 +1,13 @@
-import Hero from "@components/Hero";
-import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
-import { FunctionComponent, useCallback, useEffect, useMemo } from "react";
+import { CustomerServiceIcon } from "@icons/division";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
-import { useSlice, useData, useWatch, useTranslation } from "datagovmy-ui/hooks";
-import type { OptionType } from "@components/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
+import { FunctionComponent, useCallback, useMemo } from "react";
 
 /**
  * Wholesale & Retail Trade Dashboard
@@ -31,8 +29,8 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
-  const sortedIndices = [
+  const { t, i18n } = useTranslation(["dashboard-wholesale-retail", "common"]);
+  const INDICES = [
     "growth_index_yoy",
     "growth_sales_yoy",
     "growth_momsa",
@@ -40,14 +38,14 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
     "index",
     "sales",
   ];
-  const INDEX_OPTIONS: Array<OptionType> = sortedIndices.map((key: string) => ({
-    label: t(`wholesaleretail.keys.${key}`),
+  const INDEX_OPTIONS: Array<OptionType> = INDICES.map((key: string) => ({
+    label: t(`keys.${key}`),
     value: key,
   }));
 
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("wholesaleretail.keys.no_shade"), value: "no_shade" },
-    { label: t("wholesaleretail.keys.recession"), value: "recession" },
+    { label: t("keys.no_shade"), value: "no_shade" },
+    { label: t("keys.recession"), value: "recession" },
   ];
 
   const AXIS_Y = {
@@ -125,206 +123,196 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
     [data.index_type, data.shade_type]
   );
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "wholesaleretail.header",
-      name_en: "Wholesale & Retail Trade",
-      name_bm: "Perdagangan Borong & Runcit",
-      route: routes.WHOLESALE_RETAIL,
-    });
-  }, []);
-
-  useWatch(() => {
-    setData("minmax", [0, timeseries.data[data.index_type.value].x.length - 1]);
-  }, [data.index_type]);
-
   return (
     <>
-      <Hero background="wholesale-retail-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-green-700">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3>{t("wholesaleretail.header")}</h3>
-          <p className="text-dim">{t("wholesaleretail.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="red"
+        category={[t("common:categories.economy"), "text-danger"]}
+        header={[t("header")]}
+        description={[t("description")]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge name={t("division:bpp.full")} icon={<CustomerServiceIcon />} isDivision />
+        }
+      />
 
       <Container className="min-h-screen">
         {/* How are the Malaysian Economic Indicators trending? */}
-        <Section title={t("wholesaleretail.section_1.title")} date={timeseries.data_as_of}>
-          <div className="space-y-8">
-            <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
-              <Dropdown
-                anchor="left"
-                selected={data.index_type}
-                options={INDEX_OPTIONS}
-                onChange={(e: any) => setData("index_type", e)}
-              />
-              <Dropdown
-                anchor="left"
-                options={SHADE_OPTIONS}
-                selected={data.shade_type}
-                onChange={(e: any) => setData("shade_type", e)}
-              />
-            </div>
+        <SliderProvider>
+          {play => (
+            <Section title={t("section_1.title")} date={timeseries.data_as_of}>
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
+                  <Dropdown
+                    anchor="left"
+                    selected={data.index_type}
+                    options={INDEX_OPTIONS}
+                    onChange={(e: any) => setData("index_type", e)}
+                  />
+                  <Dropdown
+                    anchor="left"
+                    options={SHADE_OPTIONS}
+                    selected={data.shade_type}
+                    onChange={(e: any) => setData("shade_type", e)}
+                  />
+                </div>
 
-            <Slider
-              className=""
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.index_type.value].x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
-            <Timeseries
-              className="h-[350px] w-full"
-              title={t("wholesaleretail.keys.total")}
-              interval="month"
-              unitY={configs("total").unit}
-              prefixY={configs("total").prefix}
-              displayNumFormat={value =>
-                numFormat(value, "compact", 1, "long", i18n.language, true)
-              }
-              axisY={AXIS_Y}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.total,
-                    label: t("wholesaleretail.keys.total"),
-                    borderColor: AKSARA_COLOR.GREEN,
-                    borderWidth: 1.5,
-                    backgroundColor: AKSARA_COLOR.GREEN_H,
-                    fill: configs("total").fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: configs("total").callout,
-                },
-              ]}
-            />
+                <Timeseries
+                  className="h-[300px] w-full"
+                  title={t("keys.total")}
+                  interval="month"
+                  unitY={configs("total").unit}
+                  enableAnimation={!play}
+                  prefixY={configs("total").prefix}
+                  displayNumFormat={value =>
+                    numFormat(value, "compact", 1, "long", i18n.language, true)
+                  }
+                  axisY={AXIS_Y}
+                  data={{
+                    labels: coordinate.x,
+                    datasets: [
+                      {
+                        type: "line",
+                        data: coordinate.total,
+                        label: t("keys.total"),
+                        borderColor: AKSARA_COLOR.DANGER,
+                        borderWidth: 1.5,
+                        backgroundColor: AKSARA_COLOR.DANGER_H,
+                        fill: configs("total").fill,
+                      },
+                      shader(data.shade_type.value),
+                    ],
+                  }}
+                  stats={[
+                    {
+                      title: t("common:common.latest", {
+                        date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                      }),
+                      value: configs("total").callout,
+                    },
+                  ]}
+                />
 
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-              <Timeseries
-                title={t("wholesaleretail.keys.wholesale")}
-                className="h-[350px] w-full"
-                interval="month"
-                unitY={configs("wholesale").unit}
-                prefixY={configs("wholesale").prefix}
-                axisY={AXIS_Y}
-                displayNumFormat={value =>
-                  numFormat(value, "compact", 1, "long", i18n.language, true)
-                }
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: t("wholesaleretail.keys.wholesale"),
-                      data: coordinate.wholesale,
-                      borderColor: AKSARA_COLOR.GREEN,
-                      backgroundColor: AKSARA_COLOR.GREEN_H,
-                      fill: configs("wholesale").fill,
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                    }),
-                    value: configs("wholesale").callout,
-                  },
-                ]}
-              />
-              <Timeseries
-                title={t("wholesaleretail.keys.retail")}
-                className="h-[350px] w-full"
-                interval="month"
-                unitY={configs("retail").unit}
-                prefixY={configs("retail").prefix}
-                axisY={AXIS_Y}
-                displayNumFormat={value =>
-                  numFormat(value, "compact", 1, "long", i18n.language, true)
-                }
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: t("wholesaleretail.keys.retail"),
-                      data: coordinate.retail,
-                      borderColor: AKSARA_COLOR.GREEN,
-                      backgroundColor: AKSARA_COLOR.GREEN_H,
-                      fill: configs("retail").fill,
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                    }),
-                    value: configs("retail").callout,
-                  },
-                ]}
-              />
-              <Timeseries
-                title={t("wholesaleretail.keys.motor")}
-                className="h-[350px] w-full"
-                interval="month"
-                unitY={configs("motor").unit}
-                prefixY={configs("motor").prefix}
-                axisY={AXIS_Y}
-                displayNumFormat={value =>
-                  numFormat(value, "compact", 1, "long", i18n.language, true)
-                }
-                data={{
-                  labels: coordinate.x,
-                  datasets: [
-                    {
-                      type: "line",
-                      label: t("wholesaleretail.keys.motor"),
-                      data: coordinate.motor,
-                      borderColor: AKSARA_COLOR.GREEN,
-                      backgroundColor: AKSARA_COLOR.GREEN_H,
-                      fill: configs("motor").fill,
-                      borderWidth: 1.5,
-                    },
-                    shader(data.shade_type.value),
-                  ],
-                }}
-                stats={[
-                  {
-                    title: t("common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                    }),
-                    value: configs("motor").callout,
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        </Section>
+                <Slider
+                  className=""
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data[data.index_type.value].x}
+                  period="month"
+                  onChange={e => setData("minmax", e)}
+                />
+
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                  <Timeseries
+                    title={t("keys.wholesale")}
+                    className="h-[300px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY={configs("wholesale").unit}
+                    prefixY={configs("wholesale").prefix}
+                    axisY={AXIS_Y}
+                    displayNumFormat={value =>
+                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    }
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("keys.wholesale"),
+                          data: coordinate.wholesale,
+                          borderColor: AKSARA_COLOR.DANGER,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
+                          fill: configs("wholesale").fill,
+                          borderWidth: 1.5,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("wholesale").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.retail")}
+                    className="h-[300px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY={configs("retail").unit}
+                    prefixY={configs("retail").prefix}
+                    axisY={AXIS_Y}
+                    displayNumFormat={value =>
+                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    }
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("keys.retail"),
+                          data: coordinate.retail,
+                          borderColor: AKSARA_COLOR.DANGER,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
+                          fill: configs("retail").fill,
+                          borderWidth: 1.5,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("retail").callout,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    title={t("keys.motor")}
+                    className="h-[300px] w-full"
+                    interval="month"
+                    enableAnimation={!play}
+                    unitY={configs("motor").unit}
+                    prefixY={configs("motor").prefix}
+                    axisY={AXIS_Y}
+                    displayNumFormat={value =>
+                      numFormat(value, "compact", 1, "long", i18n.language, true)
+                    }
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("keys.motor"),
+                          data: coordinate.motor,
+                          borderColor: AKSARA_COLOR.DANGER,
+                          backgroundColor: AKSARA_COLOR.DANGER_H,
+                          fill: configs("motor").fill,
+                          borderWidth: 1.5,
+                        },
+                        shader(data.shade_type.value),
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:common.latest", {
+                          date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                        }),
+                        value: configs("motor").callout,
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            </Section>
+          )}
+        </SliderProvider>
       </Container>
     </>
   );

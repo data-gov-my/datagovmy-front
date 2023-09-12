@@ -1,25 +1,24 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Page } from "@lib/types";
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "@lib/api";
 import DataCatalogue, { Catalogue } from "@data-catalogue/index";
-import { SHORT_LANG } from "@lib/constants";
-import { sortAlpha } from "@lib/helpers";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { withi18n } from "datagovmy-ui/decorators";
+import { sortAlpha } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Page } from "datagovmy-ui/types";
 
 const CatalogueIndex: Page = ({
   query,
   collection,
-  total,
   sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["catalogue", "common"]);
 
   return (
     <>
-      <Metadata title={t("nav.catalogue")} description={""} keywords={""} />
-      <DataCatalogue query={query} collection={collection} total={total} sources={sources} />
+      <Metadata title={t("header")} description={"description"} keywords={""} />
+      <DataCatalogue query={query} collection={collection} sources={sources} />
     </>
   );
 };
@@ -38,14 +37,14 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["catalogue", "common"],
+  ["catalogue", "common", "opendosm-home"],
   async ({ locale, query }) => {
     const { data } = await get("/data-catalog/", {
       lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+      source: "DOSM",
+      opendosm: true,
       ...query,
     });
-
-    const collection = recurSort(data.dataset);
 
     return {
       props: {
@@ -58,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         query: query ?? {},
         total: data.total_all,
         sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
-        collection,
+        collection: data.dataset ? recurSort(data.dataset) : {},
       },
     };
   }

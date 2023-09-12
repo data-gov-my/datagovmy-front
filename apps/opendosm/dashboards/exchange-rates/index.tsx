@@ -1,28 +1,22 @@
-import { FunctionComponent, useCallback, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { sortMulti, toDate } from "@lib/helpers";
+import { IntegrationDataIcon } from "@icons/division";
+import { AgencyBadge, Container, Hero, Panel, Section, Tabs } from "datagovmy-ui/components";
+import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
+import { sortMulti } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { AKSARA_COLOR, SHORT_LANG } from "@lib/constants";
-import { Tabs, Panel, Container, Section } from "datagovmy-ui/components";
-import Hero from "@components/Hero";
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
-import { closestIndex, getColor } from "@lib/schema/exchange-rates";
+import { closestIndex, getColor } from "datagovmy-ui/schema/exchange-rates";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Exchange Rates Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
-  ssr: false,
-});
-const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), {
-  ssr: false,
-});
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface ExchangeRatesDashboardProps {
-  last_updated: number;
+  last_updated: string;
   bar: any;
   timeseries: any;
   timeseries_callouts: any;
@@ -34,7 +28,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-exchange-rates", "common"]);
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
   const { data, setData } = useData({
     active_snapshot: 0,
@@ -67,52 +61,41 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
     [data.active_trend]
   );
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "exchangerate.header",
-      name_en: "Exchange Rates",
-      name_bm: "Kadar Pertukaran",
-      route: routes.EXCHANGE_RATE,
-    });
-  }, []);
-
   return (
     <>
-      <Hero background="exchange-rates-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-green-300">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3 className="text-white">{t("exchangerate.header")}</h3>
-          <p className="whitespace-pre-line text-white">{t("exchangerate.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="gray"
+        category={[t("common:categories.financial_sector")]}
+        header={[t("header"), "dark:text-white"]}
+        description={[t("description"), "dark:text-white"]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge name={t("division:bipd.full")} icon={<IntegrationDataIcon />} isDivision />
+        }
+      />
 
       <Container className="start-h-screen">
         {/* A snapshot of the Ringgit's performance against major trade partners */}
         <Section
-          title={t("exchangerate.section_1.title")}
-          description={t("exchangerate.section_1.description")}
+          title={t("section_1.title")}
+          description={t("section_1.description")}
           date={bar.data_as_of}
         >
           <Tabs
-            title={t("exchangerate.section_1.bar_header", {
-              period: t(`exchangerate.keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
+            title={t("section_1.bar_header", {
+              period: t(`keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
             })}
             onChange={(index: number) => setData("active_snapshot", index)}
           >
             {SNAPSHOT_TAB.map((key: string) => {
-              const sorted_data = sortMulti(bar.data[key], "y", (a: number, b: number) => b - a);
+              const sorted_data = sortMulti<number>(
+                bar.data[key],
+                "y",
+                (a: number, b: number) => b - a
+              );
               const zero_index = closestIndex(sorted_data.y, 0);
               return (
-                <Panel name={t(`exchangerate.keys.${key}`)} key={key}>
+                <Panel name={t(`keys.${key}`)} key={key}>
                   <Bar
                     className="hidden h-[350px] w-full lg:block"
                     layout="vertical"
@@ -125,8 +108,8 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                       labels: sorted_data.x,
                       datasets: [
                         {
-                          label: t("exchangerate.section_1.bar_header", {
-                            period: t(`exchangerate.keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
+                          label: t("section_1.bar_header", {
+                            period: t(`keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
                           }),
                           data: sorted_data.y,
                           backgroundColor(ctx) {
@@ -147,8 +130,8 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                       labels: sorted_data.x.slice().reverse(),
                       datasets: [
                         {
-                          label: t("exchangerate.section_1.bar_header", {
-                            period: t(`exchangerate.keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
+                          label: t("section_1.bar_header", {
+                            period: t(`keys.${SNAPSHOT_TAB[data.active_snapshot]}`),
                           }),
                           data: sorted_data.y.slice().reverse(),
                           backgroundColor(ctx) {
@@ -166,14 +149,14 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
 
         {/* How is the Ringgit trending? */}
         <Section
-          title={t("exchangerate.section_2.title")}
-          description={t("exchangerate.section_2.description")}
+          title={t("section_2.title")}
+          description={t("section_2.description")}
           date={timeseries.data_as_of}
         >
           <Tabs onChange={e => setData("active_trend", e)}>
-            {/* title={t("exchangerate.keys.currency0")} */}
+            {/* title={t("keys.currency0")} */}
             {TREND_TAB.map(key => (
-              <Panel name={t(`exchangerate.keys.${key}`)} key={key}>
+              <Panel name={t(`keys.${key}`)} key={key}>
                 <div className="space-y-12">
                   {/* <Timeseries
                     className="h-[300px] w-full"
@@ -185,7 +168,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                         {
                           type: "line",
                           data: timeseries.data[key].currency0,
-                          label: t("exchangerate.keys.currency0"),
+                          label: t("keys.currency0"),
                           borderColor: AKSARA_COLOR.PRIMARY,
                           borderWidth: 1.5,
                           backgroundColor: AKSARA_COLOR.PRIMARY_H,
@@ -195,7 +178,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                     }}
                     stats={[
                       {
-                        title: t("exchangerate.latest"),
+                        title: t("latest"),
                         value: timeseries_callouts.data.currency0.callout,
                       },
                     ]}
@@ -204,11 +187,13 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                   <div className="grid grid-cols-1 gap-12 pt-8 lg:grid-cols-3">
                     {CURRENCY.map(index => (
                       <Timeseries
+                        key={timeseries_callouts.data[index][`country_${lang}`]}
                         title={timeseries_callouts.data[index][`country_${lang}`]}
                         className="h-[300px] w-full"
                         interval={data.active_trend < 2 ? "day" : "auto"}
                         prefixY={timeseries_callouts.data[index].tooltip_unit}
                         precision={3}
+                        beginZero={false}
                         data={{
                           labels: timeseries.data[key].x,
                           datasets: [
@@ -231,7 +216,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
                         }}
                         stats={[
                           {
-                            title: t("exchangerate.latest"),
+                            title: t("latest"),
                             value: timeseries_callouts.data[index].callout,
                           },
                         ]}

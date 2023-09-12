@@ -1,24 +1,25 @@
-import Accordion from "@components/Accordion";
-import Button from "@components/Button";
-import Card from "@components/Card";
-import Container from "@components/Container";
-import Dropdown from "@components/Dropdown";
-import { CheckMarkIcon } from "@components/Icon";
-import Input from "@components/Input";
-import Section from "@components/Section";
-import Spinner from "@components/Spinner";
-import { toast } from "@components/Toast";
-import { OptionType } from "@components/types";
-import { ChevronRightIcon, PlusIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { post } from "@lib/api";
-import { clx } from "@lib/helpers";
+import { CheckMarkIcon } from "../../icons";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { post } from "datagovmy-ui/api";
+import {
+  Accordion,
+  Button,
+  Card,
+  Container,
+  Dropdown,
+  Input,
+  Section,
+  Spinner,
+  toast,
+} from "datagovmy-ui/components";
+import { clx } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { FunctionComponent } from "react";
 
 /**
  * Helpdesk Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const HelpdeskDashboard: FunctionComponent = () => {
@@ -74,25 +75,24 @@ const HelpdeskDashboard: FunctionComponent = () => {
 
   return (
     <>
-      <Container background="bg-gradient-radial from-[#E2E8F0] to-background dark:from-[#3F3F46] dark:to-black">
+      <Container
+        background="bg-gradient-radial from-outline to-background dark:from-washed-dark dark:to-black"
+        className="dark:border-outlineHover-dark border-b"
+      >
         <div className="mx-auto flex h-[170px] flex-col space-y-3 py-12">
           <h2 className="text-center text-black">{t("header")}</h2>
           <p className="text-dim text-center">{t("description")}</p>
         </div>
       </Container>
       <Container className="min-h-screen">
-        <Section title={<h4 className="mx-auto flex">{t("faq")}</h4>}>
+        <Section title={<h4 className="mx-auto flex text-center">{t("faq")}</h4>}>
           <div className="flex w-full flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-10">
             <div className="flex w-full flex-col gap-3 lg:col-span-4 lg:col-start-2">
               <h5 className="mx-auto flex text-center font-bold">{t("general")}</h5>
               {[...Array(5)].map((_, i) => {
                 i++;
                 return (
-                  <Accordion
-                    key={"general" + i}
-                    icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                    title={t("general_q" + i)}
-                  >
+                  <Accordion key={"general" + i} title={t("general_q" + i)}>
                     <p>{t("general_a" + i)}</p>
                   </Accordion>
                 );
@@ -104,11 +104,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
               {[...Array(5)].map((_, i) => {
                 i++;
                 return (
-                  <Accordion
-                    key={"data-tech" + i}
-                    icon={<PlusIcon className="absolute h-5 w-5 items-center self-center" />}
-                    title={t("data-tech_q" + i)}
-                  >
+                  <Accordion key={"data-tech" + i} title={t("data-tech_q" + i)}>
                     <p>{t("data-tech_a" + i)}</p>
                   </Accordion>
                 );
@@ -211,7 +207,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
                     </div>
                   </div>
                   <Button
-                    className="btn btn-primary w-full justify-center"
+                    className="btn-primary w-full justify-center"
                     onClick={() =>
                       validate()
                         .then((resp: any) => {

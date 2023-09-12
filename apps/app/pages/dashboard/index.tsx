@@ -1,29 +1,36 @@
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { Page } from "@lib/types";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
 import Dashboard from "@dashboards/index";
-import { get } from "@lib/api";
-import { withi18n } from "@lib/decorators";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const DashboardIndex: Page = ({
   analytics,
   sources,
   dashboards,
-  agency,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  query,
+  dashboards_route,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["dashboards", "agencies"]);
 
   return (
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
-      <Dashboard agency={agency} sources={sources} analytics={analytics} dashboards={dashboards} />
+      <Dashboard
+        queries={query}
+        sources={sources}
+        analytics={analytics}
+        dashboards={dashboards}
+        dashboards_route={dashboards_route}
+      />
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"], async () => {
-  const [agencyDropdown, data] = await Promise.all([
+export const getServerSideProps: GetServerSideProps = withi18n("dashboards", async ({ query }) => {
+  const [dropdown, data] = await Promise.all([
     get("/dropdown", { dashboard: "dashboards" }).then(res => res.data),
     get("/dashboard", { dashboard: "dashboards" }).then(res => res.data),
   ]).catch(e => {
@@ -38,8 +45,9 @@ export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"
         category: null,
         agency: null,
       },
+      query: query,
       agency: null,
-      sources: agencyDropdown.data,
+      sources: dropdown.data,
       analytics: {
         data_as_of: data.dashboards_top.data_as_of,
         today: data.dashboards_top.data.today,
@@ -47,6 +55,7 @@ export const getStaticProps: GetStaticProps = withi18n(["dashboards", "agencies"
         all_time: data.dashboards_top.data.all_time,
       },
       dashboards: data.dashboards_all.data,
+      dashboards_route: data.dashboards_route.data,
     },
   };
 });

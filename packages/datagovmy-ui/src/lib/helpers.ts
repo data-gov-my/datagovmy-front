@@ -2,14 +2,16 @@ import { DateTime } from "luxon";
 import { createElement, ReactElement } from "react";
 import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
+import canvasToSvg from "canvas2svg";
+import { twMerge, ClassNameValue } from "tailwind-merge";
 
 /**
  * Conditional class joiner.
  * @param args classNames
  * @returns string
  */
-export const clx = (...args: any[]): string => {
-  return args.filter(Boolean).join(" ");
+export const clx = (...args: ClassNameValue[]): string => {
+  return twMerge(args);
 };
 
 /**
@@ -24,7 +26,7 @@ export const maxBy = (array: Array<any>, key: string) => {
   });
 };
 /**
- * Returns the object of max value by a given key in the array.
+ * Returns the object of min value by a given key in the array.
  * @param array Object array
  * @param key Comparing key
  * @returns Object
@@ -76,12 +78,12 @@ export const minMax = (values: Array<number | null>): [min: number, max: number]
 export const numFormat = (
   value: number,
   type: "compact" | "standard" | "scientific" | "engineering" | undefined = "compact",
-  precision: number | [min: number, max: number] = 1,
+  precision: number | [max: number, min: number] = 0,
   compactDisplay: "short" | "long" = "short",
   locale: string = "en",
   smart: boolean = false
 ): string => {
-  const [max, min] = Array.isArray(precision) ? precision : [precision, 0];
+  const [max, min] = Array.isArray(precision) ? precision : [precision, precision];
 
   if (smart === true) {
     let formatter: Intl.NumberFormat;
@@ -186,10 +188,10 @@ export const sortAlpha = (array: Array<Record<string, any>>, key: string): Array
   return array.sort((a: any, b: any) => a[key].localeCompare(b[key]));
 };
 
-export const sortMulti = (
+export const sortMulti = <T extends number>(
   object: Record<string, any[]>,
   index: string,
-  sort: (a: number, b: number) => number
+  sort: (a: T, b: T) => number
 ) => {
   const indexed = Array.from(object[index].keys()).sort((a, b) =>
     sort(object[index][a], object[index][b])
@@ -227,6 +229,19 @@ export const getTopIndices = (arr: number[], n: number, reverse = false): number
 
   // extract the indices from the top pairs and return them
   return topPairs.map(pair => pair[1]);
+};
+
+/**
+ * Slugify a given string
+ * @param value String to slugify
+ */
+export const slugify = (value: string): string => {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "") // remove all chars not letters, numbers and spaces (to be replaced)
+    .replace(/\s+/g, "-") // separator
+    .replace(/-+/g, "-"); // collapse dashes
 };
 
 /**
@@ -269,8 +284,18 @@ export const chunkSplit = (text: string, len: number): string[] => {
   return r;
 };
 
-export const exportAs = async (type: "svg" | "png", element: Node): Promise<string> => {
-  return type === "svg" ? DomToImage.toSvg(element) : DomToImage.toPng(element);
+export const exportAs = async (
+  type: "svg" | "png",
+  element: HTMLCanvasElement
+): Promise<string> => {
+  if (type === "svg") {
+    return new Promise(resolve => {
+      const canvas = canvasToSvg(element.width, element.height);
+      canvas.drawImage(element, 0, 0);
+      resolve("data:svg+xml;utf8,".concat(canvas.getSerializedSvg()));
+    });
+  }
+  return DomToImage.toPng(element);
 };
 
 /**
@@ -294,12 +319,56 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
       "a",
       {
         href: url,
-        className: "text-primary dark:text-primary-dark hover:underline inline",
+        className:
+          "text-primary dark:text-primary-dark hover:underline inline [text-underline-position:from-font]",
         target: "_blank",
       },
       text
     );
   }) as ReactElement[];
+};
+
+/**
+ * Check if the URL is correct
+ * @param {string} url URL to validate
+ * @returns {boolean} true | false
+ */
+export const isValidURL = (url: string): boolean => {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
+ * Parses to a cookie map.
+ * @param {string} cookie Cookie string
+ * @returns {Record<string, string>} Cookie map
+ */
+export const parseCookies = (cookie: string) => {
+  const cookies = cookie.split(";");
+  const parsedCookies: Record<string, string> = {};
+
+  cookies.forEach(cookie => {
+    const [name, value] = cookie.trim().split("=");
+    parsedCookies[name] = decodeURIComponent(value);
+  });
+
+  return parsedCookies;
+};
+
+export const enumify = <T extends string>(strings: T[]): KeyValueType<T> => {
+  const keyValuePair = {} as KeyValueType<T>;
+  for (const str of strings) {
+    keyValuePair[snakeCase<T>(str)] = str;
+  }
+  return keyValuePair;
+};
+
+export const snakeCase = <T extends string>(str: T) => {
+  return str.replace(/-/g, "_").toUpperCase() as Uppercase<SnakeCase<T>>;
 };
 
 // MATH helpers
@@ -313,3 +382,11 @@ export const standardDeviation = (values: number[]): number => {
 
 export const normalize = (value: number, min: number, max: number): number =>
   (value - min) / (max - min);
+
+type KeyValueType<T extends string> = {
+  [K in Uppercase<SnakeCase<T>>]: T;
+};
+
+type SnakeCase<S extends string> = S extends `${infer T}-${infer U}`
+  ? `${Lowercase<T>}_${SnakeCase<U>}`
+  : Lowercase<S>;

@@ -1,15 +1,13 @@
-import Hero from "@components/Hero";
-import { Container, Dropdown, Section, Slider } from "datagovmy-ui/components";
-import { FunctionComponent, useCallback, useEffect } from "react";
-import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
+import { PricesIncomeIcon } from "@icons/division";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { Container, Dropdown, Section, Slider, Hero, AgencyBadge } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useSlice, useData, useTranslation } from "datagovmy-ui/hooks";
-import type { OptionType } from "@components/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-
-import { track } from "@lib/mixpanel";
-import { routes } from "@lib/routes";
+import { OptionType, WithData } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent, useCallback } from "react";
 
 /**
  * Producer Proces (PPI) Dashboard
@@ -30,27 +28,38 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
 });
 
-interface ProducerPricesDashboardProps {
-  last_updated: number;
-  timeseries: any;
-  timeseries_callouts: any;
-}
+type ProducerPricesKeys =
+  | "electricity"
+  | "agriculture"
+  | "manufacturing"
+  | "water"
+  | "mining"
+  | "overall";
 
+interface ProducerPricesDashboardProps {
+  last_updated: string;
+  timeseries: WithData<{
+    growth_mom: Record<ProducerPricesKeys | "x" | "recession", number[]>;
+    growth_yoy: Record<ProducerPricesKeys | "x" | "recession", number[]>;
+    value: Record<ProducerPricesKeys | "x" | "recession", number[]>;
+  }>;
+  timeseries_callouts: WithData<Record<ProducerPricesKeys, { callout: number }>>;
+}
 const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> = ({
   last_updated,
   timeseries,
   timeseries_callouts,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["dashboard-producer-prices", "common"]);
   const INDEX_OPTIONS: Array<OptionType> = ["growth_yoy", "growth_mom", "value"].map(
     (key: string) => ({
-      label: t(`consumer_prices.keys.${key}`),
+      label: t(`keys.${key}`),
       value: key,
     })
   );
   const SHADE_OPTIONS: Array<OptionType> = [
-    { label: t("producer_prices.keys.no_shade"), value: "no_shade" },
-    { label: t("producer_prices.keys.recession"), value: "recession" },
+    { label: t("keys.no_shade"), value: "no_shade" },
+    { label: t("keys.recession"), value: "recession" },
   ];
 
   const { data, setData } = useData({
@@ -101,9 +110,9 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
 
   const getChartData = (sectionHeaders: string[]): TimeseriesChartData[] =>
     sectionHeaders.map(chartName => ({
-      title: t(`producer_prices.keys.${chartName}`),
+      title: t(`keys.${chartName}`),
       unitY: configs(chartName).unit,
-      label: t(`producer_prices.keys.${chartName}`),
+      label: t(`keys.${chartName}`),
       data: coordinate[chartName],
       fill: configs(chartName).fill,
       callout: configs(chartName).callout,
@@ -117,116 +126,50 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
     "water",
   ]);
 
-  useEffect(() => {
-    track("page_view", {
-      type: "dashboard",
-      id: "producer_prices.header",
-      name_en: "Producer Prices",
-      name_bm: "Harga Pengeluar",
-      route: routes.PRODUCER_PRICES,
-    });
-  }, []);
-
   return (
     <>
-      <Hero background="producer-prices-banner">
-        <div className="space-y-4 xl:w-2/3">
-          <span className="text-sm font-bold uppercase tracking-widest text-primary">
-            {t("nav.megamenu.categories.economy")}
-          </span>
-          <h3>{t("producer_prices.header")}</h3>
-          <p className="text-dim">{t("producer_prices.description")}</p>
-
-          <p className="text-sm text-dim">
-            {t("common.last_updated", {
-              date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-            })}
-          </p>
-        </div>
-      </Hero>
+      <Hero
+        background="orange"
+        category={[t("common:categories.economy"), `text-orange-500`]}
+        header={[t("header")]}
+        description={[t("description")]}
+        last_updated={last_updated}
+        agencyBadge={
+          <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
+        }
+      />
 
       <Container className="min-h-screen">
         {/* How is the CPI trending? */}
-        <Section
-          title={t("producer_prices.section_1.title")}
-          description={t("producer_prices.section_1.description")}
-          date={timeseries.data_as_of}
-        >
-          <div className="space-y-8">
-            <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
-              <Dropdown
-                anchor="left"
-                selected={data.index_type}
-                options={INDEX_OPTIONS}
-                onChange={(e: any) => setData("index_type", e)}
-              />
-              <Dropdown
-                anchor="left"
-                options={SHADE_OPTIONS}
-                selected={data.shade_type}
-                onChange={(e: any) => setData("shade_type", e)}
-              />
-            </div>
+        <SliderProvider>
+          {play => (
+            <Section
+              title={t("section_1.title")}
+              description={t("section_1.description")}
+              date={timeseries.data_as_of}
+            >
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
+                  <Dropdown
+                    anchor="left"
+                    selected={data.index_type}
+                    options={INDEX_OPTIONS}
+                    onChange={(e: any) => setData("index_type", e)}
+                  />
+                  <Dropdown
+                    anchor="left"
+                    options={SHADE_OPTIONS}
+                    selected={data.shade_type}
+                    onChange={(e: any) => setData("shade_type", e)}
+                  />
+                </div>
 
-            <Slider
-              className=""
-              type="range"
-              value={data.minmax}
-              data={timeseries.data[data.index_type.value].x}
-              period="month"
-              onChange={e => setData("minmax", e)}
-            />
-            <Timeseries
-              title={t("producer_prices.keys.overall")}
-              className="h-[350px] w-full"
-              interval="month"
-              unitY={configs("overall").unit}
-              axisY={{
-                y2: {
-                  display: false,
-                  grid: {
-                    drawTicks: false,
-                    drawBorder: false,
-                    lineWidth: 0.5,
-                  },
-                  ticks: {
-                    display: false,
-                  },
-                },
-              }}
-              data={{
-                labels: coordinate.x,
-                datasets: [
-                  {
-                    type: "line",
-                    data: coordinate.overall,
-                    label: t("producer_prices.keys.overall"),
-                    borderColor: AKSARA_COLOR.PRIMARY,
-                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                    borderWidth: 1.5,
-                    fill: configs("overall").fill,
-                  },
-                  shader(data.shade_type.value),
-                ],
-              }}
-              stats={[
-                {
-                  title: t("common.latest", {
-                    date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                  }),
-                  value: configs("overall").callout,
-                },
-              ]}
-            />
-
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-              {section1ChartData.map(chartData => (
                 <Timeseries
-                  key={chartData.title}
-                  title={chartData.title}
-                  className="h-[350px] w-full"
+                  title={t("keys.overall")}
+                  className="h-[300px] w-full"
                   interval="month"
-                  unitY={chartData.unitY}
+                  enableAnimation={!play}
+                  unitY={configs("overall").unit}
                   axisY={{
                     y2: {
                       display: false,
@@ -245,29 +188,87 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
                     datasets: [
                       {
                         type: "line",
-                        label: chartData.label,
-                        data: chartData.data,
-                        borderColor: AKSARA_COLOR.PRIMARY,
-                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                        fill: chartData.fill,
+                        data: coordinate.overall,
+                        label: t("keys.overall"),
+                        borderColor: AKSARA_COLOR.ORANGE,
+                        backgroundColor: AKSARA_COLOR.ORANGE_H,
                         borderWidth: 1.5,
+                        fill: configs("overall").fill,
                       },
                       shader(data.shade_type.value),
                     ],
                   }}
                   stats={[
                     {
-                      title: t("common.latest", {
+                      title: t("common:common.latest", {
                         date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                       }),
-                      value: chartData.callout,
+                      value: configs("overall").callout,
                     },
                   ]}
                 />
-              ))}
-            </div>
-          </div>
-        </Section>
+
+                <Slider
+                  className=""
+                  type="range"
+                  value={data.minmax}
+                  data={timeseries.data[data.index_type.value].x}
+                  period="month"
+                  onChange={e => setData("minmax", e)}
+                />
+
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                  {section1ChartData.map(chartData => (
+                    <Timeseries
+                      key={chartData.title}
+                      title={chartData.title}
+                      className="h-[300px] w-full"
+                      enableAnimation={!play}
+                      interval="month"
+                      unitY={chartData.unitY}
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
+                            display: false,
+                          },
+                        },
+                      }}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
+                          {
+                            type: "line",
+                            label: chartData.label,
+                            data: chartData.data,
+                            borderColor: AKSARA_COLOR.ORANGE,
+                            backgroundColor: AKSARA_COLOR.ORANGE_H,
+                            fill: chartData.fill,
+                            borderWidth: 1.5,
+                          },
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                          }),
+                          value: chartData.callout,
+                        },
+                      ]}
+                    />
+                  ))}
+                </div>
+              </div>
+            </Section>
+          )}
+        </SliderProvider>
       </Container>
     </>
   );

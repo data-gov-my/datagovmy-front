@@ -1,23 +1,23 @@
-import AgencyBadge from "@components/Badge/agency";
-import Hero from "@components/Hero";
-import { SPRIcon, SPRIconSolid } from "@components/Icon/agency";
 import { FlagIcon, LightBulbIcon, MapIcon, UserIcon } from "@heroicons/react/24/solid";
-import { useTranslation } from "@hooks/useTranslation";
-import { WindowContext } from "@hooks/useWindow";
-import { BREAKPOINTS } from "@lib/constants";
-import { clx } from "@lib/helpers";
 import { routes } from "@lib/routes";
-import dynamic from "next/dynamic";
+import { At, AgencyBadge, Hero } from "datagovmy-ui/components";
+import { clx } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { SPRIconSolid } from "datagovmy-ui/icons/agency";
 import { useRouter } from "next/router";
-import { FunctionComponent, ReactNode, useContext } from "react";
+import { FunctionComponent, ReactNode } from "react";
 
-const At = dynamic(() => import("@components/At"), { ssr: false });
+/**
+ * Election Explorer Layout
+ * @overview Status: Live
+ */
 
 interface ElectionLayoutProps {
+  last_updated: string;
   children: ReactNode;
 }
 
-const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) => {
+const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ last_updated, children }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
   const { pathname } = useRouter();
 
@@ -50,49 +50,57 @@ const ElectionLayout: FunctionComponent<ElectionLayoutProps> = ({ children }) =>
   ];
 
   return (
-    <div>
+    <>
       <Hero
         background="red"
         category={[t("common:categories.democracy"), "text-danger"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Election Comission (EC)"}
-            link="https://www.spr.gov.my/"
-            icon={<SPRIcon />}
-          />
-        }
+        last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="spr" />}
       />
 
       {/* Navigations */}
-      <div
-        className={clx(
-          "border-b-outline dark:border-b-washed-dark hide-scrollbar sticky top-14 z-20 flex flex-row gap-2 overflow-x-auto border-b bg-white px-3 dark:bg-black sm:justify-center md:pl-0 lg:static",
-          pathname.endsWith("/trivia") ? "justify-end" : "justify-start"
-        )}
-      >
-        {election_navs.map(nav => (
-          <At
-            className={clx(
-              "flex flex-row items-center gap-1 whitespace-nowrap px-2 py-3 text-center text-base font-medium transition lg:p-4",
-              pathname.startsWith(nav.url)
-                ? "border-primary dark:border-primary-dark border-b-2 text-black dark:text-white"
-                : "text-dim"
-            )}
-            key={nav.url}
-            href={nav.url}
-            scrollTop={false}
-          >
-            <div className="hidden sm:block">{nav.icon}</div>
-            {nav.name}
-          </At>
-        ))}
-      </div>
+      <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center lg:static">
+        <div
+          className={clx(
+            "hide-scrollbar flex snap-x snap-mandatory scroll-px-9 flex-nowrap overflow-x-auto",
+            pathname.endsWith("/trivia") && "max-[420px]:justify-end"
+          )}
+        >
+          {election_navs.map(nav => (
+            <div key={nav.url} className="snap-start">
+              <At
+                className="relative flex h-full cursor-pointer items-center justify-center px-3 outline-none"
+                href={nav.url}
+                scrollTop={false}
+              >
+                <div className="relative flex h-full flex-col items-center justify-center py-4">
+                  <div
+                    className={clx(
+                      "flex items-center gap-2",
+                      pathname === nav.url ? "text-black dark:text-white" : "text-dim"
+                    )}
+                  >
+                    <div className="-mx-[5px] hidden sm:block">{nav.icon}</div>
+                    <span className="whitespace-nowrap text-base font-medium">{nav.name}</span>
+                    {pathname === nav.url && (
+                      <div className="bg-primary dark:bg-primary-dark absolute bottom-0 inline-flex h-1 w-full rounded-full sm:hidden"></div>
+                    )}
+                  </div>
+                </div>
+                {pathname === nav.url && (
+                  <div className="bg-primary dark:bg-primary-dark absolute bottom-0 hidden h-1 w-full rounded-full sm:inline-flex"></div>
+                )}
+              </At>
+            </div>
+          ))}
+        </div>
+      </nav>
 
       {/* Content */}
       {children}
-    </div>
+    </>
   );
 };
 

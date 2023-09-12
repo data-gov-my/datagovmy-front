@@ -1,27 +1,39 @@
 import { FunctionComponent, ReactNode } from "react";
+import { clx } from "../../lib/helpers";
 
 interface CardProps {
   left: ReactNode;
   right: ReactNode;
+  leftBg?: string;
+  rightBg?: string;
 }
 
 /**
  * Left = description
  * Right = interactive area
- * @param param0
+ * @param left
+ * @param right
  * @returns
  */
 
-const LeftRightCard: FunctionComponent<CardProps> = ({ left, right }) => {
+const LeftRightCard: FunctionComponent<CardProps> = ({
+  left,
+  right,
+  leftBg = "dark:bg-washed-dark/50",
+  rightBg = "bg-background dark:bg-black",
+}) => {
   return (
     <>
-      <div className="flex flex-col items-stretch overflow-visible rounded-xl border border-slate-200 dark:border-zinc-800 lg:flex-row">
-        <div className="basis-1/3 overflow-visible border-slate-200 dark:border-zinc-800 dark:bg-zinc-800/50 lg:border-r">
+      <div className="border-outline dark:border-washed-dark flex flex-col items-stretch overflow-visible rounded-xl border lg:flex-row">
+        <div
+          className={clx(
+            "border-outline dark:border-washed-dark w-full overflow-visible lg:w-1/3 lg:border-r",
+            leftBg
+          )}
+        >
           {left}
         </div>
-        <div className="basis-2/3 rounded-b-xl bg-slate-50 dark:bg-zinc-900 lg:rounded-r-xl">
-          {right}
-        </div>
+        <div className={clx("w-full rounded-b-xl lg:w-2/3 lg:rounded-r-xl", rightBg)}>{right}</div>
       </div>
     </>
   );

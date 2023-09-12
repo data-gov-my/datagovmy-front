@@ -1,11 +1,7 @@
-import Button from "@components/Button";
-import Container from "@components/Container";
-import Input from "@components/Input";
-import Metadata from "@components/Metadata";
-import { toast } from "@components/Toast";
-import { post } from "@lib/api";
-import { withi18n } from "@lib/decorators";
-import { Page } from "@lib/types";
+import { post } from "datagovmy-ui/api";
+import { Button, Container, Input, Metadata, toast } from "datagovmy-ui/components";
+import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
 import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
@@ -47,7 +43,7 @@ const Login: Page = () => {
               validation={error}
             />
 
-            <Button type="submit" className="btn btn-primary ml-auto">
+            <Button type="submit" className="btn-primary ml-auto">
               <span>Sign in</span>
             </Button>
           </div>

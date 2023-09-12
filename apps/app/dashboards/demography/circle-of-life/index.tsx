@@ -1,12 +1,9 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
+import { AgencyBadge, Container, Hero } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import Container from "@components/Container";
-import { JPNIcon } from "@components/Icon/agency";
 
 /**
- * Election Explorer Dashboard
+ * Circle of Life Dashboard
  * @overview Status: In-development
  */
 
@@ -22,13 +19,7 @@ const CircleofLife: FunctionComponent<CircleofLifeProps> = ({}) => {
         category={[t("common:categories.demography"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency="Jabatan Pendaftaran Negara"
-            link="https://www.jpn.gov.my/en/"
-            icon={<JPNIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="jpn" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

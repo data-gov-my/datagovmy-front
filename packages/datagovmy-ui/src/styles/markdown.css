@@ -1,0 +1,32 @@
+/* Markdown generator */
+.markdown {
+  @apply space-y-6;
+}
+
+.markdown p {
+  @apply leading-7;
+}
+
+.markdown code:not(pre code) {
+  @apply bg-outline break-words rounded-md border border-black border-opacity-[0.04] px-[.25em] py-0.5 text-[.9em] dark:bg-white/10 dark:text-white;
+}
+
+.markdown pre {
+  @apply bg-outline bg-primary/5 dark:bg-primary-dark/10 my-3 overflow-x-auto whitespace-pre-wrap break-words rounded-xl border border-black border-opacity-[0.04] px-3 py-3 text-[.9em] font-medium subpixel-antialiased;
+}
+
+.markdown ul {
+  @apply my-5 list-inside list-disc space-y-3;
+}
+
+.markdown ol {
+  @apply ml-5 list-outside list-decimal space-y-6;
+}
+
+.markdown li > p {
+  @apply inline;
+}
+
+.markdown a {
+  @apply text-primary dark:text-primary-dark [text-underline-position:from-font] hover:underline;
+}

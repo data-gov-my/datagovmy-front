@@ -1,38 +1,36 @@
-import { Tabs } from "@components/index";
-import LeftRightCard from "@components/LeftRightCard";
-import { List, Panel } from "@components/Tabs";
+import { OverallSeat } from "../types";
 import { MapIcon, TableCellsIcon } from "@heroicons/react/24/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { numFormat } from "@lib/helpers";
+import { TableConfig } from "datagovmy-ui/charts/table";
+import { LeftRightCard, List, Panel, Tabs } from "datagovmy-ui/components";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
-import { OverallSeat } from "../types";
+
 /**
  * Election Explorer - Election Analysis
  * @overview Status: In-development
  */
 
-const Table = dynamic(() => import("@components/Chart/Table"), {
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
   ssr: false,
 });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 type Analysis = {
   seat: string;
   state?: string;
   party: string;
   majority: {
-    abs: string;
-    perc: string;
+    abs: number;
+    perc: number;
   };
   voter_turnout: {
-    abs: string;
-    perc: string;
+    abs: number;
+    perc: number;
   };
   votes_rejected: {
-    abs: string;
-    perc: string;
+    abs: number;
+    perc: number;
   };
 };
 
@@ -45,58 +43,48 @@ interface ElectionAnalysisProps {
 const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, seats, state }) => {
   const { t } = useTranslation(["dashboard-election-explorer", "common"]);
 
-  const config = [
+  const config: TableConfig[] = [
     {
       accessorKey: "seat",
       id: "constituency",
       header: t("constituency"),
-      className: "text-left w-auto lg:w-[150px]",
+      className: "w-[150px] max-sm:truncate sm:w-[200px]",
     },
     {
       accessorKey: "state",
       id: "state",
       header: t("state"),
-
-      className: "text-left w-auto lg:w-[150px]",
+      className: "w-[150px]",
     },
     {
       accessorKey: "majority.abs",
       id: "majority.abs",
       header: t("majority"),
-      sortingFn: "localeNumber",
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "majority.perc",
       id: "majority.perc",
       header: t("majority_%"),
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "voter_turnout.abs",
       id: "voter_turnout.abs",
       header: t("voter_turnout"),
-      sortingFn: "localeNumber",
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "voter_turnout.perc",
       id: "voter_turnout.perc",
       header: t("voter_turnout_%"),
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "votes_rejected.abs",
       id: "votes_rejected.abs",
       header: t("rejected_votes"),
-      sortingFn: "localeNumber",
-      className: "text-right w-auto lg:w-[150px]",
     },
     {
       accessorKey: "votes_rejected.perc",
       id: "votes_rejected.perc",
       header: t("rejected_votes_%"),
-      className: "text-right w-auto lg:w-[150px]",
     },
   ];
 
@@ -107,16 +95,16 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
       state: matches[1],
       party: seat.party,
       majority: {
-        abs: numFormat(seat.majority.abs, "standard"),
-        perc: numFormat(seat.majority.perc, "standard", [1, 1]),
+        abs: seat.majority.abs,
+        perc: seat.majority.perc,
       },
       voter_turnout: {
-        abs: numFormat(seat.voter_turnout.abs, "standard"),
-        perc: numFormat(seat.voter_turnout.perc, "standard", [1, 1]),
+        abs: seat.voter_turnout.abs,
+        perc: seat.voter_turnout.perc,
       },
       votes_rejected: {
-        abs: numFormat(seat.votes_rejected.abs, "standard"),
-        perc: numFormat(seat.votes_rejected.perc, "standard", [1, 1]),
+        abs: seat.votes_rejected.abs,
+        perc: seat.votes_rejected.perc,
       },
     };
   });
@@ -128,9 +116,9 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
 
   return (
     <div className="grid grid-cols-12 py-8 lg:py-12">
-      <div className="col-span-full col-start-1 lg:col-span-10 lg:col-start-2">
-        <h4 className="py-4 text-center">{t("header_3")}</h4>
-        <div className="flex justify-end pb-3 lg:pb-6">
+      <div className="col-span-full col-start-1 xl:col-span-10 xl:col-start-2">
+        <h4 className="text-center">{t("header_3")}</h4>
+        <div className="flex justify-end py-3 lg:py-6">
           <List
             options={[t("table"), t("map")]}
             icons={[
@@ -144,10 +132,19 @@ const ElectionAnalysis: FunctionComponent<ElectionAnalysisProps> = ({ index, sea
         <Tabs hidden current={data.tab_index} onChange={index => setData("tab_index", index)}>
           <Panel name={t("table")} icon={<TableCellsIcon className="mr-1 h-5 w-5" />}>
             <Table
+              className="table-sticky-header"
               data={analysisData}
               enablePagination={10}
               config={state !== "mys" ? config.filter(col => col.id !== "state") : config}
               freeze={["constituency"]}
+              precision={{
+                default: 0,
+                columns: {
+                  "majority.perc": 1,
+                  "voter_turnout.perc": 1,
+                  "votes_rejected.perc": 1,
+                },
+              }}
             />
           </Panel>
           <Panel name={t("map")} icon={<MapIcon className="mr-1 h-5 w-5" />}>

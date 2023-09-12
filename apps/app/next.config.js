@@ -21,11 +21,25 @@ const nextConfig = {
   i18n,
   reactStrictMode: true,
   swcMinify: true,
+  transpilePackages: ["datagovmy-ui"],
+  publicRuntimeConfig: {
+    APP_NAME: "data.gov.my",
+    META_AUTHOR: "Government of Malaysia",
+    META_THEME: "#13293D",
+    META_KEYWORDS: "open data statistics malaysia",
+    META_DOMAIN: "data.gov.my",
+    META_URL: process.env.NEXT_PUBLIC_APP_URL,
+    META_IMAGE: `${process.env.NEXT_PUBLIC_APP_URL}/static/images/og_{{lang}}.png`,
+  },
   async rewrites() {
     return [
       {
         source: "/dashboard/election-explorer",
         destination: "/dashboard/election-explorer/elections",
+      },
+      {
+        source: "/dashboard/income-taxation",
+        destination: "/dashboard/income-taxation/overview",
       },
       {
         source: "/mp/lib.min.js",

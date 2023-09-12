@@ -1,23 +1,10 @@
-import Button from "@components/Button";
-import Card from "@components/Card";
-import Container from "@components/Container";
-import Dropdown from "@components/Dropdown";
-import {
-  AtomIcon,
-  BarChartIcon,
-  CheckMarkIcon,
-  LineChartIcon,
-  PieChartIcon,
-} from "@components/Icon";
-import Input from "@components/Input";
-import Spinner from "@components/Spinner";
-import { toast } from "@components/Toast";
-import { OptionType } from "@components/types";
+import { AtomIcon, BarChartIcon, CheckMarkIcon, LineChartIcon, PieChartIcon } from "../../icons";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { useData } from "@hooks/useData";
-import { useTranslation } from "@hooks/useTranslation";
-import { post } from "@lib/api";
-import { clx } from "@lib/helpers";
+import { post } from "datagovmy-ui/api";
+import { Button, Card, Container, Dropdown, Input, Spinner, toast } from "datagovmy-ui/components";
+import { clx } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import { FunctionComponent } from "react";
 
 /**
@@ -212,7 +199,7 @@ const CommunityDashboard: FunctionComponent = () => {
                         </div>
                       </div>
                       <Button
-                        className="btn btn-primary w-full justify-center"
+                        className="btn-primary w-full justify-center"
                         onClick={() =>
                           validate()
                             .then((resp: any) => {

@@ -1,9 +1,8 @@
-import Link from "next/link";
+import { Container, Nav } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import Image from "next/image";
+import Link from "next/link";
 import { FunctionComponent, ReactNode } from "react";
-import { useTranslation } from "@hooks/useTranslation";
-import Nav from "@components/Nav";
-import Container from "@components/Container";
 
 interface HeaderProps {
   stateSelector?: ReactNode;
@@ -41,8 +40,13 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                   link="/data-catalogue"
                   onClick={close}
                 />
-
-                <Nav.Item title={t("common:nav.api_docs")} link="#" onClick={close} external />
+                <Nav.Item
+                  title={t("common:nav.api_docs")}
+                  key="api_docs"
+                  link="https://developer.data.gov.my"
+                  onClick={close}
+                  external
+                />
                 <Nav.Item
                   title={t("common:nav.community")}
                   key="/community"

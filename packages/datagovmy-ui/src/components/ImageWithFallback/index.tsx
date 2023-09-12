@@ -10,11 +10,15 @@ const Fallback: FunctionComponent<FallbackProps> = ({ children, inline = false }
   return (
     <div
       className={clx(
-        "border-outline dark:border-outlineHover-dark h-5 w-[30px] rounded border bg-white",
-        inline ? "mr-2 inline-block" : "absolute"
+        "border-outline dark:border-outlineHover-dark h-5 w-8 rounded border bg-white",
+        inline && "mr-2 inline-block"
       )}
     >
-      {children ?? <div className="text-center font-black leading-4 text-black">?</div>}
+      {children ?? (
+        <div className="flex h-full items-center justify-center text-sm font-black text-black">
+          ?
+        </div>
+      )}
     </div>
   );
 };
@@ -23,7 +27,13 @@ interface ImageWithFallbackProps extends ImageProps {
   inline?: boolean;
 }
 
-const ImageWithFallback = ({ fallback, alt, src, inline, ...props }: ImageWithFallbackProps) => {
+const ImageWithFallback: FunctionComponent<ImageWithFallbackProps> = ({
+  fallback,
+  alt,
+  src,
+  inline,
+  ...props
+}) => {
   const [error, setError] = useState<React.SyntheticEvent<HTMLImageElement, Event> | null>(null);
 
   useEffect(() => {

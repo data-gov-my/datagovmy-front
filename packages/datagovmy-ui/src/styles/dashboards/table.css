@@ -1,35 +1,27 @@
-.table {
-  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit md:max-w-full;
+/* .table {
+  @apply relative mx-auto w-full table-auto border-separate border-spacing-0 whitespace-nowrap md:w-fit;
 }
 
 .table-responsive {
   @apply relative overflow-x-auto;
-}
-
-.table th {
-  @apply text-dim w-auto py-3 font-normal dark:text-white md:whitespace-nowrap;
-}
-.table tbody tr {
-  @apply border-l-outline dark:border-b-washed-dark dark:border-l-outlineHover-dark border-b-[0.5px] border-l-[0.5px];
-}
-
-.table tbody tr:first-child {
-  @apply dark:border-t-outlineHover-dark border-t-[0.5px];
-}
-
-.table tbody tr:last-child {
-  @apply dark:border-outlineHover-dark border-b-[0.5px] border-b-black;
-}
-
-.table td {
-  @apply dark:border-outlineHover-dark w-auto border-r-[0.5px] px-2 py-2;
-}
-/* .table td:not(:first-child) {
-  @apply whitespace-nowrap;
+  max-sm:snap-x max-sm:snap-mandatory;
 } */
 
-/* .table td > div {
-    @apply w-max px-2 py-1 text-sm lg:w-auto;
+.table > thead > th {
+  @apply border-outline dark:border-washed-dark border border-b-2;
+}
+
+.table tbody tr {
+  @apply border-outline dark:border-washed-dark border-b bg-white dark:bg-black;
+}
+
+/* .table thead tr th {
+  @apply w-auto px-2 py-2.5 text-sm font-medium text-black dark:text-white;
+  max-sm:snap-end;
+}
+
+.table tbody tr td {
+  @apply truncate bg-white px-2 py-2.5 text-sm font-normal text-black dark:bg-black dark:text-white max-sm:max-w-[150px];
 } */
 
 .table-default th:first-child > div {
@@ -37,30 +29,19 @@
 }
 
 .table-sticky-header tr > th {
-  @apply dark:border-b-outlineHover-dark sticky top-0 border-b bg-white dark:bg-black;
+  @apply border-b-outline dark:border-b-washed-dark sticky top-0 border-b-2 bg-white dark:bg-black;
 }
 
 .sticky-col {
-  @apply sticky z-10 max-w-fit whitespace-normal bg-white dark:bg-black md:whitespace-nowrap;
+  @apply border-outline dark:border-washed-dark sticky z-10 bg-inherit max-lg:border-r-2;
 }
 
-/* .table tr > td:first-child {
-    @apply w-44 text-left;
-} */
 .table th:not(:first-child) {
   @apply w-auto;
 }
 
-.table tr:first-child {
-  @apply dark:border-t-washed-dark border-t-black;
-}
-
-.table-stripe tr:nth-child(even) {
-  @apply bg-outline dark:bg-washed-dark;
-}
-
-.table-stripe tbody tr:nth-child(odd) {
-  @apply bg-white dark:bg-black;
+.table-stripe tr {
+  @apply even:bg-background even:dark:bg-washed-dark odd:bg-white odd:dark:bg-black;
 }
 
 .table-default th:first-child {

@@ -1,15 +1,17 @@
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { Layout, Metadata, StateDropdown, StateModal } from "@components/index";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import { CountryAndStates, STATES } from "@lib/constants";
-import { useTranslation } from "@hooks/useTranslation";
-import { routes } from "@lib/routes";
-import Fonts from "@config/font";
+import Layout from "@components/Layout";
+import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
+import { body } from "datagovmy-ui/configs/font";
 import PekaB40Dashboard from "@dashboards/healthcare/peka-b40";
-import { withi18n } from "@lib/decorators";
-import { clx } from "@lib/helpers";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { get } from "datagovmy-ui/api";
+import { CountryAndStates } from "datagovmy-ui/constants";
+import { withi18n } from "datagovmy-ui/decorators";
+import { clx } from "datagovmy-ui/helpers";
+import { routes } from "@lib/routes";
+import { Page } from "datagovmy-ui/types";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 
 const PekaB40State: Page = ({
   meta,
@@ -38,34 +40,25 @@ const PekaB40State: Page = ({
 };
 
 PekaB40State.layout = (page, props) => (
-  <Layout
-    className={clx(Fonts.body.variable, "font-sans")}
-    stateSelector={
-      <StateDropdown url={routes.PEKA_B40} currentState={props?.params.state} hideOnScroll />
-    }
-  >
-    <StateModal state={props.params.state} url={routes.PEKA_B40} />
-    {page}
-  </Layout>
+  <WindowProvider>
+    <Layout
+      className={clx(body.variable, "font-sans")}
+      stateSelector={
+        <StateDropdown
+          width="w-max xl:w-64"
+          url={routes.PEKA_B40}
+          currentState={props?.params.state}
+          hideOnScroll
+        />
+      }
+    >
+      <StateModal state={props.params.state} url={routes.PEKA_B40} />
+      {page}
+    </Layout>
+  </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  //   let paths: Array<any> = [];
-  //   STATES.forEach(state => {
-  //     paths = paths.concat([
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //       },
-  //       {
-  //         params: {
-  //           state: state.key,
-  //         },
-  //         locale: "ms-MY",
-  //       },
-  //     ]);
-  //   });
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
     fallback: "blocking",

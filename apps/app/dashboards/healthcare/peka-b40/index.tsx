@@ -1,25 +1,30 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
-import { AgencyBadge, Container, Hero, Section, StateDropdown } from "@components/index";
-import { PHCorpIcon } from "@components/Icon/agency";
-import LeftRightCard from "@components/LeftRightCard";
-import Slider from "@components/Chart/Slider";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
 import { routes } from "@lib/routes";
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import { getTopIndices, toDate } from "@lib/helpers";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import {
+  AgencyBadge,
+  Container,
+  Hero,
+  LeftRightCard,
+  RankList,
+  Section,
+  Slider,
+  StateDropdown,
+  Tabs,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { TimeseriesOption } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 
 /**
  * PekaB40 Dashboard
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 interface PekaB40Props {
   last_updated: string;
@@ -37,12 +42,33 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
   const { t, i18n } = useTranslation(["dashboard-peka-b40", "common"]);
   const currentState = params.state;
   const { data, setData } = useData({
-    minmax: [timeseries.data.x.length - 366, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    period: "auto",
+    periodly: "daily_7d",
+    tab_index: 0,
   });
 
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const topStateIndices = getTopIndices(choropleth.data.y.perc, 3, true);
-  const displayPercent = (percent: number) => `${percent.toFixed(2)}%`;
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
+  };
+
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
+
   return (
     <>
       <Hero
@@ -52,13 +78,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={"ProtectHealth Corporation"}
-            link="https://protecthealth.com.my"
-            icon={<PHCorpIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="phcorp" />}
       />
 
       <Container className="min-h-screen">
@@ -74,38 +94,53 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[350px] w-full"
+                  className="h-[300px]"
                   title={t("timeseries_title", {
                     state: CountryAndStates[currentState],
+                    context: data.periodly,
                   })}
-                  interval="auto"
+                  menu={
+                    <Tabs.List
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
+                      current={data.tab_index}
+                      onChange={index => {
+                        setData("tab_index", index);
+                        setData("minmax", [
+                          0,
+                          timeseries.data[config[index].periodly].x.length - 1,
+                        ]);
+                        setData("period", config[index].period);
+                        setData("periodly", config[index].periodly);
+                      }}
+                    />
+                  }
+                  interval={data.period}
                   enableAnimation={!play}
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
                         type: "line",
-                        data: coordinate.line,
-                        label: t("tooltip1"),
+                        data: coordinate.y,
+                        label: t(`common:time.${data.periodly}`),
                         borderColor: AKSARA_COLOR.PURPLE,
                         borderWidth: 1.5,
                         backgroundColor: AKSARA_COLOR.PURPLE_H,
                         fill: true,
                       },
-                      {
-                        label: t("tooltip2"),
-                        data: coordinate.daily,
-                        borderColor: "#00000000",
-                        backgroundColor: "#00000000",
-                      },
                     ],
                   }}
                 />
-
                 <Slider
                   type="range"
+                  period={data.period}
                   value={data.minmax}
-                  data={timeseries.data.x}
+                  data={timeseries.data[data.periodly].x}
                   onChange={e => setData("minmax", e)}
                 />
               </>
@@ -117,39 +152,36 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-full w-full flex-col space-y-6 p-8">
-                <div className="flex flex-col gap-2">
-                  <h4>{t("choro_header")}</h4>
-                  <span className="text-dim text-sm">
-                    {t("common:common.data_of", {
-                      date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
-                    })}
-                  </span>
-                </div>
-                <div className="flex grow flex-col justify-between space-y-6">
-                  <p className="text-dim">{t("choro_description")}</p>
-                  <div className="space-y-3 border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-
-                    {topStateIndices.map((pos, i) => {
-                      return (
-                        <div className="flex space-x-3" key={pos}>
-                          <div className="text-dim font-medium">#{i + 1}</div>
-                          <div className="grow">{CountryAndStates[choropleth.data.x[pos]]}</div>
-                          <div className="font-bold text-[#7C3AED]">
-                            {displayPercent(choropleth.data.y.perc[pos])}
-                          </div>
-                          <ArrowRightIcon className="text-dim h-4 w-4 self-center stroke-[1.5px]" />
-                        </div>
-                      );
-                    })}
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
+                <div className="space-y-6">
+                  <div className="flex flex-col gap-2">
+                    <h4>{t("choro_header")}</h4>
+                    <span className="text-dim text-sm">
+                      {t("common:common.data_of", {
+                        date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                      })}
+                    </span>
                   </div>
+                  <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
                 </div>
+                <RankList
+                  id="peka-b40-by-state"
+                  title={t("common:common.ranking", { count: choropleth.data.x.length })}
+                  data={choropleth.data.y.perc}
+                  color="text-purple"
+                  threshold={choropleth.data.x.length}
+                  format={(position: number) => {
+                    return {
+                      label: CountryAndStates[choropleth.data.x[position]],
+                      value: `${numFormat(choropleth.data.y.perc[position], "compact", 1)}%`,
+                    };
+                  }}
+                />
               </div>
             }
             right={
               <Choropleth
-                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
                 color="purples"
                 data={{
                   labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),

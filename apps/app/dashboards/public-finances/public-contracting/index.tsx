@@ -1,9 +1,6 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
+import { AgencyBadge, Container, Hero } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import Container from "@components/Container";
-import { MOFIcon } from "@components/Icon/agency";
 
 /**
  * PublicContracting Dashboard
@@ -22,13 +19,7 @@ const PublicContracting: FunctionComponent<PublicContractingProps> = ({}) => {
         category={[t("common:categories.public_finances"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Ministry of Finance (MoF)"}
-            link="https://www.mof.gov.my/portal/en"
-            icon={<MOFIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="mof" />}
       />
       {/* Rest of page goes here */}
       <Container className="min-h-screen"></Container>

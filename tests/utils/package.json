@@ -1,0 +1,38 @@
+{
+  "name": "utils",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "module": "index.mjs",
+  "types": "types.d.ts",
+  "files": [
+    "index.mjs",
+    "playwright.mjs",
+    "types.d.ts",
+    "helper.ts"
+  ],
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "types": "./types.d.ts"
+    },
+    "./playwright": {
+      "import": "./playwright.ts",
+      "types": "./playwright.ts"
+    },
+    "./model/*": {
+      "import": "./model/*.ts",
+      "types": "./model/*.ts"
+    },
+    "./helper": {
+      "import": "./helper.ts",
+      "types": "./helper.ts"
+    }
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.35.1",
+    "luxon": "^3.0.3",
+    "start-server-and-test": "^2.0.0"
+  }
+}

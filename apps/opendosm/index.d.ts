@@ -7,7 +7,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_AUTHORIZATION_TOKEN: string;
     NEXT_PUBLIC_API_URL: string;
     NEXT_PUBLIC_GMAP_API_KEY: string;
-    NEXT_PUBLIC_MAPTILER_API_KEY: string;
+    NEXT_PUBLIC_TILESERVER_URL: string;
 
     MIXPANEL_TOKEN: string;
     MIXPANEL_PROJECT_ID: string;
@@ -34,4 +34,14 @@ declare module "canvas2svg" {
 
 declare module "geojson-bbox" {
   export default function (geojson: GeoJSONObject): [number, number, number, number] {}
+}
+
+import { OverridedMixpanel, Mixpanel } from "mixpanel-browser";
+
+declare global {
+  interface Window {
+    mixpanel: OverridedMixpanel & {
+      instance: Mixpanel;
+    };
+  }
 }

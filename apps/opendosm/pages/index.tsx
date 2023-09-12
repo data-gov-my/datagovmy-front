@@ -1,299 +1,273 @@
-import type { Page } from "@lib/types";
-import { InferGetStaticPropsType, GetStaticProps } from "next";
-
-import dynamic from "next/dynamic";
-import { get } from "@lib/api";
-import {
-  Container,
-  Section,
-  Tabs,
-  Panel,
-  Metadata,
-  Card,
-  At,
-  Slider,
-} from "datagovmy-ui/components";
-import Hero from "@components/Hero";
-import { useSlice, useData, useTranslation, WindowContext } from "datagovmy-ui/hooks";
-import { AKSARA_COLOR, BREAKPOINTS, SHORT_LANG } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import { EyeIcon, DocumentArrowDownIcon } from "@heroicons/react/24/solid";
+import { ArrowUpRightIcon } from "@heroicons/react/20/solid";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
-import { ReactNode, useContext, useEffect, useMemo } from "react";
 import { routes } from "@lib/routes";
+import { get } from "datagovmy-ui/api";
+import {
+  AgencyBadge,
+  At,
+  Card,
+  Container,
+  Hero,
+  Metadata,
+  Section,
+  Slider,
+  Tabs,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, SHORT_LANG } from "datagovmy-ui/constants";
+import { withi18n } from "datagovmy-ui/decorators";
+import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import {
   UsersIcon,
   EconomicGrowthIcon,
-  BankIcon,
   IndustryIcon,
   ProductionIcon,
   RetailTradeIcon,
   UnemploymentIcon,
   InflationIcon,
-} from "@components/Icon";
-import { track } from "@lib/mixpanel";
-import { withi18n } from "datagovmy-ui/decorators";
+} from "../icons";
+import { DOSMIcon } from "datagovmy-ui/icons/agency";
+import { Page } from "datagovmy-ui/types";
+import { InferGetStaticPropsType, GetStaticProps } from "next";
+import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+import { ReactNode, useMemo } from "react";
+import DivisionIcon, { Division } from "@icons/division";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
 });
 
 const Home: Page = ({
-  highlights,
-  timeseries,
-  timeseries_callouts,
   analytics,
+  keystats,
+  timeseries,
+  timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { breakpoint } = useContext(WindowContext);
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation("opendosm-home");
+  const { theme } = useTheme();
+  const { data, setData } = useData({
+    minmax: [0, timeseries.data.x.length - 1],
+    tabs_section_1: 0,
+    tabs_section_2: 0,
+  });
+  const { coordinate } = useSlice(timeseries.data, data.minmax);
 
-  // const { data, setData } = useData({
-  //   minmax: [0, timeseries.data.x.length - 1],
-  // });
-  // const { coordinate } = useSlice(timeseries.data, data.minmax);
+  const yieldPrefix = (value: number) => (value >= 0 ? "+" : "");
 
-  // const yieldPrefix = (value: number) => (value >= 0 ? "+" : "");
+  const yieldCallout = (key: string) => {
+    return [
+      {
+        title: t("daily"),
+        value:
+          yieldPrefix(timeseries_callout.data[key].callout1) +
+          numFormat(timeseries_callout.data[key].callout1, "standard"),
+      },
+      {
+        title: t("total"),
+        value: numFormat(timeseries_callout.data[key].callout2, "standard"),
+      },
+    ];
+  };
 
-  // const yieldCallout = (key: string) => {
-  //   return [
-  //     {
-  //       title: t("home.section_3.daily"),
-  //       value:
-  //         yieldPrefix(timeseries_callouts.data[key].callout1) +
-  //         numFormat(timeseries_callouts.data[key].callout1, "standard"),
-  //     },
-  //     {
-  //       title: t("home.section_3.total"),
-  //       value: numFormat(timeseries_callouts.data[key].callout2, "standard"),
-  //     },
-  //   ];
-  // };
+  const PANELS = [
+    {
+      name: t("past_24h"),
+      data: analytics.today,
+    },
+    {
+      name: t("all_time"),
+      data: analytics.all_time,
+    },
+  ];
 
-  // const PANELS = [
-  //   {
-  //     name: t("home.section_2.today"),
-  //     data: analytics.today,
-  //   },
-  //   {
-  //     name: t("home.section_2.past_month"),
-  //     data: analytics.last_month,
-  //   },
-  //   {
-  //     name: t("home.section_2.all_time"),
-  //     data: analytics.all_time,
-  //   },
-  // ];
+  interface StatProps {
+    icon: ReactNode;
+    title: string;
+    url: string;
+    value: string;
+    data_as_of: string;
+  }
 
-  // interface StatProps {
-  //   icon: ReactNode;
-  //   title: string;
-  //   url: string;
-  //   value: string;
-  // }
-
-  // const STATS = useMemo<StatProps[]>(
-  //   () => [
-  //     {
-  //       icon: <UsersIcon className="h-6 w-6" />,
-  //       title: t("home.section_1.stats.population"),
-  //       url: routes.KAWASANKU,
-  //       value: numFormat(
-  //         highlights.data.population.callout,
-  //         "compact",
-  //         [1, 1],
-  //         "long",
-  //         i18n.language,
-  //         true
-  //       ),
-  //     },
-  //     {
-  //       icon: <EconomicGrowthIcon className="h-5 w-5" />,
-  //       title: t("home.section_1.stats.economic_growth"),
-  //       url: routes.GDP,
-  //       value: numFormat(highlights.data.growth.callout, "compact", [1, 1]) + "%",
-  //     },
-  //     {
-  //       icon: <BankIcon className="h-4 w-4" />,
-  //       title: t("home.section_1.stats.bnm_opr"),
-  //       url: routes.INTEREST_RATES,
-  //       value: numFormat(highlights.data.opr.callout, "compact", [2, 2]) + "%",
-  //     },
-  //     {
-  //       icon: <UnemploymentIcon className="h-5 w-5" />,
-  //       title: t("home.section_1.stats.unemployment"),
-  //       url: routes.LABOUR_MARKET,
-  //       value: numFormat(highlights.data.unemployment.callout, "compact", [1, 1]) + "%",
-  //     },
-  //     {
-  //       icon: <InflationIcon className="h-5 w-5" />,
-  //       title: t("home.section_1.stats.inflation"),
-  //       url: routes.CONSUMER_PRICES,
-  //       value: numFormat(highlights.data.inflation.callout, "compact", [1, 1]) + "%",
-  //     },
-  //     {
-  //       icon: <ProductionIcon className="h-5 w-5" />,
-  //       title: t("home.section_1.stats.production_cost"),
-  //       url: routes.PRODUCER_PRICES,
-  //       value:
-  //         yieldPrefix(highlights.data.ppi.callout) +
-  //         numFormat(highlights.data.ppi.callout, "compact", [1, 1]) +
-  //         "%",
-  //     },
-  //     {
-  //       icon: <IndustryIcon className="h-4 w-4" />,
-  //       title: t("home.section_1.stats.industrial_production"),
-  //       url: routes.INDUSTRIAL_PRODUCTION,
-  //       value:
-  //         yieldPrefix(highlights.data.ipi.callout) +
-  //         numFormat(highlights.data.ipi.callout, "compact", [1, 1]) +
-  //         "%",
-  //     },
-  //     {
-  //       icon: <RetailTradeIcon className="h-5 w-5" />,
-  //       title: t("home.section_1.stats.wholesale_retail"),
-  //       url: routes.WHOLESALE_RETAIL,
-  //       value:
-  //         yieldPrefix(highlights.data.iowrt.callout) +
-  //         numFormat(highlights.data.iowrt.callout, "compact", [1, 1]) +
-  //         "%",
-  //     },
-  //   ],
-  //   []
-  // );
-
-  // useEffect(() => {
-  //   track("page_view", {
-  //     type: "dashboard",
-  //     id: "home",
-  //     name_en: "Home",
-  //     name_bm: "Utama",
-  //     route: routes.HOME,
-  //   });
-  // }, []);
+  const STATS = useMemo<StatProps[]>(
+    () => [
+      {
+        icon: <UsersIcon className="h-6 w-6" />,
+        title: "stats.population",
+        url: routes.POPULATION,
+        value: numFormat(keystats.population.callout, "compact", 1, "long", i18n.language, true),
+        data_as_of: toDate(keystats.population.data_as_of, "Qq yyyy"),
+      },
+      {
+        icon: <EconomicGrowthIcon className="h-6 w-6" />,
+        title: "stats.economic_growth",
+        url: routes.GDP,
+        value: numFormat(keystats.growth.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.growth.data_as_of, "Qq yyyy"),
+      },
+      {
+        icon: <UnemploymentIcon className="h-6 w-6" />,
+        title: "stats.unemployment",
+        url: routes.LABOUR_MARKET,
+        value: numFormat(keystats.unemployment.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.unemployment.data_as_of, "MMM yyyy"),
+      },
+      {
+        icon: <InflationIcon className="h-6 w-6" />,
+        title: "stats.inflation",
+        url: routes.CONSUMER_PRICES,
+        value: numFormat(keystats.inflation.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.inflation.data_as_of, "MMM yyyy"),
+      },
+      {
+        icon: <ProductionIcon className="h-6 w-6" />,
+        title: "stats.production_cost",
+        url: routes.PRODUCER_PRICES,
+        value:
+          yieldPrefix(keystats.ppi.callout) + numFormat(keystats.ppi.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.ppi.data_as_of, "MMM yyyy"),
+      },
+      {
+        icon: <ProductionIcon className="h-6 w-6" />,
+        title: "stats.manufacturing_output",
+        url: routes.MANUFACTURING_STATISTICS,
+        value:
+          yieldPrefix(keystats.mfg.callout) + numFormat(keystats.mfg.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.mfg.data_as_of, "MMM yyyy"),
+      },
+      {
+        icon: <IndustryIcon className="h-5 w-5" />,
+        title: "stats.industrial_production",
+        url: routes.INDUSTRIAL_PRODUCTION,
+        value:
+          yieldPrefix(keystats.ipi.callout) + numFormat(keystats.ipi.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.ipi.data_as_of, "MMM yyyy"),
+      },
+      {
+        icon: <RetailTradeIcon className="h-6 w-6" />,
+        title: "stats.wholesale_retail",
+        url: routes.WHOLESALE_RETAIL,
+        value:
+          yieldPrefix(keystats.iowrt.callout) +
+          numFormat(keystats.iowrt.callout, "compact", 1) +
+          "%",
+        data_as_of: toDate(keystats.iowrt.data_as_of, "MMM yyyy"),
+      },
+    ],
+    []
+  );
 
   return (
     <>
-      <Metadata title="OpenDOSM" keywords={"opendosm data negara inflasi"} />
+      <Metadata keywords={"opendosm data negara inflasi"} />
 
       <Hero
-        background="home-banner"
-        className="relative flex min-h-[300px] flex-col items-center justify-center text-left md:text-center"
-      >
-        <h3 className="mb-3">{t("home.title")}</h3>
-        <p className="max-w-3xl text-dim">{t("home.description")}</p>
-      </Hero>
-      <Container className="min-h-screen"></Container>
-      {/* <Container className="min-h-screen">
-        <Section title={t("home.section_1.title")}>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {STATS.map(({ icon, title, value, url }: StatProps) => (
-              <div className="flex gap-5" key={url}>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-outline">
+        background={clx(
+          theme === undefined && "gray",
+          theme === "light" && "home-banner",
+          theme === "dark" && "home-banner-dark"
+        )}
+        category={[t("category"), "text-primary dark:text-primary-dark"]}
+        header={[t("header")]}
+        description={[t("description")]}
+        agencyBadge={<AgencyBadge name={t("agencies:dosm.full")} icon={<DOSMIcon />} />}
+        action={
+          <div className="flex flex-wrap gap-3">
+            <At className="btn-primary text-sm shadow-button" href="/dashboard" enableIcon>
+              {t("common:nav.dashboards")}
+            </At>
+            <At
+              className="btn btn-border bg-white px-3 py-1.5 text-sm text-black shadow-button active:bg-washed"
+              href="/data-catalogue"
+              enableIcon
+            >
+              {t("common:nav.catalogue")}
+            </At>
+            <At className="btn px-3 py-1.5 text-sm" href="/publications" enableIcon>
+              {t("common:nav.publications")}
+            </At>
+          </div>
+        }
+      />
+
+      <Container className="min-h-screen">
+        <Section title={t("at_a_glance")}>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {STATS.map(({ data_as_of, icon, title, value, url }: StatProps) => (
+              <div className="flex items-center gap-3" key={url}>
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-outline dark:bg-washed-dark">
                   {icon}
                 </div>
-                <div>
+                <div className="space-y-0.5">
                   <At
                     href={url}
-                    className="relative flex flex-wrap items-start gap-x-2 text-sm font-medium uppercase text-dim transition-all hover:text-black hover:underline"
+                    className="relative flex flex-wrap items-start gap-1.5 text-sm font-medium uppercase text-dim transition-all [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white"
                   >
-                    <span>{title}</span>
-                    <ArrowTopRightOnSquareIcon className="absolute -right-6 h-4 w-4" />
+                    <span>{t(title)}</span>
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                   </At>
-
-                  <h3 className="font-medium">{value}</h3>
+                  <span className="flex items-baseline gap-1.5">
+                    <p className="text-2xl font-medium">{value}</p>
+                    <p className="text-sm text-dim">{`(${data_as_of})`}</p>
+                  </span>
                 </div>
               </div>
             ))}
           </div>
         </Section>
         <Section
-          title={t("home.section_2.title")}
-          description={t("home.section_2.description")}
+          title={t("dashboard.title")}
+          description={t("dashboard.description")}
           date={analytics.data_as_of}
+          menu={
+            <Tabs.List
+              options={PANELS.map(item => item.name)}
+              current={data.tabs_section_1}
+              onChange={index => setData("tabs_section_1", index)}
+            />
+          }
         >
-          <Tabs>
+          <Tabs
+            hidden
+            current={data.tabs_section_1}
+            onChange={index => setData("tabs_section_1", index)}
+          >
             {PANELS.map((panel, index) => (
-              <Panel name={panel.name as string} key={index}>
-                <div className="grid grid-cols-2 gap-6 py-6 lg:grid-cols-4">
-                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
-                    <h4 className="flex gap-3 text-base">{t("home.section_2.dashboards")}</h4>
-                    <h3 className="font-medium">16</h3>
-                  </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
-                    <h4 className="flex gap-3 text-base">
-                      {t("home.section_2.datasets_available")}
-                    </h4>
-                    <h3 className="font-medium">
-                      {numFormat(analytics.total.catalogue, "standard")}
-                    </h3>
-                  </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
-                    <h4 className="flex gap-3 text-base">{t("home.section_2.resource_views")}</h4>
-                    <h3 className="font-medium">
-                      {numFormat(
-                        panel.data.resource_views,
-                        breakpoint > BREAKPOINTS.MD ? "standard" : "compact",
-                        2
-                      )}
-                    </h3>
-                  </Card>
-                  <Card className="flex h-full flex-col justify-between space-y-3 bg-white p-6">
-                    <h4 className="flex gap-3 text-base">
-                      {t("home.section_2.resource_downloads")}
-                    </h4>
-                    <h3 className="font-medium">
-                      {numFormat(
-                        panel.data.resource_downloads,
-                        breakpoint > BREAKPOINTS.MD ? "standard" : "compact",
-                        2
-                      )}
-                    </h3>
-                  </Card>
-                </div>
-
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  <Card className="space-y-3 bg-white p-6">
-                    <Ranking
-                      type="dashboard"
-                      ranks={panel.data.dashboard_views}
-                      title={["🔥", t("home.section_2.top_dashboards")]}
-                      icon={<EyeIcon className="h-4 w-4" />}
-                    />
-                  </Card>
-                  <Card className="space-y-3 bg-white p-6">
-                    <Ranking
-                      type={"catalogue"}
-                      ranks={panel.data.dataset_views}
-                      title={["🔥", t("home.section_2.top_catalogues")]}
-                      icon={<EyeIcon className="h-4 w-4" />}
-                    />
-                  </Card>
-                  <Card className="space-y-3 bg-white p-6">
-                    <Ranking
-                      type={"catalogue"}
-                      ranks={panel.data.dataset_downloads}
-                      title={["🔢", t("home.section_2.top_files")]}
-                      icon={<DocumentArrowDownIcon className="h-4 w-4" />}
-                    />
-                  </Card>
-                  <Card className="space-y-3 bg-white p-6">
-                    <Ranking
-                      type={"catalogue"}
-                      ranks={panel.data.graphic_downloads}
-                      title={["📊", t("home.section_2.top_images")]}
-                      icon={<DocumentArrowDownIcon className="h-4 w-4" />}
-                    />
-                  </Card>
-                </div>
-              </Panel>
+              <Tabs.Panel name={panel.name as string} key={index}>
+                <Ranking ranks={panel.data.dashboard} />
+              </Tabs.Panel>
             ))}
           </Tabs>
         </Section>
-        <Section title={t("home.section_3.title")} date={timeseries.data_as_of}>
+        <Section
+          title={t("catalogue.title")}
+          description={t("catalogue.description")}
+          date={analytics.data_as_of}
+          menu={
+            <Tabs.List
+              options={PANELS.map(item => item.name)}
+              current={data.tabs_section_2}
+              onChange={index => setData("tabs_section_2", index)}
+            />
+          }
+        >
+          <Tabs
+            hidden
+            current={data.tabs_section_2}
+            onChange={index => setData("tabs_section_2", index)}
+          >
+            {PANELS.map((panel, index) => (
+              <Tabs.Panel name={panel.name as string} key={index}>
+                <Ranking ranks={panel.data.dataset} />
+              </Tabs.Panel>
+            ))}
+          </Tabs>
+        </Section>
+        <Section title={t("usage")} date={timeseries.data_as_of}>
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <Timeseries
-              className="h-[250px] w-full"
-              title={t("home.keys.views")}
+              className="h-[300px] w-full"
+              title={t("views")}
               data={{
                 labels: coordinate.x,
                 datasets: [
@@ -301,7 +275,7 @@ const Home: Page = ({
                     type: "line",
                     data: coordinate.views,
                     borderColor: AKSARA_COLOR.PRIMARY,
-                    label: t("home.keys.views") as string,
+                    label: t("views") as string,
                     borderWidth: 1.5,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     fill: true,
@@ -311,8 +285,8 @@ const Home: Page = ({
               stats={yieldCallout("views")}
             />
             <Timeseries
-              className="h-[250px] w-full"
-              title={t("home.keys.users")}
+              className="h-[300px] w-full"
+              title={t("users")}
               data={{
                 labels: coordinate.x,
                 datasets: [
@@ -321,7 +295,7 @@ const Home: Page = ({
                     data: coordinate.users,
                     borderColor: AKSARA_COLOR.PRIMARY,
                     borderWidth: 1.5,
-                    label: t("home.keys.users") as string,
+                    label: t("users") as string,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     fill: true,
                   },
@@ -330,8 +304,8 @@ const Home: Page = ({
               stats={yieldCallout("users")}
             />
             <Timeseries
-              className="h-[250px] w-full"
-              title={t("home.keys.downloads")}
+              className="h-[300px] w-full"
+              title={t("downloads")}
               data={{
                 labels: coordinate.x,
                 datasets: [
@@ -339,7 +313,7 @@ const Home: Page = ({
                     type: "line",
                     data: coordinate.downloads,
                     borderColor: AKSARA_COLOR.PRIMARY,
-                    label: t("home.keys.downloads") as string,
+                    label: t("downloads") as string,
                     backgroundColor: AKSARA_COLOR.PRIMARY_H,
                     fill: true,
                     borderWidth: 1.5,
@@ -351,14 +325,13 @@ const Home: Page = ({
           </div>
 
           <Slider
-            className="pt-12"
             type="range"
             value={data.minmax}
             data={timeseries.data.x}
             onChange={(e: any) => setData("minmax", e)}
           />
         </Section>
-      </Container> */}
+      </Container>
     </>
   );
 };
@@ -368,46 +341,54 @@ type RankItem = {
   count: number;
   name_bm: string;
   name_en: string;
+  agency_abbr: Division;
 };
 interface RankingProps {
-  type: "catalogue" | "dashboard";
-  title: [icon: ReactNode, title: ReactNode];
   ranks: RankItem[];
-  icon: ReactNode;
 }
 
-const Ranking = ({ title, ranks, type = "catalogue", icon }: RankingProps) => {
-  const { i18n } = useTranslation();
+const Ranking = ({ ranks }: RankingProps) => {
+  const { t, i18n } = useTranslation();
   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
 
   return (
     <>
-      <h4 className="flex gap-3 text-base">
-        <span>{title[0]}</span>
-        {title[1]}
-      </h4>
-      <ol className="list-inside space-y-3">
-        {ranks.map((item: RankItem, index: number) => (
-          <li className="flex items-start justify-between" key={item.id}>
-            <At
-              href={type === "catalogue" ? `/data-catalogue/${item.id}` : item.id}
-              className="flex gap-5"
-            >
-              <span className="text-dim">{index + 1}</span>
-              <span className="hover:underline">{item[`name_${lang}`]}</span>
-            </At>
-            <p className="flex items-center gap-2">
-              {icon}
-              <span>{numFormat(item.count, "compact", 2)}</span>
-            </p>
-          </li>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {ranks.map((item: RankItem) => (
+          <At href={item.id} key={item.id}>
+            <Card className="group w-full space-y-3 rounded-xl border border-outline p-3 transition-colors hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50">
+              <div className="relative flex items-center gap-3">
+                <DivisionIcon division={item.agency_abbr} className="h-6 w-6" />
+                <p className="text-sm text-dim">{t(`division:${item.agency_abbr}.abbr`)}</p>
+                <ArrowUpRightIcon className="absolute right-2 h-5 w-5 text-dim opacity-0 transition-[opacity_transform] duration-0 group-hover:translate-x-2 group-hover:opacity-100 group-hover:duration-300" />
+              </div>
+              <div className="relative overflow-hidden">
+                <p
+                  className="truncate font-medium dark:text-white"
+                  title={item[`name_${lang as "en" | "bm"}`]}
+                >
+                  {item[`name_${lang as "en" | "bm"}`]}
+                </p>
+                <p className="text-dim transition-transform group-hover:translate-y-6">
+                  {`${numFormat(item.count, "compact")} ${t("common.views", {
+                    count: item.count,
+                  })}`}
+                </p>
+                <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
+                  {t("components.click_to_explore")}
+                </p>
+              </div>
+            </Card>
+          </At>
         ))}
-      </ol>
+      </div>
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("common", async () => {
+export const getStaticProps: GetStaticProps = withi18n("opendosm-home", async () => {
+  const { data } = await get("/dashboard/", { dashboard: "opendosm_homepage" });
+
   return {
     props: {
       meta: {
@@ -416,30 +397,20 @@ export const getStaticProps: GetStaticProps = withi18n("common", async () => {
         category: null,
         agency: null,
       },
-      // timeseries_callouts: data.statistics,
-      // timeseries: data.timeseries,
-      // highlights: data.highlight,
-      // analytics: {
-      //   data_as_of: data.table_summary.data_as_of,
-      //   today: {
-      //     resource_views: data.metrics_stats.data.today.resource_views.count,
-      //     resource_downloads: data.metrics_stats.data.today.resource_downloads.count,
-      //     ...data.table_summary.data.today,
-      //   },
-      //   last_month: {
-      //     resource_views: data.metrics_stats.data.last_month.resource_views.count,
-      //     resource_downloads: data.metrics_stats.data.last_month.resource_downloads.count,
-      //     ...data.table_summary.data.last_month,
-      //   },
-      //   all_time: {
-      //     resource_views: data.metrics_stats.data.all_time.resource_views.count,
-      //     resource_downloads: data.metrics_stats.data.all_time.resource_downloads.count,
-      //     ...data.table_summary.data.all_time,
-      //   },
-      //   total: {
-      //     catalogue: data.total_catalog,
-      //   },
-      // },
+      analytics: {
+        data_as_of: data.table_summary.data_as_of,
+        today: {
+          dataset: data.table_summary.data.dataset_views.today,
+          dashboard: data.table_summary.data.dashboard_views.today,
+        },
+        all_time: {
+          dataset: data.table_summary.data.dataset_views.all_time,
+          dashboard: data.table_summary.data.dashboard_views.all_time,
+        },
+      },
+      keystats: data.keystats.data,
+      timeseries: data.timeseries,
+      timeseries_callout: data.timeseries_callout,
     },
   };
 });

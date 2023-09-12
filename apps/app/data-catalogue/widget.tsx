@@ -1,168 +1,307 @@
-export default "";
-// import { EyeIcon } from "@heroicons/react/24/outline";
-// import { useTranslation } from "@hooks/useTranslation";
-// import { FunctionComponent, ReactNode, useEffect, useState } from "react";
-// import { SHORT_LANG } from "@lib/constants";
-// import { CATALOGUE_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "@lib/schema/data-catalogue";
-// import { OptionType } from "@components/types";
-// import { track } from "@lib/mixpanel";
-// import dynamic from "next/dynamic";
-// import Dropdown from "@components/Dropdown";
-// import Search from "@components/Search";
-// import Section from "@components/Section";
-// import { useRouter } from "next/router";
+import {
+  ArrowTopRightOnSquareIcon as ExternalLinkIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
+import { Chips, Slider, Tooltip } from "datagovmy-ui/components";
+import { BREAKPOINTS, SHORT_PERIOD } from "datagovmy-ui/constants";
+import { WindowContext, WindowProvider } from "datagovmy-ui/contexts/window";
+import { clx, toDate } from "datagovmy-ui/helpers";
+import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
+import { DCChartKeys, DCConfig, OptionType } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { FunctionComponent, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
-// /**
-//  * Widget for external sites / publications. To embed data catalogue charts.
-//  * @overview Status: On-hold
-//  */
+/**
+ * Catalogue Show
+ * @overview Status: Live
+ */
 
-// const Table = dynamic(() => import("@components/Chart/Table"), { ssr: false });
-// const CatalogueTimeseries = dynamic(() => import("@data-catalogue/partials/timeseries"), {
-//   ssr: false,
-// });
-// const CatalogueChoropleth = dynamic(() => import("@data-catalogue/partials/choropleth"), {
-//   ssr: true,
-// });
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
+const CatalogueTimeseries = dynamic(() => import("datagovmy-ui/dc-charts/timeseries"), {
+  ssr: false,
+});
+const CatalogueChoropleth = dynamic(() => import("datagovmy-ui/dc-charts/choropleth"), {
+  ssr: false,
+});
+const CatalogueGeoChoropleth = dynamic(() => import("datagovmy-ui/dc-charts/geochoropleth"), {
+  ssr: false,
+});
+const CatalogueScatter = dynamic(() => import("datagovmy-ui/dc-charts/scatter"), {
+  ssr: false,
+});
+const CatalogueMapPlot = dynamic(() => import("datagovmy-ui/dc-charts/mapplot"), {
+  ssr: false,
+});
+const CatalogueGeojson = dynamic(() => import("datagovmy-ui/dc-charts/geojson"), {
+  ssr: false,
+});
+const CatalogueBar = dynamic(() => import("datagovmy-ui/dc-charts/bar"), {
+  ssr: false,
+});
+const CataloguePyramid = dynamic(() => import("datagovmy-ui/dc-charts/pyramid"), {
+  ssr: false,
+});
+const CatalogueHeatmap = dynamic(() => import("datagovmy-ui/dc-charts/heatmap"), {
+  ssr: false,
+});
+const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
+  ssr: false,
+});
 
-// interface CatalogueWidgetProps {
-//   params: {
-//     id: string;
-//   };
-//   config: any;
-//   dataset: any;
-//   explanation: any;
-//   metadata: any;
-//   urls: {
-//     csv: string;
-//     parquet: string;
-//   };
-// }
+interface CatalogueWidgetProps {
+  options: OptionType[];
+  params: {
+    id: string;
+    theme: string;
+  };
+  config: DCConfig;
+  dataset: {
+    type: DCChartKeys;
+    chart: any;
+    table: Record<string, any>[];
+    meta: { title: string; desc: string; unique_id: string };
+  };
+  metadata: {
+    data_as_of: string;
+    url: {
+      csv?: string;
+      parquet?: string;
+      [key: string]: string | undefined;
+    };
+    source: string[];
+    definitions: Array<{
+      id: number;
+      unique_id?: string;
+      name: string;
+      desc: string;
+      title: string;
+    }>;
+    next_update: string;
+    description: string;
+    last_updated: string;
+  };
+  urls: {
+    [key: string]: string;
+  };
+  translations: {
+    [key: string]: string;
+  };
+}
 
-// const CatalogueWidget: FunctionComponent<CatalogueWidgetProps> = ({
-//   config,
-//   dataset,
-//   metadata,
-//   urls,
-// }) => {
-//   const { t, i18n } = useTranslation();
-//   const showChart =
-//     dataset.type === "TABLE"
-//       ? [{ label: t("table"), value: "table" }]
-//       : [
-//           { label: t("chart"), value: "chart" },
-//           { label: t("table"), value: "table" },
-//         ];
+const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
+  params,
+  config,
+  dataset,
+  metadata,
+  urls,
+  translations,
+}) => {
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
+  const { filter, setFilter } = useFilter(config.context, { id: params.id, theme: params.theme });
+  const { size } = useContext(WindowContext);
+  const chips = useMemo<OptionType[]>(
+    () =>
+      Object.entries(filter)
+        .filter(([key, _]: [string, unknown]) => {
+          return key !== "date_slider";
+        })
+        .map(([_, value]) => value as OptionType),
+    [filter]
+  );
+  const [rows, setRows] = useState<number>(10);
+  const ROW_HEIGHT = 40;
 
-//   const [show, setShow] = useState<OptionType>(showChart[0]);
+  useEffect(
+    () =>
+      setRows(
+        Math.floor(
+          (size.height - (size.width > BREAKPOINTS.MD ? ROW_HEIGHT * 4 : ROW_HEIGHT * 6)) /
+            ROW_HEIGHT
+        )
+      ),
+    [size.height, size.width]
+  );
 
-//   const query = useRouter().query;
-//   const lang = SHORT_LANG[i18n.language as keyof typeof SHORT_LANG];
+  const renderChart = (): ReactNode | undefined => {
+    switch (dataset.type) {
+      case "TIMESERIES":
+      case "STACKED_AREA":
+      case "INTRADAY":
+        return (
+          <CatalogueTimeseries
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
+            config={{
+              precision: config.precision,
+              range: filter?.range?.value ?? "INTRADAY",
+            }}
+            translations={translations}
+          />
+        );
+      case "CHOROPLETH":
+        return (
+          <CatalogueChoropleth
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
+            config={config}
+          />
+        );
+      case "GEOCHOROPLETH":
+        return (
+          <CatalogueGeoChoropleth
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
+            config={config}
+          />
+        );
+      case "GEOPOINT":
+        return (
+          <CatalogueMapPlot className={clx(chips.length ? "h-[80vh]" : "h-[85vh]", "w-full")} />
+        );
+      case "GEOJSON":
+        return (
+          <CatalogueGeojson
+            className={clx(chips.length ? "h-[80vh]" : "h-[85vh]", "w-full")}
+            config={config}
+          />
+        );
+      case "BAR":
+      case "HBAR":
+      case "STACKED_BAR":
+        return (
+          <WindowProvider>
+            <CatalogueBar
+              className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
+              config={config}
+              translations={translations}
+            />
+          </WindowProvider>
+        );
+      case "PYRAMID":
+        return (
+          <CataloguePyramid
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
+            config={config}
+            translations={translations}
+          />
+        );
+      case "HEATTABLE":
+        return (
+          <CatalogueHeatmap
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
+            config={config}
+            translations={translations}
+          />
+        );
+      case "SCATTER":
+        return (
+          <CatalogueScatter
+            className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "mx-auto aspect-square")}
+            translations={translations}
+          />
+        );
+      case "LINE":
+        return (
+          <CatalogueLine
+            className={clx(chips.length ? "h-[75vh]" : "h-[80vh]", "w-full")}
+            config={config}
+            translations={translations}
+          />
+        );
+      case "TABLE":
+        return (
+          <div className="flex h-full w-full flex-col">
+            <Table
+              className="table-stripe table-default table-sticky-header grow"
+              responsive={true}
+              data={dataset.table}
+              freeze={config.freeze}
+              config={UNIVERSAL_TABLE_SCHEMA(
+                Object.keys(dataset.table[0]),
+                translations,
+                config.freeze,
+                (item, key) => item[key]
+              )}
+              enablePagination={rows}
+            />
+          </div>
+        );
+    }
+    return;
+  };
 
-//   const renderChart = (): ReactNode | undefined => {
-//     switch (dataset.type) {
-//       case "TIMESERIES":
-//         return (
-//           <CatalogueTimeseries
-//             className="h-[50vh] w-full"
-//             dataset={dataset}
-//             lang={lang}
-//             urls={urls}
-//             filter={undefined}
-//             config={config}
-//           />
-//         );
+  return (
+    <div className="flex h-[100vh] flex-col gap-3 p-2 lg:p-3">
+      <div className="space-y-1">
+        <div className="flex flex-row items-center justify-start gap-2 md:justify-between">
+          <h4 className="inline-block truncate" data-testid="catalogue-title">
+            {dataset.meta.title}
+          </h4>
 
-//       case "CHOROPLETH":
-//         return (
-//           <CatalogueChoropleth
-//             dataset={dataset}
-//             lang={lang}
-//             urls={urls}
-//             config={{
-//               precision: config.color,
-//               color: config.color,
-//               geojson: config.file_json,
-//             }}
-//           />
-//         );
-//       default:
-//         break;
-//     }
-//     return;
-//   };
+          <div>
+            <Tooltip
+              tip={t("common:common.data_of", {
+                date: toDate(metadata.data_as_of, "dd MMM yyyy", i18n.language),
+              })}
+            >
+              {open => (
+                <>
+                  <InformationCircleIcon
+                    className="text-outlineHover mb-1 inline-block h-4 w-4 md:hidden"
+                    onClick={() => open}
+                  />
+                </>
+              )}
+            </Tooltip>
+            <span className="text-dim hidden text-right text-sm md:block">
+              {t("common:common.data_of", {
+                date: toDate(metadata.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+              })}
+            </span>
+          </div>
+        </div>
+        <Chips className="text-sm" data={chips} onRemove={null} onClearAll={null} />
+      </div>
 
-//   useEffect(() => {
-//     track("page_view", {
-//       type: "catalogue",
-//       id: dataset.meta.unique_id,
-//       name_en: dataset.meta.en.title,
-//       name_bm: dataset.meta.bm.title,
-//     });
-//   }, []);
+      {/* Chart */}
+      <div className="grow">
+        {renderChart()}
+        {config.dates !== null && (
+          <Slider
+            className="pt-4"
+            type="single"
+            value={config.dates?.options.indexOf(
+              filter[config.dates.key].value ?? config.dates.default
+            )}
+            data={config.dates.options}
+            period={SHORT_PERIOD[config.dates.interval]}
+            onChange={e =>
+              config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
+            }
+          />
+        )}
+      </div>
 
-//   return (
-//     <div id="catalogue-widget" className="h-[100vh] w-full">
-//       {/* Chart & Table */}
-//       <Section
-//         title={dataset.meta[lang].title}
-//         className=""
-//         description={dataset.meta[lang].desc.replace(/^(.*?)]/, "")}
-//         date={metadata.data_as_of}
-//         menu={
-//           <>
-//             <Dropdown
-//               sublabel={<EyeIcon className="h-4 w-4" />}
-//               selected={show}
-//               options={showChart}
-//               onChange={e => setShow(e)}
-//             />
-//           </>
-//         }
-//       >
-//         {/* Dataset Filters & Chart / Table */}
-//         <div
-//           className={[show.value === "chart" ? "block h-full" : "hidden", "space-y-2"].join(" ")}
-//         >
-//           {renderChart()}
-//         </div>
-//         <div
-//           className={[
-//             "mx-auto",
-//             ...[show.value === "table" ? "block overflow-auto" : "hidden"],
-//           ].join(" ")}
-//         >
-//           <Table
-//             className="table-stripe table-default"
-//             data={[...dataset.table.data].reverse()}
-//             enableSticky
-//             search={
-//               dataset.type === "TABLE"
-//                 ? onSearch => (
-//                     <Search
-//                       className="w-full lg:w-auto"
-//                       onChange={query => onSearch(query ?? "")}
-//                     />
-//                   )
-//                 : undefined
-//             }
-//             config={
-//               dataset.type === "TABLE"
-//                 ? UNIVERSAL_TABLE_SCHEMA(dataset.table.columns, lang as "en" | "bm", config.freeze)
-//                 : CATALOGUE_TABLE_SCHEMA(
-//                     dataset.table.columns,
-//                     lang,
-//                     query.range ?? config.filter_state.range,
-//                     Object.keys(dataset.chart),
-//                     [config.precision, config.precision]
-//                   )
-//             }
-//             enablePagination={8}
-//           />
-//         </div>
-//       </Section>
-//     </div>
-//   );
-// };
+      <div className="bg-washed fixed bottom-0 left-0 flex w-full gap-2 px-3 py-1">
+        <Image src="/static/images/logo.png" width={16} height={14} alt="datagovmy logo" />
+        <small className="text-dim space-x-2 ">
+          <a
+            href={`https://data.gov.my/data-catalogue/${dataset.meta.unique_id}`}
+            target="_blank"
+            className="space-x-1 hover:underline"
+          >
+            <span>{t("view_full_chart")}</span>
+            <ExternalLinkIcon className="inline-block h-3 w-3" />
+          </a>
 
-// export default CatalogueWidget;
+          <span>|</span>
+
+          <a href="https://data.gov.my" className="text-primary">
+            data.gov.my
+          </a>
+        </small>
+      </div>
+    </div>
+  );
+};
+
+export default CatalogueShow;

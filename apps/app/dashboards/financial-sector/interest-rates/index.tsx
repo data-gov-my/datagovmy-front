@@ -1,17 +1,13 @@
-import { Container, Dropdown, Hero, Section } from "@components/index";
-import { FunctionComponent, useCallback } from "react";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { numFormat, toDate } from "@lib/helpers";
-import { useTranslation } from "@hooks/useTranslation";
-import { useSlice } from "@hooks/useSlice";
-import { useData } from "@hooks/useData";
-import type { OptionType } from "@components/types";
-import { AKSARA_COLOR } from "@lib/constants";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
-import Slider from "@components/Chart/Slider";
-import AgencyBadge from "@components/Badge/agency";
-import { BNMIcon } from "@components/Icon/agency";
-import { SliderProvider } from "@components/Chart/Slider/context";
+import { FunctionComponent, useCallback } from "react";
+
 /**
  * Interest Rates Dashboard
  * @overview Status: Live
@@ -26,7 +22,7 @@ interface TimeseriesChartData {
   callout: string;
 }
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface InterestRatesDashboardProps {
   last_updated: string;
@@ -149,145 +145,135 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bnm.full")}
-            link="https://www.bnm.gov.my/publications/mhs"
-            icon={<BNMIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bnm" />}
       />
 
       <Container className="min-h-screen">
         {/* How is interest rates trending? */}
         <Section
           title={t("section_1.title")}
-          description={t("section_1.description")}
+          // description={t("section_1.description")}
+          description={
+            <Dropdown
+              anchor="left"
+              options={SHADE_OPTIONS}
+              selected={data.shade_type}
+              onChange={e => setData("shade_type", e)}
+            />
+          }
           date={timeseries_opr.data_as_of}
         >
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 gap-4 lg:flex lg:flex-row">
-              <Dropdown
-                anchor="left"
-                options={SHADE_OPTIONS}
-                selected={data.shade_type}
-                onChange={e => setData("shade_type", e)}
-              />
-            </div>
-
-            <SliderProvider>
-              {play => (
-                <>
-                  <Slider
-                    className=""
-                    type="range"
-                    value={data.opr_minmax}
-                    data={timeseries_opr.data.x}
-                    period="month"
-                    onChange={e => {
-                      setData("opr_minmax", e);
-                      setData("non_opr_minmax", e);
-                    }}
-                  />
-                  <Timeseries
-                    title={t("keys.opr")}
-                    className="h-[350px] w-full"
-                    interval="month"
-                    enableAnimation={!play}
-                    unitY={oprConfigs("opr").unit}
-                    displayNumFormat={value => numFormat(value, "standard", [2, 2])}
-                    axisY={{
-                      y2: {
+          <SliderProvider>
+            {play => (
+              <>
+                <Timeseries
+                  title={t("keys.opr")}
+                  className="h-[350px] w-full"
+                  interval="month"
+                  enableAnimation={!play}
+                  unitY={oprConfigs("opr").unit}
+                  displayNumFormat={value => numFormat(value, "standard", [2, 2])}
+                  axisY={{
+                    y2: {
+                      display: false,
+                      grid: {
+                        drawTicks: false,
+                        drawBorder: false,
+                        lineWidth: 0.5,
+                      },
+                      ticks: {
                         display: false,
-                        grid: {
-                          drawTicks: false,
-                          drawBorder: false,
-                          lineWidth: 0.5,
-                        },
-                        ticks: {
-                          display: false,
-                        },
                       },
-                    }}
-                    data={{
-                      labels: opr_coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          data: opr_coordinate.opr,
-                          label: t("keys.opr"),
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          borderWidth: 1.5,
-                          fill: oprConfigs("opr").fill,
-                          stepped: true,
-                        },
-                        oprShader(data.shade_type.value),
-                      ],
-                    }}
-                    stats={[
+                    },
+                  }}
+                  data={{
+                    labels: opr_coordinate.x,
+                    datasets: [
                       {
-                        title: t("common:common.latest", {
-                          date: toDate(OPR_LATEST_TIMESTAMP, "d MMM yyyy", i18n.language),
-                        }),
-                        value: oprConfigs("opr").callout,
+                        type: "line",
+                        data: opr_coordinate.opr,
+                        label: t("keys.opr"),
+                        borderColor: AKSARA_COLOR.PRIMARY,
+                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                        borderWidth: 1.5,
+                        fill: oprConfigs("opr").fill,
+                        stepped: true,
                       },
-                    ]}
-                  />
-
-                  <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-                    {section1ChartData.map(chartData => (
-                      <Timeseries
-                        key={chartData.title}
-                        title={chartData.title}
-                        className="h-[350px] w-full"
-                        interval="month"
-                        enableAnimation={!play}
-                        unitY={chartData.unitY}
-                        displayNumFormat={value => numFormat(value, "standard", [2, 1])}
-                        axisY={{
-                          y2: {
+                      oprShader(data.shade_type.value),
+                    ],
+                  }}
+                  stats={[
+                    {
+                      title: t("common:common.latest", {
+                        date: toDate(OPR_LATEST_TIMESTAMP, "d MMM yyyy", i18n.language),
+                      }),
+                      value: oprConfigs("opr").callout,
+                    },
+                  ]}
+                />
+                <Slider
+                  className="pb-12 pt-8"
+                  type="range"
+                  value={data.opr_minmax}
+                  data={timeseries_opr.data.x}
+                  period="month"
+                  onChange={e => {
+                    setData("opr_minmax", e);
+                    setData("non_opr_minmax", e);
+                  }}
+                />
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+                  {section1ChartData.map(chartData => (
+                    <Timeseries
+                      key={chartData.title}
+                      title={chartData.title}
+                      className="h-[350px] w-full"
+                      interval="month"
+                      enableAnimation={!play}
+                      unitY={chartData.unitY}
+                      displayNumFormat={value => numFormat(value, "standard", [2, 1])}
+                      axisY={{
+                        y2: {
+                          display: false,
+                          grid: {
+                            drawTicks: false,
+                            drawBorder: false,
+                            lineWidth: 0.5,
+                          },
+                          ticks: {
                             display: false,
-                            grid: {
-                              drawTicks: false,
-                              drawBorder: false,
-                              lineWidth: 0.5,
-                            },
-                            ticks: {
-                              display: false,
-                            },
                           },
-                        }}
-                        data={{
-                          labels: non_opr_coordinate.x,
-                          datasets: [
-                            {
-                              type: "line",
-                              label: chartData.label,
-                              data: chartData.data,
-                              borderColor: AKSARA_COLOR.PRIMARY,
-                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                              fill: chartData.fill,
-                              borderWidth: 1.5,
-                            },
-                            shader(data.shade_type.value),
-                          ],
-                        }}
-                        stats={[
+                        },
+                      }}
+                      data={{
+                        labels: non_opr_coordinate.x,
+                        datasets: [
                           {
-                            title: t("common:common.latest", {
-                              date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
-                            }),
-                            value: chartData.callout,
+                            type: "line",
+                            label: chartData.label,
+                            data: chartData.data,
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            fill: chartData.fill,
+                            borderWidth: 1.5,
                           },
-                        ]}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </SliderProvider>
-          </div>
+                          shader(data.shade_type.value),
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:common.latest", {
+                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                          }),
+                          value: chartData.callout,
+                        },
+                      ]}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </SliderProvider>
         </Section>
       </Container>
     </>

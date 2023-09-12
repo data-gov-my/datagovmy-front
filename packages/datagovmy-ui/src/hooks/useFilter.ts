@@ -1,7 +1,7 @@
-import { OptionType } from "../components/types";
+import { OptionType } from "../../types";
 import debounce from "lodash/debounce";
 import { useRouter } from "next/router";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useData } from "./useData";
 import { useWatch } from "./useWatch";
 
@@ -9,10 +9,16 @@ import { useWatch } from "./useWatch";
  * Filter hook. Contains logic for backend-driven query / filtering.
  * @param state Filter queries
  * @param params Required for URL with dynamic params.
+ * @param sequential Only for DC pages
  * @returns filter, setFilter, queries, actives
  */
-export const useFilter = (state: Record<string, any> = {}, params = {}) => {
-  const { data, setData } = useData(state);
+export const useFilter = (
+  state: Record<string, any> = {},
+  params = {},
+  sequential: boolean = false
+) => {
+  const original = useRef(state);
+  const { data, setData, reset } = useData(state);
   const router = useRouter();
 
   const actives: Array<[string, unknown]> = useMemo(
@@ -27,16 +33,17 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
     [data]
   );
 
-  const queries: string = useMemo(() => {
+  const queries: string = useMemo<string>(() => {
     const query = actives
-      .map(([key, value]) =>
-        !value && Array.isArray(value)
-          ? `${key}=${value.map((item: OptionType) => item.value).join(",")}`
-          : `${key}=${(value as OptionType).value ?? value}`
-      )
+      .map(([key, value]) => {
+        if (!value) return "";
+        if (Array.isArray(value))
+          return `${key}=${value.map((item: OptionType) => item.value).join(",")}`;
+        else return `${key}=${(value as OptionType).value ?? value}`;
+      })
       .join("&");
     return `?${query}`;
-  }, [data]);
+  }, [actives]);
 
   const search: Function = useCallback(
     debounce(actives => {
@@ -64,13 +71,33 @@ export const useFilter = (state: Record<string, any> = {}, params = {}) => {
     []
   );
 
+  const _reset = () => {
+    reset(original.current);
+  };
+
+  const _setData = (key: string, value: any) => {
+    if (sequential) {
+      let flag = false;
+      for (const _key in data) {
+        if (flag && _key !== "range") setData(_key, undefined);
+        if (key === _key) {
+          setData(key, value);
+          flag = true;
+        }
+      }
+    } else {
+      setData(key, value);
+    }
+  };
+
   useWatch(() => {
     search(actives);
   }, [data]);
 
   return {
     filter: data,
-    setFilter: setData,
+    setFilter: _setData,
+    reset: _reset,
     queries,
     actives,
   };

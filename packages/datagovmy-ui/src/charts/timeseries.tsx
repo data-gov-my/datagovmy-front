@@ -27,32 +27,23 @@ import {
   Scale,
   Tick,
   TooltipItem,
+  LegendItem,
+  TimeUnit,
 } from "chart.js";
 import { CrosshairPlugin } from "chartjs-plugin-crosshair";
-import AnnotationPlugin from "chartjs-plugin-annotation";
+import AnnotationPlugin, { AnnotationOptions } from "chartjs-plugin-annotation";
 import { Chart } from "react-chartjs-2";
 import { clx, numFormat } from "../lib/helpers";
 import "chartjs-adapter-luxon";
-import { ChartCrosshairOption } from "../lib/types";
+import { ChartCrosshairOption } from "../../types";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "../lib/constants";
 import Spinner from "../components/Spinner";
 
-export type Periods =
-  | false
-  | "auto"
-  | "millisecond"
-  | "second"
-  | "minute"
-  | "hour"
-  | "day"
-  | "week"
-  | "month"
-  | "quarter"
-  | "year";
-
-type TimeseriesProps = ChartHeaderProps & {
+export type Periods = TimeUnit | "auto" | false;
+export interface TimeseriesProps extends ChartHeaderProps {
+  id?: string;
   className?: string;
   description?: string;
   type?: keyof ChartTypeRegistry;
@@ -62,6 +53,7 @@ type TimeseriesProps = ChartHeaderProps & {
   isLoading?: boolean;
   interval?: Periods;
   tooltipFormat?: string;
+  displayType?: "compact" | "standard" | "scientific" | "engineering";
   round?: Periods;
   prefixY?: string;
   unitY?: string;
@@ -72,14 +64,18 @@ type TimeseriesProps = ChartHeaderProps & {
   gridYValues?: Array<number> | undefined;
   minY?: number;
   maxY?: number;
-  precision?: number | [min: number, max: number];
+  suggestedMaxY?: number;
+  stepSize?: number;
+  precision?: number | [max: number, min: number];
   enableAnimation?: boolean;
   enableRightScale?: boolean;
   enableCallout?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  enableTooltip?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  enableMajorTick?: boolean;
   tickXCallback?: (
     this: Scale,
     tickValue: number | string,
@@ -89,15 +85,18 @@ type TimeseriesProps = ChartHeaderProps & {
   gridOffsetX?: boolean;
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   stats?: Array<StatProps> | null;
+  tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
+  generateLabels?: (chart: ChartJS<"line">) => LegendItem[];
   displayNumFormat?: (
     value: number,
     type: "compact" | "standard" | "scientific" | "engineering" | undefined,
     precision: number | [min: number, max: number]
   ) => string;
   _ref?: ForwardedRef<ChartJSOrUndefined<keyof ChartTypeRegistry, any[], unknown>>;
-};
+}
 
 const Timeseries: FunctionComponent<TimeseriesProps> = ({
+  id,
   className = "w-full h-[450px]", // manage CSS here
   menu,
   title,
@@ -106,30 +105,36 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   isLoading = false,
   interval = "auto",
   tooltipFormat,
+  displayType = "standard",
   prefixY,
   unitY,
   round = "day",
   mode = "stacked",
   data = dummy,
   stats,
-  state,
   subheader,
   type = "bar",
   axisY = undefined,
-  precision = 1,
+  precision = [1, 0],
   enableRightScale = false,
   enableCallout = false,
   enableCrosshair = true,
   enableLegend = false,
   enableGridX = false,
   enableGridY = true,
+  enableMajorTick = true,
   enableAnimation = true,
+  enableTooltip = true,
   gridOffsetX = true,
   tooltipCallback,
+  tooltipItemSort,
+  generateLabels,
   tickXCallback,
-  beginZero = false,
+  beginZero = true,
   minY,
   maxY,
+  stepSize,
+  suggestedMaxY,
   displayNumFormat = numFormat,
   _ref,
 }) => {
@@ -150,11 +155,11 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     AnnotationPlugin
   );
 
-  const { theme } = useTheme();
+  const { theme = "light" } = useTheme();
 
   const display = (
     value: number,
-    type: "compact" | "standard",
+    type: typeof displayType,
     precision: number | [min: number, max: number]
   ): string => {
     return (prefixY ?? "") + displayNumFormat(value, type, precision) + (unitY ?? "");
@@ -177,15 +182,28 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       plugins: {
         legend: {
           display: enableLegend,
+          onClick: (e, legendItem, legend) => {
+            const index = legendItem.datasetIndex as number;
+            const ci = legend.chart;
+            if (ci.isDatasetVisible(index)) {
+              ci.hide(index);
+              legendItem.hidden = true;
+            } else {
+              ci.show(index);
+              legendItem.hidden = false;
+            }
+          },
           labels: {
             usePointStyle: true,
             pointStyle: "rect",
+            generateLabels: generateLabels,
           },
           position: "top",
           align: "start",
         },
         tooltip: {
-          enabled: true,
+          enabled: enableTooltip,
+          itemSort: tooltipItemSort,
           bodyFont: {
             family: "Inter",
           },
@@ -200,7 +218,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
               : function (item) {
                   return `${item.dataset.label as string}: ${
                     item.parsed.y !== undefined || item.parsed.y !== null
-                      ? display(item.parsed.y, "standard", precision)
+                      ? display(item.parsed.y, displayType, precision)
                       : "-"
                   }`;
                 },
@@ -216,68 +234,62 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
               common: {
                 drawTime: "afterDraw",
               },
-              annotations: Object.fromEntries(
-                data.datasets.map((set, i) => {
-                  const INDEXES = {
-                    year: data.labels!.length - 200,
-                    quarter: data.labels!.length - 45,
-                    month: data.labels!.length - 15,
-                    week: data.labels!.length - 4,
-                    millisecond: data.labels!.length - 1,
-                    second: data.labels!.length - 1,
-                    minute: data.labels!.length - 1,
-                    hour: data.labels!.length - 1,
-                    day: data.labels!.length - 1,
-                  };
-                  const xIndex =
-                    round && round !== "auto" ? INDEXES[round] : data.labels!.length - 1;
-                  const yIndex = data.labels!.length - 1;
+              annotations: data.datasets.map((set, index) => {
+                const INDEXES = {
+                  year: data.labels!.length - 200,
+                  quarter: data.labels!.length - 45,
+                  month: data.labels!.length - 15,
+                  week: data.labels!.length - 4,
+                  millisecond: data.labels!.length - 1,
+                  second: data.labels!.length - 1,
+                  minute: data.labels!.length - 1,
+                  hour: data.labels!.length - 1,
+                  day: data.labels!.length - 1,
+                };
+                const xIndex = round && round !== "auto" ? INDEXES[round] : data.labels!.length - 1;
+                const yIndex = data.labels!.length - 1;
 
-                  return [
-                    i,
-                    {
-                      type: "label",
-                      callout: {
-                        display: true,
-                      },
-                      content() {
-                        let text: string = set.label!;
-                        if (text.length > 25) text = text.slice(0, 25).concat("..");
-                        // if (text.length > 25) return chunkSplit(text, 25);
-                        return text;
-                      },
-                      font: {
-                        family: "Inter",
-                        style: "normal",
-                        lineHeight: 1,
-                        weight: "400",
-                        size: 12,
-                      },
-                      color: set.borderColor as string,
-                      position: {
-                        x: "start",
-                        y: "center",
-                      },
-                      xAdjust: 0,
-                      xValue: data.labels![xIndex] as string | number,
-                      yAdjust: (data.datasets as any[]).reduce((prev: any, current: any) => {
-                        if (Math.abs(current.data[yIndex] - set.data[yIndex]) < 3) {
-                          return prev + 1;
-                        }
-                        return prev;
-                      }, -1) as number,
-                      yValue: set.data[yIndex],
-                    },
-                  ];
-                })
-              ),
+                return {
+                  type: "label",
+                  callout: {
+                    display: true,
+                  },
+                  content() {
+                    let text: string = set.label!;
+                    if (text.length > 25) text = text.slice(0, 25).concat("..");
+                    // if (text.length > 25) return chunkSplit(text, 25);
+                    return text;
+                  },
+                  font: {
+                    family: "Inter",
+                    style: "normal",
+                    lineHeight: 1,
+                    weight: "400",
+                    size: 12,
+                  },
+                  color: set.borderColor as string,
+                  position: {
+                    x: "start",
+                    y: "center",
+                  },
+                  xAdjust: 0,
+                  xValue: data.labels![xIndex] as string | number,
+                  yAdjust: (data.datasets as any[]).reduce((prev: any, current: any) => {
+                    if (Math.abs(current.data[yIndex] - set.data[yIndex]) < 3) {
+                      return prev + 1;
+                    }
+                    return prev;
+                  }, -1) as number,
+                  yValue: set.data[yIndex],
+                } as AnnotationOptions;
+              }),
             }
           : false,
         crosshair: enableCrosshair
           ? {
               line: {
                 width: 0,
-                color: theme === "dark" ? "#FFF" : "#000",
+                color: theme === "light" ? "#000" : "#FFF",
                 dashPattern: [6, 4],
               },
               zoom: {
@@ -306,13 +318,19 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
               quarter: "qQ yyyy",
               month: "MMM",
               week: "dd MMM",
+              hour: "dd MMM yyyy HH:mm",
             },
             tooltipFormat: tooltipFormat
               ? tooltipFormat
-              : ["year", "month", "quarter", "day"].includes(interval as string)
-              ? { quarter: "qQ yyyy", month: "MMM yyyy", year: "yyyy", day: "dd MMM" }[
-                  interval as string
-                ]
+              : ["year", "month", "quarter", "day", "minute", "hour"].includes(interval as string)
+              ? {
+                  quarter: "qQ yyyy",
+                  month: "MMM yyyy",
+                  year: "yyyy",
+                  day: "dd MMM yyyy",
+                  minute: "dd MMM yyyy HH:mm",
+                  hour: "dd MMM yyyy HH:mm",
+                }[interval as string]
               : "dd MMM yyyy",
           },
           grid: {
@@ -324,7 +342,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ticks: {
             callback: tickXCallback,
             major: {
-              enabled: true,
+              enabled: enableMajorTick,
             },
             minRotation: 0,
             maxRotation: 0,
@@ -335,6 +353,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           stacked: mode === "stacked",
         },
         y: {
+          suggestedMax: suggestedMaxY,
           grid: {
             display: enableGridY,
             borderWidth: 1,
@@ -344,7 +363,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
             drawTicks: false,
             drawBorder: false,
-            color: theme === "dark" ? AKSARA_COLOR.WASHED_DARK : AKSARA_COLOR.OUTLINE,
+            color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
             offset: false,
             lineWidth(ctx) {
               if (ctx.tick.value === 0) return 2;
@@ -352,6 +371,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
           },
           ticks: {
+            precision: Array.isArray(precision) ? precision[1] : precision,
+            stepSize: stepSize,
             padding: 6,
             callback: (value: string | number) => {
               return value && display(value as number, "compact", precision);
@@ -403,14 +424,17 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           <Spinner loading={isLoading} />
         </div>
       ) : (
-        <div className="flex flex-col gap-y-6">
-          <div className="flex flex-col gap-y-3">
-            <ChartHeader title={title} menu={menu} controls={controls} state={state} />
-            {stats && <Stats data={stats} />}
-            {subheader && <div>{subheader}</div>}
-          </div>
+        <div className="flex flex-col gap-y-3">
+          {[menu, title, controls, stats, subheader].some(Boolean) && (
+            <div className="flex flex-col gap-y-3">
+              <ChartHeader title={title} menu={menu} controls={controls} />
+              {stats && <Stats data={stats} />}
+              {subheader && <div>{subheader}</div>}
+            </div>
+          )}
           <div className={className}>
             <Chart
+              data-testid={id || title}
               ref={_ref}
               data={data}
               options={options()}
@@ -437,33 +461,38 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
 };
 
 const dummy: ChartData = {
-  labels: [1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
+  labels: [
+    0, 300000, 600000, 900000, 1200000, 1500000, 1800000, 2100000, 2400000, 2700000, 3000000,
+    3300000, 3600000,
+  ], //[1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
+  // labels: [1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
   datasets: [
     // stacked y-values
     {
       type: "line",
       label: "Moving Average (MA)",
-      data: [1, 2, 3], // y-values
+      data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // y-values
+      // data: [1, 2, 3], // y-values
       borderColor: "red",
     },
-    {
-      type: "bar",
-      label: "Primary",
-      data: [4, 5, 6], // y-values
-      backgroundColor: "blue",
-    },
-    {
-      type: "bar",
-      label: "Booster 1",
-      data: [1, 2, 3], // y-values
-      backgroundColor: "teal",
-    },
-    {
-      type: "bar",
-      label: "Booster 2",
-      data: [10, 11, 12], // y-values
-      backgroundColor: "green",
-    },
+    // {
+    //   type: "bar",
+    //   label: "Primary",
+    //   data: [4, 5, 6], // y-values
+    //   backgroundColor: "blue",
+    // },
+    // {
+    //   type: "bar",
+    //   label: "Booster 1",
+    //   data: [1, 2, 3], // y-values
+    //   backgroundColor: "teal",
+    // },
+    // {
+    //   type: "bar",
+    //   label: "Booster 2",
+    //   data: [10, 11, 12], // y-values
+    //   backgroundColor: "green",
+    // },
   ],
 };
 
@@ -492,7 +521,7 @@ export const Stats: FunctionComponent<StatsProps> = ({ data, className }) => {
               {open => (
                 <>
                   <p
-                    className="font-medium underline decoration-dashed underline-offset-4"
+                    className="font-medium underline decoration-dashed [text-underline-position:from-font]"
                     onClick={() => open()}
                   >
                     {value}

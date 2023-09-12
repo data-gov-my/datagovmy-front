@@ -1,44 +1,56 @@
 import { GetStaticProps } from "next";
-import type { InferGetStaticPropsType } from "next";
-import { get } from "@lib/api";
-import type { Page } from "@lib/types";
-import { withi18n } from "@lib/decorators";
-import Metadata from "@components/Metadata";
-import { useTranslation } from "@hooks/useTranslation";
+import { InferGetStaticPropsType } from "next";
+import { get } from "datagovmy-ui/api";
+import { Page } from "datagovmy-ui/types";
+import { withi18n } from "datagovmy-ui/decorators";
+import { Metadata } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
-import { AnalyticsProvider } from "@hooks/useAnalytics";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const CarPopularity: Page = ({
-  meta,
   last_updated,
+  meta,
+  model,
   queryOptions,
+  tableData,
+  timeseries,
+  timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <CarPopularityDashboard last_updated={last_updated} queryOptions={queryOptions} />
+      <CarPopularityDashboard
+        last_updated={last_updated}
+        model={model}
+        queryOptions={queryOptions}
+        tableData={tableData}
+        timeseries={timeseries}
+        timeseries_callout={timeseries_callout}
+      />
     </AnalyticsProvider>
   );
 };
-// Disabled
+
 export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
   try {
-    const [dropdown, chart] = await Promise.all([
+    const [{ data: dropdown }, { data }, { data: model }] = await Promise.all([
       get("/dropdown", {
         dashboard: "car_popularity",
       }),
-      get("/chart", {
+      get("/dashboard", { dashboard: "car_popularity" }),
+      get("chart/", {
         dashboard: "car_popularity",
         chart_name: "timeseries",
-        manufacturer: "PROTON",
-        model: "WIRA",
-        colour: "All",
+        maker: "Perodua",
+        model: "Myvi",
       }),
     ]).catch(e => {
       throw new Error("Error: " + e);
     });
+
     return {
       notFound: false,
       props: {
@@ -48,8 +60,12 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
           category: "transportation",
           agency: "JPJ",
         },
-        queryOptions: dropdown.data.data,
-        last_updated: chart.data.data_last_updated,
+        last_updated: data.data_last_updated,
+        model: model,
+        queryOptions: dropdown.data,
+        tableData: data,
+        timeseries: data.vehicle_timeseries,
+        timeseries_callout: data.vehicle_timeseries_callout,
       },
     };
   } catch (error) {

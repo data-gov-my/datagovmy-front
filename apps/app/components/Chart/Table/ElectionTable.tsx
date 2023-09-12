@@ -1,14 +1,12 @@
-import { FunctionComponent, ReactNode } from "react";
-import ImageWithFallback from "@components/ImageWithFallback";
-import Spinner from "@components/Spinner";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
-import { useTranslation } from "@hooks/useTranslation";
-import { clx, numFormat, toDate } from "@lib/helpers";
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Tooltip } from "@components/index";
-import BarPerc from "@components/Chart/BarMeter/BarPerc";
 import { ResultBadge } from "@components/Badge/election";
 import { ElectionResult } from "@dashboards/democracy/election-explorer/types";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import BarPerc from "datagovmy-ui/charts/bar-perc";
+import { ImageWithFallback, Spinner, Tooltip } from "datagovmy-ui/components";
+import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { FunctionComponent, ReactNode } from "react";
 
 export interface ElectionTableProps {
   className?: string;
@@ -67,8 +65,8 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
       case "name":
         return highlightedRows.includes(+cell.row.id) ? (
           <>
-            {value}
-            <span className="inline-flex translate-y-0.5 pl-1">
+            <span className="pr-1">{value}</span>
+            <span className="inline-flex translate-y-0.5">
               <ResultBadge hidden value={cell.row.original.result} />
             </span>
           </>
@@ -77,29 +75,32 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
         );
       case "election_name":
         return (
-          <Tooltip
-            className="tooltip-left"
-            tip={
-              cell.row.original.date && toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
-            }
-          >
-            {open => (
-              <div
-                className="cursor-help whitespace-nowrap underline decoration-dotted underline-offset-[3px]"
-                tabIndex={0}
-                onClick={open}
-              >
-                {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
-              </div>
-            )}
-          </Tooltip>
+          <div className="w-fit">
+            <Tooltip
+              tip={
+                cell.row.original.date &&
+                toDate(cell.row.original.date, "dd MMM yyyy", i18n.language)
+              }
+              className="max-xl:left-1/3"
+            >
+              {open => (
+                <div
+                  className="cursor-help whitespace-nowrap underline decoration-dashed [text-underline-position:from-font]"
+                  tabIndex={0}
+                  onClick={open}
+                >
+                  {value === "By-Election" ? t(value) : value.slice(0, -5) + t(value.slice(-5))}
+                </div>
+              )}
+            </Tooltip>
+          </div>
         );
       case "party":
         return (
           <div className="flex items-center gap-1.5">
             <div className="relative flex h-auto w-8 justify-center">
               <ImageWithFallback
-                className="border-outline dark:border-outlineHover-dark  rounded border"
+                className="border-outline dark:border-washed-dark  rounded border"
                 src={`/static/images/parties/${value}.png`}
                 width={32}
                 height={18}
@@ -169,7 +170,7 @@ const ElectionTable: FunctionComponent<ElectionTableProps> = ({
           <div className="flex items-center gap-1.5">
             <div className="relative flex h-auto w-8 justify-center">
               <ImageWithFallback
-                className="border-outline dark:border-outlineHover-dark rounded border"
+                className="border-outline dark:border-washed-dark rounded border"
                 src={`/static/images/parties/${value}.png`}
                 width={32}
                 height={18}

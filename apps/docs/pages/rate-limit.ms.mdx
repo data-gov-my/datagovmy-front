@@ -1,0 +1,16 @@
+## Had Kadar Throttle
+
+Bagi memastikan penggunaan yang adil dan prestasi yang konsisten, kami mengenakan had kadar pada bilangan permintaan yang boleh dibuat dalam jangka masa tertentu. Ini juga memastikan sebanyak mungkin pengguna API mempunyai peluang untuk menggunakan API tanpa perlahan.
+
+Jika had ini dilanggar, permintaan seterusnya akan gagal dan anda akan menerima ralat `429 Too Many Requests` dalam respons anda.
+
+Jadual berikut menghuraikan had kadar untuk API yang berbeza:
+
+| API           | Had Kadar tanpa Token     | Had Kadar dengan Token     |
+| ------------- | ------------------------- | -------------------------- |
+| Katalog Data  | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| OpenDOSM      | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| Amaran Banjir | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| Cuaca         | 4 permintaan setiap minit | 10 permintaan setiap minit |
+
+Sila ambil perhatian bahawa had kadar berbeza berdasarkan sama ada anda menggunakan token API atau tidak. Jika anda merancang untuk melebihi had kadar tanpa token API, kami mencadangkan [meminta token API](/authentication).

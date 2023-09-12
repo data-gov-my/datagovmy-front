@@ -1,12 +1,11 @@
-import Tabs, { Panel } from "@components/Tabs";
-import { useData } from "@hooks/useData";
-import { CountryAndStates, AKSARA_COLOR } from "@lib/constants";
-import { useTranslation } from "@hooks/useTranslation";
+import { Tabs, Panel } from "datagovmy-ui/components";
+import { CountryAndStates, AKSARA_COLOR } from "datagovmy-ui/constants";
+import { sortMulti } from "datagovmy-ui/helpers";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback, useRef } from "react";
-import { sortMulti } from "@lib/helpers";
+import { FunctionComponent, useCallback } from "react";
 
-const Bar = dynamic(() => import("@components/Chart/Bar"), { ssr: false });
+const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 /**
  * Consumer Prices (CPI) - Inflation Geography Section
@@ -43,7 +42,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       }
     });
 
-    _data = sortMulti(_data, "y", (a: number, b: number) => b - a);
+    _data = sortMulti<number>(_data, "y", (a: number, b: number) => b - a);
     _data.x.unshift("mys");
     _data.y.unshift(mys_overall);
 
@@ -57,7 +56,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       };
       const state_overall = bar.data[period][data.active_state].y[0];
 
-      _data = sortMulti(_data, "y", (a: number, b: number) => b - a);
+      _data = sortMulti<number>(_data, "y", (a: number, b: number) => b - a);
       _data.x.unshift("overall");
       _data.y.unshift(state_overall);
 

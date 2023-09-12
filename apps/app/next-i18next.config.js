@@ -1,13 +1,12 @@
-const I18NextHttpBackend = require("i18next-http-backend/cjs");
+const defineConfig = require("datagovmy-ui/i18n");
 
-const namespace = [
+const namespaces = [
   "common",
   "catalogue",
   "community",
   "countries",
   "dashboards",
   "agencies",
-  "dashboard-999-tracker",
   "dashboard-birthday-explorer",
   "dashboard-blood-donation",
   "dashboard-car-popularity",
@@ -17,8 +16,9 @@ const namespace = [
   "dashboard-covid-19",
   "dashboard-covid-vaccination",
   "dashboard-currency-in-circulation",
+  "dashboard-drug-addiction",
   "dashboard-election-explorer",
-  "dashboard-exchange-rates",
+  "dashboard-emergency-response",
   "dashboard-fire-and-rescue",
   "dashboard-flood-warning",
   "dashboard-gdp",
@@ -29,13 +29,16 @@ const namespace = [
   "dashboard-interest-rates",
   "dashboard-international-reserves",
   "dashboard-internet-penetration",
+  "dashboard-jobless-claims",
   "dashboard-ktmb-explorer",
   "dashboard-money-supply",
   "dashboard-name-popularity",
+  "dashboard-orang-asli",
   "dashboard-organ-donation",
   "dashboard-peka-b40",
   "dashboard-ipr",
   "dashboard-poverty",
+  "dashboard-prasarana-explorer",
   "dashboard-public-contracting",
   "dashboard-public-pension",
   "dashboard-public-transportation",
@@ -43,29 +46,11 @@ const namespace = [
   "dashboard-reserve-money",
   "dashboard-retirement-readiness",
   "dashboard-sekolahku",
-  "dashboard-social-security",
   "dashboard-weather-and-climate",
+  "dashboard-household-debt",
+  "dashboard-business-creation-destruction",
+  "dashboard-electronic-payments",
   "helpdesk",
 ];
 
-/** @type {import('next-i18next').UserConfig} */
-module.exports = {
-  i18n: {
-    defaultLocale: "en-GB",
-    locales: ["en-GB", "ms-MY"],
-    backend: {
-      backendOptions: [{ expirationTime: 60 * 60 * 1000 }, {}], // 1 hour
-      loadPath: `${process.env.NEXT_PUBLIC_API_URL}/i18n/?lang={{lng}}&filename={{ns}}`,
-      customHeaders: {
-        Authorization: process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN,
-      },
-      crossDomain: true,
-    },
-  },
-  ns: namespace,
-  load: "currentOnly",
-  preload: ["en-GB", "ms-MY"],
-  serializeConfig: false,
-  reloadOnPrerender: true,
-  use: [I18NextHttpBackend],
-};
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);

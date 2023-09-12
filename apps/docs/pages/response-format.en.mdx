@@ -1,0 +1,48 @@
+## Response Code
+
+After sending an API request, you will receive a response with the following codes and headers, which indicate the status of your request:
+
+| Code |      Status       | Description                                                                                                                                                                                      |
+| :--: | :---------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 200  |        OK         | Successful Request.                                                                                                                                                                              |
+| 400  |    Bad Request    | Invalid request. Check error message for more information.                                                                                                                                       |
+| 404  |     Not Found     | The resource requested doesn’t exist.                                                                                                                                                            |
+| 429  | Too Many Requests | Your client is currently being rate limited. Request an API token at [Authentication](authentication) to increase usage limits.                                                                  |
+| 500  |   Server Error    | Something went wrong with OpenAPI! Please [leave a GitHub issue](https://github.com/data-gov-my/datagovmy-openapi/issues/new?title=500%20Internal%20Server%20Error) if you encounter this error. |
+
+### Valid Response
+
+When your request is successful, you will receive a `200 OK` response. By default, the API returns a list of records.
+If you need more details, you can use the `meta` parameter:
+
+```http
+?meta=true
+```
+
+With `meta=true`, the response will look like this:
+
+```json
+{
+    "meta": {...},
+    "data": [...]
+}
+```
+
+- `meta`: Provides basic information about the requested resource, including any applied filters.
+- `data`: Contains the collection of records you requested.
+
+### Error Response
+
+If there is an error, the API will return an error response in JSON format. The error response includes the following elements:
+
+```json
+{
+    status: <int>,
+    errors: [...],
+}
+```
+
+- `status`: Indicates the response code corresponding to the error.
+- `errors`: Contains error messages or descriptions to help identify issues with the API request.
+
+_\*Please note that for specific APIs in the future, there may be unique formats different from the general formats above, which will be clearly explained in the respective API documentation._

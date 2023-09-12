@@ -1,17 +1,26 @@
+import { BuildingLibraryIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { SparklesIcon } from "@heroicons/react/24/outline";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   At,
   Button,
   Checkbox,
   Container,
+  Daterange,
   Dropdown,
   Hero,
+  Label,
   Modal,
   Radio,
   Search,
   Section,
-} from "@components/index";
-import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+  Sidebar,
+} from "datagovmy-ui/components";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import { Agency, OptionType } from "datagovmy-ui/types";
 import {
   FunctionComponent,
   useMemo,
@@ -22,16 +31,6 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
-import Image from "next/image";
-import Label from "@components/Label";
-import { useFilter } from "@hooks/useFilter";
-import { useTranslation } from "@hooks/useTranslation";
-import { OptionType } from "@components/types";
-import Sidebar from "@components/Sidebar";
-import { WindowContext, WindowProvider } from "@hooks/useWindow";
-import { BREAKPOINTS } from "@lib/constants";
-import Daterange from "@components/Dropdown/Daterange";
-import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 
 /**
  * Catalogue Index
@@ -46,20 +45,14 @@ export type Catalogue = {
 interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
-  total: number;
   sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
-  query,
-  collection,
-  total,
-  sources,
-}) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
-  const { breakpoint } = useContext(WindowContext);
+  const { size } = useContext(WindowContext);
   const sourceOptions = sources.map(source => ({
     label: source,
     value: source,
@@ -77,95 +70,91 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   }, [collection]);
 
   return (
-    <div>
+    <>
       <Hero
         background="blue"
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
-        header={[
-          `${
-            filterRef.current?.source?.value ? filterRef.current?.source?.value?.concat(":") : ""
-          } ${t("header")}`,
+        header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
+        description={[
+          t("description", {
+            agency: query.source ?? "",
+            context: query.source ? "agency" : "",
+          }),
         ]}
-        description={
-          <div className="space-y-6 xl:w-2/3">
-            <p className="text-dim">
-              {t("description", {
-                agency: filterRef.current?.source?.value,
-                context: filterRef.current?.source?.value ? "agency" : "",
-              })}
-            </p>
+        action={
+          <div className="flex flex-wrap items-center gap-6">
             <Dropdown
               icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-              className="min-w-[250px]"
+              width="w-64"
               placeholder={t("placeholder.source")}
               anchor="left"
               options={sourceOptions}
-              selected={filterRef.current?.source}
+              selected={query.source ? { label: query.source, value: query.source } : undefined}
               onChange={e => filterRef.current?.setFilter("source", e)}
               enableSearch
               enableClear
             />
+            <At
+              href={routes.DATA_GPT}
+              className="text-primary group flex items-center gap-2 text-sm font-medium"
+            >
+              <SparklesIcon className="h-5 w-5" />
+              <span className="group-hover:underline">{t("try_datagpt")}</span>
+            </At>
           </div>
         }
         agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:govt.full")}
-            link="https://www.malaysia.gov.my/portal/index"
-            icon={
-              <Image src={"/static/images/jata_logo.png"} width={28} height={28} alt="Jata Logo" />
-            }
-          />
+          <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : "govt"} />
         }
       />
 
-      <Container className="min-h-screen lg:px-0">
-        <WindowProvider>
-          <Sidebar
-            categories={Object.entries(collection).map(([category, subcategory]) => [
-              category,
-              Object.keys(subcategory),
-            ])}
-            onSelect={selected =>
-              scrollRef.current[selected]?.scrollIntoView({
-                behavior: "smooth",
-                block: breakpoint <= BREAKPOINTS.LG ? "start" : "center",
-                inline: "end",
-              })
-            }
-          >
-            <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
+      <Container className="min-h-screen">
+        <Sidebar
+          categories={Object.entries(collection).map(([category, subcategory]) => [
+            category,
+            Object.keys(subcategory),
+          ])}
+          onSelect={selected =>
+            scrollRef.current[selected]?.scrollIntoView({
+              behavior: "smooth",
+              block: size.width <= BREAKPOINTS.LG ? "start" : "center",
+              inline: "end",
+            })
+          }
+        >
+          <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
-            {_collection.length > 0 ? (
-              _collection.map(([title, datasets]) => {
-                return (
-                  <Section
-                    title={<p className="text-lg font-bold">{title}</p>}
-                    key={title}
-                    ref={ref => (scrollRef.current[title] = ref)}
-                    className="p-2 pb-8 pt-14 lg:p-8"
-                  >
-                    <ul className="columns-1 space-y-3 lg:columns-2 xl:columns-3">
-                      {datasets.map((item: Catalogue, index: number) => (
-                        <li key={index}>
-                          <At
-                            href={`/data-catalogue/${item.id}`}
-                            className="text-primary dark:text-primary-dark no-underline hover:underline"
-                          >
-                            {item.catalog_name}
-                          </At>
-                        </li>
-                      ))}
-                    </ul>
-                  </Section>
-                );
-              })
-            ) : (
-              <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
-            )}
-          </Sidebar>
-        </WindowProvider>
+          {_collection.length > 0 ? (
+            _collection.map(([title, datasets]) => {
+              return (
+                <Section
+                  title={title}
+                  key={title}
+                  ref={ref => (scrollRef.current[title] = ref)}
+                  className="p-2 pb-8 pt-14 lg:p-8"
+                >
+                  <ul className="columns-1 space-y-3 sm:columns-3">
+                    {datasets.map((item: Catalogue, index: number) => (
+                      <li key={index}>
+                        <At
+                          href={`/data-catalogue/${item.id}`}
+                          className="text-primary dark:text-primary-dark no-underline [text-underline-position:from-font] hover:underline"
+                          prefetch={false}
+                        >
+                          {item.catalog_name}
+                        </At>
+                      </li>
+                    ))}
+                  </ul>
+                </Section>
+              );
+            })
+          ) : (
+            <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
+          )}
+        </Sidebar>
       </Container>
-    </div>
+    </>
   );
 };
 
@@ -179,7 +168,6 @@ interface CatalogueFilterProps {
 }
 
 interface CatalogueFilterRef {
-  source?: OptionType;
   setFilter: (key: string, value: any) => void;
 }
 
@@ -192,6 +180,9 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.monthly"), value: "MONTHLY" },
       { label: t("filter_options.quarterly"), value: "QUARTERLY" },
       { label: t("filter_options.yearly"), value: "YEARLY" },
+      { label: t("filter_options.intraday"), value: "INTRADAY" },
+      { label: t("filter_options.infrequent"), value: "INFREQUENT" },
+      { label: t("filter_options.as_required"), value: "AS_REQUIRED" },
     ];
     const geographies: OptionType[] = [
       { label: t("filter_options.national"), value: "NATIONAL" },
@@ -223,7 +214,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       geography: query.geography
         ? geographies.filter(item => query.geography.split(",").includes(item.value))
         : [],
-      demographic: query.demography
+      demography: query.demography
         ? demographies.filter(item => query.demography.split(",").includes(item.value))
         : [],
       begin: query.begin
@@ -240,78 +231,83 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       setFilter("search", "");
       setFilter("period", undefined);
       setFilter("geography", []);
-      setFilter("demographic", []);
+      setFilter("demography", []);
       setFilter("begin", undefined);
       setFilter("end", undefined);
     };
 
     useImperativeHandle(ref, () => {
-      return {
-        source: filter.source,
-        setFilter,
-      };
+      return { setFilter };
     });
 
     return (
       <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
-        <div className="flex-grow">
+        <div className="flex-1">
           <Search
-            className="border-0"
+            className="border-none"
             placeholder={t("placeholder.search")}
             query={filter.search}
             onChange={e => setFilter("search", e)}
           />
         </div>
+        {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
+          <Button
+            variant="reset"
+            className="hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
+            disabled={!actives.length}
+            onClick={reset}
+          >
+            <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+          </Button>
+        )}
         {/* Mobile */}
         <div className="block xl:hidden">
           <Modal
             trigger={open => (
-              <button
-                onClick={open}
-                className="btn btn-dropdown shadow-[0_6px_24px_rgba(0,0,0,0.1)]"
-              >
+              <Button onClick={open} className="btn-default shadow-floating">
                 <span>{t("filter")}</span>
-                <div className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md">
-                  <p className="text-center text-white">{actives.length}</p>
-                </div>
-                <ChevronDownIcon className="disabled:text-outlineHover dark:disabled:text-outlineHover-dark absolute right-3 -mx-[5px] h-5 w-5" />
-              </button>
+                <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
+                  {actives.length}
+                </span>
+                <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
+              </Button>
             )}
             title={<Label label={t("filter") + ":"} className="text-sm font-bold" />}
           >
             {close => (
-              <div className="px-4.5 pb-4.5 mb-[107px] flex h-[400px] flex-col overflow-y-auto pt-3">
-                <Radio
-                  label={t("period")}
-                  name="period"
-                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
-                  options={periods}
-                  value={filter.period}
-                  onChange={e => setFilter("period", e)}
-                />
-                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
-                <Checkbox
-                  label={t("geography")}
-                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
-                  name="geography"
-                  options={geographies}
-                  value={filter.geography}
-                  onChange={e => setFilter("geography", e)}
-                />
-                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
-                <Checkbox
-                  className="gap-x-4.5 flex flex-wrap gap-y-2.5 pt-2"
-                  name="demographic"
-                  label={t("demography")}
-                  options={demographies}
-                  value={filter.demographic}
-                  onChange={e => setFilter("demographic", e)}
-                />
-                <hr className="bg-outline dark:bg-outlineHover-dark my-3 h-px"></hr>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[84px] flex h-max flex-col divide-y overflow-y-auto bg-white dark:bg-black">
+                <div className="py-3">
+                  <Radio
+                    name="period"
+                    label={t("period")}
+                    options={periods}
+                    value={filter.period}
+                    onChange={e => setFilter("period", e)}
+                  />
+                </div>
+                <div className="py-3">
+                  <Checkbox
+                    name="geography"
+                    label={t("geography")}
+                    options={geographies}
+                    value={filter.geography}
+                    onChange={e => setFilter("geography", e)}
+                  />
+                </div>
+                <div className="py-3">
+                  <Checkbox
+                    name="demography"
+                    label={t("demography")}
+                    options={demographies}
+                    value={filter.demography}
+                    onChange={e => setFilter("demography", e)}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3 pt-3">
                   <Dropdown
-                    width="w-full"
                     label={t("begin")}
+                    width="w-full"
+                    anchor="left-0 bottom-10"
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
                     placeholder={t("common:common.select")}
@@ -320,6 +316,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   <Dropdown
                     label={t("end")}
                     width="w-full"
+                    anchor="right-0 bottom-10"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
                     selected={filter.end}
@@ -327,16 +324,17 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                     onChange={e => setFilter("end", e)}
                   />
                 </div>
-                <div className="dark:border-outlineHover-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t p-3">
+                <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col border-t bg-white p-3 dark:bg-black">
                   <Button
-                    className="btn btn-primary w-full justify-center"
+                    variant="primary"
+                    className="justify-center"
                     disabled={!actives.length}
                     onClick={reset}
                   >
                     {t("common:common.reset")}
                   </Button>
-                  <Button className="btn w-full justify-center" onClick={close}>
-                    <XMarkIcon className="h-5 w-5" />
+                  <Button variant="base" className="justify-center" onClick={close}>
+                    {/* <XMarkIcon className="h-4 w-4" /> */}
                     {t("common:common.close")}
                   </Button>
                 </div>
@@ -348,15 +346,14 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         {/* Desktop */}
         <div className="hidden gap-2 pr-6 xl:flex">
           {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
-            <div>
-              <Button
-                icon={<XMarkIcon className="h-4 w-4" />}
-                disabled={!actives.length}
-                onClick={reset}
-              >
-                {t("common:common.clear_all")}
-              </Button>
-            </div>
+            <Button
+              className="btn-ghost text-dim group hover:text-black dark:hover:text-white"
+              disabled={!actives.length}
+              onClick={reset}
+            >
+              <XMarkIcon className="text-dim h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
+              {t("common:common.clear_all")}
+            </Button>
           )}
           <Dropdown
             options={periods}
@@ -378,20 +375,18 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             title={t("demography")}
             description={t("placeholder.demography") + ":"}
             options={demographies}
-            selected={filter.demographic}
-            onChange={e => setFilter("demographic", e)}
+            selected={filter.demography}
+            onChange={e => setFilter("demography", e)}
           />
 
           <Daterange
-            beginOptions={filterYears(startYear, endYear)}
-            endOptions={filterYears(startYear, endYear)}
-            selected={[
-              filterYears(startYear, endYear).find(item => item.value === query.begin),
-              filterYears(startYear, endYear).find(item => item.value === query.end),
-            ]}
+            startYear={startYear}
+            endYear={endYear}
+            selectedStart={query.begin}
+            selectedEnd={query.end}
             onChange={([begin, end]) => {
-              if (begin) setFilter("begin", begin);
-              if (end) setFilter("end", end);
+              if (begin) setFilter("begin", { label: begin, value: begin });
+              if (end) setFilter("end", { label: end, value: end });
             }}
             onReset={() => {
               setFilter("begin", undefined);

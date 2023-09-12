@@ -1,15 +1,15 @@
-import { ChartHeaderProps, default as ChartHeader } from "./chart-header";
-import { Chart as ChartJS } from "chart.js";
+import { Chart as ChartJS, Tooltip } from "chart.js";
 import { ChoroplethController, GeoFeature, ColorScale, ProjectionScale } from "chartjs-chart-geo";
-import { ForwardedRef, FunctionComponent, useEffect, useState } from "react";
-import { Chart } from "react-chartjs-2";
-
+import { ChartHeaderProps, default as ChartHeader } from "./chart-header";
 // import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+import { FeatureCollection } from "geojson";
+import { Color } from "../hooks/useColor";
 import { clx, numFormat } from "../lib/helpers";
-import type { ChartCrosshairOption, Geotype } from "../lib/types";
-import type { FeatureCollection } from "geojson";
-import type { Color } from "../hooks/useColor";
+import { ChartCrosshairOption, Geotype } from "../../types";
+import { useTheme } from "next-themes";
+import { Chart } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { ForwardedRef, FunctionComponent, useEffect, useState } from "react";
 
 /**
  *Choropleth component
@@ -44,7 +44,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   type = "state",
   data = dummyData,
   prefix,
-  precision = 1,
+  precision = [1, 0],
   unit,
   color,
   enableOutline = true,
@@ -54,7 +54,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
 }) => {
   const [desktopMap, setDesktopMap] = useState<FeatureCollection | undefined>(undefined);
   const [mobileMap, setMobileMap] = useState<FeatureCollection | undefined>(undefined);
-  ChartJS.register(ChoroplethController, ProjectionScale, ColorScale, GeoFeature);
+  ChartJS.register(ChoroplethController, ProjectionScale, ColorScale, GeoFeature, Tooltip);
 
   useEffect(() => {
     const fetchMaps = async () => {
@@ -69,12 +69,12 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
     };
 
     fetchMaps();
-  }, []);
-
+  }, [type]);
+  const { theme } = useTheme();
   const options: ChartCrosshairOption<"choropleth"> = {
     elements: {
       geoFeature: {
-        outlineBorderColor: "black",
+        outlineBorderColor: theme === "light" ? "black" : "white",
       },
     },
     maintainAspectRatio: false,
@@ -116,8 +116,6 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
     },
   };
 
-  console.log(data);
-
   return (
     <div className="relative">
       <ChartHeader title={title} menu={menu} controls={controls} />
@@ -153,6 +151,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
           <div className="block h-full w-full lg:hidden">
             <Chart
               id={id}
+              data-testid={id || title}
               ref={_ref}
               type="choropleth"
               data={{

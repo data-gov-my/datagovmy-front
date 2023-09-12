@@ -1,37 +1,41 @@
-import AgencyBadge from "@components/Badge/agency";
-import { Hero } from "@components/index";
-import { useTranslation } from "@hooks/useTranslation";
+import IncomeRank from "./rank-me";
+import IncomeOverview from "./overview";
+import { AgencyBadge, Hero, Container } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { LHDNIcon } from "datagovmy-ui/icons/agency";
 import { FunctionComponent } from "react";
-import Container from "@components/Container";
-import { LHDNIcon } from "@components/Icon/agency";
 
 /**
- * Income Taxation Dashboard
- * @overview Status: In-development
+ * Income Tax Dashboard
+ * @overview Status: Live
  */
 
-interface IncomeTaxationProps {}
+interface IncomeTaxationProps {
+  last_updated: string;
+  stacked_bar: any;
+}
 
-const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({}) => {
-  const { t, i18n } = useTranslation(["dashboard-income-taxation", "common"]);
+const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({ last_updated, stacked_bar }) => {
+  const { t } = useTranslation("dashboard-income-taxation");
 
   return (
     <>
       <Hero
-        background="orange"
-        category={[t("common:categories.economy"), "text-[#FF820E]"]}
+        background="gray"
+        category={[t("common:categories.economy"), "text-dim"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={
-          <AgencyBadge
-            agency={"Internal Revenue Board"}
-            link="https://www.hasil.gov.my"
-            icon={<LHDNIcon />}
-          />
-        }
+        last_updated={last_updated}
+        agencyBadge={<AgencyBadge agency="lhdn" icon={<LHDNIcon fillColor="#71717A" />} />}
       />
-      {/* Rest of page goes here */}
-      <Container className="min-h-screen"></Container>
+
+      <Container>
+        {/* How do I compare to other taxpayers in Malaysia? */}
+        <IncomeRank />
+
+        {/* What proportion of income taxes come from individuals? */}
+        <IncomeOverview stacked_bar={stacked_bar} />
+      </Container>
     </>
   );
 };

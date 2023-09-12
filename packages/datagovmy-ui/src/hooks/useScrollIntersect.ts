@@ -1,4 +1,4 @@
-import { createElement, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 /**
  * Language switcher hook.
  * @returns Page with current language

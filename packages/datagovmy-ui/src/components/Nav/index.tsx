@@ -1,13 +1,12 @@
-import { Bars3BottomRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { useLanguage } from "../../hooks/useLanguage";
 import { clx } from "../../lib/helpers";
+import { languages } from "../../lib/options";
 import At from "../At";
+import Dropdown from "../Dropdown";
+import ThemeToggle from "./theme";
+import { Bars3BottomRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode, useState } from "react";
-import Dropdown from "../Dropdown";
-import { languages } from "../../lib/options";
-import ThemeToggle from "./theme";
-
-import { useLanguage } from "../../hooks/useLanguage";
 
 type NavRootProps = {
   children: (close: () => void) => ReactNode;
@@ -20,13 +19,21 @@ type NavItemProps = {
   link: string;
   onClick: () => void;
   className?: string;
+  external?: boolean;
 };
 
 type NavFunctionComponent = FunctionComponent<NavRootProps> & {
   Item: typeof Item;
 };
 
-const Item: FunctionComponent<NavItemProps> = ({ link, onClick, className, icon, title }) => {
+const Item: FunctionComponent<NavItemProps> = ({
+  link,
+  onClick,
+  className,
+  icon,
+  title,
+  external = false,
+}) => {
   const { pathname } = useRouter();
   return (
     <At
@@ -38,6 +45,7 @@ const Item: FunctionComponent<NavItemProps> = ({ link, onClick, className, icon,
         pathname.startsWith(link) && link !== "/" ? "bg-washed dark:bg-washed-dark" : "",
         className
       )}
+      external={external}
     >
       {icon}
       {title}
@@ -92,7 +100,7 @@ const Nav: NavFunctionComponent = ({ children, stateSelector }) => {
       {/* Mobile - Menu */}
       <div
         className={clx(
-          "dark:divide-washed-dark fixed left-0 top-[57px] flex w-full flex-col gap-0 divide-y bg-white px-4 py-2 shadow-lg backdrop-blur-md dark:bg-black/80 lg:hidden lg:gap-1 lg:divide-y-0 lg:p-1",
+          "dark:divide-washed-dark shadow-floating fixed left-0 top-[57px] flex w-full flex-col gap-0 divide-y bg-white px-4 py-2 backdrop-blur-md dark:bg-black/80 lg:hidden lg:gap-1 lg:divide-y-0 lg:p-1",
           showMobile ? "flex" : "hidden"
         )}
       >

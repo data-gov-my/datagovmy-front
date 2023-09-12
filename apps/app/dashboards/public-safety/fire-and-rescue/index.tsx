@@ -1,34 +1,31 @@
-import { FunctionComponent } from "react";
-import dynamic from "next/dynamic";
+import { routes } from "@lib/routes";
 import {
   AgencyBadge,
   Container,
   Dropdown,
   Hero,
   LeftRightCard,
+  RankList,
   Section,
+  Slider,
   StateDropdown,
-} from "@components/index";
-import { BOMBAIcon } from "@components/Icon/agency";
-import Slider from "@components/Chart/Slider";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { OptionType } from "@components/types";
-import ArrowRightIcon from "@heroicons/react/20/solid/ArrowRightIcon";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useTranslation } from "@hooks/useTranslation";
-import { AKSARA_COLOR, CountryAndStates } from "@lib/constants";
-import { getTopIndices, numFormat, toDate } from "@lib/helpers";
-import { routes } from "@lib/routes";
-import { Trans } from "next-i18next";
+  Tabs,
+} from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { OptionType, TimeseriesOption } from "datagovmy-ui/types";
+import dynamic from "next/dynamic";
+import { FunctionComponent } from "react";
 
 /**
- * FireandRescue Dashboard
- * @overview Status: In-development
+ * Fire and Rescue Dashboard
+ * @overview Status: Live
  */
 
-const Choropleth = dynamic(() => import("@components/Chart/Choropleth"), { ssr: false });
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface FireandRescueProps {
   choropleth: any;
@@ -54,12 +51,33 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
     })
   );
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length],
-    filter: FILTER_OPTIONS[0],
+    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    filter: FILTER_OPTIONS[0].value,
+    period: "auto",
+    periodly: "daily_7d",
+    tab_index: 0,
   });
-  const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const OPERATION = ["fire", "rescue", "others"];
-  const topStateIndices = getTopIndices(choropleth.data[data.filter.value].y.value, 3, true);
+
+  const config: { [key: string]: TimeseriesOption } = {
+    0: {
+      period: "auto",
+      periodly: "daily_7d",
+    },
+    1: {
+      period: "auto",
+      periodly: "daily",
+    },
+    2: {
+      period: "month",
+      periodly: "monthly",
+    },
+    3: {
+      period: "year",
+      periodly: "yearly",
+    },
+  };
+
+  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
 
   return (
     <>
@@ -67,20 +85,10 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         background="red"
         category={[t("common:categories.public_safety"), "text-danger"]}
         header={[t("header")]}
-        description={
-          <Trans>
-            <p className={"text-dim whitespace-pre-line xl:w-2/3"}>{t("description")}</p>
-          </Trans>
-        }
+        description={[t("description"), "whitespace-pre-line"]}
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
         last_updated={last_updated}
-        agencyBadge={
-          <AgencyBadge
-            agency={t("agencies:bomba.full")}
-            link="https://www.bomba.gov.my/"
-            icon={<BOMBAIcon />}
-          />
-        }
+        agencyBadge={<AgencyBadge agency="bomba" />}
       />
 
       <Container className="min-h-screen">
@@ -90,19 +98,40 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
             {play => (
               <>
                 <Timeseries
-                  className="h-[300px] w-full"
+                  className="h-[300px]"
                   title={t("timeseries_title", {
                     state: CountryAndStates[currentState],
+                    context: data.periodly,
                   })}
+                  menu={
+                    <Tabs.List
+                      options={[
+                        t("common:time.daily_7d"),
+                        t("common:time.daily"),
+                        t("common:time.monthly"),
+                        t("common:time.yearly"),
+                      ]}
+                      current={data.tab_index}
+                      onChange={index => {
+                        setData("tab_index", index);
+                        setData("minmax", [
+                          0,
+                          timeseries.data[config[index].periodly].x.length - 1,
+                        ]);
+                        setData("period", config[index].period);
+                        setData("periodly", config[index].periodly);
+                      }}
+                    />
+                  }
                   enableAnimation={!play}
-                  interval="day"
+                  interval={data.period}
                   data={{
                     labels: coordinate.x,
                     datasets: [
                       {
                         type: "line",
                         data: coordinate.overall,
-                        label: t("daily"),
+                        label: t(`common:time.${data.periodly}`),
                         borderColor: AKSARA_COLOR.DANGER,
                         borderWidth: 1.5,
                         backgroundColor: AKSARA_COLOR.DANGER_H,
@@ -112,7 +141,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                   }}
                   stats={[
                     {
-                      title: t("daily"),
+                      title: t("common:time.daily"),
                       value: `+${numFormat(
                         timeseries_callout.data.data[currentState].overall.daily.value,
                         "standard"
@@ -129,25 +158,26 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                 />
                 <Slider
                   type="range"
+                  period={data.period}
                   value={data.minmax}
-                  data={timeseries.data.x}
+                  data={timeseries.data[data.periodly].x}
                   onChange={e => setData("minmax", e)}
                 />
                 <div className="grid grid-cols-1 gap-12 pt-12 lg:grid-cols-3">
-                  {OPERATION.map((key: string) => (
+                  {["fire", "rescue", "others"].map((key: string) => (
                     <Timeseries
                       key={key}
                       title={t(key)}
-                      className="h-[300px] w-full"
+                      className="h-[300px]"
                       enableAnimation={!play}
-                      interval={"day"}
+                      interval={data.period}
                       data={{
                         labels: coordinate.x,
                         datasets: [
                           {
                             type: "line",
                             data: coordinate[key],
-                            label: t("daily"),
+                            label: t(`common:time.${data.periodly}`),
                             borderColor: AKSARA_COLOR.DANGER,
                             borderWidth: 1.5,
                             backgroundColor: AKSARA_COLOR.DANGER_H,
@@ -157,7 +187,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
                       }}
                       stats={[
                         {
-                          title: t("daily"),
+                          title: t("common:time.daily"),
                           value: `+${numFormat(
                             timeseries_callout.data.data[currentState][key].daily.value,
                             "standard"
@@ -179,60 +209,56 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
           </SliderProvider>
         </Section>
 
+        {/* How does the rate of fire and rescue incidents differ across states? */}
         <Section>
           <LeftRightCard
             left={
-              <div className="flex h-full w-full flex-col space-y-6 p-8">
-                <div className="flex flex-col gap-2">
-                  <h4>{t("choro_header")}</h4>
-                  <span className="text-dim text-sm">
-                    {t("common:common.data_of", {
-                      date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
-                    })}
-                  </span>
-                </div>
-                <Dropdown
-                  anchor="left"
-                  width="w-fit"
-                  placeholder={t("common:common.select")}
-                  options={FILTER_OPTIONS}
-                  selected={FILTER_OPTIONS.find(e => e.value === data.filter.value)}
-                  onChange={e => setData("filter", e)}
-                />
-                <div className="flex grow flex-col justify-between space-y-6">
-                  <p className="text-dim whitespace-pre-line">{t("choro_description")}</p>
-                  <div className="space-y-3 border-t pt-6">
-                    <p className="font-bold">{t("choro_ranking")}</p>
-                    {topStateIndices.map((pos, i) => {
-                      return (
-                        <div className="flex space-x-3" key={pos}>
-                          <div className="text-dim font-medium">#{i + 1}</div>
-                          <div className="grow">
-                            {CountryAndStates[choropleth.data[data.filter.value].x[pos]]}
-                          </div>
-                          <div className="text-danger font-bold">
-                            {`${numFormat(
-                              choropleth.data[data.filter.value].y.value[pos],
-                              "standard"
-                            )}`}
-                          </div>
-                          <ArrowRightIcon className="text-dim h-4 w-4 self-center stroke-[1.5px]" />
-                        </div>
-                      );
-                    })}
+              <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
+                <div className="space-y-6 pb-6">
+                  <div className="flex flex-col gap-2">
+                    <h4>{t("choro_header")}</h4>
+                    <span className="text-dim text-sm">
+                      {t("common:common.data_of", {
+                        date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                      })}
+                    </span>
                   </div>
+                  <Dropdown
+                    anchor="left"
+                    width="w-full lg:w-fit"
+                    placeholder={t("common:common.select")}
+                    options={FILTER_OPTIONS}
+                    selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
+                    onChange={e => setData("filter", e.value)}
+                  />
+                  <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
                 </div>
+                <RankList
+                  id="active-passport-by-state"
+                  title={t("common:common.ranking", {
+                    count: choropleth.data[data.filter].x.length,
+                  })}
+                  data={choropleth.data[data.filter].y.value}
+                  color="text-danger"
+                  threshold={choropleth.data[data.filter].x.length}
+                  format={(position: number) => {
+                    return {
+                      label: CountryAndStates[choropleth.data[data.filter].x[position]],
+                      value: numFormat(choropleth.data[data.filter].y.value[position], "standard"),
+                    };
+                  }}
+                />
               </div>
             }
             right={
               <Choropleth
-                className="h-[400px] w-auto rounded-b lg:h-[500px] lg:w-full"
+                className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
                 color="reds"
                 data={{
-                  labels: choropleth.data[data.filter.value].x.map(
+                  labels: choropleth.data[data.filter].x.map(
                     (state: string) => CountryAndStates[state]
                   ),
-                  values: choropleth.data[data.filter.value].y.value,
+                  values: choropleth.data[data.filter].y.value,
                 }}
                 type="state"
               />

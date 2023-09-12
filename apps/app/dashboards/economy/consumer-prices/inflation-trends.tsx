@@ -1,28 +1,21 @@
-import Slider from "@components/Chart/Slider";
-import Chips from "@components/Chips";
-import Dropdown from "@components/Dropdown";
-import Select from "@components/Dropdown/Select";
-import { OptionType } from "@components/types";
-import { useData } from "@hooks/useData";
-import { useSlice } from "@hooks/useSlice";
-import { useWatch } from "@hooks/useWatch";
-import { get } from "@lib/api";
-import { SHORT_LANG } from "@lib/constants";
-import { numFormat } from "@lib/helpers";
-import type { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { ChartDataset, ChartTypeRegistry } from "chart.js";
+import { get } from "datagovmy-ui/api";
+import { Chips, Dropdown, Select, Slider, toast } from "datagovmy-ui/components";
+import { SHORT_LANG } from "datagovmy-ui/constants";
+import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { numFormat } from "datagovmy-ui/helpers";
+import { useData, useSlice, useTranslation, useWatch } from "datagovmy-ui/hooks";
+import { OptionType } from "datagovmy-ui/types";
 import groupBy from "lodash/groupBy";
-import { useTranslation } from "@hooks/useTranslation";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
-import { SliderProvider } from "@components/Chart/Slider/context";
-import { toast } from "@components/Toast";
 
 /**
  * Consumer Prices (CPI) - Inflation Trends Section
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("@components/Chart/Timeseries"), { ssr: false });
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 const InflationTrends: FunctionComponent = ({}) => {
   const { t, i18n } = useTranslation(["dashboard-consumer-prices", "common"]);
@@ -202,12 +195,11 @@ const InflationTrends: FunctionComponent = ({}) => {
             <Timeseries
               className="h-[500px] w-full"
               interval="month"
-              tooltipFormat="MMM yyyy"
               mode="grouped"
               unitY="%"
               enableAnimation={!play}
               displayNumFormat={value =>
-                numFormat(value, "compact", [1, 1], "short", i18n.language, true)
+                numFormat(value, "compact", 1, "short", i18n.language, true)
               }
               enableCallout
               data={{

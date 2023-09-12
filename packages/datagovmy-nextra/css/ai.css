@@ -1,0 +1,28 @@
+/* AI Helper CSS */
+.ai pre {
+  @apply bg-outline bg-primary-700/5 dark:bg-primary-300/10 my-3 overflow-x-auto whitespace-pre-wrap break-words rounded-xl border border-black border-opacity-[0.04] px-3 py-3 text-[.9em] font-medium subpixel-antialiased;
+}
+
+.ai code {
+  @apply bg-outline break-words rounded-md border border-black border-opacity-[0.04] px-[.25em] py-0.5 text-[.9em] dark:bg-white/10 dark:text-white;
+}
+
+.ai ul {
+  @apply my-5 list-inside list-disc space-y-3;
+}
+
+.ai ol {
+  @apply ml-5 list-outside list-decimal space-y-6;
+}
+
+.ai li > p {
+  @apply inline;
+}
+
+.ai p {
+  @apply leading-7;
+}
+
+.ai a {
+  @apply text-primary-dgm dark:text-primary-dark [text-underline-position:from-font] hover:underline;
+}

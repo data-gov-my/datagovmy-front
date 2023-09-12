@@ -1,0 +1,20 @@
+## Throttling Rates
+
+To ensure fair usage and consistent performance, we enforce rate limits on the number of requests that can be made within a specific timeframe. This also ensures as many API users as possible have the opportunity of using the API without slowdowns.
+
+If the limit is exceeded, subsequent requests will fail and you will receive a `429 Too Many Requests` error in your responses.
+
+The following table outlines the rate limits for different APIs:
+
+| API            | Rate Limits without Token | Rate Limits with Token |
+| -------------- | ------------------------- | ---------------------- |
+| Data Catalogue | 4 requests per minute     | 10 requests per minute |
+| OpenDOSM       | 4 requests per minute     | 10 requests per minute |
+| Flood Warning  | 4 requests per minute     | 10 requests per minute |
+| Weather        | TBD                       | TBD                    |
+| GTFS Static    | TBD                       | TBD                    |
+| GTFS Realtime  | TBD                       | TBD                    |
+
+<span className="text-sm italic">* APIs that are unreleased yet are marked with TBD.</span>
+
+Please note that the rate limits vary based on whether you are using an API token or not. If you anticipate exceeding the rate limits without an API token, we recommend [requesting an API token](/authentication).

@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import Label, { LabelProps } from "../Label";
-import { OptionType } from "../types";
+import { OptionType } from "../../../types";
 
 interface RadioProps extends LabelProps {
   className?: string;
@@ -17,7 +17,7 @@ const Radio: FunctionComponent<RadioProps> = ({
   options,
   value,
   onChange,
-  className = "space-y-1 pt-2",
+  className = "flex flex-wrap gap-x-4.5 gap-y-2.5 pt-2",
 }) => {
   return (
     <div>
