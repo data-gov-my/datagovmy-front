@@ -1,5 +1,5 @@
 import ComboOption, { ComboOptionProp, ComboOptionProps } from "./option";
-import { Button, ImageWithFallback, Spinner } from "..";
+import { Button, Spinner } from "..";
 import { useTranslation } from "../../hooks/useTranslation";
 import { clx } from "../../lib/helpers";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -18,7 +18,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { body } from "../../configs/font";
 import { matchSorter, MatchSorterOptions } from "match-sorter";
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type ComboBoxProps<T> = Omit<
   ComboOptionProps<T>,

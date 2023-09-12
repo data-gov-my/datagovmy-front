@@ -120,6 +120,13 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
                 if (selected) navigateToCountry(selected.value);
                 else setData("country", null);
               }}
+              config={{
+                baseSort: (a, b) => {
+                  if (a.item.value === "ALL") return -1;
+                  else if (b.item.value === "ALL") return 1;
+                  return a.item.label.localeCompare(b.item.label);
+                },
+              }}
             />
           </div>
           <p className="text-dim text-sm lg:text-center">{t("section_1.description")}</p>
