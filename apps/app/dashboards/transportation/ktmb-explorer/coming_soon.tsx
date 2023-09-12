@@ -3,7 +3,7 @@ import { FunctionComponent } from "react";
 import { useTranslation } from "datagovmy-ui/hooks";
 
 const KTMBExplorerComingSoon: FunctionComponent = () => {
-  const { t, i18n } = useTranslation(["dashboard-ktmb-explorer", "common"]);
+  const { t, i18n } = useTranslation("dashboard-ktmb-explorer");
   const event = new Date(Date.UTC(2023, 8, 22, 0, 0, 0));
 
   return (
@@ -12,7 +12,9 @@ const KTMBExplorerComingSoon: FunctionComponent = () => {
         <h4 className="mx-auto">{t("coming_soon")}</h4>
         <span>
           {t("the")}
-          <span className="text-primary dark:text-primary-dark">{t("header")}</span>
+          <At href="/dashboard/public-transportation" className="link-primary">
+            {t("dashboard-public-transportation:header")}
+          </At>
           {t("overview")}
         </span>
         <span>
