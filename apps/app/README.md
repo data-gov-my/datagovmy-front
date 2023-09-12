@@ -1,53 +1,40 @@
-# datagovmy-front
-
-_WIP_
-
----
+# datagovmy
+### Malaysia's Official Open Data Site
 
 ## Table of Contents
 
 - [Installation](#installation)
   - [Environment Variables](#environment-variables)
 - [Commands to Know](#commands-to-know)
-- [Development Workflow](#development-workflow)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
 
-We recommend to use `yarn` to manage the project's dependencies.
+This application is managed in a monorepo by Turbo. You can go to the root [README](../../README.md#installation) for installation of this workspace.
 
-```bash
-git clone git@github.com:data-gov-my/datagovmy-front.git
-
-# Yarn
-yarn install
-yarn prepare
-
-# NPM
-npm install
-npx prepare
-
+Then ensure to add the environment variable for this workspace by doing:
+```
 cp .env.example .env
 ```
 
 ### Environment Variables
 
-The following are the environment variables (.env) used for data.gov.my. Please take note, there are only 2 variables required to get the app running, both of which are related to [AKSARA BE](https://github.com/dosm-malaysia/aksara-back).
+The following are the environment variables (.env) used for data.gov.my. Please take note, there are only 2 variables required to get the app running, both of which are related to the BE.
 
 | Variables                       | Required | Default                             | Description                                     |
 | ------------------------------- | -------- | ----------------------------------- | ----------------------------------------------- |
-| APP_URL                         | ⬜️      | http://localhost:3000 (development) | App domain. Optional                            |
-| NEXT_PUBLIC_APP_URL             | ⬜️      | $APP_URL                            | App domain, made public. Optional               |
+| APP_URL                         | ⬜️        | http://localhost:3000 (development) | App domain. Optional                            |
+| APP_ENV                         | ✅        |                                     | App current environment                         |
+| REVALIDATE_TOKEN                | ⬜️        |                                     | BE token to revalidate staitc site. Optional    |
+| EDGE_CONFIG                     | ⬜️        |                                     | Add to use rolling token. Optional             |
+| NEXT_PUBLIC_APP_URL             | ⬜️       | $APP_URL                            | App domain, made public. Optional               |
+| NEXT_PUBLIC_APP_ENV             | ⬜️       | $APP_ENV                            | App environment, made public. Optional          |
 | NEXT_PUBLIC_AUTHORIZATION_TOKEN | ✅       | _Create own_                        | Authorization token for AKSARA BE communication |
 | NEXT_PUBLIC_API_URL             | ✅       | http://localhost:8000 (development) | AKSARA BE base URL                              |
-| NEXT_PUBLIC_GMAP_API_KEY        | ⬜️      | _Create own_                        | Google Maps API key. Optional                   |
 | NEXT_PUBLIC_GA_TAG              | ⬜️      | _Create own_                        | Google Analytics Tag. Optional                  |
-| NEXT_PUBLIC_MAPTILER_API_KEY    | ⬜️      | _Create own_                        | OpenStreetMap API key. Optional                 |
+| NEXT_PUBLIC_TILESERVER_URL      | ⬜️      | _Create own_                        | OpenStreetMap API key. Optional                 |
 | MIXPANEL_TOKEN                  | ⬜️      | _Create own_                        | Mixpanel token. Optional                        |
-| MIXPANEL_PROJECT_ID             | ⬜️      | _Create own_                        | Mixpanel project ID. Optional                   |
-| MIXPANEL_SA_USER                | ⬜️      | _Create own_                        | Mixpanel service account username. Optional     |
-| MIXPANEL_SA_USER                | ⬜️      | _Create own_                        | Mixpanel service account secret. Optional       |
 | NEXT_PUBLIC_MIXPANEL_TOKEN      | ⬜️      | $MIXPANEL_TOKEN                     | Mixpanel token, made public. Optional           |
 
 ## Commands to Know
@@ -75,13 +62,6 @@ yarn workspace app build
 yarn workspace start
 ```
 
-## Development Workflow
-
-1. Branch out from `staging` & give the new branch a descriptive name eg: `feat/covid`, `fix/dropdown-bug` etc.
-2. After you're done developing, `git fetch && git merge origin/staging` to synchronize any new changes & resolve conflicts, if there is any.
-3. Push the branch to remote and create a PR to `staging`. Briefly describe the changes introduced in the PR.
-4. Assign a core developer to review and wait for it to be approved.
-5. That's all. Happy developing!
 
 ## Contributing
 
