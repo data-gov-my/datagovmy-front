@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-refugee-situat
   const { data } = await get("/dashboard", { dashboard: "unhcr" });
 
   return {
-    notFound: false,
+    notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
     props: {
       meta: {
         id: "dashboard-refugee-situation",
