@@ -104,9 +104,10 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
     const payload = {
       model: "gpt-3.5-turbo",
       chain_type: "docs",
-      messages: chats?.slice(-5).concat([{ role: "user", content: prompt }]) || [
-        { role: "user", content: prompt },
-      ],
+      messages: chats
+        ?.filter(chat => chat.content !== t("ai.error"))
+        .slice(-5)
+        .concat([{ role: "user", content: prompt }]) || [{ role: "user", content: prompt }],
       max_tokens: 1000,
       temperature: 0,
     };
@@ -132,7 +133,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
         _answer += value;
       }
     } catch (error: any) {
-      setChats((chats: ChatType[]) => chats.concat({ role: "assistant", content: error.message }));
+      setChats((chats: ChatType[]) => chats.concat({ role: "assistant", content: t("ai.error") }));
       console.error(error.message);
     }
   };
