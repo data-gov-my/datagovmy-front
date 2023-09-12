@@ -8,7 +8,7 @@ const KTMBExplorerComingSoon: FunctionComponent = () => {
 
   return (
     <div className="flex h-[400px] items-center justify-center">
-      <div className="text-dim mx-auto flex max-w-prose flex-col gap-y-6 rounded-xl border px-3 py-6 sm:px-9">
+      <div className="text-dim dark:border-washed-dark mx-auto flex max-w-prose flex-col gap-y-6 rounded-xl border px-3 py-6 sm:px-9">
         <h4 className="mx-auto">{t("coming_soon")}</h4>
         <span>
           {t("the")}
