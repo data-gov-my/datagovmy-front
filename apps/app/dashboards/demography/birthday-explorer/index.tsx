@@ -49,8 +49,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   const nonLeapTicks: readonly number[] = [
     0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364,
   ];
-  const startYear: number = 1923;
-  const endYear: number = 2017;
+  const startYear: number = 1920;
+  const LATEST_YEAR = toDate(timeseries.data_as_of, "yyyy", i18n.language);
+  const endYear: number = Number(LATEST_YEAR);
 
   const { data, setData } = useData({
     x: timeseries.x,
@@ -66,8 +67,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     // query data
     groupBy: "day", // options: "day" | "month"
     birthday: "",
-    start: "1923",
-    end: "2017",
+    start: startYear.toString(),
+    end: LATEST_YEAR,
     state: "mys",
 
     loading: false,
@@ -133,10 +134,10 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       if (!data.p_birthday && data.p_birthday.length < 10) {
         setData("validation", t("incomplete"));
         reject("Invalid date");
-      } else if (year > 2017) {
-        setData("validation", t("invalid_max"));
+      } else if (year > endYear) {
+        setData("validation", t("invalid_max", { year: LATEST_YEAR }));
         reject("Date more than maximum");
-      } else if (year < 1923) {
+      } else if (year < startYear) {
         setData("validation", t("invalid_min"));
         reject("Date less than maximum");
       } else {
@@ -160,7 +161,11 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
-        <Section title={t("section_1.title")} description={t("section_1.description")}>
+        <Section className="mx-auto py-8 lg:py-12 xl:w-4/5">
+          <h4 className="pb-3 text-center">{t("section_1.title")}</h4>
+          <p className="text-dim pb-6 text-center">
+            {t("section_1.description", { year: endYear, next_year: endYear + 1 })}
+          </p>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             <Card className="bg-background dark:bg-background-dark shadow-button flex flex-col justify-between p-6 lg:col-span-1">
               <div>
@@ -184,8 +189,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                         .catch(e => console.error(e));
                     }
                   }}
-                  min={"1923-01-01"}
-                  max={"2017-12-31"}
+                  min={"1920-01-01"}
+                  max={"2022-12-31"}
                 ></input>
                 {data.validation && <p className="text-danger mt-1 text-xs">{data.validation}</p>}
 

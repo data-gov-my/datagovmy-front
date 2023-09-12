@@ -1,17 +1,59 @@
 # datagovmy-front
 
-_WIP_
+Welcome to the official repository for Datagovmy, a comprehensive monorepo project meticulously crafted to enhance the development, management, and deployment of a suite of projects that power Malaysian government data initiatives.
 
----
+## About Datagovmy
+At Datagovmy, our mission is to transform data into actionable insights, and this monorepo is the central hub for displaying the our data. Our projects span a wide range of applications and packages, each playing a vital role in advancing data accessibility and utilization. Explore our projects below:
+
+#### Applications
+
+- [Datagovmy App](apps/app)
+- [OpenDOSM](apps/opendosm)
+- [KKMNow](apps/kkmnow)
+- [API Docs](apps/docs)
+
+#### Packages
+
+- [Datagovmy UI](packages/datagovmy-ui)
+- [Datagovmy Nextra](packages/datagovmy-nextra)
+- [Eslint Configs](packages/eslint-config-datagovmy)
+- [TS Config](packages/tsconfig)
+
+#### Lambda
+
+- [Rolling Auth Token](lambda/roll_auth_token)
+
+We embrace collaboration and innovation, and we invite contributions from the open-source community. Whether you want to report a bug, request a new feature, or actively contribute to our projects, your input is invaluable in our mission to make data more accessible and impactful.
+
+Join us in shaping the future of data at Datagovmy!
 
 ## Table of Contents
 
+- [Turborepo](#turborepo)
 - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
 - [Commands to Know](#commands-to-know)
 - [Development Workflow](#development-workflow)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Turborepo
+
+This monorepo project is efficiently managed and organized using TurboRepo, a powerful tool that streamlines the development workflow for large-scale projects. TurboRepo simplifies the management of multiple projects and packages within a single repository, ensuring smooth collaboration, dependency management, and deployment processes.
+
+#### Using TurboRepo
+
+Installation: Ensure you have TurboRepo installed locally. You can install it globally or use it as a project dependency.
+
+```bash
+npm install -g @turbo/turbo
+```
+Configuration: This project has been configured with turborepo to manage workspaces, project dependencies. Find the configuration at root path in [turbo.json](/turbo.json)
+
+Development Workflow: With TurboRepo in place, you can easily run commands like `turbo dev`, `turbo build`, and `turbo test` to manage your projects within the monorepo efficiently.
+
+Publishing: TurboRepo offers a streamlined publishing process, making it straightforward to release new versions of your projects.
+
+Learn more about turborepo by visiting its official docs [Turborepo](https://turbo.build/repo/docs).
 
 ## Installation
 
@@ -31,33 +73,18 @@ npx prepare
 cp .env.example .env
 ```
 
-### Environment Variables
-
-The following are the environment variables (.env) used for data.gov.my. Please take note, there are only 2 variables required to get the app running, both of which are related to [AKSARA BE](https://github.com/dosm-malaysia/aksara-back).
-
-| Variables                       | Required | Default                             | Description                                     |
-| ------------------------------- | -------- | ----------------------------------- | ----------------------------------------------- |
-| APP_URL                         | ⬜️      | http://localhost:3000 (development) | App domain. Optional                            |
-| NEXT_PUBLIC_APP_URL             | ⬜️      | $APP_URL                            | App domain, made public. Optional               |
-| NEXT_PUBLIC_AUTHORIZATION_TOKEN | ✅       | _Create own_                        | Authorization token for AKSARA BE communication |
-| NEXT_PUBLIC_API_URL             | ✅       | http://localhost:8000 (development) | AKSARA BE base URL                              |
-| NEXT_PUBLIC_GMAP_API_KEY        | ⬜️      | _Create own_                        | Google Maps API key. Optional                   |
-| NEXT_PUBLIC_GA_TAG              | ⬜️      | _Create own_                        | Google Analytics Tag. Optional                  |
-| NEXT_PUBLIC_MAPTILER_API_KEY    | ⬜️      | _Create own_                        | OpenStreetMap API key. Optional                 |
-| MIXPANEL_TOKEN                  | ⬜️      | _Create own_                        | Mixpanel token. Optional                        |
-| MIXPANEL_PROJECT_ID             | ⬜️      | _Create own_                        | Mixpanel project ID. Optional                   |
-| MIXPANEL_SA_USER                | ⬜️      | _Create own_                        | Mixpanel service account username. Optional     |
-| MIXPANEL_SA_USER                | ⬜️      | _Create own_                        | Mixpanel service account secret. Optional       |
-| NEXT_PUBLIC_MIXPANEL_TOKEN      | ⬜️      | $MIXPANEL_TOKEN                     | Mixpanel token, made public. Optional           |
-
 ## Commands to Know
 
 ```bash
 # Start development server
 yarn dev
+# Start development server for specific workspace
+yarn dev --filter=app
 
 # Build production app
 yarn build
+# Build production app for specific workspace
+yarn build --filter=app
 
 # Start production server
 yarn start

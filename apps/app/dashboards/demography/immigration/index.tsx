@@ -48,11 +48,11 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
         />
 
         {/* A breakdown of foreign arrivals by demographic group */}
-        <ForeignerDemography
+        {/* <ForeignerDemography
           demography={demography}
           demography_callout={demography_callout}
           last_updated={last_updated}
-        />
+        /> */}
       </Container>
     </>
   );
