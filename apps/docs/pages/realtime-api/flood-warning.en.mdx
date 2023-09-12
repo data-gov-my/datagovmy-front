@@ -1,5 +1,40 @@
-# Flood Warning
+## Flood Warning API Endpoint
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae iusto quam natus eum molestias
-impedit, magnam error harum quos vitae illum quidem, quod modi doloremque iste adipisci nam corrupti
-quo?
+The Flood Warning API provides real-time information on water levels and flood warnings at monitoring stations around the country.
+
+```http
+GET https://api.data.gov.my/flood-warning
+```
+
+| Key                           | Type    | Description                                                                                                     | Example Value                    |
+| ----------------------------- | ------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `station_id`                  | string  | Unique identifier for the monitoring station.                                                                   | "26167"                          |
+| `station_name`                | string  | The name or description of the monitoring station.                                                              | "Sg. Anak Bukit di Jambatan TAR" |
+| `latitude`                    | float   | The latitude coordinate of the monitoring station's location.                                                   | 6.123722                         |
+| `longitude`                   | float   | The longitude coordinate of the monitoring station's location.                                                  | 100.3599                         |
+| `district`                    | string  | The district where the monitoring station is located.                                                           | "Kota Setar"                     |
+| `state`                       | string  | The state where the monitoring station is located.                                                              | "KEDAH"                          |
+| `sub_basin`                   | string  | The sub-basin associated with the monitoring station.                                                           | "Sg. Anak Bukit"                 |
+| `main_basin`                  | string  | The main basin associated with the monitoring station.                                                          | "Sungai Kedah"                   |
+| `station_type`                | string  | The type of the monitoring station, such as rain fall (`RF`) or water level (`WL`). Can contain both types.     | "WL"                             |
+| `water_level_current`         | float   | The current water level at the station.                                                                         | 1.73                             |
+| `water_level_indicator`       | string  | An indicator of the water level condition, e.g., `NORMAL`, `ALERT`, `WARNING`, `DANGER` and `ERROR`.            | "DANGER"                         |
+| `water_level_warning_level`   | float   | The warning level for the water level at the station.                                                           | 1.7                              |
+| `water_level_increment`       | float   | The increment or change in water level.                                                                         | 0.03                             |
+| `water_level_update_datetime` | string  | The date and time when the water level information was last updated.                                            | "2023-09-12 13:00:00"            |
+| `water_level_update_date`     | string  | The date when the water level information was last updated.                                                     | "2023-09-12"                     |
+| `water_level_trend`           | string  | The trend of the water level, e.g., `RISING`, `RECEDING` or `NO_CHANGE`                                         | "RISING"                         |
+| `rainfall_clean`              | float   | The clean (filtered) rainfall data, if available.                                                               | 1.3                              |
+| `rainfall_latest_1hr`         | float   | The latest rainfall measurement for the past 1 hour, if available.                                              | 2.3                              |
+| `rainfall_total_today`        | float   | The total rainfall recorded for the current day, if available.                                                  | 3.1                              |
+| `rainfall_indicator`          | string  | An indicator related to rainfall conditions, if available (e.g., `NO_RAINFALL`, `LIGHT`, `MODERATE` or `ERROR`) | "LIGHT"                          |
+| `rainfall_update_datetime`    | string  | The date and time when the rainfall information was last updated, if available.                                 | "2023-09-12 13:00:00"            |
+| `rainfall_update_date`        | string  | The date when the rainfall information was last updated, if available.                                          | "2023-09-12"                     |
+| `water_level_display`         | integer | The display value for water level, which may be different from the raw value.                                   | "1"                              |
+| `rainfall_display`            | integer | The display value for rainfall, which may be different from the raw value, if available.                        | "0"                              |
+| `raw_water_level`             | float   | The raw, unprocessed water level measurement.                                                                   | 1.73                             |
+| `raw_rainfall`                | float   | The raw, unprocessed rainfall measurement, if available.                                                        | 1.3                              |
+| `station_status`              | string  | The status of the monitoring station (e.g., `ON` or `OFF`).                                                     | "ON"                             |
+| `station_code`                | string  | A unique code or identifier for the monitoring station.                                                         | "JAMBATANTAR"                    |
+| `water_level_status`          | string  | The status of the water level monitoring (e.g., `ON`, `OFF` or `NA`)                                            | "ON"                             |
+| `rainfall_status`             | string  | The status of rainfall monitoring, if available. (e.g., `ON`, `OFF` or `NA`)                                    | "ON"                             |
