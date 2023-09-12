@@ -119,10 +119,11 @@ const IncomeRank: FunctionComponent = () => {
   };
 
   const handleChange = (e: string) => {
-    const value = Number(e.replaceAll(/\D/g, ""));
-    if (typeof value === "number" && value > 0) {
-      setData("amount", `RM ${value.toLocaleString(i18n.language)}`);
-    }
+    const value = e.replaceAll(/\D/g, "");
+    const number = value ? Number(value) : null;
+    if (typeof number === "number" && number >= 0) {
+      setData("amount", number.toLocaleString(i18n.language));
+    } else setData("amount", "");
     setData("valid_amount", false);
   };
 
@@ -152,6 +153,7 @@ const IncomeRank: FunctionComponent = () => {
               }}
             />
             <Input
+              icon={<div className="text-sm">RM</div>}
               required
               autoFocus
               type="text"
