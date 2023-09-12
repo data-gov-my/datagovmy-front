@@ -1,54 +1,56 @@
-# kkmnow-front
-
-This is the frontend repo for KKMNOW. KKMNOW is a collaboration between the Ministry of Health Malaysia and the Department of Statistics Malaysia to institutionalise transparency and make data accessible for all.
-
----
+# KKMNOW
 
 ## Table of Contents
 
 - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
 - [Commands to Know](#commands-to-know)
-- [Development Workflow](#development-workflow)
 - [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
-Please use `yarn` to manage dependencies.
+This application is managed in a monorepo by Turbo. You can go to the root [README](../../README.md#installation) for installation of this workspace.
 
-```bash
-# NPM
-git clone git@github.com:moh-malaysia/kkmnow-front.git
-yarn install
-yarn prepare
+Then ensure to add the environment variable for this workspace by doing:
+```
 cp .env.example .env
 ```
 
+### Environment Variables
+
+The following are the environment variables (.env) used for data.gov.my. Please take note, there are only 2 variables required to get the app running, both of which are related to the BE.
+
+| Variables                       | Required | Default                             | Description                                     |
+| ------------------------------- | -------- | ----------------------------------- | ----------------------------------------------- |
+| APP_URL                         | ⬜️        | http://localhost:3000 (development) | App domain. Optional                            |
+| REVALIDATE_TOKEN                | ⬜️        |                                     | BE token to revalidate staitc site. Optional    |
+| EDGE_CONFIG                     | ⬜️        |                                     | Add to use rolling token. Optional             |
+| NEXT_PUBLIC_APP_URL             | ⬜️       | $APP_URL                            | App domain, made public. Optional               |
+| NEXT_PUBLIC_AUTHORIZATION_TOKEN | ✅       | _Create own_                        | Authorization token for AKSARA BE communication |
+| NEXT_PUBLIC_API_URL             | ✅       | http://localhost:8000 (development) | AKSARA BE base URL                              |
+| MIXPANEL_TOKEN                  | ⬜️      | _Create own_                        | Mixpanel token. Optional                        |
+| NEXT_PUBLIC_MIXPANEL_TOKEN      | ⬜️      | $MIXPANEL_TOKEN                     | Mixpanel token, made public. Optional           |
+
 ## Commands to Know
+
+Turbo
 
 ```bash
 # Start development server
-yarn dev
+yarn dev --filter=kkmnow
 
 # Build production app
-yarn build
-
-# Start production server
-yarn start
-
-# Setup husky for githook
-yarn prepare
+yarn build --filter=kkmnow
 ```
 
-## Development Workflow
-
-1. Branch out from `main` & give the new branch a descriptive name eg: `feat/covid`, `fix/dropdown-bug` etc.
-2. After you're done debveloping, `git fetch && git merge origin/main` to synchronize any new changes & resolve conflicts, if there is any.
-3. Push the branch to remote and create a PR. Briefly describe the changes introduced in the PR.
-4. Assign another developer to peer review and approve.
-5. That's all. Happy working
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Thank you for your willingness to contribute to this free and open source project! When contributing, consider first discussing your desired change with the core team via GitHub issues or discussions!
 
-Please make sure to update tests as appropriate.
+## License
+
+data.gov.my is licensed under [MIT](https://github.com/data-gov-my/datagovmy-front/blob/main/LICENSE)
+
+Copyright © 2023 [Government of Malaysia](#)
