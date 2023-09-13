@@ -1,5 +1,6 @@
 {
   "gtfs-static": "Transport API (GTFS)",
   "gtfs-realtime": "Transport API (GTFS-R)",
+  "flood-warning": "Flood Warning API",
   "weather": "Weather API"
 }

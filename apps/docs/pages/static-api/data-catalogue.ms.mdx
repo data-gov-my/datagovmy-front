@@ -1,1 +1,57 @@
-## Placeholder
+## Endpoint API Katalog Data
+
+```http
+GET https://api.data.gov.my/data-catalogue
+```
+
+## Apa yang API Katalog Data boleh lakukan?
+
+API Katalog Data direka untuk membolehkan pengguna mengakses data dari katalog data secara berkomputer.
+Ia menyediakan sekumpulan titik akhir yang boleh digunakan untuk menanya data berdasarkan pelbagai parameter dan penapis.
+API ini ditujukan untuk digunakan oleh pembangun dan saintis data yang ingin mengakses katalog data secara berkomputer, walaupun pengguna yang ingin memuat turun data secara langsung juga boleh merujuk kepada halaman Katalog Data.
+
+### Bagaimana untuk Mencari Sumber yang Tersedia
+
+Untuk mengakses katalog data tertentu, anda perlu menentukan parameter `id` dalam URL permintaan anda.
+Ini adalah parameter yang wajib, berikut adalah contoh bagaimana menggunakannya:
+
+```http
+GET https://api.data.gov.my/data-catalogue?id=fuelprice
+```
+
+Untuk mencari sumber yang tersedia, lawati halaman [Katalog Data](https://data.gov.my/data-catalogue).
+Terdapat bahagian di bahagian bawah yang bertajuk "Sample OpenAPI query," yang mengandungi id yang diperlukan untuk setiap katalog data.
+Jika sesuatu katalog data tidak tersedia melalui API, ia akan dinyatakan secara eksplisit.
+
+## Format Permintaan & Respons
+
+Untuk menapis dan meminta data, gunakan operasi penapisan standard dalam API. [Format Permintaan](/request-query).
+Anda boleh mencari maklumat tentang kolom-kolom yang boleh ditapis dalam bahagian Metadata di bawah setiap halaman Katalog Data.
+Untuk maklumat tentang bagaimana API memberi tindak balas kepada permintaan anda, rujuk kepada [Response Format](/response-format).
+
+### Contoh Permintaan
+
+Mari kita ikuti contoh menggunakan sumber `fuelprice`:
+
+#### 1. Cari sumber tersebut
+
+Pergi ke halaman Katalog Data dan cari sumber [Diesel Price dataset](https://data.gov.my/data-catalogue/commodities_fuelprice_3).
+Secara alternatif, anda juga boleh menggunakan `id` yang sama untuk dua harga bahan api lain [RON95](https://data.gov.my/data-catalogue/commodities_fuelprice_1) and [RON97](https://data.gov.my/data-catalogue/commodities_fuelprice_2),yang merupakan sebahagian daripada dataset yang sama.
+Anda akan menjumpai nilai `id`, "fuelprice," dalam bahagian "Contoh Pertanyaan OpenAPI" di bahagian bawah halaman. Kami akan menggunakan `id` ini untuk contoh kami.
+
+#### 2. Menghantar Permintaan API
+
+Untuk mengambil data dari API, gunakan perintah `curl`berikut. Buka terminal anda dan masukkan perintah ini:
+
+```curl
+curl --location 'http://api.data.gov.my/data-catalogue?id=fuelprice&limit=3'
+```
+
+Melaksanakan perintah ini akan menghantar permintaan kepada API, dengan sasaran dataset `fuelprice`, dan mengehadkan respons kepada 3 rekod pertama.
+Untuk lebih banyak penapis yang tersedia, sila rujuk kepada [Request Query](/request-query).
+
+#### 3. Memahami Respons
+
+Untuk memahami respons API, Anda dapat merujuk kepada[Response Format](/response-format).
+Ini memberikan penjelasan terperinci tentang apa yang dimaksud dengan respons API.
+Dalam contoh ini, panjang total daftar ini akan menjadi 3, sesuai dengan parameter `limit` yang ditentukan.

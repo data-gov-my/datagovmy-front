@@ -1,0 +1,134 @@
+## Query Parameters
+
+For APIs that provide a collection of records, you can filter the records by using query parameters.
+Below are the available query parameters that can be used unless otherwise stated on specific API pages.
+
+| Parameter         | Type       | Description                                                         |
+| ----------------- | ---------- | ------------------------------------------------------------------- |
+| `filter`          | `string`   | Filters results to match the exact column value (case-sensitive).   |
+| `ifilter`         | `string`   | Filters results to match the exact column value (case-insensitive). |
+| `contains`        | `string`   | Filters results to match a partial column value (case-sensitive).   |
+| `icontains`       | `string`   | Filters results to match a partial column value (case-insensitive). |
+| `range`           | `string`   | Filters numerical column values within a specified range.           |
+| `sort`            | `string`   | Specifies the records order (ascending or descending).              |
+| `date_start`      | `date`     | Filters results starting from a specific date.                      |
+| `date_end`        | `date`     | Filters results ending at a specific date.                          |
+| `timestamp_start` | `datetime` | Filters results starting from a specific timestamp.                 |
+| `timestamp_end`   | `datetime` | Filters results ending at a specific timestamp.                     |
+| `limit`           | `integer`  | Sets the maximum number of records to return.                       |
+| `include`         | `string`   | Specifies which columns to include in the records.                  |
+| `exclude`         | `string`   | Specifies which columns to exclude from the records.                |
+
+Please note that the `filter` parameter is used for row-level filtering, while `include`/`exclude` parameters are used for column-level filtering.
+
+## Query Syntax
+
+When working with the OpenAPI, you can define query parameters by appending a question mark (`?`) after the base URL.
+Query parameters consist of a key-value pair, where the key and value are separated by an equal sign (`=`).
+
+### The `filter` Parameter
+
+```http
+?filter=<value>@<column>
+```
+
+- Filters the data based on a **case-sensitive exact string** match.
+- `<value>`: Represents the desired string value within the `<column>`.
+- `<column>`: Denotes the column to be filtered.
+
+### The `ifilter` Parameter
+
+```http
+?ifilter=<value>@<column>
+```
+
+- Filters data based on a **case-insensitive exact string** match.
+- `<value>`: Represents the desired string value within the `<column>`.
+- `<column>`: Denotes the column to be filtered.
+
+### The `contains` Parameter
+
+```http
+?contains=<value>@<column>
+```
+
+- Filters data based on a **case-sensitive partial string** match.
+- `<value>`: Represents a partial string value within the `<column>`.
+- `<column>`: Denotes the column to be filtered.
+
+### The `icontains` Parameter
+
+```http
+?icontains=<value>@<column>
+```
+
+- Filters data based on a **case-insensitive partial string** match.
+- `<value>`: Represents a partial string value within the `<column>`.
+- `<column>`: Denotes the column to be filtered.
+
+### The `range` Parameter
+
+```http
+?range=<column>[<begin>:<end>]
+```
+
+- Filters data within a specified numerical range.
+- `<column>` (required): Specifies the column to be filtered.
+- `<begin>` and `<end>` (optional): Define the numerical range, both values are inclusive. If not provided, the lowest and highest possible values are used.
+
+### The `sort` Parameter
+
+```http
+# single columm
+?sort=<column>
+
+# multiple columns
+?sort=<column1, -column2, ...>
+```
+
+- Sorts data based on specified columns and their respective order. You can separate multiple columns with commas (`,`).
+- `<column1>`: Represents the column to be sorted in ascending order.
+- `-<column2>`: Represents the column to be sorted in descending order. Prefixing a dash (`-`) indicates descending order.
+
+### The `date_start` and `date_end` Parameters
+
+```http
+?date_start=<YYYY-MM-DD>@<date_column>
+?date_end=<YYYY-MM-DD>@<date_column>
+```
+
+- Filters data within a specified date range.
+- `<YYYY-MM-DD>`: Represent the start and end dates (inclusive) of the desired date range.
+- `<date_column>`: Denotes the date column to be filtered.
+
+### The `timestamp_start` and `timestamp_end` Parameters
+
+```http
+?timestamp_start=<YYYY-MM-DD HH:MM:SS>@<timestamp_column>
+?timestamp_end=<YYYY-MM-DD HH:MM:SS>@<timestamp_column>
+```
+
+- Filters data within a specified timestamp range.
+- `<YYYY-MM-DD HH:MM:SS>`: Represent the start and end timestamps (inclusive) of the desired timestamp range.
+- `<timestamp_column>`: Denotes the timestamp column to be filtered.
+
+### The `limit` Parameter
+
+```http
+?limit=<value>
+```
+
+- Specifies the maximum number of records to return.
+- `<value>`: Should be a non-negative integer indicating the maximum number of records to be returned.
+  If the total available records are less than the specified limit, all available records are returned.
+
+### The `include` and `exclude` Parameters
+
+```http
+?include=<column1,column2,...>
+?exclude=<column1,column2,...>
+```
+
+- Format: Specifies which columns to include or exclude in the response.
+- `<column1, column2, ...>`: Specifies the columns to be included or excluded, separated by commas.
+  When both `include` and `exclude` parameters are provided, `include` takes precedence.

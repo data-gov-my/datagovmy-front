@@ -1,0 +1,114 @@
+## Parameter Pertanyaan
+
+API Katalog Data menyokong beberapa parameter pertanyaan. Jadual berikut memberikan maklumat tentang parameter pertanyaan yang tersedia, jenis data mereka, dan sama ada mereka diperlukan:
+
+| Parameter | Jenis     | Diperlukan | Penerangan                                                         |
+| --------- | --------- | ---------- | ------------------------------------------------------------------ |
+| id        | `string`  | Diperlukan | Mengenalpasti sumber daya tertentu yang diminta.                   |
+| filter    | `string`  | Pilihan    | Mengenalpasti jenis tapisan untuk data                             |
+| limit     | `integer` | Pilihan    | Mengenalpasti jumlah respons maksimum untuk diberikan              |
+| sort      | `string`  | Pilihan    | Mengenalpasti susunan respons, dalam urutan menaik atau menurun.   |
+| include   | `string`  | Pilihan    | Mengenalpasti kolumn yang hendak dimasukkan dalam respons.         |
+| exclude   | `string`  | Pilihan    | Mengenalpasti kolumn yang tidak ingin dimasukkan dalam respons.    |
+| start     | `date`    | Pilihan    | Mengenalpasti julat tarikh permulaan (hanya jika tarikh tersedia). |
+| end       | `date`    | Pilihan    | Mengenalpasti julat tarikh akhir (hanya jika tarikh tersedia).     |
+
+Sila ambil perhatian bahawa parameter penapis digunakan untuk penapisan peringkat baris, manakala parameter sama ada masukkan atau keluarkan digunakan untuk penapisan peringkat lajur.
+
+## Sintaks Pertanyaan
+
+Apabila berkerja dengan OpenAPI, anda boleh menentukan parameter pertanyaan dengan melampirkan tanda soalan (?) selepas URL asas. Parameter pertanyaan terdiri daripada sepasang kunci-nilai, di mana kunci dan nilai dipisahkan oleh tanda sama dengan (=). Jika terdapat beberapa parameter, mereka dipisahkan oleh tanda ampersand (&).
+
+### Parameter `filter`
+
+Parameter penapis membolehkan anda menambah baik permintaan API anda dengan mengguna pakai penapis tertentu kepada data. Terdapat 2 format yang disokong:
+
+#### Penapis Sama Rentetan
+
+```http
+# Sintaks
+?filter=<value>@<column>
+
+# Contoh
+GET .../catalogue?id=fuelprice&filter=level@series_type
+```
+
+- Format ini menapis data berdasarkan padanan rentetan yang tepat.
+- `<value>` mewakili nilai rentetan yang dikehendaki dalam `<column>`.
+- `<column>` menunjukkan kolumn yang akan ditapis.
+
+#### Filter Julat
+
+```http
+# Syntax
+?filter=<column>[<begin>:<end>]
+
+# Contoh - antara 0 (termasuk) dan 1 (termasuk)
+GET .../catalogue?id=fuelprice&filter=ron95[0:1]
+
+# Contoh - antara nilai ron95 yang paling rendah yang mungkin dan 1 (termasuk)
+GET .../catalogue?id=fuelprice&filter=ron95[:1]
+```
+
+- Format ini menapis data dalam julat nombor yang ditentukan.
+- `<column>` (wajib): Menentukan lajur yang akan ditapis.
+- `<begin>` dan `<end>` (pilihan): Menentukan julat nombor. Kedua-dua nilai adalah termasuk. Jika `<begin>` dan`<end>` tidak diberikan, nilai yang paling rendah atau yang paling tinggi akan digunakan sebagai gantinya.
+
+### Parameter had
+
+```http
+# Sintaks
+?limit=<value>
+
+# Contoh
+GET .../catalogue?id=fuelprice&limit=10
+```
+
+- `<value>` perlu menjadi integer positif yang mewakili jumlah maksimum tindak balas yang akan dikembalikan.
+- API akan mengembalikan sehingga `<value>` tindak balas berdasarkan had yang ditentukan.
+- Jika jumlah keseluruhan tindak balas yang tersedia kurang daripada had yang ditentukan, semua tindak balas yang tersedia akan dikembalikan.
+
+### Parameter susun
+
+```http
+# Sintaks
+?sort=<column>@<order>
+
+# Contoh
+GET .../catalogue?id=fuelprice&sort=ron95@asc
+```
+
+- `<column>` mewakili lajur yang digunakan untuk menyusun.
+- `<order>` boleh berupa asc (menaik) atau desc (menurun).
+- Penyusunan bersarang disokong dengan menggunakan pertanyaan yang dipisahkan ruang, contohnya <nobr>sort=ron95@asc date@desc</nobr>.
+
+### Menggunakan Parameter sama ada masukkan atau keluarkan
+
+```http
+# Sintaks
+?include=<column1,column2,...>
+?exclude=<column1,column2,...>
+
+# Contoh
+GET .../catalogue?id=fuelprice&include=ron95,ron97
+GET .../catalogue?id=fuelprice&exclude=diesel
+```
+
+- `<column1, column2, ...>` menentukan lajur yang akan dimasukkan atau dikecualikan.
+- Kolumn boleh dipisahkan dengan koma.
+- Apabila kedua-dua parameter sama ada "include" atau "exclude" diberikan, "include" akan diutamakan melebihi "exclude", di mana hanya nilai di `<include>` akan ditunjuk
+
+### Menggunakan Parameter `start` dan `end`
+
+```http
+# Sintaks
+?start=<start_date>
+?end=<end_date>
+
+# Contoh
+GET .../catalogue?id=fuelprice&start=2022-01-01&end=2022-12-31
+```
+
+- `<start_date>` and `<end_date>` mewakili tarikh permulaan dan tarikh akhir julat tarikh yang dikehendaki.
+- Tarikh-tarikh tersebut harus dalam format yang serasi dengan data yang ditanya.
+- Data akan ditapis untuk memasukkan tarikh yang lebih besar atau sama dengan `<start_date>` dan kurang atau sama dengan`<end_date>`.

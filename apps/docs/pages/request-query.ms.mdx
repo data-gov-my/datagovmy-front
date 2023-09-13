@@ -1,0 +1,134 @@
+## Parameter Pertanyaan
+
+Bagi API yang menyediakan koleksi rekod, anda boleh menyaringi rekod-rekod dengan menggunakan parameter pertanyaan.
+Berikut adalah parameter pertanyaan yang disediakan, kecuali dinyatakan sebaliknya pada halaman API tertentu.
+
+| Parameter         | Jenis      | Penerangan                                                              |
+| ----------------- | ---------- | ----------------------------------------------------------------------- |
+| `filter`          | `string`   | Menyaring hasil mengikut nilai lajur yang tepat (sensitif huruf).       |
+| `ifilter`         | `string`   | Menyaring hasil mengikut nilai lajur yang tepat (tidak sensitif huruf). |
+| `contains`        | `string`   | Menyaring hasil mengikut sebahagian nilai lajur (sensitif huruf).       |
+| `icontains`       | `string`   | Menyaring hasil mengikut sebahagian nilai lajur (tidak sensitif huruf). |
+| `range`           | `string`   | Menyaring nilai-nilai lajur berjumlah dalam julat yang ditentukan.      |
+| `sort`            | `string`   | Menentukan turutan rekod (menaik atau menurun).                         |
+| `date_start`      | `date`     | Menyaring hasil bermula dari tarikh tertentu.                           |
+| `date_end`        | `date`     | Menyaring hasil berakhir pada tarikh tertentu.                          |
+| `timestamp_start` | `datetime` | Menyaring hasil bermula dari capaian waktu tertentu.                    |
+| `timestamp_end`   | `datetime` | Menyaring hasil berakhir pada capaian waktu tertentu.                   |
+| `limit`           | `integer`  | Menetapkan jumlah maksimum rekod yang akan dikembalikan.                |
+| `include`         | `string`   | Menentukan lajur-lajur yang akan dimasukkan dalam rekod.                |
+| `exclude`         | `string`   | Menentukan lajur-lajur yang akan dikecualikan daripada rekod.           |
+
+Sila ambil perhatian bahawa parameter `filter` digunakan untuk penyaringan pada peringkat rekod barisan, sementara parameter `include`/`exclude` digunakan untuk penyaringan pada peringkat lajur.
+
+## Sintaks Pertanyaan
+
+Anda boleh menentukan parameter pertanyaan dengan menambahkan tanda soalan (`?`) selepas URL asas.
+Parameter pertanyaan terdiri daripada sepasang nilai-nilai, di mana kunci dan nilai dipisahkan oleh tanda sama dengan (`=`).
+
+### Parameter `filter`
+
+```http
+?filter=<nilai>@<lajur>
+```
+
+- Menyaring data berdasarkan **padanan rentetan tepat yang peka kes**.
+- `<nilai>`: Mewakili nilai rentetan yang diinginkan dalam `<lajur>`.
+- `<lajur>`: Menunjukkan lajur yang akan disaring.
+
+### Parameter `ifilter`
+
+```http
+?ifilter=<nilai>@<lajur>
+```
+
+- Menyaring data berdasarkan **padanan rentetan tepat yang tidak peka kes**.
+- `<nilai>`: Mewakili nilai rentetan yang diinginkan dalam `<lajur>`.
+- `<lajur>`: Menunjukkan lajur yang akan disaring.
+
+### Parameter `contains`
+
+```http
+?contains=<nilai>@<lajur>
+```
+
+- Menyaring data berdasarkan **padanan sebahagian rentetan yang peka kes**.
+- `<nilai>`: Mewakili nilai rentetan sebahagian dalam `<lajur>`.
+- `<lajur>`: Menunjukkan lajur yang akan disaring.
+
+### Parameter `icontains`
+
+```http
+?icontains=<nilai>@<lajur>
+```
+
+- Menyaring data berdasarkan **padanan sebahagian rentetan yang tidak peka kes**.
+- `<nilai>`: Mewakili nilai rentetan sebahagian dalam `<lajur>`.
+- `<lajur>`: Menunjukkan lajur yang akan disaring.
+
+### Parameter `range`
+
+```http
+?range=<lajur>[<mula>:<akhir>]
+```
+
+- Menyaring data dalam julat nilai berjumlah yang ditentukan.
+- `<lajur>` (wajib): Menentukan lajur yang akan disaring.
+- `<mula>` dan `<akhir>` (pilihan): Merujuk kepada julat angka, kedua-dua nilai adalah termasuk. Jika tidak diberikan, nilai terendah dan tertinggi yang mungkin digunakan.
+
+### Parameter `sort`
+
+```http
+# satu lajur
+?sort=<lajur>
+
+# beberapa lajur
+?sort=<lajur1, -lajur2, ...>
+```
+
+- Mengurutkan data berdasarkan lajur yang ditentukan dan turutan yang berkaitan. Anda boleh memisahkan beberapa lajur dengan koma (`,`).
+- `<lajur1>`: Mewakili lajur yang akan diurutkan secara menaik.
+- `-<lajur2>`: Mewakili lajur yang akan diurutkan secara menurun. Menambahkan tanda minus (`-`) menunjukkan urutan menurun.
+
+### Parameter `date_start` dan `date_end`
+
+```http
+?date_start=<YYYY-MM-DD>@<lajur_tarikh>
+?date_end=<YYYY-MM-DD>@<lajur_tarikh>
+```
+
+- Menyaring data dalam julat tarikh yang ditentukan.
+- `<YYYY-MM-DD>`: Mewakili tarikh mula dan akhir (termasuk) julat tarikh yang diinginkan.
+- `<lajur_tarikh>`: Menunjukkan lajur tarikh yang akan disaring.
+
+### Parameter `timestamp_start` dan `timestamp_end`
+
+```http
+?timestamp_start=<YYYY-MM-DD HH:MM:SS>@<lajur_capaian_waktu>
+?timestamp_end=<YYYY-MM-DD HH:MM:SS>@<lajur_capaian_waktu>
+```
+
+- Menyaring data dalam julat capaian waktu yang ditentukan.
+- `<YYYY-MM-DD HH:MM:SS>`: Mewakili capaian waktu mula dan akhir (termasuk) julat capaian waktu yang diinginkan.
+- `<lajur_capaian_waktu>`: Menunjukkan lajur capaian waktu yang akan disaring.
+
+### Parameter `limit`
+
+```http
+?limit=<nilai>
+```
+
+- Menentukan jumlah maksimum rekod yang akan dikembalikan.
+- `<nilai>`: Harus menjadi nombor berpositif menunjukkan jumlah maksimum rekod yang akan dikembalikan.
+  Jika jumlah rekod yang tersedia kurang daripada had yang ditetapkan, semua rekod yang tersedia akan dikembalikan.
+
+### Parameter `include` dan `exclude`
+
+```http
+?include=<lajur1,lajur2,...>
+?exclude=<lajur1,lajur2,...>
+```
+
+- Format: Menentukan lajur-lajur yang akan dimasukkan atau dikecualikan dalam respons.
+- `<lajur1, lajur2, ...>`: Menentukan lajur-lajur yang akan dimasukkan atau dikecualikan, dipisahkan oleh koma (`,`).
+  Apabila kedua-dua parameter `include` dan `exclude` disediakan, `include` akan diutamakan.

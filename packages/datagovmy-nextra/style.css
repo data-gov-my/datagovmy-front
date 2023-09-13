@@ -107,6 +107,8 @@ input,
 optgroup,
 select,
 textarea {
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
   font-family: inherit;
   font-size: 100%;
   font-weight: inherit;
@@ -196,6 +198,9 @@ menu {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+dialog {
+  padding: 0;
 }
 textarea {
   resize: vertical;
@@ -3224,9 +3229,6 @@ input[type="search"]::-webkit-search-results-decoration {
 :is(html[class~="dark"] .dark\:border-red-200\/30) {
   border-color: rgba(254, 202, 202, 0.3);
 }
-:is(html[class~="dark"] .dark\:border-transparent) {
-  border-color: transparent;
-}
 :is(html[class~="dark"] .dark\:border-washed-dark) {
   --tw-border-opacity: 1;
   border-color: rgba(39, 39, 42, var(--tw-border-opacity));
@@ -3422,25 +3424,9 @@ input[type="search"]::-webkit-search-results-decoration {
   --tw-border-opacity: 1;
   border-color: rgba(38, 38, 38, var(--tw-border-opacity));
 }
-:is(html[class~="dark"] .dark\:hover\:border-washed-dark:hover) {
-  --tw-border-opacity: 1;
-  border-color: rgba(39, 39, 42, var(--tw-border-opacity));
-}
-:is(html[class~="dark"] .dark\:hover\:border-white:hover) {
-  --tw-border-opacity: 1;
-  border-color: rgba(255, 255, 255, var(--tw-border-opacity));
-}
-:is(html[class~="dark"] .dark\:hover\:border-primary-100:hover) {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--nextra-primary-hue) 100% 94% / var(--tw-border-opacity));
-}
 :is(html[class~="dark"] .dark\:hover\:border-primary-300:hover) {
   --tw-border-opacity: 1;
   border-color: hsl(var(--nextra-primary-hue) 100% 77% / var(--tw-border-opacity));
-}
-:is(html[class~="dark"] .dark\:hover\:border-primary-200:hover) {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--nextra-primary-hue) 100% 86% / var(--tw-border-opacity));
 }
 :is(html[class~="dark"] .dark\:hover\:bg-gray-100\/5:hover) {
   background-color: rgba(243, 244, 246, 0.05);
@@ -3505,10 +3491,6 @@ input[type="search"]::-webkit-search-results-decoration {
 :is(html[class~="dark"] .focus\:dark\:text-gray-100):focus {
   --tw-text-opacity: 1;
   color: rgba(243, 244, 246, var(--tw-text-opacity));
-}
-:is(html[class~="dark"] .dark\:active\:border-outlineHover-dark:active) {
-  --tw-border-opacity: 1;
-  border-color: rgba(63, 63, 70, var(--tw-border-opacity));
 }
 @media (prefers-contrast: more) {
   :is(html[class~="dark"] .contrast-more\:dark\:border-current) {

@@ -4,13 +4,14 @@
   "quickstart": "Quickstart Guide",
   "rate-limit": "Rate Limit",
   "authentication": "Authentication",
+  "request-query": "Request Query",
   "response-format": "Response Format",
   "static-api": "Static APIs",
   "realtime-api": "Realtime APIs",
   "main-site": {
     "title": "Main Site",
     "type": "page",
-    "href": "https://staging.data.gov.my",
+    "href": "https://data.gov.my",
     "newWindow": true
   },
   "faq": "FAQ"

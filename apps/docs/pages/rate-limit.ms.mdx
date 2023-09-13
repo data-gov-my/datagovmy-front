@@ -1,12 +1,19 @@
-## Had Kadar
+## Had Kadar Penggunaan
 
-Untuk memastikan penggunaan yang adil dan menjaga prestasi sistem, OpenAPI memperkenalkan had kadar pada bilangan permintaan yang boleh dibuat dalam jangka masa tertentu. Jika had tersebut dilanggar, permintaan seterusnya akan gagal, dan anda akan menerima ralat `429 Too Many Requests` dalam respons anda.
+Untuk memastikan penggunaan yang adil dan prestasi yang konsisten, kami melaksanakan had kadar penggunaan pada bilangan permintaan yang boleh dibuat dalam suatu tempoh masa. Ia bagi memastikan peluang penggunaan API kepada semua pengguna dan mengelakkan sebarang isu prestasi.
 
-Jadual berikut menghuraikan had kadar untuk API yang berbeza dalam OpenAPI:
+Jika had penggunaan anda melebihi yang ditetapkan, permintaan berikutnya akan gagal, dan ralat `429 Terlalu Banyak Permintaan` akan dihantar dalam respons anda.
 
-| API            | Tanpa Token               | Dengan Token           |
-| -------------- | ------------------------- | ---------------------- |
-| Data Katalog   | 4 permintaan seminit      | 10 permintaan seminit  |
-| GTFS-Static    | 4 permintaan seminit      | 10 permintaan seminit  |
+Jadual berikut menghuraikan had kadar penggunaan untuk API yang disediakan:
 
-Sila ambil perhatian bahawa had kadar berbeza bergantung kepada sama ada anda menggunakan token API atau tidak. Jika anda merancang untuk melampaui had kadar tanpa menggunakan token API, kami mengesyorkan agar anda [meminta token API](/overview/authentication).
+| API           | Had Kadar tanpa Token     | Had Kadar dengan Token     |
+| ------------- | ------------------------- | -------------------------- |
+| Katalog Data  | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| Amaran Banjir | 4 permintaan setiap minit | 10 permintaan setiap minit |
+| Cuaca         | TBD                       | TBD                        |
+| GTFS Statik   | TBD                       | TBD                        |
+| GTFS Realiti  | TBD                       | TBD                        |
+
+<span className="text-sm italic">* API yang belum dikeluarkan lagi ditandai dengan TBD.</span>
+
+Sila ambil perhatian bahawa had kadar penggunaan adalah berbeza bagi pengguna yang mempunyai token pengesahan. Jika anda menjangkakan penggunaan melebihi had kadar tanpa token, kami mencadangkan anda [meminta token API](/authentication).
