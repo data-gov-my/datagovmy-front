@@ -1,1 +1,48 @@
-## Placeholder
+## Kod Respons
+
+Selepas menghantar permintaan API, anda akan menerima respons dengan kod dan elemen-elemen berikut, yang menunjukkan status permintaan anda:
+
+| Kod |          Status           | Penerangan                                                                                                                                                                                                  |
+| :-: | :-----------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 200 |            OK             | Permintaan Berjaya.                                                                                                                                                                                         |
+| 400 |     Permintaan Buruk      | Permintaan tidak sah. Semak mesej ralat untuk maklumat lanjut.                                                                                                                                              |
+| 404 |       Tidak Ditemui       | Sumber yang diminta tidak wujud.                                                                                                                                                                            |
+| 429 | Terlalu Banyak Permintaan | Kadar penggunaan anda telah dihadkan. Mohon token API di [Pengesahan](authentication) untuk meningkatkan had penggunaan.                                                                                    |
+| 500 |       Ralat Pelayan       | Ada sesuatu yang tidak kena dengan OpenAPI! Sila [tinggalkan isu GitHub](https://github.com/data-gov-my/datagovmy-openapi/issues/new?title=500%20Internal%20Server%20Error) jika anda menghadapi ralat ini. |
+
+### Respons Sah
+
+Anda akan menerima respons `200 OK` jika permintaan anda berjaya. API akan mengembalikan senarai rekod secara lalai.
+Anda juga boleh menggunakan parameter `meta` untuk lebih mendapatkan lebih banyak butiran:
+
+```http
+?meta=true
+```
+
+Dengan `meta=true`, respons akan kelihatan seperti ini:
+
+```json
+{
+    "meta": {...},
+    "data": [...]
+}
+```
+
+- `meta`: Menyediakan maklumat asas tentang sumber yang diminta, termasuk sebarang penapisan yang dikenakan.
+- `data`: Mengandungi koleksi rekod yang diminta.
+
+### Respons Ralat
+
+Jika terdapat ralat, API akan mengembalikan respons ralat dalam format JSON. Respons ralat mengandungi elemen-elemen berikut:
+
+```json
+{
+    status: <int>,
+    errors: [...],
+}
+```
+
+- `status`: Menunjukkan kod respons yang berkaitan dengan ralat tersebut.
+- `errors`: Mengandungi mesej-mesej ralat atau keterangan untuk membantu mengenal pasti masalah dengan permintaan API.
+
+_\*Sila ambil perhatian bahawa untuk API tertentu pada masa akan datang, mungkin terdapat format yang unik berbeza daripada format umum di atas, yang akan dijelaskan dengan jelas dalam dokumentasi API berkenaan._
