@@ -19,7 +19,10 @@ GET https://api.data.gov.my/flood-warning
 | `station_type`                | string  | Jenis stesen pemantauan, seperti hujan (RF) atau aras air (WL). Boleh mengandungi kedua-dua jenis. | "WL"                             |
 | `water_level_current`         | float   | Paras air semasa di stesen.                                                                        | 1.73                             |
 | `water_level_indicator`       | string  | Penunjuk keadaan aras air, e.g., `NORMAL`, `ALERT`, `WARNING`, `DANGER` and `ERROR`.               | "DANGER"                         |
-| `water_level_warning_level`   | float   | Aras air tahap bahaya di stesen pemantauan                                                         | 1.7                              |
+| `water_level_normal_level`    | float   | Aras air tahap biasa di stesen pemantauan                                                          | 4.5                              |
+| `water_level_alert_level`     | float   | Aras air tahap alert di stesen pemantauan                                                          | 7.5                              |
+| `water_level_danger_level`    | float   | Aras air tahap bahaya di stesen pemantauan                                                         | 4.5                              |
+| `water_level_warning_level`   | float   | Aras air tahap amaran di stesen pemantauan                                                         | 1.7                              |
 | `water_level_increment`       | float   | Peningkatan atau perubahan paras air                                                               | 0.03                             |
 | `water_level_update_datetime` | string  | Tarikh dan masa informasi aras air terakhir di kemaskini                                           | "2023-09-12 13:00:00"            |
 | `water_level_update_date`     | string  | Tarikh informasi aras air terakhir di kemaskini                                                    | "2023-09-12"                     |
