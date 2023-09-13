@@ -44,6 +44,9 @@ Here is a table of all possible field names returned and the description of them
 | `station_type`                | string   | The type of the monitoring station, such as rain fall (`RF`) or water level (`WL`). Can contain both types.     | "WL"                             |
 | `water_level_current`         | float    | The current water level at the station.                                                                         | 1.73                             |
 | `water_level_indicator`       | string   | An indicator of the water level condition, e.g., `NORMAL`, `ALERT`, `WARNING`, `DANGER` and `ERROR`.            | "DANGER"                         |
+| `water_level_normal_level`    | float    | The normal level for the water level at the station.                                                            | 4.5                              |
+| `water_level_alert_level`     | float    | The alert level for the water level at the station.                                                             | 7.5                              |
+| `water_level_danger_level`    | float    | The danger level for the water level at the station.                                                            | 4.5                              |
 | `water_level_warning_level`   | float    | The warning level for the water level at the station.                                                           | 1.7                              |
 | `water_level_increment`       | float    | The increment or change in water level.                                                                         | 0.03                             |
 | `water_level_update_datetime` | datetime | The date and time when the water level information was last updated.                                            | "2023-09-12 13:00:00"            |
