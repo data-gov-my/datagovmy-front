@@ -74,7 +74,6 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
 
   const DEMOGRAPHY = ["sex", "educ", "salary_range"] as DemographyKeys[];
   const { coordinate } = useSlice(timeseries.data[config.key], data.minmax);
-  const yieldPrefix = (value: number) => (value > 0 ? "+" : value < 0 ? "-" : "");
 
   return (
     <>
@@ -126,19 +125,11 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
                   stats={[
                     {
                       title: t("trend_monthly"),
-                      value: `${yieldPrefix(timeseries_callout.data.growth_mom)}${numFormat(
-                        timeseries_callout.data.growth_mom,
-                        "standard",
-                        1
-                      )}%`,
+                      value: `${numFormat(timeseries_callout.data.growth_mom, "standard", 1)}%`,
                     },
                     {
                       title: t("trend_yearly"),
-                      value: `${yieldPrefix(timeseries_callout.data.growth_yoy)}${numFormat(
-                        timeseries_callout.data.growth_yoy,
-                        "standard",
-                        1
-                      )}%`,
+                      value: `${numFormat(timeseries_callout.data.growth_yoy, "standard", 1)}%`,
                     },
                   ]}
                 />

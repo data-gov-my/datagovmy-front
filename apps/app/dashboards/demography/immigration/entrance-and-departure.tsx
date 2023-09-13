@@ -126,6 +126,7 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
                 else setData("country", null);
               }}
               config={{
+                keys: ["label"],
                 baseSort: (a, b) => {
                   if (a.item.value === "ALL") return -1;
                   else if (b.item.value === "ALL") return 1;

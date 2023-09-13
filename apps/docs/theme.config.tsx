@@ -26,8 +26,8 @@ export default {
     const { defaultLocale, locale } = useRouter();
     const lang = locale || defaultLocale || "en";
     const description: Record<string, string> = {
-      en: "Open API Documentation helps you to explore the extensive array of open datasets and realtime information produced by the Malaysian government via APIs. ",
-      ms: "Dokumentasi API Terbuka sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
+      en: "OpenAPI Documentation helps you to explore the extensive array of open datasets and realtime information produced by the Malaysian government via APIs. ",
+      ms: "Dokumentasi OpenAPI sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
     };
     return {
       titleTemplate: `%s - Open API Docs`,

@@ -79,15 +79,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             context: queries.source ? "agency" : "",
           }),
         ]}
-        action={
-          <At
-            href={routes.DATA_GPT}
-            className="text-primary group flex items-center gap-2 text-sm font-medium"
-          >
-            <SparklesIcon className="h-5 w-5" />
-            <span className="group-hover:underline">{t("common:components.try_datagpt")}</span>
-          </At>
-        }
+        // action={
+        //   <At
+        //     href={routes.DATA_GPT}
+        //     className="text-primary group flex items-center gap-2 text-sm font-medium"
+        //   >
+        //     <SparklesIcon className="h-5 w-5" />
+        //     <span className="group-hover:underline">{t("common:components.try_datagpt")}</span>
+        //   </At>
+        // }
         agencyBadge={<AgencyBadge agency={queries.source || "govt"} />}
       />
       <DashboardFilter dashboards={dashboards} sources={sources} queries={queries}>
@@ -158,12 +158,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                                       <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
                                     )}
                                   </p>
-                                  <p className="text-dim transition-transform group-hover:translate-y-6 motion-reduce:transform-none">
-                                    {`${numFormat(item.views, "compact")} ${t(
-                                      "common:common.views",
-                                      { count: item.views }
-                                    )}`}
-                                  </p>
+                                  {!isValidURL(dashboards_route[item.name].route) && (
+                                    <p className="text-dim transition-transform group-hover:translate-y-6 motion-reduce:transform-none">
+                                      {`${numFormat(item.views, "compact")} ${t(
+                                        "common:common.views",
+                                        { count: item.views }
+                                      )}`}
+                                    </p>
+                                  )}
+
                                   <p className="text-primary dark:text-primary-dark absolute -bottom-6 whitespace-nowrap transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
                                     {t("common:components.click_to_explore")}
                                   </p>
