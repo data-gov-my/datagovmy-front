@@ -15,7 +15,7 @@ import {
   Tabs,
 } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
-import { isValidURL, numFormat } from "datagovmy-ui/helpers";
+import { clx, isValidURL, numFormat } from "datagovmy-ui/helpers";
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { AgencyIcon } from "datagovmy-ui/icons/agency";
 import { Agency, OptionType } from "datagovmy-ui/types";
@@ -139,7 +139,12 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                               prefetch={false}
                               external={isValidURL(dashboards_route[item.name].route)}
                             >
-                              <Card className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black">
+                              <Card
+                                className={clx(
+                                  "border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black",
+                                  isValidURL(dashboards_route[item.name].route) ? "h-[110px]" : ""
+                                )}
+                              >
                                 <div className="relative flex items-center gap-4">
                                   <AgencyIcon
                                     agency={item.agency}
@@ -158,13 +163,15 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                                       <ArrowTopRightOnSquareIcon className="inline-block h-4 w-4" />
                                     )}
                                   </p>
-                                  {!isValidURL(dashboards_route[item.name].route) && (
+                                  {!isValidURL(dashboards_route[item.name].route) ? (
                                     <p className="text-dim transition-transform group-hover:translate-y-6 motion-reduce:transform-none">
                                       {`${numFormat(item.views, "compact")} ${t(
                                         "common:common.views",
                                         { count: item.views }
                                       )}`}
                                     </p>
+                                  ) : (
+                                    <div className="h-6"></div>
                                   )}
 
                                   <p className="text-primary dark:text-primary-dark absolute -bottom-6 whitespace-nowrap transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
