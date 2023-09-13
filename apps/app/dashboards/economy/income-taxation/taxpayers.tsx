@@ -4,7 +4,6 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { WithData } from "datagovmy-ui/types";
-import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -29,7 +28,6 @@ const Taxpayers: FunctionComponent<TaxpayersProps> = ({ timeseries, timeseries_c
     minmax: [0, timeseries.data.x.length - 1],
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
-  const { theme } = useTheme();
   const LATEST_TIMESTAMP = toDate(
     timeseries.data.x[timeseries.data.x.length - 1],
     "yyyy",
@@ -55,10 +53,8 @@ const Taxpayers: FunctionComponent<TaxpayersProps> = ({ timeseries, timeseries_c
                     data: coordinate.total,
                     label: t("section2.total"),
                     fill: true,
-                    backgroundColor:
-                      theme === "light" ? AKSARA_COLOR.PRIMARY_H : AKSARA_COLOR.PRIMARY_DARK_H,
-                    borderColor:
-                      theme === "light" ? AKSARA_COLOR.PRIMARY : AKSARA_COLOR.PRIMARY_DARK,
+                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                    borderColor: AKSARA_COLOR.PRIMARY,
                     borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
                   },
                 ],
@@ -94,10 +90,8 @@ const Taxpayers: FunctionComponent<TaxpayersProps> = ({ timeseries, timeseries_c
                         type: "line",
                         data: coordinate[key],
                         label: t(`section2.${key}`),
-                        backgroundColor:
-                          theme === "light" ? AKSARA_COLOR.PRIMARY_H : AKSARA_COLOR.PRIMARY_DARK_H,
-                        borderColor:
-                          theme === "light" ? AKSARA_COLOR.PRIMARY : AKSARA_COLOR.PRIMARY_DARK,
+                        backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                        borderColor: AKSARA_COLOR.PRIMARY,
                         borderWidth: 1.5,
                         fill: true,
                       },

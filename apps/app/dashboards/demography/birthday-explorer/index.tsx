@@ -49,8 +49,9 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   const nonLeapTicks: readonly number[] = [
     0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364,
   ];
-  const startYear: number = 1923;
-  const endYear: number = 2017;
+  const startYear: number = 1920;
+  const LATEST_YEAR = toDate(timeseries.data_as_of, "yyyy", i18n.language);
+  const endYear: number = Number(LATEST_YEAR);
 
   const { data, setData } = useData({
     x: timeseries.x,
@@ -66,8 +67,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     // query data
     groupBy: "day", // options: "day" | "month"
     birthday: "",
-    start: "1923",
-    end: "2017",
+    start: startYear.toString(),
+    end: LATEST_YEAR,
     state: "mys",
 
     loading: false,
@@ -127,16 +128,16 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
   };
 
-  const validateDate = async (): Promise<{ birthday: string; state: string }> =>
+  const validateDate = async (): Promise<{ birthday: string }> =>
     new Promise((resolve, reject) => {
       const year = Number(data.p_birthday.substring(0, 4));
       if (!data.p_birthday && data.p_birthday.length < 10) {
         setData("validation", t("incomplete"));
         reject("Invalid date");
-      } else if (year > 2017) {
-        setData("validation", t("invalid_max"));
+      } else if (year > endYear) {
+        setData("validation", t("invalid_max", { year: LATEST_YEAR }));
         reject("Date more than maximum");
-      } else if (year < 1923) {
+      } else if (year < startYear) {
         setData("validation", t("invalid_min"));
         reject("Date less than maximum");
       } else {
@@ -145,7 +146,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         setData("state", data.p_state);
         setData("start", data.p_birthday.substring(0, 4));
         setData("end", data.p_birthday.substring(0, 4));
-        resolve({ birthday: data.p_birthday, state: data.p_state });
+        resolve({ birthday: data.p_birthday });
       }
     });
 
@@ -160,7 +161,11 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
-        <Section title={t("section_1.title")} description={t("section_1.description")}>
+        <Section className="mx-auto py-8 lg:py-12 xl:w-4/5">
+          <h4 className="pb-3 text-center">{t("section_1.title")}</h4>
+          <p className="text-dim pb-6 text-center">
+            {t("section_1.description", { year: endYear, next_year: endYear + 1 })}
+          </p>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             <Card className="bg-background dark:bg-background-dark shadow-button flex flex-col justify-between p-6 lg:col-span-1">
               <div>
@@ -177,25 +182,30 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   onKeyDown={e => {
                     if (e.key === "Enter") {
                       validateDate()
-                        .then(({ birthday, state }) => {
+                        .then(({ birthday }) => {
                           setData("loading", true);
-                          fetchData(yieldParams(birthday, state));
+                          setData("start", birthday.substring(0, 4));
+                          setData("end", birthday.substring(0, 4));
                         })
                         .catch(e => console.error(e));
                     }
                   }}
-                  min={"1923-01-01"}
-                  max={"2017-12-31"}
+                  min={"1920-01-01"}
+                  max={"2022-12-31"}
                 ></input>
                 {data.validation && <p className="text-danger mt-1 text-xs">{data.validation}</p>}
 
                 <Button
                   className="btn-primary my-6 active:shadow-none"
                   onClick={() => {
+                    // fetchData(yieldParams(data.birthday, data.state));
+
                     validateDate()
-                      .then(({ birthday, state }) => {
+                      .then(({ birthday }) => {
                         setData("loading", true);
-                        fetchData(yieldParams(birthday, state));
+                        setData("start", birthday.substring(0, 4));
+                        setData("end", birthday.substring(0, 4));
+                        // fetchData(yieldParams(birthday, state));
                       })
                       .catch(e => console.error(e));
                   }}
@@ -331,7 +341,16 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 options={filterPeriods}
                 placeholder={t("period")}
                 selected={filterPeriods.find(period => period.value === data.groupBy)}
-                onChange={({ value }) => setData("groupBy", value)}
+                onChange={({ value }) => {
+                  setData("groupBy", value);
+                  validateDate()
+                    .then(({ birthday }) => {
+                      setData("loading", true);
+                      setData("start", birthday.substring(0, 4));
+                      setData("end", birthday.substring(0, 4));
+                    })
+                    .catch(e => console.error(e));
+                }}
               />
               <Daterange
                 startYear={startYear}
@@ -344,8 +363,8 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   if (end) setData("end", end);
                 }}
                 onReset={() => {
-                  setData("start", "1923");
-                  setData("end", "2017");
+                  setData("start", startYear);
+                  setData("end", endYear);
                 }}
               />
             </div>

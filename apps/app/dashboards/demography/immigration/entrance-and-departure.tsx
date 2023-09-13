@@ -46,12 +46,17 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
     label: t(`countries:${key}`),
     value: key,
   }));
-  const PERIODS: Array<DashboardPeriod> = ["daily_7d", "daily", "monthly", "yearly"];
+  const PERIODS: Array<DashboardPeriod> = [
+    "monthly",
+    "yearly",
+    // TODO: remove elements above and add comment elements
+    // "daily_7d", "daily", "monthly", "yearly"
+  ];
 
   const { data, setData } = useData({
     tab: 0,
     country: params?.country,
-    minmax: [0, timeseries.data.daily_7d.x.length - 1],
+    minmax: [0, timeseries.data.monthly.x.length - 1],
     loading: false,
   });
 
@@ -120,6 +125,14 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
                 if (selected) navigateToCountry(selected.value);
                 else setData("country", null);
               }}
+              config={{
+                keys: ["label"],
+                baseSort: (a, b) => {
+                  if (a.item.value === "ALL") return -1;
+                  else if (b.item.value === "ALL") return 1;
+                  return a.item.label.localeCompare(b.item.label);
+                },
+              }}
             />
           </div>
           <p className="text-dim text-sm lg:text-center">{t("section_1.description")}</p>
@@ -134,8 +147,9 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
               menu={
                 <Tabs.List
                   options={[
-                    t("common:time.daily_7d"),
-                    t("common:time.daily"),
+                    // TODO: TO be readded
+                    // t("common:time.daily_7d"),
+                    // t("common:time.daily"),
                     t("common:time.monthly"),
                     t("common:time.yearly"),
                   ]}
@@ -192,18 +206,19 @@ const EntranceAndDeparture: FunctionComponent<EntranceAndDepartureProps> = ({
                   ).getFullYear()})`,
                   value: `+${numFormat(timeseries_callout.data.in, "standard")}`,
                 },
-                {
-                  title: `${t("keys.departures")} (${new Date(
-                    timeseries.data[config.key].x.at(-1)!
-                  ).getFullYear()})`,
-                  value: `-${numFormat(timeseries_callout.data.out, "standard")}`,
-                },
-                {
-                  title: `${t("keys.net_migration")} (${new Date(
-                    timeseries.data[config.key].x.at(-1)!
-                  ).getFullYear()})`,
-                  value: numFormat(timeseries_callout.data.net, "standard"),
-                },
+                // TODO: TO be readded
+                // {
+                //   title: `${t("keys.departures")} (${new Date(
+                //     timeseries.data[config.key].x.at(-1)!
+                //   ).getFullYear()})`,
+                //   value: `-${numFormat(timeseries_callout.data.out, "standard")}`,
+                // },
+                // {
+                //   title: `${t("keys.net_migration")} (${new Date(
+                //     timeseries.data[config.key].x.at(-1)!
+                //   ).getFullYear()})`,
+                //   value: numFormat(timeseries_callout.data.net, "standard"),
+                // },
               ]}
             />
             <Slider
