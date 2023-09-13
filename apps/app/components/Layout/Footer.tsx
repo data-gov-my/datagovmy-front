@@ -16,6 +16,9 @@ const DGMYFooter = () => {
         <At className="link-dim" external href="https://github.com/data-gov-my/datagovmy-back">
           {t("common:nav.backend")}
         </At>
+        <At className="link-dim" external href="https://github.com/data-gov-my/datagovmy-ai">
+          {t("common:nav.ai")}
+        </At>
         <At className="link-dim" external href="https://www.figma.com/file/6iNojR8hO5bWvH0c3rvGD4">
           {t("common:nav.uiux")}
         </At>
