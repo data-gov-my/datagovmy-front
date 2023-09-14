@@ -1,6 +1,6 @@
 {
   "gtfs-static": "Pengangkutan API (GTFS)",
   "gtfs-realtime": "Pengangkutan API (GTFS-R)",
-  "flood-warning": "Amaran Banjir",
+  "flood-warning": "Amaran Banjir API",
   "weather": "Cuaca API"
 }

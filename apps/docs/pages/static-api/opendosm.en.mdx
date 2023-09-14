@@ -1,0 +1,57 @@
+## OpenDOSM API Endpoint
+
+```http
+GET https://api.data.gov.my/opendosm
+```
+
+### What does OpenDOSM API do?
+
+The OpenDOSM API is designed to allow users to programmatically access OpenDOSM data catalogue.
+This API is tailored for users who are interested exclusively in OpenDOSM data.
+For more general data across data.gov.my, please refer to [Data Catalogue API](/static-api/data-catalogue).
+
+### How to Find Available Resources
+
+To access specific data catalogue, you need to specify the `id` parameter in your request URL.
+It's a **required** parameter, here's an example of how to use it:
+
+```http
+GET https://api.data.gov.my/opendosm?id=cpi_core
+```
+
+To discover the available resources, visit the [OpenDOSM Data Catalogue page](https://open.dosm.gov.my/data-catalogue).
+There is a section at the bottom titled "Sample OpenAPI query," which contains the necessary `id` for each data catalogue.
+If a data catalogue is not available through the API, it will be explicitly mentioned.
+
+## Request Query & Response Format
+
+To filter and request data, use the standard filtering operations in the [Request Query](/request-query).
+You can find information about the available filterable columns in the Metadata section under each Data Catalogue page.
+For information on how the API responds to your requests, refer to the [Response Format](/response-format) section.
+
+### Example Request
+
+Let's walk through an example using the `cpi_core` resource:
+
+#### 1. Finding the Resource
+
+Go to the Data Catalogue page and find the [Core CPI Overall dataset](https://open.dosm.gov.my/data-catalogue/cpi_cpi_core_1).
+You'll find the `id` value, "cpi_core," in the "Sample OpenAPI query" section at the bottom of the page.
+We will use this `id` for our example.
+
+#### 2. Sending the API Request
+
+To fetch data from the API, use the following `curl` command. Open your terminal and enter this command:
+
+```curl
+curl --location 'http://api.data.gov.my/opendosm?id=cpi_core&limit=3'
+```
+
+Executing this command will send a request to the API, specifically targeting the `cpi_core` dataset, and limiting the response to the first 3 records.
+For more available filters, please refer to [Request Query](/request-query) section.
+
+#### 3. Understanding the Response
+
+To make sense of the API's response, you can refer to the [Response Format](/response-format) section.
+It provides a detailed explanation of what the API response means.
+In this example, the total length of this list will be 3, as specified by the `limit` parameter.
