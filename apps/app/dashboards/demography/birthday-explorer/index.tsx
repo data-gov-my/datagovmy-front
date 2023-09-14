@@ -198,14 +198,11 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 <Button
                   className="btn-primary my-6 active:shadow-none"
                   onClick={() => {
-                    // fetchData(yieldParams(data.birthday, data.state));
-
                     validateDate()
                       .then(({ birthday }) => {
                         setData("loading", true);
                         setData("start", birthday.substring(0, 4));
                         setData("end", birthday.substring(0, 4));
-                        // fetchData(yieldParams(birthday, state));
                       })
                       .catch(e => console.error(e));
                   }}
