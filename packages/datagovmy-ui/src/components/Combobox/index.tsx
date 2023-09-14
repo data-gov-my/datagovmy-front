@@ -61,7 +61,6 @@ const ComboBox = <T extends unknown>({
   const overflowPadding = 10;
 
   const [open, setOpen] = useState(false);
-  // const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   // The initial max-height is what `react-virtual` uses to know how many
@@ -100,7 +99,6 @@ const ComboBox = <T extends unknown>({
   const listNav = useListNavigation(context, {
     listRef,
     activeIndex,
-    // selectedIndex,
     onNavigate: setActiveIndex,
     virtual: true,
     loop: true,
@@ -111,17 +109,6 @@ const ComboBox = <T extends unknown>({
     dismiss,
     listNav,
   ]);
-
-  // const handleSelect = () => {
-  //   if (activeIndex !== null) {
-  //     onChange(filteredOptions[activeIndex]);
-  //     setQuery(filteredOptions[activeIndex].label);
-  //     setActiveIndex(null);
-  //     setOpen(false);
-  //   } else {
-  //     setSelectedIndex(0);
-  //   }
-  // };
 
   return (
     <div
@@ -178,7 +165,6 @@ const ComboBox = <T extends unknown>({
             setOpen(true);
             onChange(undefined);
             setActiveIndex(null);
-            // setSelectedIndex(null);
             (refs.reference.current as HTMLInputElement).focus();
           }}
         >
