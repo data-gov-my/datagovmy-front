@@ -19,6 +19,7 @@ const AIChat: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export const getStaticProps: GetStaticProps = withi18n("datagpt", async () => {
   return {
+    notFound: true,
     props: {
       meta: {
         id: "datagpt",

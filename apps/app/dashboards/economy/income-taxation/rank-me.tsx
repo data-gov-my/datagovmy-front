@@ -50,12 +50,8 @@ const IncomeRank: FunctionComponent = () => {
     "45-49",
     "50-54",
     "55-59",
-    "60-46",
-    "65-69",
-    "70-74",
-    "75-79",
-    "80-84",
-    "85+",
+    "60-64",
+    "65+",
   ].map((key: string) => ({ label: t(key), value: key }));
   const ASSESSMENT_OPTIONS: OptionType[] = [
     { label: t("all_assessment"), value: "all" },
