@@ -1,0 +1,54 @@
+## Endpoint API OpenDOSM
+
+```http
+GET https://api.data.gov.my/opendosm
+```
+
+### Apa yang API OpenDOSM boleh lakukan?
+
+API OpenDOSM direka untuk membolehkan pengguna mengakses katalog data OpenDOSM secara berprogram. API ini disesuaikan untuk pengguna yang hanya berminat dalam data OpenDOSM. Untuk data yang lebih umum di seluruh data.gov.my, sila rujuk ke[Data Catalogue API](/static-api/data-catalogue).
+
+### Bagaimana untuk Mencari Sumber yang Tersedia
+
+Untuk mengakses katalog data tertentu, anda perlu menentukan parameter `id` dalam URL permintaan anda.
+Ini adalah parameter yang wajib, berikut adalah contoh bagaimana menggunakannya:
+
+```http
+GET https://api.data.gov.my/opendosm?id=cpi_core
+```
+
+Untuk menemui sumber-sumber yang tersedia, sila lawati [OpenDOSM Data Catalogue page](https://open.dosm.gov.my/data-catalogue).
+Terdapat bahagian di bahagian bawah yang bertajuk "Sample OpenAPI query" yang mengandungi `id` yang diperlukan untuk setiap katalog data.
+Jika satu katalog data tidak tersedia melalui API, ia akan dinyatakan secara jelas.
+
+## Format Permintaan & Respons
+
+Untuk menapis dan meminta data, gunakan operasi penapisan standard dalam API. [Request Query](/request-query).
+Anda boleh mencari maklumat mengenai lajur yang boleh di-filter dalam bahagian Metadata di bawah setiap halaman Katalog Data.
+Untuk maklumat mengenai bagaimana API bertindak balas terhadap permintaan anda, rujuk kepada [Response Format](/response-format).
+
+### Contoh Permintaan
+
+Mari kita lihat contoh penggunaan sumber cpi_core:
+
+#### 1. Cari sumber tersebut
+
+Pergi ke halaman Katalog Data dan cari sumber data [Core CPI Overall dataset](https://open.dosm.gov.my/data-catalogue/cpi_cpi_core_1).
+Anda akan menemui nilai `id`, "cpi_core," dalam bahagian "Contoh Pertanyaan OpenAPI" di bahagian bawah halaman. Kami akan menggunakan `id` ini sebagai contoh kami.
+
+#### 2. Menghantar Permintaan API
+
+Untuk mengambil data dari API, gunakan perintah `curl` berikut. Buka terminal anda dan masukkan perintah ini:
+
+```curl
+curl --location 'http://api.data.gov.my/opendosm?id=cpi_core&limit=3'
+```
+
+Melaksanakan perintah ini akan menghantar permintaan kepada API, dengan sasaran dataset `cpi_core`, dan mengehadkan respons kepada 3 rekod pertama.
+Untuk lebih banyak penapis yang tersedia, sila rujuk kepada [Request Query](/request-query).
+
+#### 3. Memahami Respons
+
+Untuk memahami respons API, Anda dapat merujuk kepada [Response Format](/response-format).
+Ini memberikan penjelasan terperinci tentang apa yang dimaksud dengan respons API.
+Dalam contoh ini, panjang total daftar ini akan menjadi 3, sesuai dengan parameter `limit` yang ditentukan.
