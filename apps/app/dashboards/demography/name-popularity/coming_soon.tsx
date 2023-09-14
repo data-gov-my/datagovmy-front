@@ -5,7 +5,7 @@ import { DateTime } from "luxon";
 
 const ComingSoon: FunctionComponent = () => {
   const { t, i18n } = useTranslation(["dashboard-name-popularity"]);
-  const event = new Date(Date.UTC(2023, 8, 22, 0, 0, 0));
+  const event = new Date(Date.UTC(2023, 8, 27, 0, 0, 0));
 
   return (
     <div className="flex h-[400px] items-center justify-center">
