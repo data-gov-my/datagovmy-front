@@ -8,6 +8,6 @@ You are more than welcome to contribute to the documentation, if you find any ty
 
 ## License
 
-data.gov.my is licensed under [MIT](https://github.com/data-gov-my/datagovmy-front/blob/main/LICENSE)
+data.gov.my is licensed under [MIT](/LICENSE.md)
 
 Copyright © 2023 [Government of Malaysia](#)
