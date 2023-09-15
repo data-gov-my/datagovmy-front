@@ -223,14 +223,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           menu={
             <>
               <Dropdown
-                className="w-fit"
+                width="w-fit"
                 sublabel={<EyeIcon className="h-4 w-4" />}
                 selected={show}
                 options={options}
                 onChange={e => setShow(e)}
               />
               <Dropdown
-                width="w-fit"
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
