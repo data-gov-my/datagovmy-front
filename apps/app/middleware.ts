@@ -16,8 +16,26 @@ export async function middleware(request: NextRequest) {
 
   const token = await get<string>("ROLLING_TOKEN");
 
-  // Request authenticated
-  response = NextResponse.next({ request: { headers } });
-  response.cookies.set("rolling_token", token || "yikes", { path: "/", maxAge: 60 * 60 });
-  return response;
+  // Development / Production
+  if (["development", "production"].includes(process.env.NEXT_PUBLIC_APP_ENV)) {
+    response = NextResponse.next({ request: { headers } });
+    response.cookies.set("rolling_token", token || "yikes", { path: "/", maxAge: 60 * 60 });
+    return response;
+  }
+
+  // Staging
+  const basicAuth = request.headers.get("authorization");
+  if (basicAuth) {
+    const authValue = basicAuth.split(" ")[1];
+    const [user, password] = atob(authValue).split(":");
+    if (user === "admin" && password === process.env.AUTH_TOKEN) {
+      response = NextResponse.next({ request: { headers } });
+      response.cookies.set("rolling_token", token || "yikes", { path: "/", maxAge: 60 * 60 });
+      return response;
+    }
+  }
+  return new NextResponse("Auth required", {
+    status: 401,
+    headers: { "WWW-Authenticate": `Basic realm="Secure Area"` },
+  });
 }
