@@ -1,12 +1,12 @@
 {
     "header": "Populasi Penduduk Malaysia",
-    "description": "Brie halloumi say cheese. Say cheese mozzarella swiss bavarian bergkase danish fontina lancashire pepper jack when the cheese comes out everybody's happy. Chalk and cheese cheese on toast cottage cheese red leicester croque monsieur red leicester cheese on toast mascarpone. Cheesy feet squirty cheese squirty cheese pecorino camembert de normandie stinking bishop.",
+    "description": "Akan datang",
     "section_population": {
         "title": "Bagaimana tren populasi di {{ state }}?",
         "description": "Angka populasi merangkumi warganegara dan bukan warganegara, tetapi tidak termasuk penduduk sementara."
     },
     "section_vitalstats": {
-        "title": "{{ state }}: Bagaimana tren statistik vital?",
+        "title": "{{ state }}: Bagaimana tren statistik penting?",
         "description": "Kerana sifatnya yang menyeluruh, siri data ini memerlukan masa untuk dihasilkan. Data untuk tahun 2022 akan dikemaskini tidak lewat daripada Disember 2023."
     },
     "keys": {

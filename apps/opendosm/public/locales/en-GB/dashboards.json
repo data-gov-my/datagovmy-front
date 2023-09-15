@@ -212,19 +212,19 @@
         },
         "labour-market": {
             "name": "Labour Markets",
-            "description": "Data from the monthly Labour Force Report, which presents statistics of the labour force, employment and unemployment obtained from the Labour Force Survey (LFS)"
+            "description": "Monthly Labour Force Survey (LFS) report"
         },
         "composite-index": {
             "name": "Composite Indices",
-            "description": "Malaysian Economic Indicators (MEI) a set of composite indices published monthly by DOSM, which provides Leading, Coincident and Lagging signals on economic movement in Malaysia"
+            "description": "Leading, coincident, and lagging indicators for the Malaysian economy"
         },
         "wholesale-retail": {
             "name": "Wholesale & Retail Trade",
-            "description": "Performance of wholesale and retail trade (including trade of motor vehicles) in Malaysia."
+            "description": "Monthly performance of wholesale and retail trade"
         },
         "industrial-production": {
             "name": "Industrial Production",
-            "description": "Performance of industrial production in Malaysia, comprising the mining, manufacturing, and electricity production sectors."
+            "description": "Monthly industrial production performance, covering mining, manufacturing, and electricity production"
         },
         "producer-prices": {
             "name": "Producer Prices",
@@ -236,47 +236,47 @@
         },
         "iip": {
             "name": "International Investment Position (IIP)",
-            "description": "Financial statement of the value and composition of its external financial assets and liabilities of a country."
+            "description": "Quarterly statement of Malaysia's external financial assets and liabilities"
         },
         "bop": {
             "name": "Balance of Payments",
-            "description": "The Balance of Payments (BOP) shows us how resources are flowing between Malaysia and other countries."
+            "description": "Quarterly statement of Malaysia's transactions with other nations"
         },
         "manufacturing-statistics": {
             "name": "Manufacturing Statistics",
-            "description": "This dashboard summarises key indicators and gives you an easy way to monitor the performance of Malaysia\u00e2\u0080\u0099s manufacturing sector."
+            "description": "Monthly performance of manufacturing subsectors"
         },
         "labour-productivity": {
             "name": "Labour Productivity",
-            "description": "This dashboard tracks labour productivity across all key sectors in the Malaysian economy."
+            "description": "Quarterly labour productivity across all key economic sectors"
         },
         "formal-sector-wages": {
             "name": "Formal Sector Wages",
-            "description": "Data of the formal sector wages in Malaysia"
+            "description": "Quarterly formal sector wages, based on administrative data from EPF, SOCSO"
         },
         "services-statistics": {
             "name": "Services Statistics",
-            "description": "This dashboard summarises the productivity level of the service industry in Malaysia."
+            "description": "Quarterly performance of services sub-sectors"
         },
         "services-producer-prices": {
             "name": "Services Producer Prices",
-            "description": "This dashboard tracks labour productivity across all key sectors in the Malaysian economy."
+            "description": "Quarterly producer prices in services subsectors"
         },
         "construction-statistics": {
             "name": "Construction Statistics",
-            "description": "This dashboard tracks Malaysia\u00e2\u0080\u0099s construction by projects and its value across all sectors."
+            "description": "Quarterly surveillance of construction projects in the public and private sectors"
         },
         "household-income-expenditure": {
             "name": "Household Income & Expenditure",
-            "description": "This dashboard tracks Malaysia\u00e2\u0080\u0099s household income and expenditure."
+            "description": "Household income and expenditure at state and district level"
         },
         "population": {
             "name": "Population of Malaysia",
-            "description": "This dashboard tracks Malaysia\u00e2\u0080\u0099s population."
+            "description": "The population of Malaysia from 1980 to the present"
         },
         "external-trade": {
             "name": "External Trade Statistics",
-            "description": "This dashboard summarises important trade economic indicators, and in the near future, will be expanded to allow you to zoom into Malaysia\u00e2\u0080\u0099s trading relationship with any country in the world!"
+            "description": "Monthly external trade statistics and indices"
         },
         "household-debt": {
             "name": "Household Debt",

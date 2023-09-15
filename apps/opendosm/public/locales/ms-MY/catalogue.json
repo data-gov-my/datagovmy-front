@@ -1,7 +1,8 @@
 {
     "header": "Katalog Data",
-    "description": "Terokailah segala data terbuka Malaysia di sini! Ia akan diperluas secara konsisten dengan data berkualiti tinggi daripada semua agensi persekutuan dan negeri di Malaysia. Pada fasa awal, kami menerbitkan data secara terkawal dan bukan secara <i>data dump</i>. Pada 13 Sep, nantikan penerbitan data kelahiran harian, hujan dan suhu harian, serta data cukai yang terperinci!",
+    "description": "Terokailah segala data terbuka Malaysia di sini! Ia akan diperluas secara konsisten dengan data berkualiti tinggi daripada semua agensi persekutuan dan negeri di Malaysia. Pada fasa awal, kami menerbitkan data secara terkawal dan bukan secara <i>data dump</i>.",
     "description_agency": "Terokailah segala data terbuka {{ agency }} di sini. Ia akan diperluas secara konsisten dengan data yang lebih terperinci dan pelbagai daripada {{ agency }}.",
+    "description_opendosm": "Terokailah segala data terbuka kami di sini. Katalog ini akan terus diperkasakan dengan data berkualiti tinggi daripada bahagian-bahagian perangkaan di DOSM.",
     "dataset_count": "{{ count }} siri data, dan semakin meningkat",
     "download": "Muat turun",
     "category": "Kategori",

@@ -146,6 +146,7 @@
         "trade": "Perdagangan"
     },
     "home": {
+        "category": "Portal data terbuka rasmi Malaysia",
         "title": "Terkini. Terperinci. Terbukti.",
         "description": "Portal ini adalah rumah bagi segala data terbuka sektor awam Malaysia. Sama ada anda rakyat marhaen yang menginginkan maklumat, ataupun penyelidik yang mencari sumber, ataupun pembangun aplikasi yang memerlukan API, anda boleh mendapatinya di sini. Misi kami adalah untuk menjadikan Malaysia negara berpacukan data yang terhebat di dunia.",
         "section_1": {
