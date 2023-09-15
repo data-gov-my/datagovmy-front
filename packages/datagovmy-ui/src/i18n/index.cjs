@@ -1,4 +1,5 @@
-const I18NextHttpBackend = require("i18next-http-backend/cjs");
+// const I18NextHttpBackend = require("i18next-http-backend/cjs");
+const path = require("path");
 
 /** @type {import('next-i18next').UserConfig} */
 const defineConfig = (namespace, autoloadNs) => {
@@ -15,7 +16,7 @@ const defineConfig = (namespace, autoloadNs) => {
       //   allowMultiLoading: true,
       // },
     },
-    localePath: "./public/locales",
+    localePath: path.resolve("./public/locales"),
     // debug: true,
     ns: namespace,
     autoloadNs: autoloadNs,
