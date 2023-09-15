@@ -1,0 +1,26 @@
+{
+    "header": "Pencapaian Internet",
+    "description": "Dalam era global ini, akses kepada internet dilihat sebagai kemudahan asas yang sama penting dengan makanan, minuman, dan perlindungan. Sebagai pengawalselia bagi industri multimedia and komunikasi yang pesat membangunan, Suruhanjaya Komunikasi dan Multimedia Malaysia (SKMM) memantau penggunaan dan kualiti perkhidmatan di seluruh negara. Papan pemuka ini merumuskan sorotan daripada laporan suku tahunan SKMM tentang trafik dan akses kepada internet.",
+    "section_traffic": {
+        "title": "Bagaimana tren trafik jalur lebar?",
+        "description": "Nota: 1 Exabyte (EB) adalah bersamaan dengan 1 bilion Gigabyte (GB) atau 1 ribu Petabyte (PB)."
+    },
+    "section_penetration": {
+        "title": "Bagaimana tren kadar penembusan langganan utama?",
+        "description": "Nota: Seorang individu boleh mempunyai lebih daripada 1 langganan, oleh itu kadar penembusan langganan boleh melebihi 100%."
+    },
+    "keys": {
+        "traffic_fbb": "Trafik Jalur Lebar Tetap",
+        "traffic_mbb": "Trafik Jalur Lebar Mudah Alih",
+        "actual": "Nilai Sebenar",
+        "pen_rate": "Kadar Pencapaian",
+        "fbb": "Langganan Jalur Lebar Tetap",
+        "mbb": "Langganan Jalur Lebar Mudah Alih",
+        "mc": "Langganan Mudah Alih-Cellular",
+        "ptv": "Langganan TV Berbayar",
+        "perHundredPremises": "setiap 100 premis",
+        "perHundredPopulation": "setiap 100 penduduk",
+        "perHundredHouseholds": "setiap 100 isi rumah",
+        "rate": "Kadar"
+    }
+}

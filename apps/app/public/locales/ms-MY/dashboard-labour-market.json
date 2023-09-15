@@ -1,0 +1,49 @@
+{
+    "header": "Pasaran Buruh",
+    "description": "Data daripada Laporan Tenaga Buruh bulanan, yang membentangkan statistik tenaga buruh, pekerjaan dan pengangguran yang diperoleh daripada Tinjauan Tenaga Buruh (LFS)",
+    "section_1": {
+        "title": "Apakah tren pengangguran?",
+        "description": "Individu yang menganggur adalah individu yang tidak bekerja semasa tempoh survei dilaksanakan, tetapi sudi bekerja dan sedang mencari pekerjaan."
+    },
+    "section_2": {
+        "title": "Apakah tren penunjuk pasaran buruh lain?"
+    },
+    "section_3": {
+        "title": "Butiran pasaran buruh terkini",
+        "bar1_header": "Peratus Pekerja mengikut Status",
+        "bar2_header": "Peratus Penganggur mengikut Status",
+        "bar3_header": "Luar Tenaga Buruh mengikut Sebab"
+    },
+    "section_4": {
+        "title": "Apakah perbezaan penunjuk pasaran buruh utama mengikut negeri?"
+    },
+    "keys": {
+        "labour_force_participation": "Kadar Penyertaan Tenaga Buruh",
+        "unemployment_rate": "Kadar Pengangguran",
+        "unemployed_persons": "Penganggur",
+        "own_account_workers": "Pekerja Sendiri",
+        "outside_labour_force": "Luar Tenaga Buruh",
+        "under_employment_rate": "Kadar Guna Tenaga Tak Penuh",
+        "employment_population_ratio": "Nisbah Pekerja ke Penduduk",
+        "employee": "Pekerja",
+        "employer": "Majikan",
+        "own_account": "Pekerja Sendiri",
+        "unpaid": "Pekerja Keluarga Tidak Bergaji",
+        "active": "Penganggur Aktif",
+        "inactive": "Penganggur Tak Aktif",
+        "reason1": "[reason 1]",
+        "reason2": "[reason 2]",
+        "reason3": "[reason 3]",
+        "reason4": "[reason 4]",
+        "p_rate": "[p_rate]",
+        "u_rate": "[u_rate]",
+        "outside": "[outside]",
+        "ep_ratio": "[ep_ratio]",
+        "under_rate": "[under_rate]",
+        "unemployed": "Menganggur",
+        "income_mean": "Purata Pendapatan (RM)",
+        "labour_prate": "Kadar Penyertaan Tenaga Buruh",
+        "labour_urate": "Kadar Pengangguran",
+        "agegroup_working": "Peratus Penduduk Umur Bekerja (%)"
+    }
+}

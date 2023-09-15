@@ -61,5 +61,4 @@ sitemap.xml
 analyze
 
 # app
-apps/app/public/locales
 dist/

@@ -1,0 +1,26 @@
+{
+    "header": "Produktiviti Buruh",
+    "description": "Secara ringkas, produktiviti buruh mengukur berapa banyak hasil yang dihasilkan untuk setiap jam kerja, atau setiap orang yang bekerja. Bertentangan dengan kepercayaan popular, ia sebenarnya tidak mengukur sama ada pekerja adalah 'rajinkan', tetapi lebih kepada sama ada kualiti kemahiran, mesin, dan proses yang digunakan meningkat dengan cukup baik. Selain pengangguran dan upah, pembuat dasar memberikan perhatian yang besar kepada produktiviti buruh, yang merupakan pendorong utama pertumbuhan ekonomi berkualiti tinggi. Papan pemuka ini mengesan produktiviti buruh di semua sektor utama dalam ekonomi Malaysia.",
+    "section_1": {
+        "title": "Bagaimana tren statistik utama dalam sektor pembuatan?"
+    },
+    "keys": {
+        "vah": "Nilai Ditambah / Jam",
+        "vae": "Nilai Ditambah / Pekerja",
+        "hours": "Jam Bekerja",
+        "growth_yoy_vah": "Pertumbuhan YoY (Nilai Ditambah / Jam)",
+        "growth_yoy_vae": "Pertumbuhan YoY (Nilai Ditambah / Pekerja)",
+        "growth_yoy_hours": "Pertumbuhan YoY (Jam Bekerja)",
+        "recession": "Kemelesetan",
+        "no_shade": "Tiada lorekan",
+        "overall": "Seluruh Ekonomi",
+        "agriculture": "Pertanian",
+        "mining": "Perlombongan",
+        "mfg": "Pembuatan",
+        "construction": "Pembinaan",
+        "sevices": "Perkhidmatan",
+        "per_hour": "/ jam",
+        "per_employee": "/ pekerja",
+        "hours_worked": "jam bekerja"
+    }
+}

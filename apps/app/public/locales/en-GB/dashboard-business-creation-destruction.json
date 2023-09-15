@@ -1,0 +1,19 @@
+{
+    "header": "Business Creation and Destruction",
+    "description": "As in most countries, Malaysia's private sector is comprises as much larger share of GDP than the public sector, and is therefore primarily responsible for job and value creation. Furthermore, a vibrant and thriving business environment is a key indicator of a healthy economy. In Malaysia, the Companies Commission (SSM) is the single source of truth on this matter - all businesses, companies, and LLPs in operation must be registered with SSM to operate legally. Powered by their registry, this dashboard summarises trends in business creation and destruction.",
+    "section_1": {
+        "title": "A bird's eye view of Malaysia's business environment",
+        "description": "Company data covers both publicly and privately held companies. Business data covers sole proprietorships and partnership. LLP data, by definition, covers all limited liability partnerships."
+    },
+    "keys": {
+        "reg_roc": "Company Registrations",
+        "reg_rob": "Business Registrations",
+        "reg_llp": "LLP Registrations",
+        "death_roc": "Company Dissolutions",
+        "death_rob": "Business Terminations",
+        "death_llp": "LLP Dissolutions",
+        "new": "new",
+        "dissolved": "dissolved",
+        "terminated": "terminated"
+    }
+}

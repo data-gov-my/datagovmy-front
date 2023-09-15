@@ -1,0 +1,27 @@
+{
+    "header": "Indeks Komposit",
+    "description": "Papan pemuka ini memaparkan Penunjuk Ekonomi Malaysia (MEI) iaitu set indeks komposit yang diterbitkan secara bulanan oleh DOSM, dan merangkumi indikator Pelopor, Serentak, dan Susulan yang menggambarkan pergerakan ekonomi di Malaysia. Indeks tersebut dihasilkan berdasarkan garis panduan \"2017 Handbook on Cycle Composite Indicators\" yang disarankan oleh Eurostat.",
+    "section_1": {
+        "title": "Apakah tren Penunjuk Ekonomi Malaysia (MEI)?",
+        "description": "Indeks Pelopor menunjukkan arah pergerakan ekonomi. \nIndeks Serentak menggambarkan keadaan ekonomi semasa. \nIndeks Susulan mengesahkan isyarat Indeks Pelopor dan Serentak."
+    },
+    "section_2": {
+        "title": "Indeks Resapan: pandangan sudut lain Penunjuk Ekonomi Malaysia",
+        "description": "Indeks Resapan ialah penunjuk penyebaran aktiviti ekonomi dari satu industri ke satu industri yang lain. Berdasarkan daripada 7 penunjuk Indeks Duluan dan 6 penunjuk Indeks Berkebetulan, indeks ini menggambarkan satu kenaikan atau kejatuhan siri indeks duluan atau berkebetulan dalam sesuatu jeda masa. Jika bilangan siri yang mengalami kejatuhan, maka indeks ini lebih tinggi daripada 50, dan sebaliknya."
+    },
+    "mom_growth": "Pertumbuhan Bulanan",
+    "yoy_growth": "Pertumbuhan Tahunan",
+    "keys": {
+        "index": "Indeks",
+        "growth_mom": "Pertumbuhan Bulanan",
+        "growth_yoy": "Pertumbuhan Tahunan",
+        "no_shade": "Tiada lorekan",
+        "recession_growth": "Penurunan (kitaran pertumbuhan)",
+        "recession_business": "Kemelesetan (kitaran perniagaan)",
+        "leading": "Indeks Pelopor",
+        "coincident": "Indeks Serentak",
+        "lagging": "Indeks Susulan",
+        "leading_diffusion": "Indeks Pelopor (Difusi)",
+        "coincident_diffusion": "Indeks Serentak (Difusi)"
+    }
+}
