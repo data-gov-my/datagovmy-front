@@ -60,7 +60,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
         background="blue"
         category={[t("opendosm-home:category"), "text-primary dark:text-primary-dark"]}
         header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
-        description={t("description_opendosm")}
+        description={[t("description_opendosm")]}
         agencyBadge={<AgencyBadge agency="dosm" />}
       />
 
