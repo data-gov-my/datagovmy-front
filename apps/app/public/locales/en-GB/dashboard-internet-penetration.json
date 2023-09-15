@@ -1,0 +1,26 @@
+{
+    "header": "Internet Penetration",
+    "description": "In this global age, internet access is often perceived as a basic necessity on par with food, water, and shelter. As the regulator for the converging communications and multimedia industry in Malaysia, the Malaysian Commission for Multimedia and Communication (MCMC) tracks usage and industry performance across the country. This dashboard summarises data from their quarterly report on internet traffic and penetration.",
+    "section_traffic": {
+        "title": "How is broadband traffic trending?",
+        "description": "Note: 1 Exabyte (EB) is equivalent to 1 billion Gigabytes (GB) or 1 thousand Petabytes (PB)"
+    },
+    "section_penetration": {
+        "title": "How are key subscription penetration rates trending?",
+        "description": "Note: A single person may have more than 1 subscription, which is why penetration rates may exceed 100%"
+    },
+    "keys": {
+        "traffic_fbb": "Fixed-Broadband Traffic",
+        "traffic_mbb": "Mobile-Broadband Traffic",
+        "actual": "Actual Values",
+        "pen_rate": "Penetration Rates",
+        "fbb": "Fixed-Broadband Subscriptions",
+        "mbb": "Mobile-Broadband Subscriptions",
+        "mc": "Mobile-Cellular Subscriptions",
+        "ptv": "Pay-TV Subscriptions",
+        "perHundredPremises": "per 100 premises",
+        "perHundredPopulation": "per 100 population",
+        "perHundredHouseholds": "per 100 households",
+        "rate": "Rate"
+    }
+}

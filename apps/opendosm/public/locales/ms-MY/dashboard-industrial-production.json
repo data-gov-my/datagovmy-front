@@ -1,0 +1,28 @@
+{
+    "header": "Pengeluaran Perindustrian",
+    "description": "Papan pemuka ini memaparkan prestasi pengeluaran perindustrian di Malaysia yang terdiri daripada sektor pengeluaran perlombongan, pembuatan, dan elektrik. Data ini merupakan terbitan bulanan DOSM dan menggunakan pengelasan industri berdasarkan Piawaian Klasifikasi Industri Malaysia (MSIC) 2008, Versi 1.0., yang berasaskan kepada International Standard Industrial Classification of All Economic Activities Revision 4 terbitan United Nations Statistics Division.",
+    "section_1": {
+        "title": "Apakah tren pengeluaran perindustrian?"
+    },
+    "section_2": {
+        "title": "Butiran subsektor utama pembuatan"
+    },
+    "keys": {
+        "recession": "Kemelesetan",
+        "index": "Indeks",
+        "index_sa": "Indeks (sa)",
+        "no_shade": "Tiada lorekan",
+        "growth_yoy": "Pertumbuhan Tahunan",
+        "growth_momsa": "Pertumbuhan Bulanan (tsm)",
+        "overall": "Keseluruhan",
+        "mining": "Perlombongan",
+        "mfg": "Pembuatan",
+        "electric": "Elektrik",
+        "mfg_food": "Makanan, Minuman dan Tembakau",
+        "mfg_wood": "Kayu, Perabot, Kertas dan Percetakan",
+        "mfg_electric": "Elektrik dan Elektronik",
+        "mfg_textiles": "Tekstil, Pakaian, Kulit dan Kasut",
+        "mfg_petroleum": "Petroleum, Bahan Kimia, Getah dan Plastik",
+        "mfg_transport": "Kelengkapan Pengangkutan dan Lain-lain"
+    }
+}

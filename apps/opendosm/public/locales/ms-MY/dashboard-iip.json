@@ -1,0 +1,26 @@
+{
+    "header": "Kedudukan Pelaburan Antarabangsa (KPA)",
+    "description": "Berapa banyak wang yang dunia pelaburkan di Malaysia? Dan berapa banyak wang yang Malaysia pelaburkan di luar negeri? Ini adalah dua soalan penting bagi pembuat dasar kita, dijawab melalui data yang dikenali sebagai Kedudukan Pelaburan Antarabangsa (KPA). KPA merupakan salah satu daripada 3 akaun nasional utama yang menggambarkan prestasi ekonomi Malaysia, dua yang lain ialah Keluaran Dalam Negara Kasar (KDNK) dan Perimbangan Pembayaran (PP). Papan pemuka ini memberikan cara mudah untuk meneroka corak dan tren utama KPA. Selamat menikmati!",
+    "section_1": {
+        "title": "Bagaimana tren Kedudukan Pelaburan Antarabangsa (KPA) di Malaysia?",
+        "description": "Angka bersih dihasilkan dengan mengurangkan liabiliti daripada aset. Nombor positif menunjukkan aset bersih, manakala nombor negatif menunjukkan liabiliti bersih."
+    },
+    "keys": {
+        "net": "Jumlah Bersih",
+        "liabilities": "Liabiliti",
+        "assets": "Aset",
+        "derivatives": "Instrumen Derivatif",
+        "direct_debt": "Pelaburan Langsung (Hutang)",
+        "direct_equity": "Pelaburan Langsung (Ekuiti)",
+        "direct_total": "Pelaburan Langsung (Jumlah)",
+        "other": "Pelaburan Lain-lain",
+        "porfolio_equity": "Pelaburan Portfolio (Ekuiti)",
+        "portfolio_debt": "Pelaburan Portfolio (Hutang)",
+        "portfolio_total": "Pelaburan Portfolio (Jumlah)",
+        "recession": "Kemelesetan",
+        "no_shade": "Tiada lorekan",
+        "reserve": "Rizab",
+        "total": "Jumlah",
+        "qoq_change": "Perubahan QoQ"
+    }
+}

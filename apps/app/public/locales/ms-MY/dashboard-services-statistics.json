@@ -1,0 +1,33 @@
+{
+    "header": "Statistik Perkhidmatan",
+    "description": "Pada masa ini, hampir separuh daripada KDNK Malaysia disumbang oleh sektor perkhidmatan. Ia merupakan sektor di mana isi rumah paling banyak membelanjakan wang, sama ada untuk makanan dan minuman, pendidikan, pengangkutan atau kesihatan. Sehubungan itu, penggubal dasar memberi perhatian yang rapi kepada prestasi sektor ini. Menggunakan data daripada penerbitan suku tahunan kami tentang perkhidmatan, papan pemuka ini meringkaskan penunjuk utama sektor perkhidmatan Malaysia.",
+    "section_1": {
+        "title": "Bagaimanakah tren sektor perkhidmatan mengikut statistik?",
+        "description": ""
+    },
+    "keys": {
+        "no_shade": "Tiada lorekan",
+        "recession": "Kemelesetan",
+        "overall": "Keseluruhan",
+        "accommodation": "Penginapan",
+        "admin_support": "Sokongan Pentadbiran",
+        "education": "Pendidikan",
+        "food_beverage": "Makanan & Minuman",
+        "health": "",
+        "information_communication": "Maklumat, Teknologi & Komunikasi",
+        "motor_vehicles": "Kenderaan Bermotor",
+        "personal": "",
+        "professional": "Profesional",
+        "real_estate": "Harta Tanah",
+        "recreation": "Rekreasi",
+        "retail_trade": "Perdagangan Runcit",
+        "transport_storage": "Pengangkutan & Penyimpanan",
+        "wholesale_trade": "Perdagangan Borong",
+        "actual": "Nilai Sebenar",
+        "growth_qoq": "Pertumbuhan QoQ",
+        "growth_yoy": "Pertumbuhan YoY",
+        "revenue": "Hasil",
+        "employees": "Pekerja",
+        "wages": ""
+    }
+}

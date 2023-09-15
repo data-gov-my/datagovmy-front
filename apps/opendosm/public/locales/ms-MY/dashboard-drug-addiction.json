@@ -1,0 +1,40 @@
+{
+    "header": "Penagihan Dadah",
+    "description": "Setiap tahun, DOSM bekerjasama dengan Agensi Antidadah Kebangsaan (AADK) untuk menerbitkan statistik berkenaan penagihan dadah yang merupakan sebahagian daripada penerbitan statistik jenayah tahunan. Papan pemuka ini memaparkan data penagihan dadah pada peringkat negeri dan kebangsaan. Ia bertujuan untuk meneliti tren penagihan dadah yang dipecahkan mengikut demografik dengan tujuan membantu meningkatkan kesedaran dan pemahaman awam terhadap masalah dadah di Malaysia.",
+    "section_1": {
+        "title": "Apakah perubahan penagihan dadah di {{ state }}?",
+        "description": "Agensi Antidadah Kebangsaan (AADK) merupakan sebuah agensi di bawah Kementerian Dalam Negeri yang menjadi agensi peneraju membanteras penyalahgunaan dadah dan substan di Malaysia. Data berikut berasal dari data yang dikumpul daripada data pusat rawatan dan rehabilitasi di bawah pengendalian AADK."
+    },
+    "section_2": {
+        "title": "Butiran penagihan dadah di {{ state }}"
+    },
+    "age": "Jumlah Penagih Dadah mengikut Umur",
+    "job": "Jumlah Penagih Dadah mengikut Status Pekerjaan",
+    "sex": "Jumlah Penagih Dadah mengikut Jantina",
+    "drug": "Jumlah Penagih Dadah mengikut Jenis Dadah",
+    "ethnicity": "Jumlah Penagih Dadah mengikut Kaum",
+    "schooling": "Jumlah Penagih Dadah mengikut Tahap Pendidikan Tertinggi",
+    "male": "Lelaki",
+    "female": "Perempuan",
+    "total": "Keseluruhan",
+    "parttime": "Pekerja Separuh Masa",
+    "student": "Pelajar",
+    "fulltime": "Pekerja Sepenuh Masa",
+    "unemployed": "Penganggur",
+    "opiate": "Heroin dan morphin",
+    "methpill": "Methamphetamine (pil)",
+    "methcrystal": "Methamphetamine (berhablur)",
+    "ganja": "Kanabis (ganja)",
+    "ats": "Perangsang jenis Amphetamine (ATS)",
+    "opium": "Opium",
+    "psychotropic": "Pil Psikotropik",
+    "chinese": "Cina",
+    "bumiputera": "Bumiputera",
+    "other": "Lain-lain",
+    "indian": "India",
+    "primary": "Sekolah rendah",
+    "secondary": "Sekolah menengah",
+    "tertiary": "Pendidikan tinggi",
+    "diploma": "Diploma",
+    "none": "Tiada pendidikan"
+}

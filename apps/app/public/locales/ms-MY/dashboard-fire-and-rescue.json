@@ -1,0 +1,16 @@
+{
+    "header": "Kebakaran dan Penyelamatan",
+    "description": "<i>Semarak julangan api yang hangat membara,\nBegitulah semangat juang kami yang berkobar-kobar,\nDemi selamatkan nyawa, harta benda, dan alam sekitar,\nKami sentiasa siap sedia, setiap masa.</i>\n- diadaptasikan daripada 'Janji Wira Merah' oleh Mohd Nazrullah bin Abdul Aziz\n\nSetiap hari, anggota bomba negara kita mempertaruhkan nyawa mereka untuk memastikan kita selamat. Menggunakan pangkalan data operasi kecemasan mereka, papan pemuka ini memaparkan data tentang kebakaran dan operasi penyelamat di Malaysia untuk meningkatkan kesedaran awam tentang perkhidmatan Bomba.",
+    "operation_header": "Bagaimanakan tren terkini operasi bomba?",
+    "timeseries_title": "{{ state }}: Respon Harian bagi Jabatan Bomba dan Penyelamat",
+    "timeseries_title_monthly": "{{ state }}: Respon Bulanan bagi Jabatan Bomba dan Penyelamat",
+    "timeseries_title_yearly": "{{ state }}: Respon Tahunan bagi Jabatan Bomba dan Penyelamat",
+    "fire": "Kebakaran",
+    "others": "Perkhidmatan Khas",
+    "overall": "Keseluruhan",
+    "rescue": "Penyelamatan",
+    "choro_header": "Bagaimanakan kadar insiden kebakaran dan penyelamatan berbeza di seluruh negara?",
+    "choro_desc": "",
+    "choro_ranking": "Kedudukan",
+    "total": "Jumlah"
+}

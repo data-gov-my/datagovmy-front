@@ -1,0 +1,27 @@
+{
+    "header": "Pendapatan & Perbelanjaan Isi Rumah",
+    "description": "Walaupun seseorang itu bergaji sebagai individu, dia hidup secara berumahtangga. Oleh itu, terdapat pelbagai bidang polisi yang memerlukan seorang penggubal dasar untuk memahami pendapatan isi rumah berbanding pendapatan individu. Bagi membolehkan analisa ini, kami melaksanakan Survei Pendapatan dan Perbelanjaan Isi Rumah dua kali dalam mana-mana tempoh 5 tahun. Papan pemuka ini memaparkan sorotan survei terkini yang dilaksanakan pada tahun 2022.",
+    "choro_header": "Bagaimanakah taburan petunjuk utama pendapatan dan perbelanjaan isi rumah?",
+    "choro_desc": "Taburan ini adalah berdasarkan lokasi kediaman isi rumah. Sebagai contoh, pendapatan pasangan yang bekerja di Kuala Lumpur tetapi tinggal di Petaling akan dikira di bawah Petaling.",
+    "state": "Mengikut negeri",
+    "district": "Mengikut daerah",
+    "keys": {
+        "income_mean": "Purata Pendapatan Isi Rumah",
+        "income_median": "Penengah Pendapatan Isi Rumah",
+        "expenditure_mean": "Purata Perbelanjaan Isi Rumah",
+        "gini": "Pekali Gini",
+        "poverty": "Kadar Kemiskinan (%)",
+        "poverty_relative": "Kadar Kemiskinan Relatif (%)",
+        "access_water": "Akses kepada Air Paip (%)",
+        "access_electricity": "Akses kepada Elektrik (%)"
+    },
+    "timeseries_header": "Apakah tren petunjuk utama pendapatan isi rumah?",
+    "mean_title": "Purata Pendapatan Isi Rumah",
+    "median_title": "Penengah Pendapatan Isi Rumah",
+    "gini_title": "Pekali Gini",
+    "mean": "Purata",
+    "median": "Penengah",
+    "gini": "Pekali Gini",
+    "cagr": "Kadar Pertumbuhan (CAGR)",
+    "month": "sebulan"
+}

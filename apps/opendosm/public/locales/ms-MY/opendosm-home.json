@@ -1,0 +1,36 @@
+{
+    "site": {
+        "name": "OpenDOSM",
+        "description": "Terokailah pelbagai jenis data terbitan DOSM. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya."
+    },
+    "category": "Agensi Statistik Nasional Malaysia",
+    "header": "Data: Asas kepada pentadbiran cekap",
+    "description": "OpenDOSM adalah platform yang mengkatalog, memberi visualisasi, dan menganalisis pelbagai jenis data daripada Jabatan Perangkaan Malaysia. Segala data yang dipaparkan di platform ini adalah sumber terbuka dan percuma demi manfaat negara. Jika data itu minyak yang baru, maka keterbukaan itulah saluran yang memaksimumkan kegunaannya.",
+    "at_a_glance": "Malaysia secara Sepintas Lalu",
+    "stats": {
+        "population": "Penduduk Semasa",
+        "economic_growth": "Pertumbuhan Ekonomi",
+        "unemployment": "Pengangguran",
+        "inflation": "Inflasi",
+        "production_cost": "Kos Pengeluaran",
+        "manufacturing_output": "Keluaran Pembuatan",
+        "industrial_production": "Pengeluaran Industri",
+        "wholesale_retail": "Perdagangan Borong & Runcit"
+    },
+    "past_24h": "24 jam",
+    "all_time": "Keseluruhan",
+    "dashboard": {
+        "title": "Terokailah papan pemuka paling popular!",
+        "description": "Papan pemuka inilah yang paling menular, tetapi jangan lupa untuk lihat koleksi penuh papan pemuka kami!"
+    },
+    "catalogue": {
+        "title": "Lihat dataset paling hangat!",
+        "description": "Untuk carian yang khusus, gunalah katalog data kami yang membekalkan segala data terbuka sektor awam Malaysia."
+    },
+    "daily": "Harian",
+    "total": "Jumlah",
+    "usage": "Penggunaan OpenDOSM",
+    "users": "Pengguna Harian",
+    "views": "Paparan Harian",
+    "downloads": "Muat turun Data Harian"
+}

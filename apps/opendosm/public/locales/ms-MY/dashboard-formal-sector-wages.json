@@ -1,0 +1,19 @@
+{
+    "header": "Gaji Sektor Formal",
+    "description": "Terdapat lebih daripada 16 juta tenaga buruh di Malaysia, merangkumi majikan, pekerja, individu yang bekerja sendiri (iaitu pekerja tidak formal), dan pekerja keluarga yang tidak dibayar. Memandangkan tidak semua orang bekerja secara formal, ia sangat mencabar untuk mendapat data yang komprehensif tentang gaji di Malaysia. Data itu kebiasaannya hanya dikemaskini sekali setahun berdasarkan Survei Gaji dan Upah yang berlangsung selama 12 bulan. Bagi membantu pembuat dasar yang perlu membuat keputusan dengan lebih pantas, pada tahun 2023 kami mula menerbitkan laporan gaji sektor formal pada frekuensi suku tahunan. Laporan ini berdasarkan data pentadbiran (dari KWSP, SOCSO, dan DOSM), dan merangkumi 6 juta pekerja (~60% pekerja formal Malaysia). Hasil utama laporan tersebut dirumuskan di bawah.",
+    "section_barchart": {
+        "title": "Bagaimana taburan gaji dalam ekonomi formal?"
+    },
+    "section_timeseries": {
+        "title": "Bagaimana tren gaji sektor formal di {{ state }}?"
+    },
+    "keys": {
+        "bar_bracket_title": "Malaysia: Taburan Gaji mengikut Julat Gaji",
+        "bar_percentile_title": "Malaysia: Gaji Penengah mengikut Persentil",
+        "bracket": "Julat Gaji",
+        "percentile": "Gaji mengikut Persentil",
+        "state_median_salary": "{{ state }}: Gaji Penengah Bulanan",
+        "per_month": "/ bulan",
+        "timeseries_label": "{{ state }}"
+    }
+}

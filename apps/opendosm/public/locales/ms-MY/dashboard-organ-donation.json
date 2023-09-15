@@ -1,0 +1,23 @@
+{
+    "header": "Pendermaan Organ",
+    "description": "Pusat Sumber Transplan Nasional telah mengendalikan pendaftaran Pengikrar Derma Organ sejak 1997. Namun, sebahagian daripada data tersebut telah dikumpul secara manual. Data yang dipaparkan di sana adalah berdasarkan rekod sejak 2009 yang telah didigitalkan dan disatukan dengan data ikrar baru yang dikumpul melalui MySejahtera. Kementerian Kesihatan Malaysia sentiasa komited dalam memastikan penyampaian maklumat kesihatan yang komprehensif kepada rakyat.",
+    "timeseries_header": "Apakah tren pengikrar organ terkini di {{ state }}?",
+    "timeseries_desc": "Pada 6 September 2022, Ikrar Penderma Organ digital telah dilancarkan di MySejahtera. Lonjakan dalam jumlah ikrar sejak kebelakangan ini dapat dikaitkan dengan usaha digitalisasi ini.",
+    "timeseries_title": "{{ state }}: Ikrar Harian",
+    "timeseries_title_monthly": "{{ state }}: Ikrar Bulanan",
+    "timeseries_title_yearly": "{{ state }}: Ikrar Tahunan",
+    "choro_header": "Bagaimanakan kadar ikrar berbeza di seluruh negara?",
+    "choro_desc": "Data ini menunjukkan % populasi keseluruhan di setiap negeri yang telah berikrar untuk menderma organ.",
+    "choro_ranking": "Kedudukan (16)",
+    "bar_header": "Seberapa kuat pengambilan penderma baharu di {{ state }}?",
+    "bar_description": "Untuk memenuhi keperluan sistem kesihatan di Malaysia, adalah penting untuk mendapatkan pengikrar baru sebanyak yang mungkin.",
+    "bar1_title": "Bilangan Pengikrar Baru",
+    "annual": "Tahunan",
+    "bar2_title": "Pengikrar Baru mengikut Kumpulan Umur",
+    "year": "1 tahun lepas",
+    "month": "1 bulan lepas",
+    "bar_tooltip": "Ikrar Baru",
+    "donor": "Pengikrar",
+    "tooltip1": "Purata 7 hari",
+    "tooltip2": "Harian"
+}

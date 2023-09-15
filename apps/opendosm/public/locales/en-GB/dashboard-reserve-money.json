@@ -1,0 +1,29 @@
+{
+    "header": "Reserve Money",
+    "description": "This dashboard uses data from Bank Negara Malaysia (BNM)'s Monthly Highlights and Statistics to track several key measures of reserve money. This includes Statutory Reserves, which are balances that banking institutions are required to maintain in their Statutory Reserve Accounts (SRA) equivalent to a certain proportion of their eligible liabilities, this proportion being the Statutory Reserve Requirement (SRR) set by BNM.",
+    "section_1": {
+        "title": "How is reserve money trending?",
+        "description": ""
+    },
+    "section_2": {
+        "title": "Factors affecting reserve money",
+        "description": ""
+    },
+    "keys": {
+        "value_rm": "Value (RM)",
+        "growth_mom": "MoM Growth",
+        "growth_yoy": "YoY Growth",
+        "no_shade": "No shading",
+        "recession": "Recession",
+        "total": "Total Reserve Money",
+        "currency": "Currency in Circulation",
+        "reserves_required": "Statutory Reserves",
+        "reserves_excess": "Excess Reserves",
+        "net_claims_gov": "Net Claims on the Government",
+        "claims_gov": "Gross Claims on the Government",
+        "deposits_gov": "Deposits of the Government",
+        "claims_private": "Claims on the Private Sector",
+        "external": "External Operations",
+        "others": "Other Influences"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "header": "Statistik Pembinaan",
+    "description": "Semua projek pembinaan bernilai RM500,000 dan ke atas perlu berdaftar dengan Lembaga Pembangunan Industri Pembinaan (CIDB). Menggunakan data tersebut, papan pemuka ini membentangkan petunjuk utama mengenai aktiviti pembinaan di Malaysia.",
+    "section_1": {
+        "title": "Apakah tren statistik pembinaan yang utama?"
+    },
+    "section_2": {
+        "title": "Tinjauan lebih mendalam tentang pembinaan mengikut pemilik projek dan sub-sektor",
+        "total": "Semua Aktiviti Pembinaan",
+        "residential": "Bangunan Kediaman",
+        "non_residential": "Bangunan Bukan Kediaman",
+        "civileng": "Kejuruteraan Awam"
+    },
+    "projects": "projek",
+    "num_projects": "Jumlah Projek",
+    "value": "Nilai Kerja Pembinaan",
+    "actual": "Nilai Sebenar",
+    "growth_yoy": "Pertumbuhan YoY",
+    "growth_qoq": "Pertumbuhan QoQ",
+    "government": "Kerajaan",
+    "private": "Sektor Swasta",
+    "publiccorp": "Perbadanan Awam",
+    "no_shade": "Tiada lorekan",
+    "recession": "Kemelesetan"
+}

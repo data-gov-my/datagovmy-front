@@ -1,0 +1,19 @@
+{
+    "header": "Inisiatif Pendapatan Rakyat (IPR)",
+    "description": "Dalam ucapan Belanjawanku 2023, Perdana Menteri telah mengumumkan bahawa kerajaan akan memperuntukkan RM700 juta dalam usaha membasmi kemiskinan. Dengan itu - IPR dilancarkan. Cetusan idea Kementerian Ekonomi, IPR merupakan strategi serampang dua mata untuk menambah pendapatan keluarga miskin tegar dan B40 pada masa yang sama menyelesaikan masalah ekonomi harian. Atas sebab ini, IPR menumpukan usaha membasmi kemiskinan menerusi inisiatif pertanian (INTAN), perniagaan makanan (INSAN) dan operator perkhidmatan (IKHSAN). Papan pemuka ini menjejak prestasi IPR secara telus untuk dilihat oleh semua.",
+    "takeup_header": "Seberapa kuat pendaftaran baharu di kalangan rakyat?",
+    "timeseries_title": "{{ state }}: Pendaftaran Harian bagi IPR",
+    "timeseries_title_monthly": "{{ state }}: Pendaftaran Bulanan bagi IPR",
+    "timeseries_title_yearly": "{{ state }}: Pendaftaran Tahunan bagi IPR",
+    "intan": "INTAN (Usahawan Tani)",
+    "insan": "INSAN (Usahawan Makanan)",
+    "ikhsan": "IKHSAN (Operator Perkhidmatan)",
+    "choro_header": "Bagaimanakan kadar pendaftaran berbeza di seluruh negara?",
+    "choro_desc": "Data ini menunjukkan % daripada populasi sasaran yang telah berdaftar untuk sekurang-kurangnya satu program IPR.",
+    "choro_ranking": "Kedudukan (16)",
+    "total": "Jumlah",
+    "absolute": "Mutlak",
+    "absolute_hardcore_poor": "Mutlak (miskin tegar)",
+    "per_capita": "Per kapita",
+    "per_capita_hardcore_poor": "Per kapita (miskin tegar)"
+}

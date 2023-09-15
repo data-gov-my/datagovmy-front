@@ -1,0 +1,23 @@
+{
+    "header": "Household Debt",
+    "description": "Malaysia's household debt is one of the highest in the ASEAN region. Against this backdrop, Bank Negara Malaysia (BNM) safeguards financial stability by monitoring and regulating the lending activity of all financial institutions in Malaysia, among other things. Using aggregated data from BNM's Central Credit Reference Information System (CCRIS), this dashboard gives you insight into key trends on household debt. For now, it displays data on the flow of borrowing activity on a monthly basis, broken down by purpose. In due time, it will be deepened with granular data showing the state of indebtedness of Malaysians.",
+    "section_1": {
+        "title": "A breakdown of lending activity by purpose",
+        "description": "The value of loans disbursed is the indicator that captures actual borrowing transactions, as a loan application may not be approved if it is overly risky. The data on loan applications and approvals nevertheless provides useful insight into the demand for borrowing, as well as the behaviour of financial institutions."
+    },
+    "keys": {
+        "applied": "Loans Applied",
+        "approved": "Loans Approved",
+        "disbursed": "Loans Disbursed",
+        "repaid": "Loans Repaid",
+        "rm": "Value (RM)",
+        "growth_yoy": "YoY Growth",
+        "recession": "Recession",
+        "no_shade": "No shading",
+        "credit_card": "Credit Card",
+        "vehicles_passenger": "Passenger Vehicles",
+        "property_residental": "Residential Property",
+        "personal_total": "Personal Use (weddings, home renovation, etc)",
+        "securities": "Securities"
+    }
+}
