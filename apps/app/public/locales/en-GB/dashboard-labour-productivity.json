@@ -1,0 +1,26 @@
+{
+    "header": "Labour Productivity",
+    "description": "In simple terms, labour productivity measures how much output is being produced for every hour worked, or every person employed. Contrary to popular belief, it does not really measure whether workers are 'hardworking' but rather whether the quality of skills, machines and processes used is increasing adequately. Beyond unemployment and wages, policymakers pay close attention to labour productivity, which is a key driver of high-quality economic growth. This dashboard tracks labour productivity across all key sectors in the Malaysian economy.",
+    "section_1": {
+        "title": "How are key manufacturing statistics trending?"
+    },
+    "keys": {
+        "vah": "Value Added / Hour",
+        "vae": "Value Added / Employee",
+        "hours": "Hours Worked",
+        "growth_yoy_vah": "YoY Growth (Value Added / Hour)",
+        "growth_yoy_vae": "YoY Growth (Value Added / Employee)",
+        "growth_yoy_hours": "YoY Growth (Hours Worked)",
+        "recession": "Recession",
+        "no_shade": "No shading",
+        "overall": "Whole Economy",
+        "agriculture": "Agriculture",
+        "mining": "Mining",
+        "mfg": "Manufacturing",
+        "construction": "Construction",
+        "sevices": "Services",
+        "per_hour": "/ hour",
+        "per_employee": "/ employee",
+        "hours_worked": "hours worked"
+    }
+}

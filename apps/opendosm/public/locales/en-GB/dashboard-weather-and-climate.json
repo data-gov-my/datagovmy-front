@@ -1,0 +1,14 @@
+{
+    "header": "Weather and Climate",
+    "description": "Climate change is the biggest existential threat facing not just Malaysia, but the entire world. Using data from the 42 manned weather stations operated by the Malaysian Meteorological Department, this dashboard brings you rich climate data, to help you explore and understand both weather (short-term) and climate (longer-term) trends in your area. Enjoy!",
+    "title": "Zoom into a weather station near you!",
+    "search_station": "Search or select from the map!",
+    "map_desc": "Drag and zoom to see where the 42 manned weather stations are located!",
+    "station_temp_rain": "{{ station }}: Temperature and Rainfall",
+    "disclaimer": "Note: To ensure 100% completeness, observations are recorded manually on the rare occasions when automation does not operate as intended",
+    "mean_temp": "Mean Temperature",
+    "temperature": "Temperature",
+    "total_rain": "Total Rainfall",
+    "rainfall": "Rainfall",
+    "days_with_rain": "Days with Rain"
+}

@@ -1,0 +1,38 @@
+{
+    "header": "Keluaran Dalam Negeri Kasar (KDNK)",
+    "description": "Keadaan ekonomi adalah persoalan teras bagi mana-mana negara atau kerajaan. Anggaran Keluaran Dalam Negeri Kasar (KDNK) setiap suku tahun menggambarkan nilai yang dicipta oleh ekonomi Malaysia, dengan pecahan tersedia mengikut sektor ekonomi dan kategori perbelanjaan. Ia merupakan keluaran data utama yang dipantau oleh penggubal dasar, sektor swasta dan komuniti antarabangsa untuk mengukur prestasi ekonomi Malaysia.",
+    "section_1": {
+        "title": "Apakah tren KDNK?"
+    },
+    "section_2": {
+        "title": "KDNK mengikut jenis aktiviti ekonomi"
+    },
+    "section_3": {
+        "title": "KDNK mengikut jenis perbelanjaan"
+    },
+    "keys": {
+        "growth_real_yoy": "Pertumbuhan Tahunan (harga malar)",
+        "growth_real_qoq": "Pertumbuhan Sukuan (harga malar, tsm)",
+        "growth_nominal_yoy": "Pertumbuhan Tahunan (harga semasa)",
+        "growth_nominal_qoq": "Pertumbuhan Sukuan (harga semasa)",
+        "real": "Harga malar",
+        "real_sa": "Harga malar (tsm)",
+        "nominal": "Nominal",
+        "no_shade": "Tiada lorekan",
+        "recession": "Kemelesetan",
+        "overall": "Keseluruhan",
+        "supply_services": "Perkhidmatan",
+        "supply_manufacturing": "Pembuatan",
+        "supply_agri": "Pertanian",
+        "supply_mining": "Perlombongan & Pengkuarian",
+        "supply_construction": "Pembinaan",
+        "supply_import_duties": "Duti Import",
+        "demand_c": "Perbelanjaan Swasta",
+        "demand_i": "Pembentukan Modal Tetap Kasar (Pelaburan)",
+        "demand_g": "Perbelanjaan Kerajaan",
+        "demand_x": "Eksport",
+        "demand_m": "Import",
+        "demand_nx": "Eksport Bersih",
+        "demand_inventory": "Perubahan Inventori"
+    }
+}

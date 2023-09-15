@@ -1,0 +1,47 @@
+{
+    "header": "Mata Wang Dalam Edaran",
+    "description": "Terdapat lebih daripada RM150 bilion dalam nota dan syiling dalam edaran di ekonomi Malaysia. Papan pemuka ini membolehkan anda meneliti komposisi dan pertumbuhan mata wang dalam edaran berdasarkan data dari Sorotan dan Perangkaan Bulanan (MHS) terbitan Bank Negara Malaysia. Untuk makluman, mata wang dalam edaran mengambil kira mata wang yang dikira wang sah sahaja. Contohnya, duit syiling RM1 yang sudah dihentikan pengedarannya tidak termasuk dalam data dan papan pemuka ini.",
+    "section_1": {
+        "title": "Ringkasan mata wang dalam edaran",
+        "bar1_header": "Duit Kertas Mengikut Mata Wang",
+        "bar2_header": "Bilangan Helaian Duit Kertas Dalam Edaran",
+        "bar3_header": "Duit Syiling Mengikut Mata Wang",
+        "bar4_header": "Bilangan Kepingan Duit Syiling Dalam Edaran"
+    },
+    "section_2": {
+        "title": "Apakah tren mata wang dalam edaran?"
+    },
+    "mom_growth": "Pertumbuhan Bulanan",
+    "yoy_growth": "Pertumbuhan Tahunan",
+    "keys": {
+        "value": "Nilai (RM)",
+        "growth_mom": "Pertumbuhan Bulanan",
+        "growth_yoy": "Pertumbuhan Tahunan",
+        "no_shade": "Tiada lorekan",
+        "recession": "Kemelesetan",
+        "cny": "Tahun Baru Cina",
+        "eid": "Raya Aidilfitri",
+        "note_1": "RM1 ",
+        "note_5": "RM5 ",
+        "note_10": "RM10 ",
+        "note_20": "RM20 ",
+        "note_50": "RM50 ",
+        "note_100": "RM100 ",
+        "coin_1": "1 sen",
+        "coin_5": "5 sen",
+        "coin_10": "10 sen",
+        "coin_20": "20 sen",
+        "coin_50": "50 sen",
+        "others": "Lain-lain",
+        "overall": "Keseluruhan",
+        "rm1_notes": "Duit kertas RM1",
+        "rm5_notes": "Duit kertas RM5",
+        "rm10_notes": "Duit kertas RM10",
+        "rm20_notes": "Duit kertas RM20",
+        "rm50_notes": "Duit kertas RM50",
+        "rm100_notes": "Duit kertas RM100",
+        "10_sen_coins": "Duit syiling 10 sen",
+        "20_sen_coins": "Duit syiling 20 sen",
+        "50_sen_coins": "Duit syiling 50 sen"
+    }
+}

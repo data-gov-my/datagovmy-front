@@ -1,0 +1,70 @@
+{
+    "bipd": {
+        "full": "Bahagian Integrasi & Pengurusan Data",
+        "abbr": "BIPD"
+    },
+    "bkp": {
+        "full": "Bahagian Khidmat Pengurus",
+        "abbr": "BKP"
+    },
+    "bmp": {
+        "full": "Bahagian Metodologi & Penyelidikan",
+        "abbr": "BMP"
+    },
+    "bpan": {
+        "full": "Bahagian Perangkaan Akaun Nasional",
+        "abbr": "BPAN"
+    },
+    "bpe": {
+        "full": "Bahagian Petunjuk Ekonomi",
+        "abbr": "BPE"
+    },
+    "bphpp": {
+        "full": "Bahagian Perangkaan Harga, Pendapatan & Perbelanjaan",
+        "abbr": "BPHPP"
+    },
+    "bpib": {
+        "full": "Bahagian Perangkaan Imbangan Pembayaran",
+        "abbr": "BPIB"
+    },
+    "bpksa": {
+        "full": "Bahagian Perangkaan Komunikasi Strategik & Antrabangsa",
+        "abbr": "BPKSA"
+    },
+    "bpm": {
+        "full": "Bahagian Pengurusan Maklumat",
+        "abbr": "BPM"
+    },
+    "bpp": {
+        "full": "Bahagian Perangkaan Perkhidmatan",
+        "abbr": "BPP"
+    },
+    "bppa": {
+        "full": "Bahagian Perangkaan Perdagangan Antarabangsa",
+        "abbr": "BPPA"
+    },
+    "bppas": {
+        "full": "Bahagian Perangkaan Pertanian & Alam Sekitar",
+        "abbr": "BPPAS"
+    },
+    "bppd": {
+        "full": "Bahagian Perangkaan Penduduk & Demografi",
+        "abbr": "BPPD"
+    },
+    "bppib": {
+        "full": "Bahagian Perangkaan Pengeluaran Industri & Binaan",
+        "abbr": "BPPIB"
+    },
+    "bptms": {
+        "full": "Bahagian Perangkaan Tenaga Manusia & Sosial",
+        "abbr": "BPTMS"
+    },
+    "ilsm": {
+        "full": "Institut Latihan Statistik Malaysia",
+        "abbr": "ILSM"
+    },
+    "mbls": {
+        "full": "Biro Statistik Buruh Malaysia",
+        "abbr": "MBLS"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "header": "International Investment Position (IIP)",
+    "description": "How much money is the world investing in Malaysia? And how much money is Malaysia investing overseas? These are two critical questions for our policymakers, answered through data on what is called our International Investment Position (IIP). The IIP is one of 3 primary national accounts that convey Malaysia' economic performance, the other two being Gross Domestic Product (GDP) and the Balance of Payments (BOP). This dashboard gives you an easy way to explore key IIP trends and patterns. Enjoy!",
+    "section_1": {
+        "title": "How is Malaysia\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0080\u00c3\u0082\u00c2\u0099s International Investment Position (IIP) trending?",
+        "description": "Net figures are derived by subtracting liabilities from assets. A positive number indicates net assets, while a negative number indicates net liabilities."
+    },
+    "keys": {
+        "net": "Net",
+        "liabilities": "Liabilities",
+        "assets": "Assets",
+        "derivatives": "Derivatives",
+        "direct_debt": "Direct Investment (Debt)",
+        "direct_equity": "Direct Investment (Equity)",
+        "direct_total": "Direct Investment (Total)",
+        "other": "Other Investments",
+        "porfolio_equity": "Portfolio Investment (Equity)",
+        "portfolio_debt": "Portfolio Investment (Debt)",
+        "portfolio_total": "Portfolio Investment (Total)",
+        "recession": "Recession",
+        "no_shade": "No shading",
+        "reserve": "Reserves",
+        "total": "Total",
+        "qoq_change": "QoQ change"
+    }
+}

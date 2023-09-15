@@ -1,0 +1,28 @@
+{
+    "header": "Immigresen",
+    "description": "Selain daripada kelahiran dan kematian, migrasi merupakan penyumbang utama kepada perubahan demografi, terutamanya bagi sebuah negara dengan lokasi strategik seperti Malaysia. Dengan menggunakan data terperinci dari Jabatan Imigresen, papan pemuka ini memberi gambaran tentang tentang data dari sempadan negara kita. Berapa ramai orang luar yang datang ke Malaysia setiap tahun? Dari negara mana mereka datang? Adakah terdapat musim yang mencapai cepumas bagi sektor pelancongan? Teroikai dan tahu!",
+    "section_1": {
+        "title": "Berapakah jumlah kemasukan dan pelepasan warga {{ country }} di Malaysia?",
+        "title_ALL": "Berapakah jumlah kemasukan dan pelepasan warga asing secara keseluruhan di Malaysia?",
+        "description": "Data ini hanya dipaparkan di peringkat nasional kerana pergerakan antara negeri di Malaysia adalah bebas dan tidak dipantau oleh kerajaan.",
+        "search_placeholder": "Cari negara yang spesifik",
+        "timeseries_title": "Kemasukan dan Pelepasan"
+    },
+    "section_2": {
+        "title": "Pecahan ketibaan warga asing mengikut kumpulan demografi",
+        "description": "(insert blurb after we can actually see the data)"
+    },
+    "keys": {
+        "entrances": "Kemasukan",
+        "departures": "Pelepasan",
+        "net_migration": "Migrasi Bersih",
+        "male": "Lelaki",
+        "female": "Perempuan",
+        "baby": "Bayi (< 2 tahun)",
+        "child": "Kanak-kanak (3-10 tahun)",
+        "teenager": "Remaja (11-17 tahun)",
+        "adult_young": "Dewasa Muda (18-30 tahun)",
+        "adult": "Dewasa (31-60 tahun)",
+        "elderly": "Warga Emas (> 60 tahun)"
+    }
+}

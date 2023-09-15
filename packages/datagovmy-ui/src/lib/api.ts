@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { parseCookies } from "./helpers";
 
 type BaseURL = "api" | "app" | string;
@@ -17,7 +17,7 @@ const instance = (base: BaseURL, headers: Record<string, string> = {}) => {
     api: process.env.NEXT_PUBLIC_API_URL,
     app: process.env.NEXT_PUBLIC_APP_URL,
   };
-  const BROWSER_RUNTIME = typeof window === "object";
+  const BROWSER_RUNTIME = typeof window !== "undefined";
 
   const authorization = !BROWSER_RUNTIME
     ? process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN
@@ -49,7 +49,11 @@ export const get = (
     instance(base)
       .get(route, { params })
       .then((response: AxiosResponse) => resolve(response))
-      .catch(err => reject(err));
+      .catch((err: AxiosError<{ status: number; message: string }>) => {
+        if (err.response?.data.status === 401 && typeof window !== "undefined")
+          window.location.reload(); // refresh rolling token
+        reject(err);
+      });
   });
 };
 
@@ -71,7 +75,7 @@ export const post = (
     instance(base, headers)
       .post(route, payload)
       .then((response: AxiosResponse) => resolve(response))
-      .catch(err => reject(err));
+      .catch((err: AxiosError) => reject(err));
   });
 };
 

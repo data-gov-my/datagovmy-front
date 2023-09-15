@@ -1,0 +1,25 @@
+{
+    "header": "Construction Statistics",
+    "description": "All construction projects worth RM500,000 and above must be registered with the Construction Industry Development Board (CIDB). Using that data, this dashboard presents key indicators on construction activity in Malaysia.",
+    "section_1": {
+        "title": "How are key construction statistics trending?"
+    },
+    "section_2": {
+        "title": "A deeper look at construction activity by project owner and sub-sector",
+        "total": "All Construction Activity",
+        "residential": "Residential Buildings",
+        "non_residential": "Non-Residential Buildings",
+        "civileng": "Civil Engineering"
+    },
+    "projects": "projects",
+    "num_projects": "Number of Projects",
+    "value": "Value of Work Done",
+    "actual": "Actual Values",
+    "growth_yoy": "YoY Growth",
+    "growth_qoq": "QoQ Growth",
+    "government": "Government",
+    "private": "Private Sector",
+    "publiccorp": "Public Corporations",
+    "no_shade": "No shading",
+    "recession": "Recession"
+}

@@ -1,0 +1,21 @@
+{
+    "header": "Harga Pengeluar",
+    "description": "IHP memantau harga yang dikenakan ke atas pengguna, iaitu harga yang anda bayar semasa membeli barang dapur, perkakasan rumah serta barangan dan perkhidmatan lain. Akan tetapi, harga tersebut mungkin sudah terherot oleh cukai seperti SST, duti eksais, subsidi dan kos pengangkutan. Maka, untuk mendapatkan pandangan dari sudut lain terhadap harga barangan dalam ekonomi Malaysia, DOSM memantau harga yang diterima pengeluar untuk 1,063 item ketika tahap pertama pemerdagangan berlaku. Data ini diterbit dan dikenali sebagai Indeks Harga Pengeluar (IHPR).",
+    "section_1": {
+        "title": "Apakah tren IHPR?",
+        "description": "Carta di bawah menunjukkan tren keseluruhan IHPRT berserta 5 sektor pengeluaran."
+    },
+    "keys": {
+        "value": "Indeks",
+        "growth_mom": "Pertumbuhan Bulanan",
+        "growth_yoy": "Pertumbuhan Tahunan",
+        "no_shade": "Tiada lorekan",
+        "recession": "Kemelesetan",
+        "overall": "Keseluruhan",
+        "agriculture": "Pertanian, Perhutanan & Perikanan",
+        "mining": "Perlombongan",
+        "manufacturing": "Pembuatan",
+        "electricity": "Bekalan Elektrik & Gas",
+        "water": "Bekalan Air"
+    }
+}

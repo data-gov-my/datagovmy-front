@@ -1,0 +1,38 @@
+{
+    "header": "Gross Domestic Product (GDP)",
+    "description": "The state of the economy is a core question for any country or government. Our quarterly Gross Domestic Product (GDP) estimates capture the value being created by the Malaysian economy, with breakdowns available by economic sector and expenditure category. It is a key data release monitored by policymakers, the private sector, and the international community - to get a sense of how the Malaysian economy is performing.",
+    "section_1": {
+        "title": "How is GDP trending?"
+    },
+    "section_2": {
+        "title": "A deeper look at GDP by economic sector"
+    },
+    "section_3": {
+        "title": "A deeper look at GDP by expenditure category"
+    },
+    "keys": {
+        "growth_real_yoy": "YoY Growth (real)",
+        "growth_real_qoq": "QoQ Growth (real, sa)",
+        "growth_nominal_yoy": "YoY Growth (nominal)",
+        "growth_nominal_qoq": "QoQ Growth (nominal)",
+        "real": "Real",
+        "real_sa": "Real (sa)",
+        "nominal": "Nominal",
+        "no_shade": "No shading",
+        "recession": "Recession",
+        "overall": "Overall",
+        "supply_services": "Services",
+        "supply_manufacturing": "Manufacturing",
+        "supply_agri": "Agriculture",
+        "supply_mining": "Mining & Quarrying",
+        "supply_construction": "Construction",
+        "supply_import_duties": "Import Duties",
+        "demand_c": "Private Consumption",
+        "demand_i": "Gross Fixed Capital Formation (Investment)",
+        "demand_g": "Government Consumption",
+        "demand_x": "Exports",
+        "demand_m": "Imports",
+        "demand_nx": "Net Exports",
+        "demand_inventory": "Change in Inventories"
+    }
+}
