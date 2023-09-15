@@ -77,9 +77,9 @@
         "comfortable": "Comfortable win"
     },
     "trivia": {
-        "header": "Trivia: Fun facts about {{ country }}\u2019s electoral history!",
-        "majority_slim": "The slimmest majorities in {{ country }}\u2019s electoral history",
-        "majority_big": "The biggest majorities in {{ country }}\u2019s electoral history",
+        "header": "Trivia: Fun facts about {{ country }}’s electoral history!",
+        "majority_slim": "The slimmest majorities in {{ country }}’s electoral history",
+        "majority_big": "The biggest majorities in {{ country }}’s electoral history",
         "slim": "Slimmest majority",
         "big": "Biggest majority",
         "won": "won",

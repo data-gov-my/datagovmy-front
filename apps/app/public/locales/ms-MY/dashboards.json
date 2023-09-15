@@ -212,19 +212,19 @@
         },
         "labour-market": {
             "name": "Pasaran Buruh",
-            "description": "Data daripada Laporan Tenaga Buruh bulanan, yang membentangkan statistik tenaga buruh, pekerjaan dan pengangguran yang diperoleh daripada Tinjauan Tenaga Buruh (LFS)."
+            "description": "Laporan Survei Tenaga Buruh (STB) bulanan"
         },
         "composite-index": {
             "name": "Indeks Komposit",
-            "description": "Penunjuk Ekonomi Malaysia (MEI) iaitu set indeks komposit yang diterbitkan secara bulanan oleh DOSM, dan merangkumi indikator Pelopor, Serentak, dan Susulan yang menggambarkan pergerakan ekonomi di Malaysia."
+            "description": "Indikator pelopor, serentak, dan susulan bagi ekonomi Malaysia"
         },
         "wholesale-retail": {
             "name": "Perdagangan Borong dan Runcit",
-            "description": "Prestasi perdagangan borong dan runcit (termasuk perdagangan kenderaan bermotor) di Malaysia."
+            "description": "Prestasi bulanan perdagangan borong dan runcit"
         },
         "industrial-production": {
             "name": "Pengeluaran Perindustrian",
-            "description": "Prestasi pengeluaran perindustrian di Malaysia yang terdiri daripada sektor pengeluaran perlombongan, pembuatan, dan elektrik"
+            "description": "Prestasi pengeluaran perindustrian bulanan, merangkumi perlombongan, pembuatan, dan penjanaan elektrik"
         },
         "producer-prices": {
             "name": "Harga Pengeluar",
@@ -236,47 +236,47 @@
         },
         "iip": {
             "name": "Kedudukan Pelaburan Antarabangsa",
-            "description": "Penyata kewangan nilai dan komposisi aset kewangan luaran dan liabiliti negara."
+            "description": "Penyata kewangan aset dan liability kewangan luar Malaysia"
         },
         "bop": {
             "name": "Perimbangan Pembayaran",
-            "description": "Perimbangan Pembayaran menunjukkan bagaimana sumber-sumber mengalir antara Malaysia dan negara-negara lain."
+            "description": "Penyata suku tahunan transaksi Malaysia dengan negara lain"
         },
         "manufacturing-statistics": {
             "name": "Statistik Pembuatan",
-            "description": "Papan pemuka ini merangkumi petunjuk utama dan memberikan cara mudah untuk memantau prestasi sektor pembuatan Malaysia."
+            "description": "Prestasi bulanan bagi subsektor pembuatan"
         },
         "labour-productivity": {
             "name": "Produktiviti Buruh",
-            "description": "Papan pemuka ini mengesan produktiviti buruh di semua sektor utama dalam ekonomi Malaysia."
+            "description": "Produktiviti buruh suku tahunan bagi semua sektor ekonomi utama"
         },
         "formal-sector-wages": {
             "name": "Gaji Sektor Formal",
-            "description": "Data gaji sektor formal di Malaysia"
+            "description": "Gaji suku tahunan sektor formal, berdasarkan data pentadbiran daripada KWSP dan PERKESO"
         },
         "services-statistics": {
             "name": "Statistik Perkhidmatan",
-            "description": "Papan pemuka ini mempamerkan tahap produktiviti industri perkhidmatan dalam ekonomi Malaysia."
+            "description": "Prestasi suku tahunan sub-sektor perkhidmatan"
         },
         "services-producer-prices": {
             "name": "Harga Pengeluar Perkhidmatan",
-            "description": "Papan pemuka ini mengesan produktiviti buruh di semua sektor utama dalam ekonomi Malaysia."
+            "description": "Harga pengeluar suku tahunan di subsektor perkhidmatan"
         },
         "construction-statistics": {
             "name": "Statistik Pembinaan",
-            "description": "Papan pemuka ini menunjukkan jumlah dan nilai projek pembinaan mengikut sektor atau pemilik."
+            "description": "Survelan suku tahunan projek pembinaan di sektor awam dan swasta"
         },
         "household-income-expenditure": {
             "name": "Pendapatan & Perbelanjaan Isi Rumah",
-            "description": "Papan pemuka ini menunjukkan data pendapatan dan perbelanjaan isi rumah di Malaysia."
+            "description": "Pendapat dan perbelanjaan isi rumah di peringkat negeri dan daerah"
         },
         "population": {
             "name": "Populasi Penduduk Malaysia",
-            "description": "Papan pemuka ini mengesan populasi penduduk Malaysia"
+            "description": "Populasi Malaysia sejak 1980"
         },
         "external-trade": {
             "name": "Statistik Perdagangan Luaran",
-            "description": "Papan pemuka ini merangkumi petunjuk ekonomi perdagangan penting, dan pada masa akan datang, akan diperluaskan untuk membolehkan anda menganalisis hubungan perdagangan Malaysia dengan mana-mana negara di dunia!"
+            "description": "Statistik dan indeks bulanan perdagangan luar"
         },
         "household-debt": {
             "name": "Hutang Isi Rumah",
