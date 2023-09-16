@@ -151,6 +151,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         catalogueId: data.openapi_id ?? "",
       },
     };
+  },
+  {
+    cache_expiry: 21600, // 6 hrs
   }
 );
 

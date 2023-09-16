@@ -65,6 +65,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       console.error(error);
       return { notFound: true };
     }
+  },
+  {
+    cache_expiry: 600, // 10 min
   }
 );
 

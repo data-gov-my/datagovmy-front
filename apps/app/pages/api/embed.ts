@@ -18,12 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       ...query,
     });
 
-    return res.json({
-      params: {
-        id: id ?? null,
-      },
-      options: data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null,
-    });
+    return res
+      .setHeader("Cache-Control", "public, s-maxage=21600, stale-while-revalidate=21600") // 30 min
+      .json({
+        params: {
+          id: id ?? null,
+        },
+        options: data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null,
+      });
   } catch (err: any) {
     return res.status(400).json({ error: "Bad request", authorized: false });
   }

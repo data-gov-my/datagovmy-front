@@ -26,7 +26,8 @@ type ResolvedProps<T> = GetStaticPropsResult<T> & GetServerSidePropsResult<T>;
  */
 export const withi18n = <T extends Context>(
   namespace: string | string[] | null,
-  getProps: (ctx: T) => Promise<ResolvedProps<MetaPage>>
+  getProps: (ctx: T) => Promise<ResolvedProps<MetaPage>>,
+  option?: { cache_expiry: number }
 ): ((ctx: T) => Promise<ResolvedProps<MetaPage>>) => {
   return async (context: T) => {
     const config = await readNextI18nConfig();
@@ -45,11 +46,11 @@ export const withi18n = <T extends Context>(
       getProps(context),
     ]);
 
-    // Cache content to browser for getServerSideProps operations. [15d, 21d]
-    if ("res" in context)
+    // Cache content to browser for getServerSideProps operations (production only)
+    if ("res" in context && option && process.env.NEXT_PUBLIC_APP_ENV === "production")
       context.res.setHeader(
         "Cache-Control",
-        "public, s-maxage=1296000, stale-while-revalidate=1814000"
+        `public, s-maxage=${option.cache_expiry}, stale-while-revalidate=${option.cache_expiry}`
       );
 
     return merge(props, { props: i18n });

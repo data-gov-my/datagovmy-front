@@ -58,6 +58,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         total_pubs: data.count,
       },
     };
+  },
+  {
+    cache_expiry: 600, // 10min
   }
 );
 
