@@ -60,6 +60,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         collection: data.dataset ? recurSort(data.dataset) : {},
       },
     };
+  },
+  {
+    cache_expiry: 600, // 10min
   }
 );
 

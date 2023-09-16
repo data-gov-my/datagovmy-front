@@ -75,6 +75,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       console.error(e.message);
       return { notFound: true };
     }
+  },
+  {
+    cache_expiry: 600, // 10 min
   }
 );
 

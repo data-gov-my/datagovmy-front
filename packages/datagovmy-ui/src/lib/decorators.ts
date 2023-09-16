@@ -46,8 +46,8 @@ export const withi18n = <T extends Context>(
       getProps(context),
     ]);
 
-    // Cache content to browser for getServerSideProps operations
-    if ("res" in context && option)
+    // Cache content to browser for getServerSideProps operations (production only)
+    if ("res" in context && option && process.env.NEXT_PUBLIC_APP_ENV === "production")
       context.res.setHeader(
         "Cache-Control",
         `public, s-maxage=${option.cache_expiry}, stale-while-revalidate=${option.cache_expiry}`
