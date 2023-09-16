@@ -45,11 +45,11 @@ export const withi18n = <T extends Context>(
       getProps(context),
     ]);
 
-    // Cache content to browser for getServerSideProps operations. [15d, 21d]
+    // Cache content to browser for getServerSideProps operations. [24h, 24h]
     if ("res" in context)
       context.res.setHeader(
         "Cache-Control",
-        "public, s-maxage=1296000, stale-while-revalidate=1814000"
+        "public, s-maxage=86400, stale-while-revalidate=86400"
       );
 
     return merge(props, { props: i18n });
