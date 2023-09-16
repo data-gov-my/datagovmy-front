@@ -1,4 +1,4 @@
-// import Nexti18NextConfig from "../next-i18next.config";
+import Nexti18NextConfig from "../next-i18next.config";
 import "datagovmy-ui/styles";
 import Layout from "@components/Layout";
 import { Progress, Toast } from "datagovmy-ui/components";
@@ -56,4 +56,4 @@ function App({ Component, pageProps }: AppPropsLayout) {
   );
 }
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, Nexti18NextConfig);
