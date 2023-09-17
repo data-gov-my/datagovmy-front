@@ -19,7 +19,7 @@ import { clx, toDate } from "datagovmy-ui/helpers";
 import { OptionType } from "datagovmy-ui/types";
 import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useContext, useEffect, useMemo } from "react";
+import { FunctionComponent, useContext, useMemo, useRef } from "react";
 
 /**
  * Birthday Explorer Dashboard
@@ -38,6 +38,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
   timeseries,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common", "catalogue"]);
+  const ref = useRef<HTMLParagraphElement>(null);
   const { size } = useContext(WindowContext);
 
   const filterPeriods: Array<OptionType> = [
@@ -80,22 +81,16 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     validation: "",
   });
 
-  const yieldParams = (birthday: string, state: string = data.state) => {
-    let items: Array<[string, any]> = [
-      ["explorer", "BIRTHDAY_POPULARITY"],
-      ["state", state],
-    ];
-    if (birthday) items.push(["birthday", birthday]);
-    for (const key of ["start", "end", "groupByDay"]) {
-      if (key === "groupByDay" && data.groupBy) items.push([key, data.groupBy === "day"]);
-      if (data[key]) items.push([key, data[key]]);
-    }
-    return Object.fromEntries(items);
-  };
-
-  const fetchData = (query: ReturnType<typeof yieldParams>) => {
+  const fetchData = (birthday: string, groupBy: string, start: string, end: string) => {
     setData("timeseries_loading", true);
-    get("/explorer", query)
+    get("/explorer", {
+      explorer: "BIRTHDAY_POPULARITY",
+      state: data.state,
+      birthday: birthday,
+      groupByDay: groupBy === "day",
+      start: start,
+      end: end,
+    })
       .then(({ data }) => {
         for (const key of ["x", "y"]) {
           setData(key, data.timeseries[key]);
@@ -114,9 +109,16 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
       });
   };
 
-  useEffect(() => {
-    fetchData(yieldParams(data.birthday, data.state));
-  }, [data.groupBy, data.start, data.end]);
+  const handleSearch = () => {
+    validateDate()
+      .then(({ birthday, year }) => {
+        setData("loading", true);
+        fetchData(birthday, data.groupBy, year, year);
+        if (size.width <= BREAKPOINTS.SM)
+          ref && ref.current && ref.current.scrollIntoView({ behavior: "smooth" });
+      })
+      .catch(e => console.error(e));
+  };
 
   const { years, months, days } = useMemo<{ years?: number; months?: number; days?: number }>(
     () =>
@@ -128,25 +130,26 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
     return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
   };
 
-  const validateDate = async (): Promise<{ birthday: string }> =>
+  const validateDate = async (): Promise<{ birthday: string; year: string }> =>
     new Promise((resolve, reject) => {
-      const year = Number(data.p_birthday.substring(0, 4));
+      const yearStr = data.p_birthday.substring(0, 4);
+      const yearNum = Number(yearStr);
       if (!data.p_birthday && data.p_birthday.length < 10) {
         setData("validation", t("incomplete"));
         reject("Invalid date");
-      } else if (year > endYear) {
+      } else if (yearNum > endYear) {
         setData("validation", t("invalid_max", { year: LATEST_YEAR }));
         reject("Date more than maximum");
-      } else if (year < startYear) {
+      } else if (yearNum < startYear) {
         setData("validation", t("invalid_min"));
         reject("Date less than maximum");
       } else {
         setData("validation", false);
         setData("birthday", data.p_birthday);
         setData("state", data.p_state);
-        setData("start", data.p_birthday.substring(0, 4));
-        setData("end", data.p_birthday.substring(0, 4));
-        resolve({ birthday: data.p_birthday });
+        setData("start", yearStr);
+        setData("end", yearStr);
+        resolve({ birthday: data.p_birthday, year: yearStr });
       }
     });
 
@@ -180,38 +183,24 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                   onChange={selected => setData("p_birthday", selected.target.value)}
                   required
                   onKeyDown={e => {
-                    if (e.key === "Enter") {
-                      validateDate()
-                        .then(({ birthday }) => {
-                          setData("loading", true);
-                          setData("start", birthday.substring(0, 4));
-                          setData("end", birthday.substring(0, 4));
-                        })
-                        .catch(e => console.error(e));
-                    }
+                    if (e.key === "Enter") handleSearch();
                   }}
                   min={"1920-01-01"}
-                  max={"2022-12-31"}
+                  max={timeseries.data_as_of.split(" ")[0]}
                 ></input>
                 {data.validation && <p className="text-danger mt-1 text-xs">{data.validation}</p>}
 
                 <Button
                   className="btn-primary my-6 active:shadow-none"
-                  onClick={() => {
-                    validateDate()
-                      .then(({ birthday }) => {
-                        setData("loading", true);
-                        setData("start", birthday.substring(0, 4));
-                        setData("end", birthday.substring(0, 4));
-                      })
-                      .catch(e => console.error(e));
-                  }}
+                  onClick={handleSearch}
                   icon={<SearchIcon className="h-4 w-4" />}
                 >
                   {t("search")}
                 </Button>
               </div>
-              <p className="text-dim text-sm">{t("disclaimer")}</p>
+              <p ref={ref} className="text-dim text-sm">
+                {t("disclaimer")}
+              </p>
             </Card>
             <div className="lg:col-span-2">
               {data.birthday ? (
@@ -301,7 +290,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                     </div>
                   </Card>
                 ) : (
-                  <Card className="flex h-full w-full items-center justify-center">
+                  <Card className="flex min-h-[300px] w-full items-center justify-center">
                     <Spinner loading={data.loading} />
                   </Card>
                 )
@@ -340,13 +329,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 selected={filterPeriods.find(period => period.value === data.groupBy)}
                 onChange={({ value }) => {
                   setData("groupBy", value);
-                  validateDate()
-                    .then(({ birthday }) => {
-                      setData("loading", true);
-                      setData("start", birthday.substring(0, 4));
-                      setData("end", birthday.substring(0, 4));
-                    })
-                    .catch(e => console.error(e));
+                  fetchData(data.p_birthday, value, data.start, data.end);
                 }}
               />
               <Daterange
@@ -354,10 +337,15 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 endYear={endYear}
                 selectedStart={data.start}
                 selectedEnd={data.end}
-                anchor={"left"}
+                anchor="right"
                 onChange={([begin, end]) => {
-                  if (begin) setData("start", begin);
-                  if (end) setData("end", end);
+                  if (begin) {
+                    setData("start", begin);
+                  }
+                  if (end) {
+                    setData("end", end);
+                  }
+                  fetchData(data.p_birthday, data.groupBy, begin ?? data.start, end ?? data.end);
                 }}
                 onReset={() => {
                   setData("start", startYear);
