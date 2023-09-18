@@ -30,7 +30,7 @@ export const getStaticProps: GetStaticProps = withi18n(
       data_as_of: "2023-06-19 23:59",
       data: [
         {
-          id: "kawasanku",
+          id: "dashboard-kawasanku",
           name: "kawasanku",
           division: "bipd",
           route: routes.KAWASANKU,
