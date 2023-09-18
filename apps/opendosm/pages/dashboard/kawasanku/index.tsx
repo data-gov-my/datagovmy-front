@@ -1,16 +1,18 @@
-import { GeoJsonObject } from "geojson";
-
-import { InferGetStaticPropsType, GetStaticProps } from "next";
-import { Page } from "datagovmy-ui/types";
 import KawasankuDashboard from "@dashboards/kawasanku";
+import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { withi18n } from "datagovmy-ui/decorators";
 import MalaysiaGeojson from "datagovmy-ui/geojson/state/_map";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "datagovmy-ui/api";
 import { STATES } from "datagovmy-ui/schema/kawasanku";
-import { withi18n } from "datagovmy-ui/decorators";
+import { Page } from "datagovmy-ui/types";
+import { GeoJsonObject } from "geojson";
+import { InferGetStaticPropsType, GetStaticProps } from "next";
 
 const KawasankuIndex: Page = ({
+  last_updated,
+  meta,
   params,
   bar,
   jitterplot,
@@ -21,9 +23,10 @@ const KawasankuIndex: Page = ({
   const { t } = useTranslation(["dashboard-kawasanku"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("title")} description={t("description")} keywords={""} />
       <KawasankuDashboard
+        last_updated={last_updated}
         params={params}
         bar={bar}
         jitterplot={jitterplot}
@@ -33,7 +36,7 @@ const KawasankuIndex: Page = ({
         jitterplot_options={STATES.filter(item => item.value !== "malaysia")}
         geojson={MalaysiaGeojson as GeoJsonObject}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -46,6 +49,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-kawasanku", as
 
   return {
     props: {
+      last_updated: data.data_last_updated,
       meta: {
         id: "dashboard-kawasanku",
         type: "dashboard",

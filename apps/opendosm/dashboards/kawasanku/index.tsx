@@ -9,6 +9,7 @@ import {
   Chips,
   Container,
   Dropdown,
+  Hero,
   Panel,
   Section,
   Spinner,
@@ -32,7 +33,6 @@ import { useRouter } from "next/router";
 
 const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 const Jitterplot = dynamic(() => import("datagovmy-ui/charts/jitterplot"), { ssr: false });
-
 const Pyramid = dynamic(() => import("datagovmy-ui/charts/pyramid"), {
   ssr: false,
 });
@@ -42,6 +42,7 @@ const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), {
 });
 
 interface KawasankuDashboardProps {
+  last_updated: string;
   params: {
     state: string;
     geofilter?: AreaType; // Required for "dun" | "parlimen" | "district"
@@ -94,6 +95,7 @@ interface KawasankuDashboardProps {
 type AreaType = "district" | "dun" | "parlimen" | "state";
 
 const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
+  last_updated,
   params,
   bar,
   pyramid,
@@ -188,93 +190,91 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
 
   return (
     <>
-      <div className="relative bg-gradient-to-r from-[#c9ecc9] from-0% via-[#EDF8ED] via-60% to-transparent to-100% dark:from-black dark:via-background-dark dark:to-transparent ">
-        <div className="mx-auto max-w-screen-2xl px-3 py-12 lg:px-6">
-          <div className=" space-y-4 lg:w-2/3">
-            <span className="text-sm font-bold uppercase tracking-widest text-dim">Kawasanku</span>
-            <h3 className="text-black"> {t("header")}</h3>
-            <p className="whitespace-pre-line text-dim">{t("description")}</p>
-
-            <div className="flex w-full flex-col flex-wrap items-start justify-start gap-2 lg:flex-row lg:items-center">
-              <div className="flex items-center gap-2">
-                <p className="font-bold text-dim">{t("action")}:</p>
-                <Spinner loading={data.loading} className="block place-self-center lg:hidden" />
-              </div>
-
-              <Dropdown
-                options={STATES}
-                selected={{ label: params.state, value: params.state }}
-                width="w-full lg:w-fit"
-                sublabel={!isMalaysia ? t("common:common.state") + ":" : ""}
-                onChange={(e: OptionType) => {
-                  setData("loading", true);
-                  router.push(routes.KAWASANKU.concat("/", e.value !== "Malaysia" ? e.value : ""));
-                }}
-                anchor="left"
-              />
-              <Dropdown
-                anchor="left"
-                options={availableAreaTypes}
-                selected={availableAreaTypes.find(type => type.value === data.geofilter)}
-                onChange={(e: OptionType) => {
-                  setData("geofilter", e.value);
-                  setData("area", undefined);
-                }}
-                disabled={isMalaysia}
-                sublabel={`${t("geofilter")}:`}
-                placeholder={t("common:common.select")}
-                width="w-full lg:w-fit"
-              />
-              <Dropdown
-                anchor="left"
-                options={
-                  data?.geofilter !== "state" && !isMalaysia
-                    ? AREA_OPTIONS[data.geofilter][params.state]
-                    : []
-                }
-                disabled={!data.geofilter || isMalaysia}
-                enableSearch
-                selected={
-                  data?.geofilter !== "state"
-                    ? AREA_OPTIONS[data.geofilter][params.state].find(
-                        area => area.value === data.area
-                      )
-                    : undefined
-                }
-                onChange={(e: { value: string }) => {
-                  setData("area", e.value);
-                  setData("loading", true);
-                  router.push(
-                    routes.KAWASANKU.concat("/", params.state, "/", data.geofilter, "/", e.value)
-                  );
-                }}
-                placeholder={t("common:common.select")}
-                width="w-full lg:w-fit"
-              />
-              <div className="flex items-center">
-                <Spinner loading={data.loading} className="hidden place-self-center lg:block" />
-                {(data.geofilter !== "state" || data.area) && (
-                  <Button
-                    variant="ghost"
-                    className="hover:shadow-button"
-                    icon={<XMarkIcon className="h-4 w-4" />}
-                    onClick={() => router.push(routes.KAWASANKU)}
-                  >
-                    {t("common:common.clear_all")}
-                  </Button>
-                )}
-              </div>
+      <Hero
+        background=" bg-gradient-to-r from-[#C9ECC9] from-0% via-[#EDF8ED] via-60% to-transparent to-100% dark:from-black dark:via-background-dark dark:to-transparent"
+        category={["Kawasanku", "text-dim text-sm font-bold uppercase tracking-widest"]}
+        header={[t("header")]}
+        description={[t("description"), "whitespace-pre-line"]}
+        last_updated={last_updated}
+        action={
+          <div className="flex w-full flex-col flex-wrap items-start justify-start gap-2 md:flex-row md:items-center">
+            <div className="flex items-center gap-2">
+              <p className="font-bold text-dim">{t("action")}:</p>
+              <Spinner loading={data.loading} className="block place-self-center md:hidden" />
             </div>
-          </div>
-        </div>
 
-        <MapPlot
-          geojson={geojson}
-          tileTheme="terrain"
-          className="absolute -right-0 top-0 -z-10 h-full overflow-hidden lg:h-full lg:w-[40vw]"
-          enableZoom={false}
-        />
-      </div>
+            <Dropdown
+              options={STATES}
+              selected={{ label: params.state, value: params.state }}
+              width="w-full md:w-fit"
+              sublabel={!isMalaysia ? t("common:common.state") + ":" : ""}
+              onChange={(e: OptionType) => {
+                setData("loading", true);
+                router.push(routes.KAWASANKU.concat("/", e.value !== "Malaysia" ? e.value : ""));
+              }}
+              anchor="left"
+            />
+            <Dropdown
+              anchor="left"
+              options={availableAreaTypes}
+              selected={availableAreaTypes.find(type => type.value === data.geofilter)}
+              onChange={(e: OptionType) => {
+                setData("geofilter", e.value);
+                setData("area", undefined);
+              }}
+              disabled={isMalaysia}
+              sublabel={`${t("geofilter")}:`}
+              placeholder={t("common:common.select")}
+              width="w-full md:w-fit"
+            />
+            <Dropdown
+              anchor="left"
+              options={
+                data?.geofilter !== "state" && !isMalaysia
+                  ? AREA_OPTIONS[data.geofilter][params.state]
+                  : []
+              }
+              disabled={!data.geofilter || data.geofilter === "state" || isMalaysia}
+              enableSearch
+              selected={
+                data?.geofilter !== "state"
+                  ? AREA_OPTIONS[data.geofilter][params.state].find(
+                      area => area.value === data.area
+                    )
+                  : undefined
+              }
+              onChange={(e: { value: string }) => {
+                setData("area", e.value);
+                setData("loading", true);
+                router.push(
+                  routes.KAWASANKU.concat("/", params.state, "/", data.geofilter, "/", e.value)
+                );
+              }}
+              placeholder={t("common:common.select")}
+              width="w-full md:w-fit"
+            />
+            <div className="flex items-center">
+              <Spinner loading={data.loading} className="hidden place-self-center md:block" />
+              {(data.geofilter !== "state" || data.area) && (
+                <Button
+                  variant="ghost"
+                  className="hover:bg-transparent hover:shadow-button"
+                  icon={<XMarkIcon className="h-4 w-4" />}
+                  onClick={() => router.push(routes.KAWASANKU)}
+                >
+                  {t("common:common.clear_all")}
+                </Button>
+              )}
+            </div>
+            <MapPlot
+              geojson={geojson}
+              tileTheme="terrain"
+              className="absolute -right-0 top-0 -z-10 h-full overflow-hidden md:h-full md:w-[40vw]"
+              enableZoom={false}
+            />
+          </div>
+        }
+      />
 
       <Container className="min-h-screen">
         {/* What does the population of {{ area }} look like? */}
@@ -437,7 +437,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
             onChange={index => setData("indicator_index", index)}
           >
             {AREA_TYPES.filter(type => type.value !== "district").map(type => (
-              <Panel name={type.label}>
+              <Panel name={type.label} key={type.value}>
                 <Choropleth
                   prefix={indicator_prefix}
                   unit={indicator_unit}

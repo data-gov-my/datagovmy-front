@@ -1,17 +1,17 @@
 import KawasankuDashboard from "@dashboards/kawasanku";
+import { PARLIMENS, STATE_MAP } from "@lib/schema/kawasanku";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
-import { useTranslation } from "datagovmy-ui/hooks";
-import { STATES } from "datagovmy-ui/schema/kawasanku";
-import { Page } from "datagovmy-ui/types";
-import { GeoJsonObject } from "geojson";
-import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { useEffect, useState } from "react";
 import getGeojson from "datagovmy-ui/geojson/parlimen";
-import { PARLIMENS, STATE_MAP } from "@lib/schema/kawasanku";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 
 const KawasankuParlimen: Page = ({
+  last_updated,
+  meta,
   params,
   bar,
   jitterplot,
@@ -24,13 +24,14 @@ const KawasankuParlimen: Page = ({
   const { t } = useTranslation(["dashboard-kawasanku"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={t("title_area", { area: params.id })}
         description={t("description")}
         keywords={""}
       />
       <KawasankuDashboard
+        last_updated={last_updated}
         params={params}
         bar={bar}
         jitterplot={jitterplot}
@@ -40,7 +41,7 @@ const KawasankuParlimen: Page = ({
         jitterplot_options={jitterplot_options}
         geojson={geojson}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -78,6 +79,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
     return {
       props: {
+        last_updated: data.data_last_updated,
         meta: {
           id: "dashboard-kawasanku",
           type: "dashboard",
