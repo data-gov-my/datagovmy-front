@@ -75,7 +75,7 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
     return { label: t(`keys.${type}`), value: type };
   });
 
-  const TREND_OPTIONS: Array<OptionType> = ["actual", "growth_qoq", "growth_yoy"].map(trend => {
+  const TREND_OPTIONS: Array<OptionType> = ["growth_yoy", "growth_qoq", "actual"].map(trend => {
     return { label: t(`keys.${trend}`), value: trend };
   });
 
