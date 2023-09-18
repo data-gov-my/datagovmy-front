@@ -238,11 +238,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
-                options={_downloads.map(item => ({
-                  label: item.title as string,
-                  value: item.id,
-                }))}
-                // .concat({ label: t("embed"), value: "embed" })}
+                options={_downloads
+                  .map(item => ({
+                    label: item.title as string,
+                    value: item.id,
+                  }))
+                  .concat({ label: t("embed"), value: "embed" })}
                 onChange={e => {
                   // embed
                   if (e.value === "embed") {
