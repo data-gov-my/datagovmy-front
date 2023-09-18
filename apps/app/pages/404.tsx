@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
-  const { asPath } = useRouter();
+
   return (
     <>
       <Metadata title={t("error.404.title") as string} keywords={""} />
@@ -18,7 +18,7 @@ const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
           description={
             <>
               {`${t("error.404.description")} ${t("error.404.legacy")}`}
-              <At external href={`https://archive.data.gov.my${asPath}`} className="link-primary">
+              <At external href={"https://archive.data.gov.my"} className="link-primary">
                 archive.data.gov.my
               </At>
             </>
