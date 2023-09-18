@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-external-trade
   return {
     props: {
       meta: {
-        id: "external-trade",
+        id: "dashboard-external-trade",
         type: "dashboard",
         category: "trade",
         agency: "DOSM",

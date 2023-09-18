@@ -190,7 +190,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
       { label: t("filter_options.marital"), value: "MARITAL" },
     ];
 
-    const startYear = 1982;
+    const startYear = 1920;
     const endYear: number = new Date().getFullYear();
 
     const filterYears = (start: number, end: number): OptionType[] =>

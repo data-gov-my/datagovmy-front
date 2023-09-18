@@ -350,6 +350,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
                 onReset={() => {
                   setData("start", startYear);
                   setData("end", endYear);
+                  fetchData(data.p_birthday, data.groupBy, startYear.toString(), LATEST_YEAR);
                 }}
               />
             </div>

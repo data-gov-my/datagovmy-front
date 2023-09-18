@@ -5,8 +5,7 @@ import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
-import { useTranslation } from "datagovmy-ui/hooks";
-import { DCConfig, DCFilter, FilterDate, OptionType, Page } from "datagovmy-ui/types";
+import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo } from "react";
 
@@ -21,22 +20,17 @@ const CatalogueShow: Page = ({
   translations,
   catalogueId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(["catalogue", "common"]);
-
-  const availableOptions = useMemo<OptionType[]>(() => {
+  const availableOptions = useMemo<string[]>(() => {
     switch (dataset.type) {
       case "TABLE":
-        return [{ label: t("table"), value: "table" }];
+        return ["table"];
 
       case "GEOJSON":
       case "HEATTABLE":
-        return [{ label: t("chart"), value: "chart" }];
+        return ["chart"];
 
       default:
-        return [
-          { label: t("chart"), value: "chart" },
-          { label: t("table"), value: "table" },
-        ];
+        return ["chart", "table"];
     }
   }, [dataset.type]);
 

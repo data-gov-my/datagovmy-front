@@ -5,20 +5,19 @@ import { SHORT_LANG } from "datagovmy-ui/constants";
 import { withi18n } from "datagovmy-ui/decorators";
 import { sortAlpha } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Page } from "datagovmy-ui/types";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const CatalogueIndex: Page = ({
   query,
   collection,
-  sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(["catalogue", "common"]);
+  const { t } = useTranslation("catalogue");
 
   return (
     <>
-      <Metadata title={t("header")} description={"description"} keywords={""} />
-      <DataCatalogue query={query} collection={collection} sources={sources} />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <DataCatalogue query={query} collection={collection} />
     </>
   );
 };
@@ -49,20 +48,19 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     return {
       props: {
         meta: {
-          id: "data-catalogue",
+          id: "catalogue-index",
           type: "misc",
           category: null,
           agency: null,
         },
         query: query ?? {},
         total: data.total_all,
-        sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
         collection: data.dataset ? recurSort(data.dataset) : {},
       },
     };
   },
   {
-    cache_expiry: 600, // 10min
+    cache_expiry: 600, // 10 min
   }
 );
 

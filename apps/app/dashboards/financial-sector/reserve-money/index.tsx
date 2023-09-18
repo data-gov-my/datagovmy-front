@@ -98,12 +98,16 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
             unit,
           ].join("")
         : [
+            timeseries_callouts.data[data.index_type.value][key].callout > 0 ? "" : "-",
             prefix,
-            smartNumFormat({
-              value: timeseries_callouts.data[data.index_type.value][key].callout,
-              locale: i18n.language,
-              precision: [1, 1],
-            }),
+            numFormat(
+              Math.abs(timeseries_callouts.data[data.index_type.value][key].callout),
+              "compact",
+              [1, 1],
+              "long",
+              i18n.language,
+              false
+            ),
           ].join("");
       return {
         prefix,
@@ -181,8 +185,9 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
                   className="h-[350px] w-full"
                   interval="month"
                   enableAnimation={!play}
+                  displayType="compact"
                   displayNumFormat={(value, type, precision) =>
-                    smartNumFormat({ value, type, precision, locale: i18n.language })
+                    numFormat(value, type, precision, "long", i18n.language, true)
                   }
                   unitY={configs("total").unit}
                   prefixY={configs("total").prefix}
@@ -239,8 +244,13 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
                       className="h-[350px] w-full"
                       interval="month"
                       enableAnimation={!play}
+                      displayType={
+                        ["growth_yoy", "growth_mom"].includes(data.index_type.value)
+                          ? "standard"
+                          : "compact"
+                      }
                       displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
+                        numFormat(value, type, precision, "long", i18n.language, true)
                       }
                       unitY={chartData.unitY}
                       prefixY={chartData.prefix}
@@ -298,11 +308,37 @@ const ReserveMoneyDashboard: FunctionComponent<ReserveMoneyDashboardProps> = ({
                       className="h-[350px] w-full"
                       interval="month"
                       enableAnimation={!play}
-                      displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
-                      }
-                      unitY={chartData.unitY}
-                      prefixY={chartData.prefix}
+                      displayNumFormat={value => {
+                        const isPercentage = ["growth_yoy", "growth_mom"].includes(
+                          data.index_type.value
+                        );
+                        return [
+                          value < 0 ? "-" : "",
+                          !isPercentage ? "RM" : "",
+                          numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                          isPercentage ? "%" : "",
+                        ].join("");
+                      }}
+                      tooltipCallback={item => {
+                        const isPercentage = ["growth_yoy", "growth_mom"].includes(
+                          data.index_type.value
+                        );
+                        return [
+                          item.dataset.label + ": ",
+                          item.parsed.y < 0 ? "-" : "",
+                          !isPercentage ? "RM" : "",
+                          numFormat(
+                            Math.abs(item.parsed.y),
+                            isPercentage ? "standard" : "compact",
+                            1,
+                            "long",
+                            i18n.language,
+                            true
+                          ),
+                          isPercentage ? "%" : "",
+                          ,
+                        ].join("");
+                      }}
                       axisY={{
                         y2: {
                           display: false,

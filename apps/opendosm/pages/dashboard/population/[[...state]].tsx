@@ -81,7 +81,7 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       props: {
         meta: {
-          id: "population",
+          id: "dashboard-population",
           type: "dashboard",
           category: "demography",
           agency: "DOSM",

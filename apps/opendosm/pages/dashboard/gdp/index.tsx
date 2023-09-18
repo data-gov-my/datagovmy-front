@@ -1,27 +1,28 @@
 import GDPDashboard from "@dashboards/gdp";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { GetStaticProps, InferGetServerSidePropsType } from "next";
 
-import { withi18n } from "datagovmy-ui/decorators";
-
 const GDP = ({
   last_updated,
+  meta,
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-gdp", "common"]);
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GDPDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 

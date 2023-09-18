@@ -7,11 +7,11 @@ import {
   Card,
   Container,
   Dropdown,
+  Markdown,
   Search,
   Section,
   Slider,
   Tooltip,
-  Markdown,
 } from "datagovmy-ui/components";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
 import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
@@ -69,7 +69,7 @@ const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
 });
 
 interface CatalogueShowProps {
-  options: OptionType[];
+  options: string[];
   params: {
     id: string;
   };
@@ -121,8 +121,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   catalogueId,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const [show, setShow] = useState<OptionType>(options[0]);
-
+  const availableOptions: OptionType[] = options.map(value => ({
+    label: t(value),
+    value: value,
+  }));
+  const [show, setShow] = useState<OptionType>(availableOptions[0]);
   const embedRef = useRef<EmbedInterface>(null);
   const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
   const { downloads } = useContext(CatalogueContext);
@@ -234,11 +237,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           menu={
             <>
               <Dropdown
-                className="w-fit"
+                width="w-fit"
                 sublabel={<EyeIcon className="h-4 w-4" />}
-                selected={show}
-                options={options}
-                onChange={e => setShow(e)}
+                selected={availableOptions.find(e => e.value === show.value)}
+                options={availableOptions}
+                onChange={e => setShow(e.value)}
               />
               <Dropdown
                 width="w-fit"
@@ -547,10 +550,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
                   {downloads?.chart.map(props => (
                     <DownloadCard
-                      key={dataset.meta.unique_id}
-                      views={
-                        result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
-                      }
+                      key={`${dataset.meta.unique_id}_${props.id}`}
+                      views={result ? result[`download_${props.id as "png" | "svg"}`] : undefined}
                       {...props}
                     />
                   ))}
@@ -563,7 +564,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <div className="gap-4.5 grid grid-cols-1 md:grid-cols-2">
                   {downloads?.data.map(props => (
                     <DownloadCard
-                      key={dataset.meta.unique_id}
+                      key={`${dataset.meta.unique_id}_${props.id}`}
                       views={
                         result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
                       }

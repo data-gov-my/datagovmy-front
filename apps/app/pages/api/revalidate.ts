@@ -60,24 +60,14 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
   new Promise(async (resolve, reject) => {
     switch (route) {
       // For routes with dynamic /[state] pages
-      case "/dashboard/covid-19":
-      case "/dashboard/covid-vaccination":
-      case "/dashboard/peka-b40":
-      case "/dashboard/organ-donation":
-      case "/dashboard/blood-donation":
-      case "/dashboard/crime":
-      case "/dashboard/fire-and-rescue":
-      case "/dashboard/inisiatif-pendapatan-rakyat":
       case "/dashboard/business-creation-destruction":
-      case "/ms-MY/dashboard/covid-19":
-      case "/ms-MY/dashboard/covid-vaccination":
-      case "/ms-MY/dashboard/peka-b40":
-      case "/ms-MY/dashboard/organ-donation":
-      case "/ms-MY/dashboard/blood-donation":
-      case "/ms-MY/dashboard/crime":
-      case "/ms-MY/dashboard/fire-and-rescue":
-      case "/ms-MY/dashboard/inisiatif-pendapatan-rakyat":
+      case "/dashboard/drug-addiction":
+      case "/dashboard/fire-and-rescue":
+      case "/dashboard/jobless-claims":
       case "/ms-MY/dashboard/business-creation-destruction":
+      case "/ms-MY/dashboard/drug-addiction":
+      case "/ms-MY/dashboard/fire-and-rescue":
+      case "/ms-MY/dashboard/jobless-claims":
         await res.revalidate(route);
         const result = revalidateWithStates(res, route);
         routes.push.apply(routes, result);

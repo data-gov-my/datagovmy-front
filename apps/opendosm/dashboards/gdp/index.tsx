@@ -121,9 +121,10 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
       const prefix = isRM ? "RM" : "";
       const unit = isRM ? "" : "%";
       const callout = [
+        timeseries_callouts.data[data.index_type.value][key].callout > 0 ? "" : "-",
         prefix,
         numFormat(
-          timeseries_callouts.data[data.index_type.value][key].callout,
+          Math.abs(timeseries_callouts.data[data.index_type.value][key].callout),
           "compact",
           [1, 1],
           "long",
@@ -225,6 +226,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                 tooltipCallback={item =>
                   [
                     item.dataset.label + ": ",
+                    item.parsed.y < 0 ? "-" : "",
                     configs("overall").prefix,
                     numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
                     configs("overall").unit,
@@ -294,6 +296,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                     tooltipCallback={item =>
                       [
                         item.dataset.label + ": ",
+                        item.parsed.y < 0 ? "-" : "",
                         chartData.prefix,
                         numFormat(
                           Math.abs(item.parsed.y),
@@ -360,11 +363,16 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                       interval="quarter"
                       enableAnimation={!play}
                       displayNumFormat={value =>
-                        numFormat(value, "compact", 0, "long", i18n.language, true)
+                        [
+                          value < 0 ? "-" : "",
+                          data.index_type.value.includes("growth") ? "" : "RM",
+                          numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                        ].join("")
                       }
                       tooltipCallback={item =>
                         [
                           item.dataset.label + ": ",
+                          item.parsed.y < 0 ? "-" : "",
                           chartData.prefix,
                           numFormat(
                             Math.abs(item.parsed.y),
@@ -377,7 +385,6 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                           chartData.unitY,
                         ].join("")
                       }
-                      prefixY={chartData.prefix}
                       unitY={chartData.unitY}
                       axisY={{
                         y2: {

@@ -1,9 +1,10 @@
 import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import DivisionIcon, { Division } from "@icons/division";
+import { get } from "datagovmy-ui/api";
 import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 /**
  * Dashboard Index
@@ -11,10 +12,16 @@ import { FunctionComponent, useMemo } from "react";
  */
 
 type Dashboard = {
+  id: string;
   name: string;
   division: Division;
   route: string;
   colour?: string;
+};
+
+type View = {
+  id: string;
+  view_count: number;
 };
 
 interface DashboardIndexProps {
@@ -34,7 +41,6 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
         t(`dashboards.${d.name}.name`).toLowerCase().includes(data.search.toLowerCase())
       );
     });
-    // .sort((a, b) => b.views - a.views);
   }, [data.search]);
 
   return (
@@ -47,9 +53,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
         agencyBadge={<AgencyBadge agency="dosm" />}
       />
       <DashboardFilter
-        data={{
-          search: data.search,
-        }}
+        data={{ search: data.search }}
         onSearch={value => setData("search", value)}
       />
       <Container className="min-h-screen">
@@ -109,6 +113,15 @@ interface RankingProps {
 
 const Ranking = ({ ranks }: RankingProps) => {
   const { t, i18n } = useTranslation(["dashboards", "agencies", "common", "division"]);
+  const [views, setViews] = useState<View[]>([]);
+
+  useEffect(() => {
+    const fetchViews = () =>
+      get("/view-count/", { type: "dashboard", views_only: true }).then(({ data }) =>
+        setViews(data)
+      );
+    fetchViews();
+  }, []);
 
   return (
     <>
@@ -135,14 +148,14 @@ const Ranking = ({ ranks }: RankingProps) => {
                   </p>
                 </div>
                 <div className="relative w-full">
-                  {/* TODO: Remove when view count is readded.It was used to create artificial height for hovering */}
-                  <p className="h-6 text-dim transition-transform group-hover:translate-y-6"></p>
-                  {/* TODO: View counts (add back when ready) */}
-                  {/* <p className="text-dim transition-transform group-hover:translate-y-6 h-6">
-                    {`${numFormat(100, "compact")} ${t("common:common.views", {
-                      count: 100,
+                  <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
+                    {`${numFormat(
+                      views.find(e => e.id === item.id)?.view_count ?? 0,
+                      "compact"
+                    )} ${t("common:common.views", {
+                      count: views.find(e => e.id === item.id)?.view_count ?? 0,
                     })}`}
-                  </p> */}
+                  </p>
                   <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
                     {t("common:components.click_to_explore")}
                   </p>

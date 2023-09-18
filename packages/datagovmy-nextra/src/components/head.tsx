@@ -35,6 +35,44 @@ export function Head(): ReactElement {
             href={`data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='.9em' font-size='90' text-anchor='middle'>${config.faviconGlyph}</text><style>text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";fill:black}@media(prefers-color-scheme:dark){text{fill:white}}</style></svg>`}
           />
         ) : null}
+
+        {/* Apple Splash Screen */}
+        <link
+          rel="apple-touch-startup-image"
+          href="/static/images/icons/apple_splash_2048.png"
+          sizes="2048x2732"
+        />
+        <link
+          rel="apple-touch-startup-image"
+          href="/static/images/icons/apple_splash_1668.png"
+          sizes="1668x2224"
+        />
+        <link
+          rel="apple-touch-startup-image"
+          href="/static/images/icons/apple_splash_1536.png"
+          sizes="1536x2048"
+        />
+        <link
+          rel="apple-touch-startup-image"
+          href="/static/images/icons/apple_splash_1125.png"
+          sizes="1125x2436"
+        />
+        <link
+          rel="apple-touch-startup-image"
+          href="/static/images/icons/apple_splash_1242.png"
+          sizes="1242x2208"
+        />
+        <link
+          rel="apple-touch-startup-image"
+          href="/static/images/icons/apple_splash_750.png"
+          sizes="750x1334"
+        />
+        <link
+          rel="apple-touch-startup-image"
+          href="/static/images/icons/apple_splash_640.png"
+          sizes="640x1136"
+        />
+
         {mounted ? (
           <meta name="theme-color" content={resolvedTheme === "dark" ? "#111" : "#fff"} />
         ) : (

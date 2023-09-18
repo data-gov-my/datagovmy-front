@@ -76,7 +76,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const configs = useCallback<
@@ -94,12 +94,16 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
             unit,
           ].join("")
         : [
+            timeseries_callouts.data[data.index_type.value][key].callout > 0 ? "" : "-",
             prefix,
-            smartNumFormat({
-              value: timeseries_callouts.data[data.index_type.value][key].callout,
-              locale: i18n.language,
-              precision: [1, 1],
-            }),
+            numFormat(
+              Math.abs(timeseries_callouts.data[data.index_type.value][key].callout),
+              "compact",
+              [1, 1],
+              "long",
+              i18n.language,
+              false
+            ),
           ].join("");
       return {
         prefix,
@@ -226,8 +230,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                   className="h-[350px] w-full"
                   interval="month"
                   enableAnimation={!play}
+                  precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                  displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                   displayNumFormat={(value, type, precision) =>
-                    smartNumFormat({ value, type, precision, locale: i18n.language })
+                    numFormat(value, type, precision, "long", i18n.language, true)
                   }
                   unitY={configs("total").unit}
                   prefixY={configs("total").prefix}
@@ -283,8 +289,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("note_1").unit}
                     prefixY={configs("note_1").prefix}
@@ -331,8 +339,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("note_5").unit}
                     prefixY={configs("note_5").prefix}
@@ -379,8 +389,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("note_10").unit}
                     prefixY={configs("note_10").prefix}
@@ -427,8 +439,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("note_20").unit}
                     prefixY={configs("note_20").prefix}
@@ -475,8 +489,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("note_50").unit}
                     prefixY={configs("note_50").prefix}
@@ -523,8 +539,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("note_100").unit}
                     prefixY={configs("note_100").prefix}
@@ -571,8 +589,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("coin_10").unit}
                     prefixY={configs("coin_10").prefix}
@@ -619,8 +639,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("coin_20").unit}
                     prefixY={configs("coin_20").prefix}
@@ -667,8 +689,10 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
                     className="h-[350px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                    displayType={data.index_type.value.includes("growth") ? "standard" : "compact"}
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     unitY={configs("coin_50").unit}
                     prefixY={configs("coin_50").prefix}
