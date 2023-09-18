@@ -11,17 +11,24 @@ import { FunctionComponent, useMemo } from "react";
  */
 
 type Dashboard = {
+  id: string;
   name: string;
   division: Division;
   route: string;
   colour?: string;
 };
 
+type View = {
+  id: string;
+  view_count: number;
+};
+
 interface DashboardIndexProps {
   dashboards: Record<string, Dashboard[]>;
+  views: View[];
 }
 
-const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) => {
+const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards, views }) => {
   const { t } = useTranslation(["dashboards", "opendosm-home", "agencies", "common"]);
 
   const { data, setData } = useData({ search: "" });
@@ -34,7 +41,6 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
         t(`dashboards.${d.name}.name`).toLowerCase().includes(data.search.toLowerCase())
       );
     });
-    // .sort((a, b) => b.views - a.views);
   }, [data.search]);
 
   return (
@@ -54,7 +60,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) 
       />
       <Container className="min-h-screen">
         <Section title={t("section2_title")}>
-          <Ranking ranks={_collection} />
+          <Ranking ranks={_collection} views={views} />
         </Section>
       </Container>
     </>
@@ -105,9 +111,10 @@ DashboardFilter.displayName = "DashboardFilter";
 
 interface RankingProps {
   ranks: Dashboard[];
+  views: View[];
 }
 
-const Ranking = ({ ranks }: RankingProps) => {
+const Ranking = ({ ranks, views }: RankingProps) => {
   const { t, i18n } = useTranslation(["dashboards", "agencies", "common", "division"]);
 
   return (
@@ -135,14 +142,14 @@ const Ranking = ({ ranks }: RankingProps) => {
                   </p>
                 </div>
                 <div className="relative w-full">
-                  {/* TODO: Remove when view count is readded.It was used to create artificial height for hovering */}
-                  <p className="h-6 text-dim transition-transform group-hover:translate-y-6"></p>
-                  {/* TODO: View counts (add back when ready) */}
-                  {/* <p className="text-dim transition-transform group-hover:translate-y-6 h-6">
-                    {`${numFormat(100, "compact")} ${t("common:common.views", {
-                      count: 100,
+                  <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
+                    {`${numFormat(
+                      views.find(e => e.id === item.id)?.view_count ?? 0,
+                      "compact"
+                    )} ${t("common:common.views", {
+                      count: views.find(e => e.id === item.id)?.view_count ?? 0,
                     })}`}
-                  </p> */}
+                  </p>
                   <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">
                     {t("common:components.click_to_explore")}
                   </p>
