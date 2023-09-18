@@ -1,9 +1,10 @@
 import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import DivisionIcon, { Division } from "@icons/division";
+import { get } from "datagovmy-ui/api";
 import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 /**
  * Dashboard Index
@@ -25,10 +26,9 @@ type View = {
 
 interface DashboardIndexProps {
   dashboards: Record<string, Dashboard[]>;
-  views: View[];
 }
 
-const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards, views }) => {
+const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) => {
   const { t } = useTranslation(["dashboards", "opendosm-home", "agencies", "common"]);
 
   const { data, setData } = useData({ search: "" });
@@ -53,14 +53,12 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards, vi
         agencyBadge={<AgencyBadge agency="dosm" />}
       />
       <DashboardFilter
-        data={{
-          search: data.search,
-        }}
+        data={{ search: data.search }}
         onSearch={value => setData("search", value)}
       />
       <Container className="min-h-screen">
         <Section title={t("section2_title")}>
-          <Ranking ranks={_collection} views={views} />
+          <Ranking ranks={_collection} />
         </Section>
       </Container>
     </>
@@ -111,11 +109,19 @@ DashboardFilter.displayName = "DashboardFilter";
 
 interface RankingProps {
   ranks: Dashboard[];
-  views: View[];
 }
 
-const Ranking = ({ ranks, views }: RankingProps) => {
+const Ranking = ({ ranks }: RankingProps) => {
   const { t, i18n } = useTranslation(["dashboards", "agencies", "common", "division"]);
+  const [views, setViews] = useState<View[]>([]);
+
+  useEffect(() => {
+    const fetchViews = () =>
+      get("/view-count/", { type: "dashboard", views_only: true }).then(({ data }) =>
+        setViews(data)
+      );
+    fetchViews();
+  }, []);
 
   return (
     <>
