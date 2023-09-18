@@ -1,16 +1,19 @@
 import KawasankuDashboard from "@dashboards/kawasanku";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
+import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
-import { useTranslation, useWatch } from "datagovmy-ui/hooks";
+import getGeojson from "datagovmy-ui/geojson/dun";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { STATE_MAP, DUNS } from "datagovmy-ui/schema/kawasanku";
 import { Page } from "datagovmy-ui/types";
 import { GeoJsonObject } from "geojson";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useState } from "react";
-import getGeojson from "datagovmy-ui/geojson/dun";
 
 const KawasankuDun: Page = ({
+  last_updated,
+  meta,
   params,
   geojson,
   bar,
@@ -23,13 +26,14 @@ const KawasankuDun: Page = ({
   const { t } = useTranslation();
 
   return (
-    <>
+    <AnalyticsProvider meta={meta}>
       <Metadata
         title={t("title_area", { area: params.id })}
         description={t("description")}
         keywords={""}
       />
       <KawasankuDashboard
+        last_updated={last_updated}
         params={params}
         bar={bar}
         jitterplot={jitterplot}
@@ -39,7 +43,7 @@ const KawasankuDun: Page = ({
         geojson={geojson}
         choropleth={choropleth}
       />
-    </>
+    </AnalyticsProvider>
   );
 };
 
@@ -77,6 +81,7 @@ export const getStaticProps: GetStaticProps = withi18n(
 
     return {
       props: {
+        last_updated: data.data_last_updated,
         meta: {
           id: "dashboard-kawasanku",
           type: "dashboard",

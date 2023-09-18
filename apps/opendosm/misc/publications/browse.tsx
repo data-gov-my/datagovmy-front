@@ -43,6 +43,7 @@ export type Publication = {
   publication_type: string;
   release_date: string;
   title: string;
+  total_downloads: number;
 };
 
 export type Resource = {

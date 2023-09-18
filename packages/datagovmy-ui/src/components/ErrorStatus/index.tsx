@@ -1,10 +1,10 @@
 import { useTranslation } from "next-i18next";
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import useConfig from "next/config";
 
 interface ErrorStatusProps {
   title: string;
-  description?: string | null;
+  description?: ReactNode | null;
   code: number;
   reason: string;
 }

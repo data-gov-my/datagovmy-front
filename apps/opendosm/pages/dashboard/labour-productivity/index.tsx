@@ -35,7 +35,7 @@ export const getStaticProps: GetStaticProps = withi18n(
       notFound: false,
       props: {
         meta: {
-          id: "labour-productivity",
+          id: "dashboard-labour-productivity",
           type: "dashboard",
           category: "labour-markets",
           agency: "DOSM",

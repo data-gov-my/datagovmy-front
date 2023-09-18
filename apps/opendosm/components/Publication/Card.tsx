@@ -6,16 +6,11 @@ import { Publication } from "misc/publications/browse";
 import { FunctionComponent } from "react";
 
 interface PublicationCardProps {
-  downloads?: number;
   onClick: () => void;
   publication: Publication;
 }
 
-const PublicationCard: FunctionComponent<PublicationCardProps> = ({
-  downloads = 100000,
-  onClick,
-  publication,
-}) => {
+const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, publication }) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
 
   return (
@@ -45,16 +40,13 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({
           <p className="text-sm font-normal text-dim">{publication.description}</p>
         </div>
         <div className="relative w-full text-base font-normal">
-          {/* TODO: Remove when view count is readded.It was used to create artificial height for hovering */}
-          <p className="h-6 text-dim transition-transform group-hover:translate-y-6"></p>
           {/* TODO: View counts (add back when ready) */}
-          {/* <p className="text-dim transition-transform group-hover:translate-y-6">
-            {numFormat(downloads, "compact")}
-            {downloads % 10 !== 0 ? "+ " : " "}
+          <p className="text-dim transition-transform group-hover:translate-y-6">
+            {numFormat(publication.total_downloads, "compact")}{" "}
             {t("common:common.downloads", {
-              count: downloads,
+              count: publication.total_downloads,
             })}
-          </p> */}
+          </p>
           <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 group-hover:duration-300 dark:text-primary-dark">
             {t("common:components.click_to_explore")}
           </p>

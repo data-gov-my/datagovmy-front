@@ -69,7 +69,7 @@ const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
 });
 
 interface CatalogueShowProps {
-  options: OptionType[];
+  options: string[];
   params: {
     id: string;
   };
@@ -121,11 +121,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   catalogueId,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const [show, setShow] = useState<OptionType>(options[0]);
+  const availableOptions: OptionType[] = options.map(value => ({
+    label: t(value),
+    value: value,
+  }));
+  const [show, setShow] = useState<OptionType>(availableOptions[0]);
   const { downloads } = useContext(CatalogueContext);
   const _downloads = Object.values(downloads).flatMap(option => option);
   const embedRef = useRef<EmbedInterface>(null);
-  const { filter, setFilter } = useFilter(config.context, { id: params.id });
+  const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
   const { result, track } = useAnalytics(dataset);
 
   const renderChart = (): ReactNode | undefined => {
@@ -178,7 +182,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   };
 
   const generateTableSchema = () => {
-    const columns = Object.keys(dataset.table[0]);
+    const columns = Array.isArray(dataset.table) ? Object.keys(dataset.table[0]) : [];
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
@@ -225,19 +229,27 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <Dropdown
                 width="w-fit"
                 sublabel={<EyeIcon className="h-4 w-4" />}
-                selected={show}
-                options={options}
-                onChange={e => setShow(e)}
+                selected={availableOptions.find(e => e.value === show.value)}
+                options={availableOptions}
+                onChange={e => setShow(e.value)}
               />
               <Dropdown
+                width="w-fit"
                 anchor="right"
                 sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
                 placeholder={t("download")}
-                options={_downloads.map(item => ({
-                  label: item.title as string,
-                  value: item.id,
-                }))}
+                options={_downloads
+                  .map(item => ({
+                    label: item.title as string,
+                    value: item.id,
+                  }))
+                  .concat({ label: t("embed"), value: "embed" })}
                 onChange={e => {
+                  // embed
+                  if (e.value === "embed") {
+                    embedRef.current?.open();
+                    return;
+                  }
                   // downloads
                   const action = _downloads.find(({ id }) => e.value === id);
                   if (!action) return;
@@ -302,6 +314,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 }
                 config={generateTableSchema()}
                 enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 15 : false}
+                data-testid="catalogue-table"
               />
             </div>
           )}
@@ -311,7 +324,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             <Slider
               type="single"
               value={config.dates?.options.indexOf(
-                config.context[config.dates.key].value || config.dates.default
+                config.context[config.dates.key]?.value || config.dates.default
               )}
               data={config.dates.options}
               period={SHORT_PERIOD[config.dates.interval]}
@@ -429,7 +442,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     </ul>
                     <div className="hidden md:block">
                       <Table
-                        className="table-slate table-default-slate"
+                        className="table-slate table-default-slate md:w-full"
                         data={metadata.definitions.map((item: any) => {
                           const raw = item.desc;
                           const [type, definition] = [
@@ -527,10 +540,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <div className="grid grid-cols-1 gap-4.5 md:grid-cols-2">
                   {downloads?.chart.map(props => (
                     <DownloadCard
-                      key={dataset.meta.unique_id}
-                      views={
-                        result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
-                      }
+                      key={`${dataset.meta.unique_id}_${props.id}`}
+                      views={result ? result[`download_${props.id as "png" | "svg"}`] : undefined}
                       {...props}
                     />
                   ))}
@@ -543,7 +554,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 <div className="grid grid-cols-1 gap-4.5 md:grid-cols-2">
                   {downloads?.data.map(props => (
                     <DownloadCard
-                      key={dataset.meta.unique_id}
+                      key={`${dataset.meta.unique_id}_${props.id}`}
                       views={
                         result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
                       }

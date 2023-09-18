@@ -141,11 +141,11 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
                             >
                               <Card
                                 className={clx(
-                                  "border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-3 rounded-xl border bg-white p-3 transition-colors dark:bg-black",
+                                  "border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full space-y-2 rounded-xl border bg-white p-3 transition-colors dark:bg-black",
                                   isValidURL(dashboards_route[item.name].route) ? "h-[110px]" : ""
                                 )}
                               >
-                                <div className="relative flex items-center gap-4">
+                                <div className="relative flex items-center gap-x-3">
                                   <AgencyIcon
                                     agency={item.agency}
                                     className="h-6 w-6"
