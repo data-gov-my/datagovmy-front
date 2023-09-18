@@ -88,9 +88,9 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
   const { t } = useTranslation(["dashboard-external-trade"]);
 
   const INDEX_OPTIONS: Array<OptionType> = [
+    { label: t("keys.growth_yoy"), value: "growth_yoy" },
     { label: t("keys.value"), value: "value" },
     { label: t("keys.index"), value: "index" },
-    { label: t("keys.growth_yoy"), value: "growth_yoy" },
   ];
 
   const SHADE_OPTIONS: Array<OptionType> = [

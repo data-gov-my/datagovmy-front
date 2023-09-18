@@ -260,8 +260,9 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                     className="h-[300px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    displayType="compact"
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     data={{
                       labels: coordinate.x,
@@ -282,7 +283,16 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                         title: t("common:common.latest", {
                           date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                         }),
-                        value: numFormat(timeseries_callouts.data.own_account.callout1, "standard"),
+                        value: numFormat(
+                          timeseries_callouts.data.own_account.callout1,
+                          timeseries_callouts.data.own_account.callout1 < 1e6
+                            ? "standard"
+                            : "compact",
+                          timeseries_callouts.data.own_account.callout1 < 1e6 ? 0 : 1,
+                          "long",
+                          i18n.language,
+                          false
+                        ),
                       },
                     ]}
                   />
@@ -291,8 +301,9 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                     className="h-[300px] w-full"
                     interval="month"
                     enableAnimation={!play}
+                    displayType="compact"
                     displayNumFormat={(value, type, precision) =>
-                      smartNumFormat({ value, type, precision, locale: i18n.language })
+                      numFormat(value, type, precision, "long", i18n.language, true)
                     }
                     data={{
                       labels: coordinate.x,
@@ -313,7 +324,14 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                         title: t("common:common.latest", {
                           date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                         }),
-                        value: numFormat(timeseries_callouts.data.outside.callout1, "standard"),
+                        value: numFormat(
+                          timeseries_callouts.data.outside.callout1,
+                          timeseries_callouts.data.outside.callout1 < 1e6 ? "standard" : "compact",
+                          timeseries_callouts.data.outside.callout1 < 1e6 ? 0 : 1,
+                          "long",
+                          i18n.language,
+                          false
+                        ),
                       },
                     ]}
                   />

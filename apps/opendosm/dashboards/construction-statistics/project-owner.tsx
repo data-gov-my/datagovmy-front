@@ -50,7 +50,7 @@ const ProjectOwner: FunctionComponent<ProjectOwnerProps> = ({
     label: t(key) as string,
     value: key,
   }));
-  const VALUE_OPTIONS = ["value", "growth_qoq", "growth_yoy"].map((key: string) => ({
+  const VALUE_OPTIONS = ["growth_yoy", "growth_qoq", "value"].map((key: string) => ({
     label: t(key) as string,
     value: key,
   }));

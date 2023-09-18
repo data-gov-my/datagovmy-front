@@ -7,6 +7,7 @@ import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { FunctionComponent, useCallback } from "react";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
+import { useTheme } from "next-themes";
 
 /**
  * Household Debt Dashboard
@@ -61,6 +62,7 @@ const HouseholdDebtDashboard: FunctionComponent<HouseholdDebtProp> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-household-debt"]);
+  const { theme } = useTheme();
 
   const OPTIONS: Array<OptionType> = TIMESERIESTYPE.map(type => ({
     label: t(`keys.${type}`),
@@ -101,14 +103,14 @@ const HouseholdDebtDashboard: FunctionComponent<HouseholdDebtProp> = ({
       return {
         type: "line",
         data: coordinate[key],
-        backgroundColor: AKSARA_COLOR.BLACK_H,
+        backgroundColor: theme === "light" ? AKSARA_COLOR.BLACK_H : AKSARA_COLOR.WASHED_DARK,
         borderWidth: 0,
         fill: true,
         yAxisID: "y2",
         stepped: true,
       };
     },
-    [data]
+    [data, theme]
   );
 
   const plotTimeseries = (charts: Exclude<TimeseriesData, "x" | "recession">[], play: boolean) => {
@@ -139,7 +141,7 @@ const HouseholdDebtDashboard: FunctionComponent<HouseholdDebtProp> = ({
                 2,
                 "long",
                 i18n.language,
-                true
+                false
               ),
             ].join(""),
           },
@@ -171,8 +173,27 @@ const HouseholdDebtDashboard: FunctionComponent<HouseholdDebtProp> = ({
             const isPercentage = ["growth_yoy"].includes(data.index);
             return [
               value < 0 ? "-" : "",
+              !isPercentage ? "RM" : "",
               numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
               isPercentage ? "%" : "",
+            ].join("");
+          }}
+          tooltipCallback={item => {
+            const isPercentage = ["growth_yoy"].includes(data.index);
+            return [
+              item.dataset.label + ": ",
+              item.parsed.y < 0 ? "-" : "",
+              !isPercentage ? "RM" : "",
+              numFormat(
+                Math.abs(item.parsed.y),
+                isPercentage ? "standard" : "compact",
+                isPercentage ? 1 : 2,
+                "long",
+                i18n.language,
+                true
+              ),
+              isPercentage ? "%" : "",
+              ,
             ].join("");
           }}
           axisY={{

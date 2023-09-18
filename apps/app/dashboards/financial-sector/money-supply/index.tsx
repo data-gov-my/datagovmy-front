@@ -169,11 +169,16 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
             unit,
           ].join("")
         : [
+            timeseries_callouts.data[data.index_type.value][key].callout > 0 ? "" : "-",
             prefix,
-            smartNumFormat({
-              value: timeseries_callouts.data[data.index_type.value][key].callout,
-              locale: i18n.language,
-            }),
+            numFormat(
+              Math.abs(timeseries_callouts.data[data.index_type.value][key].callout),
+              "compact",
+              [1, 1],
+              "long",
+              i18n.language,
+              false
+            ),
           ].join("");
       return {
         prefix,
@@ -265,8 +270,12 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
                       className="h-[350px] w-full"
                       interval="month"
                       enableAnimation={!play}
+                      precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                      displayType={
+                        data.index_type.value.includes("growth") ? "standard" : "compact"
+                      }
                       displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
+                        numFormat(value, type, precision, "long", i18n.language, true)
                       }
                       unitY={chartData.unitY}
                       prefixY={chartData.prefix}
@@ -315,8 +324,12 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
                       className="h-[350px] w-full"
                       interval="month"
                       enableAnimation={!play}
+                      precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                      displayType={
+                        data.index_type.value.includes("growth") ? "standard" : "compact"
+                      }
                       displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
+                        numFormat(value, type, precision, "long", i18n.language, true)
                       }
                       unitY={chartData.unitY}
                       prefixY={chartData.prefix}
@@ -358,8 +371,12 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
                       className="h-[350px] w-full"
                       interval="month"
                       enableAnimation={!play}
+                      precision={data.index_type.value.includes("growth") ? [2, 0] : [1, 0]}
+                      displayType={
+                        data.index_type.value.includes("growth") ? "standard" : "compact"
+                      }
                       displayNumFormat={(value, type, precision) =>
-                        smartNumFormat({ value, type, precision, locale: i18n.language })
+                        numFormat(value, type, precision, "long", i18n.language, true)
                       }
                       unitY={chartData.unitY}
                       prefixY={chartData.prefix}

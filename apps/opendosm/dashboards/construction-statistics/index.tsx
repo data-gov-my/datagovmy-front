@@ -47,7 +47,7 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
   const { t, i18n } = useTranslation(["dashboard-construction-statistics", "common"]);
   const { theme } = useTheme();
 
-  const INDEX_OPTIONS = ["actual", "growth_qoq", "growth_yoy"].map((key: string) => ({
+  const INDEX_OPTIONS = ["growth_yoy", "growth_qoq", "actual"].map((key: string) => ({
     label: t(key) as string,
     value: key,
   }));

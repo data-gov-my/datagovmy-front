@@ -42,10 +42,10 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
   const { theme } = useTheme();
 
   const INDEX_OPTIONS: Array<OptionType> = [
+    { label: t("keys.growth_yoy"), value: "growth_yoy" },
+    { label: t("keys.growth_momsa"), value: "growth_momsa" },
     { label: t("keys.actual"), value: "actual" },
     { label: t("keys.actual_sa"), value: "actual_sa" },
-    { label: t("keys.growth_momsa"), value: "growth_momsa" },
-    { label: t("keys.growth_yoy"), value: "growth_yoy" },
   ];
   const SHADE_OPTIONS: Array<OptionType> = [
     { label: t("keys.no_shade"), value: "no_shade" },
@@ -164,7 +164,10 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
                         interval="month"
                         enableAnimation={!play}
                         displayNumFormat={value =>
-                          numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true)
+                          [
+                            value > 0 ? "" : "-",
+                            numFormat(Math.abs(value), "compact", 0, "long", i18n.language, true),
+                          ].join("")
                         }
                         tooltipCallback={item =>
                           [
