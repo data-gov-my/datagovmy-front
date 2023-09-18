@@ -197,10 +197,13 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       },
     },
     {
-      accessorKey: "downloads",
+      accessorKey: "total_downloads",
       id: "downloads",
       header: t("downloads"),
       className: "w-[150px]",
+      cell: ({ getValue }) => {
+        return <>{getValue()}</>;
+      },
     },
   ];
 
