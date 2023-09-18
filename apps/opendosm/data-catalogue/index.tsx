@@ -35,10 +35,9 @@ export type Catalogue = {
 interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
-  sources: string[];
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection }) => {
   const { t } = useTranslation(["catalogue", "opendosm-home", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const { size } = useContext(WindowContext);
@@ -78,7 +77,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             })
           }
         >
-          <CatalogueFilter query={query} sources={sources} />
+          <CatalogueFilter query={query} />
 
           {_collection.length > 0 ? (
             _collection.map(([title, datasets]) => {
@@ -118,10 +117,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
  */
 interface CatalogueFilterProps {
   query: Record<string, any>;
-  sources: string[];
 }
 
-const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sources }) => {
+const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const periods: OptionType[] = [
     { label: t("filter_options.daily"), value: "DAILY" },
@@ -129,6 +127,8 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
     { label: t("filter_options.monthly"), value: "MONTHLY" },
     { label: t("filter_options.quarterly"), value: "QUARTERLY" },
     { label: t("filter_options.yearly"), value: "YEARLY" },
+    { label: t("filter_options.infrequent"), value: "INFREQUENT" },
+    { label: t("filter_options.as_required"), value: "AS_REQUIRED" },
   ];
   const geographies: OptionType[] = [
     { label: t("filter_options.national"), value: "NATIONAL" },
@@ -146,7 +146,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
     { label: t("filter_options.disability"), value: "DISABILITY" },
     { label: t("filter_options.marital"), value: "MARITAL" },
   ];
-  const startYear: number = 1982;
+  const startYear: number = 1920;
   const endYear: number = new Date().getFullYear();
 
   const filterYears = (start: number, end: number): Array<OptionType> =>
@@ -178,7 +178,6 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query, sourc
     setFilter("demography", []);
     setFilter("begin", undefined);
     setFilter("end", undefined);
-    // setFilter("source", []);
   };
 
   return (
