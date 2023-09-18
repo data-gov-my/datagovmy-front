@@ -51,7 +51,6 @@ const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
 });
 
 interface CatalogueWidgetProps {
-  options: OptionType[];
   params: {
     id: string;
     theme: string;
@@ -95,7 +94,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   config,
   dataset,
   metadata,
-  urls,
   translations,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
@@ -226,7 +224,6 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           </div>
         );
     }
-    return;
   };
 
   return (
