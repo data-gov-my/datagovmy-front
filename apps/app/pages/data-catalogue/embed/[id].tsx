@@ -6,10 +6,8 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
-import { useTranslation } from "datagovmy-ui/hooks";
-import { DCConfig, DCFilter, FilterDate, OptionType, Page } from "datagovmy-ui/types";
+import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useMemo } from "react";
 
 const CatalogueEmbed: Page = ({
   meta,
@@ -20,25 +18,6 @@ const CatalogueEmbed: Page = ({
   urls,
   translations,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(["catalogue", "common"]);
-
-  const availableOptions = useMemo<OptionType[]>(() => {
-    switch (dataset.type) {
-      case "TABLE":
-        return [{ label: t("table"), value: "table" }];
-
-      case "GEOJSON":
-      case "HEATTABLE":
-        return [{ label: t("chart"), value: "chart" }];
-
-      default:
-        return [
-          { label: t("chart"), value: "chart" },
-          { label: t("table"), value: "table" },
-        ];
-    }
-  }, [dataset.type]);
-
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
@@ -49,7 +28,6 @@ const CatalogueEmbed: Page = ({
       <WindowProvider>
         <CatalogueProvider dataset={dataset} urls={urls}>
           <DataCatalogueWidget
-            options={availableOptions}
             params={params}
             config={config}
             dataset={dataset}
