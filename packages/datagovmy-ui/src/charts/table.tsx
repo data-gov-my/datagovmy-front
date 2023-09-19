@@ -40,7 +40,7 @@ export interface TableConfigColumn {
   accessorKey?: string;
 }
 
-export interface TableConfig {
+export type TableConfig<T = any> = {
   id: string | undefined;
   header?: ReactNode;
   accessorKey?: string;
@@ -48,10 +48,10 @@ export interface TableConfig {
   enableSorting?: boolean;
   cell?: (item: any) => JSX.Element;
   columns?: TableConfigColumn[];
-  accessorFn?: ({ value }: any) => string;
+  accessorFn?: ({ value }: { value: T }) => string;
   sortingFn?: string;
   sortDescFirst?: boolean;
-}
+};
 
 export interface TableProps {
   "className"?: string;
