@@ -155,7 +155,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     });
   };
 
-  const pubConfig: TableConfig[] = [
+  const pubConfig: TableConfig<Publication>[] = [
     {
       accessorKey: "title",
       id: "title",
@@ -191,8 +191,8 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       id: "release_date",
       header: t("table.release_date"),
       className: "w-[150px]",
-      accessorFn({ value }) {
-        return toDate(value.release_date, "dd MMM yyyy", i18n.language);
+      accessorFn({ release_date }) {
+        return toDate(release_date, "dd MMM yyyy", i18n.language);
       },
     },
     {
