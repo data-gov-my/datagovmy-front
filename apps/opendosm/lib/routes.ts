@@ -21,10 +21,13 @@ export const routes = {
   SERVICES_PRODUCER_PRICES: "/dashboard/services-producer-prices",
   SERVICES_STATISTICS: "/dashboard/services-statistics",
   WHOLESALE_RETAIL: "/dashboard/wholesale-retail-trade",
+  PUBLICATIONS: "/publications",
 };
 
 export const static_routes: string[] = (() => {
-  let s_routes = Object.values(routes).filter(route => !["/data-catalogue"].includes(route));
+  let s_routes = Object.values(routes).filter(
+    route => !["/data-catalogue", "/publications"].includes(route)
+  );
 
   s_routes.forEach(route => {
     s_routes.push(`/ms-MY${route}`);
