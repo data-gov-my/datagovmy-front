@@ -48,7 +48,7 @@ export type TableConfig<T = any> = {
   enableSorting?: boolean;
   cell?: (item: any) => JSX.Element;
   columns?: TableConfigColumn[];
-  accessorFn?: ({ value }: { value: T }) => string;
+  accessorFn?: (props: T) => string;
   sortingFn?: string;
   sortDescFirst?: boolean;
 };
