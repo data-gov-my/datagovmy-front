@@ -638,7 +638,7 @@ export type Division =
   | "bpan"
   | "bpe"
   | "bphpp"
-  | "bpib"
+  | "bpip"
   | "bpksa"
   | "bpm"
   | "bpp"
@@ -668,7 +668,7 @@ export const DivisionIcon: FunctionComponent<DivisionIconProps> = ({
     bpan: AccountingIcon,
     bpe: LineChartIcon,
     bphpp: PricesIncomeIcon,
-    bpib: GlobeIcon,
+    bpip: GlobeIcon,
     bpksa: CommunicationIcon,
     bpm: InfoIcon,
     bpp: CustomerServiceIcon,
