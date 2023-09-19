@@ -57,13 +57,13 @@ export const getStaticProps: GetStaticProps = withi18n(
         {
           id: "dashboard-iip",
           name: "iip",
-          division: "bpib",
+          division: "bpip",
           route: routes.IIP,
         },
         {
           id: "dashboard-bop",
           name: "bop",
-          division: "bpib",
+          division: "bpip",
           route: routes.BOP,
         },
         {
