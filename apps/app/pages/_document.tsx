@@ -130,7 +130,6 @@ class HTMLDocument extends Document {
             media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
             sizes="1536x2048"
           />
-
           <link
             rel="apple-touch-startup-image"
             href="/static/images/icons/apple_splash_1125.png"
