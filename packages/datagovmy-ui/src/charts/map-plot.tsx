@@ -117,9 +117,11 @@ const MapPlot: FunctionComponent<MapPlotProps> = ({
               <Marker
                 key={index}
                 position={item.position}
-                eventHandlers={{
-                  click: item.onMarkerClick,
-                }}
+                eventHandlers={
+                  item.onMarkerClick && {
+                    click: item.onMarkerClick,
+                  }
+                }
                 icon={item.icon === "red" ? redMarker : blueMarker}
               >
                 <Popup>{printMarker(item.tooltip)}</Popup>
