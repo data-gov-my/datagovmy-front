@@ -32,7 +32,7 @@ import { FunctionComponent, useMemo } from "react";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-interface RapidBusRailExplorerProps {
+interface RapidExplorerProps {
   A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
   A_to_B_callout: Record<DashboardPeriod, number>;
   B_to_A?: Record<DashboardPeriod, Record<"x" | "passengers", number[]>>;
@@ -42,7 +42,7 @@ interface RapidBusRailExplorerProps {
   params: any;
 }
 
-const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
+const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   A_to_B,
   A_to_B_callout,
   B_to_A,
@@ -51,7 +51,7 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
   last_updated,
   params,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-rapid-bus-and-rail-explorer", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-rapid-explorer", "common"]);
   const { push } = useRouter();
   const { data, setData } = useData({
     loading: false,
@@ -115,7 +115,7 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
   const navigateToService = (service?: string, origin?: string, destination?: string) => {
     if (!service || !origin || !destination) return;
     setData("loading", true);
-    const route = `${routes.PRASARANA_EXPLORER}/${service}/${encodeURIComponent(
+    const route = `${routes.RAPID_EXPLORER}/${service}/${encodeURIComponent(
       origin
     )}/${encodeURIComponent(destination)}`;
 
@@ -398,4 +398,4 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
   );
 };
 
-export default RapidBusRailExplorer;
+export default RapidExplorer;

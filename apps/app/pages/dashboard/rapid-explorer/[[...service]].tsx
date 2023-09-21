@@ -1,4 +1,4 @@
-import RapidBusRailExplorerDashboard from "@dashboards/transportation/rapid-bus-and-rail-explorer";
+import RapidExplorerDashboard from "@dashboards/transportation/rapid-explorer";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
@@ -7,7 +7,7 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
-const RapidBusRailExplorer: Page = ({
+const RapidExplorer: Page = ({
   meta,
   A_to_B,
   A_to_B_callout,
@@ -17,12 +17,12 @@ const RapidBusRailExplorer: Page = ({
   last_updated,
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation("dashboard-rapid-bus-and-rail-explorer");
+  const { t } = useTranslation("dashboard-rapid-explorer");
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <RapidBusRailExplorerDashboard
+      <RapidExplorerDashboard
         A_to_B={A_to_B}
         A_to_B_callout={A_to_B_callout}
         B_to_A={B_to_A}
@@ -49,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  "dashboard-rapid-bus-and-rail-explorer",
+  "dashboard-rapid-explorer",
   async ({ params }) => {
     const [service, origin, destination] = params?.service
       ? (params.service as string[])
@@ -79,7 +79,7 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       props: {
         meta: {
-          id: "dashboard-rapid-bus-and-rail-explorer",
+          id: "dashboard-rapid-explorer",
           type: "dashboard",
           category: "transportation",
           agency: "prasarana",
@@ -97,4 +97,4 @@ export const getStaticProps: GetStaticProps = withi18n(
   }
 );
 
-export default RapidBusRailExplorer;
+export default RapidExplorer;
