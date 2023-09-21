@@ -91,12 +91,12 @@ read_parquet("${url}")`;
   return <CodeBlock event={{ url }}>{{ python: pythonTemplate, r: rTemplate }}</CodeBlock>;
 };
 
-interface SampelCodeProps {
+interface SampleCodeProps {
   url: string;
   catalogueId?: string;
   route: "data-catalogue" | "opendosm";
 }
-const SampleCode: FunctionComponent<SampelCodeProps> = ({
+const SampleCode: FunctionComponent<SampleCodeProps> = ({
   catalogueId = "<catalogue_id>",
   url,
   route = "data-catalogue",
