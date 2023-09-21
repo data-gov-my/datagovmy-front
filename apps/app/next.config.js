@@ -22,6 +22,12 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: ["datagovmy-ui"],
+  modularizeImports: {
+    "datagovmy-ui": {
+      transform: "datagovmy-ui/{{member}}",
+      preventFullImport: true,
+    },
+  },
   publicRuntimeConfig: {
     APP_NAME: "data.gov.my",
     META_AUTHOR: "Government of Malaysia",
@@ -30,6 +36,14 @@ const nextConfig = {
     META_DOMAIN: "data.gov.my",
     META_URL: process.env.NEXT_PUBLIC_APP_URL,
     META_IMAGE: `${process.env.NEXT_PUBLIC_APP_URL}/static/images/og_{{lang}}.png`,
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /index\.(js|mjs|jsx|ts|tsx)$/,
+      include: mPath => mPath.includes("datagovmy-ui"),
+      sideEffects: false,
+    });
+    return config;
   },
   async rewrites() {
     return [
