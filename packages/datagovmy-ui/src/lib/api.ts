@@ -50,8 +50,7 @@ export const get = (
       .get(route, { params })
       .then((response: AxiosResponse) => resolve(response))
       .catch((err: AxiosError<{ status: number; message: string }>) => {
-        if (err.response?.data.status === 401 && typeof window !== "undefined")
-          window.location.reload(); // refresh rolling token
+        if (err.response?.status === 401 && typeof window !== "undefined") window.location.reload(); // refresh rolling token
         reject(err);
       });
   });
