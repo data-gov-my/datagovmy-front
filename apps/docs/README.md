@@ -10,6 +10,6 @@ To get started, see [CONTRIBUTING.md](/CONTRIBUTING.md) for more information.
 
 ## License
 
-data.gov.my is licensed under [MIT](https://github.com/data-gov-my/datagovmy-front/blob/main/LICENSE)
+data.gov.my is licensed under [MIT](/LICENSE.md)
 
 Copyright © 2023 [Government of Malaysia](#)

@@ -69,6 +69,6 @@ Thank you for your willingness to contribute to this free and open source projec
 
 ## License
 
-data.gov.my is licensed under [MIT](https://github.com/data-gov-my/datagovmy-front/blob/main/LICENSE)
+data.gov.my is licensed under [MIT](/LICENSE.md)
 
 Copyright © 2023 [Government of Malaysia](#)
