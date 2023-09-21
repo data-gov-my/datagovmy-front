@@ -24,7 +24,6 @@ import { DashboardPeriod, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
-import RapidBusRailComingSoon from "@dashboards/transportation/rapid-bus-and-rail-explorer/coming_soon";
 
 /**
  * Rapid Bus and Rail Explorer
@@ -53,78 +52,78 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
   params,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-rapid-bus-and-rail-explorer", "common"]);
-  // const { push } = useRouter();
-  // const { data, setData } = useData({
-  //   loading: false,
-  //   minmax: [0, A_to_B.data.daily.x.length - 1],
-  //   service: params.service,
-  //   origin: params.origin,
-  //   destination: params.destination,
-  //   tab: 0,
-  // });
-  // const PERIODS: Array<DashboardPeriod> = ["daily_7d", "daily", "monthly", "yearly"];
-  // const config = useMemo<{
-  //   key: DashboardPeriod;
-  //   period: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week">;
-  // }>(() => {
-  //   const key = PERIODS[data.tab];
-  //   setData("minmax", [0, A_to_B.data[key].x.length - 1]);
-  //   switch (key) {
-  //     case "daily":
-  //     case "daily_7d":
-  //       return { key: key, period: "day" };
-  //     case "monthly":
-  //       return { key: key, period: "month" };
-  //     case "yearly":
-  //       return { key: key, period: "year" };
-  //   }
-  // }, [data.tab]);
+  const { push } = useRouter();
+  const { data, setData } = useData({
+    loading: false,
+    minmax: [0, A_to_B.data.daily.x.length - 1],
+    service: params.service,
+    origin: params.origin,
+    destination: params.destination,
+    tab: 0,
+  });
+  const PERIODS: Array<DashboardPeriod> = ["daily", "monthly"];
+  const config = useMemo<{
+    key: DashboardPeriod;
+    period: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week">;
+  }>(() => {
+    const key = PERIODS[data.tab];
+    setData("minmax", [0, A_to_B.data[key].x.length - 1]);
+    switch (key) {
+      case "daily":
+      case "daily_7d":
+        return { key: key, period: "day" };
+      case "monthly":
+        return { key: key, period: "month" };
+      case "yearly":
+        return { key: key, period: "year" };
+    }
+  }, [data.tab]);
 
-  // const { coordinate: A_to_B_coords } = useSlice(A_to_B.data[config.key], data.minmax);
-  // const { coordinate: B_to_A_coords } = useSlice(
-  //   B_to_A ? B_to_A[config.key] : A_to_B.data[config.key],
-  //   data.minmax
-  // );
+  const { coordinate: A_to_B_coords } = useSlice(A_to_B.data[config.key], data.minmax);
+  const { coordinate: B_to_A_coords } = useSlice(
+    B_to_A ? B_to_A[config.key] : A_to_B.data[config.key],
+    data.minmax
+  );
 
-  // const SERVICE_OPTIONS = useMemo<Array<OptionType>>(() => {
-  //   const _services = Object.keys(dropdown).map(service => ({ label: t(service), value: service }));
-  //   return _services;
-  // }, []);
+  const SERVICE_OPTIONS = useMemo<Array<OptionType>>(() => {
+    const _services = Object.keys(dropdown).map(service => ({ label: t(service), value: service }));
+    return _services;
+  }, []);
 
-  // const ORIGIN_OPTIONS = useMemo<Array<OptionType>>(() => {
-  //   let _origins: Array<OptionType> = [];
-  //   if (data.service) {
-  //     _origins = Object.keys(dropdown[data.service]).map(origin => ({
-  //       label: origin,
-  //       value: origin,
-  //     }));
-  //   }
-  //   return _origins;
-  // }, [data.service]);
+  const ORIGIN_OPTIONS = useMemo<Array<OptionType>>(() => {
+    let _origins: Array<OptionType> = [];
+    if (data.service) {
+      _origins = Object.keys(dropdown[data.service]).map(origin => ({
+        label: origin,
+        value: origin,
+      }));
+    }
+    return _origins;
+  }, [data.service]);
 
-  // const DESTINATION_OPTIONS = useMemo<Array<OptionType>>(() => {
-  //   let _destinations: Array<OptionType> = [];
-  //   if (data.service && data.origin) {
-  //     _destinations = dropdown[data.service][data.origin].map((destination: string) => ({
-  //       label: destination,
-  //       value: destination,
-  //     }));
-  //   }
-  //   return _destinations;
-  // }, [data.origin]);
+  const DESTINATION_OPTIONS = useMemo<Array<OptionType>>(() => {
+    let _destinations: Array<OptionType> = [];
+    if (data.service && data.origin) {
+      _destinations = dropdown[data.service][data.origin].map((destination: string) => ({
+        label: destination,
+        value: destination,
+      }));
+    }
+    return _destinations;
+  }, [data.origin]);
 
-  // const navigateToService = (service?: string, origin?: string, destination?: string) => {
-  //   if (!service || !origin || !destination) return;
-  //   setData("loading", true);
-  //   const route = `${routes.PRASARANA_EXPLORER}/${service}/${encodeURIComponent(
-  //     origin
-  //   )}/${encodeURIComponent(destination)}`;
+  const navigateToService = (service?: string, origin?: string, destination?: string) => {
+    if (!service || !origin || !destination) return;
+    setData("loading", true);
+    const route = `${routes.PRASARANA_EXPLORER}/${service}/${encodeURIComponent(
+      origin
+    )}/${encodeURIComponent(destination)}`;
 
-  //   push(route, undefined, {
-  //     scroll: false,
-  //     locale: i18n.language,
-  //   }).then(() => setData("loading", false));
-  // };
+    push(route, undefined, {
+      scroll: false,
+      locale: i18n.language,
+    }).then(() => setData("loading", false));
+  };
 
   return (
     <>
@@ -138,9 +137,7 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
       />
 
       <Container>
-        <RapidBusRailComingSoon />
-
-        {/* <Section
+        <Section
           title={t("title")}
           date={A_to_B.data_as_of}
           description={
@@ -263,12 +260,7 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
           }
           menu={
             <Tabs.List
-              options={[
-                t("common:time.daily_7d"),
-                t("common:time.daily"),
-                t("common:time.monthly"),
-                t("common:time.yearly"),
-              ]}
+              options={[t("common:time.daily"), t("common:time.monthly")]}
               current={data.tab}
               onChange={index => setData("tab", index)}
             />
@@ -316,10 +308,6 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
                             title: t("past_month"),
                             value: `${numFormat(A_to_B_callout.monthly, "standard")}`,
                           },
-                          {
-                            title: t("past_year"),
-                            value: `${numFormat(A_to_B_callout.yearly, "standard")}`,
-                          },
                         ]}
                       />
                       {B_to_A && B_to_A_callout ? (
@@ -354,10 +342,6 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
                             {
                               title: t("past_month"),
                               value: `${numFormat(B_to_A_callout.monthly, "standard")}`,
-                            },
-                            {
-                              title: t("past_year"),
-                              value: `${numFormat(B_to_A_callout.yearly, "standard")}`,
                             },
                           ]}
                         />
@@ -408,7 +392,7 @@ const RapidBusRailExplorer: FunctionComponent<RapidBusRailExplorerProps> = ({
               </>
             )}
           </SliderProvider>
-        </Section> */}
+        </Section>
       </Container>
     </>
   );

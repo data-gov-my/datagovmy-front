@@ -17,7 +17,7 @@ const KTMBExplorer: Page = ({
   last_updated,
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboard-ktmb-explorer", "common"]);
+  const { t } = useTranslation("dashboard-ktmb-explorer");
 
   return (
     <AnalyticsProvider meta={meta}>
@@ -49,51 +49,50 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  ["dashboard-ktmb-explorer", "dashboard-public-transportation"],
+  "dashboard-ktmb-explorer",
   async ({ params }) => {
     const [service, origin, destination] = params?.service
       ? (params.service as string[])
       : ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
 
-    // const results = await Promise.allSettled([
-    //   get("/explorer", { explorer: "KTMB", dropdown: true }),
-    //   get("/explorer", {
-    //     explorer: "KTMB",
-    //     service,
-    //     origin,
-    //     destination,
-    //   }),
-    //   get("/explorer", {
-    //     explorer: "KTMB",
-    //     service,
-    //     origin: destination,
-    //     destination: origin,
-    //   }),
-    // ]);
+    const results = await Promise.allSettled([
+      get("/explorer", { explorer: "KTMB", dropdown: true }),
+      get("/explorer", {
+        explorer: "KTMB",
+        service,
+        origin,
+        destination,
+      }),
+      get("/explorer", {
+        explorer: "KTMB",
+        service,
+        origin: destination,
+        destination: origin,
+      }),
+    ]);
 
-    // const [dropdown, A_to_B, B_to_A] = results.map(e => {
-    //   if (e.status === "rejected") return {};
-    //   else return e.value.data;
-    // });
+    const [dropdown, A_to_B, B_to_A] = results.map(e => {
+      if (e.status === "rejected") return {};
+      else return e.value.data;
+    });
 
     return {
-      notFound: false,
       props: {
         meta: {
           id: "dashboard-ktmb-explorer",
           type: "dashboard",
           category: "transportation",
-          agency: "MoT",
+          agency: "ktmb",
         },
-        // A_to_B: A_to_B.timeseries,
-        // A_to_B_callout: A_to_B.timeseries_callout?.data ?? ,
-        // B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
-        // B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
-        // dropdown: dropdown,
-        // last_updated: A_to_B.data_last_updated,
-        // params: params?.service ? { service, origin, destination } : {},
+        A_to_B: A_to_B.timeseries,
+        A_to_B_callout: A_to_B.timeseries_callout?.data,
+        B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
+        B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
+        dropdown: dropdown,
+        last_updated: A_to_B.data_last_updated,
+        params: params?.service ? { service, origin, destination } : {},
       },
-      // revalidate: 60 * 60 * 24, // 1 day (in seconds)
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
   }
 );
