@@ -231,7 +231,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 sublabel={<EyeIcon className="h-4 w-4" />}
                 selected={availableOptions.find(e => e.value === show.value)}
                 options={availableOptions}
-                onChange={e => setShow(e.value)}
+                onChange={e => setShow(e)}
               />
               <Dropdown
                 width="w-fit"
