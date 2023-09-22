@@ -18,7 +18,7 @@ import {
 } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { numFormat } from "datagovmy-ui/helpers";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { DashboardPeriod, OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
@@ -84,6 +84,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
     B_to_A ? B_to_A[config.key] : A_to_B.data[config.key],
     data.minmax
   );
+  const LATEST_MONTH = A_to_B.data.monthly.x[A_to_B.data.monthly.x.length - 1];
 
   const SERVICE_OPTIONS = useMemo<Array<OptionType>>(() => {
     const _services = Object.keys(dropdown).map(service => ({ label: t(service), value: service }));
@@ -220,7 +221,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                 <Dropdown
                   placeholder={t("service")}
                   anchor="left"
-                  width="w-auto"
+                  width="min-w-[150px] w-auto"
                   options={SERVICE_OPTIONS}
                   selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
                   onChange={selected => {
@@ -232,7 +233,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_origin")}
                   anchor="left"
-                  width="w-auto"
+                  width="min-w-[210px] w-auto"
                   options={ORIGIN_OPTIONS}
                   selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
                   disabled={!data.service}
@@ -245,7 +246,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_destination")}
                   anchor="left"
-                  width="w-auto"
+                  width="min-w-[210px] w-auto"
                   options={DESTINATION_OPTIONS}
                   selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
                   disabled={!data.service || !data.origin}
@@ -305,7 +306,9 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                             value: `+${numFormat(A_to_B_callout.daily, "standard")}`,
                           },
                           {
-                            title: t("past_month"),
+                            title: t("this_month", {
+                              date: toDate(LATEST_MONTH, "MMM yyyy", i18n.language),
+                            }),
                             value: `${numFormat(A_to_B_callout.monthly, "standard")}`,
                           },
                         ]}
@@ -340,17 +343,19 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                               value: `+${numFormat(B_to_A_callout.daily, "standard")}`,
                             },
                             {
-                              title: t("past_month"),
+                              title: t("this_month", {
+                                date: toDate(LATEST_MONTH, "MMM yyyy", i18n.language),
+                              }),
                               value: `${numFormat(B_to_A_callout.monthly, "standard")}`,
                             },
                           ]}
                         />
                       ) : (
-                        <div className="relative flex h-full w-full flex-col">
+                        <div className="relative flex h-[400px] w-full flex-col">
                           <h5>
                             {t(`ridership_${config.period}`, {
-                              from: params.destination,
-                              to: params.origin,
+                              from: params.destination ?? "WOODLANDS CIQ",
+                              to: params.origin ?? "JB SENTRAL",
                             })}
                           </h5>
                           <Timeseries
