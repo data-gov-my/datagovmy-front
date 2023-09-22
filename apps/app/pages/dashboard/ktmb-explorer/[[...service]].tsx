@@ -85,9 +85,12 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "ktmb",
         },
         A_to_B: A_to_B.timeseries,
-        A_to_B_callout: A_to_B.timeseries_callout?.data,
-        B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
-        B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
+        A_to_B_callout: A_to_B.timeseries_callout.data,
+        B_to_A: Object.keys(B_to_A.timeseries.data).length !== 0 ? B_to_A.timeseries.data : null,
+        B_to_A_callout:
+          Object.keys(B_to_A.timeseries_callout.data).length !== 0
+            ? B_to_A.timeseries_callout.data
+            : null,
         dropdown: dropdown,
         last_updated: A_to_B.data_last_updated,
         params: params?.service ? { service, origin, destination } : {},

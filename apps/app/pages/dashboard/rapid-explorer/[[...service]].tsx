@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     const [service, origin, destination] = params?.service
       ? (params.service as string[])
-      : ["rail", "KJ10", "KJ15"];
+      : ["rail", "KJ10: KLCC", "KJ15: KL SENTRAL"];
 
     const results = await Promise.allSettled([
       get("/explorer", { explorer: "Prasarana", dropdown: true }),
@@ -70,12 +70,15 @@ export const getStaticProps: GetStaticProps = withi18n(
         destination: origin,
       }),
     ]);
-
+    console.log(results[2]);
     const [dropdown, A_to_B, B_to_A] = results.map(e => {
-      if (e.status === "rejected") return {};
-      else return e.value.data;
+      if (e.status === "rejected") {
+        console.log(e.reason);
+        console.log(e);
+        return {};
+      } else return e.value.data;
     });
-
+    console.log(B_to_A);
     return {
       props: {
         meta: {
@@ -86,8 +89,11 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         A_to_B: A_to_B.timeseries,
         A_to_B_callout: A_to_B.timeseries_callout.data,
-        B_to_A: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries.data : null,
-        B_to_A_callout: Object.keys(B_to_A).length !== 0 ? B_to_A.timeseries_callout.data : null,
+        B_to_A: Object.keys(B_to_A.timeseries.data).length !== 0 ? B_to_A.timeseries.data : null,
+        B_to_A_callout:
+          Object.keys(B_to_A.timeseries_callout.data).length !== 0
+            ? B_to_A.timeseries_callout.data
+            : null,
         dropdown: dropdown,
         last_updated: A_to_B.data_last_updated,
         params: params?.service ? { service, origin, destination } : {},
