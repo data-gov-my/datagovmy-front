@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     const [service, origin, destination] = params?.service
       ? (params.service as string[])
-      : ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
+      : ["tebrau", "JB Sentral", "Woodlands CIQ"];
 
     const results = await Promise.allSettled([
       get("/explorer", { explorer: "KTMB", dropdown: true }),

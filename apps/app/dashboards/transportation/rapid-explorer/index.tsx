@@ -61,8 +61,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
     destination: params.destination,
     tab: 0,
   });
-  const DEFAULT_ORIG = "KJ15: KL Sentral";
-  const DEFAULT_DEST = "KJ10: KLCC";
+  const DEFAULT_ORIG = "KJ10: KLCC";
+  const DEFAULT_DEST = "KJ15: KL Sentral";
 
   const PERIODS: Array<DashboardPeriod> = ["daily", "monthly"];
   const config = useMemo<{
@@ -242,7 +242,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_origin")}
                   anchor="left"
-                  width="min-w-[240px] lg:min-w-[270px] w-auto"
+                  width="min-w-[250px] w-auto"
                   options={ORIGIN_OPTIONS}
                   selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
                   disabled={!data.service}
@@ -255,7 +255,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_destination")}
                   anchor="left"
-                  width="min-w-[240px] lg:min-w-[270px] w-auto"
+                  width="min-w-[250px] w-auto"
                   options={DESTINATION_OPTIONS}
                   selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
                   disabled={!data.service || !data.origin}
