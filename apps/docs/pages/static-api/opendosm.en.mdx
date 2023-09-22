@@ -10,17 +10,17 @@ The OpenDOSM API is designed to allow users to programmatically access OpenDOSM 
 This API is tailored for users who are interested exclusively in OpenDOSM data.
 For more general data across data.gov.my, please refer to [Data Catalogue API](/static-api/data-catalogue).
 
-### How to Find Available Resources
+### How to Find Available Datasets
 
-To access specific data catalogue, you need to specify the `id` parameter in your request URL.
+To access specific OpenDOSM data catalogue, you need to specify the `id` parameter in your request URL.
 It's a **required** parameter, here's an example of how to use it:
 
 ```http
 GET https://api.data.gov.my/opendosm?id=cpi_core
 ```
 
-To discover the available resources, visit the [OpenDOSM Data Catalogue page](https://open.dosm.gov.my/data-catalogue).
-There is a section at the bottom titled "Sample OpenAPI query," which contains the necessary `id` for each data catalogue.
+To discover the available datasets, visit the [OpenDOSM Data Catalogue page](https://open.dosm.gov.my/data-catalogue), where datasets are categorised and listed.
+To find out more about each dataset, click on the dataset page. On each dataset page, there is a section at the bottom titled "Sample OpenAPI query," which contains the necessary `id` for each data catalogue.
 If a data catalogue is not available through the API, it will be explicitly mentioned.
 
 ## Request Query & Response Format
@@ -35,7 +35,7 @@ Let's walk through an example using the `cpi_core` resource:
 
 #### 1. Finding the Resource
 
-Go to the Data Catalogue page and find the [Core CPI Overall dataset](https://open.dosm.gov.my/data-catalogue/cpi_cpi_core_1).
+Go to the OpenDOSM Data Catalogue page and find the [Core CPI Overall dataset](https://open.dosm.gov.my/data-catalogue/cpi_cpi_core_1).
 You'll find the `id` value, "cpi_core," in the "Sample OpenAPI query" section at the bottom of the page.
 We will use this `id` for our example.
 

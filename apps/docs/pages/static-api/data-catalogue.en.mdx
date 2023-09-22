@@ -10,7 +10,7 @@ The Data Catalogue API is designed to allow users to access data from the data c
 It provides a set of endpoints that can be used to query the data based on various parameters and filters.
 The API is meant for use by developers and data scientists who want to programmatically access the data catalogue, although users who want to download data directly can also refer to the Data Catalogue page.
 
-### How to Find Available Resources
+### How to Find Available Datasets
 
 To access specific data catalogue, you need to specify the `id` parameter in your request URL.
 It's a **required** parameter, here's an example of how to use it:
@@ -19,8 +19,8 @@ It's a **required** parameter, here's an example of how to use it:
 GET https://api.data.gov.my/data-catalogue?id=fuelprice
 ```
 
-To discover the available resources, visit the [Data Catalogue page](https://data.gov.my/data-catalogue).
-There is a section at the bottom titled "Sample OpenAPI query," which contains the necessary `id` for each data catalogue.
+To discover the available datasets, visit the [Data Catalogue page](https://data.gov.my/data-catalogue), where datasets are categorised and listed.
+To find out more about each dataset, click on the dataset page. On each dataset page, there is a section at the bottom titled "Sample OpenAPI query," which contains the necessary `id` for each data catalogue.
 If a data catalogue is not available through the API, it will be explicitly mentioned.
 
 ## Request Query & Response Format
