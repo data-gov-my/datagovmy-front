@@ -24,8 +24,8 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, pub
         <p className="text-sm font-medium uppercase text-dim">
           {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
         </p>
-        {/* If release date is less than 30 days from today */}
-        {Date.now() - Date.parse(publication.release_date) < 2529000000 && (
+        {/* If release date is less than 14 days from today */}
+        {Date.now() - Date.parse(publication.release_date) < 1180200000 && (
           <div className="flex items-center gap-1.5 rounded-full bg-danger px-1.5 py-0.5 text-xs text-white transition-transform group-hover:-translate-x-7 group-hover:duration-300">
             <span className="h-2 w-2 rounded-full bg-white" />
             {t("new")}!

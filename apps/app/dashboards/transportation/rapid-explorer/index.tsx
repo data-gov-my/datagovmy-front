@@ -26,13 +26,13 @@ import { useRouter } from "next/router";
 import { FunctionComponent, useMemo } from "react";
 
 /**
- * KTMB Explorer
+ * Rapid Bus and Rail Explorer
  * @overview Status: Live
  */
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
-interface KTMBExplorerProps {
+interface RapidExplorerProps {
   A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
   A_to_B_callout: Record<DashboardPeriod, number>;
   B_to_A?: Record<DashboardPeriod, Record<"x" | "passengers", number[]>>;
@@ -42,7 +42,7 @@ interface KTMBExplorerProps {
   params: any;
 }
 
-const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
+const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   A_to_B,
   A_to_B_callout,
   B_to_A,
@@ -51,7 +51,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   last_updated,
   params,
 }) => {
-  const { t, i18n } = useTranslation(["dashboard-ktmb-explorer", "common"]);
+  const { t, i18n } = useTranslation(["dashboard-rapid-explorer", "common"]);
   const { push } = useRouter();
   const { data, setData } = useData({
     loading: false,
@@ -61,8 +61,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
     destination: params.destination,
     tab: 0,
   });
-  const DEFAULT_ORIG = "JB Sentral";
-  const DEFAULT_DEST = "Woodlands CIQ";
+  const DEFAULT_ORIG = "KJ10: KLCC";
+  const DEFAULT_DEST = "KJ15: KL Sentral";
 
   const PERIODS: Array<DashboardPeriod> = ["daily", "monthly"];
   const config = useMemo<{
@@ -119,7 +119,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const navigateToService = (service?: string, origin?: string, destination?: string) => {
     if (!service || !origin || !destination) return;
     setData("loading", true);
-    const route = `${routes.KTMB_EXPLORER}/${service}/${encodeURIComponent(
+    const route = `${routes.RAPID_EXPLORER}/${service}/${encodeURIComponent(
       origin
     )}/${encodeURIComponent(destination)}`;
 
@@ -136,7 +136,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         category={[t("common:categories.transportation"), "text-primary dark:text-primary-dark"]}
         header={[t("header")]}
         description={[t("description")]}
-        agencyBadge={<AgencyBadge agency="ktmb" />}
+        agencyBadge={<AgencyBadge agency="prasarana" />}
         last_updated={last_updated}
       />
 
@@ -144,129 +144,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
         <Section
           title={t("title")}
           date={A_to_B.data_as_of}
-          description={
-            <div className="w-full">
-              <div className="flex sm:hidden">
-                <Modal
-                  trigger={open => (
-                    <Button onClick={open} className="btn-default shadow-floating">
-                      <span>{t("filters")}</span>
-                      <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
-                        3
-                      </span>
-                      <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
-                    </Button>
-                  )}
-                  title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
-                >
-                  {close => (
-                    <div className="flex h-max flex-col bg-white dark:bg-black">
-                      <div className="dark:divide-washed-dark divide-y px-3 pb-3">
-                        <div className="space-y-2 py-3">
-                          <Label label={t("service")} className="text-sm" />
-                          <Dropdown
-                            anchor="bottom"
-                            width="w-full"
-                            options={SERVICE_OPTIONS}
-                            selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
-                            onChange={selected => {
-                              setData("service", selected.value);
-                              setData("origin", null);
-                              setData("destination", null);
-                            }}
-                          />
-                        </div>
-                        <div className="space-y-2 py-3">
-                          <Label label={t("origin")} className="text-sm" />
-                          <Dropdown
-                            anchor="bottom-10"
-                            width="w-full"
-                            options={ORIGIN_OPTIONS}
-                            selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-                            disabled={!data.service}
-                            onChange={selected => {
-                              setData("origin", selected.value);
-                              setData("destination", null);
-                            }}
-                            enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
-                          />
-                        </div>
-                        <div className="space-y-2 py-3">
-                          <Label label={t("destination")} className="text-sm" />
-                          <Dropdown
-                            anchor="right-0 bottom-10"
-                            width="w-full"
-                            options={DESTINATION_OPTIONS}
-                            selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-                            disabled={!data.service || !data.origin}
-                            onChange={selected => {
-                              setData("destination", selected.value);
-                            }}
-                            enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
-                          />
-                        </div>
-                      </div>
-                      <div className="dark:border-washed-dark flex w-full flex-col gap-2 border-t bg-white p-3 dark:bg-black">
-                        <Button
-                          className="btn-primary w-full justify-center"
-                          onClick={() => {
-                            navigateToService(data.service, data.origin, data.destination);
-                            close();
-                          }}
-                        >
-                          {t("apply_filter")}
-                        </Button>
-                        <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
-                          <XMarkIcon className="h-4.5 w-4.5" />
-                          {t("common:common.close")}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </Modal>
-              </div>
-              <div className="hidden gap-2 sm:flex lg:gap-3">
-                <Dropdown
-                  placeholder={t("service")}
-                  anchor="left"
-                  width="min-w-[150px] w-auto"
-                  options={SERVICE_OPTIONS}
-                  selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
-                  onChange={selected => {
-                    setData("service", selected.value);
-                    setData("origin", null);
-                    setData("destination", null);
-                  }}
-                />
-                <Dropdown
-                  placeholder={t("select_origin")}
-                  anchor="left"
-                  width="min-w-[210px] w-auto"
-                  options={ORIGIN_OPTIONS}
-                  selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-                  disabled={!data.service}
-                  onChange={selected => {
-                    setData("origin", selected.value);
-                    setData("destination", null);
-                  }}
-                  enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
-                />
-                <Dropdown
-                  placeholder={t("select_destination")}
-                  anchor="left"
-                  width="min-w-[210px] w-auto"
-                  options={DESTINATION_OPTIONS}
-                  selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-                  disabled={!data.service || !data.origin}
-                  onChange={selected => {
-                    setData("destination", selected.value);
-                    navigateToService(data.service, data.origin, selected.value);
-                  }}
-                  enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
-                />
-              </div>
-            </div>
-          }
+          description={t("disclaimer")}
           menu={
             <Tabs.List
               options={[t("common:time.daily"), t("common:time.monthly")]}
@@ -284,6 +162,130 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   </div>
                 ) : (
                   <>
+                    <div className="pb-3 lg:pb-6">
+                      <div className="flex sm:hidden">
+                        <Modal
+                          trigger={open => (
+                            <Button onClick={open} className="btn-default shadow-floating">
+                              <span>{t("filters")}</span>
+                              <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
+                                3
+                              </span>
+                              <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
+                            </Button>
+                          )}
+                          title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
+                        >
+                          {close => (
+                            <div className="flex h-max flex-col bg-white dark:bg-black">
+                              <div className="dark:divide-washed-dark divide-y px-3 pb-3">
+                                <div className="space-y-2 py-3">
+                                  <Label label={t("service")} className="text-sm" />
+                                  <Dropdown
+                                    anchor="bottom"
+                                    width="w-full"
+                                    options={SERVICE_OPTIONS}
+                                    selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
+                                    onChange={selected => {
+                                      setData("service", selected.value);
+                                      setData("origin", null);
+                                      setData("destination", null);
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2 py-3">
+                                  <Label label={t("origin")} className="text-sm" />
+                                  <Dropdown
+                                    anchor="bottom-10"
+                                    width="w-full"
+                                    options={ORIGIN_OPTIONS}
+                                    selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
+                                    disabled={!data.service}
+                                    onChange={selected => {
+                                      setData("origin", selected.value);
+                                      setData("destination", null);
+                                    }}
+                                    enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
+                                  />
+                                </div>
+                                <div className="space-y-2 py-3">
+                                  <Label label={t("destination")} className="text-sm" />
+                                  <Dropdown
+                                    anchor="right-0 bottom-10"
+                                    width="w-full"
+                                    options={DESTINATION_OPTIONS}
+                                    selected={DESTINATION_OPTIONS.find(
+                                      e => e.value === data.destination
+                                    )}
+                                    disabled={!data.service || !data.origin}
+                                    onChange={selected => {
+                                      setData("destination", selected.value);
+                                    }}
+                                    enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
+                                  />
+                                </div>
+                              </div>
+                              <div className="dark:border-washed-dark flex w-full flex-col gap-2 border-t bg-white p-3 dark:bg-black">
+                                <Button
+                                  variant="primary"
+                                  className="justify-center"
+                                  onClick={() => {
+                                    navigateToService(data.service, data.origin, data.destination);
+                                    close();
+                                  }}
+                                >
+                                  {t("apply_filter")}
+                                </Button>
+                                <Button variant="base" className="justify-center" onClick={close}>
+                                  <XMarkIcon className="h-4.5 w-4.5" />
+                                  {t("common:common.close")}
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </Modal>
+                      </div>
+                      <div className="hidden gap-2 sm:flex lg:gap-3">
+                        <Dropdown
+                          placeholder={t("service")}
+                          anchor="left"
+                          width="min-w-[100px] w-auto"
+                          options={SERVICE_OPTIONS}
+                          selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
+                          onChange={selected => {
+                            setData("service", selected.value);
+                            setData("origin", null);
+                            setData("destination", null);
+                          }}
+                        />
+                        <Dropdown
+                          placeholder={t("select_origin")}
+                          anchor="left"
+                          width="min-w-[250px] w-auto"
+                          options={ORIGIN_OPTIONS}
+                          selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
+                          disabled={!data.service}
+                          onChange={selected => {
+                            setData("origin", selected.value);
+                            setData("destination", null);
+                          }}
+                          enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
+                        />
+                        <Dropdown
+                          placeholder={t("select_destination")}
+                          anchor="left"
+                          width="min-w-[250px] w-auto"
+                          options={DESTINATION_OPTIONS}
+                          selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
+                          disabled={!data.service || !data.origin}
+                          onChange={selected => {
+                            setData("destination", selected.value);
+                            navigateToService(data.service, data.origin, selected.value);
+                          }}
+                          enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
+                        />
+                      </div>
+                    </div>
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                       <Timeseries
                         className="h-[300px] w-full"
@@ -361,7 +363,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           ]}
                         />
                       ) : (
-                        <div className="relative flex h-[400px] w-full flex-col">
+                        <div className="relative flex h-[400px] w-full flex-col lg:h-full">
                           <h5>
                             {t("ridership", {
                               context: config.period,
@@ -414,4 +416,4 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   );
 };
 
-export default KTMBExplorer;
+export default RapidExplorer;
