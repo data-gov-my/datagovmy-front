@@ -8,7 +8,9 @@ const defineConfig = (namespace, autoloadNs) => {
       defaultLocale: "en-GB",
       locales: ["en-GB", "ms-MY"],
       backend: {
-        loadPath: `${process.env.NEXT_PUBLIC_I18N_URL}/${process.env.NEXT_PUBLIC_APP_ENV}/{{lng}}/{{ns}}.json`,
+        loadPath: `${process.env.NEXT_PUBLIC_I18N_URL}/${
+          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "production" : "staging"
+        }/{{lng}}/{{ns}}.json`,
         crossDomain: true,
         allowMultiLoading: true,
       },

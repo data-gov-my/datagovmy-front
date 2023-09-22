@@ -263,6 +263,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                 setData("loading", true);
                 setFilter("pub_type", selected.value);
                 setData("publication_option", selected.value);
+                setFilter("page", "1");
               } else {
                 setFilter("pub_type", null);
                 setData("publication_option", null);
@@ -296,6 +297,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                     onChange={e => {
                       setData("loading", true);
                       setFilter("frequency", e);
+                      setFilter("page", "1");
                     }}
                   />
                 </div>
@@ -308,6 +310,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                     onChange={e => {
                       setData("loading", true);
                       setFilter("geography", e);
+                      setFilter("page", "1");
                     }}
                   />
                 </div>
@@ -320,6 +323,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                     onChange={e => {
                       setData("loading", true);
                       setFilter("demography", e);
+                      setFilter("page", "1");
                     }}
                   />
                 </div>
