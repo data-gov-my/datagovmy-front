@@ -37,9 +37,9 @@ const RapidExplorer: Page = ({
 
 /**
  * Path: /{service}/{origin}/{destination}
- * service - required - tebrau
- * origin - required - JB SENTRAL
- * destination - required - WOODLANDS CIQ
+ * service - required - rail
+ * origin - required - KJ10
+ * destination - required - KJ15
  */
 export const getStaticPaths: GetStaticPaths = () => {
   return {
@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     const [service, origin, destination] = params?.service
       ? (params.service as string[])
-      : ["tebrau", "JB SENTRAL", "WOODLANDS CIQ"];
+      : ["rail", "KJ10", "KJ15"];
 
     const results = await Promise.allSettled([
       get("/explorer", { explorer: "Prasarana", dropdown: true }),

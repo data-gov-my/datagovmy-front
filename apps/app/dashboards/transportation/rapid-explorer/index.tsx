@@ -220,7 +220,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                 <Dropdown
                   placeholder={t("service")}
                   anchor="left"
-                  width="w-auto"
+                  width="min-w-[100px] w-auto"
                   options={SERVICE_OPTIONS}
                   selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
                   onChange={selected => {
@@ -232,7 +232,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_origin")}
                   anchor="left"
-                  width="w-auto"
+                  width="min-w-[100px] w-auto"
                   options={ORIGIN_OPTIONS}
                   selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
                   disabled={!data.service}
@@ -245,7 +245,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_destination")}
                   anchor="left"
-                  width="w-auto"
+                  width="min-w-[100px] w-auto"
                   options={DESTINATION_OPTIONS}
                   selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
                   disabled={!data.service || !data.origin}
@@ -279,8 +279,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                       <Timeseries
                         className="h-[300px] w-full"
                         title={t(`ridership_${config.period}`, {
-                          from: params.origin ?? "JB SENTRAL",
-                          to: params.destination ?? "WOODLANDS CIQ",
+                          from: params.origin ?? "KJ10",
+                          to: params.destination ?? "KJ15",
                         })}
                         enableAnimation={!play}
                         interval={config.period}
@@ -314,8 +314,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                         <Timeseries
                           className="h-[300px] w-full"
                           title={t(`ridership_${config.period}`, {
-                            from: params.destination ?? "WOODLANDS CIQ",
-                            to: params.origin ?? "JB SENTRAL",
+                            from: params.destination ?? "KJ15",
+                            to: params.origin ?? "KJ10",
                           })}
                           enableAnimation={!play}
                           interval={config.period}
