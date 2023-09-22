@@ -206,9 +206,10 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                       <div className="dark:border-washed-dark flex w-full flex-col gap-2 border-t bg-white p-3 dark:bg-black">
                         <Button
                           className="btn-primary w-full justify-center"
-                          onClick={() =>
-                            navigateToService(data.service, data.origin, data.destination)
-                          }
+                          onClick={() => {
+                            navigateToService(data.service, data.origin, data.destination);
+                            close();
+                          }}
                         >
                           {t("apply_filter")}
                         </Button>

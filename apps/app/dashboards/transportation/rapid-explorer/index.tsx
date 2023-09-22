@@ -207,9 +207,10 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                         <Button
                           variant="primary"
                           className="justify-center"
-                          onClick={() =>
-                            navigateToService(data.service, data.origin, data.destination)
-                          }
+                          onClick={() => {
+                            navigateToService(data.service, data.origin, data.destination);
+                            close();
+                          }}
                         >
                           {t("apply_filter")}
                         </Button>
