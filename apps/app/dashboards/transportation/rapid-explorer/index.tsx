@@ -61,6 +61,9 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
     destination: params.destination,
     tab: 0,
   });
+  const DEFAULT_ORIG = "KJ15: KL Sentral";
+  const DEFAULT_DEST = "KJ10: KLCC";
+
   const PERIODS: Array<DashboardPeriod> = ["daily", "monthly"];
   const config = useMemo<{
     key: DashboardPeriod;
@@ -285,9 +288,10 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                       <Timeseries
                         className="h-[300px] w-full"
-                        title={t(`ridership_${config.period}`, {
-                          from: params.origin ?? "KJ10: KLCC",
-                          to: params.destination ?? "KJ15: KL SENTRAL",
+                        title={t("ridership", {
+                          context: config.period,
+                          from: params.origin ?? DEFAULT_ORIG,
+                          to: params.destination ?? DEFAULT_DEST,
                         })}
                         enableAnimation={!play}
                         interval={config.period}
@@ -322,9 +326,10 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                       {B_to_A && B_to_A_callout ? (
                         <Timeseries
                           className="h-[300px] w-full"
-                          title={t(`ridership_${config.period}`, {
-                            from: params.destination ?? "KJ15: KL SENTRAL",
-                            to: params.origin ?? "KJ10: KLCC",
+                          title={t("ridership", {
+                            context: config.period,
+                            from: params.destination ?? DEFAULT_DEST,
+                            to: params.origin ?? DEFAULT_ORIG,
                           })}
                           enableAnimation={!play}
                           interval={config.period}
@@ -359,9 +364,10 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                       ) : (
                         <div className="relative flex h-[400px] w-full flex-col">
                           <h5>
-                            {t(`ridership_${config.period}`, {
-                              from: params.destination ?? "KJ15: KL SENTRAL",
-                              to: params.origin ?? "KJ10: KLCC",
+                            {t("ridership", {
+                              context: config.period,
+                              from: params.destination ?? DEFAULT_DEST,
+                              to: params.origin ?? DEFAULT_ORIG,
                             })}
                           </h5>
                           <Timeseries

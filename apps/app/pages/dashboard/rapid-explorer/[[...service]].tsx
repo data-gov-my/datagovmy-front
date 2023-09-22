@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   async ({ params }) => {
     const [service, origin, destination] = params?.service
       ? (params.service as string[])
-      : ["rail", "KJ10: KLCC", "KJ15: KL SENTRAL"];
+      : ["rail", "KJ10: KLCC", "KJ15: KL Sentral"];
 
     const results = await Promise.allSettled([
       get("/explorer", { explorer: "Prasarana", dropdown: true }),
@@ -70,15 +70,12 @@ export const getStaticProps: GetStaticProps = withi18n(
         destination: origin,
       }),
     ]);
-    console.log(results[2]);
+
     const [dropdown, A_to_B, B_to_A] = results.map(e => {
-      if (e.status === "rejected") {
-        console.log(e.reason);
-        console.log(e);
-        return {};
-      } else return e.value.data;
+      if (e.status === "rejected") return {};
+      else return e.value.data;
     });
-    console.log(B_to_A);
+
     return {
       props: {
         meta: {
