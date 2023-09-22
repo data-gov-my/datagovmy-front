@@ -157,8 +157,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
                 >
                   {close => (
-                    <div className="space-y-4 bg-white p-3 dark:bg-black">
-                      <div className="space-y-2">
+                    <div className="dark:divide-washed-dark mb-[101px] flex h-max flex-col divide-y bg-white px-3 pb-3 dark:bg-black">
+                      <div className="space-y-2 py-3">
                         <Label label={t("service")} className="text-sm" />
                         <Dropdown
                           anchor="bottom"
@@ -172,9 +172,8 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           }}
                         />
                       </div>
-                      <div className="dark:border-outlineHover-dark grid grid-cols-2 gap-x-3 gap-y-2 border-y py-4">
+                      <div className="space-y-2 py-3">
                         <Label label={t("origin")} className="text-sm" />
-                        <Label label={t("destination")} className="text-sm" />
                         <Dropdown
                           anchor="bottom-10"
                           width="w-full"
@@ -187,6 +186,9 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           }}
                           enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
                         />
+                      </div>
+                      <div className="space-y-2 py-3">
+                        <Label label={t("destination")} className="text-sm" />
                         <Dropdown
                           anchor="right-0 bottom-10"
                           width="w-full"
@@ -199,7 +201,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-2 border-t bg-white p-3 dark:bg-black">
                         <Button
                           className="btn-primary w-full justify-center"
                           onClick={() =>
@@ -209,7 +211,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                           {t("apply_filter")}
                         </Button>
                         <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
-                          <XMarkIcon className="h-5 w-5" />
+                          <XMarkIcon className="h-4.5 w-4.5" />
                           {t("common:common.close")}
                         </Button>
                       </div>
