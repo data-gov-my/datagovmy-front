@@ -157,51 +157,53 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   title={<Label label={t("filters") + ":"} className="text-sm font-bold" />}
                 >
                   {close => (
-                    <div className="dark:divide-washed-dark mb-[101px] flex h-max flex-col divide-y bg-white px-3 pb-3 dark:bg-black">
-                      <div className="space-y-2 py-3">
-                        <Label label={t("service")} className="text-sm" />
-                        <Dropdown
-                          anchor="bottom"
-                          width="w-full"
-                          options={SERVICE_OPTIONS}
-                          selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
-                          onChange={selected => {
-                            setData("service", selected.value);
-                            setData("origin", null);
-                            setData("destination", null);
-                          }}
-                        />
+                    <div className="flex h-max flex-col bg-white dark:bg-black">
+                      <div className="dark:divide-washed-dark divide-y px-3 pb-3">
+                        <div className="space-y-2 py-3">
+                          <Label label={t("service")} className="text-sm" />
+                          <Dropdown
+                            anchor="bottom"
+                            width="w-full"
+                            options={SERVICE_OPTIONS}
+                            selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
+                            onChange={selected => {
+                              setData("service", selected.value);
+                              setData("origin", null);
+                              setData("destination", null);
+                            }}
+                          />
+                        </div>
+                        <div className="space-y-2 py-3">
+                          <Label label={t("origin")} className="text-sm" />
+                          <Dropdown
+                            anchor="bottom-10"
+                            width="w-full"
+                            options={ORIGIN_OPTIONS}
+                            selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
+                            disabled={!data.service}
+                            onChange={selected => {
+                              setData("origin", selected.value);
+                              setData("destination", null);
+                            }}
+                            enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
+                          />
+                        </div>
+                        <div className="space-y-2 py-3">
+                          <Label label={t("destination")} className="text-sm" />
+                          <Dropdown
+                            anchor="right-0 bottom-10"
+                            width="w-full"
+                            options={DESTINATION_OPTIONS}
+                            selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
+                            disabled={!data.service || !data.origin}
+                            onChange={selected => {
+                              setData("destination", selected.value);
+                            }}
+                            enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-2 py-3">
-                        <Label label={t("origin")} className="text-sm" />
-                        <Dropdown
-                          anchor="bottom-10"
-                          width="w-full"
-                          options={ORIGIN_OPTIONS}
-                          selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-                          disabled={!data.service}
-                          onChange={selected => {
-                            setData("origin", selected.value);
-                            setData("destination", null);
-                          }}
-                          enableSearch={ORIGIN_OPTIONS.length > 15 ? true : false}
-                        />
-                      </div>
-                      <div className="space-y-2 py-3">
-                        <Label label={t("destination")} className="text-sm" />
-                        <Dropdown
-                          anchor="right-0 bottom-10"
-                          width="w-full"
-                          options={DESTINATION_OPTIONS}
-                          selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-                          disabled={!data.service || !data.origin}
-                          onChange={selected => {
-                            setData("destination", selected.value);
-                          }}
-                          enableSearch={DESTINATION_OPTIONS.length > 15 ? true : false}
-                        />
-                      </div>
-                      <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-2 border-t bg-white p-3 dark:bg-black">
+                      <div className="dark:border-washed-dark flex w-full flex-col gap-2 border-t bg-white p-3 dark:bg-black">
                         <Button
                           className="btn-primary w-full justify-center"
                           onClick={() =>
