@@ -15,6 +15,7 @@ export const routes = {
   KAWASANKU: "/dashboard/kawasanku",
   LABOUR_MARKET: "/dashboard/labour-market",
   LABOUR_PRODUCTIVITY: "dashboard/labour-productivity",
+  LIFE_EXPECTANCY: "dashboard/life-expectancy",
   MANUFACTURING_STATISTICS: "/dashboard/manufacturing-statistics",
   POPULATION: "/dashboard/population",
   PRODUCER_PRICES: "/dashboard/producer-prices",
