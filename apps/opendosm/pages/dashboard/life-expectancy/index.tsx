@@ -4,12 +4,11 @@ import { get } from "datagovmy-ui/api";
 import { Page } from "datagovmy-ui/types";
 import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
-// import PovertyDashboard from "@dashboards/economy/poverty";
 import { withi18n } from "datagovmy-ui/decorators";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
-import LifeExpectancy from "@dashboards/life-expectancy";
+import LifeExpectancyDashboard from "@dashboards/life-expectancy";
 
-const Poverty: Page = ({
+const LifeExpectancy: Page = ({
   choropleth,
   heatmap,
   last_updated,
@@ -22,7 +21,7 @@ const Poverty: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <LifeExpectancy
+      <LifeExpectancyDashboard
         last_updated={last_updated}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
@@ -54,4 +53,4 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-life-expectanc
   };
 });
 
-export default Poverty;
+export default LifeExpectancy;
