@@ -6,6 +6,7 @@ import { WithData } from "datagovmy-ui/types";
 import LifeExpectancyTimeseries from "./timeseries";
 import { HeatmapData } from "datagovmy-ui/charts/heatmap";
 import LifeExpectancyHeatmap from "./heatmap";
+import LifeExpectancyChoropleth from "./choropleth";
 
 /**
  * Life Expectancy Dashboard
@@ -30,9 +31,14 @@ export type TimeseriesType = (typeof TIMESERIESTYPE)[number];
 
 export type TimeseriesOptions = Record<TimeseriesData, number[]>;
 
+export type ChoroplethOptions = {
+  x: Array<string>;
+  y: Record<TimeseriesType, Array<number>>;
+};
+
 interface LifeExpectancyProps {
   last_updated: string;
-  choropleth: any;
+  choropleth: WithData<ChoroplethOptions>;
   heatmap: WithData<HeatmapData>;
   timeseries: WithData<Record<TimeseriesType, TimeseriesOptions>>;
   timeseries_callout: WithData<Record<TimeseriesData, Record<TimeseriesType, number>>>;
@@ -43,6 +49,7 @@ const LifeExpectancy: FunctionComponent<LifeExpectancyProps> = ({
   timeseries,
   timeseries_callout,
   heatmap,
+  choropleth,
 }) => {
   const { t } = useTranslation(["dashboard-life-expectancy"]);
 
@@ -61,6 +68,7 @@ const LifeExpectancy: FunctionComponent<LifeExpectancyProps> = ({
       <Container className="min-h-screen">
         <LifeExpectancyTimeseries timeseries={timeseries} timeseries_callout={timeseries_callout} />
         <LifeExpectancyHeatmap heatmap={heatmap} />
+        <LifeExpectancyChoropleth choropleth={choropleth} />
       </Container>
     </>
   );

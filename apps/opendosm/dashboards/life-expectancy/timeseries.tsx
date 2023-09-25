@@ -61,15 +61,15 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
         stats: [
           {
             title: t(`keys.overall`),
-            value: `${timeseries_callout.data[name].overall} years`,
+            value: `${timeseries_callout.data[name].overall} ${t(`keys.years`)}`,
           },
           {
             title: t(`keys.male`),
-            value: `${timeseries_callout.data[name].male} years`,
+            value: `${timeseries_callout.data[name].male} ${t(`keys.years`)}`,
           },
           {
             title: t(`keys.female`),
-            value: `${timeseries_callout.data[name].female} years`,
+            value: `${timeseries_callout.data[name].female} ${t(`keys.years`)}`,
           },
         ],
       };
@@ -118,7 +118,7 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
       title={t("section_timeseries.title")}
       description={
         <div className="flex flex-col gap-4">
-          <p className={"whitespace-pre-line text-base"}>{t("section_1.description")}</p>
+          <p className={"whitespace-pre-line text-base"}>{t("section_timeseries.description")}</p>
           <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
             <Dropdown
               anchor="left"
@@ -169,15 +169,15 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
               stats={[
                 {
                   title: t(`keys.overall`),
-                  value: `${timeseries_callout.data.overall.overall} years`,
+                  value: `${timeseries_callout.data.overall.overall} ${t(`keys.years`)}`,
                 },
                 {
                   title: t(`keys.male`),
-                  value: `${timeseries_callout.data.overall.male} years`,
+                  value: `${timeseries_callout.data.overall.male} ${t(`keys.years`)}`,
                 },
                 {
                   title: t(`keys.female`),
-                  value: `${timeseries_callout.data.overall.female} years`,
+                  value: `${timeseries_callout.data.overall.female} ${t(`keys.years`)}`,
                 },
               ]}
             />
