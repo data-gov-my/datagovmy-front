@@ -15,6 +15,7 @@ const namespaces = [
   "dashboard-gdp",
   "dashboard-kawasanku",
   "dashboard-labour-market",
+  "dashboard-life-expectancy",
   "dashboard-manufacturing-statistics",
   "dashboard-producer-prices",
   "dashboard-wholesale-retail",

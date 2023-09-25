@@ -42,6 +42,12 @@ export const getStaticProps: GetStaticProps = withi18n(
           route: routes.POPULATION,
         },
         {
+          id: "dashboard-life-expectancy",
+          name: "life-expectancy",
+          division: "bppd",
+          route: routes.LIFE_EXPECTANCY,
+        },
+        {
           id: "dashboard-household-income-expenditure",
           name: "household-income-expenditure",
           division: "bphpp",

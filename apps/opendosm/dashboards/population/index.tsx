@@ -266,7 +266,9 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
         description={[t("description")]}
         last_updated={last_updated}
         action={<StateDropdown url={routes.POPULATION} currentState={params.state} />}
-        agencyBadge={<AgencyBadge name={t("division:bppd.full")} icon={<PeopleIcon />} />}
+        agencyBadge={
+          <AgencyBadge name={t("division:bppd.full")} icon={<PeopleIcon />} isDivision />
+        }
       />
       <Container className="min-h-screen">
         <Section
