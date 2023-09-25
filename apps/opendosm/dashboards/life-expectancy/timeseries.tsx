@@ -185,14 +185,12 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
                 },
               ]}
             />
-            <Section>
-              <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                {plotTimeseries(
-                  ["bumi", "bumi_malay", "bumi_other", "chinese", "indian", "noncitizen"],
-                  play
-                )}
-              </div>
-            </Section>
+            <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3">
+              {plotTimeseries(
+                ["bumi", "bumi_malay", "bumi_other", "chinese", "indian", "noncitizen"],
+                play
+              )}
+            </div>
             <Slider
               type="range"
               period="year"
