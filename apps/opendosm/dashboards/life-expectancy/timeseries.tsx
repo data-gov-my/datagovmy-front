@@ -27,7 +27,7 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
   timeseries,
   timeseries_callout,
 }) => {
-  const { t } = useTranslation(["dashboard-household-debt"]);
+  const { t } = useTranslation(["dashboard-life-expectancy"]);
 
   const OPTIONS: Array<OptionType> = TIMESERIESTYPE.map(type => ({
     label: t(`keys.${type}`),

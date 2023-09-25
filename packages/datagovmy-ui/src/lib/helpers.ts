@@ -53,20 +53,20 @@ export const limitMax = (e: number, max: number = 100) => {
  * @returns [min, max]
  */
 export const minMax = (values: Array<number | null>): [min: number, max: number] => {
-  let min: number = 0;
-  let max: number = 0;
+  let min: number | null = null;
+  let max: number | null = null;
   for (let num of values) {
-    if (num !== null) {
-      if (num < min) {
-        min = num;
-      }
-      if (num > max) {
-        max = num;
-      }
+    if (num === null) continue;
+
+    if (min === null || num < min) {
+      min = num;
+    }
+    if (max === null || num > max) {
+      max = num;
     }
   }
 
-  return [min, max];
+  return [min ?? 0, max ?? 0];
 };
 
 /**
