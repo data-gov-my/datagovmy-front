@@ -35,7 +35,7 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
   }));
 
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.overall.x.length - 1],
+    minmax: [timeseries.data.overall.x.length - 32, timeseries.data.overall.x.length - 1],
     options: OPTIONS[0].value,
   });
 
@@ -80,6 +80,8 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
           className="h-[350px] w-full"
           interval="year"
           enableAnimation={!play}
+          beginZero={false}
+          suggestedMinY={50}
           axisY={{
             y2: {
               display: false,
@@ -139,6 +141,8 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
               className="h-[350px] w-full"
               interval="year"
               enableAnimation={!play}
+              beginZero={false}
+              suggestedMinY={50}
               axisY={{
                 y2: {
                   display: false,

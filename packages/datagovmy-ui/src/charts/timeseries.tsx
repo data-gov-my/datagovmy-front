@@ -65,6 +65,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   minY?: number;
   maxY?: number;
   suggestedMaxY?: number;
+  suggestedMinY?: number;
   stepSize?: number;
   precision?: number | [max: number, min: number];
   enableAnimation?: boolean;
@@ -135,6 +136,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   maxY,
   stepSize,
   suggestedMaxY,
+  suggestedMinY,
   displayNumFormat = numFormat,
   _ref,
 }) => {
@@ -354,6 +356,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
         },
         y: {
           suggestedMax: suggestedMaxY,
+          suggestedMin: suggestedMinY,
           grid: {
             display: enableGridY,
             borderWidth: 1,
