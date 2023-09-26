@@ -26,10 +26,14 @@ export const TIMESERIESDATA = [
 
 export const TIMESERIESTYPE = ["overall", "male", "female"] as const;
 
+export const CHOROPLETHAREA = ["state", "district"] as const;
+
 export type TimeseriesData = (typeof TIMESERIESDATA)[number];
 export type TimeseriesType = (typeof TIMESERIESTYPE)[number];
 
 export type TimeseriesOptions = Record<TimeseriesData, number[]>;
+
+export type ChoroplethArea = (typeof CHOROPLETHAREA)[number];
 
 export type ChoroplethOptions = {
   x: Array<string>;
@@ -38,7 +42,7 @@ export type ChoroplethOptions = {
 
 interface LifeExpectancyProps {
   last_updated: string;
-  choropleth: WithData<ChoroplethOptions>;
+  choropleth: Record<ChoroplethArea, WithData<ChoroplethOptions>>;
   heatmap: WithData<HeatmapData>;
   timeseries: WithData<Record<TimeseriesType, TimeseriesOptions>>;
   timeseries_callout: WithData<Record<TimeseriesData, Record<TimeseriesType, number>>>;
