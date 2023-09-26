@@ -10,6 +10,7 @@ import {
   SetStateAction,
   createContext,
   forwardRef,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -77,6 +78,25 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
     const leaflet = useRef<GeoChoroplethRef | null>(null);
     const { png } = useExport(Boolean(leaflet.current), dataset.meta.unique_id);
     const { track } = useAnalytics(dataset);
+
+    const _dataset = useMemo(() => {
+      if (["TIMESERIES", "STACKED_AREA", "INTRADAY"].includes(dataset.type)) {
+        let numOfItemsToRemove: number;
+        const chart = Object.entries(dataset.chart)
+          .filter(([key, _]) => key !== "x")
+          .map(([key, y]) => [key, (y as number[]).filter(item => Boolean(item))]);
+        numOfItemsToRemove = chart[0][1].length;
+
+        const finalChart = {
+          x: dataset.chart.x.slice(dataset.chart.x.length - numOfItemsToRemove),
+          ...Object.fromEntries(chart),
+        };
+
+        return { ...dataset, chart: finalChart };
+        // return { ...dataset}
+      }
+      return dataset;
+    }, [dataset]);
 
     const _downloads = (() => {
       switch (dataset.type) {
@@ -225,7 +245,7 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
             leaflet: leaflet,
           },
           downloads: _downloads,
-          dataset: dataset,
+          dataset: _dataset,
         }}
       >
         {children}
