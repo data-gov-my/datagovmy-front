@@ -45,7 +45,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-life-expectanc
         category: "demography",
         agency: "DOSM",
       },
-      choropleth: data.choropleth_state,
+      choropleth: { state: data.choropleth_state, district: data.choropleth_district },
       heatmap: data.heatmap,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
