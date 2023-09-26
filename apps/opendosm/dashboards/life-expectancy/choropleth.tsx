@@ -35,15 +35,16 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
             <div className="space-y-6 pb-6">
               <div className="flex flex-col gap-2">
                 <h4>{t("section_choropleth.title")}</h4>
-                <span className="text-dim text-sm">
+                <span className="text-sm text-dim">
                   {t("common:common.data_of", {
                     date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
                   })}
                 </span>
               </div>
-              <p className="text-dim whitespace-pre-line">{t("section_choropleth.description")}</p>
+              <p className="whitespace-pre-line text-dim">{t("section_choropleth.description")}</p>
               <div className="flex space-x-3">
                 <Dropdown
+                  width="min-w-[150px]"
                   anchor="left"
                   placeholder={t("common:common.select")}
                   options={FILTER_OPTIONS}

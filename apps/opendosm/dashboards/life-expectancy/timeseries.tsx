@@ -123,6 +123,7 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
           <p className={"whitespace-pre-line text-base"}>{t("section_timeseries.description")}</p>
           <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row">
             <Dropdown
+              width="min-w-[150px]"
               anchor="left"
               options={OPTIONS}
               selected={OPTIONS.find(option => data.options === option.value)}
