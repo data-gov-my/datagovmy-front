@@ -81,14 +81,17 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
 
     const _dataset = useMemo(() => {
       if (["TIMESERIES", "STACKED_AREA", "INTRADAY"].includes(dataset.type)) {
-        let numOfItemsToRemove: number;
+        const numOfValidItems: Array<number> = [];
         const chart = Object.entries(dataset.chart)
           .filter(([key, _]) => key !== "x")
           .map(([key, y]) => [key, (y as number[]).filter(item => Boolean(item))]);
-        numOfItemsToRemove = chart[0][1].length;
+
+        chart.forEach(([key, y]) => {
+          numOfValidItems.push((y as number[]).length);
+        });
 
         const finalChart = {
-          x: dataset.chart.x.slice(dataset.chart.x.length - numOfItemsToRemove),
+          x: dataset.chart.x.slice(dataset.chart.x.length - numOfValidItems[0]),
           ...Object.fromEntries(chart),
         };
 
