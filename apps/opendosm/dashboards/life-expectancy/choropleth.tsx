@@ -53,7 +53,6 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
               <div className="flex space-x-3">
                 <Dropdown
                   width="w-full"
-                  className="truncate"
                   anchor="left"
                   placeholder={t("common:common.select")}
                   options={AREA_OPTIONS}
@@ -76,7 +75,7 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
               id="life-expectancy-by-area"
               title={t("common:common.ranking", { count: choropleth[area].data.x.length })}
               data={choropleth[area].data.y[data.filter]}
-              color="text-primary"
+              color={data.filter === "gap_sex" ? "text-danger" : "text-primary"}
               threshold={choropleth[area].data.y[data.filter].length}
               format={(position: number) => {
                 return {
@@ -98,7 +97,7 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
           <Choropleth
             id="choropleth"
             className="h-[400px] w-auto lg:h-[600px]"
-            color="blues"
+            color={data.filter === "gap_sex" ? "reds" : "blues"}
             data={{
               labels: choropleth[area].data.x.map((_area: string) =>
                 area === "state" ? CountryAndStates[_area] : _area
