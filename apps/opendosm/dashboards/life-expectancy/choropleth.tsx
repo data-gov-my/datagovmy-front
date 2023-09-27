@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { Dropdown, LeftRightCard, RankList, Section } from "datagovmy-ui/components";
 import { OptionType, WithData } from "datagovmy-ui/types";
-import { ChoroplethOptions, TIMESERIESTYPE } from ".";
+import { CHOROPLETHAREA, ChoroplethArea, ChoroplethOptions, TIMESERIESTYPE } from ".";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { CountryAndStates } from "datagovmy-ui/constants";
@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 interface LifeExpectancyChoroplethProps {
-  choropleth: WithData<ChoroplethOptions>;
+  choropleth: Record<ChoroplethArea, WithData<ChoroplethOptions>>;
 }
 
 const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps> = ({
@@ -18,14 +18,22 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
 }) => {
   const { t, i18n } = useTranslation(["dashboard-life-expectancy"]);
 
-  const FILTER_OPTIONS: Array<OptionType> = TIMESERIESTYPE.map(type => ({
+  const AREA_OPTIONS: Array<OptionType> = CHOROPLETHAREA.map((key: string) => ({
+    label: t(`keys.${key}`),
+    value: key,
+  }));
+
+  const FILTER_OPTIONS: Array<OptionType> = [...TIMESERIESTYPE, "gap_sex"].map(type => ({
     label: t(`keys.${type}`),
     value: type,
   }));
 
   const { data, setData } = useData({
+    area: "state",
     filter: "overall",
   });
+
+  const area = data.area as ChoroplethArea;
 
   return (
     <Section>
@@ -37,14 +45,25 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
                 <h4>{t("section_choropleth.title")}</h4>
                 <span className="text-sm text-dim">
                   {t("common:common.data_of", {
-                    date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                    date: toDate(choropleth[area].data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
                   })}
                 </span>
               </div>
               <p className="whitespace-pre-line text-dim">{t("section_choropleth.description")}</p>
               <div className="flex space-x-3">
                 <Dropdown
-                  width="min-w-[150px]"
+                  width="w-full"
+                  className="truncate"
+                  anchor="left"
+                  placeholder={t("common:common.select")}
+                  options={AREA_OPTIONS}
+                  selected={AREA_OPTIONS.find(e => e.value === area)}
+                  onChange={e => {
+                    setData("area", e.value);
+                  }}
+                />
+                <Dropdown
+                  width="w-full lg:max-w-[200px]"
                   anchor="left"
                   placeholder={t("common:common.select")}
                   options={FILTER_OPTIONS}
@@ -55,15 +74,18 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
             </div>
             <RankList
               id="life-expectancy-by-area"
-              title={t("common:common.ranking", { count: choropleth.data.x.length })}
-              data={choropleth.data.y[data.filter]}
+              title={t("common:common.ranking", { count: choropleth[area].data.x.length })}
+              data={choropleth[area].data.y[data.filter]}
               color="text-primary"
-              threshold={choropleth.data.y[data.filter].length}
+              threshold={choropleth[area].data.y[data.filter].length}
               format={(position: number) => {
                 return {
-                  label: CountryAndStates[choropleth.data.x[position]],
+                  label:
+                    area === "state"
+                      ? CountryAndStates[choropleth[area].data.x[position]]
+                      : choropleth[area].data.x[position],
                   value: `${numFormat(
-                    choropleth.data.y[data.filter][position],
+                    choropleth[area].data.y[data.filter][position],
                     "standard",
                     [1, 1]
                   )}`,
@@ -78,10 +100,12 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
             className="h-[400px] w-auto lg:h-[600px]"
             color="blues"
             data={{
-              labels: choropleth.data.x.map((area: string) => CountryAndStates[area]),
-              values: choropleth.data.y[data.filter],
+              labels: choropleth[area].data.x.map((_area: string) =>
+                area === "state" ? CountryAndStates[_area] : _area
+              ),
+              values: choropleth[area].data.y[data.filter],
             }}
-            type={"state"}
+            type={area === "state" ? "state" : "district"}
           />
         }
       />
