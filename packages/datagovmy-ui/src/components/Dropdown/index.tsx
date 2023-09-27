@@ -233,8 +233,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
             <Listbox.Options
               ref={optionsRef}
               className={clx(
-                "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 w-full min-w-full rounded-md bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black dark:text-white",
+                "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 rounded-md bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black dark:text-white",
                 availableOptions.length <= 160 && "max-h-60 overflow-auto",
+                width ? width : "",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
               )}
             >
