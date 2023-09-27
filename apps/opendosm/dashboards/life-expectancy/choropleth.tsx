@@ -53,7 +53,6 @@ const LifeExpectancyChoropleth: FunctionComponent<LifeExpectancyChoroplethProps>
               <div className="flex space-x-3">
                 <Dropdown
                   width="w-full"
-                  className="truncate"
                   anchor="left"
                   placeholder={t("common:common.select")}
                   options={AREA_OPTIONS}
