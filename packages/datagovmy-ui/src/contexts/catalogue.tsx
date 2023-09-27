@@ -91,7 +91,9 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
         });
 
         const finalChart = {
-          x: dataset.chart.x.slice(dataset.chart.x.length - numOfValidItems[0]),
+          x: dataset.chart.x.slice(
+            dataset.chart.x.length - numOfValidItems.sort((a, b) => b - a)[0]
+          ),
           ...Object.fromEntries(chart),
         };
 
