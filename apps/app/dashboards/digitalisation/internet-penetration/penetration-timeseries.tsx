@@ -70,7 +70,13 @@ const PenetrationTimeseries: FunctionComponent<PenetrationTimeseriesProps> = ({
         stats: [
           {
             title: t("common:common.latest", {
-              date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+              date: toDate(
+                LATEST_TIMESTAMP,
+                `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                  i18n.language === "ms-MY" ? "" : "Q"
+                } yyyy`,
+                i18n.language
+              ),
             }),
             value: [
               numFormat(

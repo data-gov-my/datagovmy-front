@@ -266,7 +266,13 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                 stats={[
                   {
                     title: t("common:common.latest", {
-                      date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                      date: toDate(
+                        LATEST_TIMESTAMP,
+                        `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                          i18n.language === "ms-MY" ? "" : "Q"
+                        } yyyy`,
+                        i18n.language
+                      ),
                     }),
                     value: configs("overall").callout,
                   },
@@ -342,7 +348,13 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                     stats={[
                       {
                         title: t("common:common.latest", {
-                          date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                          date: toDate(
+                            LATEST_TIMESTAMP,
+                            `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                              i18n.language === "ms-MY" ? "" : "Q"
+                            } yyyy`,
+                            i18n.language
+                          ),
                         }),
                         value: chartData.callout,
                       },
@@ -417,7 +429,13 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
                       stats={[
                         {
                           title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                            date: toDate(
+                              LATEST_TIMESTAMP,
+                              `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                                i18n.language === "ms-MY" ? "" : "Q"
+                              } yyyy`,
+                              i18n.language
+                            ),
                           }),
                           value: chartData.callout,
                         },

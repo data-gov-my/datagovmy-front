@@ -177,7 +177,13 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                     stats={[
                       {
                         title: t("common:common.latest", {
-                          date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                          date: toDate(
+                            LATEST_TIMESTAMP,
+                            `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                              i18n.language === "ms-MY" ? "" : "Q"
+                            } yyyy`,
+                            i18n.language
+                          ),
                         }),
                         value: `${numFormat(
                           timeseries_callout.data[data.index].projects.latest,
@@ -217,7 +223,13 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
                     stats={[
                       {
                         title: t("common:common.latest", {
-                          date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                          date: toDate(
+                            LATEST_TIMESTAMP,
+                            `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                              i18n.language === "ms-MY" ? "" : "Q"
+                            } yyyy`,
+                            i18n.language
+                          ),
                         }),
                         value: getCallout(
                           timeseries_callout.data[data.index].value.latest,
