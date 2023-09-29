@@ -150,11 +150,26 @@ export const toDate = (
   format: string = "dd MMM yyyy",
   locale: string = "en-GB"
 ): string => {
-  const date =
-    typeof timestamp === "number" ? DateTime.fromMillis(timestamp) : DateTime.fromSQL(timestamp);
-  const formatted_date = date.setLocale(locale).toFormat(format);
+  if (typeof timestamp === "number") {
+    const formatted_date = DateTime.fromMillis(timestamp).setLocale(locale).toFormat(format);
+    return formatted_date !== "Invalid DateTime" ? formatted_date : "N/A";
+  }
 
-  return formatted_date !== "Invalid DateTime" ? formatted_date : "N/A";
+  if (/^\d{4}-\d{2}$/.test(timestamp)) {
+    // Format: YYYY-MM
+    return DateTime.fromFormat(timestamp, "yyyy-MM").setLocale(locale).toFormat("MMMM yyyy");
+  } else if (/^\d{4}-Q[1-4]$/.test(timestamp)) {
+    // Format: YYYY-QQ
+    return DateTime.fromFormat(timestamp, "yyyy-'Q'q").setLocale(locale).toFormat("qQ yyyy");
+  } else if (/^\d+$/.test(timestamp)) {
+    // Format: YYYY
+    return DateTime.fromFormat(timestamp, "yyyy").setLocale(locale).toFormat("yyyy");
+  } else {
+    const date = DateTime.fromSQL(timestamp);
+    const formatted_date = date.setLocale(locale).toFormat(format);
+
+    return formatted_date !== "Invalid DateTime" ? formatted_date : "N/A";
+  }
 };
 
 /**
