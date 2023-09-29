@@ -96,14 +96,14 @@ const Home: Page = ({
         title: "stats.population",
         url: routes.POPULATION,
         value: numFormat(keystats.population.callout, "compact", 1, "long", i18n.language, true),
-        data_as_of: toDate(keystats.population.data_as_of, "Qq yyyy"),
+        data_as_of: toDate(keystats.population.data_as_of, "qQ yyyy"),
       },
       {
         icon: <EconomicGrowthIcon className="h-6 w-6" />,
         title: "stats.economic_growth",
         url: routes.GDP,
         value: numFormat(keystats.growth.callout, "compact", 1) + "%",
-        data_as_of: toDate(keystats.growth.data_as_of, "Qq yyyy"),
+        data_as_of: toDate(keystats.growth.data_as_of, "qQ yyyy"),
       },
       {
         icon: <UnemploymentIcon className="h-6 w-6" />,
