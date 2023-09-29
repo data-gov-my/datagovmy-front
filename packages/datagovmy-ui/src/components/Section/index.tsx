@@ -32,7 +32,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
         else return date;
       }
       return toDate(date, "dd MMM yyyy, HH:mm", i18n.language);
-    }, [date]);
+    }, [date, i18n.language]);
     return (
       <section className={className} ref={ref}>
         <div className="flex flex-col gap-6 lg:gap-8">

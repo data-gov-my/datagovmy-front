@@ -157,10 +157,12 @@ export const toDate = (
 
   if (/^\d{4}-\d{2}$/.test(timestamp)) {
     // Format: YYYY-MM
-    return DateTime.fromFormat(timestamp, "yyyy-MM").setLocale(locale).toFormat("MMMM yyyy");
+    return DateTime.fromFormat(timestamp, "yyyy-MM").setLocale(locale).toFormat("MMM yyyy");
   } else if (/^\d{4}-Q[1-4]$/.test(timestamp)) {
     // Format: YYYY-QQ
-    return DateTime.fromFormat(timestamp, "yyyy-'Q'q").setLocale(locale).toFormat("qQ yyyy");
+    return DateTime.fromFormat(timestamp, "yyyy-'Q'q")
+      .setLocale(locale)
+      .toFormat(`${locale === "ms-MY" ? "'ST'" : ""}q${locale === "ms-MY" ? "" : "Q"} yyyy`);
   } else if (/^\d+$/.test(timestamp)) {
     // Format: YYYY
     return DateTime.fromFormat(timestamp, "yyyy").setLocale(locale).toFormat("yyyy");
