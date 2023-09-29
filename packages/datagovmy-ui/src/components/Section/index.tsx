@@ -24,12 +24,15 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
       if (date === undefined || date === null) return "";
 
       if (typeof date === "string") {
-        if (DateTime.fromSQL(date).isValid && date.length > 4)
+        if (
+          (DateTime.fromSQL(date).isValid || DateTime.fromFormat(date, "yyyy-'Q'q").isValid) &&
+          date.length > 4
+        )
           return toDate(date, "dd MMM yyyy, HH:mm", i18n.language);
         else return date;
       }
       return toDate(date, "dd MMM yyyy, HH:mm", i18n.language);
-    }, [date]);
+    }, [date, i18n.language]);
     return (
       <section className={className} ref={ref}>
         <div className="flex flex-col gap-6 lg:gap-8">

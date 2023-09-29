@@ -149,7 +149,13 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
         stats: [
           {
             title: t("common:common.latest", {
-              date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+              date: toDate(
+                LATEST_TIMESTAMP,
+                `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                  i18n.language === "ms-MY" ? "" : "Q"
+                } yyyy`,
+                i18n.language
+              ),
             }),
             value: [
               isPercentage ? "" : data.index === "hours" ? "" : "RM ",
@@ -304,7 +310,13 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
                   stats={[
                     {
                       title: t("common:common.latest", {
-                        date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                        date: toDate(
+                          LATEST_TIMESTAMP,
+                          `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                            i18n.language === "ms-MY" ? "" : "Q"
+                          } yyyy`,
+                          i18n.language
+                        ),
                       }),
                       value: ["growth_yoy_vah", "growth_yoy_vae", "growth_yoy_hours"].includes(
                         data.index

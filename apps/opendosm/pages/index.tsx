@@ -96,28 +96,36 @@ const Home: Page = ({
         title: "stats.population",
         url: routes.POPULATION,
         value: numFormat(keystats.population.callout, "compact", 1, "long", i18n.language, true),
-        data_as_of: toDate(keystats.population.data_as_of, "Qq yyyy"),
+        data_as_of: toDate(
+          keystats.population.data_as_of,
+          `${i18n.language === "ms-MY" ? "'ST'" : ""}q${i18n.language === "ms-MY" ? "" : "Q"} yyyy`,
+          i18n.language
+        ),
       },
       {
         icon: <EconomicGrowthIcon className="h-6 w-6" />,
         title: "stats.economic_growth",
         url: routes.GDP,
         value: numFormat(keystats.growth.callout, "compact", 1) + "%",
-        data_as_of: toDate(keystats.growth.data_as_of, "Qq yyyy"),
+        data_as_of: toDate(
+          keystats.growth.data_as_of,
+          `${i18n.language === "ms-MY" ? "'ST'" : ""}q${i18n.language === "ms-MY" ? "" : "Q"} yyyy`,
+          i18n.language
+        ),
       },
       {
         icon: <UnemploymentIcon className="h-6 w-6" />,
         title: "stats.unemployment",
         url: routes.LABOUR_MARKET,
         value: numFormat(keystats.unemployment.callout, "compact", 1) + "%",
-        data_as_of: toDate(keystats.unemployment.data_as_of, "MMM yyyy"),
+        data_as_of: toDate(keystats.unemployment.data_as_of, "MMM yyyy", i18n.language),
       },
       {
         icon: <InflationIcon className="h-6 w-6" />,
         title: "stats.inflation",
         url: routes.CONSUMER_PRICES,
         value: numFormat(keystats.inflation.callout, "compact", 1) + "%",
-        data_as_of: toDate(keystats.inflation.data_as_of, "MMM yyyy"),
+        data_as_of: toDate(keystats.inflation.data_as_of, "MMM yyyy", i18n.language),
       },
       {
         icon: <ProductionIcon className="h-6 w-6" />,
@@ -125,7 +133,7 @@ const Home: Page = ({
         url: routes.PRODUCER_PRICES,
         value:
           yieldPrefix(keystats.ppi.callout) + numFormat(keystats.ppi.callout, "compact", 1) + "%",
-        data_as_of: toDate(keystats.ppi.data_as_of, "MMM yyyy"),
+        data_as_of: toDate(keystats.ppi.data_as_of, "MMM yyyy", i18n.language),
       },
       {
         icon: <ProductionIcon className="h-6 w-6" />,
@@ -133,7 +141,7 @@ const Home: Page = ({
         url: routes.MANUFACTURING_STATISTICS,
         value:
           yieldPrefix(keystats.mfg.callout) + numFormat(keystats.mfg.callout, "compact", 1) + "%",
-        data_as_of: toDate(keystats.mfg.data_as_of, "MMM yyyy"),
+        data_as_of: toDate(keystats.mfg.data_as_of, "MMM yyyy", i18n.language),
       },
       {
         icon: <IndustryIcon className="h-5 w-5" />,
@@ -141,7 +149,7 @@ const Home: Page = ({
         url: routes.INDUSTRIAL_PRODUCTION,
         value:
           yieldPrefix(keystats.ipi.callout) + numFormat(keystats.ipi.callout, "compact", 1) + "%",
-        data_as_of: toDate(keystats.ipi.data_as_of, "MMM yyyy"),
+        data_as_of: toDate(keystats.ipi.data_as_of, "MMM yyyy", i18n.language),
       },
       {
         icon: <RetailTradeIcon className="h-6 w-6" />,
@@ -151,10 +159,10 @@ const Home: Page = ({
           yieldPrefix(keystats.iowrt.callout) +
           numFormat(keystats.iowrt.callout, "compact", 1) +
           "%",
-        data_as_of: toDate(keystats.iowrt.data_as_of, "MMM yyyy"),
+        data_as_of: toDate(keystats.iowrt.data_as_of, "MMM yyyy", i18n.language),
       },
     ],
-    []
+    [i18n.language]
   );
 
   return (

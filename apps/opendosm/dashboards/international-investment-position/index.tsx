@@ -95,7 +95,13 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
       stats: [
         {
           title: t("common:common.latest", {
-            date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+            date: toDate(
+              LATEST_TIMESTAMP,
+              `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                i18n.language === "ms-MY" ? "" : "Q"
+              } yyyy`,
+              i18n.language
+            ),
           }),
           value: [
             prefixRM(timeseries_callout.data[data.index][name].latest, false),
@@ -220,7 +226,13 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
                   stats={[
                     {
                       title: t("common:common.latest", {
-                        date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                        date: toDate(
+                          LATEST_TIMESTAMP,
+                          `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                            i18n.language === "ms-MY" ? "" : "Q"
+                          } yyyy`,
+                          i18n.language
+                        ),
                       }),
                       value: [
                         prefixRM(timeseries_callout.data[data.index].total.latest),
