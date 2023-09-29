@@ -125,7 +125,13 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
         stats: [
           {
             title: t("common:common.latest", {
-              date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+              date: toDate(
+                LATEST_TIMESTAMP,
+                `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                  i18n.language === "ms-MY" ? "" : "Q"
+                } yyyy`,
+                i18n.language
+              ),
             }),
             value: [
               numFormat(
@@ -260,7 +266,13 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
                   stats={[
                     {
                       title: t("common:common.latest", {
-                        date: toDate(LATEST_TIMESTAMP, "qQ yyyy", i18n.language),
+                        date: toDate(
+                          LATEST_TIMESTAMP,
+                          `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+                            i18n.language === "ms-MY" ? "" : "Q"
+                          } yyyy`,
+                          i18n.language
+                        ),
                       }),
                       value: ["growth_qoq", "growth_yoy"].includes(data.index)
                         ? `${numFormat(

@@ -51,7 +51,9 @@ const Slider: FunctionComponent<SliderProps> = ({
     auto: "dd MMM yyyy",
     day: "dd MMM yyyy",
     month: "MMM yyyy",
-    quarter: "qQ yyyy",
+    quarter: `${i18n.language === "ms-MY" ? "'ST'" : ""}q${
+      i18n.language === "ms-MY" ? "" : "Q"
+    } yyyy`,
     year: "yyyy",
     hour: "dd MMM yy HH:mm ",
   };

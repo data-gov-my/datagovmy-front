@@ -65,7 +65,11 @@ const BalanceOfPaymentsSnapshot: FunctionComponent<BOPProps> = ({ bop_snapshot }
   const tableData = useMemo(() => {
     const datesData = {};
     for (let i = data.snapshot_index; i <= data.snapshot_index + 4; i++) {
-      const date = toDate(xValues[i], "qQ yyyy", i18n.language);
+      const date = toDate(
+        xValues[i],
+        `${i18n.language === "ms-MY" ? "'ST'" : ""}q${i18n.language === "ms-MY" ? "" : "Q"} yyyy`,
+        i18n.language
+      );
       datesData[date] = item[i];
     }
     const dates = size.width < 640 ? Object.keys(datesData).reverse() : Object.keys(datesData);
