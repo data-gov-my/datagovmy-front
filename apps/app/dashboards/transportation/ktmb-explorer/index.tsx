@@ -225,11 +225,10 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                   )}
                 </Modal>
               </div>
-              <div className="hidden gap-2 sm:flex lg:gap-3">
+              <div className="hidden gap-2 sm:flex sm:flex-wrap lg:gap-3">
                 <Dropdown
                   placeholder={t("service")}
                   anchor="left"
-                  width="min-w-[150px] w-auto"
                   options={SERVICE_OPTIONS}
                   selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
                   onChange={selected => {
@@ -241,7 +240,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_origin")}
                   anchor="left"
-                  width="min-w-[210px] w-auto"
                   options={ORIGIN_OPTIONS}
                   selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
                   disabled={!data.service}
@@ -254,7 +252,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                 <Dropdown
                   placeholder={t("select_destination")}
                   anchor="left"
-                  width="min-w-[210px] w-auto"
                   options={DESTINATION_OPTIONS}
                   selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
                   disabled={!data.service || !data.origin}
@@ -288,7 +285,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                       <Timeseries
                         className="h-[300px] w-full"
                         title={t("ridership", {
-                          context: config.period,
                           from: params.origin ?? DEFAULT_ORIG,
                           to: params.destination ?? DEFAULT_DEST,
                         })}
@@ -326,7 +322,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         <Timeseries
                           className="h-[300px] w-full"
                           title={t("ridership", {
-                            context: config.period,
                             from: params.destination ?? DEFAULT_DEST,
                             to: params.origin ?? DEFAULT_ORIG,
                           })}
@@ -364,7 +359,6 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
                         <div className="relative flex h-[400px] w-full flex-col">
                           <h5>
                             {t("ridership", {
-                              context: config.period,
                               from: params.destination ?? DEFAULT_DEST,
                               to: params.origin ?? DEFAULT_ORIG,
                             })}

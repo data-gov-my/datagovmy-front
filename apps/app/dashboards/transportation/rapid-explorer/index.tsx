@@ -56,7 +56,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   const { data, setData } = useData({
     loading: false,
     minmax: [0, A_to_B.data.daily.x.length - 1],
-    service: params.service,
+    service: "rail", // FIXME if adding other services: params.service,
     origin: params.origin,
     destination: params.destination,
     tab: 0,
@@ -89,6 +89,12 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   );
   const LATEST_MONTH = A_to_B.data.monthly.x[A_to_B.data.monthly.x.length - 1];
 
+  const isAllStations = (station: string) => {
+    if (station === "A0: All Stations") {
+      return t("all_stations");
+    } else return station;
+  };
+
   const SERVICE_OPTIONS = useMemo<Array<OptionType>>(() => {
     const _services = Object.keys(dropdown).map(service => ({ label: t(service), value: service }));
     return _services;
@@ -98,7 +104,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
     let _origins: Array<OptionType> = [];
     if (data.service) {
       _origins = Object.keys(dropdown[data.service]).map(origin => ({
-        label: origin,
+        label: isAllStations(origin),
         value: origin,
       }));
     }
@@ -108,8 +114,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   const DESTINATION_OPTIONS = useMemo<Array<OptionType>>(() => {
     let _destinations: Array<OptionType> = [];
     if (data.service && data.origin) {
-      _destinations = dropdown[data.service][data.origin].map((destination: string) => ({
-        label: destination,
+      _destinations = dropdown[data.service][data.origin].map(destination => ({
+        label: isAllStations(destination),
         value: destination,
       }));
     }
@@ -245,11 +251,10 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                           )}
                         </Modal>
                       </div>
-                      <div className="hidden gap-2 sm:flex lg:gap-3">
+                      <div className="hidden gap-2 sm:flex sm:flex-wrap lg:gap-3">
                         <Dropdown
                           placeholder={t("service")}
                           anchor="left"
-                          width="min-w-[100px] w-auto"
                           options={SERVICE_OPTIONS}
                           selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
                           onChange={selected => {
@@ -261,7 +266,6 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                         <Dropdown
                           placeholder={t("select_origin")}
                           anchor="left"
-                          width="min-w-[250px] w-auto"
                           options={ORIGIN_OPTIONS}
                           selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
                           disabled={!data.service}
@@ -274,7 +278,6 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                         <Dropdown
                           placeholder={t("select_destination")}
                           anchor="left"
-                          width="min-w-[250px] w-auto"
                           options={DESTINATION_OPTIONS}
                           selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
                           disabled={!data.service || !data.origin}
@@ -290,9 +293,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                       <Timeseries
                         className="h-[300px] w-full"
                         title={t("ridership", {
-                          context: config.period,
-                          from: params.origin ?? DEFAULT_ORIG,
-                          to: params.destination ?? DEFAULT_DEST,
+                          from: isAllStations(params.origin) ?? DEFAULT_ORIG,
+                          to: isAllStations(params.destination) ?? DEFAULT_DEST,
                         })}
                         enableAnimation={!play}
                         interval={config.period}
@@ -328,9 +330,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                         <Timeseries
                           className="h-[300px] w-full"
                           title={t("ridership", {
-                            context: config.period,
-                            from: params.destination ?? DEFAULT_DEST,
-                            to: params.origin ?? DEFAULT_ORIG,
+                            from: isAllStations(params.destination) ?? DEFAULT_DEST,
+                            to: isAllStations(params.origin) ?? DEFAULT_ORIG,
                           })}
                           enableAnimation={!play}
                           interval={config.period}
@@ -366,9 +367,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                         <div className="relative flex h-[400px] w-full flex-col lg:h-full">
                           <h5>
                             {t("ridership", {
-                              context: config.period,
-                              from: params.destination ?? DEFAULT_DEST,
-                              to: params.origin ?? DEFAULT_ORIG,
+                              from: isAllStations(params.destination) ?? DEFAULT_DEST,
+                              to: isAllStations(params.origin) ?? DEFAULT_ORIG,
                             })}
                           </h5>
                           <Timeseries
