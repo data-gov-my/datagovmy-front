@@ -79,7 +79,7 @@ export const useFilter = (
     if (sequential) {
       let flag = false;
       for (const _key in data) {
-        if (flag && _key !== "range") setData(_key, undefined);
+        if (!flag && ["range", "date_slider"].includes(_key)) setData(_key, undefined);
         if (key === _key) {
           setData(key, value);
           flag = true;

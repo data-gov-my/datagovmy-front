@@ -12,6 +12,20 @@ const nextConfig = {
   reactStrictMode: false, // Bug requires strict-mode false: https://github.com/plouc/nivo/issues/2009
   poweredByHeader: false,
   transpilePackages: ["datagovmy-ui"],
+  modularizeImports: {
+    "datagovmy-ui": {
+      transform: "datagovmy-ui/{{member}}",
+      preventFullImport: true,
+    },
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /index\.(js|mjs|jsx|ts|tsx)$/,
+      include: mPath => mPath.includes("datagovmy-ui"),
+      sideEffects: false,
+    });
+    return config;
+  },
   publicRuntimeConfig: {
     APP_NAME: "OpenDOSM",
     META_AUTHOR: "Department of Statistics Malaysia",
