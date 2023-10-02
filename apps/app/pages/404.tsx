@@ -1,9 +1,28 @@
-import { At, Container, ErrorStatus, Metadata } from "datagovmy-ui/components";
+import { Container, ErrorStatus, Metadata } from "datagovmy-ui/components";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
+import { ComponentProps, useEffect, useState } from "react";
+
+const ActiveLink = ({ children, className, ...props }: ComponentProps<"a">) => {
+  const { asPath, isReady } = useRouter();
+  const [legacyPath, setLegacyPath] = useState<string>(props.href as string);
+
+  useEffect(() => {
+    // Check if the router fields are updated client-side
+    if (isReady) {
+      setLegacyPath(asPath);
+    }
+  }, [isReady]);
+
+  return (
+    <a href={legacyPath} className={className} target="_blank">
+      {children}
+    </a>
+  );
+};
 
 const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("common");
@@ -18,9 +37,7 @@ const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
           description={
             <>
               {`${t("error.404.description")} ${t("error.404.legacy")}`}
-              <At external href={"https://archive.data.gov.my"} className="link-primary">
-                archive.data.gov.my
-              </At>
+              <ActiveLink className="link-primary">{"https://archive.data.gov.my"}</ActiveLink>
             </>
           }
           code={404}
