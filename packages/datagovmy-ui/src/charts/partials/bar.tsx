@@ -1,3 +1,4 @@
+import { useTheme } from "next-themes";
 import { CatalogueContext } from "../../contexts/catalogue";
 import { WindowContext } from "../../contexts/window";
 import { BREAKPOINTS, CATALOGUE_COLORS } from "../../lib/constants";
@@ -20,6 +21,8 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   translations,
 }) => {
   const { bind, dataset } = useContext(CatalogueContext);
+  const { forcedTheme } = useTheme();
+
   const { size } = useContext(WindowContext);
   const bar_layout = useMemo<"horizontal" | "vertical">(() => {
     if (dataset.type === "HBAR" || size.width < BREAKPOINTS.MD) return "horizontal";
@@ -59,6 +62,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
         labels: dataset.chart.x,
         datasets: _datasets,
       }}
+      forcedTheme={forcedTheme}
     />
   );
 };

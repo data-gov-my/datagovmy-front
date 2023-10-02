@@ -38,6 +38,7 @@ type ScatterProps = ChartHeaderProps & {
   enableLegend?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
+  forcedTheme?: string;
   _ref?: ForwardedRef<ChartJSOrUndefined<"scatter", any[], unknown>>;
 };
 
@@ -55,6 +56,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   enableLegend = false,
   enableGridX = true,
   enableGridY = true,
+  forcedTheme,
   titleX,
   titleY,
   minX,
@@ -73,6 +75,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
     Legend
   );
   const { theme } = useTheme();
+  const isLightMode = forcedTheme ? forcedTheme === "light" : theme === "light";
 
   const display = (
     value: number,
@@ -85,7 +88,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
   const titleConfig = (axis: string | undefined) => ({
     display: Boolean(axis),
     text: axis,
-    color: theme === "light" ? AKSARA_COLOR.BLACK : AKSARA_COLOR.DIM,
+    color: isLightMode ? AKSARA_COLOR.BLACK : AKSARA_COLOR.DIM,
     font: {
       size: 14,
       family: "Inter",
@@ -166,7 +169,7 @@ const Scatter: FunctionComponent<ScatterProps> = ({
         ? {
             line: {
               width: 0,
-              color: theme === "light" ? "#000" : "#FFF",
+              color: isLightMode ? "#000" : "#FFF",
               dashPattern: [6, 4],
             },
             zoom: {

@@ -1,6 +1,7 @@
 import { CatalogueContext } from "../../contexts/catalogue";
 import { CATALOGUE_COLORS } from "../../lib/constants";
 import { ChartDataset } from "chart.js";
+import { useTheme } from "next-themes";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useContext, useMemo } from "react";
 
@@ -16,6 +17,7 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
   translations,
 }) => {
   const { bind, dataset } = useContext(CatalogueContext);
+  const { forcedTheme } = useTheme();
 
   const _datasets = useMemo<ChartDataset<"scatter", any[]>[]>(() => {
     return dataset.chart.map((item: any, index: number) => ({
@@ -35,6 +37,7 @@ const CatalogueScatter: FunctionComponent<CatalogueScatterProps> = ({
       data={_datasets}
       enableRegression
       enableLegend
+      forcedTheme={forcedTheme}
     />
   );
 };
