@@ -68,6 +68,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
       }
     };
 
+    // This hook is used when different filter options are shown based on a previous filter (eg. KTM stations)
     useWatch(() => {
       get(
         "/api/embed",
