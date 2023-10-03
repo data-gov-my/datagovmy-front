@@ -641,7 +641,7 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
         {["svg", "png"].includes(id) ? (
           <Image
             src={image || ""}
-            className="aspect-video h-14 rounded border bg-white object-cover lg:h-16"
+            className="dark:border-dim aspect-video h-14 rounded border bg-white object-cover dark:bg-black lg:h-16"
             width={128}
             height={64}
             alt={title as string}
