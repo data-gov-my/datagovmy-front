@@ -115,6 +115,7 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
           t("common:error.toast.reach_support")
         );
         console.error(e);
+        setData("loading", false);
       });
   };
 
