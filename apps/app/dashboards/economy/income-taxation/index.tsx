@@ -14,6 +14,7 @@ import Taxpayers, { TaxpayersProps } from "./taxpayers";
 interface IncomeTaxationProps extends TaxpayersProps {
   last_updated: string;
   stacked_bar: any;
+  year: number;
 }
 
 const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({
@@ -21,6 +22,7 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({
   stacked_bar,
   timeseries,
   timeseries_callout,
+  year,
 }) => {
   const { t } = useTranslation("dashboard-income-taxation");
 
@@ -37,7 +39,7 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({
 
       <Container>
         {/* How do I compare to other taxpayers in Malaysia? */}
-        <IncomeRank />
+        <IncomeRank year={year} />
 
         {/* How many people pay tax each year? */}
         <Taxpayers timeseries={timeseries} timeseries_callout={timeseries_callout} />
