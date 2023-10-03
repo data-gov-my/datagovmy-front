@@ -13,7 +13,7 @@ const ActiveLink = ({ children, className, ...props }: ComponentProps<"a">) => {
   useEffect(() => {
     // Check if the router fields are updated client-side
     if (isReady) {
-      setLegacyPath(asPath);
+      setLegacyPath(`https://archive.data.gov.my${asPath}`);
     }
   }, [isReady]);
 
