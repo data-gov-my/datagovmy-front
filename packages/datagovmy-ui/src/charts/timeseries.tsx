@@ -77,6 +77,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableGridX?: boolean;
   enableGridY?: boolean;
   enableMajorTick?: boolean;
+  forcedTheme?: string;
   tickXCallback?: (
     this: Scale,
     tickValue: number | string,
@@ -131,6 +132,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   tooltipItemSort,
   generateLabels,
   tickXCallback,
+  forcedTheme,
   beginZero = true,
   minY,
   maxY,
@@ -157,7 +159,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
     AnnotationPlugin
   );
 
-  const { theme = "light" } = useTheme();
+  const { theme } = useTheme();
+  const isLightMode = forcedTheme ? forcedTheme === "light" : theme === "light";
 
   const display = (
     value: number,
@@ -291,7 +294,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ? {
               line: {
                 width: 0,
-                color: theme === "light" ? "#000" : "#FFF",
+                color: isLightMode ? "#000" : "#FFF",
                 dashPattern: [6, 4],
               },
               zoom: {
@@ -366,7 +369,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
             drawTicks: false,
             drawBorder: false,
-            color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
+            color: isLightMode ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
             offset: false,
             lineWidth(ctx) {
               if (ctx.tick.value === 0) return 2;

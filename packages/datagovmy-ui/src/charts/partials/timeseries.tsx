@@ -31,7 +31,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
     minmax: [0, dataset.chart?.x ? dataset.chart?.x.length - 1 : 0],
   });
   const { coordinate } = useSlice(dataset.chart, data.minmax);
-  const { theme } = useTheme();
+  const { forcedTheme, theme } = useTheme();
 
   const getPrecision = (precision: number | Precision, key?: string): number | [number, number] => {
     if (!precision) return [1, 0];
@@ -55,7 +55,9 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
       label: translations[key] ?? key,
       borderColor: CATALOGUE_COLORS[index],
       backgroundColor:
-        theme === "light" ? NON_OVERLAPPING_BGCOLOR[index] : DARK_NON_OVERLAPPING_BGCOLOR[index],
+        (forcedTheme || theme) === "light"
+          ? NON_OVERLAPPING_BGCOLOR[index]
+          : DARK_NON_OVERLAPPING_BGCOLOR[index],
       borderWidth: 1,
       fill: dataset.type === "STACKED_AREA" || sets.length <= 1,
     }));
@@ -74,7 +76,6 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               _ref={ref => bind.chartjs(ref)}
               className={className}
               interval={SHORT_PERIOD[config.range]}
-              round={SHORT_PERIOD[config.range]}
               precision={
                 typeof config.precision === "number"
                   ? config.precision
@@ -95,6 +96,7 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
                 datasets: _datasets,
               }}
               beginZero={["STACKED_AREA", "INTRADAY"].includes(dataset.type)}
+              forcedTheme={forcedTheme}
             />
             <Slider
               className="pt-4"

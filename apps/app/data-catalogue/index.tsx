@@ -120,7 +120,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
                   title={title}
                   key={title}
                   ref={ref => (scrollRef.current[title] = ref)}
-                  className="p-2 pb-8 pt-14 lg:p-8"
+                  className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
                 >
                   <ul className="columns-1 space-y-3 sm:columns-3">
                     {datasets.map((item: Catalogue, index: number) => (

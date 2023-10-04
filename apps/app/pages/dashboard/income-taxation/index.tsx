@@ -14,6 +14,7 @@ const IncomeTaxation: Page = ({
   stacked_bar,
   timeseries,
   timeseries_callout,
+  year,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-income-taxation", "common"]);
 
@@ -26,6 +27,7 @@ const IncomeTaxation: Page = ({
           stacked_bar={stacked_bar}
           timeseries={timeseries}
           timeseries_callout={timeseries_callout}
+          year={year}
         />
       </WindowProvider>
     </AnalyticsProvider>
@@ -33,7 +35,14 @@ const IncomeTaxation: Page = ({
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxation", async () => {
-  const { data } = await get("/dashboard", { dashboard: "income_tax" });
+  const { data } = await get("/dashboard", {
+    dashboard: "income_tax",
+    variable: "tax",
+    state: "mys",
+    type: "all",
+    age: "all",
+  });
+
   return {
     notFound: false,
     props: {
@@ -43,6 +52,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxatio
         category: "economy",
         agency: "LHDN",
       },
+      year: Number(data.tax_percentile.data_as_of.substring(0, 4)) - 1,
       last_updated: data.data_last_updated,
       stacked_bar: data.stacked_bar,
       timeseries: data.timeseries,
