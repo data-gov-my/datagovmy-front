@@ -76,7 +76,6 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               _ref={ref => bind.chartjs(ref)}
               className={className}
               interval={SHORT_PERIOD[config.range]}
-              round={SHORT_PERIOD[config.range]}
               precision={
                 typeof config.precision === "number"
                   ? config.precision
