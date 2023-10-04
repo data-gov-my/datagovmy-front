@@ -107,7 +107,6 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
             setResult(key, biggest[key]);
           }
         }
-        setData("loading", false);
       })
       .catch(e => {
         toast.error(
@@ -115,8 +114,8 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
           t("common:error.toast.reach_support")
         );
         console.error(e);
-        setData("loading", false);
-      });
+      })
+      .finally(() => setData("loading", false));
   };
 
   const handleChange = (e: string) => {
