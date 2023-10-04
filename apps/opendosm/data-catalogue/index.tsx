@@ -86,7 +86,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
                   title={title}
                   key={title}
                   ref={ref => (scrollRef.current[title] = ref)}
-                  className="p-2 pb-8 pt-14 lg:p-8"
+                  className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
                 >
                   <ul className="columns-1 space-y-3 lg:columns-2 xl:columns-3">
                     {datasets.map((item: Catalogue, index: number) => (
@@ -181,7 +181,7 @@ const CatalogueFilter: FunctionComponent<CatalogueFilterProps> = ({ query }) => 
   };
 
   return (
-    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-4 dark:border-outlineHover-dark dark:bg-background-dark lg:pl-2">
+    <div className="sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:border-outlineHover-dark dark:bg-background-dark lg:pl-2">
       <div className="flex-grow">
         <Search
           className="border-0"

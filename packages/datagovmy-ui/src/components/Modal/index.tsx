@@ -76,7 +76,7 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
                     </Dialog.Title>
                     <Button
                       variant="ghost"
-                      className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-3 rounded-full p-0"
+                      className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-1 rounded-full p-2"
                       onClick={() => setShow(false)}
                     >
                       <XMarkIcon className="text-dim mx-auto h-5 w-5 group-hover:text-black group-hover:dark:text-white" />

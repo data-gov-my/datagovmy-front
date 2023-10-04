@@ -39,6 +39,7 @@ interface BarProps extends ChartHeaderProps {
   enableGridY?: boolean;
   enableStack?: boolean;
   enableStep?: boolean;
+  forcedTheme?: string;
   interactive?: boolean;
   tooltipEnabled?: boolean;
   _ref?: ForwardedRef<ChartJSOrUndefined<"bar", any[], string | number>>;
@@ -65,6 +66,7 @@ const Bar: FunctionComponent<BarProps> = ({
   enableStack = false,
   enableGridX = true,
   enableGridY = true,
+  forcedTheme,
   minY,
   maxY,
   suggestedMaxY,
@@ -75,8 +77,8 @@ const Bar: FunctionComponent<BarProps> = ({
   const isVertical = useMemo(() => layout === "vertical", [layout]);
   const { size } = useContext(WindowContext);
   ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
-  const { theme = "light" } = useTheme();
-
+  const { theme } = useTheme();
+  const isLightMode = forcedTheme ? forcedTheme === "light" : theme === "light";
   const display = (
     value: number,
     type: "compact" | "standard",
@@ -148,7 +150,7 @@ const Bar: FunctionComponent<BarProps> = ({
           display: enableGridX,
           borderWidth: 1,
           borderDash: [5, 10],
-          color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
+          color: isLightMode ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
           drawTicks: true,
           drawBorder: true,
         },
@@ -188,7 +190,7 @@ const Bar: FunctionComponent<BarProps> = ({
           drawTicks: false,
           drawBorder: false,
           offset: false,
-          color: theme === "light" ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
+          color: isLightMode ? AKSARA_COLOR.OUTLINE : AKSARA_COLOR.WASHED_DARK,
           borderDash(ctx) {
             if (ctx.tick.value === 0) return [0, 0];
             return [5, 5];

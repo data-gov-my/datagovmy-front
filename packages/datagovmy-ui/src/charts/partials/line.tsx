@@ -1,3 +1,4 @@
+import { useTheme } from "next-themes";
 import { Precision } from "../../../types";
 import { CatalogueContext } from "../../contexts/catalogue";
 import { CATALOGUE_COLORS } from "../../lib/constants";
@@ -22,6 +23,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
   translations,
 }) => {
   const { bind, dataset } = useContext(CatalogueContext);
+  const { forcedTheme } = useTheme();
 
   const getPrecision = (key: string, precision: number | Precision): number | [number, number] => {
     if (!precision) return [1, 0];
@@ -40,7 +42,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
 
     return sets.map(([key, y], index) => ({
       type: "line",
-      data: (y as number[]).map(e => numFormat(e, "standard", getPrecision(key, config.precision))),
+      data: y as number[], //(y as number[]).map(e => numFormat(e, "standard", getPrecision(key, config.precision))),
       label: translations[key] ?? key,
       fill: sets.length === 1,
       backgroundColor: CATALOGUE_COLORS[index].concat("1A"),
@@ -74,6 +76,7 @@ const CatalogueLine: FunctionComponent<CatalogueLineProps> = ({
       enableTooltip
       enableCrosshair
       enableLegend={_datasets.length > 1}
+      forcedTheme={forcedTheme}
     />
   );
 };

@@ -42,6 +42,7 @@ type LineProps = ChartHeaderProps & {
   enableTooltip?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  forcedTheme?: string;
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
   _ref?: ForwardedRef<ChartJSOrUndefined<"line", any[], unknown>>;
 };
@@ -69,6 +70,7 @@ const Line: FunctionComponent<LineProps> = ({
   enableTooltip = false,
   enableCrosshair = false,
   enableLegend = false,
+  forcedTheme,
   tooltipCallback,
   _ref,
 }) => {
@@ -87,6 +89,7 @@ const Line: FunctionComponent<LineProps> = ({
   );
 
   const { theme } = useTheme();
+  const isLightMode = forcedTheme ? forcedTheme === "light" : theme === "light";
 
   const options: ChartCrosshairOption<"line"> = {
     maintainAspectRatio: false,
@@ -106,7 +109,7 @@ const Line: FunctionComponent<LineProps> = ({
         ? {
             line: {
               width: 0,
-              color: theme === "light" ? "#000" : "#FFF",
+              color: isLightMode ? "#000" : "#FFF",
               dashPattern: [6, 4],
             },
             zoom: {

@@ -31,7 +31,11 @@ type Percentile = {
 
 type PercentileKeys = keyof Percentile;
 
-const IncomeRank: FunctionComponent = () => {
+interface IncomeRankProps {
+  year: number;
+}
+
+const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
   const { t, i18n } = useTranslation(["dashboard-income-taxation", "common"]);
   const barRef = useRef<HTMLParagraphElement>(null);
   const { size } = useContext(WindowContext);
@@ -110,8 +114,8 @@ const IncomeRank: FunctionComponent = () => {
           t("common:error.toast.reach_support")
         );
         console.error(e);
-      });
-    setTimeout(() => setData("loading", false), 400);
+      })
+      .finally(() => setData("loading", false));
   };
 
   const handleChange = (e: string) => {
@@ -201,22 +205,21 @@ const IncomeRank: FunctionComponent = () => {
             {t("rank_me")}
           </button>
           <p ref={barRef} className="text-dim text-sm">
-            {/* FIXME: year */}
-            {t("disclaimer", { year: 2022 })}
+            {t("disclaimer", { year: year })}
           </p>
         </Card>
         <div className="w-full sm:w-7/12 lg:w-2/3">
-          {typeof result.percentile !== "number" ? (
+          {data.loading ? (
+            <div className="shadow-button border-outline dark:border-washed-dark flex h-full w-full items-center justify-center rounded-xl border">
+              <Spinner loading={data.loading} />
+            </div>
+          ) : typeof result.percentile !== "number" ? (
             <Card className="border-outline dark:border-washed-dark hidden h-full items-center gap-6 rounded-xl border p-8 sm:flex">
               <Card className="border-outline bg-outline dark:border-washed-dark dark:bg-washed-dark mx-auto flex h-min w-fit flex-row gap-2 self-center rounded-md border px-3 py-1.5">
                 <MagnifyingGlassIcon className="mx-auto mt-1 h-4 w-4 text-black dark:text-white" />
                 <p>{t("start_search")}</p>
               </Card>
             </Card>
-          ) : data.loading ? (
-            <div className="shadow-button border-outline dark:border-washed-dark flex h-full w-full items-center justify-center rounded-xl border">
-              <Spinner loading={data.loading} />
-            </div>
           ) : (
             <div className="border-outline dark:border-washed-dark dark:divide-washed-dark shadow-button flex flex-col rounded-xl border max-lg:divide-y lg:flex-row lg:divide-x">
               <div className="bg-background dark:bg-background-dark/50 flex h-auto w-full flex-col items-center gap-6 p-6 max-lg:rounded-t-xl lg:h-[400px] lg:w-1/2 lg:rounded-l-xl lg:p-8">
@@ -268,7 +271,7 @@ const IncomeRank: FunctionComponent = () => {
                         : t("assessment", { context: result.assessment }),
                     aged: result.age === "all" ? "" : `${t("aged")} ${t(result.age)}`,
                     state: CountryAndStates[result.state],
-                    year: 2022, // FIXME: year
+                    year: year,
                   })}
                 </p>
               </div>
