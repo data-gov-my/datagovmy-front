@@ -56,6 +56,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/kawasanku/:state*",
+        destination: "/dashboard/kawasanku/:state*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = () => {
