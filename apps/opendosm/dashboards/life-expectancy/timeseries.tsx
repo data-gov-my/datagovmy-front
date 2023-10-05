@@ -35,7 +35,7 @@ const LifeExpectancyTimeseries: FunctionComponent<TimeseriesProp> = ({
   }));
 
   const { data, setData } = useData({
-    minmax: [timeseries.data.overall.x.length - 32, timeseries.data.overall.x.length - 1],
+    minmax: [26, timeseries.data.overall.x.length - 1],
     options: OPTIONS[0].value,
   });
 
