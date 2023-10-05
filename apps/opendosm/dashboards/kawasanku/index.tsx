@@ -191,7 +191,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
   return (
     <>
       <Hero
-        background=" bg-gradient-to-r from-[#C9ECC9] from-0% via-[#EDF8ED] via-60% to-transparent to-100% dark:from-black dark:via-background-dark dark:to-transparent"
+        background="bg-gradient-to-r from-[#C9ECC9] from-0% via-[#EDF8ED] via-60% to-transparent to-100% dark:from-black dark:via-background-dark dark:to-transparent"
         category={["Kawasanku", "text-dim text-sm font-bold uppercase tracking-widest"]}
         header={[t("header")]}
         description={[t("description"), "whitespace-pre-line"]}

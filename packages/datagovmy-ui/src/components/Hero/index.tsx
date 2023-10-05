@@ -67,8 +67,8 @@ const Hero: FunctionComponent<HeroProps> = ({
 
   return (
     <Container
-      background={clx(background_style, "border-b dark:border-washed-dark")}
-      className={clx("relative", className)}
+      background={clx(background_style, "border-b dark:border-washed-dark relative")}
+      className={clx("", className)}
     >
       {children ? (
         children
