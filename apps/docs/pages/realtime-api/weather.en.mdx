@@ -1,8 +1,181 @@
 ## Weather API Endpoint
 
 ```http
-# COMING SOON
-GET https://api.data.gov.my/weather
+GET https://api.data.gov.my/weather/forecast
+GET https://api.data.gov.my/weather/warning
 ```
 
-Our Weather API will be officially launching on **October 5, 2023**. Please stay tuned for updates!
+### Source of Weather Data
+
+The Weather API offers real-time weather information, including a 7-day general forecast and live weather warnings.
+The data is provided by MET Malaysia (Malaysian Meteorological Department).
+For more comprehensive weather-related information and additional resources, you can visit [MET Malaysia's Official Portal](https://www.met.gov.my/).
+
+_Note: Marine forecast data is currently unavailable._
+
+### Frequency of Data Update
+
+- The 7-day general forecast data is updated **daily**.
+- The warning data is updated **when required**.
+
+### Request Query & Response Format
+
+To filter and request data, use the standard filtering operations in the [Request Query](/request-query).
+For information on how the API responds to your requests, refer to the [Response Format](/response-format) section.
+
+## 7-day General Forecast
+
+```http
+GET https://api.data.gov.my/weather/forecast
+```
+
+### Example Query
+
+To fetch data from the Weather API, use the following `curl` command. Open your terminal and enter this command:
+
+```curl
+curl --location 'https://api.data.gov.my/weather/forecast?limit=3'
+```
+
+#### Querying Nested Fields
+
+```json
+    {
+        // double underscore is used
+        "location": {
+            "location_id": "Ds001", // location__location_id
+            "location_name": "Langkawi" // location__location_name
+        },
+        "date": "1957-08-31",
+        "morning_forecast": "Hujan di satu dua tempat",
+        "afternoon_forecast": "Ribut petir di satu dua tempat",
+        "night_forecast": "Tiada hujan",
+        "summary_forecast": "Ribut petir di satu dua tempat",
+        "summary_when": "Petang",
+        "min_temp": 26,
+        "max_temp": 32
+    },
+```
+
+The response data is structured as above. You can access nested fields using a **double underscore**.
+For instance, to filter forecast data for Langkawi, you can use the query parameter `?contains=Langkawi@location__location_name`.
+
+#### Filtering by Location Category
+
+```http
+GET https://api.data.gov.my/weather/forecast?contains=<prefix>@location__location_id
+```
+
+The `location_id` is in "AA000" format, where the aphabetical prefix represents the type of location.
+There are five possible types of locations:
+
+- `St` for State
+- `Rc` for Recreation
+- `Ds` for District
+- `Tn` for Town
+- `Dv` for Division
+
+To filter for forecast data for a specific location category, simply use the `contains` query parameter. For example, to retrieve State location forecast data only, use `?contains=St@location__location_id`.
+
+### Understanding the Field Values
+
+| Key                  | Type    | Description                                                                                                                 | Example Value                                                                                                                                               |
+| -------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `location_id`        | string  | Unique identifier for the location. See [Filtering by location category](#filtering-by-location-category) for more details. | <ul> <li>`"St001"` (State)</li> <li>`"Rc001"` (Recreation)</li> <li>`"Ds001"` (District)</li> <li>`"Tn001"` (Town)</li> <li>`"Dv001"` (Division)</li> </ul> |
+| `location_name`      | string  | Name of the location.                                                                                                       | `"Langkawi"`                                                                                                                                                |
+| `date`               | string  | Date of the weather forecast.                                                                                               | `"1957-08-31"`                                                                                                                                              |
+| `morning_forecast`   | string  | Forecast for the morning period.                                                                                            | `"Hujan di satu dua tempat"`                                                                                                                                |
+| `afternoon_forecast` | string  | Forecast for the afternoon period.                                                                                          | `"Ribut petir di satu dua tempat"`                                                                                                                          |
+| `night_forecast`     | string  | Forecast for the night period.                                                                                              | `"Tiada hujan"`                                                                                                                                             |
+| `summary_forecast`   | string  | Summary of the day's forecast.                                                                                              | `"Ribut petir di satu dua tempat"`                                                                                                                          |
+| `summary_when`       | string  | Timing of the summarized forecast.                                                                                          | `"Petang"`                                                                                                                                                  |
+| `min_temp`           | integer | Minimum temperature for the day in Celsius.                                                                                 | `26`                                                                                                                                                        |
+| `max_temp`           | integer | Maximum temperature for the day in Celsius.                                                                                 | `32`                                                                                                                                                        |
+
+#### Possible Values for `*_forecast` Fields
+
+Possible values for `morning_forecast`, `afternoon_forecast`, `night_forecast`, and `summary_forecast`:
+
+| Value                                                 | Description                                |
+| ----------------------------------------------------- | ------------------------------------------ |
+| `Berjerebu`                                           | Hazy conditions.                           |
+| `Tiada hujan`                                         | No rain.                                   |
+| `Hujan`                                               | Rain.                                      |
+| `Hujan di beberapa tempat`                            | Scattered rain showers.                    |
+| `Hujan di satu dua tempat`                            | Rain in one or two places.                 |
+| `Hujan di satu dua tempat di kawasan pantai`          | Rain in one or two coastal areas.          |
+| `Hujan di satu dua tempat di kawasan pedalaman`       | Rain in one or two inland areas.           |
+| `Ribut petir`                                         | Thunderstorms.                             |
+| `Ribut petir di beberapa tempat`                      | Thunderstorms in multiple places.          |
+| `Ribut petir di beberapa tempat di kawasan pedalaman` | Thunderstorms in multiple inland areas.    |
+| `Ribut petir di satu dua tempat`                      | Thunderstorms in one or two places.        |
+| `Ribut petir di satu dua tempat di kawasan pantai`    | Thunderstorms in one or two coastal areas. |
+| `Ribut petir di satu dua tempat di kawasan pedalaman` | Thunderstorms in one or two inland areas.  |
+
+#### Possible Values for `summary_when` Field
+
+| Value              | Description          |
+| ------------------ | -------------------- |
+| `Pagi`             | Morning.             |
+| `Malam`            | Night.               |
+| `Petang`           | Evening.             |
+| `Pagi dan Petang`  | Morning and Evening. |
+| `Pagi dan Malam`   | Morning and Night.   |
+| `Petang dan Malam` | Evening and Night.   |
+| `Sepanjang Hari`   | Throughout the Day.  |
+
+_Note: Please be aware that the above field values are currently only available in Bahasa Melayu._
+
+## Warning Forecast
+
+```http
+GET https://api.data.gov.my/weather/warning
+```
+
+### Example Query
+
+To fetch data from the Weather API, use the following `curl` command. Open your terminal and enter this command:
+
+```curl
+curl --location 'https://api.data.gov.my/weather/warning?limit=3'
+```
+
+#### Querying Nested Fields
+
+```json
+    {
+        // double underscore is used
+        "warning_issue": {
+            "issued": "1957-08-31T00:00:00", // warning_issue__issued
+            "title_bm": "", // warning_issue__title_bm
+            "title_en": "" // warning_issue__title_en
+        },
+        "valid_from": "1957-08-31T00:00:00",
+        "valid_to": "2023-08-31T00:00:00",
+        "heading_en": "",
+        "text_en": "",
+        "instruction_en": "",
+        "heading_bm": "",
+        "text_bm": "",
+        "instruction_bm": ""
+    },
+```
+
+The response data is structured as above. You can access nested fields using a **double underscore**.
+For instance, to filter for warnings issued from 1957-08-31 onwards, you can use the query parameter `?timestamp_start=1957-08-31 00:00:00@warning_issue__issued`.
+
+### Understanding the Field Values
+
+| Key              | Type     | Description                                           | Example Value                                            |
+| ---------------- | -------- | ----------------------------------------------------- | -------------------------------------------------------- |
+| `issued`         | datetime | Date and time when the warning was issued.            | "1957-08-31T00:00:00"                                    |
+| `title_bm`       | string   | Title of the warning in Bahasa Melayu.                | "Amaran Angin Kencang Kategori Pertama"                  |
+| `title_en`       | string   | Title of the warning in English.                      | "First Category Warning on Strong Winds"                 |
+| `valid_from`     | datetime | Date and time from which the warning is valid.        | "2023-10-05T14:00:00"                                    |
+| `valid_to`       | datetime | Date and time until which the warning is valid.       | "2023-10-07T00:00:00"                                    |
+| `heading_en`     | string   | Heading of the warning in English.                    | "Strong Wind and Rough Seas (First Category)"            |
+| `text_en`        | string   | Detailed warning text in English.                     | "Strong winds of 40-50 kmph with wave height up to 3.5m" |
+| `instruction_en` | string   | Instructions related to the warning in English.       | "Stay safe!"                                             |
+| `heading_bm`     | string   | Heading of the warning in Bahasa Melayu.              | "Amaran Angin Kencang (Kategori Pertama)"                |
+| `text_bm`        | string   | Detailed warning text in Bahasa Melayu.               | "Angin kencang 40-50 kmsj dengan ombak mencapai 3.5m"    |
+| `instruction_bm` | string   | Instructions related to the warning in Bahasa Melayu. | "Jaga diri!"                                             |
