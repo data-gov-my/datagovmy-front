@@ -1,8 +1,210 @@
 ## Endpoint API Cuaca
 
 ```http
-# AKAN DATANG
-GET https://api.data.gov.my/weather
+GET https://api.data.gov.my/weather/forecast
+GET https://api.data.gov.my/weather/warning
+GET https://api.data.gov.my/weather/warning/earthquake
 ```
 
-API Cuaca akan dilancarkan secara rasmi oleh pihak kami tidak lewat dari Selasa, **10 Oktober 2023**. Nantikan kemaskini dari pihak kami tidak lama lagi!
+### Sumber Data Cuaca
+
+API Cuaca menyediakan maklumat cuaca secara pada masa nyata, termasuk ramalan umum 7 hari dan amaran cuaca secara langsung. Amaran gempa bumi juga disediakan dalam 'endpoint' yang berlainan kerana format ia yang unik. Data-data ini disediakan oleh MET Malaysia (Jabatan Meteorologi Malaysia). Untuk maklumat cuaca yang lebih komprehensif dan untuk mengakses sumber tambahan, anda boleh mengunjungi [Portal Rasmi MET Malaysia](https://www.met.gov.my/).
+
+_Catatan: Data ramalan laut masih tidak tersedia pada masa ini._
+
+### Kekerapan Kemaskini Data
+
+- Data ramalan umum 7 hari dikemaskini **setiap hari**.
+- Data amaran (termasuk data gempa bumi) dikemaskini **apabila diperlukan**.
+
+### Format Permintaan & Respons
+
+Untuk menyaring dan meminta data, gunakan operasi penyaringan standard dalam [Permintaan Pertanyaan](/request-query). Untuk maklumat tentang bagaimana API ini memberi respons kepada permintaan anda, rujuk bahagian [Format Respons](/response-format).
+
+## Ramalan Umum 7 Hari
+
+```http
+GET https://api.data.gov.my/weather/forecast
+```
+
+### Contoh Permintaan
+
+Untuk mendapatkan data dari API Cuaca, gunakan perintah `curl` berikut. Buka terminal anda dan masukkan perintah ini:
+
+```curl
+curl --location 'https://api.data.gov.my/weather/forecast?limit=3'
+```
+
+#### Permintaan Bidang-Bidang Bersarang
+
+```json
+    {
+        // gunakan 'double underscore'
+        "location": {
+            "location_id": "Ds001", // location__location_id
+            "location_name": "Langkawi" // location__location_name
+        },
+        "date": "1957-08-31",
+        "morning_forecast": "Hujan di satu dua tempat",
+        "afternoon_forecast": "Ribut petir di satu dua tempat",
+        "night_forecast": "Tiada hujan",
+        "summary_forecast": "Ribut petir di satu dua tempat",
+        "summary_when": "Petang",
+        "min_temp": 26,
+        "max_temp": 32
+    },
+```
+
+Data respons mempunyai struktur seperti di atas. Anda boleh mengakses bidang-bidang bersarang dengan menggunakan **'double underscore'**. Sebagai contoh, untuk menyaring data ramalan di Langkawi, anda boleh menggunakan parameter pertanyaan `?contains=Langkawi@location__location_name`.
+
+#### Penyaringan Mengikut Kategori Lokasi
+
+```http
+GET https://api.data.gov.my/weather/forecast?contains=<prefix>@location__location_id
+```
+
+`location_id` berada dalam format "AA000," di mana abjad awalan mewakili jenis lokasi. Terdapat lima jenis kategori lokasi yang boleh digunakan:
+
+- `St` untuk Negeri
+- `Rc` untuk Pusat Rekreasi
+- `Ds` untuk Daerah
+- `Tn` untuk Bandar
+- `Dv` untuk Bahagian
+
+Untuk menyaring data ramalan untuk kategori lokasi tertentu, parameter pertanyaan `contains` boleh digunakan. Sebagai contoh, untuk mendapatkan data ramalan lokasi Negeri sahaja, gunakan `?contains=St@location__location_id`.
+
+### Fahami Nilai Bidang-Bidang
+
+| Kata kunci           | Jenis   | Penerangan                                                                                                                                   | Contoh Nilai                                                                                                                                                     |
+| -------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `location_id`        | string  | Pengenalpasti unik untuk lokasi. Lihat [Penyaringan mengikut kategori lokasi](#penyaringan-mengikut-kategori-lokasi) untuk lebih keterangan. | <ul> <li>`"St001"` (Negeri)</li> <li>`"Rc001"` (Pusat Rekreasi)</li> <li>`"Ds001"` (Daerah)</li> <li>`"Tn001"` (Bandar)</li> <li>`"Dv001"` (Bahagian)</li> </ul> |
+| `location_name`      | string  | Nama lokasi.                                                                                                                                 | `"Langkawi"`                                                                                                                                                     |
+| `date`               | date    | Tarikh ramalan cuaca.                                                                                                                        | `"1957-08-31"`                                                                                                                                                   |
+| `morning_forecast`   | string  | Ramalan untuk waktu pagi.                                                                                                                    | `"Hujan di satu dua tempat"`                                                                                                                                     |
+| `afternoon_forecast` | string  | Ramalan untuk waktu tengahari.                                                                                                               | `"Ribut petir di satu dua tempat"`                                                                                                                               |
+| `night_forecast`     | string  | Ramalan untuk waktu malam.                                                                                                                   | `"Tiada hujan"`                                                                                                                                                  |
+| `summary_forecast`   | string  | Ringkasan ramalan hari tersebut.                                                                                                             | `"Ribut petir di satu dua tempat"`                                                                                                                               |
+| `summary_when`       | string  | Masa ringkasan ramalan.                                                                                                                      | `"Petang"`                                                                                                                                                       |
+| `min_temp`           | integer | Suhu minimum untuk hari tersebut dalam Celsius.                                                                                              | `26`                                                                                                                                                             |
+| `max_temp`           | integer | Suhu maksimum untuk hari tersebut dalam Celsius.                                                                                             | `32`                                                                                                                                                             |
+
+#### Nilai-nilai yang sah bagi Bidang `*_forecast`
+
+Nilai-nilai sah untuk `morning_forecast`, `afternoon_forecast`, `night_forecast`, dan `summary_forecast`:
+
+- `Berjerebu`
+- `Tiada hujan`
+- `Hujan`
+- `Hujan di beberapa tempat`
+- `Hujan di satu dua tempat`
+- `Hujan di satu dua tempat di kawasan pantai`
+- `Hujan di satu dua tempat di kawasan pedalaman`
+- `Ribut petir`
+- `Ribut petir di beberapa tempat`
+- `Ribut petir di beberapa tempat di kawasan pedalaman`
+- `Ribut petir di satu dua tempat`
+- `Ribut petir di satu dua tempat di kawasan pantai`
+- `Ribut petir di satu dua tempat di kawasan pedalaman`
+
+#### Nilai-nilai sah untuk Bidang `summary_when`
+
+- `Pagi`
+- `Malam`
+- `Petang`
+- `Pagi dan Petang`
+- `Pagi dan Malam`
+- `Petang dan Malam`
+- `Sepanjang Hari`
+
+_Nota: Nilai-nilai sah ini hanya tersedia dalam Bahasa Melayu._
+
+## Ramalan Amaran
+
+```http
+GET https://api.data.gov.my/weather/warning
+```
+
+### Contoh Permintaan
+
+Untuk mendapatkan data dari API Cuaca, gunakan perintah `curl` berikut. Buka terminal anda dan masukkan perintah ini:
+
+```curl
+curl --location 'https://api.data.gov.my/weather/warning?limit=3'
+```
+
+#### Permintaan Bidang-Bidang Bersarang
+
+```json
+    {
+        // gunakan 'double underscore'
+        "warning_issue": {
+            "issued": "1957-08-31T00:00:00", // warning_issue__issued
+            "title_bm": "", // warning_issue__title_bm
+            "title_en": "" // warning_issue__title_en
+        },
+        "valid_from": "1957-08-31T00:00:00",
+        "valid_to": "2023-08-31T00:00:00",
+        "heading_en": "",
+        "text_en": "",
+        "instruction_en": "",
+        "heading_bm": "",
+        "text_bm": "",
+        "instruction_bm": ""
+    },
+```
+
+Data respons mempunyai struktur seperti di atas. Anda boleh mengakses bidang-bidang bersarang menggunakan **'double underscore'**. Sebagai contoh, untuk menyaring amaran yang dikeluarkan bermula dari 1957-08-31 ke atas, anda boleh menggunakan parameter permintaan `?timestamp_start=1957-08-31 00:00:00@warning_issue__issued`.
+
+### Fahami Nilai Bidang-Bidang
+
+| Kata kunci       | Jenis    | Penerangan                                            | Contoh Nilai                                                     |
+| ---------------- | -------- | ----------------------------------------------------- | ---------------------------------------------------------------- |
+| `issued`         | datetime | Tarikh dan masa apabila amaran dikeluarkan.           | "1957-08-31T00:00:00"                                            |
+| `title_bm`       | string   | Tajuk amaran dalam Bahasa Melayu.                     | "Amaran Angin Kencang Kategori Pertama"                          |
+| `title_en`       | string   | Tajuk amaran dalam Bahasa Inggeris.                   | "First Category Warning on Strong Winds"                         |
+| `valid_from`     | datetime | Tarikh dan masa dari bila amaran berkuatkuasa.        | "2023-10-05T14:00:00"                                            |
+| `valid_to`       | datetime | Tarikh dan masa sehingga bila amaran berkuatkuasa.    | "2023-10-07T00:00:00"                                            |
+| `heading_en`     | string   | Tajuk amaran dalam Bahasa Inggeris.                   | "Strong Wind and Rough Seas (First Category)"                    |
+| `text_en`        | string   | Teks amaran terperinci dalam Bahasa Inggeris.         | "Strong winds of 40-50 kmph with wave height up to 3.5m"         |
+| `instruction_en` | string   | Arahan berkaitan dengan amaran dalam Bahasa Inggeris. | "Stay safe!"                                                     |
+| `heading_bm`     | string   | Tajuk amaran dalam Bahasa Melayu.                     | "Amaran Angin Kencang (Kategori Pertama)"                        |
+| `text_bm`        | string   | Teks amaran terperinci dalam Bahasa Melayu.           | "Angin kencang 40-50 km/j dengan ketinggian ombak sehingga 3.5m" |
+| `instruction_bm` | string   | Arahan berkaitan dengan amaran dalam Bahasa Melayu.   | "Pastikan keselamatan anda!"                                     |
+
+## Amaran Gempa Bumi
+
+```http
+GET https://api.data.gov.my/weather/warning/earthquake
+```
+
+Data gempa bumi disediakan dalam 'endpoint' yang tersendiri yang asing daripada endpoint `weather/warning` disebabkan format ia yang unik.
+
+### Contoh Permintaan
+
+Untuk mendapatkan data dari API Cuaca, gunakan perintah `curl` berikut. Buka terminal anda dan masukkan perintah ini:
+
+```curl
+curl --location 'https://api.data.gov.my/weather/warning/earthquake?limit=3'
+```
+
+### Fahami Nilai Bidang-Bidang
+
+| Kata kunci          | Jenis    | Penerangan                                                   | Contoh Nilai                      |
+| ------------------- | -------- | ------------------------------------------------------------ | --------------------------------- |
+| `utcdatetime`       | datetime | Tarikh dan masa gempa bumi dalam format UTC.                 | "2023-10-09T03:50:50"             |
+| `localdatetime`     | datetime | Tarikh dan masa gempa bumi dalam waktu tempatan (UTC+08:00). | "2023-10-09T11:50:50"             |
+| `lat`               | float    | Latitud gempa bumi.                                          | 0.350031                          |
+| `lon`               | float    | Longitud gempa bumi.                                         | 122.238975                        |
+| `depth`             | float    | Kedalaman gempa bumi dalam kilometer.                        | 135.0                             |
+| `location`          | string   | Penerangan lokasi gempa bumi dalam Bahasa Melayu.            | "Semenanjung Minahassa, Sulawesi" |
+| `location_original` | string   | Penerangan lokasi gempa bumi dalam Bahasa Inggeris.          | "Minahassa Peninsula, Sulawesi"   |
+| `n_distancemas`     | string   | Jarak dari Malaysia dalam Bahasa Inggeris.                   | "613km SE Semporna, Sabah"        |
+| `n_distancerest`    | string   | Jarak dari lokasi lain dalam Bahasa Inggeris.                | "97km W Gorontalo, Indonesia"     |
+| `nbm_distancemas`   | string   | Jarak dari Malaysia dalam Bahasa Melayu.                     | "613km TG Semporna, Sabah"        |
+| `nbm_distancerest`  | string   | Jarak dari lokasi lain dalam Bahasa Melayu.                  | "97km B Gorontalo, Indonesia"     |
+| `magdefault`        | float    | Magnitud default gempa bumi.                                 | 5.5                               |
+| `magtypedefault`    | string   | Jenis magnitud default gempa bumi.                           | "mb"                              |
+| `status`            | string   | Status gempa bumi.                                           | "NORMAL"                          |
+| `visible`           | boolean  | Status keterlihatan gempa bumi.                              | true                              |
+| `lat_vector`        | string   | Representasi vektor latitud dalam Bahasa Melayu.             | "0.3500° U"                       |
+| `lon_vector`        | string   | Representasi vektor longitud dalam Bahasa Melayu.            | "122.2390° T"                     |

@@ -1,12 +1,36 @@
 ## Endpoint API Amaran Banjir
 
-API Amaran Banjir ini menyediakan maklumat masa sebenar mengenai paras air dan amaran banjir di stesen pemantauan di seluruh negara.
-
 ```http
 GET https://api.data.gov.my/flood-warning
 ```
 
-| Key                           | Jenis   | Penerangan                                                                                         | Nilai Contoh                     |
+### Sumber Data Amaran Banjir
+
+API Amaran Banjir ini menyediakan maklumat dalam masa nyata tentang tahap air dan amaran banjir di stesen pemantauan di seluruh negara.
+Data ini telah dikumpul dan disediankan oleh Jabatan Pengairan dan Saliran.
+Anda juga boleh mengakses semua data API Amaran Banjir ini di pautan [Pautan Rasmi Awam Infobanjir](https://publicinfobanjir.water.gov.my/main/).
+
+### Kekerapan Kemaskini Data
+
+Data API Amaran Banjir ini dikemaskini pada setiap **15 minit**.
+
+## Format Permintaan & Respons
+
+Untuk menyaring dan meminta data, gunakan operasi penyaringan standard dalam [Permintaan Pertanyaan](/request-query). Untuk maklumat tentang bagaimana API ini memberi respons kepada permintaan anda, rujuk bahagian [Format Respons](/response-format).
+
+### Contoh Permintaan
+
+Untuk mendapatkan data dari API Amaran Banjir, gunakan perintah `curl` berikut. Buka terminal anda dan masukkan perintah ini:
+
+```curl
+curl --location 'http://api.data.gov.my/flood-warning?limit=3'
+```
+
+### Fahami Nilai Bidang-Bidang
+
+Berikut adalah jadual semua nama bidang yang boleh digunakan untuk membuat permintaan dan penerangan mengenai bidang tersebut.
+
+| Kata Kunci                    | Jenis   | Penerangan                                                                                         | Nilai Contoh                     |
 | ----------------------------- | ------- | -------------------------------------------------------------------------------------------------- | -------------------------------- |
 | `station_id`                  | string  | Pengenalpasti unik untuk stesen pemantauan                                                         | "26167"                          |
 | `station_name`                | string  | Nama atau penerangan stesen pemantauan                                                             | "Sg. Anak Bukit di Jambatan TAR" |
@@ -41,3 +65,5 @@ GET https://api.data.gov.my/flood-warning
 | `station_code`                | string  | Kod unik atau pengenalpasti stesen pemantauan                                                      | "JAMBATANTAR"                    |
 | `water_level_status`          | string  | Status pemantauan aras air (e.g., `ON`, `OFF` or `NA`)                                             | "ON"                             |
 | `rainfall_status`             | string  | Status pemantauan hujan, jika ada (e.g., `ON`, `OFF` or `NA`)                                      | "ON"                             |
+
+_Nota: Nilai `-9999` yang terhasil di bidang nombor menandakan bahawa terdapat gangguan perkhidmatan atau kerosakan sensor pada masa pengukuran._
