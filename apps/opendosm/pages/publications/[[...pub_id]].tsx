@@ -11,6 +11,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 const BrowsePublications: Page = ({
   dropdown,
   meta,
+  pub,
   publications,
   params,
   query,
@@ -20,10 +21,15 @@ const BrowsePublications: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={pub ? pub.title : t("header")}
+        description={pub ? pub.description : t("description")}
+        keywords={""}
+      />
       <PublicationsLayout>
         <BrowsePublicationsDashboard
           dropdown={dropdown}
+          pub={pub}
           publications={publications}
           params={params}
           query={query}
@@ -51,6 +57,12 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         throw new Error("Invalid filter. Message: " + e);
       });
 
+      const pub = pub_id
+        ? await get(`/publication-resource/${pub_id}`, {
+            language: locale,
+          })
+        : null;
+
       return {
         notFound: false,
         props: {
@@ -61,6 +73,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             agency: "DOSM",
           },
           dropdown: dropdown,
+          pub: pub ? pub.data : null,
           publications:
             data.results.sort(
               (a: Publication, b: Publication) =>

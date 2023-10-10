@@ -1,5 +1,5 @@
 import PublicationCard from "@components/Publication/Card";
-import PublicationModal from "@components/Publication/Modal";
+import PublicationModal, { PubResource } from "@components/Publication/Modal";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
@@ -16,6 +16,7 @@ import { Publication, Resource } from "./browse";
  */
 
 interface TechnicalNotesProps {
+  pub: PubResource;
   publications: Publication[];
   params: any;
   query: any;
@@ -23,40 +24,26 @@ interface TechnicalNotesProps {
 }
 
 const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
+  pub,
   publications,
   params,
   query,
   total_pubs,
 }) => {
-  const { t, i18n } = useTranslation(["publications", "common"]);
+  const { t } = useTranslation(["publications", "common"]);
   const { push, events } = useRouter();
   const [show, setShow] = useState<boolean>(false);
   const ITEMS_PER_PAGE = 15;
   const { data, setData } = useData({
     loading: false,
     modal_loading: false,
-    pub: "",
+    pub: pub,
   });
 
   const { filter, setFilter, actives, queries } = useFilter({
     page: query.page ?? "",
     search: query.search ?? "",
   });
-
-  const fetchResource = async (publication_id: string): Promise<Resource[]> => {
-    return new Promise(resolve => {
-      get(`/pub-docs-resource/${publication_id}`, {
-        language: i18n.language,
-      })
-        .then(({ data }: { data: Resource[] }) => {
-          resolve(data);
-        })
-        .catch(e => {
-          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-          console.error(e);
-        });
-    });
-  };
 
   const postDownload = (resource_id: number) => {
     post(
@@ -87,15 +74,21 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
   };
 
   useEffect(() => {
-    if (params.pub_id) {
-      fetchResource(params.pub_id).then(data => setData("pub", data));
+    if (pub) {
       setShow(true);
+      setData("pub", pub);
     }
-    events.on("routeChangeComplete", () => setData("loading", false));
+    events.on("routeChangeComplete", () => {
+      setData("loading", false);
+      setData("modal_loading", false);
+    });
     return () => {
-      events.off("routeChangeComplete", () => setData("loading", false));
+      events.off("routeChangeComplete", () => {
+        setData("loading", false);
+        setData("modal_loading", false);
+      });
     };
-  }, []);
+  }, [pub]);
 
   return (
     <Container className="min-h-screen">
@@ -144,10 +137,6 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
                       scroll: false,
                     }
                   );
-                  fetchResource(item.publication_id).then(data => {
-                    setData("pub", data);
-                    setData("modal_loading", false);
-                  });
                 }}
               />
             ))}

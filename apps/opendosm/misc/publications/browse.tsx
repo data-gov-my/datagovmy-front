@@ -1,9 +1,9 @@
 import PublicationCard from "@components/Publication/Card";
-import PublicationModal from "@components/Publication/Modal";
+import PublicationModal, { PubResource } from "@components/Publication/Modal";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
-import { get, post } from "datagovmy-ui/api";
+import { post } from "datagovmy-ui/api";
 import { TableConfig } from "datagovmy-ui/charts/table";
 import {
   Button,
@@ -18,7 +18,6 @@ import {
   Section,
   Spinner,
   Tabs,
-  toast,
 } from "datagovmy-ui/components";
 import { toDate } from "datagovmy-ui/helpers";
 import { useCache, useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
@@ -56,16 +55,18 @@ export type Resource = {
 
 interface BrowsePublicationsProps {
   dropdown: Array<{ publication_type: string; publication_type_title: string }>;
-  publications: Publication[];
   params: any;
+  pub: PubResource | null;
+  publications: Publication[];
   query: any;
   total_pubs: number;
 }
 
 const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = ({
   dropdown,
-  publications,
   params,
+  pub,
+  publications,
   query,
   total_pubs,
 }) => {
@@ -77,7 +78,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   const { data, setData } = useData({
     loading: false,
     modal_loading: false,
-    pub: "",
+    pub: pub,
     publication_option: query.pub_type,
     tab: 0,
   });
@@ -140,21 +141,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     setData("publication_option", undefined);
   };
 
-  const fetchResource = async (publication_id: string): Promise<Resource[]> => {
-    return new Promise(resolve => {
-      get(`/publication-resource/${publication_id}`, {
-        language: i18n.language,
-      })
-        .then(({ data }: { data: Resource[] }) => {
-          resolve(data);
-        })
-        .catch(e => {
-          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-          console.error(e);
-        });
-    });
-  };
-
   const pubConfig: TableConfig<Publication>[] = [
     {
       accessorKey: "title",
@@ -179,7 +165,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   scroll: false,
                 }
               );
-              fetchResource(row.original.publication_id).then(data => setData("pub", data));
             }}
           >
             {getValue()}
@@ -204,18 +189,24 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   ];
 
   useEffect(() => {
-    if (params.pub_id) {
-      fetchResource(params.pub_id).then(data => setData("pub", data));
+    if (pub) {
       setShow(true);
+      setData("pub", pub);
     }
     if (cache.has("tab")) {
       setData("tab", cache.get("tab"));
     }
-    events.on("routeChangeComplete", () => setData("loading", false));
+    events.on("routeChangeComplete", () => {
+      setData("loading", false);
+      setData("modal_loading", false);
+    });
     return () => {
-      events.off("routeChangeComplete", () => setData("loading", false));
+      events.off("routeChangeComplete", () => {
+        setData("loading", false);
+        setData("modal_loading", false);
+      });
     };
-  }, []);
+  }, [pub]);
 
   const postDownload = (resource_id: number) => {
     post(
@@ -446,10 +437,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                         routes.PUBLICATIONS.concat("/", item.publication_id),
                         { scroll: false }
                       );
-                      fetchResource(item.publication_id).then(data => {
-                        setData("pub", data);
-                        setData("modal_loading", false);
-                      });
                     }}
                   />
                 ))}

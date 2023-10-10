@@ -12,7 +12,7 @@ import { matchSorter } from "match-sorter";
 import { Resource } from "misc/publications/browse";
 import { Fragment, FunctionComponent, useMemo } from "react";
 
-type PubResource = {
+export type PubResource = {
   description: string;
   release_date: string;
   resources: Resource[];
