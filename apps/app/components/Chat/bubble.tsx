@@ -48,7 +48,8 @@ const ChatBubble: ForwardRefExoticComponent<ChatInterface> = forwardRef(
         >
           {
             {
-              assistant: children.length > 0 ? <Markdown>{children}</Markdown> : <p>{dots}</p>,
+              assistant:
+                children && children.length > 0 ? <Markdown>{children}</Markdown> : <p>{dots}</p>,
               user: <p>{children} </p>,
             }[from]
           }
