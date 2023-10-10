@@ -23,7 +23,7 @@ const BrowsePublications: Page = ({
     <AnalyticsProvider meta={meta}>
       <Metadata
         title={pub ? pub.title : t("header")}
-        description={t("description")}
+        description={pub ? pub.description : t("description")}
         keywords={""}
       />
       <PublicationsLayout>
