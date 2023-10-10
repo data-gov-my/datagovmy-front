@@ -280,9 +280,10 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
                     aged: result.age === "all" ? "" : `${t("aged")} ${t(result.age)}`,
                     state: CountryAndStates[result.state],
                     year: year,
+                    context: result.assessment === "all" && "all",
                   })}
                 </p>
-                {result.assessment === "joint" && <p className="text-dim">{t("rank_desc*")}</p>}
+                {result.assessment === "all" && <p className="text-dim">{t("asterisk")}</p>}
               </div>
             </div>
           )}
