@@ -84,7 +84,7 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
 
   const fetchData = (amount: number) => {
     setData("loading", true);
-    for (const key of ["age", "assessment", "state"]) {
+    for (const key of ["age", "amount", "assessment", "state"]) {
       setResult(key, data[key]);
     }
     setResult("variable", data.income_or_tax.value);
@@ -170,25 +170,16 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
           <div className="space-y-3">
             <Label label={t("filter_by")} className="text-dim text-sm" />
             <div className="flex flex-col gap-y-2">
-              <StateDropdown
-                currentState={data.state}
-                onChange={selected => setData("state", selected.value)}
-                anchor="left"
-                width="w-full"
-              />
-
-              <div className="grid grid-cols-3 gap-2">
-                <div className="col-span-2 sm:max-[876px]:col-span-3">
-                  <Dropdown
-                    placeholder={t("assessment")}
-                    options={ASSESSMENT_OPTIONS}
+              <div className="grid grid-cols-5 gap-2">
+                <div className="col-span-3 sm:max-[876px]:col-span-3">
+                  <StateDropdown
+                    currentState={data.state}
+                    onChange={selected => setData("state", selected.value)}
                     anchor="left"
                     width="w-full"
-                    selected={ASSESSMENT_OPTIONS.find(e => e.value === data.assessment)}
-                    onChange={e => setData("assessment", e.value)}
                   />
                 </div>
-                <div className="col-span-1 sm:max-[876px]:col-span-3">
+                <div className="col-span-2 sm:max-[876px]:col-span-3">
                   <Dropdown
                     placeholder={t("age")}
                     options={AGE_OPTIONS}
@@ -199,6 +190,14 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
                   />
                 </div>
               </div>
+              <Dropdown
+                placeholder={t("assessment")}
+                options={ASSESSMENT_OPTIONS}
+                anchor="left"
+                width="w-full"
+                selected={ASSESSMENT_OPTIONS.find(e => e.value === data.assessment)}
+                onChange={e => setData("assessment", e.value)}
+              />
             </div>
           </div>
           <button className="btn-primary my-6" onClick={() => handleSearch(data.amount)}>
@@ -210,7 +209,7 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
         </Card>
         <div className="w-full sm:w-7/12 lg:w-2/3">
           {data.loading ? (
-            <div className="shadow-button border-outline dark:border-washed-dark flex h-full w-full items-center justify-center rounded-xl border">
+            <div className="shadow-button border-outline dark:border-washed-dark flex h-full min-h-[60px] w-full items-center justify-center rounded-xl border">
               <Spinner loading={data.loading} />
             </div>
           ) : typeof result.percentile !== "number" ? (
@@ -236,10 +235,19 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
                         height: `${(result.percentile / 100) * 93 + 5}%`,
                       }}
                     >
-                      <div className="border-r-primary dark:border-r-primary-dark ml-[22px] h-0 w-0 -translate-y-1 border-b-[7px] border-r-[7px] border-t-[7px] border-b-transparent border-t-transparent lg:-translate-y-2"></div>
-                      <p className="ml-10 w-max -translate-y-[23px] font-bold lg:-translate-y-[27px]">
-                        {t("you_are_here")}
-                      </p>
+                      <div className="flex -translate-y-10 items-center lg:-translate-y-9">
+                        <div className="border-r-primary dark:border-r-primary-dark h-0 w-0 border-b-[7px] border-r-[7px] border-t-[7px] border-b-transparent border-t-transparent pl-5 lg:-translate-y-2"></div>
+                        <div className="flex w-max flex-col pb-3 pl-3">
+                          <p className="whitespace-nowrap font-bold">{t("you_are_here")}</p>
+                          <p className="text-dim flex min-w-[120px] flex-wrap text-sm leading-tight">{`RM ${
+                            result.amount
+                          } ${
+                            result.variable === "income"
+                              ? t("annual_income").split(" (")[0]
+                              : t("annual_tax_paid")
+                          }`}</p>
+                        </div>
+                      </div>
                     </div>
                   )}
                   <div className="text-dim flex -translate-x-14 flex-col gap-[25px] whitespace-nowrap text-right text-sm lg:gap-[37px]">
@@ -252,17 +260,17 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
                 </div>
                 <p className="text-dim font-medium">{t("earned_less")}</p>
               </div>
-              <div className="flex w-full flex-col justify-center gap-3 bg-white p-6 dark:bg-black max-lg:rounded-b-xl lg:h-[400px] lg:w-1/2 lg:rounded-r-xl lg:p-8">
+              <div className="flex w-full flex-col justify-center gap-3 bg-white p-6 text-black dark:bg-black dark:text-white max-lg:rounded-b-xl lg:h-[400px] lg:w-1/2 lg:rounded-r-xl lg:p-8">
                 <p>
-                  <span className="text-lg font-bold">{t("top")}</span>
+                  <span className="text-lg font-bold">{t("top", { amount: result.amount })}</span>
                   <span className="text-primary dark:text-primary-dark text-lg font-bold">
                     {100 - result.percentile}%
                   </span>
                   <span className="text-lg font-bold">{t("of_taxpayers")}</span>
                 </p>
-                <p className="text-dim">
+                <p>
                   {t("rank_desc", {
-                    more: t(`${result.variable}`),
+                    more: t(result.variable),
                     n_more_than: result.n_more_than,
                     n_group: result.n_group,
                     assessment:
@@ -272,8 +280,10 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
                     aged: result.age === "all" ? "" : `${t("aged")} ${t(result.age)}`,
                     state: CountryAndStates[result.state],
                     year: year,
+                    context: result.assessment === "all" && "all",
                   })}
                 </p>
+                {result.assessment === "all" && <p className="text-dim">{t("asterisk")}</p>}
               </div>
             </div>
           )}

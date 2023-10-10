@@ -11,6 +11,7 @@ import { Publication } from "misc/publications/browse";
 
 const TechnicalNotes: Page = ({
   meta,
+  pub,
   publications,
   params,
   query,
@@ -20,9 +21,14 @@ const TechnicalNotes: Page = ({
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={pub ? pub.title : t("header")}
+        description={pub ? pub.description : t("description")}
+        keywords={""}
+      />
       <PublicationsLayout>
         <TechnicalNotesDashboard
+          pub={pub}
           publications={publications}
           params={params}
           query={query}
@@ -38,6 +44,11 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   async ({ locale, params, query }) => {
     const pub_id = params.pub_id ? params.pub_id[0] : "";
     const { data } = await get("/pub-docs/technical-note", { language: locale, ...query });
+    const pub = pub_id
+      ? await get(`/pub-docs-resource/${pub_id}`, {
+          language: locale,
+        })
+      : null;
 
     return {
       notFound: false,
@@ -48,6 +59,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           category: null,
           agency: "DOSM",
         },
+        pub: pub ? pub.data : null,
         publications:
           data.results.sort(
             (a: Publication, b: Publication) =>
