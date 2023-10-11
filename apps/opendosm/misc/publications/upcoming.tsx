@@ -129,17 +129,17 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     setFilter("start", toDate(new Date(data.year, data.month, -firstDay + 1, 8, 0, 0)));
     setFilter("end", toDate(new Date(data.year, data.month + 1, remaining, 8, 0, 0)));
 
+    // for desktop only, prev month
     for (let i = firstDay - 1; i >= 0; i--) {
-      // for desktop only, prev month
       const date = toDate(new Date(data.year, data.month - 1, daysInLastMonth - i, 8, 0, 0));
       desktop.push({
         date: date, // to match for publications
-        day: daysInLastMonth - i, // to match for current month
-        month: data.month - 1, // to display day in calendar
+        day: daysInLastMonth - i, // to display day in calendar
+        month: data.month - 1, // to match for current month
       });
     }
+    // for curr month
     for (let i = 1; i <= daysInCurrMonth; i++) {
-      // for curr month
       const date = toDate(new Date(data.year, data.month, i, 8, 0, 0));
       const pub: ScheduledPub = {
         date: date,
@@ -149,8 +149,8 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       desktop.push(pub);
       mobile.push(pub);
     }
+    // for desktop only, next month
     for (let i = 1; i < 7; i++) {
-      // for desktop only, next month
       if (desktop.length % 7 === 0) break;
       const date = toDate(new Date(data.year, data.month + 1, i, 8, 0, 0));
       desktop.push({

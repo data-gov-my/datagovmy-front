@@ -79,12 +79,11 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         throw new Error("Invalid filter. Message: " + e);
       });
 
-      // rename keys and map array values
+      // map to array of only publication titles
       const transform = (input: Record<string, UpcomingPublication[]>) => {
         const result: Record<string, string[]> = {};
-        for (const oldKey in input) {
-          const newKey = `${oldKey}_${locale}`;
-          result[newKey] = input[oldKey].map(e => e.publication_title);
+        for (const key in input) {
+          result[key] = input[key].map(e => e.publication_title);
         }
         return result;
       };
