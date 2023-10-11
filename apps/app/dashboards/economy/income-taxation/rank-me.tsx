@@ -19,7 +19,7 @@ import { FunctionComponent, useContext, useRef } from "react";
 
 /**
  * Income Taxation - Rank
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 type Percentile = {
@@ -119,10 +119,10 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
   };
 
   const handleChange = (e: string) => {
-    const value = e.replaceAll(/\D/g, "");
+    const value = e.replaceAll(/\D/g, ""); // replace all non-numbers
     const number = value ? Number(value) : null;
     if (typeof number === "number" && number >= 0) {
-      setData("amount", number.toLocaleString(i18n.language));
+      setData("amount", number.toLocaleString(i18n.language)); // comma-sep
     } else setData("amount", "");
     setData("valid_amount", false);
   };
@@ -235,19 +235,13 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
                         height: `${(result.percentile / 100) * 93 + 5}%`,
                       }}
                     >
-                      <div className="flex -translate-y-10 items-center lg:-translate-y-9">
-                        <div className="border-r-primary dark:border-r-primary-dark h-0 w-0 border-b-[7px] border-r-[7px] border-t-[7px] border-b-transparent border-t-transparent pl-5 lg:-translate-y-2"></div>
-                        <div className="flex w-max flex-col pb-3 pl-3">
+                      <>
+                        <div className="border-r-primary dark:border-r-primary-dark h-0 w-0 -translate-y-1.5 border-b-[7px] border-r-[7px] border-t-[7px] border-b-transparent border-t-transparent pl-5"></div>
+                        <div className="flex w-max -translate-y-9 flex-col pl-10">
                           <p className="whitespace-nowrap font-bold">{t("you_are_here")}</p>
-                          <p className="text-dim flex min-w-[120px] flex-wrap text-sm leading-tight">{`RM ${
-                            result.amount
-                          } ${
-                            result.variable === "income"
-                              ? t("annual_income").split(" (")[0]
-                              : t("annual_tax_paid")
-                          }`}</p>
+                          <p className="text-dim flex max-w-[120px] flex-wrap text-sm">{`RM ${result.amount}`}</p>
                         </div>
-                      </div>
+                      </>
                     </div>
                   )}
                   <div className="text-dim flex -translate-x-14 flex-col gap-[25px] whitespace-nowrap text-right text-sm lg:gap-[37px]">
