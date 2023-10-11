@@ -16,6 +16,7 @@ import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import chunk from "lodash/chunk";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useContext, useEffect, useMemo, useRef } from "react";
@@ -130,7 +131,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     setFilter("end", toDate(new Date(data.year, data.month + 1, remaining, 8, 0, 0)));
 
     // for desktop only, prev month
-    for (let i = firstDay - 1; i >= 0; i--) {
+    for (let i = firstDay; i > 0; i--) {
       const date = toDate(new Date(data.year, data.month - 1, daysInLastMonth - i, 8, 0, 0));
       desktop.push({
         date: date, // to match for publications
@@ -329,7 +330,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                       {calendar.desktop.map((week, i) => (
                         <tr key={i} className="divide-x divide-outline dark:divide-washed-dark">
                           {week.map(d => {
-                            const isToday = todayISO === d.date;
+                            const isToday = DateTime.fromISO(d.date).hasSame(DateTime.now(), "day");
                             const notThisMonth = d.month !== data.month;
 
                             return (
@@ -388,7 +389,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 </div>
                 <div className="grid grid-cols-1 gap-3 md:max-lg:grid-cols-2 lg:hidden">
                   {calendar.mobile.map(d => {
-                    const isToday = todayISO === d.date;
+                    const isToday = DateTime.fromISO(d.date).hasSame(DateTime.now(), "day");
 
                     if (!(d.date in cal_pubs)) return;
                     return (
