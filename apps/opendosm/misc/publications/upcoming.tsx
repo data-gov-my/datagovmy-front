@@ -22,7 +22,7 @@ import { FunctionComponent, useContext, useEffect, useMemo, useRef } from "react
 
 /**
  * Upcoming Publications
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
@@ -75,10 +75,12 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   }));
 
   const today = new Date();
-  const todayISO = today.toISOString().split("T")[0];
-
   const thisMonth = today.getMonth(); // 0 - 11
   const thisYear = today.getFullYear();
+
+  const todayISO = new Date(thisYear, thisMonth, today.getDate(), 8, 0, 0)
+    .toISOString()
+    .split("T")[0];
   const daysInWeek: string[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
   const getMonthAndYear = (isoDate: string): [month: number, year: number] => {
