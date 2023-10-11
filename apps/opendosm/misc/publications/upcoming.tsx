@@ -16,13 +16,14 @@ import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import chunk from "lodash/chunk";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useContext, useEffect, useMemo, useRef } from "react";
 
 /**
  * Upcoming Publications
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
@@ -75,10 +76,12 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   }));
 
   const today = new Date();
-  const todayISO = today.toISOString().split("T")[0];
-
   const thisMonth = today.getMonth(); // 0 - 11
   const thisYear = today.getFullYear();
+
+  const todayISO = new Date(thisYear, thisMonth, today.getDate(), 8, 0, 0)
+    .toISOString()
+    .split("T")[0];
   const daysInWeek: string[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
   const getMonthAndYear = (isoDate: string): [month: number, year: number] => {
@@ -110,33 +113,33 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       : undefined,
   });
 
-  const pubs = new Map<string, string[]>(Object.entries(cal_pubs));
-
   const calendar = useMemo(() => {
     let desktop: ScheduledPub[] = [];
     let mobile: ScheduledPub[] = [];
 
-    const daysInLastMonth = new Date(data.year, data.month, 0).getDate();
-    const firstDay = new Date(data.year, data.month).getDay();
-    const daysInCurrMonth = new Date(data.year, data.month + 1, 0).getDate();
-    const totalModuloSeven = (firstDay + daysInCurrMonth) % 7;
-    const remaining = totalModuloSeven === 0 ? 0 : 7 - totalModuloSeven;
+    const daysInLastMonth = new Date(data.year, data.month, 0).getDate(); // for desktop, to get total days in prev month
+    const firstDay = new Date(data.year, data.month).getDay(); // to get day of week, 0 - 6 = Sun - Sat
+    const daysInCurrMonth = new Date(data.year, data.month + 1, 0).getDate(); // to get total days in curr month
+    const totalModuloSeven = (firstDay + daysInCurrMonth) % 7; // to get number of days in last week of curr month
+    const remaining = totalModuloSeven === 0 ? 0 : 7 - totalModuloSeven; // for desktop, num of days in next month needed to fill remainder
 
     const toDate = (date: Date): string => {
-      return date.toISOString().split("T")[0];
+      return date.toISOString().split("T")[0]; // get date in yyyy-mm-dd
     };
 
     setFilter("start", toDate(new Date(data.year, data.month, -firstDay + 1, 8, 0, 0)));
     setFilter("end", toDate(new Date(data.year, data.month + 1, remaining, 8, 0, 0)));
 
-    for (let i = firstDay - 1; i >= 0; i--) {
+    // for desktop only, prev month
+    for (let i = firstDay; i > 0; i--) {
       const date = toDate(new Date(data.year, data.month - 1, daysInLastMonth - i, 8, 0, 0));
       desktop.push({
-        date: date,
-        day: daysInLastMonth - i,
-        month: data.month - 1,
+        date: date, // to match for publications
+        day: daysInLastMonth - i, // to display day in calendar
+        month: data.month - 1, // to match for current month
       });
     }
+    // for curr month
     for (let i = 1; i <= daysInCurrMonth; i++) {
       const date = toDate(new Date(data.year, data.month, i, 8, 0, 0));
       const pub: ScheduledPub = {
@@ -147,6 +150,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       desktop.push(pub);
       mobile.push(pub);
     }
+    // for desktop only, next month
     for (let i = 1; i < 7; i++) {
       if (desktop.length % 7 === 0) break;
       const date = toDate(new Date(data.year, data.month + 1, i, 8, 0, 0));
@@ -157,7 +161,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       });
     }
 
-    return { desktop: chunk(desktop, 7), mobile };
+    return { desktop: chunk(desktop, 7), mobile }; // chunk into arrays of size 7
   }, [data.month, i18n.language]);
 
   const config: TableConfig[] = [
@@ -201,7 +205,6 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     const scrollOptions: ScrollIntoViewOptions = {
       behavior: "smooth",
       block: "center",
-      inline: "end",
     };
     if (size.width >= BREAKPOINTS.LG) desktopRef.current[todayISO]?.scrollIntoView(scrollOptions);
     else mobileRef.current[todayISO]?.scrollIntoView(scrollOptions);
@@ -327,9 +330,8 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                       {calendar.desktop.map((week, i) => (
                         <tr key={i} className="divide-x divide-outline dark:divide-washed-dark">
                           {week.map(d => {
-                            const isToday = todayISO === d.date;
+                            const isToday = DateTime.fromISO(d.date).hasSame(DateTime.now(), "day");
                             const notThisMonth = d.month !== data.month;
-                            const id = `${d.date}_${i18n.language}`;
 
                             return (
                               <td
@@ -365,8 +367,8 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                                   </span>
 
                                   <div className="flex h-full flex-col justify-start gap-1.5">
-                                    {pubs.has(id) &&
-                                      pubs.get(id).map((pub, i) => (
+                                    {d.date in cal_pubs &&
+                                      cal_pubs[d.date].map((pub, i) => (
                                         <Tooltip key={`desktop_${pub}_${d.date}_${i}`} tip={pub}>
                                           {() => (
                                             <p className="h-6 w-full truncate rounded bg-primary/20 px-1.5 py-1 text-xs text-black dark:text-white">
@@ -387,9 +389,9 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 </div>
                 <div className="grid grid-cols-1 gap-3 md:max-lg:grid-cols-2 lg:hidden">
                   {calendar.mobile.map(d => {
-                    const isToday = todayISO === d.date;
-                    const id = `${d.date}_${i18n.language}`;
-                    if (!pubs.has(id)) return;
+                    const isToday = DateTime.fromISO(d.date).hasSame(DateTime.now(), "day");
+
+                    if (!(d.date in cal_pubs)) return;
                     return (
                       <div
                         key={d.date}
@@ -418,8 +420,8 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                               {d.day}
                             </span>
                           </div>
-                          {pubs.has(id) &&
-                            pubs.get(id).map((pub, i) => (
+                          {d.date in cal_pubs &&
+                            cal_pubs[d.date].map((pub, i) => (
                               <Tooltip tip={pub} key={`mobile_${pub}_${d.date}_${i}`}>
                                 {open => (
                                   <div
