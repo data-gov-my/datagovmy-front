@@ -133,7 +133,9 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
       setData("percent", result.percentile);
       fetchData(value);
       if (size.width <= BREAKPOINTS.SM)
-        barRef && barRef.current && barRef.current.scrollIntoView({ behavior: "smooth" });
+        barRef &&
+          barRef.current &&
+          barRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     } else setData("valid_amount", t("valid_amount"));
   };
 
@@ -203,9 +205,7 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
           <button className="btn-primary my-6" onClick={() => handleSearch(data.amount)}>
             {t("rank_me")}
           </button>
-          <p ref={barRef} className="text-dim text-sm">
-            {t("disclaimer", { year: year })}
-          </p>
+          <p className="text-dim text-sm">{t("disclaimer", { year: year })}</p>
         </Card>
         <div className="w-full sm:w-7/12 lg:w-2/3">
           {data.loading ? (
@@ -228,6 +228,7 @@ const IncomeRank: FunctionComponent<IncomeRankProps> = ({ year }) => {
                     <></>
                   ) : (
                     <div
+                      ref={barRef}
                       className="from-primary absolute bottom-0 w-full animate-[grow_1.5s_ease-in-out] rounded-md bg-gradient-to-t to-[#5B8EFF]"
                       style={{
                         ["--from-height" as string]: 0,
