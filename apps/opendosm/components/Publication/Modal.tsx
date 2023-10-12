@@ -6,11 +6,13 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { At, Button, Search, Spinner } from "datagovmy-ui/components";
 import { body } from "datagovmy-ui/configs/font";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { matchSorter } from "match-sorter";
 import { Resource } from "misc/publications/browse";
-import { Fragment, FunctionComponent, useMemo } from "react";
+import { Fragment, FunctionComponent, useContext, useMemo } from "react";
 
 export type PubResource = {
   description: string;
@@ -38,6 +40,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   type,
 }) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
+  const { size } = useContext(WindowContext);
   const { data, setData } = useData({
     copied: false,
     query: "",
@@ -58,6 +61,9 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
       id: "resource_name",
       header: t("subject"),
       enableSorting: false,
+      cell: ({ getValue }) => {
+        return <p className="whitespace-normal">{getValue()}</p>;
+      },
     },
     {
       accessorKey: "resource_link",
@@ -77,7 +83,9 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
             ) : (
               <PDFIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
             )}
-            {t("download", { context: row.original.resource_type })}
+            {size.width <= BREAKPOINTS.SM
+              ? t("download_mobile", { context: row.original.resource_type })
+              : t("download", { context: row.original.resource_type })}
           </At>
         );
       },
@@ -85,6 +93,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
     {
       accessorKey: "downloads",
       id: "downloads",
+      className: "w-20",
       header: t("downloads"),
     },
   ];
@@ -93,7 +102,14 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
     <>
       {publication && (
         <Transition show={show} as={Fragment}>
-          <Dialog as="div" className="relative z-30" onClose={hide}>
+          <Dialog
+            as="div"
+            className="relative z-30"
+            onClose={() => {
+              hide();
+              setData("query", "");
+            }}
+          >
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -168,14 +184,17 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                           <Button
                             variant="reset"
                             className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
-                            onClick={hide}
+                            onClick={() => {
+                              hide();
+                              setData("query", "");
+                            }}
                           >
                             <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
                           </Button>
                         </Dialog.Title>
                         <div className="flex flex-col justify-between gap-3 pt-6 sm:flex-row sm:items-center">
                           <h5>{t("download_list")}</h5>
-                          {filteredRes.length > 5 && (
+                          {publication.resources.length > 5 && (
                             <Search
                               className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark sm:w-[300px]"
                               placeholder={t("search_subject")}

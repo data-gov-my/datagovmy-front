@@ -29,7 +29,7 @@ import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 /**
  * Publications
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
@@ -131,6 +131,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
       : undefined,
   });
+
+  useEffect(() => {
+    show ? (document.body.style.overflow = "hidden") : (document.body.style.overflow = "unset");
+  }, [show]);
 
   const reset = () => {
     setFilter("demography", []);
