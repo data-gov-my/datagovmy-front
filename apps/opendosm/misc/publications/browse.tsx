@@ -29,7 +29,7 @@ import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 /**
  * Publications
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
