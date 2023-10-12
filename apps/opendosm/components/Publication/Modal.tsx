@@ -102,7 +102,14 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
     <>
       {publication && (
         <Transition show={show} as={Fragment}>
-          <Dialog as="div" className="relative z-30" onClose={hide}>
+          <Dialog
+            as="div"
+            className="relative z-30"
+            onClose={() => {
+              hide();
+              setData("query", "");
+            }}
+          >
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -177,7 +184,10 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                           <Button
                             variant="reset"
                             className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
-                            onClick={hide}
+                            onClick={() => {
+                              hide();
+                              setData("query", "");
+                            }}
                           >
                             <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
                           </Button>
