@@ -132,6 +132,10 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       : undefined,
   });
 
+  useEffect(() => {
+    show ? (document.body.style.overflow = "hidden") : (document.body.style.overflow = "unset");
+  }, [show]);
+
   const reset = () => {
     setFilter("demography", []);
     setFilter("frequency", undefined);
