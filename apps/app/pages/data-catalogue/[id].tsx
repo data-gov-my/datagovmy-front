@@ -1,4 +1,4 @@
-import DataCatalogueShow from "@data-catalogue/show";
+import DataCatalogueShow, { IDataViz } from "@data-catalogue/show";
 import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
@@ -7,7 +7,8 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
 import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { DateTime } from "luxon";
 
 const CatalogueShow: Page = ({
   meta,
@@ -19,7 +20,9 @@ const CatalogueShow: Page = ({
   urls,
   translations,
   catalogueId,
+  dataviz,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const [selectedViz, setSelectedViz] = useState<IDataViz | undefined>();
   const availableOptions = useMemo<string[]>(() => {
     switch (dataset.type) {
       case "TABLE":
@@ -34,6 +37,49 @@ const CatalogueShow: Page = ({
     }
   }, [dataset.type]);
 
+  const recurDataMapping = (key: string, value: string | string[], table_data: Array<any>) => {
+    const set = [];
+
+    if (Array.isArray(value)) {
+      value.map((val, index) => {
+        const res = recurDataMapping(`${key}${index + 1}`, val, table_data);
+        set.push(...res);
+      });
+    } else {
+      if (key === "date") {
+        set.push([key, table_data.map(item => DateTime.fromISO(item[value]).toSeconds())]);
+      }
+      set.push([key, table_data.map(item => item[value])]);
+    }
+
+    return set;
+  };
+
+  const extractChartDataset = (table_data: Record<string, any>[], currentViz: IDataViz) => {
+    const set = Object.entries(currentViz?.chart_variables.format).map(([key, value]) =>
+      recurDataMapping(key, value, table_data)
+    );
+    return {
+      ...Object.fromEntries(set.map(array => [array[0][0], array[0][1]])),
+    };
+  };
+
+  const selectedDataset = useMemo(() => {
+    if (!selectedViz) {
+      config.context["range"] = { label: "Weekly", value: "WEEKLY" };
+      return dataset;
+    }
+
+    config.context["range"] = { label: "Weekly", value: "WEEKLY" };
+
+    return {
+      type: selectedViz.chart_type,
+      chart: extractChartDataset(dataset.table, selectedViz),
+      table: dataset.table,
+      meta: dataset.meta,
+    };
+  }, [selectedViz, config.options]);
+
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
@@ -41,17 +87,20 @@ const CatalogueShow: Page = ({
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
-      <CatalogueProvider dataset={dataset} urls={urls}>
+      <CatalogueProvider dataset={selectedDataset} urls={urls}>
         <DataCatalogueShow
           options={availableOptions}
           params={params}
           config={config}
-          dataset={dataset}
+          dataset={selectedDataset}
           explanation={explanation}
           metadata={metadata}
           urls={urls}
           translations={translations}
           catalogueId={catalogueId}
+          dataviz={dataviz}
+          selectedViz={selectedViz}
+          setSelectedViz={setSelectedViz}
         />
       </CatalogueProvider>
     </AnalyticsProvider>
@@ -62,7 +111,13 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query, params }) => {
     try {
-      const { data } = await get("/data-variable/", {
+      // OLD DC variable query
+      // const { data } = await get("/data-variable/", {
+      //   id: params?.id,
+      //   lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
+      //   ...query,
+      // });
+      const { data } = await get("/data-catalogue-variable/", {
         id: params?.id,
         lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
         ...query,
@@ -143,6 +198,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             source: data.metadata.data_source,
             definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
           },
+          dataviz: data.dataviz,
           urls: data.downloads ?? {},
           translations: data.translations ?? {},
           catalogueId: data.openapi_id ?? "",

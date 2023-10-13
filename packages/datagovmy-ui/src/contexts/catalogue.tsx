@@ -84,7 +84,7 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
         const numOfValidItems: Array<number> = [];
         const chart = Object.entries(dataset.chart)
           .filter(([key, _]) => key !== "x")
-          .map(([key, y]) => [key, (y as number[]).filter(item => Boolean(item))]);
+          .map(([key, y]) => [key, (y as number[]).filter(item => item !== null)]);
 
         chart.forEach(([key, y]) => {
           numOfValidItems.push((y as number[]).length);

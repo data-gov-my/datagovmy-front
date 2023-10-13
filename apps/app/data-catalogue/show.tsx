@@ -29,7 +29,15 @@ import {
 import sum from "lodash/sum";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { FunctionComponent, ReactNode, useContext, useRef, useState } from "react";
+import {
+  Dispatch,
+  FunctionComponent,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 
 /**
  * Catalogue Show
@@ -107,6 +115,23 @@ interface CatalogueShowProps {
     [key: string]: string;
   };
   catalogueId?: string;
+  dataviz: Array<IDataViz>;
+  selectedViz: IDataViz | undefined;
+  setSelectedViz: Dispatch<SetStateAction<undefined | IDataViz>>;
+}
+
+export interface IDataViz {
+  translation_key: string;
+  chart_type: DCChartKeys;
+  chart_filters: {
+    SLICE_BY: Array<string>;
+    precision: number;
+  };
+  chart_variables: {
+    parents: Array<string>;
+    operation: string;
+    format: { x: string; y: Array<string> };
+  };
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -119,6 +144,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   urls,
   translations,
   catalogueId,
+  dataviz,
+  selectedViz,
+  setSelectedViz,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const availableOptions: OptionType[] = options.map(value => ({
@@ -141,7 +169,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           <CatalogueTimeseries
             translations={translations}
             config={{
-              precision: config.precision,
+              precision: selectedViz?.chart_filters.precision ?? config.precision,
               range: filter?.range?.value || "INTRADAY",
             }}
           />
@@ -236,13 +264,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           date={metadata.data_as_of}
           menu={
             <>
-              <Dropdown
+              {/* <Dropdown
                 width="w-fit"
                 sublabel={<EyeIcon className="h-4 w-4" />}
                 selected={availableOptions.find(e => e.value === show.value)}
                 options={availableOptions}
                 onChange={e => setShow(e)}
-              />
+              /> */}
               <Dropdown
                 width="w-fit"
                 anchor="right"
@@ -293,12 +321,40 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             </div>
           </div>
 
-          {/* Chart */}
-          <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
+          {dataset.type === "TABLE" ? (
+            /* Table */
+            <div
+              className={clx(dataset.type !== "TABLE" && "mx-auto max-h-[500px] overflow-auto", "")}
+            >
+              <Table
+                className={clx("table-stripe table-default table-sticky-header")}
+                responsive={dataset.type === "TABLE"}
+                data={dataset.table}
+                freeze={config.freeze}
+                precision={config.precision}
+                search={
+                  dataset.type === "TABLE"
+                    ? onSearch => (
+                        <Search
+                          className="w-full border-b lg:w-auto"
+                          onChange={query => onSearch(query ?? "")}
+                        />
+                      )
+                    : undefined
+                }
+                config={generateTableSchema()}
+                enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 15 : false}
+                data-testid="catalogue-table"
+              />
+            </div>
+          ) : (
+            /* Chart */
+            <div className={clx("", "space-y-2")}>{renderChart()}</div>
+          )}
+          {/* <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
           </div>
 
-          {/* Table */}
           {dataset.table && (
             <div
               className={clx(
@@ -327,10 +383,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 data-testid="catalogue-table"
               />
             </div>
-          )}
+          )} */}
 
           {/* Date Slider (optional) */}
-          {config.dates !== null && (
+          {/* {config.dates !== null && (
             <Slider
               type="single"
               value={config.dates?.options.indexOf(
@@ -342,7 +398,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
               }
             />
-          )}
+          )} */}
 
           <CatalogueEmbed
             uid={dataset.meta.unique_id}
@@ -380,6 +436,32 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               })}`}
             </span>
           </p>
+
+          {dataviz && dataviz.length > 1 && (
+            <Section>
+              <div className="flex w-full gap-2">
+                <Card
+                  className="h-48 min-w-[calc(100%_/_3-_8px)]"
+                  onClick={() => setSelectedViz(undefined)}
+                >
+                  table
+                </Card>
+                <div className="flex w-full gap-2 overflow-x-scroll">
+                  {dataviz.map((viz, index) => {
+                    return (
+                      <Card
+                        key={`${viz.translation_key}-${index}`}
+                        className="h-48 min-w-[calc(100%_/_2-_8px)]"
+                        onClick={() => setSelectedViz(viz)}
+                      >
+                        {viz.translation_key}
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            </Section>
+          )}
         </Section>
 
         <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-8 lg:py-12">
