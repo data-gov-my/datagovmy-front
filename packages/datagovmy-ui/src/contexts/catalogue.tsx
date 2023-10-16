@@ -106,7 +106,6 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
     const _downloads = (() => {
       switch (dataset.type) {
         // Case: Leaflet based maps
-        case "GEOJSON":
         case "GEOCHOROPLETH":
           return {
             chart: [
@@ -143,6 +142,37 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
                 icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
                 href: () => {
                   download(urls.parquet, dataset.meta.unique_id.concat(".parquet"));
+                  track("parquet");
+                },
+              },
+            ],
+          };
+        // Case: GEOJSON
+        case "GEOJSON":
+          return {
+            chart: [
+              {
+                id: "png",
+                image: png,
+                title: t("image.title"),
+                description: t("image.desc"),
+                icon: <CloudArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
+                href: () => {
+                  if (!leaflet) return;
+                  leaflet.current?.print(dataset.meta.unique_id.concat(".png"));
+                  track("png");
+                },
+              },
+            ],
+            data: [
+              {
+                id: "geojson",
+                image: "/static/images/icons/geojson.png",
+                title: t("geojson.title"),
+                description: t("geojson.desc"),
+                icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
+                href: () => {
+                  download(urls.link_geojson, dataset.meta.unique_id.concat(".geojson"));
                   track("parquet");
                 },
               },
