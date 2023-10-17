@@ -264,7 +264,7 @@ export const slugify = (value: string): string => {
 /**
  * Generic download helper function
  * @param url URL or URLData
- * @param callback Callback function
+ * @param title title
  */
 export const download = (url: string, title: string): void => {
   let v_anchor = document.createElement("a");

@@ -161,7 +161,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
           <>
             <Popover.Button
               className={cn(
-                "from-primary-dgm to-primary-dark shadow-button fixed bottom-4 right-4 flex items-center justify-center gap-2 rounded-full bg-gradient-to-t px-3 py-1.5 font-medium text-white transition-all hover:to-[#5B8EFF]",
+                "from-primary-dgm to-primary-dark shadow-button fixed bottom-4 right-4 z-50 flex items-center justify-center gap-2 rounded-full bg-gradient-to-t px-3 py-1.5 font-medium text-white transition-all hover:to-[#5B8EFF]",
                 open && "flex aspect-square w-12 "
               )}
             >
