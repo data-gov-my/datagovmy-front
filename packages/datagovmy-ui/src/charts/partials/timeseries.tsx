@@ -78,7 +78,10 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               _ref={ref => bind.chartjs(ref)}
               className={className}
               enableGridY={isPreview ? false : true}
+              displayXAxis={isPreview ? false : true}
+              displayYAxis={isPreview ? false : true}
               interval={SHORT_PERIOD[config.range]}
+              enableCrosshair={isPreview ? false : true}
               enableTooltip={isPreview ? false : true}
               precision={
                 typeof config.precision === "number"

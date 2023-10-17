@@ -78,7 +78,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
         return (
           <CatalogueTimeseries
             translations={translations}
-            className={"h-full w-full"}
+            className={"h-[94px] w-full"}
             isPreview={true}
             config={{
               precision: dataviz?.chart_filters.precision ?? config.precision,
@@ -138,14 +138,16 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
 
   return (
     <CatalogueProvider dataset={_dataset} urls={urls}>
-      <Card
-        key={`${dataviz.translation_key}`}
-        className="flex h-48 min-w-[calc(100%_-_8px)] flex-col gap-2 p-2 lg:min-w-[calc(100%_/_2-_8px)]"
-        onClick={() => setSelectedViz(dataviz)}
-      >
-        {renderChart()}
-        <p className="text-center">{dataviz.translation_key ?? ""}</p>
-      </Card>
+      <div className="flex h-full flex-col justify-start gap-2">
+        <Card
+          key={`${dataviz.translation_key}`}
+          className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] w-[200px] p-2 transition-colors"
+          onClick={() => setSelectedViz(dataviz)}
+        >
+          {renderChart()}
+        </Card>
+        <p className="text-center text-xs">{dataviz.translation_key ?? ""}</p>
+      </div>
     </CatalogueProvider>
   );
 };

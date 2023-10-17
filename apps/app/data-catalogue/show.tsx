@@ -440,36 +440,37 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
           {dataviz && dataviz.length > 1 && (
             <Section>
-              <div className="flex w-full gap-2 overflow-x-scroll lg:overflow-visible">
-                <Card
-                  className="h-48 min-w-[calc(100%_-_8px)] overflow-auto px-10 py-2 lg:min-w-[calc(100%_/_3-_8px)]"
-                  onClick={() => setSelectedViz(undefined)}
-                >
-                  <Table
-                    className={clx("table-stripe table-default table-sticky-header ")}
-                    responsive={true}
-                    data={dataset.table.slice(0, 5)}
-                    freeze={config.freeze}
-                    precision={config.precision}
-                    config={generateTableSchema()}
-                    enablePagination={false}
-                    data-testid="catalogue-table-preview"
-                  />
-                </Card>
-                <div className="flex w-full gap-2 lg:overflow-x-scroll">
-                  {dataviz.map(viz => {
-                    return (
-                      <CataloguePreview
-                        dataviz={viz}
-                        dataset={dataset}
-                        urls={urls}
-                        translations={translations}
-                        config={config}
-                        setSelectedViz={setSelectedViz}
-                      />
-                    );
-                  })}
+              <div className="flex justify-start gap-[1rem] overflow-x-scroll pb-4">
+                <div className="flex h-full flex-col justify-start gap-2">
+                  <Card
+                    className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-[200px] overflow-hidden p-2 transition-colors"
+                    onClick={() => setSelectedViz(undefined)}
+                  >
+                    <Table
+                      className={clx("table-stripe table-default table-sticky-header ")}
+                      responsive={false}
+                      data={dataset.table.slice(0, 3)}
+                      freeze={config.freeze}
+                      precision={config.precision}
+                      config={generateTableSchema()}
+                      enablePagination={false}
+                      data-testid="catalogue-table-preview"
+                    />
+                  </Card>
+                  <p className="w-full text-center text-xs">Table</p>
                 </div>
+                {dataviz.map(viz => {
+                  return (
+                    <CataloguePreview
+                      dataviz={viz}
+                      dataset={dataset}
+                      urls={urls}
+                      translations={translations}
+                      config={config}
+                      setSelectedViz={setSelectedViz}
+                    />
+                  );
+                })}
               </div>
             </Section>
           )}
