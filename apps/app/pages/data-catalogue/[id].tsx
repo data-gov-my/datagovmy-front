@@ -8,7 +8,7 @@ import { withi18n } from "datagovmy-ui/decorators";
 import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo, useState } from "react";
-import { DateTime } from "luxon";
+import { recurDataMapping } from "datagovmy-ui/helpers";
 
 const CatalogueShow: Page = ({
   meta,
@@ -37,24 +37,6 @@ const CatalogueShow: Page = ({
     }
   }, [dataset.type]);
 
-  const recurDataMapping = (key: string, value: string | string[], table_data: Array<any>) => {
-    const set = [];
-
-    if (Array.isArray(value)) {
-      value.map((val, index) => {
-        const res = recurDataMapping(`${key}${index + 1}`, val, table_data);
-        set.push(...res);
-      });
-    } else {
-      if (key === "date") {
-        set.push([key, table_data.map(item => DateTime.fromISO(item[value]).toSeconds())]);
-      }
-      set.push([key, table_data.map(item => item[value])]);
-    }
-
-    return set;
-  };
-
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: IDataViz) => {
     const set = Object.entries(currentViz?.chart_variables.format).map(([key, value]) =>
       recurDataMapping(key, value, table_data)
@@ -66,6 +48,7 @@ const CatalogueShow: Page = ({
 
   const selectedDataset = useMemo(() => {
     if (!selectedViz) {
+      // TODO: ask BE to provide this range value to use for timeseries
       config.context["range"] = { label: "Weekly", value: "WEEKLY" };
       return dataset;
     }

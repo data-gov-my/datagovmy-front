@@ -20,6 +20,13 @@ import { ChartTypeRegistry } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { GeoChoroplethRef } from "../charts/geochoropleth";
 
+export type DatasetType = {
+  type: DCChartKeys;
+  chart: any;
+  table: Record<string, any>[];
+  meta: { title: string; desc: string; unique_id: string };
+};
+
 interface CatalogueContextProps {
   bind: {
     chartjs: Dispatch<
@@ -27,22 +34,12 @@ interface CatalogueContextProps {
     >;
     leaflet: MutableRefObject<GeoChoroplethRef | null>;
   };
-  dataset: {
-    type: DCChartKeys;
-    chart: any;
-    table: Record<string, any>[];
-    meta: { title: string; desc: string; unique_id: string };
-  };
+  dataset: DatasetType;
   downloads: DownloadOptions;
 }
 
 interface CatalogueProviderProps {
-  dataset: {
-    type: DCChartKeys;
-    chart: any;
-    table: Record<string, any>[];
-    meta: { title: string; desc: string; unique_id: string };
-  };
+  dataset: DatasetType;
   urls: {
     [key: string]: string;
   };

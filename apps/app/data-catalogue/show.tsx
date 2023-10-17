@@ -38,6 +38,7 @@ import {
   useRef,
   useState,
 } from "react";
+import CataloguePreview from "./preview";
 
 /**
  * Catalogue Show
@@ -439,23 +440,33 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
           {dataviz && dataviz.length > 1 && (
             <Section>
-              <div className="flex w-full gap-2">
+              <div className="flex w-full gap-2 overflow-x-scroll lg:overflow-visible">
                 <Card
-                  className="h-48 min-w-[calc(100%_/_3-_8px)]"
+                  className="h-48 min-w-[calc(100%_-_8px)] overflow-auto px-10 py-2 lg:min-w-[calc(100%_/_3-_8px)]"
                   onClick={() => setSelectedViz(undefined)}
                 >
-                  table
+                  <Table
+                    className={clx("table-stripe table-default table-sticky-header ")}
+                    responsive={true}
+                    data={dataset.table.slice(0, 5)}
+                    freeze={config.freeze}
+                    precision={config.precision}
+                    config={generateTableSchema()}
+                    enablePagination={false}
+                    data-testid="catalogue-table-preview"
+                  />
                 </Card>
-                <div className="flex w-full gap-2 overflow-x-scroll">
-                  {dataviz.map((viz, index) => {
+                <div className="flex w-full gap-2 lg:overflow-x-scroll">
+                  {dataviz.map(viz => {
                     return (
-                      <Card
-                        key={`${viz.translation_key}-${index}`}
-                        className="h-48 min-w-[calc(100%_/_2-_8px)]"
-                        onClick={() => setSelectedViz(viz)}
-                      >
-                        {viz.translation_key}
-                      </Card>
+                      <CataloguePreview
+                        dataviz={viz}
+                        dataset={dataset}
+                        urls={urls}
+                        translations={translations}
+                        config={config}
+                        setSelectedViz={setSelectedViz}
+                      />
                     );
                   })}
                 </div>

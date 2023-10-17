@@ -19,12 +19,14 @@ interface CatalogueTimeseriesProps {
   };
   className?: string;
   translations: Record<string, string>;
+  isPreview?: boolean;
 }
 
 const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
   config,
   className = "h-[350px] w-full lg:h-[450px]",
   translations,
+  isPreview = false,
 }) => {
   const { bind, dataset } = useContext(CatalogueContext);
   const { data, setData } = useData({
@@ -75,7 +77,9 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
             <Timeseries
               _ref={ref => bind.chartjs(ref)}
               className={className}
+              enableGridY={isPreview ? false : true}
               interval={SHORT_PERIOD[config.range]}
+              enableTooltip={isPreview ? false : true}
               precision={
                 typeof config.precision === "number"
                   ? config.precision
@@ -98,14 +102,16 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               beginZero={["STACKED_AREA", "INTRADAY"].includes(dataset.type)}
               forcedTheme={forcedTheme}
             />
-            <Slider
-              className="pt-4"
-              type="range"
-              data={dataset.chart.x}
-              value={data.minmax}
-              period={SHORT_PERIOD[config.range]}
-              onChange={e => setData("minmax", e)}
-            />
+            {isPreview ? null : (
+              <Slider
+                className="pt-4"
+                type="range"
+                data={dataset.chart.x}
+                value={data.minmax}
+                period={SHORT_PERIOD[config.range]}
+                onChange={e => setData("minmax", e)}
+              />
+            )}
           </>
         ) : (
           <div className={clx(className, "flex items-center justify-center")}>
