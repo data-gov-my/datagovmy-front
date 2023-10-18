@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from "datagovmy-ui/components";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
-import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
+import { CatalogueContext, DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useAnalytics, useFilter, useTranslation } from "datagovmy-ui/hooks";
@@ -83,12 +83,7 @@ interface CatalogueShowProps {
     id: string;
   };
   config: DCConfig;
-  dataset: {
-    type: DCChartKeys;
-    chart: any;
-    table: Record<string, any>[];
-    meta: { title: string; desc: string; unique_id: string };
-  };
+  dataset: DatasetType;
   explanation: { caveat: string; methodology: string; publication?: string };
   metadata: {
     data_as_of: string;
@@ -419,6 +414,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             options={config.options}
             defaultOption={filter}
             translations={translations}
+            selectedVizKey={selectedViz?.translation_key}
           />
 
           {/* Views / download count*/}

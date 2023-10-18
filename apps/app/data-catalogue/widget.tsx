@@ -4,6 +4,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Chips, Slider, Tooltip } from "datagovmy-ui/components";
 import { BREAKPOINTS, SHORT_PERIOD } from "datagovmy-ui/constants";
+import { DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { WindowContext, WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
@@ -54,14 +55,10 @@ interface CatalogueWidgetProps {
   params: {
     id: string;
     theme: string;
+    currentVisual: string;
   };
   config: DCConfig;
-  dataset: {
-    type: DCChartKeys;
-    chart: any;
-    table: Record<string, any>[];
-    meta: { title: string; desc: string; unique_id: string };
-  };
+  dataset: DatasetType;
   metadata: {
     data_as_of: string;
     url: {
@@ -97,7 +94,11 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   translations,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const { filter, setFilter } = useFilter(config.context, { id: params.id, theme: params.theme });
+  const { filter, setFilter } = useFilter(config.context, {
+    id: params.id,
+    theme: params.theme,
+    currViz: params.currentVisual,
+  });
   const { size } = useContext(WindowContext);
   const chips = useMemo<OptionType[]>(
     () =>

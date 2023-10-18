@@ -11,8 +11,16 @@ import { NextApiRequest, NextApiResponse } from "next";
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
+    // OLD DC variable query
+    // const { id, lang, ...query } = req.query;
+    // const { data } = await get("/data-variable/", {
+    //   id,
+    //   lang: SHORT_LANG[lang as keyof typeof SHORT_LANG],
+    //   ...query,
+    // });
+
     const { id, lang, ...query } = req.query;
-    const { data } = await get("/data-variable/", {
+    const { data } = await get("/data-catalogue-variable/", {
       id,
       lang: SHORT_LANG[lang as keyof typeof SHORT_LANG],
       ...query,
