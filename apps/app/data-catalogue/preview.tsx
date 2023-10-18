@@ -4,7 +4,7 @@ import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue"
 import { Card } from "datagovmy-ui/components";
 import dynamic from "next/dynamic";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
-import { recurDataMapping } from "datagovmy-ui/helpers";
+import { clx, recurDataMapping } from "datagovmy-ui/helpers";
 import { DCConfig } from "datagovmy-ui/types";
 
 /**
@@ -55,6 +55,7 @@ interface CataloguePreviewProps {
     [key: string]: string;
   };
   config: DCConfig;
+  selectedViz: IDataViz | undefined;
   setSelectedViz: Dispatch<SetStateAction<undefined | IDataViz>>;
 }
 
@@ -62,6 +63,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   dataviz,
   dataset,
   urls,
+  selectedViz,
   setSelectedViz,
   translations,
   config,
@@ -138,10 +140,13 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
 
   return (
     <CatalogueProvider dataset={_dataset} urls={urls}>
-      <div className="flex h-full flex-col justify-start gap-2">
+      <div className="flex w-[calc(100%_/_1.5-_0.5rem)] flex-col justify-start gap-2 lg:w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]">
         <Card
           key={`${dataviz.translation_key}`}
-          className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] w-[200px] p-2 transition-colors"
+          className={clx(
+            "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-w-[calc(100%_/_1.5-_0.5rem)]  p-2 transition-colors lg:min-w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]",
+            selectedViz?.translation_key === dataviz.translation_key && "border-outlineHover"
+          )}
           onClick={() => setSelectedViz(dataviz)}
         >
           {renderChart()}

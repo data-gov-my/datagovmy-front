@@ -440,10 +440,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
           {dataviz && dataviz.length > 1 && (
             <Section>
-              <div className="flex justify-start gap-[1rem] overflow-x-scroll pb-4">
-                <div className="flex h-full flex-col justify-start gap-2">
+              <div className="relative flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
+                <div className="static left-0 top-0 flex h-full w-[calc(100%_/_1.5-_0.5rem)] flex-col justify-start gap-2 rounded-xl bg-white lg:sticky lg:w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]">
                   <Card
-                    className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-[200px] overflow-hidden p-2 transition-colors"
+                    className={clx(
+                      "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] min-w-[calc(100%_/_1.5_-_0.5rem)] overflow-hidden p-2 transition-colors lg:min-w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]",
+                      selectedViz === undefined && "border-outlineHover"
+                    )}
                     onClick={() => setSelectedViz(undefined)}
                   >
                     <Table
@@ -457,9 +460,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       data-testid="catalogue-table-preview"
                     />
                   </Card>
-                  <p className="w-full text-center text-xs">Table</p>
+                  <p className=" text-center text-xs">Table</p>
                 </div>
-                {dataviz.map(viz => {
+                {[...dataviz, ...dataviz].map(viz => {
                   return (
                     <CataloguePreview
                       dataviz={viz}
@@ -467,6 +470,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       urls={urls}
                       translations={translations}
                       config={config}
+                      selectedViz={selectedViz}
                       setSelectedViz={setSelectedViz}
                     />
                   );
