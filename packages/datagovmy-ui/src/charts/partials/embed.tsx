@@ -23,7 +23,7 @@ interface CatalogueEmbedProps {
   options?: FilterDefault[] | null;
   defaultOption?: any;
   translations?: any;
-  selectedVizKey: string | undefined;
+  selectedVizKey?: string | undefined;
   ref: ForwardedRef<EmbedInterface>;
 }
 
