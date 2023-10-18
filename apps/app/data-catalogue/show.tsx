@@ -156,6 +156,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   }));
   const [show, setShow] = useState<OptionType>(availableOptions[0]);
   const embedRef = useRef<EmbedInterface>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
   const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
   const { downloads } = useContext(CatalogueContext);
   const _downloads = Object.values(downloads).flatMap(option => option);
@@ -247,6 +248,14 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     }
   };
 
+  const scrollToChart = () => {
+    const scrollOptions: ScrollIntoViewOptions = {
+      behavior: "smooth",
+      block: "start",
+    };
+    chartRef.current?.scrollIntoView(scrollOptions);
+  };
+
   return (
     <div>
       <Container className="mx-auto w-full pt-6 md:max-w-screen-md lg:max-w-screen-lg">
@@ -262,6 +271,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             </p>
           }
           className=""
+          ref={chartRef}
           date={metadata.data_as_of}
           menu={
             <>
@@ -322,10 +332,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             </div>
           </div>
 
-          {dataset.type === "TABLE" ? (
-            /* Table */
+          <div className="min-h-[350px] lg:min-h-[450px]">
             <div
-              className={clx(dataset.type !== "TABLE" && "mx-auto max-h-[500px] overflow-auto", "")}
+              className={clx(
+                dataset.type !== "TABLE" && "mx-auto max-h-[500px] overflow-auto",
+                dataset.type === "TABLE" ? "block" : "hidden"
+              )}
             >
               <Table
                 className={clx("table-stripe table-default table-sticky-header")}
@@ -348,10 +360,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 data-testid="catalogue-table"
               />
             </div>
-          ) : (
-            /* Chart */
-            <div className={clx("", "space-y-2")}>{renderChart()}</div>
-          )}
+            <div className={clx("space-y-2", dataset.type === "TABLE" ? "hidden" : "block")}>
+              {renderChart()}
+            </div>
+          </div>
           {/* <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
             {renderChart()}
           </div>
@@ -447,7 +459,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] min-w-[calc(100%_/_1.5_-_0.5rem)] overflow-hidden p-2 transition-colors lg:min-w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]",
                       selectedViz === undefined && "border-outlineHover"
                     )}
-                    onClick={() => setSelectedViz(undefined)}
+                    onClick={() => {
+                      setSelectedViz(undefined);
+                      scrollToChart();
+                    }}
                   >
                     <Table
                       className={clx("table-stripe table-default table-sticky-header ")}
@@ -462,7 +477,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   </Card>
                   <p className=" text-center text-xs">Table</p>
                 </div>
-                {[...dataviz, ...dataviz].map(viz => {
+                {dataviz.map(viz => {
                   return (
                     <CataloguePreview
                       dataviz={viz}
@@ -472,6 +487,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       config={config}
                       selectedViz={selectedViz}
                       setSelectedViz={setSelectedViz}
+                      scrollToChart={scrollToChart}
                     />
                   );
                 })}

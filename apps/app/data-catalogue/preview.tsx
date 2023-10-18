@@ -57,6 +57,7 @@ interface CataloguePreviewProps {
   config: DCConfig;
   selectedViz: IDataViz | undefined;
   setSelectedViz: Dispatch<SetStateAction<undefined | IDataViz>>;
+  scrollToChart: () => void;
 }
 
 const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
@@ -67,6 +68,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   setSelectedViz,
   translations,
   config,
+  scrollToChart,
 }) => {
   if (!dataviz) {
     return null;
@@ -147,7 +149,10 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
             "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-w-[calc(100%_/_1.5-_0.5rem)]  p-2 transition-colors lg:min-w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]",
             selectedViz?.translation_key === dataviz.translation_key && "border-outlineHover"
           )}
-          onClick={() => setSelectedViz(dataviz)}
+          onClick={() => {
+            setSelectedViz(dataviz);
+            scrollToChart();
+          }}
         >
           {renderChart()}
         </Card>
