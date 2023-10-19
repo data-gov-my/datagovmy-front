@@ -3,6 +3,7 @@ import {
   AgencyBadge,
   At,
   Button,
+  Card,
   Checkbox,
   Container,
   Daterange,
@@ -15,9 +16,11 @@ import {
   Section,
   Sidebar,
 } from "datagovmy-ui/components";
-import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { AKSARA_COLOR, BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
+import { toDate } from "datagovmy-ui/helpers";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
+import AgencyIcon from "datagovmy-ui/icons/agency";
 import { Agency, OptionType } from "datagovmy-ui/types";
 import {
   FunctionComponent,
@@ -47,7 +50,7 @@ interface CatalogueIndexProps {
 }
 
 const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { size } = useContext(WindowContext);
@@ -97,7 +100,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
         }
       />
 
-      <Container className="min-h-screen">
+      <Container className="min-h-screen max-w-full">
         <Sidebar
           categories={Object.entries(collection).map(([category, subcategory]) => [
             category,
@@ -111,36 +114,72 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             })
           }
         >
-          <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
+          <div className="flex-1">
+            <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
-          {_collection.length > 0 ? (
-            _collection.map(([title, datasets]) => {
-              return (
-                <Section
-                  title={title}
-                  key={title}
-                  ref={ref => (scrollRef.current[title] = ref)}
-                  className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
-                >
-                  <ul className="columns-1 space-y-3 sm:columns-3">
-                    {datasets.map((item: Catalogue, index: number) => (
-                      <li key={index}>
-                        <At
-                          href={`/data-catalogue/${item.id}`}
-                          className="text-primary dark:text-primary-dark no-underline [text-underline-position:from-font] hover:underline"
-                          prefetch={false}
+            {_collection.length > 0 ? (
+              _collection.map(([title, datasets]) => {
+                return (
+                  <Section
+                    title={title}
+                    key={title}
+                    ref={ref => (scrollRef.current[title] = ref)}
+                    className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
+                  >
+                    <div className="flex flex-row flex-wrap gap-x-6 gap-y-6 md:gap-y-3">
+                      {datasets.map((item: Catalogue, index: number) => (
+                        <Card
+                          key={index}
+                          className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark w-full rounded-xl transition-colors md:w-[calc(100%_/_2-24px)]"
                         >
-                          {item.catalog_name}
-                        </At>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              );
-            })
-          ) : (
-            <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
-          )}
+                          <At
+                            href={`/data-catalogue/${item.id}`}
+                            locale={i18n.language}
+                            prefetch={false}
+                            className="py-4.5 flex flex-col gap-1.5 px-5"
+                          >
+                            <p
+                              className="text-lg font-bold text-black dark:text-white"
+                              title={item.catalog_name}
+                            >
+                              {item.catalog_name}
+                            </p>
+                            <p className="truncate text-sm">
+                              This dataset provides monthly consumer price index data, with
+                              breakdown of the blabla vll Lorem ipsum dolor sit amet consectetur
+                              adipisicing elit.
+                            </p>
+                            <div className="flex flex-row items-center gap-1">
+                              <AgencyIcon
+                                agency="dosm"
+                                className="h-4 w-4"
+                                fillColor={AKSARA_COLOR.DIM}
+                              />
+                              <p className="text-dim text-sm font-medium">
+                                {t(`agencies:dosm.abbr`)}
+                              </p>
+                              <div className="bg-dim h-1 w-1 rounded-full px-0.5" />
+                              <p className="text-dim text-sm">
+                                {t("common:common.data_of", {
+                                  date: toDate(
+                                    "2023-10-19 11:59",
+                                    "dd MMM yyyy, HH:mm",
+                                    i18n.language
+                                  ),
+                                })}
+                              </p>
+                            </div>
+                          </At>
+                        </Card>
+                      ))}
+                    </div>
+                  </Section>
+                );
+              })
+            ) : (
+              <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
+            )}
+          </div>
         </Sidebar>
       </Container>
     </>
