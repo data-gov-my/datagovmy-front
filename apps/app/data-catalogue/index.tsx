@@ -31,6 +31,8 @@ import {
   useImperativeHandle,
   ForwardedRef,
   useContext,
+  useState,
+  useEffect,
 } from "react";
 
 /**
@@ -129,13 +131,20 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
                     <div className="flex flex-row flex-wrap gap-x-6 gap-y-6 md:gap-y-3">
                       {datasets.map((item: Catalogue, index: number) => {
                         const titleRef = useRef<HTMLParagraphElement | null>(null);
+                        const [isTruncated, setIsTruncated] = useState(false);
                         const isEllipsisActive = (e: HTMLElement | null) => {
                           if (e) {
                             return e.offsetWidth < e.scrollWidth;
                           }
+                          return false;
                         };
 
-                        const isTruncated = isEllipsisActive(titleRef.current);
+                        useEffect(() => {
+                          if (titleRef.current) {
+                            setIsTruncated(isEllipsisActive(titleRef.current));
+                          }
+                        }, [titleRef.current]);
+
                         return (
                           <Card
                             key={index}
