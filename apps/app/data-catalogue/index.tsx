@@ -16,11 +16,10 @@ import {
   Section,
   Sidebar,
 } from "datagovmy-ui/components";
-import { AKSARA_COLOR, BREAKPOINTS } from "datagovmy-ui/constants";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { toDate } from "datagovmy-ui/helpers";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
-import AgencyIcon from "datagovmy-ui/icons/agency";
 import { Agency, OptionType } from "datagovmy-ui/types";
 import {
   FunctionComponent,
@@ -130,31 +129,29 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
                       {datasets.map((item: Catalogue, index: number) => (
                         <Card
                           key={index}
-                          className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark w-full rounded-xl transition-colors md:w-[calc(100%_/_2-24px)]"
+                          className="border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group w-full rounded-xl transition-colors md:w-[calc(100%_/_2-24px)]"
                         >
                           <At
                             href={`/data-catalogue/${item.id}`}
                             locale={i18n.language}
                             prefetch={false}
-                            className="py-4.5 flex flex-col gap-1.5 px-5"
+                            className="py-4.5 flex flex-col gap-4 px-5"
                           >
-                            <p
-                              className="text-lg font-bold text-black dark:text-white"
-                              title={item.catalog_name}
-                            >
-                              {item.catalog_name}
-                            </p>
-                            <p className="truncate text-sm">
-                              This dataset provides monthly consumer price index data, with
-                              breakdown of the blabla vll Lorem ipsum dolor sit amet consectetur
-                              adipisicing elit.
-                            </p>
+                            <div className="flex flex-col gap-1.5">
+                              <p
+                                className="truncate text-lg font-bold text-black transition-all duration-100 group-hover:overflow-visible group-hover:whitespace-break-spaces dark:text-white"
+                                title={item.catalog_name}
+                              >
+                                {item.catalog_name}
+                              </p>
+                              <p className="truncate text-sm">
+                                This dataset provides monthly consumer price index data, with
+                                breakdown of the blabla vll Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit.
+                              </p>
+                            </div>
                             <div className="flex flex-row items-center gap-1">
-                              <AgencyIcon
-                                agency="dosm"
-                                className="h-4 w-4"
-                                fillColor={AKSARA_COLOR.DIM}
-                              />
+                              <BuildingLibraryIcon className="text-dim h-4 w-4" />
                               <p className="text-dim text-sm font-medium">
                                 {t(`agencies:dosm.abbr`)}
                               </p>
