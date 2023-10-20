@@ -235,6 +235,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             });
           }}
           mobileClassName="top-4"
+          initialSelected={i18n.language === "en-GB" ? "Table & Charts" : "Jadual & Carta"}
+          initialIndex={[0, null]}
           sidebarTitle={i18n.language === "en-GB" ? "On this page" : "Kandungan"}
         >
           <div className="mx-auto flex-1 p-2 py-6 pt-16 md:max-w-screen-md lg:max-w-screen-lg lg:p-8 lg:pb-6">

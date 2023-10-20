@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import Button from "../Button";
 import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -11,6 +11,8 @@ interface SidebarProps {
   onSelect: (index: string) => void;
   sidebarTitle?: string;
   mobileClassName?: string;
+  initialSelected?: string;
+  initialIndex?: [number, number | null];
 }
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
@@ -19,9 +21,14 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   onSelect,
   sidebarTitle,
   mobileClassName,
+  initialSelected,
+  initialIndex,
 }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
-  const [selected, setSelected] = useState<string>();
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
+  const [selected, setSelected] = useState<string>(initialSelected ?? categories[0][0]);
+  const [selectedIndex, setSelectedIndex] = useState<[number, number | null]>(
+    initialIndex ?? [0, null]
+  );
   const [show, setShow] = useState<boolean>(false);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
@@ -29,6 +36,19 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
       "text-sm border-l-2 border-black bg-washed text-black font-medium dark:bg-washed-dark dark:text-white dark:border-white",
     default: "text-sm text-dim",
   };
+
+  useEffect(() => {
+    setSelectedIndex(([index, subIndex]) => {
+      setSelected(
+        subIndex !== null
+          ? categories
+              .find(([category, subcategory], idx) => idx === index)?.[1]
+              .find((title, idx2) => idx2 === subIndex) ?? ""
+          : categories.find(([category, subcategory], idx) => idx === index)?.[0] ?? ""
+      );
+      return [index, subIndex];
+    });
+  }, [i18n.language]);
 
   return (
     <>
@@ -40,7 +60,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
               <h5 className={styles.base}>{sidebarTitle ?? t("category")}</h5>
             </li>
             {categories.length > 0 ? (
-              categories.map(([category, subcategory]) => (
+              categories.map(([category, subcategory], index) => (
                 <li key={`${category}: ${subcategory[0]}`} title={category}>
                   <Button
                     className={[
@@ -49,6 +69,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                     ].join(" ")}
                     onClick={() => {
                       setSelected(category);
+                      setSelectedIndex([index, null]);
                       onSelect(
                         subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
                       );
@@ -58,7 +79,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                   </Button>
                   <ul className="ml-5 space-y-1">
                     {Boolean(subcategory.length) &&
-                      subcategory.map(title => (
+                      subcategory.map((title, subIndex) => (
                         <li key={title} title={title}>
                           <Button
                             className={[
@@ -67,6 +88,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                             ].join(" ")}
                             onClick={() => {
                               setSelected(title);
+                              setSelectedIndex([index, subIndex]);
                               onSelect(`${category}: ${title}`);
                             }}
                           >
