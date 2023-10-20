@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "pages/dashboard/index.tsx": {
+      "maxDuration": 5
+    },
+    "pages/data-catalogue/**/*": {
+      "maxDuration": 5
+    }
+  }
+}

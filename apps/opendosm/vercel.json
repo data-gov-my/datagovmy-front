@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "pages/publications/**/*": {
+      "maxDuration": 5
+    },
+    "pages/data-catalogue/**/*": {
+      "maxDuration": 5
+    }
+  }
+}
