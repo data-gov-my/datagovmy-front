@@ -4,5 +4,19 @@
   },
   "github": {
     "silent": false
+  },
+  "functions": {
+    "apps/opendosm/pages/publications/**/*": {
+      "maxDuration": 5
+    },
+    "apps/opendosm/pages/data-catalogue/**/*": {
+      "maxDuration": 5
+    },
+    "apps/app/pages/dashboard/index.tsx": {
+      "maxDuration": 5
+    },
+    "apps/app/pages/data-catalogue/**/*": {
+      "maxDuration": 5
+    }
   }
 }
