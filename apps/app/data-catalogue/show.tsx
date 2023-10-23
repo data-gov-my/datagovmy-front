@@ -470,7 +470,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 }
                 className=""
               >
-                <div className="relative flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
+                <div className="flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
                   {[
                     {
                       catalog_name: "Pakaian & Kasut",
@@ -493,7 +493,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       id: "population_population_malaysia_0",
                     },
                   ].map((item: Catalogue, index) => (
-                    <CatalogueCard key={index} dataset={item} index={index} />
+                    <CatalogueCard
+                      key={index}
+                      dataset={item}
+                      index={index}
+                      alternateStyle={true}
+                      width="md:min-w-[calc(100%_/_3.25-0.5rem)]"
+                    />
                   ))}
                 </div>
               </Section>
