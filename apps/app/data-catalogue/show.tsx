@@ -31,6 +31,8 @@ import sum from "lodash/sum";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent, ReactNode, useContext, useRef, useState } from "react";
+import CatalogueCard from "./catalogue-card";
+import { Catalogue } from ".";
 
 /**
  * Catalogue Show
@@ -456,6 +458,45 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   }
                 />
               )}
+
+              <Section
+                title={t("header_4")}
+                ref={ref =>
+                  (scrollRef.current[
+                    i18n.language === "en-GB"
+                      ? "Metadata: Related Datasets"
+                      : "Metadata: Dataset Berkaitan"
+                  ] = ref)
+                }
+                className=""
+              >
+                <div className="relative flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
+                  {[
+                    {
+                      catalog_name: "Pakaian & Kasut",
+                      id: "cpi_cpi_headline_4",
+                    },
+                    {
+                      catalog_name: "Perumahan, Air, Elektrik, Gas & Bahan Api Lain",
+                      id: "cpi_cpi_headline_5",
+                    },
+                    {
+                      catalog_name: "Penggunaan Bas Rapid (KL)",
+                      id: "transportation_ridership_headline_1",
+                    },
+                    {
+                      catalog_name: "Penggunaan LRT Laluan Kelana Jaya",
+                      id: "transportation_ridership_headline_5",
+                    },
+                    {
+                      catalog_name: "Penduduk: Malaysia",
+                      id: "population_population_malaysia_0",
+                    },
+                  ].map((item: Catalogue, index) => (
+                    <CatalogueCard key={index} dataset={item} index={index} />
+                  ))}
+                </div>
+              </Section>
             </div>
 
             {/* Metadata */}
@@ -774,6 +815,7 @@ const sideBarCollection: Record<string, Record<string, any>> = {
       "Methodology": [],
       "Caveats": [],
       "Publications": [],
+      "Related Datasets": [],
       "Variables": [],
       "Next update": [],
       "License": [],
@@ -790,6 +832,7 @@ const sideBarCollection: Record<string, Record<string, any>> = {
       "Metodologi": [],
       "Kaveat": [],
       "Penerbitan": [],
+      "Dataset Berkaitan": [],
       "Pembolehubah": [],
       "Kemaskini seterusnya": [],
       "Lesen": [],

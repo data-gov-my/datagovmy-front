@@ -8,6 +8,7 @@ import { withi18n } from "datagovmy-ui/decorators";
 import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo } from "react";
+import { useRouter } from "next/router";
 
 const CatalogueShow: Page = ({
   meta,
@@ -20,6 +21,8 @@ const CatalogueShow: Page = ({
   translations,
   catalogueId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const router = useRouter();
+
   const availableOptions = useMemo<string[]>(() => {
     switch (dataset.type) {
       case "TABLE":
@@ -43,6 +46,7 @@ const CatalogueShow: Page = ({
       />
       <CatalogueProvider dataset={dataset} urls={urls}>
         <DataCatalogueShow
+          key={router.asPath}
           options={availableOptions}
           params={params}
           config={config}
