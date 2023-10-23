@@ -280,7 +280,7 @@ const KawasankuDashboard: FunctionComponent<KawasankuDashboardProps> = ({
         {/* What does the population of {{ area }} look like? */}
         <Section
           title={t("section_1.title", {
-            area: data.area?.label ?? params.state,
+            area: data.area ?? params.state,
             size: numFormat(population_callout.total, "standard"),
           })}
           date={"MyCensus 2020"}

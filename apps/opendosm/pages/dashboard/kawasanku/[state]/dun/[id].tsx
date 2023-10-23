@@ -23,7 +23,7 @@ const KawasankuDun: Page = ({
   choropleth,
   population_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["dashboard-kawasanku"]);
 
   return (
     <AnalyticsProvider meta={meta}>
