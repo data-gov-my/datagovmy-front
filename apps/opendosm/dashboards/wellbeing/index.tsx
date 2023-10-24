@@ -1,7 +1,16 @@
 import { FunctionComponent } from "react";
-import { AgencyBadge, Container, Dropdown, Hero, Section, Slider } from "datagovmy-ui/components";
+import {
+  AgencyBadge,
+  Container,
+  Dropdown,
+  Hero,
+  Markdown,
+  Section,
+  Slider,
+  Tooltip,
+} from "datagovmy-ui/components";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { PeopleIcon } from "@icons/division";
+import { SocietyIcon } from "@icons/division";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
@@ -121,9 +130,21 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
       return (
         <Timeseries
           key={title}
-          title={title}
+          title={
+            <div className="flex items-center gap-2">
+              <h5>{title}</h5>
+              <Tooltip
+                tip={
+                  <Markdown className="markdown" data-testid="catalogue-methodology">
+                    {t(`tooltip.${name}`)}
+                  </Markdown>
+                }
+              />
+            </div>
+          }
           className="h-[350px] w-full"
           interval="year"
+          beginZero={false}
           unitY={options === "index" ? "" : "%"}
           enableAnimation={!play}
           axisY={{
@@ -197,11 +218,23 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
     };
     return (
       <Timeseries
-        title={title}
+        title={
+          <div className="flex items-center gap-2">
+            <h5>{title}</h5>
+            <Tooltip
+              tip={
+                <Markdown className="markdown" data-testid="catalogue-methodology">
+                  {t(`tooltip.${chart}`)}
+                </Markdown>
+              }
+            />
+          </div>
+        }
         className="h-[350px] w-full"
         interval="year"
         unitY={options === "index" ? "" : "%"}
         enableAnimation={!play}
+        beginZero={false}
         axisY={{
           y2: {
             display: false,
@@ -243,7 +276,7 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
         description={[t("description")]}
         last_updated={last_updated}
         agencyBadge={
-          <AgencyBadge name={t("division:bppd.full")} icon={<PeopleIcon />} isDivision />
+          <AgencyBadge name={t("division:bptms.full")} icon={<SocietyIcon />} isDivision />
         }
       />
       <Container className="min-h-screen">

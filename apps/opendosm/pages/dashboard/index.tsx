@@ -50,7 +50,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         {
           id: "dashboard-wellbeing",
           name: "wellbeing",
-          division: "bppd",
+          division: "bptms",
           route: routes.WELLBEING,
         },
         {
