@@ -22,6 +22,7 @@ export const routes = {
   SERVICES_PRODUCER_PRICES: "/dashboard/services-producer-prices",
   SERVICES_STATISTICS: "/dashboard/services-statistics",
   WHOLESALE_RETAIL: "/dashboard/wholesale-retail-trade",
+  WELLBEING: "/dashboard/wellbeing",
   PUBLICATIONS: "/publications",
 };
 
