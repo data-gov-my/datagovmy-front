@@ -136,7 +136,6 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
             <div className="flex items-center gap-2">
               <Tooltip
                 anchor="bottom"
-                className="bottom-[unset] mt-0.5"
                 disableArrowTip={true}
                 tip={<Markdown className="tooltip-list">{t(`tooltip.${name}`)}</Markdown>}
               >
@@ -231,7 +230,6 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
           <div className="flex items-center gap-2">
             <Tooltip
               anchor="bottom"
-              className="bottom-[unset] mt-0.5"
               disableArrowTip={true}
               tip={
                 <Markdown className="markdown" data-testid="catalogue-methodology">
