@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
 import {
   AgencyBadge,
   Container,
@@ -13,9 +13,10 @@ import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { SocietyIcon } from "@icons/division";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
-import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import { AKSARA_COLOR, BREAKPOINTS } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
@@ -73,6 +74,7 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-wellbeing"]);
+  const { size } = useContext(WindowContext);
 
   const OPTIONS: Array<OptionType> = TIMESERIESTYPE.map(type => ({
     label: t(`keys.${type}`),
@@ -134,12 +136,15 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
             <div className="flex items-center gap-2">
               <Tooltip
                 anchor="bottom"
-                className="-bottom-[2px]"
+                className="bottom-[unset] mt-0.5"
                 disableArrowTip={true}
                 tip={<Markdown className="tooltip-list">{t(`tooltip.${name}`)}</Markdown>}
               >
-                {() => (
-                  <h5 className="underline decoration-dashed decoration-from-font underline-offset-4 [text-underline-position:from-font]">
+                {open => (
+                  <h5
+                    onClick={size.width < BREAKPOINTS.SM ? open : null}
+                    className="underline decoration-dashed decoration-from-font underline-offset-4 [text-underline-position:from-font]"
+                  >
                     {title}
                   </h5>
                 )}
@@ -234,8 +239,11 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
                 </Markdown>
               }
             >
-              {() => (
-                <h5 className="underline decoration-dashed decoration-from-font underline-offset-4 [text-underline-position:from-font]">
+              {open => (
+                <h5
+                  onClick={size.width < BREAKPOINTS.SM ? open : null}
+                  className="underline decoration-dashed decoration-from-font underline-offset-4 [text-underline-position:from-font]"
+                >
                   {title}
                 </h5>
               )}
