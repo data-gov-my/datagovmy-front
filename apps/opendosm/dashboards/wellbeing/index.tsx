@@ -132,14 +132,10 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
           key={title}
           title={
             <div className="flex items-center gap-2">
-              <h5>{title}</h5>
-              <Tooltip
-                tip={
-                  <Markdown className="markdown" data-testid="catalogue-methodology">
-                    {t(`tooltip.${name}`)}
-                  </Markdown>
-                }
-              />
+              <h5 className="underline decoration-dashed [text-underline-position:from-font]">
+                {title}
+              </h5>
+              <Tooltip tip={<Markdown className="tooltip-list">{t(`tooltip.${name}`)}</Markdown>} />
             </div>
           }
           className="h-[350px] w-full"
@@ -220,7 +216,9 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
       <Timeseries
         title={
           <div className="flex items-center gap-2">
-            <h5>{title}</h5>
+            <h5 className="underline decoration-dashed [text-underline-position:from-font]">
+              {title}
+            </h5>
             <Tooltip
               tip={
                 <Markdown className="markdown" data-testid="catalogue-methodology">
