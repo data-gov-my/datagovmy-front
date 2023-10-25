@@ -1,17 +1,58 @@
 import { Transition, Dialog } from "@headlessui/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { clx } from "../../lib/helpers";
-import { Fragment, FunctionComponent, ReactNode, useState } from "react";
+import {
+  Fragment,
+  FunctionComponent,
+  ReactNode,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { body } from "../../configs/font";
 
 type TooltipProps = {
   children?: (open: () => void) => ReactNode;
   className?: string;
   tip: ReactNode;
+  disableArrowTip?: boolean;
+  anchor?: AnchorType;
 };
 
-const Tooltip: FunctionComponent<TooltipProps> = ({ children, className, tip }) => {
+type AnchorType = "top" | "right" | "bottom";
+
+const Tooltip: FunctionComponent<TooltipProps> = ({
+  children,
+  className,
+  tip,
+  disableArrowTip,
+  anchor = "top",
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef<HTMLSpanElement | null>(null);
+  const [height, setHeight] = useState<number>();
+
+  useLayoutEffect(() => {
+    setHeight(contentRef.current ? contentRef.current.clientHeight : 0);
+  }, [contentRef.current]);
+
+  const getTooltipPosition = (anchor: AnchorType) => {
+    switch (anchor) {
+      case "top":
+        return "-translate-x-1/2 transform bottom-7 left-1/2 items-center";
+
+      case "bottom":
+        return `-bottom-[${height}px] left-0`;
+
+      default:
+        return "-translate-x-1/2 transform bottom-7 left-1/2 items-center";
+    }
+  };
+
+  const position = useMemo(() => {
+    return getTooltipPosition(anchor);
+  }, [height]);
 
   return (
     <div className="group relative">
@@ -32,8 +73,14 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, className, tip }) 
           )}
         </>
       )}
-      <div className="invisible absolute bottom-7 left-1/2 z-[100] hidden -translate-x-1/2 transform flex-col items-center group-hover:visible group-hover:flex lg:flex">
+      <div
+        className={clx(
+          "invisible absolute z-[100] hidden flex-col group-hover:visible group-hover:flex lg:flex",
+          position
+        )}
+      >
         <span
+          ref={contentRef}
           className={clx(
             "shadow-floating absolute bottom-1 w-max max-w-[200px] rounded-lg bg-black px-3 py-2 text-sm font-normal text-white dark:bg-white dark:text-black lg:max-h-[250px] lg:overflow-scroll",
             className
@@ -41,7 +88,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({ children, className, tip }) 
         >
           {tip}
         </span>
-        <div className=" h-2 w-2 rotate-45 bg-black dark:bg-white"></div>
+        {disableArrowTip ? null : <div className="h-2 w-2 rotate-45 bg-black dark:bg-white"></div>}
       </div>
 
       <Transition.Root show={isOpen} as={Fragment}>

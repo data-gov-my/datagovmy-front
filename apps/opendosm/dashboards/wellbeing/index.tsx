@@ -132,10 +132,18 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
           key={title}
           title={
             <div className="flex items-center gap-2">
-              <h5 className="underline decoration-dashed [text-underline-position:from-font]">
-                {title}
-              </h5>
-              <Tooltip tip={<Markdown className="tooltip-list">{t(`tooltip.${name}`)}</Markdown>} />
+              <Tooltip
+                anchor="bottom"
+                className="-bottom-[2px]"
+                disableArrowTip={true}
+                tip={<Markdown className="tooltip-list">{t(`tooltip.${name}`)}</Markdown>}
+              >
+                {() => (
+                  <h5 className="underline decoration-dashed decoration-from-font underline-offset-4 [text-underline-position:from-font]">
+                    {title}
+                  </h5>
+                )}
+              </Tooltip>
             </div>
           }
           className="h-[350px] w-full"
@@ -216,16 +224,22 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
       <Timeseries
         title={
           <div className="flex items-center gap-2">
-            <h5 className="underline decoration-dashed [text-underline-position:from-font]">
-              {title}
-            </h5>
             <Tooltip
+              anchor="bottom"
+              className="bottom-[unset] mt-0.5"
+              disableArrowTip={true}
               tip={
                 <Markdown className="markdown" data-testid="catalogue-methodology">
                   {t(`tooltip.${chart}`)}
                 </Markdown>
               }
-            />
+            >
+              {() => (
+                <h5 className="underline decoration-dashed decoration-from-font underline-offset-4 [text-underline-position:from-font]">
+                  {title}
+                </h5>
+              )}
+            </Tooltip>
           </div>
         }
         className="h-[350px] w-full"
