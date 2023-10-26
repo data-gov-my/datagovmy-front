@@ -3,6 +3,7 @@
 Welcome to the official repository for Datagovmy, a comprehensive monorepo project meticulously crafted to enhance the development, management, and deployment of a suite of projects that power Malaysian government data initiatives.
 
 ## About Datagovmy
+
 At Datagovmy, our mission is to transform data into actionable insights, and this monorepo is the central hub for displaying the our data. Our projects span a wide range of applications and packages, each playing a vital role in advancing data accessibility and utilization. Explore our projects below:
 
 #### Applications
@@ -47,6 +48,7 @@ Installation: Ensure you have TurboRepo installed locally. You can install it gl
 ```bash
 npm install -g @turbo/turbo
 ```
+
 Configuration: This project has been configured with turborepo to manage workspaces, project dependencies. Find the configuration at root path in [turbo.json](/turbo.json)
 
 Development Workflow: With TurboRepo in place, you can easily run commands like `turbo dev`, `turbo build`, and `turbo test` to manage your projects within the monorepo efficiently.
@@ -104,6 +106,18 @@ yarn prepare
 ## Contributing
 
 Thank you for your willingness to contribute to this free and open source project by the Malaysian public sector! When contributing, consider first discussing your desired change with the core team via GitHub issues or discussions!
+
+### Issues
+
+Issues are very valuable to this project and we appreciate the time you take with the repository.
+
+If you have anything specific and project-related to this repository, feel free to create an issue ticket.
+
+- Ideas are a valuable source of contributions others can make
+- Problems show where this project is lacking
+- With a question you show where contributors can improve the user experience
+
+Thank you for creating them.
 
 ## License
 
