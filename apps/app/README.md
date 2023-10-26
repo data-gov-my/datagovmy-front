@@ -24,20 +24,21 @@ cp .env.example .env
 
 The following are the environment variables (.env) used for data.gov.my. Please take note, there are only 2 variables required to get the app running, both of which are related to the BE.
 
-| Variables                       | Required | Default                             | Description                                     |
-| ------------------------------- | -------- | ----------------------------------- | ----------------------------------------------- |
-| APP_URL                         | ⬜️      | http://localhost:3000 (development) | App domain. Optional                            |
-| APP_ENV                         | ✅       |                                     | App current environment                         |
-| REVALIDATE_TOKEN                | ⬜️      |                                     | BE token to revalidate staitc site. Optional    |
-| EDGE_CONFIG                     | ⬜️      |                                     | Add to use rolling token. Optional              |
-| NEXT_PUBLIC_APP_URL             | ⬜️      | $APP_URL                            | App domain, made public. Optional               |
-| NEXT_PUBLIC_APP_ENV             | ⬜️      | $APP_ENV                            | App environment, made public. Optional          |
-| NEXT_PUBLIC_AUTHORIZATION_TOKEN | ✅       | _Create own_                        | Authorization token for AKSARA BE communication |
-| NEXT_PUBLIC_API_URL             | ✅       | http://localhost:8000 (development) | AKSARA BE base URL                              |
-| NEXT_PUBLIC_GA_TAG              | ⬜️      | _Create own_                        | Google Analytics Tag. Optional                  |
-| NEXT_PUBLIC_TILESERVER_URL      | ⬜️      | _Create own_                        | OpenStreetMap API key. Optional                 |
-| MIXPANEL_TOKEN                  | ⬜️      | _Create own_                        | Mixpanel token. Optional                        |
-| NEXT_PUBLIC_MIXPANEL_TOKEN      | ⬜️      | $MIXPANEL_TOKEN                     | Mixpanel token, made public. Optional           |
+| Variables                       | Required | Default                              | Description                                     |
+| ------------------------------- | -------- | ------------------------------------ | ----------------------------------------------- |
+| APP_URL                         | ⬜️      | http://localhost:3000 (development)  | App domain. Optional                            |
+| APP_ENV                         | ✅       |                                      | App current environment                         |
+| REVALIDATE_TOKEN                | ⬜️      |                                      | BE token to revalidate staitc site. Optional    |
+| EDGE_CONFIG                     | ⬜️      |                                      | Add to use rolling token. Optional              |
+| NEXT_PUBLIC_APP_URL             | ⬜️      | $APP_URL                             | App domain, made public. Optional               |
+| NEXT_PUBLIC_APP_ENV             | ⬜️      | $APP_ENV                             | App environment, made public. Optional          |
+| NEXT_PUBLIC_I18N_URL            | ✅       | https://dlz3uh7rpztx1.cloudfront.net | i18n url. Used to serve translation json        |
+| NEXT_PUBLIC_AUTHORIZATION_TOKEN | ✅       | _Create own_                         | Authorization token for AKSARA BE communication |
+| NEXT_PUBLIC_API_URL             | ✅       | http://localhost:8000 (development)  | AKSARA BE base URL                              |
+| NEXT_PUBLIC_GA_TAG              | ⬜️      | _Create own_                         | Google Analytics Tag. Optional                  |
+| NEXT_PUBLIC_TILESERVER_URL      | ⬜️      | _Create own_                         | OpenStreetMap API key. Optional                 |
+| MIXPANEL_TOKEN                  | ⬜️      | _Create own_                         | Mixpanel token. Optional                        |
+| NEXT_PUBLIC_MIXPANEL_TOKEN      | ⬜️      | $MIXPANEL_TOKEN                      | Mixpanel token, made public. Optional           |
 
 ## Commands to Know
 
