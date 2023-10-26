@@ -6,7 +6,7 @@
 
 You are more than welcome to contribute to the documentation, if you find any typos, outdated content or better suggestion for copywriting! For major changes, please raise a GitHub issue or a discussion thread first, to discuss the desired change with the core team.
 
-For more information, refer to our [README.md](/CONTRIBUTING.md) for more information about contribution.
+For more information, refer to our [README.md](../../README.md#contributing) for more information about contribution.
 
 ## License
 
