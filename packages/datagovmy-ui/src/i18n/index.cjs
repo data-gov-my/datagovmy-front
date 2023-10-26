@@ -14,6 +14,11 @@ const defineConfig = (namespace, autoloadNs) => {
         crossDomain: true,
         allowMultiLoading: true,
       },
+      // USE THIS for local translation file
+      // localePath:
+      //   typeof window === "undefined"
+      //     ? require("path").resolve("./public/translations")
+      //     : "./public/translations",
     },
     debug: false,
     ns: namespace,
@@ -22,6 +27,7 @@ const defineConfig = (namespace, autoloadNs) => {
     preload: ["en-GB", "ms-MY"],
     serializeConfig: false,
     reloadOnPrerender: true,
+    // COMMENT this line to use local translation
     use: [I18NextHttpBackend],
   };
 };
