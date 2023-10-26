@@ -82,7 +82,7 @@ const Tooltip: FunctionComponent<TooltipProps> = ({
         <span
           ref={contentRef}
           className={clx(
-            "shadow-floating absolute  w-max max-w-[200px] rounded-lg bg-black px-3 py-2 text-sm font-normal text-white dark:bg-white dark:text-black lg:max-h-[250px] lg:overflow-scroll",
+            "shadow-floating hide-scrollbar lg:hide-scrollbar::-webkit-scrollbar  absolute w-max max-w-[200px] rounded-lg bg-black px-3 py-2 text-sm font-normal text-white dark:bg-white dark:text-black lg:max-h-[250px] lg:overflow-scroll",
             anchor === "bottom" ? "bottom-[unset] mt-0.5" : "bottom-1",
             className
           )}
