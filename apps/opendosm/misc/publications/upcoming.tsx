@@ -131,7 +131,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     setFilter("end", toDate(new Date(data.year, data.month + 1, remaining, 8, 0, 0)));
 
     // for desktop only, prev month
-    for (let i = firstDay; i > 0; i--) {
+    for (let i = firstDay - 1; i >= 0; i--) {
       const date = toDate(new Date(data.year, data.month - 1, daysInLastMonth - i, 8, 0, 0));
       desktop.push({
         date: date, // to match for publications
