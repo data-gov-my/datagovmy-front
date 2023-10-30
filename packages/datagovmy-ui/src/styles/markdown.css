@@ -34,3 +34,10 @@
 .tooltip-list ul {
   @apply list-inside list-disc space-y-0.5;
 }
+
+.banner-markdown a {
+  @apply underline;
+}
+.banner-markdown p {
+  @apply text-sm;
+}
