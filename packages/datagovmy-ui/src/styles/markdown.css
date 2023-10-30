@@ -30,3 +30,7 @@
 .markdown a {
   @apply text-primary dark:text-primary-dark [text-underline-position:from-font] hover:underline;
 }
+
+.tooltip-list ul {
+  @apply list-inside list-disc space-y-0.5;
+}

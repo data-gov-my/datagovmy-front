@@ -29,6 +29,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   const [selectedIndex, setSelectedIndex] = useState<[number, number | null]>(
     initialIndex ?? [0, null]
   );
+  const [mainFlag, setMainFlag] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
@@ -65,14 +66,17 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                   <Button
                     className={[
                       styles.base,
-                      selected === category ? styles.active : styles.default,
+                      mainFlag && selected === `${category}: ${subcategory[0]}`
+                        ? styles.active
+                        : styles.default,
                     ].join(" ")}
                     onClick={() => {
-                      setSelected(category);
+                      setSelected(`${category}: ${subcategory[0]}`);
                       setSelectedIndex([index, null]);
                       onSelect(
                         subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
                       );
+                      setMainFlag(true);
                     }}
                   >
                     {category}
@@ -84,11 +88,14 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                           <Button
                             className={[
                               styles.base,
-                              selected === title ? styles.active : styles.default,
+                              !mainFlag && selected === `${category}: ${title}`
+                                ? styles.active
+                                : styles.default,
                             ].join(" ")}
                             onClick={() => {
-                              setSelected(title);
+                              setSelected(`${category}: ${title}`);
                               setSelectedIndex([index, subIndex]);
+                              setMainFlag(false);
                               onSelect(`${category}: ${title}`);
                             }}
                           >
