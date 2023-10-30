@@ -87,7 +87,12 @@ interface CatalogueShowProps {
   };
   config: DCConfig;
   dataset: DatasetType;
-  explanation: { caveat: string; methodology: string; publication?: string };
+  explanation: {
+    caveat: string;
+    methodology: string;
+    publication?: string;
+    related_datasets: Array<{ id: string; title: string; description: string }>;
+  };
   metadata: {
     data_as_of: string;
     url: {
@@ -272,7 +277,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           }}
           mobileClassName="top-4"
           initialSelected={i18n.language === "en-GB" ? "Table & Charts" : "Jadual & Carta"}
-          initialIndex={[0, null]}
           sidebarTitle={i18n.language === "en-GB" ? "On this page" : "Kandungan"}
         >
           <div className="mx-auto flex-1 p-2 py-6 pt-16 md:max-w-screen-md lg:max-w-screen-lg lg:p-8 lg:pb-6">
@@ -584,34 +588,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 className=""
               >
                 <div className="flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
-                  {[
-                    {
-                      catalog_name: "Pakaian & Kasut",
-                      id: "cpi_cpi_headline_4",
-                    },
-                    {
-                      catalog_name: "Perumahan, Air, Elektrik, Gas & Bahan Api Lain",
-                      id: "cpi_cpi_headline_5",
-                    },
-                    {
-                      catalog_name: "Penggunaan Bas Rapid (KL)",
-                      id: "transportation_ridership_headline_1",
-                    },
-                    {
-                      catalog_name: "Penggunaan LRT Laluan Kelana Jaya",
-                      id: "transportation_ridership_headline_5",
-                    },
-                    {
-                      catalog_name: "Penduduk: Malaysia",
-                      id: "population_population_malaysia_0",
-                    },
-                  ].map((item: Catalogue, index) => (
+                  {explanation.related_datasets.map((item, index) => (
                     <CatalogueCard
                       key={index}
-                      dataset={item}
+                      dataset={{
+                        id: item.id,
+                        catalog_name: item.title,
+                        description: item.description,
+                      }}
                       index={index}
                       alternateStyle={true}
-                      width="md:min-w-[calc(100%_/_3.25-0.5rem)]"
+                      width="md:min-w-[calc(100%_/_3.25-0.5rem)] md:w-[calc(100%_/_3.25-0.5rem)]"
                     />
                   ))}
                 </div>

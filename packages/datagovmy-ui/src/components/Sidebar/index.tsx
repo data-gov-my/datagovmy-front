@@ -12,7 +12,6 @@ interface SidebarProps {
   sidebarTitle?: string;
   mobileClassName?: string;
   initialSelected?: string;
-  initialIndex?: [number, number | null];
 }
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
@@ -22,14 +21,9 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   sidebarTitle,
   mobileClassName,
   initialSelected,
-  initialIndex,
 }) => {
-  const { t, i18n } = useTranslation(["catalogue", "common"]);
+  const { t } = useTranslation(["catalogue", "common"]);
   const [selected, setSelected] = useState<string>(initialSelected ?? categories[0][0]);
-  const [selectedIndex, setSelectedIndex] = useState<[number, number | null]>(
-    initialIndex ?? [0, null]
-  );
-  const [mainFlag, setMainFlag] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
@@ -38,24 +32,11 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
     default: "text-sm text-dim",
   };
 
-  useEffect(() => {
-    setSelectedIndex(([index, subIndex]) => {
-      setSelected(
-        subIndex !== null
-          ? categories
-              .find(([category, subcategory], idx) => idx === index)?.[1]
-              .find((title, idx2) => idx2 === subIndex) ?? ""
-          : categories.find(([category, subcategory], idx) => idx === index)?.[0] ?? ""
-      );
-      return [index, subIndex];
-    });
-  }, [i18n.language]);
-
   return (
     <>
       <div className="flex w-full flex-row">
         {/* Desktop */}
-        <div className="dark:border-r-washed-dark hidden border-r pb-6 lg:block lg:w-1/4 xl:w-1/5">
+        <div className="dark:border-r-washed-dark hidden border-r pb-6 lg:block lg:w-1/5 xl:w-1/5">
           <ul className="sticky top-14 flex h-[calc(100vh-56px)] flex-col gap-2 overflow-auto pt-3">
             <li>
               <h5 className={styles.base}>{sidebarTitle ?? t("category")}</h5>
@@ -66,17 +47,13 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                   <Button
                     className={[
                       styles.base,
-                      mainFlag && selected === `${category}: ${subcategory[0]}`
-                        ? styles.active
-                        : styles.default,
+                      selected === `${category}` ? styles.active : styles.default,
                     ].join(" ")}
                     onClick={() => {
-                      setSelected(`${category}: ${subcategory[0]}`);
-                      setSelectedIndex([index, null]);
+                      setSelected(`${category}`);
                       onSelect(
                         subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
                       );
-                      setMainFlag(true);
                     }}
                   >
                     {category}
@@ -88,14 +65,10 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                           <Button
                             className={[
                               styles.base,
-                              !mainFlag && selected === `${category}: ${title}`
-                                ? styles.active
-                                : styles.default,
+                              selected === `${category}: ${title}` ? styles.active : styles.default,
                             ].join(" ")}
                             onClick={() => {
                               setSelected(`${category}: ${title}`);
-                              setSelectedIndex([index, subIndex]);
-                              setMainFlag(false);
                               onSelect(`${category}: ${title}`);
                             }}
                           >
@@ -115,7 +88,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
         </div>
 
         {/* Mobile */}
-        <div className="relative w-full">
+        <div className="relative w-full lg:w-4/5 xl:w-4/5">
           <>
             <div
               className={clx(

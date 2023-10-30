@@ -171,7 +171,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             table: data.chart_details.table_data ?? null,
             meta: data.chart_details.intro,
           },
-          explanation: data.explanation,
+          explanation: { ...data.explanation, related_datasets: data.related_datasets },
           metadata: {
             url: {
               csv: data.metadata.url.csv ?? null,

@@ -1,9 +1,7 @@
 import { BuildingLibraryIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import {
   AgencyBadge,
-  At,
   Button,
-  Card,
   Checkbox,
   Container,
   Daterange,
@@ -15,11 +13,9 @@ import {
   Search,
   Section,
   Sidebar,
-  Tooltip,
 } from "datagovmy-ui/components";
 import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
-import { toDate } from "datagovmy-ui/helpers";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { Agency, OptionType } from "datagovmy-ui/types";
 import {
@@ -31,8 +27,6 @@ import {
   useImperativeHandle,
   ForwardedRef,
   useContext,
-  useState,
-  useEffect,
 } from "react";
 import CatalogueCard from "./catalogue-card";
 
@@ -44,6 +38,9 @@ import CatalogueCard from "./catalogue-card";
 export type Catalogue = {
   id: string;
   catalog_name: string;
+  description?: string;
+  data_as_of?: string;
+  data_source?: Array<string>;
 };
 
 interface CatalogueIndexProps {
@@ -103,7 +100,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
         }
       />
 
-      <Container className="min-h-screen max-w-full">
+      <Container className="min-h-screen max-w-full lg:px-0 lg:pl-6">
         <Sidebar
           categories={Object.entries(collection).map(([category, subcategory]) => [
             category,
@@ -117,7 +114,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             })
           }
         >
-          <div className="flex-1">
+          <div className="flex flex-1 flex-col">
             <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
             {_collection.length > 0 ? (
