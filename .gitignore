@@ -62,3 +62,6 @@ analyze
 
 # app
 dist/
+apps/app/public/translations
+apps/kkmnow/public/translations
+apps/opendosm/public/translations
