@@ -154,7 +154,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   }));
   const [show, setShow] = useState<OptionType>(availableOptions[0]);
   const embedRef = useRef<EmbedInterface>(null);
-  const chartRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
   const { downloads } = useContext(CatalogueContext);
