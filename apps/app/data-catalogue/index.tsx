@@ -3,6 +3,7 @@ import {
   AgencyBadge,
   At,
   Button,
+  Card,
   Checkbox,
   Container,
   Daterange,
@@ -14,9 +15,11 @@ import {
   Search,
   Section,
   Sidebar,
+  Tooltip,
 } from "datagovmy-ui/components";
 import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
+import { toDate } from "datagovmy-ui/helpers";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { Agency, OptionType } from "datagovmy-ui/types";
 import {
@@ -28,7 +31,10 @@ import {
   useImperativeHandle,
   ForwardedRef,
   useContext,
+  useState,
+  useEffect,
 } from "react";
+import CatalogueCard from "./catalogue-card";
 
 /**
  * Catalogue Index
@@ -47,7 +53,7 @@ interface CatalogueIndexProps {
 }
 
 const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { size } = useContext(WindowContext);
@@ -97,7 +103,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
         }
       />
 
-      <Container className="min-h-screen">
+      <Container className="min-h-screen max-w-full">
         <Sidebar
           categories={Object.entries(collection).map(([category, subcategory]) => [
             category,
@@ -111,36 +117,30 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             })
           }
         >
-          <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
+          <div className="flex-1">
+            <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
-          {_collection.length > 0 ? (
-            _collection.map(([title, datasets]) => {
-              return (
-                <Section
-                  title={title}
-                  key={title}
-                  ref={ref => (scrollRef.current[title] = ref)}
-                  className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
-                >
-                  <ul className="columns-1 space-y-3 sm:columns-3">
-                    {datasets.map((item: Catalogue, index: number) => (
-                      <li key={index}>
-                        <At
-                          href={`/data-catalogue/${item.id}`}
-                          className="text-primary dark:text-primary-dark no-underline [text-underline-position:from-font] hover:underline"
-                          prefetch={false}
-                        >
-                          {item.catalog_name}
-                        </At>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              );
-            })
-          ) : (
-            <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
-          )}
+            {_collection.length > 0 ? (
+              _collection.map(([title, datasets]) => {
+                return (
+                  <Section
+                    title={title}
+                    key={title}
+                    ref={ref => (scrollRef.current[title] = ref)}
+                    className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
+                  >
+                    <div className="flex flex-row flex-wrap gap-x-6 gap-y-6 md:gap-y-3">
+                      {datasets.map((item: Catalogue, index: number) => (
+                        <CatalogueCard dataset={item} index={index} />
+                      ))}
+                    </div>
+                  </Section>
+                );
+              })
+            ) : (
+              <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
+            )}
+          </div>
         </Sidebar>
       </Container>
     </>

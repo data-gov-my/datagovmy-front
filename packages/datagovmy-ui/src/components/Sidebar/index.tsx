@@ -1,18 +1,34 @@
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FunctionComponent, ReactNode, useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import Button from "../Button";
 import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "../../hooks/useTranslation";
+import { clx } from "../../lib/helpers";
 
 interface SidebarProps {
   children: ReactNode;
   categories: Array<[category: string, subcategory: string[]]>;
   onSelect: (index: string) => void;
+  sidebarTitle?: string;
+  mobileClassName?: string;
+  initialSelected?: string;
+  initialIndex?: [number, number | null];
 }
 
-const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSelect }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
-  const [selected, setSelected] = useState<string>();
+const Sidebar: FunctionComponent<SidebarProps> = ({
+  children,
+  categories,
+  onSelect,
+  sidebarTitle,
+  mobileClassName,
+  initialSelected,
+  initialIndex,
+}) => {
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
+  const [selected, setSelected] = useState<string>(initialSelected ?? categories[0][0]);
+  const [selectedIndex, setSelectedIndex] = useState<[number, number | null]>(
+    initialIndex ?? [0, null]
+  );
   const [mainFlag, setMainFlag] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const styles = {
@@ -22,6 +38,19 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
     default: "text-sm text-dim",
   };
 
+  useEffect(() => {
+    setSelectedIndex(([index, subIndex]) => {
+      setSelected(
+        subIndex !== null
+          ? categories
+              .find(([category, subcategory], idx) => idx === index)?.[1]
+              .find((title, idx2) => idx2 === subIndex) ?? ""
+          : categories.find(([category, subcategory], idx) => idx === index)?.[0] ?? ""
+      );
+      return [index, subIndex];
+    });
+  }, [i18n.language]);
+
   return (
     <>
       <div className="flex w-full flex-row">
@@ -29,10 +58,10 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
         <div className="dark:border-r-washed-dark hidden border-r pb-6 lg:block lg:w-1/4 xl:w-1/5">
           <ul className="sticky top-14 flex h-[calc(100vh-56px)] flex-col gap-2 overflow-auto pt-3">
             <li>
-              <h5 className={styles.base}>{t("category")}</h5>
+              <h5 className={styles.base}>{sidebarTitle ?? t("category")}</h5>
             </li>
             {categories.length > 0 ? (
-              categories.map(([category, subcategory]) => (
+              categories.map(([category, subcategory], index) => (
                 <li key={`${category}: ${subcategory[0]}`} title={category}>
                   <Button
                     className={[
@@ -43,15 +72,18 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                     ].join(" ")}
                     onClick={() => {
                       setSelected(`${category}: ${subcategory[0]}`);
+                      setSelectedIndex([index, null]);
+                      onSelect(
+                        subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
+                      );
                       setMainFlag(true);
-                      onSelect(`${category}: ${subcategory[0]}`);
                     }}
                   >
                     {category}
                   </Button>
                   <ul className="ml-5 space-y-1">
-                    {subcategory.length &&
-                      subcategory.map(title => (
+                    {Boolean(subcategory.length) &&
+                      subcategory.map((title, subIndex) => (
                         <li key={title} title={title}>
                           <Button
                             className={[
@@ -62,6 +94,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                             ].join(" ")}
                             onClick={() => {
                               setSelected(`${category}: ${title}`);
+                              setSelectedIndex([index, subIndex]);
                               setMainFlag(false);
                               onSelect(`${category}: ${title}`);
                             }}
@@ -84,13 +117,18 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
         {/* Mobile */}
         <div className="relative w-full">
           <>
-            <div className="absolute top-[72px] block lg:hidden">
+            <div
+              className={clx(
+                "absolute block lg:hidden",
+                mobileClassName ? mobileClassName : "top-[72px]"
+              )}
+            >
               <Button
                 className="btn-default shadow-button"
                 icon={<Bars3BottomLeftIcon className="h-4 w-4" />}
                 onClick={() => setShow(true)}
               >
-                {t("category")}
+                {sidebarTitle ?? t("category")}
               </Button>
             </div>
             <Transition
@@ -106,7 +144,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
             >
               <ul className="flex flex-col gap-1 overflow-auto pt-2">
                 <li className="flex items-baseline justify-between">
-                  <h5 className={styles.base}>{t("category")}</h5>
+                  <h5 className={styles.base}>{sidebarTitle ?? t("category")}</h5>
 
                   <Button
                     className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-2 top-2 flex h-8 w-8 items-center rounded-full"
@@ -126,13 +164,17 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                         ].join(" ")}
                         onClick={() => {
                           setSelected(category);
-                          onSelect(`${category}: ${subcategory[0]}`);
+                          onSelect(
+                            subcategory.length > 0
+                              ? `${category}: ${subcategory[0]}`
+                              : `${category}`
+                          );
                         }}
                       >
                         {category}
                       </Button>
                       <ul className="ml-4">
-                        {subcategory.length &&
+                        {Boolean(subcategory.length) &&
                           subcategory.map(title => (
                             <li key={title}>
                               <Button

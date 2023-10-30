@@ -9,6 +9,7 @@ import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo, useState } from "react";
 import { recurDataMapping } from "datagovmy-ui/helpers";
+import { useRouter } from "next/router";
 
 const CatalogueShow: Page = ({
   meta,
@@ -23,6 +24,8 @@ const CatalogueShow: Page = ({
   dataviz,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selectedViz, setSelectedViz] = useState<IDataViz | undefined>();
+  const router = useRouter();
+
   const availableOptions = useMemo<string[]>(() => {
     switch (dataset.type) {
       case "TABLE":
@@ -72,6 +75,7 @@ const CatalogueShow: Page = ({
       />
       <CatalogueProvider dataset={selectedDataset} urls={urls}>
         <DataCatalogueShow
+          key={router.asPath}
           options={availableOptions}
           params={params}
           config={config}
