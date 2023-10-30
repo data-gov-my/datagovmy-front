@@ -13,6 +13,7 @@ interface SidebarProps {
 const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSelect }) => {
   const { t } = useTranslation(["catalogue", "common"]);
   const [selected, setSelected] = useState<string>();
+  const [mainFlag, setMainFlag] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
@@ -36,10 +37,13 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                   <Button
                     className={[
                       styles.base,
-                      selected === category ? styles.active : styles.default,
+                      mainFlag && selected === `${category}: ${subcategory[0]}`
+                        ? styles.active
+                        : styles.default,
                     ].join(" ")}
                     onClick={() => {
-                      setSelected(category);
+                      setSelected(`${category}: ${subcategory[0]}`);
+                      setMainFlag(true);
                       onSelect(`${category}: ${subcategory[0]}`);
                     }}
                   >
@@ -52,10 +56,13 @@ const Sidebar: FunctionComponent<SidebarProps> = ({ children, categories, onSele
                           <Button
                             className={[
                               styles.base,
-                              selected === title ? styles.active : styles.default,
+                              !mainFlag && selected === `${category}: ${title}`
+                                ? styles.active
+                                : styles.default,
                             ].join(" ")}
                             onClick={() => {
-                              setSelected(title);
+                              setSelected(`${category}: ${title}`);
+                              setMainFlag(false);
                               onSelect(`${category}: ${title}`);
                             }}
                           >
