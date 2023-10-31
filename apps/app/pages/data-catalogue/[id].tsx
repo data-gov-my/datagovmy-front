@@ -23,7 +23,10 @@ const CatalogueShow: Page = ({
   catalogueId,
   dataviz,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [selectedViz, setSelectedViz] = useState<IDataViz | undefined>();
+  const [selectedViz, setSelectedViz] = useState<IDataViz | undefined>(
+    dataviz.find((item: IDataViz) => item.translation_key === config.context["visual"]?.value) ??
+      undefined
+  );
   const router = useRouter();
 
   const availableOptions = useMemo<string[]>(() => {
@@ -51,12 +54,8 @@ const CatalogueShow: Page = ({
 
   const selectedDataset = useMemo(() => {
     if (!selectedViz) {
-      // TODO: ask BE to provide this range value to use for timeseries
-      config.context["range"] = { label: "Weekly", value: "WEEKLY" };
       return dataset;
     }
-
-    config.context["range"] = { label: "Weekly", value: "WEEKLY" };
 
     return {
       type: selectedViz.chart_type,
@@ -69,7 +68,11 @@ const CatalogueShow: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
-        title={dataset.meta.title}
+        title={
+          selectedViz?.translation_key
+            ? `${translations[selectedViz.translation_key]}`
+            : dataset.meta.title
+        }
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
@@ -96,7 +99,8 @@ const CatalogueShow: Page = ({
 
 export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
-  async ({ locale, query, params }) => {
+  async ({ locale, query: q, params }) => {
+    const { visual, ...query } = q;
     try {
       // OLD DC variable query
       // const { data } = await get("/data-variable/", {
@@ -152,6 +156,13 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       });
       config.options =
         data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
+
+      // Assign the filter context for chart preview
+      if (visual) {
+        Object.assign(config.context, { visual: { label: visual, value: visual } });
+      } else {
+        Object.assign(config.context, { visual: { label: "table", value: "table" } });
+      }
 
       return {
         props: {

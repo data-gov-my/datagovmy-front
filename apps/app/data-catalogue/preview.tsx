@@ -51,13 +51,12 @@ interface CataloguePreviewProps {
   urls: {
     [key: string]: string;
   };
-  translations: {
-    [key: string]: string;
-  };
+  translations: Record<string, string>;
   config: DCConfig;
   selectedViz: IDataViz | undefined;
   setSelectedViz: Dispatch<SetStateAction<undefined | IDataViz>>;
   scrollToChart: () => void;
+  setFilter: (key: string, value: any) => void;
 }
 
 const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
@@ -69,6 +68,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   translations,
   config,
   scrollToChart,
+  setFilter,
 }) => {
   if (!dataviz) {
     return null;
@@ -151,12 +151,15 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
           )}
           onClick={() => {
             setSelectedViz(dataviz);
+            setFilter("visual", dataviz.translation_key);
             scrollToChart();
           }}
         >
           {renderChart()}
         </Card>
-        <p className="text-center text-xs">{dataviz.translation_key ?? ""}</p>
+        <p className="text-center text-xs">
+          {dataviz.translation_key ? translations[dataviz.translation_key] : ""}
+        </p>
       </div>
     </CatalogueProvider>
   );

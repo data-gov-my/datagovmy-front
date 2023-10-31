@@ -494,11 +494,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         )}
                         onClick={() => {
                           setSelectedViz(undefined);
+                          setFilter("visual", "table");
                           scrollToChart();
                         }}
                       >
                         <div className="flex h-full w-full items-center justify-center">
-                          <TableCellsIcon className="text-primary h-24 w-24 stroke-[0.5px]" />
+                          <TableCellsIcon className="text-outlineHover-dark h-24 w-24 stroke-[0.5px]" />
                         </div>
                       </Card>
                       <p className=" text-center text-xs">Table</p>
@@ -514,6 +515,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           selectedViz={selectedViz}
                           setSelectedViz={setSelectedViz}
                           scrollToChart={scrollToChart}
+                          setFilter={setFilter}
                         />
                       );
                     })}
