@@ -1,4 +1,5 @@
 import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { TableCellsIcon } from "@heroicons/react/24/outline";
 import CatalogueCode from "datagovmy-ui/charts/partials/code";
 import { SampleCode } from "datagovmy-ui/charts/partials/code";
 import CatalogueEmbed, { EmbedInterface } from "datagovmy-ui/charts/partials/embed";
@@ -265,9 +266,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     <div>
       <Container className="minh-screen max-w-full">
         <Sidebar
-          categories={Object.entries(sideBarCollection[i18n.language]).map(
-            ([category, subcategory]) => [category, Object.keys(subcategory)]
-          )}
+          categories={Object.entries(
+            getSideBarCollection({
+              publications: Boolean(explanation.publication),
+              related_datasets: Boolean(explanation.related_datasets.length),
+            })[i18n.language]
+          ).map(([category, subcategory]) => [category, Object.keys(subcategory)])}
           onSelect={selected => {
             scrollRef.current[selected]?.scrollIntoView({
               behavior: "smooth",
@@ -482,7 +486,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               {dataviz && dataviz.length > 1 && (
                 <Section>
                   <div className="relative flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
-                    <div className="static left-0 top-0 flex h-full w-[calc(100%_/_1.5-_0.5rem)] flex-col justify-start gap-2 rounded-xl bg-white lg:sticky lg:w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]">
+                    <div className="static left-0 top-0 flex h-full w-[calc(100%_/_1.5-_0.5rem)] flex-col justify-start gap-2 rounded-xl lg:sticky lg:w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]">
                       <Card
                         className={clx(
                           "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] min-w-[calc(100%_/_1.5_-_0.5rem)] overflow-hidden p-2 transition-colors lg:min-w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]",
@@ -493,16 +497,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           scrollToChart();
                         }}
                       >
-                        <Table
-                          className={clx("table-stripe table-default table-sticky-header ")}
-                          responsive={false}
-                          data={dataset.table.slice(0, 3)}
-                          freeze={config.freeze}
-                          precision={config.precision}
-                          config={generateTableSchema()}
-                          enablePagination={false}
-                          data-testid="catalogue-table-preview"
-                        />
+                        <div className="flex h-full w-full items-center justify-center">
+                          <TableCellsIcon className="text-primary h-24 w-24 stroke-[0.5px]" />
+                        </div>
                       </Card>
                       <p className=" text-center text-xs">Table</p>
                     </div>
@@ -576,33 +573,36 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 />
               )}
 
-              <Section
-                title={t("header_4")}
-                ref={ref =>
-                  (scrollRef.current[
-                    i18n.language === "en-GB"
-                      ? "Metadata: Related Datasets"
-                      : "Metadata: Dataset Berkaitan"
-                  ] = ref)
-                }
-                className=""
-              >
-                <div className="flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
-                  {explanation.related_datasets.map((item, index) => (
-                    <CatalogueCard
-                      key={index}
-                      dataset={{
-                        id: item.id,
-                        catalog_name: item.title,
-                        description: item.description,
-                      }}
-                      index={index}
-                      alternateStyle={true}
-                      width="md:min-w-[calc(100%_/_3.25-0.5rem)] md:w-[calc(100%_/_3.25-0.5rem)]"
-                    />
-                  ))}
-                </div>
-              </Section>
+              {/* Related Datasets */}
+              {Boolean(explanation.related_datasets.length) && (
+                <Section
+                  title={t("header_4")}
+                  ref={ref =>
+                    (scrollRef.current[
+                      i18n.language === "en-GB"
+                        ? "Metadata: Related Datasets"
+                        : "Metadata: Dataset Berkaitan"
+                    ] = ref)
+                  }
+                  className=""
+                >
+                  <div className="flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
+                    {explanation.related_datasets.map((item, index) => (
+                      <CatalogueCard
+                        key={index}
+                        dataset={{
+                          id: item.id,
+                          catalog_name: item.title,
+                          description: item.description,
+                        }}
+                        index={index}
+                        alternateStyle={true}
+                        width="md:min-w-[calc(100%_/_3.25-0.5rem)] md:w-[calc(100%_/_3.25-0.5rem)]"
+                      />
+                    ))}
+                  </div>
+                </Section>
+              )}
             </div>
 
             {/* Metadata */}
@@ -914,41 +914,45 @@ const DownloadCard: FunctionComponent<DownloadCard> = ({
   );
 };
 
-const sideBarCollection: Record<string, Record<string, any>> = {
-  "en-GB": {
-    "Table & Charts": {},
-    "Metadata": {
-      "Methodology": [],
-      "Caveats": [],
-      "Publications": [],
-      "Related Datasets": [],
-      "Variables": [],
-      "Next update": [],
-      "License": [],
+const getSideBarCollection: (
+  item: Record<"publications" | "related_datasets", Boolean>
+) => Record<string, Record<string, any>> = item => {
+  return {
+    "en-GB": {
+      "Table & Charts": {},
+      "Metadata": {
+        "Methodology": [],
+        "Caveats": [],
+        ...(item.publications ? { Publications: [] } : {}),
+        ...(item.related_datasets ? { "Related Datasets": [] } : {}),
+        "Variables": [],
+        "Next update": [],
+        "License": [],
+      },
+      "Download": {},
+      "Programmatic Access": {
+        "Full dataset": [],
+        "Open API": [],
+      },
     },
-    "Download": {},
-    "Programmatic Access": {
-      "Full dataset": [],
-      "Open API": [],
+    "ms-MY": {
+      "Jadual & Carta": {},
+      "Metadata": {
+        "Metodologi": [],
+        "Kaveat": [],
+        ...(item.publications ? { Penerbitan: [] } : {}),
+        ...(item.related_datasets ? { "Dataset Berkaitan": [] } : {}),
+        "Pembolehubah": [],
+        "Kemaskini seterusnya": [],
+        "Lesen": [],
+      },
+      "Muat Turun": {},
+      "Akses Programatif": {
+        "Dataset penuh": [],
+        "Open API": [],
+      },
     },
-  },
-  "ms-MY": {
-    "Jadual & Carta": {},
-    "Metadata": {
-      "Metodologi": [],
-      "Kaveat": [],
-      "Penerbitan": [],
-      "Dataset Berkaitan": [],
-      "Pembolehubah": [],
-      "Kemaskini seterusnya": [],
-      "Lesen": [],
-    },
-    "Muat Turun": {},
-    "Akses Programatif": {
-      "Dataset penuh": [],
-      "Open API": [],
-    },
-  },
+  };
 };
 
 export default CatalogueShow;
