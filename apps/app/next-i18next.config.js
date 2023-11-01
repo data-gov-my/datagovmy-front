@@ -42,6 +42,7 @@ const namespaces = [
   "dashboard-business-creation-destruction",
   "dashboard-electronic-payments",
   "helpdesk",
+  "gui",
 ];
 
 module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
