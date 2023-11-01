@@ -250,7 +250,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                     ) : (
                       <div className="space-y-6">
                         {data.resources.map((item: PublicationResource, index: number) => (
-                          <div className="flex flex-col space-y-3">
+                          <div key={index} className="flex flex-col space-y-3">
                             <div className="group flex w-fit items-center gap-2">
                               <p className="text-md font-medium text-black">Resource {index + 1}</p>
                               <MinusCircleIcon
