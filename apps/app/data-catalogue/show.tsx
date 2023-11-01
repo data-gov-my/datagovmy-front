@@ -42,7 +42,6 @@ import {
 } from "react";
 import CataloguePreview from "./preview";
 import CatalogueCard from "./catalogue-card";
-import { Catalogue } from ".";
 
 /**
  * Catalogue Show
@@ -494,7 +493,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         )}
                         onClick={() => {
                           setSelectedViz(undefined);
-                          setFilter("visual", "table");
                           scrollToChart();
                         }}
                       >
@@ -515,7 +513,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           selectedViz={selectedViz}
                           setSelectedViz={setSelectedViz}
                           scrollToChart={scrollToChart}
-                          setFilter={setFilter}
                         />
                       );
                     })}

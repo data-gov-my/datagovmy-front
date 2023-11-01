@@ -24,8 +24,7 @@ const CatalogueShow: Page = ({
   dataviz,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [selectedViz, setSelectedViz] = useState<IDataViz | undefined>(
-    dataviz.find((item: IDataViz) => item.translation_key === config.context["visual"]?.value) ??
-      undefined
+    dataviz.find((item: IDataViz) => item.translation_key === params.visual) ?? undefined
   );
   const router = useRouter();
 
@@ -157,13 +156,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       config.options =
         data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
 
-      // Assign the filter context for chart preview
-      if (visual) {
-        Object.assign(config.context, { visual: { label: visual, value: visual } });
-      } else {
-        Object.assign(config.context, { visual: { label: "table", value: "table" } });
-      }
-
       return {
         props: {
           meta: {
@@ -175,7 +167,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
               : "",
           },
           config,
-          params,
+          params: { ...params, visual: visual ?? "table" },
           dataset: {
             type: data.API.chart_type,
             chart: data.chart_details.chart_data ?? {},

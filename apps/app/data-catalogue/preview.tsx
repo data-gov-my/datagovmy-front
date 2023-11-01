@@ -56,7 +56,6 @@ interface CataloguePreviewProps {
   selectedViz: IDataViz | undefined;
   setSelectedViz: Dispatch<SetStateAction<undefined | IDataViz>>;
   scrollToChart: () => void;
-  setFilter: (key: string, value: any) => void;
 }
 
 const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
@@ -68,7 +67,6 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   translations,
   config,
   scrollToChart,
-  setFilter,
 }) => {
   if (!dataviz) {
     return null;
@@ -151,7 +149,6 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
           )}
           onClick={() => {
             setSelectedViz(dataviz);
-            setFilter("visual", dataviz.translation_key);
             scrollToChart();
           }}
         >
