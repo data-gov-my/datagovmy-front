@@ -176,7 +176,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         }}
                       />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2 lg:flex-row">
                       <Input
                         required
                         type="text"
@@ -205,7 +205,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
 
                     <div className="flex flex-col gap-2">
                       <Label label="Choose items" />
-                      <div className="flex gap-2">
+                      <div className="flex flex-col gap-3 lg:flex-row lg:gap-2">
                         <Dropdown
                           anchor="left"
                           width="w-full"
@@ -243,7 +243,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         />
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2 lg:flex-row">
                       <Input
                         required
                         type="text"
@@ -269,7 +269,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         }}
                       />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2 lg:flex-row">
                       <Input
                         required
                         type="text"
@@ -295,7 +295,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         }}
                       />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2 lg:flex-row">
                       <div className="flex w-full flex-col gap-2">
                         <Label name="description" label="Description" />
                         <Textarea
@@ -412,7 +412,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                 </form>
               </div>
               <div className="mx-auto w-full max-w-screen-lg">
-                <div className="flex flex-row items-center space-x-6">
+                <div className="flex flex-col items-center space-y-6 lg:flex-row lg:space-x-6">
                   {/* Publication Card English */}
                   <PublicationCard
                     onClick={() => null}
@@ -448,7 +448,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                 </div>
               </div>
               <div className="mx-auto w-full max-w-screen-xl">
-                <div className="flex w-full flex-row items-center space-x-6">
+                <div className="flex w-full flex-col items-center space-y-6 lg:flex-row lg:space-x-6">
                   <ModalAsCard
                     publication={{
                       title: data.title ? data.title : "[INSERT TITLE]",
