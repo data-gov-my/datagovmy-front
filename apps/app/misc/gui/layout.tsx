@@ -54,7 +54,7 @@ const GUILayout: FunctionComponent<GUILayoutProps> = ({ children }) => {
       <Hero background="blue" header={[t("header")]} description={[t("description")]} />
 
       {/* Navigations */}
-      <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center lg:static">
+      {/* <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center lg:static">
         <div
           className={clx(
             "hide-scrollbar flex snap-x snap-mandatory scroll-px-9 flex-nowrap overflow-x-auto sm:justify-center"
@@ -87,7 +87,7 @@ const GUILayout: FunctionComponent<GUILayoutProps> = ({ children }) => {
             </div>
           ))}
         </div>
-      </nav>
+      </nav> */}
 
       {/* Content */}
       {children}
