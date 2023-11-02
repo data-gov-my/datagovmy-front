@@ -8,7 +8,9 @@ import {
   Input,
   Label,
   Metadata,
+  PubResource,
   PublicationCard,
+  Resource,
   Section,
   Textarea,
 } from "datagovmy-ui/components";
@@ -16,14 +18,12 @@ import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { withi18n } from "datagovmy-ui/decorators";
 import GUILayout from "@misc/gui/layout";
 import { DateTime } from "luxon";
-
-type PublicationResource = {
-  resource_id: string;
-  resource_type: string;
-  resource_name: string;
-  resource_name_bm: string;
-  resource_link: string;
-};
+import { toDate } from "datagovmy-ui/helpers";
+import Table, { TableConfig } from "datagovmy-ui/charts/table";
+import { useContext } from "react";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { ExcelIcon, PDFIcon } from "datagovmy-ui/icons";
 
 const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["gui", "catalogue"]);
@@ -36,7 +36,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
     frequency: "",
     demography: [],
     geography: [],
-    resources: [] as PublicationResource[],
+    resources: [],
     publication_type_title: "",
     publication_type_title_bm: "",
     description: "",
@@ -75,6 +75,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
         resource_name: "",
         resource_name_bm: "",
         resource_link: "",
+        downloads: 0,
       },
     ]);
   };
@@ -82,7 +83,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
   const handleDeleteOneResource = (index: number) => {
     setData(
       "resources",
-      data.resources.filter((item: PublicationResource, idx: number) => idx !== index)
+      data.resources.filter((item: Resource, idx: number) => idx !== index)
     );
   };
 
@@ -101,6 +102,53 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
     setData("resources", updatedResource);
   };
 
+  const generateOutputJSON = () => {
+    return JSON.stringify({
+      publication: data.publication,
+      publication_type: data.publication_type,
+      release_date: data.release_date,
+      frequency: data.frequency,
+      geography: data.geography.map((item: OptionType) => item.value),
+      demography: data.demography.map((item: OptionType) => item.value),
+      en: {
+        title: data.title,
+        publication_type_title: data.publication_type_title,
+        description: data.description,
+        resources: data.resources.map((item: Resource & { resource_name_bm: string }) => ({
+          resource_id: item.resource_id,
+          resource_type: item.resource_type,
+          resource_name: item.resource_name,
+          resource_link: item.resource_link,
+        })),
+      },
+      bm: {
+        title: data.title_bm,
+        publication_type_title: data.publication_type_title_bm,
+        description: data.description_bm,
+        resources: data.resources.map((item: Resource & { resource_name_bm: string }) => ({
+          resource_id: item.resource_id,
+          resource_type: item.resource_type,
+          resource_name: item.resource_name_bm,
+          resource_link: item.resource_link,
+        })),
+      },
+    });
+  };
+
+  function downloadJSON(data: any, filename: string, type: "application/json") {
+    const file = new Blob([data], { type: type });
+    const a = document.createElement("a");
+    const url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  }
+
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
@@ -110,9 +158,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
             title={"Get Started"}
             description="Fill in the forms and show preview of the metadata of the publication"
           >
-            <div className="flex w-full">
-              <div className="w-1/2">
-                <form className="p-6 lg:p-8" method="post">
+            <div className="flex w-full flex-col gap-6">
+              <div className="mx-auto w-full max-w-screen-md">
+                <form className="flex w-full flex-col" method="post">
                   <div className="space-y-3">
                     <div className="flex gap-2">
                       <Input
@@ -286,7 +334,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                       </div>
                     ) : (
                       <div className="space-y-6">
-                        {data.resources.map((item: PublicationResource, index: number) => (
+                        {data.resources.map((item: Resource, index: number) => (
                           <div key={index} className="flex flex-col space-y-3">
                             <div className="group flex w-fit items-center gap-2">
                               <p className="text-md font-medium text-black">Resource {index + 1}</p>
@@ -363,8 +411,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                   </Section>
                 </form>
               </div>
-              <div className="flex w-1/2 justify-center">
-                <div className="hide-scrollbar sticky top-[15%] flex h-[70vh] max-w-md flex-col items-center space-y-3 overflow-auto py-10">
+              <div className="mx-auto w-full max-w-screen-lg">
+                <div className="flex flex-row items-center space-x-6">
                   {/* Publication Card English */}
                   <PublicationCard
                     onClick={() => null}
@@ -397,49 +445,141 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                       total_downloads: 0,
                     }}
                   />
-                  <PublicationCard
-                    onClick={() => null}
+                </div>
+              </div>
+              <div className="mx-auto w-full max-w-screen-xl">
+                <div className="flex w-full flex-row items-center space-x-6">
+                  <ModalAsCard
                     publication={{
-                      publication_id: data.publication,
+                      title: data.title ? data.title : "[INSERT TITLE]",
+                      release_date: data.release_date
+                        ? data.release_date
+                        : DateTime.now().toISODate(),
                       description: data.description
                         ? data.description
-                        : "The publication description in English. This is required for a publication",
-                      publication_type: data.publication_type,
-                      release_date: data.release_date
-                        ? data.release_date
-                        : DateTime.now().toISODate(),
-                      title: data.title ? data.title : "[INSERT TITLE]",
-                      total_downloads: 0,
+                        : "The publication description preview in English. This is required for a publication metadata",
+                      resources: data.resources.map(
+                        (item: Resource & { resource_name_bm: string }) => ({
+                          resource_id: item.resource_id,
+                          resource_type: item.resource_type,
+                          resource_name: item.resource_name
+                            ? item.resource_name
+                            : "[INSERT RESOURCE NAME]",
+                          resource_link: item.resource_link,
+                          downloads: 0,
+                        })
+                      ),
                     }}
                   />
-                  <PublicationCard
-                    onClick={() => null}
+                  <ModalAsCard
                     publication={{
-                      publication_id: data.publication,
-                      description: data.description_bm
-                        ? data.description_bm
-                        : "The publication description preview in Bahasa Malaysia. This is required for a publication",
-                      publication_type: data.publication_type,
+                      title: data.title ? data.title : "[INSERT TITLE]",
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
-                      title: data.title_bm ? data.title_bm : "[INSERT TITLE]",
-                      total_downloads: 0,
+                      description: data.description
+                        ? data.description
+                        : "The publication description preview in English. This is required for a publication metadata",
+                      resources: data.resources.map(
+                        (item: Resource & { resource_name_bm: string }) => ({
+                          resource_id: item.resource_id,
+                          resource_type: item.resource_type,
+                          resource_name: item.resource_name_bm
+                            ? item.resource_name_bm
+                            : "[INSERT RESOURCE NAME]",
+                          resource_link: item.resource_link,
+                          downloads: 0,
+                        })
+                      ),
                     }}
                   />
                 </div>
               </div>
-            </div>
-            <div className="flex gap-4">
-              <Button className="w-full">Generate JSON</Button>
-              <Button className="w-full" disabled={true}>
-                Push
-              </Button>
+              <div className="flex w-full items-center justify-center gap-4">
+                <Button
+                  variant="primary"
+                  className=""
+                  onClick={() =>
+                    downloadJSON(
+                      generateOutputJSON(),
+                      `${data.publication}.json`,
+                      "application/json"
+                    )
+                  }
+                >
+                  Generate JSON
+                </Button>
+              </div>
             </div>
           </Section>
         </Container>
       </GUILayout>
     </>
+  );
+};
+
+const ModalAsCard = ({ publication }: { publication: PubResource }) => {
+  const { t, i18n } = useTranslation(["publications", "common"]);
+  const { size } = useContext(WindowContext);
+
+  const config: TableConfig[] = [
+    {
+      accessorKey: "resource_name",
+      id: "resource_name",
+      header: t("subject"),
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        return <p className="whitespace-normal">{getValue()}</p>;
+      },
+    },
+    {
+      accessorKey: "resource_link",
+      id: "download_link",
+      header: t("file_download"),
+      enableSorting: false,
+      cell: ({ row, getValue }) => {
+        return (
+          <div className="link-primary font-normal" onClick={() => {}}>
+            {row.original.resource_type === "excel" ? (
+              <ExcelIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
+            ) : (
+              <PDFIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />
+            )}
+            {size.width <= BREAKPOINTS.SM
+              ? t("download_mobile", { context: row.original.resource_type })
+              : t("download", { context: row.original.resource_type })}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "downloads",
+      id: "downloads",
+      className: "w-20",
+      header: t("downloads"),
+    },
+  ];
+
+  return (
+    <div className="border-outline shadow-floating dark:border-outlineHover-dark w-full rounded-xl border bg-white p-6">
+      <div className="flex flex-col gap-y-1.5 text-black dark:text-white">
+        <span className="text-dim pr-8 text-sm uppercase">
+          {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
+        </span>
+        <span className="text-lg font-bold">{publication.title}</span>
+        <p className="text-sm">{publication.description}</p>
+      </div>
+      <div className="flex flex-col justify-between gap-3 pt-6 sm:flex-row sm:items-center">
+        <h5>{t("download_list")}</h5>
+      </div>
+      <Table
+        className="pt-3 md:w-full"
+        data={publication.resources}
+        enablePagination={publication.resources.length > 10 ? 10 : false}
+        config={config}
+        precision={0}
+      />
+    </div>
   );
 };
 

@@ -7,7 +7,7 @@ import { Page } from "datagovmy-ui/types";
 import TechnicalNotesDashboard from "misc/publications/technical-notes";
 import PublicationsLayout from "misc/publications/layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Publication } from "misc/publications/browse";
+import { Publication } from "datagovmy-ui/components";
 
 const TechnicalNotes: Page = ({
   meta,
