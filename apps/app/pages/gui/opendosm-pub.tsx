@@ -103,36 +103,40 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
   };
 
   const generateOutputJSON = () => {
-    return JSON.stringify({
-      publication: data.publication,
-      publication_type: data.publication_type,
-      release_date: data.release_date,
-      frequency: data.frequency,
-      geography: data.geography.map((item: OptionType) => item.value),
-      demography: data.demography.map((item: OptionType) => item.value),
-      en: {
-        title: data.title,
-        publication_type_title: data.publication_type_title,
-        description: data.description,
-        resources: data.resources.map((item: Resource & { resource_name_bm: string }) => ({
-          resource_id: item.resource_id,
-          resource_type: item.resource_type,
-          resource_name: item.resource_name,
-          resource_link: item.resource_link,
-        })),
+    return JSON.stringify(
+      {
+        publication: data.publication,
+        publication_type: data.publication_type,
+        release_date: data.release_date,
+        frequency: data.frequency,
+        geography: data.geography.map((item: OptionType) => item.value),
+        demography: data.demography.map((item: OptionType) => item.value),
+        en: {
+          title: data.title,
+          publication_type_title: data.publication_type_title,
+          description: data.description,
+          resources: data.resources.map((item: Resource & { resource_name_bm: string }) => ({
+            resource_id: item.resource_id,
+            resource_type: item.resource_type,
+            resource_name: item.resource_name,
+            resource_link: item.resource_link,
+          })),
+        },
+        bm: {
+          title: data.title_bm,
+          publication_type_title: data.publication_type_title_bm,
+          description: data.description_bm,
+          resources: data.resources.map((item: Resource & { resource_name_bm: string }) => ({
+            resource_id: item.resource_id,
+            resource_type: item.resource_type,
+            resource_name: item.resource_name_bm,
+            resource_link: item.resource_link,
+          })),
+        },
       },
-      bm: {
-        title: data.title_bm,
-        publication_type_title: data.publication_type_title_bm,
-        description: data.description_bm,
-        resources: data.resources.map((item: Resource & { resource_name_bm: string }) => ({
-          resource_id: item.resource_id,
-          resource_type: item.resource_type,
-          resource_name: item.resource_name_bm,
-          resource_link: item.resource_link,
-        })),
-      },
-    });
+      null,
+      4
+    );
   };
 
   function downloadJSON(data: any, filename: string, type: "application/json") {
