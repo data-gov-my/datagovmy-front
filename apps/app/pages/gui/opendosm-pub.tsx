@@ -15,6 +15,7 @@ import {
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { withi18n } from "datagovmy-ui/decorators";
 import GUILayout from "@misc/gui/layout";
+import { DateTime } from "luxon";
 
 type PublicationResource = {
   resource_id: string;
@@ -27,12 +28,19 @@ type PublicationResource = {
 const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["gui", "catalogue"]);
   const { data, setData } = useData({
+    release_date: "",
+    publication: "",
+    publication_type: "",
     title: "",
     title_bm: "",
     frequency: "",
     demography: [],
     geography: [],
-    resources: [],
+    resources: [] as PublicationResource[],
+    publication_type_title: "",
+    publication_type_title_bm: "",
+    description: "",
+    description_bm: "",
   });
 
   const frequencies: OptionType[] = [
@@ -78,6 +86,21 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
     );
   };
 
+  const updateSingleResource = (index: number, key: string, value: any) => {
+    if (index < 0 || index >= data.resources.length) {
+      return;
+    }
+
+    // Create a copy of the resources array
+    const updatedResource = [...data.resources];
+    updatedResource[index] = {
+      ...updatedResource[index],
+      [key]: value,
+    };
+
+    setData("resources", updatedResource);
+  };
+
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
@@ -99,9 +122,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         name="release_date"
                         label="Release Date"
                         placeholder={"Release Date"}
-                        value={data.title}
+                        value={data.release_date}
                         onChange={e => {
-                          setData("title", e);
+                          setData("release_date", e);
                         }}
                       />
                     </div>
@@ -113,9 +136,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         name="publication"
                         label="Publication ID"
                         placeholder={"Publication ID"}
-                        value={data.title}
+                        value={data.publication}
                         onChange={e => {
-                          setData("title", e);
+                          setData("publication", e);
                         }}
                       />
                       <Input
@@ -125,9 +148,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         name="publication_type"
                         label="Publication Type"
                         placeholder={"Publication Type"}
-                        value={data.title}
+                        value={data.publication_type}
                         onChange={e => {
-                          setData("title", e);
+                          setData("publication_type", e);
                         }}
                       />
                     </div>
@@ -192,9 +215,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         name="title_bm"
                         label="Title BM"
                         placeholder={"Title BM"}
-                        value={data.title}
+                        value={data.title_bm}
                         onChange={e => {
-                          setData("title", e);
+                          setData("title_bm", e);
                         }}
                       />
                     </div>
@@ -206,9 +229,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         name="publication_type_title"
                         label="Publication Type Title"
                         placeholder={"Publication Type Title"}
-                        value={data.title}
+                        value={data.publication_type_title}
                         onChange={e => {
-                          setData("title", e);
+                          setData("publication_type_title", e);
                         }}
                       />
                       <Input
@@ -218,20 +241,34 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         name="publication_type_title_bm"
                         label="Publication Type Title BM"
                         placeholder={"Publication Type Title BM"}
-                        value={data.title}
+                        value={data.publication_type_title_bm}
                         onChange={e => {
-                          setData("title", e);
+                          setData("publication_type_title_bm", e);
                         }}
                       />
                     </div>
                     <div className="flex gap-2">
                       <div className="flex w-full flex-col gap-2">
                         <Label name="description" label="Description" />
-                        <Textarea placeholder="Add description here" rows={2} />
+                        <Textarea
+                          placeholder="Add description here"
+                          rows={2}
+                          value={data.description}
+                          onChange={e => {
+                            setData("description", e.target.value);
+                          }}
+                        />
                       </div>
                       <div className="flex w-full flex-col gap-2">
                         <Label name="description_bm" label="Description BM" />
-                        <Textarea placeholder="Add description BM here" rows={2} />
+                        <Textarea
+                          placeholder="Add description BM here"
+                          rows={2}
+                          value={data.description_bm}
+                          onChange={e => {
+                            setData("description_bm", e.target.value);
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
@@ -267,10 +304,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   name="resource_link"
                                   label="Resource Link"
                                   placeholder={"Insert resource url"}
-                                  value={data.title}
-                                  onChange={e => {
-                                    setData("title", e);
-                                  }}
+                                  value={data.resources[index].resource_link}
+                                  onChange={e => updateSingleResource(index, "resource_link", e)}
                                 />
                               </div>
                               <div className="flex gap-2">
@@ -281,10 +316,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   name="resource_id"
                                   label="Resource ID"
                                   placeholder={"Resource ID"}
-                                  value={data.title}
-                                  onChange={e => {
-                                    setData("title", e);
-                                  }}
+                                  value={data.resources[index].resource_id}
+                                  onChange={e => updateSingleResource(index, "resource_id", e)}
                                 />
                                 <Input
                                   required
@@ -293,10 +326,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   name="resource_type"
                                   label="Resource Type"
                                   placeholder={"Resource Type"}
-                                  value={data.title}
-                                  onChange={e => {
-                                    setData("title", e);
-                                  }}
+                                  value={data.resources[index].resource_type}
+                                  onChange={e => updateSingleResource(index, "resource_type", e)}
                                 />
                               </div>
                               <div className="flex gap-2">
@@ -307,10 +338,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   name="resource_name"
                                   label="Resource Name"
                                   placeholder={"Resource Name"}
-                                  value={data.title}
-                                  onChange={e => {
-                                    setData("title", e);
-                                  }}
+                                  value={data.resources[index].resource_name}
+                                  onChange={e => updateSingleResource(index, "resource_name", e)}
                                 />
                                 <Input
                                   required
@@ -319,10 +348,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   name="resource_name_bm"
                                   label="Resource Name BM"
                                   placeholder={"Resource Name BM"}
-                                  value={data.title}
-                                  onChange={e => {
-                                    setData("title", e);
-                                  }}
+                                  value={data.resources[index].resource_name_bm}
+                                  onChange={e => updateSingleResource(index, "resource_name_bm", e)}
                                 />
                               </div>
                             </div>
@@ -338,51 +365,65 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
               </div>
               <div className="flex w-1/2 justify-center">
                 <div className="hide-scrollbar sticky top-[15%] flex h-[70vh] max-w-md flex-col items-center space-y-3 overflow-auto py-10">
+                  {/* Publication Card English */}
                   <PublicationCard
                     onClick={() => null}
                     publication={{
-                      publication_id: "key_of_publication",
-                      description:
-                        "Leading, lagging, and coincident composite indices (with diffusion) showing overall economic direction.",
-                      publication_type: "indicators",
-                      release_date: "2023-10-01",
-                      title: "[Aug 2023] HAHA huhuh hhe",
+                      publication_id: data.publication,
+                      description: data.description
+                        ? data.description
+                        : "The publication description preview in English. This is required for a publication",
+                      publication_type: data.publication_type,
+                      release_date: data.release_date
+                        ? data.release_date
+                        : DateTime.now().toISODate(),
+                      title: data.title ? data.title : "[INSERT TITLE]",
+                      total_downloads: 0,
+                    }}
+                  />
+                  {/* Publication Card BM */}
+                  <PublicationCard
+                    onClick={() => null}
+                    publication={{
+                      publication_id: data.publication,
+                      description: data.description_bm
+                        ? data.description_bm
+                        : "The publication description preview in Bahasa Malaysia. This is required for a publication",
+                      publication_type: data.publication_type,
+                      release_date: data.release_date
+                        ? data.release_date
+                        : DateTime.now().toISODate(),
+                      title: data.title_bm ? data.title_bm : "[INSERT TITLE]",
                       total_downloads: 0,
                     }}
                   />
                   <PublicationCard
                     onClick={() => null}
                     publication={{
-                      publication_id: "key_of_publication",
-                      description:
-                        "Indeks komposit pelopor, serentak, dan susulan (termasuk difusi) menunjuk prestasi ekonomi secara am.",
-                      publication_type: "indicators",
-                      release_date: "2023-10-25",
-                      title: "[Aug 2023] Title in Malay pulak",
+                      publication_id: data.publication,
+                      description: data.description
+                        ? data.description
+                        : "The publication description in English. This is required for a publication",
+                      publication_type: data.publication_type,
+                      release_date: data.release_date
+                        ? data.release_date
+                        : DateTime.now().toISODate(),
+                      title: data.title ? data.title : "[INSERT TITLE]",
                       total_downloads: 0,
                     }}
                   />
                   <PublicationCard
                     onClick={() => null}
                     publication={{
-                      publication_id: "key_of_publication",
-                      description:
-                        "Leading, lagging, and coincident composite indices (with diffusion) showing overall economic direction.",
-                      publication_type: "indicators",
-                      release_date: "2023-10-25",
-                      title: "[Aug 2023] HAHA huhuh hhe",
-                      total_downloads: 0,
-                    }}
-                  />
-                  <PublicationCard
-                    onClick={() => null}
-                    publication={{
-                      publication_id: "key_of_publication",
-                      description:
-                        "Indeks komposit pelopor, serentak, dan susulan (termasuk difusi) menunjuk prestasi ekonomi secara am.",
-                      publication_type: "indicators",
-                      release_date: "2023-10-25",
-                      title: "[Aug 2023] Title in Malay pulak",
+                      publication_id: data.publication,
+                      description: data.description_bm
+                        ? data.description_bm
+                        : "The publication description preview in Bahasa Malaysia. This is required for a publication",
+                      publication_type: data.publication_type,
+                      release_date: data.release_date
+                        ? data.release_date
+                        : DateTime.now().toISODate(),
+                      title: data.title_bm ? data.title_bm : "[INSERT TITLE]",
                       total_downloads: 0,
                     }}
                   />
