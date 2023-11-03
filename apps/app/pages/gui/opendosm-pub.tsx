@@ -1,7 +1,8 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { OptionType, Page } from "datagovmy-ui/types";
-import { MinusCircleIcon } from "@heroicons/react/20/solid";
+import { TrashIcon } from "@heroicons/react/20/solid";
 import {
+  Accordion,
   Button,
   Container,
   Dropdown,
@@ -26,9 +27,9 @@ import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { ExcelIcon, PDFIcon } from "datagovmy-ui/icons";
 
 const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["gui", "catalogue"]);
+  const { t } = useTranslation(["gui", "catalogue", "publications"]);
   const { data, setData } = useData({
-    release_date: "",
+    release_date: DateTime.now().toISODate(),
     publication: "",
     publication_type: "",
     title: "",
@@ -64,6 +65,10 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
     { label: t("catalogue:filter_options.nationality"), value: "NATIONALITY" },
     { label: t("catalogue:filter_options.disability"), value: "DISABILITY" },
     { label: t("catalogue:filter_options.marital"), value: "MARITAL" },
+  ];
+  const resourceType: OptionType[] = [
+    { label: t("publications:download_mobile_excel"), value: "excel" },
+    { label: t("publications:download_mobile_pdf"), value: "pdf" },
   ];
 
   const handleAddNewResource = () => {
@@ -107,7 +112,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
       {
         publication: data.publication,
         publication_type: data.publication_type,
-        release_date: data.release_date,
+        release_date: "YYYY-MM-DD",
         frequency: data.frequency,
         geography: data.geography.map((item: OptionType) => item.value),
         demography: data.demography.map((item: OptionType) => item.value),
@@ -166,20 +171,6 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
               <div className="mx-auto w-full max-w-screen-md">
                 <form className="flex w-full flex-col" method="post">
                   <div className="space-y-3">
-                    <div className="flex gap-2">
-                      <Input
-                        required
-                        type="date"
-                        className="w-full"
-                        name="release_date"
-                        label="Release Date"
-                        placeholder={"Release Date"}
-                        value={data.release_date}
-                        onChange={e => {
-                          setData("release_date", e);
-                        }}
-                      />
-                    </div>
                     <div className="flex flex-col gap-2 lg:flex-row">
                       <Input
                         required
@@ -339,14 +330,22 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                     ) : (
                       <div className="space-y-6">
                         {data.resources.map((item: Resource, index: number) => (
-                          <div key={index} className="flex flex-col space-y-3">
-                            <div className="group flex w-fit items-center gap-2">
-                              <p className="text-md font-medium text-black">Resource {index + 1}</p>
-                              <MinusCircleIcon
-                                className="text-danger h-4 w-4 opacity-0 transition-opacity hover:cursor-pointer group-hover:block group-hover:opacity-100"
-                                onClick={() => handleDeleteOneResource(index)}
-                              />
-                            </div>
+                          <Accordion
+                            defaultOpen={true}
+                            title={
+                              <div className="flex w-full items-center gap-2">
+                                <p className="text-md flex-1 font-medium text-black">
+                                  Resource {index + 1}
+                                </p>
+                                <TrashIcon
+                                  className="text-danger hover:bg-outlineHover/30 h-4 w-4 rounded-full"
+                                  onClick={() => handleDeleteOneResource(index)}
+                                />
+                              </div>
+                            }
+                            key={index}
+                            className="group flex"
+                          >
                             <div className="space-y-3">
                               <div className="flex gap-2">
                                 <Input
@@ -371,16 +370,23 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   value={data.resources[index].resource_id}
                                   onChange={e => updateSingleResource(index, "resource_id", e)}
                                 />
-                                <Input
-                                  required
-                                  type="text"
-                                  className="w-full"
-                                  name="resource_type"
-                                  label="Resource Type"
-                                  placeholder={"Resource Type"}
-                                  value={data.resources[index].resource_type}
-                                  onChange={e => updateSingleResource(index, "resource_type", e)}
-                                />
+                                <div className="flex w-full flex-col gap-2">
+                                  <Label label="Resource Type" />
+                                  <Dropdown
+                                    anchor="left"
+                                    width="w-full"
+                                    options={resourceType}
+                                    placeholder="Resource Type"
+                                    selected={
+                                      resourceType.find(
+                                        e => e.value === data.resources[index].resource_type
+                                      ) ?? undefined
+                                    }
+                                    onChange={e =>
+                                      updateSingleResource(index, "resource_type", e.value)
+                                    }
+                                  />
+                                </div>
                               </div>
                               <div className="flex gap-2">
                                 <Input
@@ -405,7 +411,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                 />
                               </div>
                             </div>
-                          </div>
+                          </Accordion>
                         ))}
                         <Button onClick={handleAddNewResource} variant="primary">
                           Add more
@@ -416,7 +422,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                 </form>
               </div>
               <div className="mx-auto w-full max-w-screen-lg">
-                <div className="flex flex-col items-center space-y-6 lg:flex-row lg:space-x-6">
+                <div className="flex flex-col items-center space-y-6 lg:flex-row lg:space-x-6 lg:space-y-0">
                   {/* Publication Card English */}
                   <PublicationCard
                     onClick={() => null}
@@ -429,7 +435,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
-                      title: data.title ? data.title : "[INSERT TITLE]",
+                      title: data.title ? data.title : "[SERIES] [PUBLICATION TITLE]",
                       total_downloads: 0,
                     }}
                   />
@@ -445,17 +451,17 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
-                      title: data.title_bm ? data.title_bm : "[INSERT TITLE]",
+                      title: data.title_bm ? data.title_bm : "[SIRI] [TAJUK PENERBITAN]",
                       total_downloads: 0,
                     }}
                   />
                 </div>
               </div>
               <div className="mx-auto w-full max-w-screen-xl">
-                <div className="flex w-full flex-col items-center space-y-6 lg:flex-row lg:space-x-6">
+                <div className="flex w-full flex-col items-center space-y-6 lg:flex-row lg:space-x-6 lg:space-y-0">
                   <ModalAsCard
                     publication={{
-                      title: data.title ? data.title : "[INSERT TITLE]",
+                      title: data.title ? data.title : "[SERIES] [PUBLICATION TITLE]",
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
@@ -468,7 +474,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                           resource_type: item.resource_type,
                           resource_name: item.resource_name
                             ? item.resource_name
-                            : "[INSERT RESOURCE NAME]",
+                            : "[INSERT RESOURCE NAME]: [SERIES]",
                           resource_link: item.resource_link,
                           downloads: 0,
                         })
@@ -477,7 +483,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                   />
                   <ModalAsCard
                     publication={{
-                      title: data.title ? data.title : "[INSERT TITLE]",
+                      title: data.title ? data.title : "[SIRI] [TAJUK PENERBITAN]",
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
@@ -490,7 +496,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                           resource_type: item.resource_type,
                           resource_name: item.resource_name_bm
                             ? item.resource_name_bm
-                            : "[INSERT RESOURCE NAME]",
+                            : "[NAMA SUMBER]: [SIRI]",
                           resource_link: item.resource_link,
                           downloads: 0,
                         })
@@ -523,7 +529,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
 };
 
 const ModalAsCard = ({ publication }: { publication: PubResource }) => {
-  const { t, i18n } = useTranslation(["publications", "common"]);
+  const { t, i18n } = useTranslation(["publications"]);
   const { size } = useContext(WindowContext);
 
   const config: TableConfig[] = [
