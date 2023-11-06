@@ -11,7 +11,6 @@ import { WindowContext } from "datagovmy-ui/contexts/window";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { matchSorter } from "match-sorter";
-import { Resource } from "misc/publications/browse";
 import { Fragment, FunctionComponent, useContext, useMemo } from "react";
 
 export type PubResource = {
@@ -19,6 +18,14 @@ export type PubResource = {
   release_date: string;
   resources: Resource[];
   title: string;
+};
+
+export type Resource = {
+  resource_id: number;
+  resource_name: string;
+  resource_link: string;
+  resource_type: string;
+  downloads: number;
 };
 
 interface PublicationModalProps {
@@ -136,7 +143,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                   <Dialog.Panel
                     className={clx(
                       body.variable,
-                      "w-full max-w-4xl transform rounded-xl border border-outline bg-white p-6 text-left align-middle font-sans shadow-floating transition-all dark:border-outlineHover-dark dark:bg-black"
+                      "border-outline shadow-floating dark:border-outlineHover-dark w-full max-w-4xl transform rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
                     )}
                   >
                     {loading ? (
@@ -149,7 +156,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                           as="div"
                           className="flex flex-col gap-y-1.5 text-black dark:text-white"
                         >
-                          <span className="pr-8 text-sm uppercase text-dim">
+                          <span className="text-dim pr-8 text-sm uppercase">
                             {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
                           </span>
                           <span className="text-lg font-bold">{publication.title}</span>
@@ -183,20 +190,20 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                           </Button>
                           <Button
                             variant="reset"
-                            className="group absolute right-4 top-4 h-9 w-9 rounded-full hover:bg-washed dark:hover:bg-washed-dark"
+                            className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-4 top-4 h-9 w-9 rounded-full"
                             onClick={() => {
                               hide();
                               setData("query", "");
                             }}
                           >
-                            <XMarkIcon className="mx-auto h-6 w-6 text-dim group-hover:text-black group-hover:dark:text-white" />
+                            <XMarkIcon className="text-dim mx-auto h-6 w-6 group-hover:text-black group-hover:dark:text-white" />
                           </Button>
                         </Dialog.Title>
                         <div className="flex flex-col justify-between gap-3 pt-6 sm:flex-row sm:items-center">
                           <h5>{t("download_list")}</h5>
                           {publication.resources.length > 5 && (
                             <Search
-                              className="w-full rounded-md border border-outline text-dim dark:border-outlineHover-dark sm:w-[300px]"
+                              className="border-outline text-dim dark:border-outlineHover-dark w-full rounded-md border sm:w-[300px]"
                               placeholder={t("search_subject")}
                               onChange={q => setData("query", q)}
                             />

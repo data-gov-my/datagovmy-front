@@ -4,7 +4,8 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
-import BrowsePublicationsDashboard, { Publication } from "misc/publications/browse";
+import BrowsePublicationsDashboard from "misc/publications/browse";
+import { Publication } from "datagovmy-ui/components";
 import PublicationsLayout from "misc/publications/layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 

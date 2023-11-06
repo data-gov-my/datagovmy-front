@@ -327,8 +327,8 @@ const Table: FunctionComponent<TableProps> = ({
               })
             ) : (
               <tr>
-                <td colSpan={table.getAllColumns().length} className="border-r border-black">
-                  <div>{t("common:common.no_entries")}. </div>
+                <td colSpan={table.getAllColumns().length} className="border-outline border-r">
+                  <div className="text-sm">{t("common:common.no_entries")}.</div>
                 </td>
               </tr>
             )}
