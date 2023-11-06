@@ -59,7 +59,7 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
     setData("resources", [
       ...data.resources,
       {
-        resource_id: "",
+        resource_id: data.resources.length + 1,
         resource_type: "",
         resource_name: "",
         resource_name_bm: "",
@@ -323,6 +323,7 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
                       type="text"
                       className="w-full"
                       name="resource_id"
+                      readOnly={true}
                       label={t("forms.resource_id")}
                       placeholder={t("forms.resource_id")}
                       value={data.resources[index].resource_id}
