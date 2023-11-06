@@ -11,7 +11,7 @@ To learn more about GTFS and its specifications, you can visit the [GTFS documen
 
 ### Source of GTFS Static Data
 
-GTFS-Static API incorporates data from various transport agencies. Agencies who contribute their transit data to the GTFS-Static API include:
+The GTFS Static API incorporates data from various transport agencies in Malaysia. Currently, the following agencies contribute their transit data:
 
 - [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): A bus service operator in Johor Bahru, Malaysia, providing bus transportation on 19 routes across 5 corridors, including Kota Tinggi, Masai, Kulai, Gelang Patah, and Pontian.
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): The main railway operator in Malaysia, providing train services across the country.
@@ -25,7 +25,7 @@ GTFS-Static API incorporates data from various transport agencies. Agencies who 
 ## Request Query & Response Format
 
 The GTFS Static API provides access to public transportation data represented as a GTFS Feed, which consists of a collection of text files packaged in a **ZIP file**.
-This API allows users to download the ZIP files by different agencies using the endpoints below:
+You can access these data files through the following endpoints:
 
 ### myBAS Johor Bahru
 
@@ -53,7 +53,8 @@ GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
 
 ### Understanding the data
 
-After unzipping the files obtained from the API endpoints above, you will see different text files. Below is a basic explanation of the required text files from all agencies:
+Upon extracting the ZIP files obtained from the API endpoints, you will find various text files.
+Here are the essential text files provided by all agencies:
 
 | GTFS Type        | Description                                      |
 | ---------------- | ------------------------------------------------ |
@@ -64,4 +65,5 @@ After unzipping the files obtained from the API endpoints above, you will see di
 | `stop_times.txt` | Timetables and stop details for trips            |
 | `calendar.txt`   | Service availability for specific dates          |
 
-There are other text files, e.g. `frequencies.txt` and `shapes.txt` that are optionally provided if available. For more information, refer to [Static Transit Reference](https://developers.google.com/transit/gtfs/reference) provided by Google.
+Other optional files, such as `frequencies.txt` and `shapes.txt`, are provided if available.
+For more details, refer to the [Static Transit Reference](https://developers.google.com/transit/gtfs/reference) provided by Google.
