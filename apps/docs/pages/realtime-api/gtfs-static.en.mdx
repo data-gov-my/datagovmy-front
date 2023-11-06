@@ -1,8 +1,67 @@
 ## GTFS Static API Endpoint
 
 ```http
-# COMING SOON
-GET https://api.data.gov.my/gtfs-static
+GET https://api.data.gov.my/gtfs-static/<agency>
 ```
 
-Our Transport API (GTFS Static) will be officially launching on ~~October 26, 2023~~ November 7, 2023. The launch date was pushed back due to unforeseen challenges at ground level. Please stay tuned for updates!
+### What does GTFS Static do?
+
+GTFS Static API provides access to standardized public transportation schedules and geographic information, following the General Transit Feed Specification (GTFS).
+To learn more about GTFS and its specifications, you can visit the [GTFS documentation](https://developers.google.com/transit/gtfs) provided by Google.
+
+### Source of GTFS Static Data
+
+GTFS-Static API incorporates data from various transport agencies. Agencies who contribute their transit data to the GTFS-Static API include:
+
+- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): A bus service operator in Johor Bahru, Malaysia, providing bus transportation on 19 routes across 5 corridors, including Kota Tinggi, Masai, Kulai, Gelang Patah, and Pontian.
+- [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): The main railway operator in Malaysia, providing train services across the country.
+- [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
+
+### Frequency of Data Update
+
+- myBAS Johor Bahru and Prasarana GTFS datasets are updated **when required**.
+- KTMB GTFS dataset is updated **daily**.
+
+## Request Query & Response Format
+
+The GTFS Static API provides access to public transportation data represented as a GTFS Feed, which consists of a collection of text files packaged in a **ZIP file**.
+This API allows users to download the ZIP files by different agencies using the endpoints below:
+
+### myBAS Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-johor
+# ZIP file is returned
+```
+
+### KTMB
+
+```http
+GET https://api.data.gov.my/gtfs-static/ktmb
+# ZIP file is returned
+```
+
+### Prasarana
+
+```http
+GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
+# ZIP file is returned
+```
+
+- The possible `<category>` values are `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder` & `rapid-rail-kl`.
+- _Note: `rapid-bus-kl` is currently unavailable and will be updated in the future._
+
+### Understanding the data
+
+After unzipping the files obtained from the API endpoints above, you will see different text files. Below is a basic explanation of the required text files from all agencies:
+
+| GTFS Type        | Description                                      |
+| ---------------- | ------------------------------------------------ |
+| `agency.txt`     | Information about transit agencies               |
+| `stops.txt`      | Information about transit stops                  |
+| `routes.txt`     | Details about transit routes                     |
+| `trips.txt`      | Specific trips with associated route information |
+| `stop_times.txt` | Timetables and stop details for trips            |
+| `calendar.txt`   | Service availability for specific dates          |
+
+There are other text files, e.g. `frequencies.txt` and `shapes.txt` that are optionally provided if available. For more information, refer to [Static Transit Reference](https://developers.google.com/transit/gtfs/reference) provided by Google.
