@@ -1,11 +1,11 @@
-## 1.0.0 (2023-09-13)
+## 1.2.0 (2023-11-06)
 
-### Pelancaran Awal
+### Pelancaran API GTFS Statik
 
-- Pelancaran OpenAPI Malaysia dengan 'endpoints' berikut:
-  - `/data-catalogue` untuk mengakses katalog data.
-  - `/opendosm` untuk mengakses katalog data OpenDOSM.
-  - `/flood-warning` untuk mengakses data amaran banjir secara waktu sebenar.
+- Pelancaran [API GTFS Statik](ms/realtime-api/gtfs-static) dengan data dari myBAS Johor Bahru, KTMB, dan Prasarana dengan 'endpoints' berikut:
+  - `gtfs-static/mybas-johor` untuk muat turun fail ZIP GTFS myBAS.
+  - `gtfs-static/ktmb` untuk muat turun fail ZIP GTFS KTMB.
+  - `gtfs-static/prasarana?category=<kategori>` untuk muat turun fail ZIP GTFS Prasarana.
 
 ## 1.1.0 (2023-10-09)
 
@@ -16,5 +16,14 @@
   - `/weather/warning` untuk mengakses data masa nyata amaran cuaca.
   - `/weather/warning/earthquake` untuk mengakses data amaran gempa bumi.
 
-[Unreleased]: #unreleased
-[1.1.0]: #1.1.0---2023-10-25
+## 1.0.0 (2023-09-13)
+
+### Pelancaran Awal
+
+- Pelancaran OpenAPI Malaysia dengan 'endpoints' berikut:
+  - `/data-catalogue` untuk mengakses katalog data.
+  - `/opendosm` untuk mengakses katalog data OpenDOSM.
+  - `/flood-warning` untuk mengakses data amaran banjir secara waktu sebenar.
+
+[Belum Dikeluarkan]: #belum-dikeluarkan
+[1.2.1]: #1.2.1---2023-11-13

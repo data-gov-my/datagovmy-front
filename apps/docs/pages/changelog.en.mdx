@@ -1,11 +1,11 @@
-## 1.0.0 (2023-09-13)
+## 1.2.0 (2023-11-06)
 
-### Initial Release
+### GTFS Static API Release
 
-- Launched Malaysia's OpenAPI with the following endpoints:
-  - `/data-catalogue` for accessing full data catalogue.
-  - `/opendosm` for accessing OpenDOSM specific data catalogue.
-  - `/flood-warning` for accessing realtime flood warning data.
+- Launched [GTFS Static API](realtime-api/gtfs-static) with data from myBAS Johor Bahru, KTMB and Prasarana with the following endpoints:
+  - `gtfs-static/mybas-johor` for downloading myBAS GTFS ZIP file.
+  - `gtfs-static/ktmb`for downloading KTMB GTFS ZIP file.
+  - `gtfs-static/prasarana?category=<category>` for downloading Prasarana GTFS ZIP file.
 
 ## 1.1.0 (2023-10-09)
 
@@ -16,5 +16,14 @@
   - `/weather/warning` for accessing realtime weather warning data.
   - `/weather/warning/earthquake` for accessing earthquake warning data.
 
+## 1.0.0 (2023-09-13)
+
+### Initial Release
+
+- Launched Malaysia's OpenAPI with the following endpoints:
+  - `/data-catalogue` for accessing full data catalogue.
+  - `/opendosm` for accessing OpenDOSM specific data catalogue.
+  - `/flood-warning` for accessing realtime flood warning data.
+
 [Unreleased]: #unreleased
-[1.1.0]: #1.1.0---2023-10-25
+[1.2.1]: #1.2.1---2023-11-13
