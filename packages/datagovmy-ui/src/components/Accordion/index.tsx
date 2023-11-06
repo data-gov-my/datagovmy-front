@@ -6,8 +6,9 @@ import { FunctionComponent, ReactNode } from "react";
 type AccordionProps = {
   className?: string;
   width?: string;
-  title: string;
+  title: ReactNode;
   children: ReactNode;
+  defaultOpen?: boolean;
 };
 
 const Accordion: FunctionComponent<AccordionProps> = ({
@@ -15,9 +16,10 @@ const Accordion: FunctionComponent<AccordionProps> = ({
   width = "w-full",
   title,
   children,
+  defaultOpen = false,
 }) => {
   return (
-    <Disclosure>
+    <Disclosure as={"div"} defaultOpen={defaultOpen}>
       {({ open }) => (
         <>
           <Disclosure.Button
