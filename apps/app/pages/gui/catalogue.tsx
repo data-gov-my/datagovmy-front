@@ -6,7 +6,7 @@ import { withi18n } from "datagovmy-ui/decorators";
 import GUILayout from "@misc/gui/layout";
 
 const GUICatalogue: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["gui"]);
+  const { t } = useTranslation(["gui-opendosm-pub"]);
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
@@ -17,7 +17,7 @@ const GUICatalogue: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticPr
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("gui", async () => {
+export const getStaticProps: GetStaticProps = withi18n("gui-opendosm-pub", async () => {
   return {
     notFound: false,
     props: {

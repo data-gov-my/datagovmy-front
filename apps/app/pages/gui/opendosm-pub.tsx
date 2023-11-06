@@ -27,7 +27,7 @@ import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { ExcelIcon, PDFIcon } from "datagovmy-ui/icons";
 
 const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["gui", "catalogue", "publications"]);
+  const { t } = useTranslation(["gui-opendosm-pub", "catalogue", "publications"]);
   const { data, setData } = useData({
     release_date: DateTime.now().toISODate(),
     publication: "",
@@ -246,10 +246,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GUILayout>
         <Container>
-          <Section
-            title={"Get Started"}
-            description="Fill in the forms and show preview of the metadata of the publication"
-          >
+          <Section title={t("get_started")} description={t("get_started_desc")}>
             <div className="flex w-full flex-col gap-6">
               <div className="mx-auto w-full max-w-screen-md">
                 <form className="flex w-full flex-col" method="post">
@@ -260,8 +257,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         type="text"
                         className="w-full"
                         name="publication"
-                        label="Publication ID"
-                        placeholder={"Publication ID"}
+                        label={t("forms.publication")}
+                        placeholder={t("forms.publication")}
                         value={data.publication}
                         onChange={e => {
                           setData("publication", e);
@@ -274,8 +271,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         type="text"
                         className="w-full"
                         name="publication_type"
-                        label="Publication Type"
-                        placeholder={"Publication Type"}
+                        label={t("forms.publication_type")}
+                        placeholder={t("forms.publication_type")}
                         value={data.publication_type}
                         onChange={e => {
                           setData("publication_type", e);
@@ -286,7 +283,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label label="Choose items" />
+                      <Label label={t("choose_items")} />
                       <div className="flex flex-col gap-3 lg:flex-row lg:gap-2">
                         <Dropdown
                           anchor="left"
@@ -334,8 +331,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         type="text"
                         name="title"
                         className="w-full"
-                        label="Title"
-                        placeholder={"Title"}
+                        label={t("forms.title")}
+                        placeholder={t("forms.title")}
                         value={data.title}
                         onChange={e => {
                           setData("title", e);
@@ -348,8 +345,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         type="text"
                         className="w-full"
                         name="title_bm"
-                        label="Title BM"
-                        placeholder={"Title BM"}
+                        label={t("forms.title_bm")}
+                        placeholder={t("forms.title_bm")}
                         value={data.title_bm}
                         onChange={e => {
                           setData("title_bm", e);
@@ -364,8 +361,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         type="text"
                         className="w-full"
                         name="publication_type_title"
-                        label="Publication Type Title"
-                        placeholder={"Publication Type Title"}
+                        label={t("forms.publication_type_title")}
+                        placeholder={t("forms.publication_type_title")}
                         value={data.publication_type_title}
                         onChange={e => {
                           setData("publication_type_title", e);
@@ -378,8 +375,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         type="text"
                         className="w-full"
                         name="publication_type_title_bm"
-                        label="Publication Type Title BM"
-                        placeholder={"Publication Type Title BM"}
+                        label={t("forms.publication_type_title_bm")}
+                        placeholder={t("forms.publication_type_title_bm")}
                         value={data.publication_type_title_bm}
                         onChange={e => {
                           setData("publication_type_title_bm", e);
@@ -390,9 +387,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                     </div>
                     <div className="flex flex-col gap-2 lg:flex-row">
                       <div className="flex w-full flex-col gap-2">
-                        <Label name="description" label="Description" />
+                        <Label name="description" label={t("forms.description")} />
                         <Textarea
-                          placeholder="Add description here"
+                          placeholder={t("forms.description_placeholder")}
                           rows={2}
                           className={validation.description ? "border-danger border-2" : ""}
                           value={data.description}
@@ -404,9 +401,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         <p className="text-danger text-xs">{validation.description}</p>
                       </div>
                       <div className="flex w-full flex-col gap-2">
-                        <Label name="description_bm" label="Description BM" />
+                        <Label name="description_bm" label={t("forms.description_bm")} />
                         <Textarea
-                          placeholder="Add description BM here"
+                          placeholder={t("forms.description_placeholder_bm")}
                           rows={2}
                           value={data.description_bm}
                           className={validation.description_bm ? "border-danger border-2" : ""}
@@ -420,15 +417,12 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                     </div>
                   </div>
 
-                  <Section
-                    title="Resources"
-                    description="Add or remove resources for this publication"
-                  >
+                  <Section title={t("resources")} description={t("resources_desc")}>
                     {data.resources?.length === 0 ? (
                       <div className="flex h-[300px] w-full flex-col items-center justify-center gap-2">
-                        <p className="text-dim ">No resources added.</p>
+                        <p className="text-dim ">{t("no_resource_added")}</p>
                         <Button onClick={handleAddNewResource} variant="primary">
-                          Add one
+                          {t("add_one")}
                         </Button>
                       </div>
                     ) : (
@@ -439,7 +433,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                             title={
                               <div className="flex w-full items-center gap-2">
                                 <p className="text-md flex-1 font-medium text-black">
-                                  Resource {index + 1}
+                                  {t("resources")} {index + 1}
                                 </p>
                                 <TrashIcon
                                   className="text-danger hover:bg-outlineHover/30 h-4 w-4 rounded-full"
@@ -457,8 +451,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   type="text"
                                   className="w-full"
                                   name="resource_link"
-                                  label="Resource Link"
-                                  placeholder={"Insert resource url"}
+                                  label={t("forms.resource_link")}
+                                  placeholder={t("forms.resource_link_placeholder")}
                                   value={data.resources[index].resource_link}
                                   onChange={e => updateSingleResource(index, "resource_link", e)}
                                   validation={validation.resources[index].resource_link}
@@ -470,14 +464,14 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   type="text"
                                   className="w-full"
                                   name="resource_id"
-                                  label="Resource ID"
-                                  placeholder={"Resource ID"}
+                                  label={t("forms.resource_id")}
+                                  placeholder={t("forms.resource_id")}
                                   value={data.resources[index].resource_id}
                                   onChange={e => updateSingleResource(index, "resource_id", e)}
                                   validation={validation.resources[index].resource_id}
                                 />
                                 <div className="flex w-full flex-col gap-2">
-                                  <Label label="Resource Type" />
+                                  <Label label={t("forms.resource_type")} />
                                   <Dropdown
                                     anchor="left"
                                     width="w-full"
@@ -487,7 +481,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                         : ""
                                     }
                                     options={resourceType}
-                                    placeholder="Resource Type"
+                                    placeholder={t("forms.resource_type")}
                                     selected={
                                       resourceType.find(
                                         e => e.value === data.resources[index].resource_type
@@ -508,8 +502,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   type="text"
                                   className="w-full"
                                   name="resource_name"
-                                  label="Resource Name"
-                                  placeholder={"Resource Name"}
+                                  label={t("forms.resource_name")}
+                                  placeholder={t("forms.resource_name")}
                                   value={data.resources[index].resource_name}
                                   onChange={e => updateSingleResource(index, "resource_name", e)}
                                   validation={validation.resources[index].resource_name}
@@ -519,8 +513,8 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   type="text"
                                   className="w-full"
                                   name="resource_name_bm"
-                                  label="Resource Name BM"
-                                  placeholder={"Resource Name BM"}
+                                  label={t("forms.resource_name_bm")}
+                                  placeholder={t("forms.resource_name_bm")}
                                   value={data.resources[index].resource_name_bm}
                                   onChange={e => updateSingleResource(index, "resource_name_bm", e)}
                                   validation={validation.resources[index].resource_name_bm}
@@ -530,7 +524,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                           </Accordion>
                         ))}
                         <Button onClick={handleAddNewResource} variant="primary">
-                          Add more
+                          {t("add_more")}
                         </Button>
                       </div>
                     )}
@@ -551,7 +545,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
-                      title: data.title ? data.title : "[SERIES] [PUBLICATION TITLE]",
+                      title: data.title ? data.title : "[PUBLICATION TITLE]",
                       total_downloads: 0,
                     }}
                   />
@@ -567,7 +561,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
-                      title: data.title_bm ? data.title_bm : "[SIRI] [TAJUK PENERBITAN]",
+                      title: data.title_bm ? data.title_bm : "[TAJUK PENERBITAN]",
                       total_downloads: 0,
                     }}
                   />
@@ -577,7 +571,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                 <div className="flex w-full flex-col items-center space-y-6 lg:flex-row lg:space-x-6 lg:space-y-0">
                   <ModalAsCard
                     publication={{
-                      title: data.title ? data.title : "[SERIES] [PUBLICATION TITLE]",
+                      title: data.title ? data.title : "[PUBLICATION TITLE]",
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
@@ -590,7 +584,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                           resource_type: item.resource_type,
                           resource_name: item.resource_name
                             ? item.resource_name
-                            : "[INSERT RESOURCE NAME]: [SERIES]",
+                            : "[INSERT RESOURCE NAME]",
                           resource_link: item.resource_link,
                           downloads: 0,
                         })
@@ -599,20 +593,20 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                   />
                   <ModalAsCard
                     publication={{
-                      title: data.title ? data.title : "[SIRI] [TAJUK PENERBITAN]",
+                      title: data.title_bm ? data.title_bm : "[TAJUK PENERBITAN]",
                       release_date: data.release_date
                         ? data.release_date
                         : DateTime.now().toISODate(),
-                      description: data.description
-                        ? data.description
-                        : "The publication description preview in English. This is required for a publication metadata",
+                      description: data.description_bm
+                        ? data.description_bm
+                        : "The publication description preview in Bahasa Malaysia. This is required for a publication metadata",
                       resources: data.resources.map(
                         (item: Resource & { resource_name_bm: string }) => ({
                           resource_id: item.resource_id,
                           resource_type: item.resource_type,
                           resource_name: item.resource_name_bm
                             ? item.resource_name_bm
-                            : "[NAMA SUMBER]: [SIRI]",
+                            : "[NAMA SUMBER]",
                           resource_link: item.resource_link,
                           downloads: 0,
                         })
@@ -715,7 +709,7 @@ const ModalAsCard = ({ publication }: { publication: PubResource }) => {
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  ["gui", "catalogue", "publications"],
+  ["gui-opendosm-pub", "catalogue", "publications"],
   async () => {
     return {
       notFound: false,

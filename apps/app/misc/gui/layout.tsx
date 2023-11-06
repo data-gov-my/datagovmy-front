@@ -16,7 +16,7 @@ interface GUILayoutProps {
 }
 
 const GUILayout: FunctionComponent<GUILayoutProps> = ({ children }) => {
-  const { t } = useTranslation(["gui", "common"]);
+  const { t } = useTranslation(["gui-opendosm-pub", "common"]);
   const { pathname, ...router } = useRouter();
 
   useEffect(() => {

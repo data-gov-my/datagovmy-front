@@ -42,7 +42,7 @@ const namespaces = [
   "dashboard-business-creation-destruction",
   "dashboard-electronic-payments",
   "helpdesk",
-  "gui",
+  "gui-opendosm-pub",
 ];
 
 module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
