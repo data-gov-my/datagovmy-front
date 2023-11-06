@@ -1,5 +1,10 @@
-import PublicationCard from "@components/Publication/Card";
-import PublicationModal, { PubResource } from "@components/Publication/Modal";
+import {
+  PublicationModal,
+  PublicationCard,
+  PubResource,
+  Resource,
+  Publication,
+} from "datagovmy-ui/components";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
@@ -35,23 +40,6 @@ import { FunctionComponent, useEffect, useMemo, useState } from "react";
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
   ssr: false,
 });
-
-export type Publication = {
-  description: string;
-  publication_id: string;
-  publication_type: string;
-  release_date: string;
-  title: string;
-  total_downloads: number;
-};
-
-export type Resource = {
-  resource_id: number;
-  resource_name: string;
-  resource_link: string;
-  resource_type: string;
-  downloads: number;
-};
 
 interface BrowsePublicationsProps {
   dropdown: Array<{ publication_type: string; publication_type_title: string }>;
