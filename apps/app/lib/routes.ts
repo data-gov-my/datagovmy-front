@@ -41,6 +41,8 @@ export const routes = {
   SEKOLAHKU: "/dashboard/sekolahku",
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
   GUI: "/gui",
+  GUI_OPENDOSM_PUB: "/gui/opendosm-pub",
+  GUI_CATALOGUE: "/gui/catalogue",
 };
 
 export const static_routes: string[] = (() => {
