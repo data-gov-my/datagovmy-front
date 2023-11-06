@@ -44,6 +44,10 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
     description_bm: "",
   });
 
+  const { data: validation, setData: setValidation } = useData(
+    Object.fromEntries(Object.entries(data).map(([key]) => [key, key === "resources" ? [] : false]))
+  );
+
   const frequencies: OptionType[] = [
     { label: t("catalogue:filter_options.monthly"), value: "MONTHLY" },
     { label: t("catalogue:filter_options.quarterly"), value: "QUARTERLY" },
@@ -83,12 +87,28 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
         downloads: 0,
       },
     ]);
+
+    setValidation("resources", [
+      ...validation.resources,
+      {
+        resource_id: false,
+        resource_type: false,
+        resource_name: false,
+        resource_name_bm: false,
+        resource_link: false,
+        downloads: false,
+      },
+    ]);
   };
 
   const handleDeleteOneResource = (index: number) => {
     setData(
       "resources",
       data.resources.filter((item: Resource, idx: number) => idx !== index)
+    );
+    setValidation(
+      "resources",
+      validation.resources.filter((item: Resource, idx: number) => idx !== index)
     );
   };
 
@@ -106,6 +126,69 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
 
     setData("resources", updatedResource);
   };
+
+  const validateInput = async () =>
+    new Promise((resolve, reject) => {
+      const updatedValidation = Object.entries(data).map(([key, value]) => {
+        if (typeof value === "string") {
+          if (value) {
+            setValidation(key, false);
+            return [key, true];
+          } else {
+            setValidation(key, "Required");
+            return [key, false];
+          }
+        }
+
+        if (Array.isArray(value) && (key === "demography" || key === "geography")) {
+          setValidation(key, false);
+          return [key, true];
+        }
+
+        if (Array.isArray(value) && key === "resources") {
+          const validatedResource = data.resources.map((item: any, index: number) => {
+            return Object.fromEntries(
+              Object.entries(item).map(([k, v]) => {
+                if (typeof v === "string") {
+                  if (k === "resource_link") {
+                    const isValidUrl = new RegExp(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, "i").test(
+                      v
+                    );
+                    return [k, !Boolean(v) ? "Required" : !isValidUrl ? "Not a valid url" : false];
+                  }
+
+                  if (v) {
+                    return [k, false];
+                  } else {
+                    return [k, "Required"];
+                  }
+                }
+                return [k, false];
+              })
+            );
+          });
+
+          setValidation(key, validatedResource);
+          return [
+            key,
+            validatedResource.length > 0
+              ? validatedResource
+                  .map((item: any) => Object.values(item).filter(i => Boolean(i) === true))
+                  .every((arr: any) => arr.length === 0)
+              : false,
+          ];
+        }
+      });
+
+      if (updatedValidation.every(el => el && el[1] === true)) {
+        resolve({
+          ok: true,
+          message: "All fields are validated",
+        });
+      } else {
+        reject("Some field needs to be validated");
+      }
+    });
 
   const generateOutputJSON = () => {
     return JSON.stringify(
@@ -182,7 +265,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         value={data.publication}
                         onChange={e => {
                           setData("publication", e);
+                          setValidation("publication", false);
                         }}
+                        validation={validation.publication}
                       />
                       <Input
                         required
@@ -194,7 +279,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         value={data.publication_type}
                         onChange={e => {
                           setData("publication_type", e);
+                          setValidation("publication_type", false);
                         }}
+                        validation={validation.publication_type}
                       />
                     </div>
 
@@ -204,11 +291,13 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         <Dropdown
                           anchor="left"
                           width="w-full"
+                          className={validation.frequency ? "border-danger border-2" : ""}
                           options={frequencies}
                           placeholder={t("catalogue:frequency")}
                           selected={frequencies.find(e => e.value === data.frequency) ?? undefined}
                           onChange={e => {
                             setData("frequency", e.value);
+                            setValidation("frequency", false);
                           }}
                         />
                         <Dropdown
@@ -237,6 +326,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                           }}
                         />
                       </div>
+                      <p className="text-danger text-xs">{validation.frequency}</p>
                     </div>
                     <div className="flex flex-col gap-2 lg:flex-row">
                       <Input
@@ -249,7 +339,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         value={data.title}
                         onChange={e => {
                           setData("title", e);
+                          setValidation("title", false);
                         }}
+                        validation={validation.title}
                       />
                       <Input
                         required
@@ -261,7 +353,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         value={data.title_bm}
                         onChange={e => {
                           setData("title_bm", e);
+                          setValidation("title_bm", false);
                         }}
+                        validation={validation.title_bm}
                       />
                     </div>
                     <div className="flex flex-col gap-2 lg:flex-row">
@@ -275,7 +369,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         value={data.publication_type_title}
                         onChange={e => {
                           setData("publication_type_title", e);
+                          setValidation("publication_type_title", false);
                         }}
+                        validation={validation.publication_type_title}
                       />
                       <Input
                         required
@@ -287,7 +383,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         value={data.publication_type_title_bm}
                         onChange={e => {
                           setData("publication_type_title_bm", e);
+                          setValidation("publication_type_title_bm", false);
                         }}
+                        validation={validation.publication_type_title_bm}
                       />
                     </div>
                     <div className="flex flex-col gap-2 lg:flex-row">
@@ -296,11 +394,14 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                         <Textarea
                           placeholder="Add description here"
                           rows={2}
+                          className={validation.description ? "border-danger border-2" : ""}
                           value={data.description}
                           onChange={e => {
                             setData("description", e.target.value);
+                            setValidation("description", false);
                           }}
                         />
+                        <p className="text-danger text-xs">{validation.description}</p>
                       </div>
                       <div className="flex w-full flex-col gap-2">
                         <Label name="description_bm" label="Description BM" />
@@ -308,10 +409,13 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                           placeholder="Add description BM here"
                           rows={2}
                           value={data.description_bm}
+                          className={validation.description_bm ? "border-danger border-2" : ""}
                           onChange={e => {
                             setData("description_bm", e.target.value);
+                            setValidation("description_bm", false);
                           }}
                         />
+                        <p className="text-danger text-xs">{validation.description_bm}</p>
                       </div>
                     </div>
                   </div>
@@ -357,6 +461,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   placeholder={"Insert resource url"}
                                   value={data.resources[index].resource_link}
                                   onChange={e => updateSingleResource(index, "resource_link", e)}
+                                  validation={validation.resources[index].resource_link}
                                 />
                               </div>
                               <div className="flex gap-2">
@@ -369,12 +474,18 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   placeholder={"Resource ID"}
                                   value={data.resources[index].resource_id}
                                   onChange={e => updateSingleResource(index, "resource_id", e)}
+                                  validation={validation.resources[index].resource_id}
                                 />
                                 <div className="flex w-full flex-col gap-2">
                                   <Label label="Resource Type" />
                                   <Dropdown
                                     anchor="left"
                                     width="w-full"
+                                    className={
+                                      validation.resources[index].resource_type
+                                        ? "border-danger border-2"
+                                        : ""
+                                    }
                                     options={resourceType}
                                     placeholder="Resource Type"
                                     selected={
@@ -386,6 +497,9 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                       updateSingleResource(index, "resource_type", e.value)
                                     }
                                   />
+                                  <p className="text-danger text-xs">
+                                    {validation.resources[index].resource_type}
+                                  </p>
                                 </div>
                               </div>
                               <div className="flex gap-2">
@@ -398,6 +512,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   placeholder={"Resource Name"}
                                   value={data.resources[index].resource_name}
                                   onChange={e => updateSingleResource(index, "resource_name", e)}
+                                  validation={validation.resources[index].resource_name}
                                 />
                                 <Input
                                   required
@@ -408,6 +523,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                                   placeholder={"Resource Name BM"}
                                   value={data.resources[index].resource_name_bm}
                                   onChange={e => updateSingleResource(index, "resource_name_bm", e)}
+                                  validation={validation.resources[index].resource_name_bm}
                                 />
                               </div>
                             </div>
@@ -509,13 +625,18 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                 <Button
                   variant="primary"
                   className=""
-                  onClick={() =>
-                    downloadJSON(
-                      generateOutputJSON(),
-                      `${data.publication}.json`,
-                      "application/json"
-                    )
-                  }
+                  onClick={async () => {
+                    try {
+                      const isValid = (await validateInput()) as { ok: boolean; message: string };
+                      if (isValid.ok) {
+                        downloadJSON(
+                          generateOutputJSON(),
+                          `${data.publication}.json`,
+                          "application/json"
+                        );
+                      }
+                    } catch (error) {}
+                  }}
                 >
                   Generate JSON
                 </Button>
