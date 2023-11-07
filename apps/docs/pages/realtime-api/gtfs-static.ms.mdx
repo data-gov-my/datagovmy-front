@@ -57,8 +57,8 @@ GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
 # Fail ZIP dikembalikan
 ```
 
-- Senarai nilai sah bagi `<category>` adalah `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder` & `rapid-rail-kl`.
-- _Nota: `rapid-bus-kl` belum lagi dibekalkan, tetapi akan disediakan pada masa depan dalam format yang sama._
+- Senarai nilai sah bagi `<category>` adalah `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder`, `rapid-rail-kl` & `rapid-bus-kl`.
+- Nota: Beberapa perjalanan (diperincikan sepenuhnya dalam [CSV ini](https://openapi-malaysia-transport.s3.ap-southeast-1.amazonaws.com/prasarana/problematic_trips.csv)) bagi endpoint `rapid-bus-kl` telah dikeluarkan daripada fail `stop_times.txt` kerana isu operasi yang memberi kesan kepada ketepatan data. Kami sedang berusaha untuk menyempurnakan dan memasukkan semula perjalanan tersebut dalam data GTFS yang dibekalkan.
 
 ### Memahami data GTFS
 
