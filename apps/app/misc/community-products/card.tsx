@@ -1,20 +1,24 @@
 import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent } from "react";
-import { ComminityProductsItem } from ".";
 import Image from "next/image";
 import { toDate } from "datagovmy-ui/helpers";
 import { DateTime } from "luxon";
+import { CommunityProductsItem } from "pages/community-products/[[...product_id]]";
 
 interface CommunityProductsCardProps {
-  item: ComminityProductsItem;
+  item: CommunityProductsItem;
+  onClick: () => void;
 }
 
-const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({ item }) => {
+const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({
+  item,
+  onClick,
+}) => {
   const { t, i18n } = useTranslation(["community-products"]);
   const diffInDays = DateTime.now().diff(DateTime.fromISO(item.date), ["days"]);
 
   return (
-    <div className="gap-4.5 flex w-full hover:cursor-pointer" key={item.id}>
+    <div className="gap-4.5 flex w-full hover:cursor-pointer" key={item.id} onClick={onClick}>
       <div className="bg-background border-outline flex h-[150px] w-[150px] items-center rounded-lg border">
         <Image src={item.image} width={150} height={150} alt={item.title} />
       </div>

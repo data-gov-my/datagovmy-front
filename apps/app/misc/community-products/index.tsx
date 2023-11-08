@@ -8,102 +8,45 @@ import {
   Section,
   Spinner,
 } from "datagovmy-ui/components";
-import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { useData, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import CommunityProductsCard from "./card";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import CommunityProductsModal from "./modal";
+import { CommunityProductsItem } from "pages/community-products/[[...product_id]]";
+import { useRouter } from "next/router";
+import { routes } from "@lib/routes";
 
-export type ComminityProductsItem = {
-  id: number;
-  title: string;
-  date: string;
-  type: "app";
-  description: string;
-  image: string;
-};
+interface CommunityProductsDashboardProps {
+  params: any;
+  query: any;
+  total_products: number;
+  products: Array<CommunityProductsItem>;
+  product: CommunityProductsItem;
+}
 
-// Dummy items for the page
-const dropdown: Array<ComminityProductsItem> = [
-  {
-    id: 1,
-    title: "CHIPTA 2020 : BAZ apps",
-    type: "app",
-    date: "2023-11-07",
-    description:
-      "Aplikasi dapat membantu ibu bapa mendapatkan maklumat berkaitan taska, pengasuh dan perkhidmatan yang ditawarkan.",
-    image: "/static/images/og_en-GB.png",
-  },
-  {
-    id: 2,
-    title: "CHIPTA 2020 : Digital Therapeutics",
-    type: "app",
-    date: "2021-04-09",
-    description:
-      "Membangunkan aplikasi telefon pintar 'My Transplant Diary' untuk meningkatkan swadaya pesakit buah pinggang melalui mekanisma sokongan pesakit dan perkongsian pengalaman",
-    image: "/static/images/og_en-GB.png",
-  },
-  {
-    id: 3,
-    title: "CHIPTA 2020 : PGAD",
-    type: "app",
-    date: "2023-11-03",
-    description:
-      "1. Pemetaan maklumat dadah2. Pemetaan lokasi dan kawasan berisiko3. Pelaporan/Statistik kepada stakeholder4. Merancang program kesedaran yang sesuai5. Pengintegrasian dengan maklumat penduduk",
-    image: "/static/images/og_en-GB.png",
-  },
-  {
-    id: 4,
-    title: "CHIPTA 2020 : DuoFlex",
-    type: "app",
-    date: "2023-10-24",
-    description:
-      "1. Menambahbaik kadar kitar semula negara. 2. Menggalakkan rutin lestari di kalangan rakyat Malaysia.3. Mendigitalkan industri kitar semula negara",
-    image: "/static/images/og_en-GB.png",
-  },
-  {
-    id: 5,
-    title: "CHIPTA 2020 : Dominator Innovation Team",
-    type: "app",
-    date: "2021-04-09",
-    description:
-      "Memastikan setiap pelajar berjaya mendapatkan pendidikan berkualiti secara percuma serta suasana pembelajaran yang relevan disamping menaik taraf sistem pendidikan di Malaysia.",
-    image: "/static/images/og_en-GB.png",
-  },
-  {
-    id: 6,
-    title: "CHIPTA 2020 : Seedoo.my",
-    type: "app",
-    date: "2021-04-09",
-    description:
-      "Membantu petani menjadi 'broker' sendiri agar mereka boleh mengakses tanpa menggunakan orang tengah ke pasaran pertanian dan petani juga boleh menetapkan harga tanaman mereka dengan kadar yang lebih kompetitif.",
-    image: "/static/images/og_en-GB.png",
-  },
-  {
-    id: 7,
-    title: "CHIPTA 2020 : Lestari",
-    type: "app",
-    date: "2021-04-09",
-    description:
-      "Memangkin kelestarian inovasi dalam industri SME seiring dengan norma baharu serta menyediakan kemudahan “marketplace” untuk mempromosi produk kepada pihak kerajaan / GLC / MNC",
-    image: "/static/images/og_en-GB.png",
-  },
-];
-
-const CommunityProductsDashboard: FunctionComponent = () => {
+const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardProps> = ({
+  params,
+  query,
+  total_products,
+  product,
+  products,
+}) => {
   const { t, i18n } = useTranslation(["community-products"]);
+  const { push, events, back } = useRouter();
 
   const { data, setData } = useData({
     loading: false,
     modal_loading: false,
-    // pub: pub,
-    search_query: dropdown[0].id,
+    show: false,
+    search_query: "",
     type: "",
     year: "",
     page: 1,
   });
 
-  const PRODUCTS_OPTIONS: OptionType[] = dropdown.map(e => ({
+  const PRODUCTS_OPTIONS: OptionType[] = products.map(e => ({
     label: e.title,
     value: e.id.toString(),
   }));
@@ -115,6 +58,29 @@ const CommunityProductsDashboard: FunctionComponent = () => {
     { label: "2021", value: "2021" },
     { label: "2020", value: "2020" },
   ];
+
+  useEffect(() => {
+    if (product) {
+      setData("show", true);
+    }
+    events.on("routeChangeComplete", () => {
+      setData("loading", false);
+      setData("modal_loading", false);
+    });
+    return () => {
+      events.off("routeChangeComplete", () => {
+        setData("loading", false);
+        setData("modal_loading", false);
+      });
+    };
+  }, [product]);
+
+  useWatch(() => {
+    data.show
+      ? (document.body.style.overflow = "hidden")
+      : (document.body.style.overflow = "unset");
+  }, [data.show]);
+
   return (
     <>
       <Container
@@ -217,8 +183,19 @@ const CommunityProductsDashboard: FunctionComponent = () => {
             ) : (
               <div>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                  {dropdown.map((item: ComminityProductsItem) => (
-                    <CommunityProductsCard item={item} />
+                  {products.map(item => (
+                    <CommunityProductsCard
+                      item={item}
+                      onClick={() => {
+                        setData("show", true);
+                        setData("modal_loading", true);
+                        push(
+                          routes.COMMUNITY_PRODUCTS.concat("/", item.id),
+                          routes.COMMUNITY_PRODUCTS.concat("/", item.id),
+                          { scroll: false }
+                        );
+                      }}
+                    />
                   ))}
                 </div>
                 <div className="flex items-center justify-center gap-4 pt-8 text-sm font-medium">
@@ -238,7 +215,7 @@ const CommunityProductsDashboard: FunctionComponent = () => {
 
                   <NumberedPagination
                     currentPage={data.page}
-                    totalPage={11}
+                    totalPage={total_products}
                     setPage={newPage => setData("page", newPage)}
                   />
                   <Button
@@ -249,12 +226,24 @@ const CommunityProductsDashboard: FunctionComponent = () => {
                       // setFilter("page", `${+filter.page + 1}`);
                       setData("page", data.page + 1);
                     }}
-                    disabled={data.page === 11}
+                    disabled={data.page === total_products}
                   >
                     {t("common:common.next")}
                     <ChevronRightIcon className="h-4.5 w-4.5" />
                   </Button>
                 </div>
+
+                <CommunityProductsModal
+                  show={data.show}
+                  loading={data.loading}
+                  hide={() => {
+                    setData("show", false);
+                    push(routes.COMMUNITY_PRODUCTS, undefined, {
+                      scroll: false,
+                    });
+                  }}
+                  product={product}
+                />
               </div>
             )}
           </Section>
