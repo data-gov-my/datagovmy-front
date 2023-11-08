@@ -44,10 +44,13 @@ export const routes = {
   GUI_OPENDOSM_PUB: "/gui/opendosm-pub",
   GUI_CATALOGUE: "/gui/catalogue",
   COMMUNITY_PRODUCTS: "/community-products",
+  DATA_REQUEST: "/data-request",
 };
 
 export const static_routes: string[] = (() => {
-  let s_routes = Object.values(routes).filter(route => !["/data-catalogue"].includes(route));
+  let s_routes = Object.values(routes).filter(
+    route => !["/data-catalogue", "/data_request", "/community-products"].includes(route)
+  );
 
   s_routes.forEach(route => {
     s_routes.push(`/ms-MY${route}`);
