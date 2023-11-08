@@ -1,5 +1,6 @@
 import CommunityProductsDashboard from "@misc/community-products";
 import { Metadata } from "datagovmy-ui/components";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
@@ -98,19 +99,21 @@ const CommunityProducts: Page = ({
         description={t("description")}
         keywords={""}
       />
-      <CommunityProductsDashboard
-        params={params}
-        query={query}
-        total_products={total_products}
-        product={product}
-        products={products}
-      />
+      <WindowProvider>
+        <CommunityProductsDashboard
+          params={params}
+          query={query}
+          total_products={total_products}
+          product={product}
+          products={products}
+        />
+      </WindowProvider>
     </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["community-products"],
+  ["community-products", "catalogue"],
   async ({ locale, query, params }) => {
     try {
       const product_id = params && params.product_id ? params.product_id[0] : "";

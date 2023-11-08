@@ -4,15 +4,18 @@ import {
   ComboBox,
   Container,
   Dropdown,
+  Label,
+  Modal,
   NumberedPagination,
+  Radio,
   Section,
   Spinner,
 } from "datagovmy-ui/components";
 import { useData, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect } from "react";
 import CommunityProductsCard from "./card";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import CommunityProductsModal from "./modal";
 import { CommunityProductsItem } from "pages/community-products/[[...product_id]]";
 import { useRouter } from "next/router";
@@ -33,8 +36,8 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
   product,
   products,
 }) => {
-  const { t, i18n } = useTranslation(["community-products"]);
-  const { push, events, back } = useRouter();
+  const { t, i18n } = useTranslation(["community-products, catalogue"]);
+  const { push, events } = useRouter();
 
   const { data, setData } = useData({
     loading: false,
@@ -119,7 +122,74 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
             />
           </div>
 
-          <div className="hidden gap-x-2 md:flex md:items-center md:justify-center">
+          {/* Mobile */}
+          <div className="flex w-full justify-end sm:hidden">
+            <Modal
+              trigger={open => (
+                <Button onClick={open} variant="default" className="shadow-floating">
+                  <span>{t("catalogue:filter")}</span>
+                  <span className="w-4.5 bg-primary dark:bg-primary-dark h-5 rounded-md text-center text-white">
+                    {/* {actives.filter(e => !e.includes("page")).length} */}0
+                  </span>
+                  <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
+                </Button>
+              )}
+              title={<Label label={t("catalogue:filter") + ":"} className="text-sm font-bold" />}
+            >
+              {close => (
+                <div className="px-4.5 dark:divide-washed-dark mb-[100px] flex h-max flex-col divide-y overflow-y-auto bg-white dark:bg-black">
+                  <div className="py-3">
+                    <Radio
+                      name="type"
+                      label={"Product Type"}
+                      options={PRODUCT_TYPE}
+                      value={data.type}
+                      onChange={e => {
+                        // setData("loading", true);
+                        setData("type", e.value);
+                        // setFilter("frequency", e);
+                        // setFilter("page", "1");
+                      }}
+                    />
+                  </div>
+                  <div className="py-3">
+                    <Radio
+                      name="year"
+                      label={"Year"}
+                      options={PRODUCT_YEAR}
+                      value={data.year}
+                      onChange={e => {
+                        // setData("loading", true);
+                        setData("year", e.value);
+                        // setFilter("frequency", e);
+                        // setFilter("page", "1");
+                      }}
+                    />
+                  </div>
+                  <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t bg-white p-3 dark:bg-black">
+                    <Button
+                      variant="primary"
+                      className="w-full justify-center"
+                      // disabled={!actives.filter(e => !e.includes("page")).length}
+                      disabled={true}
+                      // onClick={() => {
+                      //   setData("loading", true);
+                      //   reset();
+                      // }}
+                    >
+                      {t("common:common.reset")}
+                    </Button>
+                    <Button className="btn w-full justify-center px-3 py-1.5" onClick={close}>
+                      <XMarkIcon className="h-5 w-5" />
+                      {t("common:common.close")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Modal>
+          </div>
+
+          <div className="hidden gap-x-2 sm:flex sm:items-center sm:justify-center">
             <span className="text-dim">{t("filter_by")}:</span>
             <Dropdown
               anchor="left"
@@ -182,7 +252,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
               </div>
             ) : (
               <div>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                   {products.map(item => (
                     <CommunityProductsCard
                       item={item}

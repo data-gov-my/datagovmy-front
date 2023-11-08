@@ -83,7 +83,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                 >
                   <Dialog.Panel
                     className={
-                      "border-outline shadow-floating dark:border-outlineHover-dark max-h-[90vh] w-full max-w-4xl transform overflow-hidden rounded-xl border bg-white text-left align-middle font-sans transition-all dark:bg-black"
+                      "border-outline shadow-floating dark:border-outlineHover-dark max-h-[100vh] w-full max-w-4xl transform overflow-hidden rounded-xl border bg-white text-left align-middle font-sans transition-all dark:bg-black sm:max-h-[90vh]"
                     }
                   >
                     {loading ? (
@@ -130,13 +130,13 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                         </Dialog.Title>
 
                         {/* Content */}
-                        <div className="flex h-full flex-row gap-8 p-6">
+                        <div className="hide-scrollbar flex h-[85vh] flex-col gap-8 overflow-scroll p-6 sm:h-full sm:flex-row">
                           <div className="gap-4.5 flex flex-col">
-                            <div className="bg-background border-outline flex h-[300px] w-[300px] items-center rounded-lg border">
+                            <div className="bg-background border-outline relative flex h-full w-full items-center rounded-lg border sm:h-[300px] sm:w-[300px]">
                               <Image
                                 src={product.image}
-                                width={300}
-                                height={300}
+                                width={600}
+                                height={600}
                                 alt={product.title}
                               />
                             </div>
@@ -164,7 +164,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               }
                             })}
                           </div>
-                          <div className="hide-scrollbar flex h-[80vh] flex-1 flex-col gap-6 overflow-y-scroll">
+                          <div className="hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:h-[70vh] sm:overflow-y-scroll">
                             {Object.entries(dummyApplication).map(([key, value]) => {
                               if (key === "email" || key === "website") {
                                 return null;
