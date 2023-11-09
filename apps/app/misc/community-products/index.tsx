@@ -20,6 +20,7 @@ import CommunityProductsModal from "./modal";
 import { CommunityProductsItem } from "pages/community-products/[[...product_id]]";
 import { useRouter } from "next/router";
 import { routes } from "@lib/routes";
+import { RequestFeatureModal } from "./request-feature-modal";
 
 interface CommunityProductsDashboardProps {
   params: any;
@@ -43,6 +44,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
     loading: false,
     modal_loading: false,
     show: false,
+    show_feature_request: false,
     search_query: "",
     type: "",
     year: "",
@@ -93,11 +95,21 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
         <div className="mx-auto flex flex-col items-center gap-3 py-12">
           <h2 className="text-center text-black">{t("header")}</h2>
           <p className="text-dim text-center">{t("description")}</p>
-          <Button variant="primary" className="mt-3 w-fit text-center">
+          <Button
+            onClick={() => setData("show_feature_request", true)}
+            variant="primary"
+            className="mt-3 w-fit text-center"
+          >
             {t("request_to_feature")}
           </Button>
         </div>
       </Container>
+      <RequestFeatureModal
+        show={data.show_feature_request}
+        hide={() => {
+          setData("show_feature_request", false);
+        }}
+      />
       <Container>
         <Section>
           <h4 className="text-center">{t("section_title")}</h4>
