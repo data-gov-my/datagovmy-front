@@ -6,10 +6,12 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { Agency, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
+export type DataRequestStatus = "under_review" | "rejected" | "in_progress" | "published";
+
 export type DataRequestItem = {
   id: string;
   title: string;
-  status: "under_review" | "rejected" | "in_progress" | "published";
+  status: DataRequestStatus;
   date: string;
   description: string;
   data_owner: Agency;
@@ -22,7 +24,8 @@ const dummy: Array<DataRequestItem> = [
     title: "Title of the data set",
     status: "under_review",
     date: "2023-11-07",
-    description: "Description of the data set long long description",
+    description:
+      "Description of the data set long long descriptionDescription of the data set long long descriptionDescription of the data set long long description",
     data_owner: "dosm",
   },
   {
