@@ -9,7 +9,7 @@ import {
 } from "datagovmy-ui/components";
 import { useData, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { DataRequestItem, DataRequestStatus } from "pages/data-request";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useMemo } from "react";
 import {
   TicketIcon,
   MagnifyingGlassIcon,
@@ -23,6 +23,7 @@ import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { clx } from "datagovmy-ui/helpers";
 import { PublishedDataModal, RequestDataModal } from "./modal";
+import { matchSorter } from "match-sorter";
 
 interface DataRequestDashboardProps {
   query: any;
@@ -48,6 +49,19 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     tab: 0,
   });
   const baseClass = "text-sm font-normal";
+
+  const filteredStatus = useMemo(() => {
+    if (data.status === "all") return items;
+
+    return items.filter(item => item.status === data.status);
+  }, [data.status]);
+
+  const filteredRes = useMemo(
+    () => matchSorter(filteredStatus, data.search_query, { keys: ["title", "data_owner"] }),
+    [filteredStatus, data.search_query]
+  );
+
+  console.log(filteredRes);
 
   useWatch(() => {
     data.show_request || data.show_published
@@ -209,13 +223,14 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             current={data.tab}
             onChange={index => {
               setData("tab", index);
+              setData("status", STATUS_OPTIONS[index].value);
             }}
           >
             {STATUS_OPTIONS.map(option => (
               <Panel name={t(option.value)} key={option.value}>
                 <Table
                   className="mb-12 mt-8 md:mx-auto md:w-4/5 lg:w-full"
-                  data={items}
+                  data={filteredRes}
                   enablePagination={10}
                   pagination={(currentPage, totalPage, setPage) => (
                     <NumberedPagination

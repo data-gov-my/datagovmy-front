@@ -46,11 +46,11 @@ const dummy: Array<DataRequestItem> = [
   },
   {
     id: "4",
-    title: "Title of the data set",
+    title: "Random of the data set",
     status: "under_review",
     date: "2023-11-07",
     description: "Description of the data set long long description",
-    data_owner: "dosm",
+    data_owner: "bnm",
   },
   {
     id: "5",
@@ -62,7 +62,7 @@ const dummy: Array<DataRequestItem> = [
   },
   {
     id: "6",
-    title: "Title of the data set",
+    title: "What of the data set",
     status: "rejected",
     date: "2023-11-07",
     description: "Description of the data set long long description",
@@ -70,7 +70,7 @@ const dummy: Array<DataRequestItem> = [
   },
   {
     id: "7",
-    title: "Title of the data set",
+    title: "Test of the data set",
     status: "published",
     date: "2023-11-07",
     description: "Description of the data set long long description",
@@ -82,7 +82,7 @@ const dummy: Array<DataRequestItem> = [
     status: "published",
     date: "2023-11-07",
     description: "Description of the data set long long description",
-    data_owner: "dosm",
+    data_owner: "bnm",
   },
   {
     id: "9",
@@ -90,7 +90,7 @@ const dummy: Array<DataRequestItem> = [
     status: "in_progress",
     date: "2023-11-07",
     description: "Description of the data set long long description",
-    data_owner: "dosm",
+    data_owner: "bomba",
   },
   {
     id: "10",
