@@ -161,7 +161,7 @@ const DataRequest: Page = ({
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["data-request", "catalogue"],
+  ["data-request", "catalogue", "agencies"],
   async ({ locale, query }) => {
     try {
       // Fetch data from BE here later

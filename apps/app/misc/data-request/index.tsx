@@ -22,7 +22,7 @@ import { OptionType } from "datagovmy-ui/types";
 import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { clx } from "datagovmy-ui/helpers";
-import { PublishedDataModal } from "./modal";
+import { PublishedDataModal, RequestDataModal } from "./modal";
 
 interface DataRequestDashboardProps {
   query: any;
@@ -39,7 +39,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   const { data, setData } = useData({
     loading: false,
     modal_loading: false,
-    show: false,
+    show_request: false,
     show_published: false,
     published_data: [], // TODO: add them later. using dummy for now.
     search_query: "",
@@ -50,10 +50,10 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   const baseClass = "text-sm font-normal";
 
   useWatch(() => {
-    data.show || data.show_published
+    data.show_request || data.show_published
       ? (document.body.style.overflow = "hidden")
       : (document.body.style.overflow = "unset");
-  }, [data.show, data.show_published]);
+  }, [data.show_request, data.show_published]);
 
   const STATUS_OPTIONS: OptionType[] = [
     {
@@ -174,7 +174,11 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
         <div className="mx-auto flex flex-col items-center gap-3 py-12">
           <h2 className="text-center text-black">{t("header")}</h2>
           <p className="text-dim text-center">{t("description")}</p>
-          <Button variant="primary" className="mt-3 w-fit text-center">
+          <Button
+            onClick={() => setData("show_request", true)}
+            variant="primary"
+            className="mt-3 w-fit text-center"
+          >
             {t("request_data")}
           </Button>
         </div>
@@ -195,7 +199,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 name="search_query"
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 value={data.search_query}
-                className="w-[420px]"
+                className="w-[300px] sm:w-[420px]"
                 placeholder="Has your request been made before?"
                 onChange={value => {
                   setData("search_query", value);
@@ -227,6 +231,8 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
           </Tabs>
         </Section>
       </Container>
+
+      <RequestDataModal show={data.show_request} hide={() => setData("show_request", false)} />
 
       <PublishedDataModal
         show={data.show_published}
