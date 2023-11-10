@@ -124,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       const product = product_id ? dummy.find(item => item.id === product_id) : null;
 
       return {
-        notFound: false,
+        notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
         props: {
           meta: {
             id: "community-products",
