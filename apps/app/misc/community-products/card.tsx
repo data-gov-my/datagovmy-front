@@ -23,7 +23,7 @@ const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({
         <Image src={item.image} width={150} height={150} alt={item.title} />
       </div>
       <div className="flex flex-1 flex-col justify-center gap-1.5">
-        {diffInDays.days < 14 && <p className="text-primary text-sm font-medium">New</p>}
+        {diffInDays.days < 14 && <p className="text-primary text-sm font-medium">{t("new")}</p>}
         <p className="text-base font-bold">{item.title}</p>
         <div className="text-dim flex items-center gap-2 text-sm font-medium">
           <p className="capitalize">{item.type}</p>

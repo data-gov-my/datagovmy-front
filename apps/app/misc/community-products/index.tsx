@@ -37,7 +37,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
   product,
   products,
 }) => {
-  const { t, i18n } = useTranslation(["community-products, catalogue"]);
+  const { t, i18n } = useTranslation(["community-products", "catalogue"]);
   const { push, events } = useRouter();
 
   const { data, setData } = useData({
@@ -202,7 +202,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
           </div>
 
           <div className="hidden gap-x-2 sm:flex sm:items-center sm:justify-center">
-            <span className="text-dim">{t("filter_by")}:</span>
+            <span className="text-dim">{t("filter_by")}</span>
             <Dropdown
               anchor="left"
               width="w-fit"

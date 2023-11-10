@@ -13,7 +13,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
   show,
   hide,
 }) => {
-  const { t, i18n } = useTranslation(["data-request"]);
+  const { t, i18n } = useTranslation(["community-products"]);
   return (
     <>
       <Transition show={show} as={Fragment}>
@@ -71,15 +71,19 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
                   </Dialog.Title>
 
                   <div className="mt-3 flex flex-col gap-3">
-                    <p className="text-base font-medium">{t("request_feature_modal.subtitle")}</p>
+                    <p className="text-base font-medium">
+                      {t("request_feature_modal.subtitle", {
+                        email: `data.dtsa@mampu.gov.my`,
+                      })}
+                    </p>
                     <div className="bg-washed text-washed-dark mt-2 flex flex-col gap-2 rounded-xl p-3 text-base">
                       <p className="">1) {t("request_feature_modal.name")} **</p>
-                      <p className="">2) {t("request_feature_modal.email")}</p>
+                      <p className="">2) {t("request_feature_modal.email")} **</p>
                       <p className="">3) {t("request_feature_modal.institution")}</p>
-                      <p className="">4) {t("request_feature_modal.product_name")}</p>
-                      <p className="">5) {t("request_feature_modal.product_description")}</p>
-                      <p className="">6) {t("request_feature_modal.link_to_product")}</p>
-                      <p className="">7) {t("request_feature_modal.dataset_used")}</p>
+                      <p className="">4) {t("request_feature_modal.product_name")} **</p>
+                      <p className="">5) {t("request_feature_modal.product_description")} **</p>
+                      <p className="">6) {t("request_feature_modal.link_to_product")} **</p>
+                      <p className="">7) {t("request_feature_modal.dataset_used")} **</p>
                     </div>
                   </div>
                 </Dialog.Panel>

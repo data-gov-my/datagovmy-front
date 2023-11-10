@@ -105,7 +105,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                   diffInDays.days < 14 ? "opacity-100" : "opacity-0"
                                 )}
                               >
-                                New
+                                {t("new")}
                               </p>
                               {diffInDays.days < 14 && (
                                 <div className="bg-dim h-1 w-1 rounded-full" />

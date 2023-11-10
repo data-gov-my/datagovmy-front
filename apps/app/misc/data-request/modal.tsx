@@ -209,7 +209,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
   );
 
   const agencies: OptionType[] = Object.keys(AgencyLink).map(agency => ({
-    label: t(`agencies.${agency}`),
+    label: t(`agencies:${agency}.abbr`),
     value: agency,
   }));
   // TODO: to set up actual list for the dropdown
@@ -446,7 +446,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                               }
                             }}
                           >
-                            Submit Request
+                            {t("forms.submit")}
                             {submissionLoading ? (
                               <Spinner loading={submissionLoading} className="border-t-white" />
                             ) : (

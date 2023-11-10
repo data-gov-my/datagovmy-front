@@ -36,7 +36,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   total_requests,
   items,
 }) => {
-  const { t, i18n } = useTranslation(["data-request, catalogue"]);
+  const { t, i18n } = useTranslation(["data-request", "catalogue", "agencies"]);
   const { data, setData } = useData({
     loading: false,
     modal_loading: false,
@@ -61,8 +61,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     [filteredStatus, data.search_query]
   );
 
-  console.log(filteredRes);
-
   useWatch(() => {
     data.show_request || data.show_published
       ? (document.body.style.overflow = "hidden")
@@ -71,23 +69,23 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
 
   const STATUS_OPTIONS: OptionType[] = [
     {
-      label: t("all"),
+      label: t("status.all"),
       value: "all",
     },
     {
-      label: t("under_review"),
+      label: t("status.under_review"),
       value: "under_review",
     },
     {
-      label: t("in_progress"),
+      label: t("status.in_progress"),
       value: "in_progress",
     },
     {
-      label: t("published"),
+      label: t("status.published"),
       value: "published",
     },
     {
-      label: t("rejected"),
+      label: t("status.rejected"),
       value: "rejected",
     },
   ];
@@ -137,7 +135,10 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     {
       accessorKey: "data_owner",
       id: "data_owner",
-      header: t("table.data_owner"),
+      header: t("data-request:table.data_owner"),
+      accessorFn({ data_owner }) {
+        return t(`agencies:${data_owner}.abbr`);
+      },
     },
   ];
 
@@ -187,7 +188,10 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       >
         <div className="mx-auto flex flex-col items-center gap-3 py-12">
           <h2 className="text-center text-black">{t("header")}</h2>
-          <p className="text-dim text-center">{t("description")}</p>
+          <div className="flex flex-col">
+            <p className="text-dim text-center">{t("description_line1")}</p>
+            <p className="text-dim text-center">{t("description_line2")}</p>
+          </div>
           <Button
             onClick={() => setData("show_request", true)}
             variant="primary"
@@ -214,7 +218,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                 value={data.search_query}
                 className="w-[300px] sm:w-[420px]"
-                placeholder="Has your request been made before?"
+                placeholder={t("search_query_placeholder")}
                 onChange={value => {
                   setData("search_query", value);
                 }}
@@ -227,7 +231,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             }}
           >
             {STATUS_OPTIONS.map(option => (
-              <Panel name={t(option.value)} key={option.value}>
+              <Panel name={t(option.label)} key={option.value}>
                 <Table
                   className="mb-12 mt-8 md:mx-auto md:w-4/5 lg:w-full"
                   data={filteredRes}
