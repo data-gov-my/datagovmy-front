@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 export const track = (event: "page_view", prop?: Record<string, any>): void => {
   if (window.mixpanel?.instance) {
     window.mixpanel.instance.track(event, prop);
-    console.log();
   }
 };
 

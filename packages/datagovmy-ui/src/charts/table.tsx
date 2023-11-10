@@ -66,6 +66,11 @@ export interface TableProps {
   "config"?: Array<TableConfig>;
   "responsive"?: Boolean;
   "enablePagination"?: false | number;
+  "pagination"?: (
+    currentPage: number,
+    totalPage: number,
+    setPage: (page: number) => void
+  ) => ReactNode;
   "precision"?: number | Precision;
   "data-testid"?: string;
 }
@@ -108,6 +113,7 @@ const Table: FunctionComponent<TableProps> = ({
   search,
   responsive = true,
   enablePagination = false,
+  pagination,
   cellClass,
   precision,
   ...props
@@ -346,12 +352,20 @@ const Table: FunctionComponent<TableProps> = ({
             {t("common:common.previous")}
           </Button>
 
-          <span className="flex items-center gap-1 text-center">
-            {t("common:common.page_of", {
-              current: table.getState().pagination.pageIndex + 1,
-              total: table.getPageCount(),
-            })}
-          </span>
+          {pagination ? (
+            pagination(
+              table.getState().pagination.pageIndex + 1,
+              table.getPageCount(),
+              table.setPageIndex
+            )
+          ) : (
+            <span className="flex items-center gap-1 text-center">
+              {t("common:common.page_of", {
+                current: table.getState().pagination.pageIndex + 1,
+                total: table.getPageCount(),
+              })}
+            </span>
+          )}
           <Button
             className="btn-disabled btn-default"
             onClick={() => table.nextPage()}

@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import Link, { LinkProps } from "next/link";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, HTMLAttributeAnchorTarget, ReactNode } from "react";
 
 interface AtProps extends LinkProps {
   href: string;
@@ -9,6 +9,7 @@ interface AtProps extends LinkProps {
   scrollTop?: boolean;
   enableIcon?: boolean;
   external?: boolean;
+  target?: HTMLAttributeAnchorTarget;
 }
 
 const At: FunctionComponent<AtProps> = ({
@@ -20,6 +21,7 @@ const At: FunctionComponent<AtProps> = ({
   onClick,
   external,
   prefetch,
+  target,
 }) => {
   const content = (
     <>
@@ -34,7 +36,7 @@ const At: FunctionComponent<AtProps> = ({
     </>
   );
   return external ? (
-    <a href={href} className={className} onClick={onClick} target="_blank">
+    <a href={href} className={className} onClick={onClick} target={target ?? "_blank"}>
       {content}
     </a>
   ) : (
@@ -44,6 +46,7 @@ const At: FunctionComponent<AtProps> = ({
       className={className}
       onClick={onClick}
       prefetch={prefetch}
+      target={target}
     >
       {content}
     </Link>
