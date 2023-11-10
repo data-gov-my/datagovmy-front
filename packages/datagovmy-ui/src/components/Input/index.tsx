@@ -47,7 +47,7 @@ const Input: FunctionComponent<InputProps> = ({
 
   return (
     <div className="relative flex w-full flex-col gap-2">
-      {label && <Label name={name} label={label} />}
+      {label && <Label name={name} label={label} required={required} />}
       <div
         className={clx(
           "text-dim absolute left-3 h-full",
