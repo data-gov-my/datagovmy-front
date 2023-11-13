@@ -3,14 +3,93 @@ import Head from "next/head";
 ## GTFS Realtime API Endpoint
 
 <Head>
-  <title>GTFS Realtime - Open API Docs</title>
+  <title>GTFS-R - Open API Docs</title>
 </Head>
 
 ```http
-# COMING SOON
-GET https://api.data.gov.my/gtfs-realtime
+GET https://api.data.gov.my/gtfs-realtime/<feed>/<agency>
 ```
 
-We have launched [GTFS Static](gtfs-static), and are currently in the process of gathering community feedback.
-Our GTFS Realtime API has also been made live, but only to selected parties for a week of beta testing;
-we target to release it to the public on November 14, 2023. Please stay tuned for updates!
+### What does GTFS Realtime do?
+
+GTFS Realtime is an extension of [GTFS Static](gtfs-static) that enables public transportation agencies to share live trip updates, service alerts and vehicle positions.
+Currently, our GTFS Realtime API only offers vehicle position data. For more details on GTFS Realtime and its broader functionalities, please refer to https://gtfs.org/realtime/.
+
+### Important note: We are building iteratively
+
+(below is direct copy from gtfs-static)
+
+This is the first time that Malaysia has had an official and freely-usable GTFS API. It is the result of months of hard work and collaboration between the data.gov.my developer team and various public transport operators. It is by no means complete; there are plenty of services that will only be integrated over the coming months and years. However, with several primary services already included, we felt that it was time to push it live - so that the private sector and public transport community could begin building from it, and most crucially, giving us feedback on how to improve it.
+
+If you have any feedback on the GTFS API, please write to us at data.dtsa@mampu.gov.my - we welcome any and all constructive feedback!
+
+### Source of GTFS Realtime Data
+
+The GTFS Realtime API incorporates data from various transport agencies in Malaysia. Currently, the following agencies contribute their transit data:
+
+- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): A bus service operator in Johor Bahru, Malaysia, providing bus transportation on 19 routes across 5 corridors, including Kota Tinggi, Masai, Kulai, Gelang Patah, and Pontian.
+- [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
+- [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
+
+## Vehicle Position
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/<agency>
+```
+
+### Frequency of Data Update
+
+- Vehicle Position feed is updated every **30 seconds**.
+
+## Request Query & Response Format
+
+The GTFS Realtime API adheres to the standard GTFS Realtime protobuf format (`.proto`).
+The detailed format is available in the [official GTFS Realtime reference](https://gtfs.org/realtime/proto/), and you can access the protobuf files through the following endpoints:
+
+### myBAS Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
+# .proto file is returned
+```
+
+### KTMB
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/ktmb
+# .proto file is returned
+```
+
+### Prasarana
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<category>
+# .proto file is returned
+```
+
+- The possible `<category>` values are `rkl` (RapidKl), `rkn` (RapidKuantan) and `rpg` (RapidPenang).
+
+### Understanding the data
+
+To properly parse the protobuf data, refer to the [official GTFS Realtime language bindings](https://gtfs.org/realtime/language-bindings/)
+for guidance on decoding the information.
+Below is a concise Python example illustrating how to read RapidKL vehicle position data from the GTFS Realtime API:
+
+```python
+from google.transit import gtfs_realtime_pb2
+from google.protobuf.json_format import MessageToDict
+from requests import get
+
+# Example URL for vehicle position data
+URL = 'https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=rkl'
+
+# Parsing the GTFS Realtime feed
+feed = gtfs_realtime_pb2.FeedMessage()
+response = get(URL)
+feed.ParseFromString(response.content)
+
+# Extracting and printing vehicle position information
+vehicle_positions = [MessageToDict(entity.vehicle) for entity in feed.entity]
+print(f'Total vehicle position data: {len(vehicle_positions)}')
+print(vehicle_positions)
+```
