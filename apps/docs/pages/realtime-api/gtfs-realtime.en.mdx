@@ -31,6 +31,11 @@ The GTFS Realtime API incorporates data from various transport agencies in Malay
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
 - [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
 
+### Request Query & Response Format
+
+The GTFS Realtime API adheres to the standard GTFS Realtime protobuf format (`.proto`).
+The detailed format is available in the [official GTFS Realtime reference](https://gtfs.org/realtime/proto/), and you can access the protobuf files through the following endpoints:
+
 ## Vehicle Position
 
 ```http
@@ -39,12 +44,7 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/<agency>
 
 ### Frequency of Data Update
 
-- Vehicle Position feed is updated every **30 seconds**.
-
-## Request Query & Response Format
-
-The GTFS Realtime API adheres to the standard GTFS Realtime protobuf format (`.proto`).
-The detailed format is available in the [official GTFS Realtime reference](https://gtfs.org/realtime/proto/), and you can access the protobuf files through the following endpoints:
+- All Vehicle Position feeds are updated every **30 seconds**.
 
 ### myBAS Johor Bahru
 
