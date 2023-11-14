@@ -17,10 +17,7 @@ Currently, our GTFS Realtime API only offers vehicle position data. For more det
 
 ### Important note: We are building iteratively
 
-(below is direct copy from gtfs-static - this section should be the "flag in docs" disclaimer stuff touching on WIP errors)
-
 This is the first time that Malaysia has had an official and freely-usable GTFS API. It is the result of months of hard work and collaboration between the data.gov.my developer team and various public transport operators. It is by no means complete; there are plenty of services that will only be integrated over the coming months and years. However, with several primary services already included, we felt that it was time to push it live - so that the private sector and public transport community could begin building from it, and most crucially, giving us feedback on how to improve it.
-
 If you have any feedback on the GTFS API, please write to us at data.dtsa@mampu.gov.my - we welcome any and all constructive feedback!
 
 ### Source of GTFS Realtime Data
@@ -38,6 +35,8 @@ The detailed format is available in the [official GTFS Realtime reference](https
 
 ## Vehicle Position
 
+_Note: Validation errors for each feed is included below_
+
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/<agency>
 ```
@@ -53,6 +52,12 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
 # .proto file is returned
 ```
 
+- Errors:
+  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` does not exist in GTFS data
+  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` does not exist in GTFS data
+  - [E023](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E023) - trip `start_time` does not match first GTFS `arrival_time`
+  - [E028](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E028) - Vehicle position outside agency coverage area
+
 ### KTMB
 
 ```http
@@ -67,7 +72,10 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<c
 # .proto file is returned
 ```
 
-- The possible `<category>` values are `rkl` (RapidKl), `rkn` (RapidKuantan) and `rpg` (RapidPenang).
+- The possible `<category>` values are `rkl` , `rapid-bus-kuantan` and `rapid-bus-penang`.
+- Errors:
+  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` does not exist in GTFS data
+  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` does not exist in GTFS data
 
 ### Understanding the data
 
@@ -76,20 +84,23 @@ for guidance on decoding the information.
 Below is a concise Python example illustrating how to read RapidKL vehicle position data from the GTFS Realtime API:
 
 ```python
+# pip install gtfs-realtime-bindings pandas requests
 from google.transit import gtfs_realtime_pb2
 from google.protobuf.json_format import MessageToDict
+import pandas as pd
 from requests import get
 
-# Example URL for vehicle position data
+# Sample GTFS-R URL from Malaysia's Open API
 URL = 'https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=rkl'
 
-# Parsing the GTFS Realtime feed
+# Parse the GTFS Realtime feed
 feed = gtfs_realtime_pb2.FeedMessage()
 response = get(URL)
 feed.ParseFromString(response.content)
 
-# Extracting and printing vehicle position information
+# Extract and print vehicle position information
 vehicle_positions = [MessageToDict(entity.vehicle) for entity in feed.entity]
-print(f'Total vehicle position data: {len(vehicle_positions)}')
-print(vehicle_positions)
+print(f'Total vehicles: {len(vehicle_positions)}')
+df = pd.json_normalize(vehicle_positions)
+print(df)
 ```
