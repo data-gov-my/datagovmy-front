@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-## GTFS Realtime API Endpoint
+## _Endpoint_ API GTFS _Realtime_ (Masa Sebenar)
 
 <Head>
   <title>GTFS-R - Open API Docs</title>
@@ -10,93 +10,89 @@ import Head from "next/head";
 GET https://api.data.gov.my/gtfs-realtime/<feed>/<agency>
 ```
 
-### What does GTFS Realtime do?
+### Apakah fungsi API GTFS _Realtime_?
 
-GTFS Realtime is an extension of the [GTFS Static API](gtfs-static) that enables public transportation agencies to share live trip updates, service alerts and vehicle positions.
-At present, our GTFS Realtime API only offers vehicle position data - service alerts and and trip updates are in our pipeline for 2024-25. For more details on GTFS Realtime and its broader functionalities, please refer to https://gtfs.org/realtime/.
+GTFS _Realtime_ adalah lanjutan daripada [API GTFS Statik](gtfs-static) yang membolehkan pengendali pengangkutan awam untuk membekalkan masa ketibaan, amaran gangguan perkhidmatan, dan kedudukan kenderaan secara masa sebenar (_realtime_).
+Buat masa ini, API GTFS _Realtime_ kami hanya membekalkan kedudukan kenderaan sahaja; amaran gangguan perkhidmatan dan kemaskini masa ketibaan akan disusuli secara berperingkat pada 2024-25. Untuk maklumat lanjut mengenai GTFS _Realtime_ dan kegunaannya secara am, sila rujuk kepada https://gtfs.org/realtime/.
 
-### Important note: We are building iteratively
+### Nota penting: API ini dibangunkan secara _iterative_
 
-This is the first time that Malaysia has had an official and freely-usable GTFS API. It is the result of months of hard work and collaboration between the data.gov.my developer team and various public transport operators. It is by no means complete; there are plenty of services that will only be integrated over the coming months and years. Furthermore, the Realtime API in particular needs a lot of work; the documentation for each endpoint transparently details known errors so that developers using the API are aware of its current limitations (and are aware that we are aware!).
+Ini adalah kali pertama Malaysia membekalkan API GTFS yang rasmi dan boleh digunakan secara terbuka dan percuma. Ia adalah hasil kerjasama antara pasukan pembangunan data.gov.my dengan pelbagai pengendali pengangkutan awam. Ia belum lagi lengkap; sememangnya, masih terdapat perkhidmatan yang hanya akan disepadukan dalam bulan dan tahun akan datang. API _Realtime_ secara khususnya memerlukan banyak penambahbaikan; maklumat tentang kekurangan yang sudah dikenalpasti telah diperincikan secara telus dalam dokumentasi di bawah supaya para _developer_ yang menggunakan API ini maklum tentang kekangan sedia ada (dan juga maklum bahawa pihak kami juga sudahpun maklum!).
 
-However, we felt that it was time to go live - so that the private sector and public transport community could begin building from it, and most crucially, giving us feedback on how to improve it.
-If you have any feedback on the GTFS API, please write to us at data.dtsa@mampu.gov.my - we welcome any and all constructive feedback!
+Walau bagaimanapun, dengan beberapa perkhidmatan utama yang sudah terkandung, pihak kami merasakan sudah tiba masa untuk melancarkannya - supaya sektor swasta dan komuniti pengangkutan awam dapat membina produk atas API ini, dan yang paling penting, memberi kami maklum balas untuk meningkatkan lagi mutunya.
 
-_Note: The validation errors specific to each feed in the [Vehicle Position](#vehicle-position) section were generated using using the [GTFS Realtime Validator](https://github.com/MobilityData/gtfs-realtime-validator)._
+_Nota: Ralat pengesahan bagi setiap _endpoint_ dalam bahagian [Kedudukan Kenderaan](#vehicle-position) telah dijana dengan [Pengesah GTFS Realtime](https://github.com/MobilityData/gtfs-realtime-validator)._
 
-### Source of GTFS Realtime Data
+### Sumber Data bagi GTFS _Realtime_
 
-The GTFS Realtime API incorporates data from various transport agencies in Malaysia. Currently, the following agencies contribute their transit data:
+API GTFS _Realtime_ menggabungkan data dari pelbagai agensi pengangkutan di Malaysia. Buat masa ini, agensi-agensi berikut menyumbang data pengangkutan mereka:
 
-- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): A bus service operator in Johor Bahru, Malaysia, providing bus transportation on 19 routes across 5 corridors, including Kota Tinggi, Masai, Kulai, Gelang Patah, and Pontian.
-- [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
-- [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
+- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): Pengendali perkhidmatan bas di Johor Bahru yang menyediakan pengangkutan bas di 19 laluan merentasi 5 koridor, termasuk Kota Tinggi, Masai, Kulai, Gelang Patah, dan Pontian.
+- [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): Pengendali keretapi yang menyediakan perkhidmatan keretapi di seluruh negara.
+- [**Prasarana**](https://myrapid.com.my/): Pengendali pengangkutan awam yang bertanggungjawab mengurus pelbagai mod pengangkutan termasuk LRT (Transit Aliran Ringan), MRT (Transit Aliran Massa), monorel, dan perkhidmatan bas.
 
-### Request Query & Response Format
+### Format Permintaan (_Query_) dan Respon
 
-The GTFS Realtime API adheres to the standard GTFS Realtime protobuf format (`.proto`).
-The detailed format is available in the [official GTFS Realtime reference](https://gtfs.org/realtime/proto/), and you can access the protobuf files through the following endpoints:
+API GTFS _Realtime_ menepati piawaian format _protobuf_ GTFS _Realtime_ (`.proto`). Perincian format yang lengkap boleh didapati di [rujukan rasmi GTFS _Realtime_](https://gtfs.org/realtime/proto/), manakala fail _protobuf_ dapat diakses melalui _endpoint_ berikut:
 
-## Vehicle Position
+## Kedudukan Kenderaan
 
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/<agency>
 ```
 
-### Frequency of Data Update
+### Kekerapan Kemaskini Data
 
-- All Vehicle Position feeds are updated every **30 seconds**.
+- Semua data kedudukan kenderaan dikemaskini setiap **30 saat**.
 
 ### myBAS Johor Bahru
 
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
-# .proto file is returned
+# .proto file dkembalikan
 ```
 
-- Known errors:
-  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` does not exist in GTFS data
-    - ~50% of trips are undefined in GTFS Static.
-  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` does not exist in GTFS data
-    - ~15% of the routes are undefined in GTFS Static.
-  - [E023](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E023) - trip `start_time` does not match first GTFS `arrival_time`
-    - `start_time` is invalid; this requires minor fixes to operational systems.
-  - [E028](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E028) - Vehicle position outside agency coverage area
-    - Does not invalidate the feed per se, but implies that improvements to the static endpoint are needed.
+- Ralat yang sudah dikenalpasti:
+  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` tidak wujud dalam data GTFS
+    - ~50% daripada perjalanan tidak wujud (_undefined_) dalam GTFS Statik.
+  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` tidak wujud dalam data GTFS
+    - ~15% daripada laluan tidak wujud (_undefined_) dalam GTFS Statik.
+  - [E023](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E023) - `start_time` bagi perjalanan tidak sepadan dengan `arrival_time` GTFS yang pertama
+    - medan `start_time` tidak sah; ini memerlukan pembetulan yang kecil kepada sistem operasi.
+  - [E028](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E028) - Kedudukan kenderaan di luar kawasan liputan agensi
+    - Walaupun ralat ini tidak nyahsahkan data secara sendiri, namun tetap memerlukan penambahbaikan bagi data GTFS Statik untuk menyempurnakan padanan data statik dan _realtime_
 
 ### KTMB
 
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/ktmb
-# .proto file is returned
+# .proto file dkembalikan
 ```
 
 ### Prasarana
 
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<category>
-# .proto file is returned
+# .proto file dkembalikan
 ```
 
-- Possible `<category>` values are `rapid-bus-kl` , `rapid-bus-kuantan` and `rapid-bus-penang`.
-  - `rapid-bus-mrtfeeder` and `rapid-rail-kl`, for which static endpoints are available, do not yet have stable realtime feeds.
-- Known errors affecting `rapid-bus-kuantan` and `rapid-bus-penang`:
-  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` does not exist in GTFS data
-  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` does not exist in GTFS data
-    - These errors are due to issues with legacy operational systems (some more than a decade old) which cannot support tracking trips and routes properly, yet. Our team is actively working to alleviate these constraints to make the feed meaningful and compliant.
-- Known issue with `rapid-bus-penang`:
-  - Developers need to match trip IDs in the realtime feed with existing trip IDs in the static schedule. This can be achieved by comparing the portion of the ID that comes after the service ID prefix.
-    - For example, the GTFS Realtime trip ID `30000001_1000000855_053000_02` corresponds to trip IDs in the static schedule such as:
+- Senarai nilai sah bagi `<category>` adalah `rapid-bus-kl`, `rapid-bus-kuantan` dan `rapid-bus-penang`.
+  - Endpoint `rapid-bus-mrtfeeder` dan `rapid-rail-kl` yang terkandung dalam API GTFS Statik belum lagi dibekalkan dalam API _realtime_ kerana data operasi _realtime_ belum dapat dibekalkan secara stabil.
+- Ralat yang sudah dikenalpasti bagi `rapid-bus-kuantan` dan `rapid-bus-penang`:
+  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` tidak wujud dalam data GTFS
+  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` tidak wujud dalam data GTFS
+    - Ralat ini disebabkan oleh beberapa isu dengan sistem operasi legasi (antaranya yang sudah dipakai lebih daripada sepuluh tahun) yang tidak dapat menjejaki perjalanan kenderaan dan menjana data laluan dengan sempurna. Pasukan kami giat berusaha untuk mengatasi kekangan ini untuk memastikan data _realtime_ menepati piawaian maka menjadi lebih berguna.
+- Ralat yang sudah dikenalpasti bagi `rapid-bus-penang`:
+  - _Developer_ perlu memadankan ID perjalanan (_trip ID_) dalam data _realtime_ dengan ID perjalanan sedia ada dalam jadual statik. Ini dapat dilaksanakan dengan membandingkan segmen ID perjalanan selepas awalan ID perkhidmatan.
+    - Sebagai contoh, ID perjalanan `30000001_1000000855_053000_02` dalam GTFS _Realtime_ sepadan dengan ID perjalanan statik seperti:
       - `weekend_30000001_1000000855_053000_02`
       - `weekday_30000001_1000000855_053000_02`
       - `23102302_30000001_1000000855_053000_02`
-    - We took the decision not to modify the realtime feed received from operational systems to avoid jeopardising performance; a deeper fix will be deployed in future to ensure out-of-the-box synchronicity between the realtime and static trip IDs.
+    - Kami telah mengambil keputusan untuk bergantung kepada _developer_ untuk melaksanakan proses padanan ini kerana sebarang pemprosesan data masa sebenar mungkin akan menjejaskan keberfungsian API. Pihak kami akan susuli pembetulan yang lebih menyeleruh pada amsa depan untuk memastikan API statik dan _realtime_ adalah sepadan tanpa perlu sebarang pemprosesan.
 
-### Understanding the data
+### Memahami data GTFS _Realtime_
 
-To properly parse the protobuf data, refer to the [official GTFS Realtime language bindings](https://gtfs.org/realtime/language-bindings/)
-for guidance on decoding the information.
-Below is a concise Python example illustrating how to read RapidKL (bus) vehicle position data from the GTFS Realtime API:
+Untuk membaca data _protobuf_ dengan betul, sila rujuk kepada [ikatan bahasa (_language bindings_) GTFS _Realtime_ rasmi](https://gtfs.org/realtime/language-bindings/) untuk panduan dalam menyahkod data. Kami juga telah sediakan kod Python di bawah sebagai contoh penggunaan data kedudukan kenderaan masa sebenar daripada API GTFS _Realtime_:
 
 ```python
 # pip install gtfs-realtime-bindings pandas requests
