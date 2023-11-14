@@ -17,6 +17,8 @@ Currently, our GTFS Realtime API only offers vehicle position data. For more det
 
 ### Important note: We are building iteratively
 
+_TODO: inform users that validation errors for each feed are included [below](#vehicle-position)?_
+
 This is the first time that Malaysia has had an official and freely-usable GTFS API. It is the result of months of hard work and collaboration between the data.gov.my developer team and various public transport operators. It is by no means complete; there are plenty of services that will only be integrated over the coming months and years. However, with several primary services already included, we felt that it was time to push it live - so that the private sector and public transport community could begin building from it, and most crucially, giving us feedback on how to improve it.
 If you have any feedback on the GTFS API, please write to us at data.dtsa@mampu.gov.my - we welcome any and all constructive feedback!
 
@@ -35,8 +37,6 @@ The detailed format is available in the [official GTFS Realtime reference](https
 
 ## Vehicle Position
 
-_Note: Validation errors for each feed is included below_
-
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/<agency>
 ```
@@ -54,9 +54,13 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
 
 - Errors:
   - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` does not exist in GTFS data
+    - Around 55% of trips are undefined in GTFS Static.
   - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` does not exist in GTFS data
+    - Around 15% of the routes are undefined in GTFS Static.
   - [E023](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E023) - trip `start_time` does not match first GTFS `arrival_time`
+    - `start_time` is invalidly provided - requires agency to fix in future.
   - [E028](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E028) - Vehicle position outside agency coverage area
+    - acknowledged
 
 ### KTMB
 
@@ -76,6 +80,7 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<c
 - Errors:
   - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` does not exist in GTFS data
   - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` does not exist in GTFS data
+- _Note: Above errors are due to existing system that cannot support tracking trips and routes properly. Will need a full reform to make the feed meaningful and compliant._
 
 ### Understanding the data
 
