@@ -84,7 +84,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
           <p className="text-dim text-center">{t("description")}</p>
         </div>
       </Container>
-      <Container className="min-h-screen">
+      <Container>
         <Section title={<h4 className="mx-auto flex text-center">{t("faq")}</h4>}>
           <div className="flex w-full flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-10">
             <div className="flex w-full flex-col gap-3 lg:col-span-4 lg:col-start-2">
@@ -112,7 +112,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
             </div>
           </div>
         </Section>
-        <Section title={<h4 className="mx-auto flex text-center">{t("form_title")}</h4>}>
+        {/* <Section title={<h4 className="mx-auto flex text-center">{t("form_title")}</h4>}>
           <div className="mx-auto w-full max-w-[450px]">
             <Card className="shadow-outline bg-white drop-shadow-xl dark:bg-black">
               {data.sent ? (
@@ -255,7 +255,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
               )}
             </Card>
           </div>
-        </Section>
+        </Section> */}
       </Container>
     </>
   );
