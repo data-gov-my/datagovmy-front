@@ -1,13 +1,15 @@
-import DataCatalogueShow from "@data-catalogue/show";
+import { CatalogueShow as DataCatalogueShow, IDataViz } from "datagovmy-ui/data-catalogue";
+import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
-import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { withi18n } from "datagovmy-ui/decorators";
 import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { recurDataMapping } from "datagovmy-ui/helpers";
+import { useRouter } from "next/router";
 
 const CatalogueShow: Page = ({
   meta,
@@ -19,7 +21,13 @@ const CatalogueShow: Page = ({
   urls,
   translations,
   catalogueId,
+  dataviz,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const [selectedViz, setSelectedViz] = useState<IDataViz | undefined>(
+    dataviz.find((item: IDataViz) => item.translation_key === params.visual) ?? undefined
+  );
+  const router = useRouter();
+
   const availableOptions = useMemo<string[]>(() => {
     switch (dataset.type) {
       case "TABLE":
@@ -34,24 +42,54 @@ const CatalogueShow: Page = ({
     }
   }, [dataset.type]);
 
+  const extractChartDataset = (table_data: Record<string, any>[], currentViz: IDataViz) => {
+    const set = Object.entries(currentViz?.chart_variables.format).map(([key, value]) =>
+      recurDataMapping(key, value, table_data)
+    );
+    return {
+      ...Object.fromEntries(set.map(array => [array[0][0], array[0][1]])),
+    };
+  };
+
+  const selectedDataset = useMemo(() => {
+    if (!selectedViz) {
+      return dataset;
+    }
+
+    return {
+      type: selectedViz.chart_type,
+      chart: extractChartDataset(dataset.table, selectedViz),
+      table: dataset.table,
+      meta: dataset.meta,
+    };
+  }, [selectedViz, config.options]);
+
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
-        title={dataset.meta.title}
+        title={
+          selectedViz?.translation_key
+            ? `${translations[selectedViz.translation_key]}`
+            : dataset.meta.title
+        }
         description={dataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
-      <CatalogueProvider dataset={dataset} urls={urls}>
+      <CatalogueProvider dataset={selectedDataset} urls={urls}>
         <DataCatalogueShow
+          key={router.asPath}
           options={availableOptions}
           params={params}
           config={config}
-          dataset={dataset}
+          dataset={selectedDataset}
           explanation={explanation}
           metadata={metadata}
           urls={urls}
           translations={translations}
           catalogueId={catalogueId}
+          dataviz={dataviz}
+          selectedViz={selectedViz}
+          setSelectedViz={setSelectedViz}
         />
       </CatalogueProvider>
     </AnalyticsProvider>
@@ -60,9 +98,16 @@ const CatalogueShow: Page = ({
 
 export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
-  async ({ locale, query, params }) => {
+  async ({ locale, query: q, params }) => {
+    const { visual, ...query } = q;
     try {
-      const { data } = await get("/data-variable/", {
+      // OLD DC variable query
+      // const { data } = await get("/data-variable/", {
+      //   id: params?.id,
+      //   lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
+      //   ...query,
+      // });
+      const { data } = await get("/data-catalogue-variable/", {
         id: params?.id,
         lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
         ...query,
@@ -122,14 +167,14 @@ export const getServerSideProps: GetServerSideProps = withi18n(
               : "",
           },
           config,
-          params,
+          params: { ...params, visual: visual ?? "table" },
           dataset: {
             type: data.API.chart_type,
             chart: data.chart_details.chart_data ?? {},
             table: data.chart_details.table_data ?? null,
             meta: data.chart_details.intro,
           },
-          explanation: data.explanation,
+          explanation: { ...data.explanation, related_datasets: data.related_datasets },
           metadata: {
             url: {
               csv: data.metadata.url.csv ?? null,
@@ -143,6 +188,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             source: data.metadata.data_source,
             definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
           },
+          dataviz: data.dataviz,
           urls: data.downloads ?? {},
           translations: data.translations ?? {},
           catalogueId: data.openapi_id ?? "",

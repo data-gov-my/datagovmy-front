@@ -1,4 +1,4 @@
-import DataCatalogue, { Catalogue } from "@data-catalogue/index";
+import { CatalogueIndex as DataCatalogue, Catalogue } from "datagovmy-ui/data-catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";

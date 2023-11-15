@@ -1,5 +1,5 @@
 import { Dispatch, FunctionComponent, ReactNode, SetStateAction } from "react";
-import { IDataViz } from "./show";
+import { IDataViz } from "../Show";
 import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { Card } from "datagovmy-ui/components";
 import dynamic from "next/dynamic";

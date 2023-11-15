@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useRef, useState } from "react";
-import { Catalogue } from ".";
+import { Catalogue } from "../Main";
 import { At, Card, Tooltip } from "datagovmy-ui/components";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 import { clx, toDate } from "datagovmy-ui/helpers";

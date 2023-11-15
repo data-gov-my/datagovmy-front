@@ -1,4 +1,4 @@
-import DataCatalogue, { Catalogue } from "@data-catalogue/index";
+import { CatalogueIndex as DataCatalogue, Catalogue } from "datagovmy-ui/data-catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
@@ -17,7 +17,7 @@ const CatalogueIndex: Page = ({
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <DataCatalogue query={query} collection={collection} />
+      <DataCatalogue query={query} collection={collection} sources={[]} />
     </>
   );
 };
@@ -38,7 +38,14 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 export const getServerSideProps: GetServerSideProps = withi18n(
   ["catalogue", "common", "opendosm-home"],
   async ({ locale, query }) => {
-    const { data } = await get("/data-catalog/", {
+    // const { data } = await get("/data-catalog/", {
+    //   lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+    //   source: "DOSM",
+    //   opendosm: true,
+    //   ...query,
+    // });
+
+    const { data } = await get("/data-catalogue/", {
       lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
       source: "DOSM",
       opendosm: true,

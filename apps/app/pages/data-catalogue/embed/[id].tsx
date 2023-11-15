@@ -1,5 +1,4 @@
-import { IDataViz } from "@data-catalogue/show";
-import DataCatalogueWidget from "@data-catalogue/widget";
+import { IDataViz, CatalogueWidget as DataCatalogueWidget } from "datagovmy-ui/data-catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";

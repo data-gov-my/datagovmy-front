@@ -28,7 +28,7 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
-import CatalogueCard from "./catalogue-card";
+import CatalogueCard from "../Card";
 
 /**
  * Catalogue Index
@@ -83,17 +83,19 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
           }),
         ]}
         action={
-          <Dropdown
-            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-            width="w-64"
-            placeholder={t("placeholder.source")}
-            anchor="left"
-            options={sourceOptions}
-            selected={query.source ? { label: query.source, value: query.source } : undefined}
-            onChange={e => filterRef.current?.setFilter("source", e)}
-            enableSearch
-            enableClear
-          />
+          sourceOptions.length > 0 && (
+            <Dropdown
+              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+              width="w-64"
+              placeholder={t("placeholder.source")}
+              anchor="left"
+              options={sourceOptions}
+              selected={query.source ? { label: query.source, value: query.source } : undefined}
+              onChange={e => filterRef.current?.setFilter("source", e)}
+              enableSearch
+              enableClear
+            />
+          )
         }
         agencyBadge={
           <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : "govt"} />

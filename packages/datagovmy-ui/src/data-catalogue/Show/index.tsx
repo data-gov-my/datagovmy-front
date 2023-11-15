@@ -40,8 +40,8 @@ import {
   useRef,
   useState,
 } from "react";
-import CataloguePreview from "./preview";
-import CatalogueCard from "./catalogue-card";
+import CataloguePreview from "../Preview";
+import CatalogueCard from "../Card";
 
 /**
  * Catalogue Show

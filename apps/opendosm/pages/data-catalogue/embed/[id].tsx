@@ -1,4 +1,4 @@
-import DataCatalogueWidget from "@data-catalogue/widget";
+import { IDataViz, CatalogueWidget as DataCatalogueWidget } from "datagovmy-ui/data-catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
@@ -6,8 +6,10 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
+import { recurDataMapping } from "datagovmy-ui/helpers";
 import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useMemo } from "react";
 
 const CatalogueEmbed: Page = ({
   meta,
@@ -17,7 +19,35 @@ const CatalogueEmbed: Page = ({
   metadata,
   urls,
   translations,
+  dataviz,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const extractChartDataset = (table_data: Record<string, any>[], currentViz: IDataViz) => {
+    const set = Object.entries(currentViz?.chart_variables.format).map(([key, value]) =>
+      recurDataMapping(key, value, table_data)
+    );
+    return {
+      ...Object.fromEntries(set.map(array => [array[0][0], array[0][1]])),
+    };
+  };
+
+  const selectedDataset = useMemo(() => {
+    if (!params.currentVisual) {
+      // TODO: ask BE to provide this range value to use for timeseries
+      return dataset;
+    }
+
+    const selectedViz = dataviz.find(
+      (item: IDataViz) => item.translation_key === params.currentVisual
+    );
+
+    return {
+      type: selectedViz.chart_type,
+      chart: extractChartDataset(dataset.table, selectedViz),
+      table: dataset.table,
+      meta: dataset.meta,
+    };
+  }, [params.currentVisual]);
+
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
@@ -26,11 +56,11 @@ const CatalogueEmbed: Page = ({
         keywords={""}
       />
       <WindowProvider>
-        <CatalogueProvider dataset={dataset} urls={urls}>
+        <CatalogueProvider dataset={selectedDataset} urls={urls}>
           <DataCatalogueWidget
             params={params}
             config={config}
-            dataset={dataset}
+            dataset={selectedDataset}
             metadata={metadata}
             urls={urls}
             translations={translations}
@@ -49,7 +79,13 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   async ({ locale, query, params }) => {
     try {
       const { theme, ...qs } = query;
-      const { data } = await get("/data-variable/", {
+      // OLD DC variable query
+      // const { data } = await get("/data-variable/", {
+      //   id: params!.id,
+      //   lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
+      //   ...qs,
+      // });
+      const { data } = await get("/data-catalogue-variable/", {
         id: params!.id,
         lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
         ...qs,
@@ -112,6 +148,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           params: {
             id: params?.id ?? null,
             theme: theme ?? "light",
+            currentVisual: query.currViz ?? null,
           },
           dataset: {
             type: data.API.chart_type,
@@ -133,6 +170,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
           },
           urls: data.downloads ?? {},
+          dataviz: data.dataviz,
           translations: data.translations ?? {},
         },
       };

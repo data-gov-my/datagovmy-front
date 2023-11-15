@@ -1,4 +1,4 @@
-import DataCatalogueShow, { IDataViz } from "@data-catalogue/show";
+import { CatalogueShow as DataCatalogueShow, IDataViz } from "datagovmy-ui/data-catalogue";
 import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
