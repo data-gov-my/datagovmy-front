@@ -17,6 +17,7 @@ interface InputProps extends LabelProps {
   spellCheck?: boolean;
   validation?: string;
   disabled?: boolean;
+  readOnly?: boolean;
 }
 
 const Input: FunctionComponent<InputProps> = ({
@@ -36,6 +37,7 @@ const Input: FunctionComponent<InputProps> = ({
   onChange,
   onKeyDown,
   disabled = false,
+  readOnly,
 }) => {
   const ref = useRef<HTMLInputElement>(null);
 
@@ -45,7 +47,7 @@ const Input: FunctionComponent<InputProps> = ({
 
   return (
     <div className="relative flex w-full flex-col gap-2">
-      {label && <Label name={name} label={label} />}
+      {label && <Label name={name} label={label} required={required} />}
       <div
         className={clx(
           "text-dim absolute left-3 h-full",
@@ -64,6 +66,7 @@ const Input: FunctionComponent<InputProps> = ({
         type={type as HTMLInputTypeAttribute}
         min={min}
         max={max}
+        readOnly={readOnly}
         className={clx(
           "placeholder:text-dim focus:ring-dim w-full rounded-md px-3 text-sm dark:bg-black dark:text-white",
           "focus:ring-primary dark:focus:ring-primary-dark focus:outline-none",

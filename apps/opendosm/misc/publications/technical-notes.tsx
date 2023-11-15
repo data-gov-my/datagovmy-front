@@ -1,5 +1,10 @@
-import PublicationCard from "@components/Publication/Card";
-import PublicationModal, { PubResource } from "@components/Publication/Modal";
+import {
+  PublicationModal,
+  PublicationCard,
+  PubResource,
+  Resource,
+  Publication,
+} from "datagovmy-ui/components";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
@@ -8,7 +13,6 @@ import { Button, Container, Input, Section, Spinner, toast } from "datagovmy-ui/
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { useRouter } from "next/router";
 import { FunctionComponent, useEffect, useState } from "react";
-import { Publication, Resource } from "./browse";
 
 /**
  * Technical Notes

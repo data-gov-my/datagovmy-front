@@ -1,9 +1,117 @@
-## Endpoint API GTFS Masa Nyata
+import Head from "next/head";
+
+## _Endpoint_ API GTFS _Realtime_ (Masa Sebenar)
+
+<Head>
+  <title>GTFS-R - Open API Docs</title>
+</Head>
 
 ```http
-# AKAN DATANG
-GET https://api.data.gov.my/gtfs-realtime
+GET https://api.data.gov.my/gtfs-realtime/<feed>/<agency>
 ```
 
-API Pengangkutan (GTFS Masa Nyata) akan dilancarkan pada ~~Oktober 26,2023~~ November 7, 2023.
-Tarikh pelancaran telah dilewatkan akibat beberapa isu di peringkat operasi lapangan.
+### Apakah fungsi API GTFS _Realtime_?
+
+GTFS _Realtime_ adalah lanjutan daripada [API GTFS Statik](gtfs-static) yang membolehkan pengendali pengangkutan awam untuk membekalkan masa ketibaan, amaran gangguan perkhidmatan, dan kedudukan kenderaan secara masa sebenar (_realtime_).
+Buat masa ini, API GTFS _Realtime_ kami hanya membekalkan kedudukan kenderaan sahaja; amaran gangguan perkhidmatan dan kemaskini masa ketibaan akan disusuli secara berperingkat pada 2024-25. Untuk maklumat lanjut mengenai GTFS _Realtime_ dan kegunaannya secara am, sila rujuk kepada https://gtfs.org/realtime/.
+
+### Nota penting: API ini dibangunkan secara _iterative_
+
+Ini adalah kali pertama Malaysia membekalkan API GTFS yang rasmi dan boleh digunakan secara terbuka dan percuma. Ia adalah hasil kerjasama antara pasukan pembangunan data.gov.my dengan pelbagai pengendali pengangkutan awam. Ia belum lagi lengkap; sememangnya, masih terdapat perkhidmatan yang hanya akan disepadukan dalam bulan dan tahun akan datang. API _Realtime_ secara khususnya memerlukan banyak penambahbaikan; maklumat tentang kekurangan yang sudah dikenalpasti telah diperincikan secara telus dalam dokumentasi di bawah supaya para _developer_ yang menggunakan API ini maklum tentang kekangan sedia ada (dan juga maklum bahawa pihak kami juga sudahpun maklum!).
+
+Walau bagaimanapun, dengan beberapa perkhidmatan utama yang sudah terkandung, pihak kami merasakan sudah tiba masa untuk melancarkannya - supaya sektor swasta dan komuniti pengangkutan awam dapat membina produk atas API ini, dan yang paling penting, memberi kami maklum balas untuk meningkatkan lagi mutunya.
+
+_Nota: Ralat pengesahan bagi setiap _endpoint_ dalam bahagian [Kedudukan Kenderaan](#vehicle-position) telah dijana dengan [Pengesah GTFS Realtime](https://github.com/MobilityData/gtfs-realtime-validator)._
+
+### Sumber Data bagi GTFS _Realtime_
+
+API GTFS _Realtime_ menggabungkan data dari pelbagai agensi pengangkutan di Malaysia. Buat masa ini, agensi-agensi berikut menyumbang data pengangkutan mereka:
+
+- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): Pengendali perkhidmatan bas di Johor Bahru yang menyediakan pengangkutan bas di 19 laluan merentasi 5 koridor, termasuk Kota Tinggi, Masai, Kulai, Gelang Patah, dan Pontian.
+- [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): Pengendali keretapi yang menyediakan perkhidmatan keretapi di seluruh negara.
+- [**Prasarana**](https://myrapid.com.my/): Pengendali pengangkutan awam yang bertanggungjawab mengurus pelbagai mod pengangkutan termasuk LRT (Transit Aliran Ringan), MRT (Transit Aliran Massa), monorel, dan perkhidmatan bas.
+
+### Format Permintaan (_Query_) dan Respon
+
+API GTFS _Realtime_ menepati piawaian format _protobuf_ GTFS _Realtime_ (`.proto`). Perincian format yang lengkap boleh didapati di [rujukan rasmi GTFS _Realtime_](https://gtfs.org/realtime/proto/), manakala fail _protobuf_ dapat diakses melalui _endpoint_ berikut:
+
+## Kedudukan Kenderaan
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/<agency>
+```
+
+### Kekerapan Kemaskini Data
+
+- Semua data kedudukan kenderaan dikemaskini setiap **30 saat**.
+
+### myBAS Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
+# .proto file dkembalikan
+```
+
+- Ralat yang sudah dikenalpasti:
+  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` tidak wujud dalam data GTFS
+    - ~50% daripada perjalanan tidak wujud (_undefined_) dalam GTFS Statik.
+  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` tidak wujud dalam data GTFS
+    - ~15% daripada laluan tidak wujud (_undefined_) dalam GTFS Statik.
+  - [E023](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E023) - `start_time` bagi perjalanan tidak sepadan dengan `arrival_time` GTFS yang pertama
+    - medan `start_time` tidak sah; ini memerlukan pembetulan yang kecil kepada sistem operasi.
+  - [E028](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E028) - Kedudukan kenderaan di luar kawasan liputan agensi
+    - Walaupun ralat ini tidak nyahsahkan data secara sendiri, namun tetap memerlukan penambahbaikan bagi data GTFS Statik untuk menyempurnakan padanan data statik dan _realtime_
+
+### KTMB
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/ktmb
+# .proto file dkembalikan
+```
+
+### Prasarana
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<category>
+# .proto file dkembalikan
+```
+
+- Senarai nilai sah bagi `<category>` adalah `rapid-bus-kl`, `rapid-bus-kuantan` dan `rapid-bus-penang`.
+  - Endpoint `rapid-bus-mrtfeeder` dan `rapid-rail-kl` yang terkandung dalam API GTFS Statik belum lagi dibekalkan dalam API _realtime_ kerana data operasi _realtime_ belum dapat dibekalkan secara stabil.
+- Ralat yang sudah dikenalpasti bagi `rapid-bus-kuantan` dan `rapid-bus-penang`:
+  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` tidak wujud dalam data GTFS
+  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` tidak wujud dalam data GTFS
+    - Ralat ini disebabkan oleh beberapa isu dengan sistem operasi legasi (antaranya yang sudah dipakai lebih daripada sepuluh tahun) yang tidak dapat menjejaki perjalanan kenderaan dan menjana data laluan dengan sempurna. Pasukan kami giat berusaha untuk mengatasi kekangan ini untuk memastikan data _realtime_ menepati piawaian maka menjadi lebih berguna.
+- Ralat yang sudah dikenalpasti bagi `rapid-bus-penang`:
+  - _Developer_ perlu memadankan ID perjalanan (_trip ID_) dalam data _realtime_ dengan ID perjalanan sedia ada dalam jadual statik. Ini dapat dilaksanakan dengan membandingkan segmen ID perjalanan selepas awalan ID perkhidmatan.
+    - Sebagai contoh, ID perjalanan `30000001_1000000855_053000_02` dalam GTFS _Realtime_ sepadan dengan ID perjalanan statik seperti:
+      - `weekend_30000001_1000000855_053000_02`
+      - `weekday_30000001_1000000855_053000_02`
+      - `23102302_30000001_1000000855_053000_02`
+    - Kami telah mengambil keputusan untuk bergantung kepada _developer_ untuk melaksanakan proses padanan ini kerana sebarang pemprosesan data masa sebenar mungkin akan menjejaskan keberfungsian API. Pihak kami akan susuli pembetulan yang lebih menyeleruh pada amsa depan untuk memastikan API statik dan _realtime_ adalah sepadan tanpa perlu sebarang pemprosesan.
+
+### Memahami data GTFS _Realtime_
+
+Untuk membaca data _protobuf_ dengan betul, sila rujuk kepada [ikatan bahasa (_language bindings_) GTFS _Realtime_ rasmi](https://gtfs.org/realtime/language-bindings/) untuk panduan dalam menyahkod data. Kami juga telah sediakan kod Python di bawah sebagai contoh penggunaan data kedudukan kenderaan masa sebenar daripada API GTFS _Realtime_:
+
+```python
+# pip install gtfs-realtime-bindings pandas requests
+from google.transit import gtfs_realtime_pb2
+from google.protobuf.json_format import MessageToDict
+import pandas as pd
+from requests import get
+
+# Sample GTFS-R URL from Malaysia's Open API
+URL = 'https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=rapid-bus-kl'
+
+# Parse the GTFS Realtime feed
+feed = gtfs_realtime_pb2.FeedMessage()
+response = get(URL)
+feed.ParseFromString(response.content)
+
+# Extract and print vehicle position information
+vehicle_positions = [MessageToDict(entity.vehicle) for entity in feed.entity]
+print(f'Total vehicles: {len(vehicle_positions)}')
+df = pd.json_normalize(vehicle_positions)
+print(df)
+```

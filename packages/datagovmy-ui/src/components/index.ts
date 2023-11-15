@@ -25,6 +25,7 @@ export { default as Metadata } from "./Metadata";
 export { default as Modal } from "./Modal";
 export { default as Nav } from "./Nav";
 export { default as Progress } from "./Progress";
+export { default as NumberedPagination } from "./Pagination/NumberedPagination";
 export { default as Radio } from "./Radio";
 export { default as Search } from "./Search";
 export { default as Section } from "./Section";
@@ -42,7 +43,11 @@ export { default as ThemeToggle } from "./Nav/theme";
 
 /** Derivatives */
 export { default as Daterange } from "./Dropdown/Daterange";
+export { default as PublicationCard } from "./Card/PublicationCard";
 export { default as StateDropdown } from "./Dropdown/StateDropdown";
 export { default as StateModal } from "./Modal/StateModal";
+export { default as PublicationModal } from "./Modal/PublicationModal";
+export type { Publication } from "./Card/PublicationCard";
+export type { PubResource, Resource } from "./Modal/PublicationModal";
 export type { Language } from "./CodeBlock";
 export type { ModalInterface } from "./Modal";

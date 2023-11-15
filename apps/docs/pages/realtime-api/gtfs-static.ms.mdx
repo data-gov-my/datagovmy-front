@@ -1,9 +1,78 @@
+import Head from "next/head";
+
 ## Endpoint API GTFS Statik
 
+<Head>
+  <title>GTFS Static - Open API Docs</title>
+</Head>
+
 ```http
-# AKAN DATANG
-GET https://api.data.gov.my/gtfs-static
+GET https://api.data.gov.my/gtfs-static/<agency>
 ```
 
-API Pengangkutan (GTFS) akan dilancarkan pada ~~Oktober 26,2023~~ November 7, 2023.
-Tarikh pelancaran telah dilewatkan akibat beberapa isu beberapa isu di peringkat operasi lapangan.
+### Apakah fungsi API GTFS Statik?
+
+API GTFS Static menyediakan akses kepada jadual pengangkutan awam serta maklumat geospatial yang telah dipiawaikan mengikuti General Transit Feed Specification (GTFS). Untuk mendapat maklumat lanjut mengenai GTFS, anda boleh merujuk [dokumentasi GTFS](https://developers.google.com/transit/gtfs) yang disediakan oleh Google.
+
+### Nota penting: API ini dibangunkan secara _iterative_
+
+Ini adalah kali pertama Malaysia membekalkan API GTFS yang rasmi dan boleh digunakan secara terbuka dan percuma. Ia adalah hasil kerjasama antara pasukan pembangunan data.gov.my dengan pelbagai pengendali pengangkutan awam. Ia belum lagi lengkap; sememangnya, masih terdapat perkhidmatan yang hanya akan disepadukan dalam bulan dan tahun akan datang. Walau bagaimanapun, dengan beberapa perkhidmatan utama yang sudah terkandung, pihak kami merasakan sudah tiba masa untuk melancarkannya - supaya sektor swasta dan komuniti pengangkutan awam dapat membina produk atas API ini, dan yang paling penting, memberi kami maklum balas untuk meningkatkan lagi mutunya.
+
+### Sumber Data bagi GTFS Statik
+
+API GTFS Statik menggabungkan data dari pelbagai agensi pengangkutan di Malaysia. Buat masa ini, agensi-agensi berikut menyumbang data pengangkutan mereka:
+
+- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): Pengendali perkhidmatan bas di Johor Bahru yang menyediakan pengangkutan bas di 19 laluan merentasi 5 koridor, termasuk Kota Tinggi, Masai, Kulai, Gelang Patah, dan Pontian.
+- [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): Pengendali keretapi yang menyediakan perkhidmatan keretapi di seluruh negara.
+- [**Prasarana**](https://myrapid.com.my/): Pengendali pengangkutan awam yang bertanggungjawab mengurus pelbagai mod pengangkutan termasuk LRT (Transit Aliran Ringan), MRT (Transit Aliran Massa), monorel, dan perkhidmatan bas.
+
+### Kekerapan Kemaskini
+
+- GTFS bagi myBAS Johor Bahru: **Apabila perlu**.
+- GTFS bagi Prasarana: **Apabila perlu**.
+- GTFS bagi KTMB: **Setiap hari pada pukul 00:01:00**.
+
+## Format Permintaan (_Query_) dan Respon
+
+API GTFS Statik menyediakan akses kepada data pengangkutan awam sebagai koleksi fail teks yang dibekalkan bersekali dalam fail ZIP. Anda boleh mengakses fail-fail data ini melalui titik akhir berikut:
+
+### myBAS Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-johor
+# Fail ZIP dikembalikan
+```
+
+### KTMB
+
+```http
+GET https://api.data.gov.my/gtfs-static/ktmb
+# Fail ZIP dikembalikan
+```
+
+### Prasarana
+
+```http
+GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
+# Fail ZIP dikembalikan
+```
+
+- Senarai nilai sah bagi `<category>` adalah `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder`, `rapid-rail-kl` & `rapid-bus-kl`.
+- Nota: Segelintir kecil perjalanan (~2%, diperincikan sepenuhnya dalam [CSV ini](https://openapi-malaysia-transport.s3.ap-southeast-1.amazonaws.com/prasarana/problematic_trips.csv)) bagi endpo
+  int `rapid-bus-kl` telah dikeluarkan daripada fail `stop_times.txt` kerana isu operasi yang memberi kesan kepada ketepatan data. Kami sedang berusaha untuk menyempurnakan dan memasukkan semula perjalanan tersebut dalam data GTFS yang dibekalkan.
+
+### Memahami data GTFS
+
+Setelah mengekstrak fail ZIP yang diperoleh dari API, anda akan mendapat beberapa fail dalam format `.txt`. Berikut adalah fail utama yang disediakan oleh semua agensi:
+
+| Jenis fail GTFS  | Penerangan                                         |
+| ---------------- | -------------------------------------------------- |
+| `agency.txt`     | Maklumat mengenai agensi pengangkutan              |
+| `stops.txt`      | Maklumat mengenai hentian pengangkutan             |
+| `routes.txt`     | Butiran mengenai laluan pengangkutan               |
+| `trips.txt`      | Perjalanan khusus dengan maklumat laluan berkaitan |
+| `stop_times.txt` | Jadual dan butiran hentian bagi perjalanan         |
+| `calendar.txt`   | Status perkhidmatan untuk tarikh tertentu          |
+
+Fail lain seperti `frequencies.txt` dan `shapes.txt` dibekalkan sekiranya tersedia oleh agensi.
+Untuk butiran lanjut, anda boleh merujuk [Rujukan Transit Statik](https://gtfs.org/schedule/reference/).

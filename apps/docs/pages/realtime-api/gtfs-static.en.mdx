@@ -1,8 +1,84 @@
+import Head from "next/head";
+
 ## GTFS Static API Endpoint
 
+<Head>
+  <title>GTFS Static - Open API Docs</title>
+</Head>
+
 ```http
-# COMING SOON
-GET https://api.data.gov.my/gtfs-static
+GET https://api.data.gov.my/gtfs-static/<agency>
 ```
 
-Our Transport API (GTFS Static) will be officially launching on ~~October 26, 2023~~ November 7, 2023. The launch date was pushed back due to unforeseen challenges at ground level. Please stay tuned for updates!
+### What does GTFS Static do?
+
+The GTFS Static API provides access to standardized public transportation schedules and geographic information, following the General Transit Feed Specification (GTFS).
+To learn more about GTFS and its specifications, you can visit the [GTFS documentation](https://developers.google.com/transit/gtfs) provided by Google.
+
+### Important note: We are building iteratively
+
+This is the first time that Malaysia has had an official and freely-usable GTFS API. It is the result of months of hard work and collaboration between the data.gov.my developer team and various public transport operators. It is by no means complete; there are plenty of services that will only be integrated over the coming months and years. However, with several primary services already included, we felt that it was time to push it live - so that the private sector and public transport community could begin building from it, and most crucially, giving us feedback on how to improve it.
+
+If you have any feedback on the GTFS API, please write to us at data.dtsa@mampu.gov.my - we welcome any and all constructive feedback!
+
+### Source of GTFS Static Data
+
+The GTFS Static API incorporates data from various transport agencies in Malaysia. Currently, the following agencies contribute their transit data:
+
+- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): A bus service operator in Johor Bahru, Malaysia, providing bus transportation on 19 routes across 5 corridors, including Kota Tinggi, Masai, Kulai, Gelang Patah, and Pontian.
+- [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
+- [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
+
+### Frequency of Data Update
+
+- GTFS for myBAS Johor Bahru: **As required**.
+- GTFS for Prasarana: **As required**.
+- GTFS for KTMB: **Daily at 00:01:00**.
+
+## Request Query & Response Format
+
+The GTFS Static API provides access to public transportation data represented as a GTFS Feed, which consists of a collection of text files packaged in a **ZIP file**.
+You can access these data files through the following endpoints:
+
+### myBAS Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-johor
+# ZIP file is returned
+```
+
+### KTMB
+
+```http
+GET https://api.data.gov.my/gtfs-static/ktmb
+# ZIP file is returned
+```
+
+### Prasarana
+
+```http
+GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
+# ZIP file is returned
+```
+
+- The possible `<category>` values are `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder`, `rapid-rail-kl` and `rapid-bus-kl`.
+- Note: A small number of trips (~2%, fully specified in [this CSV](https://openapi-malaysia-transport.s3.ap-southeast-1.amazonaws.com/prasarana/problematic_trips.csv))
+  for the `rapid-bus-kl` endpoint have been removed from the `stop_times.txt` file due to operational issues which affect data accuracy.
+  We are actively working to resolve and restore them to our GTFS feed.
+
+### Understanding the data
+
+Upon extracting the ZIP files obtained from the API endpoints, you will find various text files.
+Here are the essential text files provided by all agencies:
+
+| GTFS Type        | Description                                      |
+| ---------------- | ------------------------------------------------ |
+| `agency.txt`     | Information about transit agencies               |
+| `stops.txt`      | Information about transit stops                  |
+| `routes.txt`     | Details about transit routes                     |
+| `trips.txt`      | Specific trips with associated route information |
+| `stop_times.txt` | Timetables and stop details for trips            |
+| `calendar.txt`   | Service availability for specific dates          |
+
+Other optional files, such as `frequencies.txt` and `shapes.txt`, are provided if available.
+For more details, refer to the [GTFS Schedule Reference](https://gtfs.org/schedule/reference/).
