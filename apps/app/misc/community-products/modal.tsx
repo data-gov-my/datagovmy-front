@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { At, Button, Spinner } from "datagovmy-ui/components";
+import { body, header } from "datagovmy-ui/configs/font";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DateTime } from "luxon";
@@ -53,7 +54,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
         <Transition show={show} as={Fragment}>
           <Dialog
             as="div"
-            className="relative z-30"
+            className={clx(header.variable, body.variable, "relative z-30 font-sans")}
             onClose={() => {
               hide();
             }}
@@ -143,7 +144,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                             {Object.entries(dummyApplication).map(([key, value]) => {
                               if (key === "email" || key === "website") {
                                 return (
-                                  <div className="flex flex-col gap-1 text-base font-medium text-black">
+                                  <div className="flex flex-col gap-1 text-base text-black">
                                     <p className="font-bold">{t(key)}:</p>
                                     <At
                                       passHref={true}
@@ -170,7 +171,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                 return null;
                               }
                               return (
-                                <div className="flex flex-col gap-1 text-base font-medium text-black">
+                                <div className="flex flex-col gap-1 text-base text-black">
                                   <p className="font-bold">{t(key)}:</p>
                                   <p>{value}</p>
                                 </div>
