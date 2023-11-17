@@ -11,6 +11,7 @@ import {
   Spinner,
   Textarea,
 } from "datagovmy-ui/components";
+import { body, header } from "datagovmy-ui/configs/font";
 import { AgencyLink } from "datagovmy-ui/constants";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -70,7 +71,7 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
       <Transition show={show} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-30"
+          className={clx(header.variable, body.variable, "relative z-30 font-sans")}
           onClose={() => {
             hide();
           }}
@@ -249,7 +250,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
       <Transition show={show} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-30"
+          className={clx(header.variable, body.variable, "relative z-30 font-sans")}
           onClose={() => {
             hide();
           }}

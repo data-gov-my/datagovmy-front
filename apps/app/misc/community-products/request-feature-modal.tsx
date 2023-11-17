@@ -1,6 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { Button } from "datagovmy-ui/components";
+import { body, header } from "datagovmy-ui/configs/font";
+import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Fragment, FunctionComponent } from "react";
 
@@ -19,7 +21,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
       <Transition show={show} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-30"
+          className={clx(header.variable, body.variable, "relative z-30 font-sans")}
           onClose={() => {
             hide();
           }}
