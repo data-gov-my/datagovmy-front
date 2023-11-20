@@ -13,7 +13,7 @@
   "sideEffects": false,
   "dependencies": {
     "@vercel/edge-config": "^0.2.1",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "datagovmy-nextra": "*",
     "next": "^13.4.3",
     "nextra": "^2.6.2",
