@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useEffect, useState } from "react";
+import { FunctionComponent, ReactNode, useState } from "react";
 import { Transition } from "@headlessui/react";
 import Button from "../Button";
 import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -23,7 +23,9 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   initialSelected,
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
-  const [selected, setSelected] = useState<string>(initialSelected ?? categories[0][0]);
+  const [selected, setSelected] = useState<string>(
+    initialSelected ?? Array.isArray(categories[0]) ? categories[0][0] : categories[0]
+  );
   const [show, setShow] = useState<boolean>(false);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",

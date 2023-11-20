@@ -128,9 +128,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
                     ref={ref => (scrollRef.current[title] = ref)}
                     className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
                   >
-                    <div className="flex flex-row flex-wrap gap-x-6 gap-y-6 md:gap-y-3">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                       {datasets.map((item: Catalogue, index: number) => (
-                        <CatalogueCard dataset={item} index={index} />
+                        <CatalogueCard key={index} dataset={item} index={index} />
                       ))}
                     </div>
                   </Section>

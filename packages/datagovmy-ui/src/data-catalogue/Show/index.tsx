@@ -596,7 +596,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         }}
                         index={index}
                         alternateStyle={true}
-                        width="md:min-w-[calc(100%_/_3.25-0.5rem)] md:w-[calc(100%_/_3.25-0.5rem)]"
+                        width="md:min-w-[calc(100%_/_3.25-0.5rem)] md:w-[calc(100%_/_3.25-0.5rem)] w-full"
                       />
                     ))}
                   </div>
