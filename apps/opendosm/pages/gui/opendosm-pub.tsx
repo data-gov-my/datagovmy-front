@@ -10,11 +10,11 @@ import {
 } from "datagovmy-ui/components";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { withi18n } from "datagovmy-ui/decorators";
-import GUILayout from "@misc/gui/layout";
+import GUILayout from "misc/gui/layout";
 import { DateTime } from "luxon";
-import GUIOpenDOSMPubForms from "@misc/gui/opendosm-pub/forms";
-import { downloadJSON } from "@misc/gui/opendosm-pub/functions";
-import ModalAsCard from "@misc/gui/opendosm-pub/ModalCard";
+import GUIOpenDOSMPubForms from "misc/gui/opendosm-pub/forms";
+import { downloadJSON } from "misc/gui/opendosm-pub/functions";
+import ModalAsCard from "misc/gui/opendosm-pub/ModalCard";
 
 const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["gui-opendosm-pub", "catalogue", "publications"]);

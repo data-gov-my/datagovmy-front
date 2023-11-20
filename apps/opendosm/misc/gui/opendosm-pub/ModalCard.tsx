@@ -50,9 +50,9 @@ const ModalAsCard = ({ publication }: { publication: PubResource }) => {
   ];
 
   return (
-    <div className="border-outline shadow-floating dark:border-outlineHover-dark w-full rounded-xl border bg-white p-6">
+    <div className="w-full rounded-xl border border-outline bg-white p-6 shadow-floating dark:border-outlineHover-dark dark:bg-transparent">
       <div className="flex flex-col gap-y-1.5 text-black dark:text-white">
-        <span className="text-dim pr-8 text-sm uppercase">
+        <span className="pr-8 text-sm uppercase text-dim">
           {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
         </span>
         <span className="text-lg font-bold">{publication.title}</span>

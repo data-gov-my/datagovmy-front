@@ -147,7 +147,7 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
             <Dropdown
               anchor="left"
               width="w-full"
-              className={validation.frequency ? "border-danger border-2" : ""}
+              className={validation.frequency ? "border-2 border-danger dark:border-danger" : ""}
               options={frequencies}
               placeholder={t("catalogue:frequency")}
               selected={frequencies.find(e => e.value === data.frequency) ?? undefined}
@@ -182,7 +182,7 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
               }}
             />
           </div>
-          <p className="text-danger text-xs">{validation.frequency}</p>
+          <p className="text-xs text-danger">{validation.frequency}</p>
         </div>
         <div className="flex flex-col gap-2 lg:flex-row">
           <Input
@@ -250,14 +250,14 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
             <Textarea
               placeholder={t("forms.description_placeholder")}
               rows={2}
-              className={validation.description ? "border-danger border-2" : ""}
+              className={validation.description ? "border-2 border-danger dark:border-danger" : ""}
               value={data.description}
               onChange={e => {
                 setData("description", e.target.value);
                 setValidation("description", false);
               }}
             />
-            <p className="text-danger text-xs">{validation.description}</p>
+            <p className="text-xs text-danger">{validation.description}</p>
           </div>
           <div className="flex w-full flex-col gap-2">
             <Label name="description_bm" label={t("forms.description_bm")} />
@@ -265,13 +265,15 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
               placeholder={t("forms.description_placeholder_bm")}
               rows={2}
               value={data.description_bm}
-              className={validation.description_bm ? "border-danger border-2" : ""}
+              className={
+                validation.description_bm ? "border-2 border-danger dark:border-danger" : ""
+              }
               onChange={e => {
                 setData("description_bm", e.target.value);
                 setValidation("description_bm", false);
               }}
             />
-            <p className="text-danger text-xs">{validation.description_bm}</p>
+            <p className="text-xs text-danger">{validation.description_bm}</p>
           </div>
         </div>
       </div>
@@ -291,11 +293,11 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
                 defaultOpen={true}
                 title={
                   <div className="flex w-full items-center gap-2">
-                    <p className="text-md flex-1 font-medium text-black">
+                    <p className="text-md flex-1 font-medium text-black dark:text-white">
                       {t("resources")} {index + 1}
                     </p>
                     <TrashIcon
-                      className="text-danger hover:bg-outlineHover/30 h-4 w-4 rounded-full"
+                      className="h-4 w-4 rounded-full text-danger hover:bg-outlineHover/30"
                       onClick={() => handleDeleteOneResource(index)}
                     />
                   </div>
@@ -336,7 +338,9 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
                         anchor="left"
                         width="w-full"
                         className={
-                          validation.resources[index].resource_type ? "border-danger border-2" : ""
+                          validation.resources[index].resource_type
+                            ? "border-2 border-danger dark:border-danger"
+                            : ""
                         }
                         options={resourceType}
                         placeholder={t("forms.resource_type")}
@@ -346,7 +350,7 @@ const GUIOpenDOSMPubForms: FunctionComponent<FormsProps> = ({
                         }
                         onChange={e => updateSingleResource(index, "resource_type", e.value)}
                       />
-                      <p className="text-danger text-xs">
+                      <p className="text-xs text-danger">
                         {validation.resources[index].resource_type}
                       </p>
                     </div>
