@@ -22,7 +22,7 @@
     "@tanstack/match-sorter-utils": "^8.1.1",
     "@tanstack/react-table": "^8.5.2",
     "@vercel/edge-config": "^0.2.1",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "datagovmy-ui": "*",
     "i18next-http-backend": "^2.2.0",
     "lodash": "^4.17.21",

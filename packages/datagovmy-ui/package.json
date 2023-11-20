@@ -129,7 +129,7 @@
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.8.5",
     "@tanstack/react-virtual": "^3.0.0-beta.54",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "canvas2svg": "^1.0.16",
     "chart.js": "^3.9.1",
     "chartjs-adapter-luxon": "^1.2.0",
