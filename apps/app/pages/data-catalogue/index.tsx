@@ -1,4 +1,4 @@
-import DataCatalogue, { Catalogue } from "@data-catalogue/index";
+import { CatalogueIndex as DataCatalogue, Catalogue } from "datagovmy-ui/data-catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
@@ -40,7 +40,12 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query }) => {
     try {
-      const { data } = await get("/data-catalog/", {
+      // const { data } = await get("/data-catalog/", {
+      //   lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+      //   opendosm: false,
+      //   ...query,
+      // });
+      const { data } = await get("/data-catalogue/", {
         lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
         opendosm: false,
         ...query,

@@ -1,31 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { BuildingLibraryIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import {
-  At,
-  Button,
-  Card,
-  Dropdown,
-  Input,
-  Label,
-  Spinner,
-  Textarea,
-} from "datagovmy-ui/components";
+import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
 import { AgencyLink } from "datagovmy-ui/constants";
-import { clx, toDate } from "datagovmy-ui/helpers";
+import { Catalogue, CatalogueCard } from "datagovmy-ui/data-catalogue";
+import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import { Fragment, FunctionComponent, useState } from "react";
-
-// TODO: Temp, please import from DC index, when the branch is merged
-type Catalogue = {
-  id: string;
-  catalog_name: string;
-  description?: string;
-  data_as_of?: string;
-  data_source?: Array<string>;
-};
 
 type PublishedDataModalProps = {
   items?: Array<Catalogue>;
@@ -124,54 +107,9 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
 
                   <div className="mt-3 flex flex-col gap-3">
                     <p className="text-base font-medium">{t("success_modal.subtitle")}</p>
-                    <div className="bg-washed hide-scrollbar flex h-[80vh] flex-col gap-2 overflow-y-scroll rounded-xl p-3">
+                    <div className="bg-washed dark:bg-washed-dark hide-scrollbar flex h-[80vh] flex-col gap-2 overflow-y-scroll rounded-xl p-3">
                       {items.map((dataset, index) => (
-                        // TODO: Use Component from DC when merged
-                        <Card
-                          key={index}
-                          className={clx(
-                            "border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group relative rounded-xl bg-white transition-colors",
-                            "w-full"
-                          )}
-                        >
-                          <At
-                            href={`/data-catalogue/${dataset.id}`}
-                            locale={i18n.language}
-                            prefetch={false}
-                            target="_blank"
-                            className="py-4.5 flex flex-col gap-4 px-5"
-                          >
-                            <div className="flex flex-col gap-1.5">
-                              <p
-                                className="truncate text-lg font-bold text-black dark:text-white"
-                                title={dataset.catalog_name}
-                              >
-                                {dataset.catalog_name}
-                              </p>
-
-                              <p className={clx("text-sm", "truncate")}>{dataset.description}</p>
-                            </div>
-
-                            <div className="flex flex-row items-center gap-1">
-                              <BuildingLibraryIcon className="text-dim h-4 w-4" />
-                              <p className="text-dim text-sm font-medium">
-                                {dataset.data_source?.length ? dataset.data_source[0] : ""}
-                              </p>
-                              <div className="bg-dim h-1 w-1 rounded-full px-0.5" />
-                              <p className="text-dim text-sm">
-                                {t("common:common.data_of", {
-                                  date: toDate(
-                                    dataset.data_as_of
-                                      ? dataset.data_as_of
-                                      : new Date().toISOString(),
-                                    "dd MMM yyyy, HH:mm",
-                                    i18n.language
-                                  ),
-                                })}
-                              </p>
-                            </div>
-                          </At>
-                        </Card>
+                        <CatalogueCard key={index} dataset={dataset} index={index} />
                       ))}
                     </div>
                   </div>

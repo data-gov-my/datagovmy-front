@@ -11,9 +11,10 @@ import { appWithTranslation } from "next-i18next";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { useEffect, ReactNode } from "react";
+import { AppPropsLayout } from "datagovmy-ui/types";
 
 // App instance
-function App({ Component, pageProps }: any) {
+function App({ Component, pageProps }: AppPropsLayout) {
   const layout =
     Component.layout ||
     ((page: ReactNode) => <Layout className={clx(body.variable, "font-sans")}>{page}</Layout>);

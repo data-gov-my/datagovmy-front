@@ -54,6 +54,8 @@ export interface TimeseriesProps extends ChartHeaderProps {
   interval?: Periods;
   tooltipFormat?: string;
   displayType?: "compact" | "standard" | "scientific" | "engineering";
+  displayXAxis?: boolean;
+  displayYAxis?: boolean;
   round?: Periods;
   prefixY?: string;
   unitY?: string;
@@ -108,6 +110,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   interval = "auto",
   tooltipFormat,
   displayType = "standard",
+  displayXAxis = true,
+  displayYAxis = true,
   prefixY,
   unitY,
   round = "day",
@@ -315,6 +319,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       },
       scales: {
         x: {
+          display: displayXAxis,
           type: "time",
           time: {
             unit: interval === "auto" ? autoScale : interval,
@@ -358,6 +363,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           stacked: mode === "stacked",
         },
         y: {
+          display: displayYAxis,
           suggestedMax: suggestedMaxY,
           suggestedMin: suggestedMinY,
           grid: {

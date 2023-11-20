@@ -4,6 +4,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Chips, Slider, Tooltip } from "datagovmy-ui/components";
 import { BREAKPOINTS, SHORT_PERIOD } from "datagovmy-ui/constants";
+import { DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { WindowContext, WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
@@ -54,14 +55,10 @@ interface CatalogueWidgetProps {
   params: {
     id: string;
     theme: string;
+    currentVisual: string;
   };
   config: DCConfig;
-  dataset: {
-    type: DCChartKeys;
-    chart: any;
-    table: Record<string, any>[];
-    meta: { title: string; desc: string; unique_id: string };
-  };
+  dataset: DatasetType;
   metadata: {
     data_as_of: string;
     url: {
@@ -97,7 +94,11 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   translations,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const { filter, setFilter } = useFilter(config.context, { id: params.id, theme: params.theme });
+  const { filter, setFilter } = useFilter(config.context, {
+    id: params.id,
+    theme: params.theme,
+    currViz: params.currentVisual,
+  });
   const { size } = useContext(WindowContext);
   const chips = useMemo<OptionType[]>(
     () =>
@@ -243,13 +244,13 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
               {open => (
                 <>
                   <InformationCircleIcon
-                    className="mb-1 inline-block h-4 w-4 text-outlineHover md:hidden"
+                    className="text-outlineHover mb-1 inline-block h-4 w-4 md:hidden"
                     onClick={() => open}
                   />
                 </>
               )}
             </Tooltip>
-            <span className="hidden text-right text-sm text-dim md:block">
+            <span className="text-dim hidden text-right text-sm md:block">
               {t("common:common.data_of", {
                 date: toDate(metadata.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
               })}
@@ -278,13 +279,11 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 flex w-full gap-2 bg-washed px-3 py-1">
-        <div className="flex h-4 w-4 items-end">
-          <Image src="/static/images/logo.png" width={16} height={16} alt="datagovmy logo" />
-        </div>
-        <small className="space-x-2 text-dim ">
+      <div className="bg-washed fixed bottom-0 left-0 flex w-full gap-2 px-3 py-1">
+        <Image src="/static/images/logo.png" width={16} height={14} alt="datagovmy logo" />
+        <small className="text-dim space-x-2 ">
           <a
-            href={`https://open.dosm.gov.my/data-catalogue/${dataset.meta.unique_id}`}
+            href={`https://data.gov.my/data-catalogue/${dataset.meta.unique_id}`}
             target="_blank"
             className="space-x-1 hover:underline"
           >
@@ -294,8 +293,8 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
 
           <span>|</span>
 
-          <a href="https://open.dosm.gov.my" className="text-primary">
-            open.dosm.gov.my
+          <a href="https://data.gov.my" className="text-primary">
+            data.gov.my
           </a>
         </small>
       </div>

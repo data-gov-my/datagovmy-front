@@ -23,11 +23,12 @@ interface CatalogueEmbedProps {
   options?: FilterDefault[] | null;
   defaultOption?: any;
   translations?: any;
+  selectedVizKey?: string | undefined;
   ref: ForwardedRef<EmbedInterface>;
 }
 
 const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRef(
-  ({ uid, options, defaultOption, translations }, ref) => {
+  ({ uid, options, defaultOption, translations, selectedVizKey }, ref) => {
     const modalRef = useRef<ModalInterface>(null);
     const { t, i18n } = useTranslation(["catalogue"]);
     const { data, setData } = useData(defaultOption);
@@ -43,19 +44,20 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
           language?.value === "ms-MY" ? "/ms-MY" : ""
         }/data-catalogue/embed/${uid}`
       );
-      const search_params = new URLSearchParams(
-        Object.entries(data)
+      const search_params = new URLSearchParams([
+        ...Object.entries(data)
           .filter(([_, value]) => !!value)
           .map(([key, value]: [string, unknown]) => {
             if (isOptionType(value)) return [key, value.value];
             return [key, value as string];
-          })
-      );
+          }),
+        ["currViz", selectedVizKey ?? ""],
+      ]);
 
       embed.search = search_params.toString();
 
       return { url: embed.href, params: search_params };
-    }, [uid, data, language]);
+    }, [uid, data, language, selectedVizKey]);
 
     const _setData = (key: string, value: any) => {
       let flag = false;

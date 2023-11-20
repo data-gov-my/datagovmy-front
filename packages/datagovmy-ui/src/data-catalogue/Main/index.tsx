@@ -1,7 +1,6 @@
 import { BuildingLibraryIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import {
   AgencyBadge,
-  At,
   Button,
   Checkbox,
   Container,
@@ -29,6 +28,7 @@ import {
   ForwardedRef,
   useContext,
 } from "react";
+import CatalogueCard from "../Card";
 
 /**
  * Catalogue Index
@@ -38,6 +38,9 @@ import {
 export type Catalogue = {
   id: string;
   catalog_name: string;
+  description?: string;
+  data_as_of?: string;
+  data_source?: Array<string>;
 };
 
 interface CatalogueIndexProps {
@@ -47,7 +50,7 @@ interface CatalogueIndexProps {
 }
 
 const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { size } = useContext(WindowContext);
@@ -80,24 +83,26 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
           }),
         ]}
         action={
-          <Dropdown
-            icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-            width="w-64"
-            placeholder={t("placeholder.source")}
-            anchor="left"
-            options={sourceOptions}
-            selected={query.source ? { label: query.source, value: query.source } : undefined}
-            onChange={e => filterRef.current?.setFilter("source", e)}
-            enableSearch
-            enableClear
-          />
+          sourceOptions.length > 0 && (
+            <Dropdown
+              icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
+              width="w-64"
+              placeholder={t("placeholder.source")}
+              anchor="left"
+              options={sourceOptions}
+              selected={query.source ? { label: query.source, value: query.source } : undefined}
+              onChange={e => filterRef.current?.setFilter("source", e)}
+              enableSearch
+              enableClear
+            />
+          )
         }
         agencyBadge={
           <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : "govt"} />
         }
       />
 
-      <Container className="min-h-screen">
+      <Container className="min-h-screen max-w-full lg:px-0 lg:pl-6">
         <Sidebar
           categories={Object.entries(collection).map(([category, subcategory]) => [
             category,
@@ -111,36 +116,30 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
             })
           }
         >
-          <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
+          <div className="flex flex-1 flex-col">
+            <CatalogueFilter ref={filterRef} query={query} sources={sourceOptions} />
 
-          {_collection.length > 0 ? (
-            _collection.map(([title, datasets]) => {
-              return (
-                <Section
-                  title={title}
-                  key={title}
-                  ref={ref => (scrollRef.current[title] = ref)}
-                  className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
-                >
-                  <ul className="columns-1 space-y-3 sm:columns-3">
-                    {datasets.map((item: Catalogue, index: number) => (
-                      <li key={index}>
-                        <At
-                          href={`/data-catalogue/${item.id}`}
-                          className="text-primary dark:text-primary-dark no-underline [text-underline-position:from-font] hover:underline"
-                          prefetch={false}
-                        >
-                          {item.catalog_name}
-                        </At>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              );
-            })
-          ) : (
-            <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
-          )}
+            {_collection.length > 0 ? (
+              _collection.map(([title, datasets]) => {
+                return (
+                  <Section
+                    title={title}
+                    key={title}
+                    ref={ref => (scrollRef.current[title] = ref)}
+                    className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
+                  >
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                      {datasets.map((item: Catalogue, index: number) => (
+                        <CatalogueCard key={index} dataset={item} index={index} />
+                      ))}
+                    </div>
+                  </Section>
+                );
+              })
+            ) : (
+              <p className="text-dim p-2 pt-16 lg:p-8">{t("common:common.no_entries")}.</p>
+            )}
+          </div>
         </Sidebar>
       </Container>
     </>
