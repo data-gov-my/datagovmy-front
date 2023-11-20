@@ -38,7 +38,7 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
     <Card
       key={index}
       className={clx(
-        "border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group relative rounded-xl transition-colors",
+        "border-outline hover:border-outlineHover hover:bg-background dark:hover:bg-washed-dark/50 dark:border-washed-dark dark:hover:border-outlineHover-dark group relative rounded-xl bg-white transition-colors dark:bg-black",
         width ? width : "w-full"
       )}
     >
