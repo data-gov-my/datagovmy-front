@@ -81,7 +81,7 @@
     "eslint": "^8.40.0",
     "eslint-config-datagovmy": "*",
     "geojson-bbox": "^0.0.1",
-    "postcss": "^8.4.14",
+    "postcss": "^8.4.31",
     "postcss-import": "^14.1.0",
     "postcss-nesting": "^10.1.10",
     "prettier": "^2.7.1",
