@@ -357,8 +357,8 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                           label: t("total"),
                           pointRadius: 0,
                           data: coordinate.deaths_tooltip,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          backgroundColor: AKSARA_COLOR.PRIMARY,
+                          borderColor: AKSARA_COLOR.BLACK,
+                          backgroundColor: AKSARA_COLOR.BLACK_H,
                           borderWidth: 1.5,
                         },
                         {
@@ -520,7 +520,8 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                         {
                           type: "line",
                           label: t("area_chart6_tooltip1"),
-                          borderColor: "#2563EB",
+                          borderColor: AKSARA_COLOR.BLACK,
+                          backgroundColor: AKSARA_COLOR.BLACK_H,
                           data: coordinate.tests_tooltip,
                           borderWidth: 1.5,
                           yAxisID: "y1",
