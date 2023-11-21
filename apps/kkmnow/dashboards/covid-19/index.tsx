@@ -131,7 +131,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         cell: (item: any) => {
           const state = item.getValue() as string;
           return (
-            <div className="flex items-center gap-2 w-32">
+            <div className="flex items-center gap-2 w-36">
               <Image
                 src={`/static/images/states/${state}.jpeg`}
                 width={20}
