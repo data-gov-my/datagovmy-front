@@ -17,7 +17,7 @@ import {
 import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
 import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { OptionType } from "datagovmy-ui/types";
+import { OptionType, WithData } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
@@ -31,13 +31,40 @@ const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
+type TableData = {
+  data: {
+    hospital: string;
+    beds_nonicu: string;
+    util_nonicu: string;
+    beds_icu: string;
+    util_icu: string;
+    vent: string;
+    util_vent: string;
+  };
+  index: number;
+  state: string;
+};
+
 interface HospitalBedUtilisationProps {
   last_updated: string;
-  choropleth: any;
+  choropleth: WithData<{
+    x: string[];
+    y: {
+      beds_nonicu: number[];
+      util_nonicu: number[];
+      beds_icu: number[];
+      util_icu: number[];
+      vent: number[];
+      util_vent: number[];
+    };
+  }>;
   dropdown: Array<string>;
   hospital: string;
-  table_facility: any;
-  timeseries_facility: any;
+  table_facility: WithData<Array<TableData>>;
+  timeseries_facility: Record<
+    "x" | "beds_nonicu" | "util_nonicu" | "beds_icu" | "util_icu" | "vent" | "util_vent",
+    number[]
+  >;
 }
 
 const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = ({
