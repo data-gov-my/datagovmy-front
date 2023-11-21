@@ -36,6 +36,12 @@
   @apply border-outline dark:border-washed-dark sticky z-10 bg-inherit max-lg:border-r-2;
 }
 
+/* Covid Table */
+.table-sticky-first thead tr > th:first-child,
+.table-sticky-first tbody tr > td:first-child {
+  @apply sticky left-0 z-10 bg-white dark:bg-black;
+}
+
 .table th:not(:first-child) {
   @apply w-auto;
 }

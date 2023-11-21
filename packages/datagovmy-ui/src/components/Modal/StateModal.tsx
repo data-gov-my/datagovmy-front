@@ -50,7 +50,7 @@ const StateModal: FunctionComponent<StateModalProps> = ({ state, exclude, url, t
       title={title ?? t("common:common.check_out")}
     >
       {close => (
-        <ul className="max-h-96 overflow-y-auto">
+        <ul className="max-h-96 overflow-y-auto bg-white dark:bg-black">
           {statesOptions
             .filter(option => !exclude?.includes(option.value))
             .map(state => (

@@ -1,98 +1,102 @@
 import Layout from "@components/Layout";
 import { Metadata, StateDropdown, StateModal } from "datagovmy-ui/components";
-import COVID19Dashboard from "@dashboards/covid-19";
-import { useTranslation } from "next-i18next";
+import CovidVaccinationDashboard from "@dashboards/covid-vaccination";
 import { get } from "datagovmy-ui/api";
+import { CountryAndStates } from "datagovmy-ui/constants";
 import { withi18n } from "datagovmy-ui/decorators";
 import { routes } from "@lib/routes";
 import { Page } from "datagovmy-ui/types";
 import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
-import { CountryAndStates } from "datagovmy-ui/constants";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { sortMsiaFirst } from "datagovmy-ui/helpers";
 
-const COVID19: Page = ({
+/**
+ * Covid Vaccination Page <State>
+ */
+
+const CovidVaccinationState: Page = ({
   meta,
-  params,
   last_updated,
-  snapshot_bar,
-  snapshot_graphic,
+  params,
+  waffle,
+  barmeter,
   timeseries,
   statistics,
+  table,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboard-covid-19", "common"]);
-
+  const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
         title={[t("header"), "·", CountryAndStates[params.state]].join(" ")}
         description={t("description")}
-        keywords={""}
+        keywords=""
       />
-      <COVID19Dashboard
-        params={params}
+      <CovidVaccinationDashboard
         last_updated={last_updated}
-        snapshot_bar={snapshot_bar}
-        snapshot_graphic={snapshot_graphic}
+        params={params}
+        waffle={waffle}
+        barmeter={barmeter}
         timeseries={timeseries}
         statistics={statistics}
+        table={table}
       />
     </AnalyticsProvider>
   );
 };
 
-COVID19.layout = (page, props) => (
+CovidVaccinationState.layout = (page, props) => (
   <WindowProvider>
     <Layout
       stateSelector={
         <StateDropdown
           width="w-max xl:w-64"
-          url={routes.COVID_19}
-          currentState={props.params.state ?? "mys"}
-          exclude={["kvy"]}
+          url={routes.COVID_VACCINATION}
+          currentState={props?.params.state}
           hideOnScroll
         />
       }
     >
-      <StateModal state={props.params.state} exclude={["kvy"]} url={routes.COVID_19} />
+      <StateModal url={routes.COVID_VACCINATION} state={props.params.state} />
       {page}
     </Layout>
   </WindowProvider>
 );
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
-    fallback: "blocking", // can also be true or 'blocking'
+    fallback: "blocking",
   };
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
-  ["dashboard-covid-19", "common"],
+  ["dashboard-covid-vaccination", "common"],
   async ({ params }) => {
-    const { data } = await get("/dashboard", {
-      dashboard: "covid_epid",
-      state: params?.state || "mys",
-    });
+    const state = params?.state ? params.state[0] : "mys";
+    const { data } = await get("/dashboard", { dashboard: "covid_vax", state: state });
+    data.snapshot.data = sortMsiaFirst(data.snapshot.data, "state");
 
     return {
-      notFound: false,
       props: {
         meta: {
-          id: "dashboard-covid-19",
+          id: "dashboard-covid-vaccination",
           type: "dashboard",
           category: "healthcare",
           agency: "KKM",
         },
-        params: params,
+        params: { state },
         last_updated: data.data_last_updated,
-        snapshot_bar: data.snapshot_bar,
-        snapshot_graphic: data.snapshot_graphic,
+        waffle: data.waffle,
+        barmeter: data.bar_chart,
         timeseries: data.timeseries,
         statistics: data.statistics,
+        table: data.snapshot,
       },
     };
   }
 );
 
-export default COVID19;
+export default CovidVaccinationState;
