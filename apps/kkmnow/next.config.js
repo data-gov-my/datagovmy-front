@@ -10,6 +10,12 @@ const nextConfig = {
   reactStrictMode: false, // Bug requires strict-mode false: https://github.com/plouc/nivo/issues/2009
   poweredByHeader: false,
   transpilePackages: ["datagovmy-ui"],
+  modularizeImports: {
+    "datagovmy-ui": {
+      transform: "datagovmy-ui/{{member}}",
+      preventFullImport: true,
+    },
+  },
   publicRuntimeConfig: {
     APP_NAME: "KKMNOW",
     META_AUTHOR: "Ministry of Health & Department of Statistics Malaysia",
@@ -19,6 +25,14 @@ const nextConfig = {
     META_DOMAIN: "data.moh.gov.my",
     META_URL: "https://data.moh.gov.my",
     META_IMAGE: "https://data.moh.gov.my/static/images/jata_512.png",
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /index\.(js|mjs|jsx|ts|tsx)$/,
+      include: mPath => mPath.includes("datagovmy-ui"),
+      sideEffects: false,
+    });
+    return config;
   },
   async rewrites() {
     return [
