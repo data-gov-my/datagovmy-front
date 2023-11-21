@@ -43,10 +43,11 @@ export interface TableConfigColumn {
 export type TableConfig<T = any> = {
   id: string | undefined;
   header?: ReactNode;
+  subheader?: ReactNode;
   accessorKey?: string;
   className?: string;
   enableSorting?: boolean;
-  cell?: (item: any) => JSX.Element;
+  cell?: (item: any) => ReactNode;
   columns?: TableConfigColumn[];
   accessorFn?: (props: T) => string;
   sortingFn?: string;
@@ -77,9 +78,9 @@ export interface TableProps {
 
 const relativeColor = (delta: number, inverse: boolean = false) => {
   const COLOR = {
-    DEFAULT: "bg-outline",
-    GREEN: "bg-green-400 text-green-600",
-    RED: "bg-red-400 text-red-600",
+    DEFAULT: "bg-zinc-500 bg-opacity-10",
+    GREEN: "bg-green-400 bg-opacity-20 text-green-600",
+    RED: "bg-red-400 bg-opacity-20 text-red-600",
   };
   if (inverse) return delta > 1 ? COLOR.RED : delta < 0 ? COLOR.GREEN : COLOR.DEFAULT;
   else return delta > 1 ? COLOR.GREEN : delta < 0 ? COLOR.RED : COLOR.DEFAULT;
@@ -297,7 +298,7 @@ const Table: FunctionComponent<TableProps> = ({
                         "border-outline dark:border-washed-dark border-b px-2 py-2.5 max-sm:max-w-[150px] truncate",
                         typeof value === "number" && "tabular-nums text-right",
                         lastCellInGroup.id === cell.column.id && "text-sm",
-                        relative ? relativeColor(value as number, inverse) : "bg-opacity-20",
+                        relative && relativeColor(value as number, inverse),
                         scale && scaleColor(value as number),
                         freeze?.includes(cell.column.id) && "sticky-col",
                         cell.column.columnDef.className

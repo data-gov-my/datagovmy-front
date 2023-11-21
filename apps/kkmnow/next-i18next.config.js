@@ -3,6 +3,8 @@ const defineConfig = require("datagovmy-ui/i18n");
 const namespaces = [
   "common",
   "agencies",
+  "division",
+  "kkmnow-home",
   "dashboard-blood-donation",
   "dashboard-covid-19",
   "dashboard-covid-vaccination",
@@ -11,4 +13,4 @@ const namespaces = [
   "dashboard-peka-b40",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "division"]);

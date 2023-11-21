@@ -14,7 +14,7 @@ const DashboardIndex: Page = ({ dashboards }: InferGetStaticPropsType<typeof get
     <>
       <Metadata title={t("common:nav.dashboards")} description={""} keywords={""} />
       <Progress />
-      <Dashboard dashboards={dashboards} />
+      {/* <Dashboard dashboards={dashboards} /> */}
     </>
   );
 };
@@ -57,6 +57,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboards", async () =>
   };
 
   return {
+    notFound: true,
     props: {
       meta: {
         id: "dashboard-index",

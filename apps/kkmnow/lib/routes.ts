@@ -1,4 +1,5 @@
 export const routes = {
+  HOME: "/",
   COVID_19: "/dashboard/covid-19",
   COVID_VACCINATION: "/dashboard/covid-vaccination",
   BLOOD_DONATION: "/dashboard/blood-donation",

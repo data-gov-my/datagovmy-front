@@ -124,7 +124,7 @@ const Hero: FunctionComponent<HeroProps> = ({
             )}
 
             {(action || last_updated) && (
-              <div className="space-y-3">
+              <div className="space-y-6">
                 {action}
                 {last_updated && (
                   <p className="text-dim text-sm" data-testid="hero-last-updated">
