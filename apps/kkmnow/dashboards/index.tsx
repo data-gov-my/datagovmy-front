@@ -44,6 +44,7 @@ type Dashboard = {
 };
 
 interface DashboardIndexProps {
+  last_updated: string;
   dashboards: WithData<Array<Dashboard>>;
   keystats: WithData<Record<string, { callout: number; data_as_of: string }>>;
   timeseries: WithData<
@@ -55,6 +56,7 @@ interface DashboardIndexProps {
 }
 
 const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
+  last_updated,
   dashboards,
   keystats,
   timeseries,
@@ -155,7 +157,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         header={[t("common:home.category")]}
         description={[t("common:home.description")]}
         className="relative"
-        last_updated={dashboards.data_as_of}
+        last_updated={last_updated}
         action={
           <div className="flex flex-wrap gap-3">
             <At className="btn-primary shadow-button text-sm" href="/data-catalogue" enableIcon>

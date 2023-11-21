@@ -9,6 +9,7 @@ import DashboardIndex from "@dashboards/index";
 import { get } from "datagovmy-ui/api";
 
 const Home: Page = ({
+  last_updated,
   dashboards,
   keystats,
   timeseries,
@@ -19,6 +20,7 @@ const Home: Page = ({
     <>
       <Metadata keywords={""} />
       <DashboardIndex
+        last_updated={last_updated}
         dashboards={dashboards}
         keystats={keystats}
         timeseries={timeseries}
@@ -81,6 +83,7 @@ export const getStaticProps: GetStaticProps = withi18n(null, async () => {
         category: null,
         agency: null,
       },
+      last_updated: data.data_last_updated,
       dashboards: dashboard_route,
       keystats: data.keystats,
       timeseries: data.timeseries,
