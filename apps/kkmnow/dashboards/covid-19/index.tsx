@@ -26,12 +26,14 @@ import { FunctionComponent } from "react";
 const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 const Stages = dynamic(() => import("datagovmy-ui/charts/stages"), { ssr: false });
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 
 interface COVID19Props {
   params: Record<string, any>;
   last_updated: string;
   snapshot_bar: any;
   snapshot_graphic: any;
+  snapshot_table: any;
   timeseries: any;
   statistics: any;
 }
@@ -41,6 +43,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
   last_updated,
   snapshot_bar,
   snapshot_graphic,
+  snapshot_table,
   timeseries,
   statistics,
 }) => {
@@ -117,6 +120,162 @@ const COVID19: FunctionComponent<COVID19Props> = ({
       data: snapshot_bar.data.cases,
     },
   ];
+
+  const COVID_TABLE_SCHEMA = () => {
+    const subcolumn = {
+      state: {
+        header: "",
+        id: "state",
+        accessorKey: "state",
+        enableSorting: false,
+        cell: (item: any) => {
+          const state = item.getValue() as string;
+          return (
+            <div className="flex items-center gap-2 w-32">
+              <Image
+                src={`/static/images/states/${state}.jpeg`}
+                width={20}
+                height={12}
+                alt={CountryAndStates[state]}
+              />
+              <span>{CountryAndStates[state]}</span>
+            </div>
+          );
+        },
+      },
+      deaths: [
+        {
+          id: "deaths.deaths",
+          header: t("table_death"),
+          subheader: t("past14d"),
+          accessorKey: "deaths.deaths",
+        },
+        {
+          id: "deaths.deaths_100k",
+          header: "Per 100K",
+          subheader: t("past14d"),
+          accessorKey: "deaths.deaths_100k",
+          cell: ({ getValue }) => (getValue() ? `${numFormat(getValue(), "standard", 1)}%` : "-"),
+        },
+        {
+          id: "deaths.deaths_trend",
+          header: t("table_death_trend"),
+          subheader: t("past14d"),
+          accessorKey: "deaths.deaths_trend",
+          cell: ({ getValue }) =>
+            getValue() === "None" ? "-" : `${numFormat(getValue(), "standard", 1)}%`,
+          relative: true,
+          inverse: true,
+        },
+      ],
+      admitted: [
+        {
+          id: "admitted.admitted",
+          header: t("table_admission"),
+          subheader: t("past14d"),
+          accessorKey: "admitted.admitted",
+        },
+        {
+          id: "admitted.util_hosp",
+          header: t("table_admission_util"),
+          accessorKey: "admitted.util_hosp",
+          cell: ({ getValue }) => (getValue() ? `${numFormat(getValue(), "standard", 1)}%` : "-"),
+        },
+        {
+          id: "admitted.admitted_trend",
+          header: t("table_admission_trend"),
+          subheader: t("past14d"),
+          accessorKey: "admitted.admitted_trend",
+          cell: ({ getValue }) =>
+            getValue() === "None" ? "-" : `${numFormat(getValue(), "standard", 1)}%`,
+          relative: true,
+          inverse: true,
+        },
+      ],
+      cases: [
+        {
+          id: "cases.cases",
+          header: t("table_cases"),
+          subheader: t("past14d"),
+          accessorKey: "cases.cases",
+        },
+        {
+          id: "cases.cases_100k",
+          header: "Per 100K",
+          subheader: t("past14d"),
+          accessorKey: "cases.cases_100k",
+          cell: ({ getValue }) => (getValue() ? `${numFormat(getValue(), "standard", 1)}%` : "-"),
+        },
+        {
+          id: "cases.cases_posrate",
+          header: t("table_cases_posrate"),
+          accessorKey: "cases.cases_posrate",
+          cell: ({ getValue }) => (getValue() ? `${numFormat(getValue(), "standard", 1)}%` : "-"),
+        },
+        {
+          id: "cases.cases_trend",
+          header: t("table_cases_trend"),
+          subheader: t("past14d"),
+          accessorKey: "cases.cases_trend",
+          cell: ({ getValue }) =>
+            getValue() === "None" ? "-" : `${numFormat(getValue(), "standard", 1)}%`,
+          relative: true,
+          inverse: true,
+        },
+      ],
+    };
+
+    return [
+      {
+        name: t("tab_table1"),
+        config: [
+          subcolumn.state,
+          {
+            id: "deaths",
+            columns: subcolumn.deaths,
+          },
+          {
+            id: "admitted",
+            columns: subcolumn.admitted,
+          },
+          {
+            id: "cases",
+            columns: subcolumn.cases,
+          },
+        ],
+      },
+      {
+        name: t("tab_table2"),
+        config: [
+          subcolumn.state,
+          {
+            id: "deaths",
+            columns: subcolumn.deaths,
+          },
+        ],
+      },
+      {
+        name: "Hosp.",
+        config: [
+          subcolumn.state,
+          {
+            id: "admitted",
+            columns: subcolumn.admitted,
+          },
+        ],
+      },
+      {
+        name: t("tab_table4"),
+        config: [
+          subcolumn.state,
+          {
+            id: "cases",
+            columns: subcolumn.cases,
+          },
+        ],
+      },
+    ];
+  };
 
   return (
     <>
@@ -558,6 +717,30 @@ const COVID19: FunctionComponent<COVID19Props> = ({
               </>
             )}
           </SliderProvider>
+        </Section>
+
+        {/* How vaccinated against COVID-19 are we? */}
+        <Section title={t("table_header")} date={snapshot_table.data_as_of}>
+          <div>
+            <Tabs className="flex flex-wrap gap-2 pb-4" title={t("table_subheader")}>
+              {COVID_TABLE_SCHEMA().map((menu, index) => {
+                return (
+                  <Panel key={index} name={menu.name}>
+                    <Table
+                      className="text-sm text-right table-sticky-first"
+                      data={snapshot_table.data}
+                      config={menu.config}
+                      freeze={["state"]}
+                      precision={{
+                        default: 1,
+                        columns: { "admitted.admitted": 0, "cases.cases": 0, "deaths.deaths": 0 },
+                      }}
+                    />
+                  </Panel>
+                );
+              })}
+            </Tabs>
+          </div>
         </Section>
       </Container>
     </>
