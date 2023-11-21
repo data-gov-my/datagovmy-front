@@ -10,6 +10,7 @@ import { InferGetStaticPropsType, GetStaticProps, GetStaticPaths } from "next";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { sortMsiaFirst } from "datagovmy-ui/helpers";
 
 /**
  * Covid Vaccination Page <State>
@@ -23,6 +24,7 @@ const CovidVaccinationState: Page = ({
   barmeter,
   timeseries,
   statistics,
+  table,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   return (
@@ -39,6 +41,7 @@ const CovidVaccinationState: Page = ({
         barmeter={barmeter}
         timeseries={timeseries}
         statistics={statistics}
+        table={table}
       />
     </AnalyticsProvider>
   );
@@ -72,7 +75,9 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const getStaticProps: GetStaticProps = withi18n(
   ["dashboard-covid-vaccination", "common"],
   async ({ params }) => {
-    const { data } = await get("/dashboard", { dashboard: "covid_vax", state: params?.state });
+    const state = params?.state ? params.state[0] : "mys";
+    const { data } = await get("/dashboard", { dashboard: "covid_vax", state: state });
+    data.snapshot.data = sortMsiaFirst(data.snapshot.data, "state");
 
     return {
       props: {
@@ -82,12 +87,13 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "healthcare",
           agency: "KKM",
         },
-        params: params,
+        params: { state },
         last_updated: data.data_last_updated,
         waffle: data.waffle,
         barmeter: data.bar_chart,
         timeseries: data.timeseries,
         statistics: data.statistics,
+        table: data.snapshot,
       },
     };
   }

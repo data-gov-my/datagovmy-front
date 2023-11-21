@@ -1,4 +1,5 @@
 import COVIDVaccinationTrends from "./vaccine-trends";
+import COVIDVaccinationTable from "./table";
 import { routes } from "@lib/routes";
 import {
   AgencyBadge,
@@ -30,6 +31,7 @@ interface COVIDVaccinationProps {
   statistics: Record<string, any>;
   barmeter: Record<string, any>;
   waffle: Record<string, any>;
+  table: Record<string, any>;
 }
 
 const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
@@ -42,6 +44,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   statistics,
   barmeter,
   waffle,
+  table,
 }) => {
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   const currentState = params.state;
@@ -220,6 +223,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           timeseries={timeseries}
           statistics={statistics}
         />
+
+        {/* Which states are best vaccinated against COVID-19? */}
+        <COVIDVaccinationTable table={table} />
       </Container>
     </>
   );
