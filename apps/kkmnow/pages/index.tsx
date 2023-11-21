@@ -15,7 +15,7 @@ const Home: Page = ({
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t, i18n } = useTranslation(["dashboards"]);
+  const { t, i18n } = useTranslation(["kkmnow-home"]);
   return (
     <>
       <Metadata keywords={""} />
@@ -30,7 +30,7 @@ const Home: Page = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n(null, async () => {
+export const getStaticProps: GetStaticProps = withi18n(["kkmnow-home"], async () => {
   const { data } = await get("/dashboard/", { dashboard: "kkmnow_homepage" });
 
   const dashboard_route = {

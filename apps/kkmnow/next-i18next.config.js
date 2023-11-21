@@ -4,6 +4,7 @@ const namespaces = [
   "common",
   "agencies",
   "division",
+  "kkmnow-home",
   "dashboard-blood-donation",
   "dashboard-covid-19",
   "dashboard-covid-vaccination",

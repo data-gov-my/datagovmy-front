@@ -62,7 +62,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   timeseries,
   timeseries_callout,
 }) => {
-  const { t, i18n } = useTranslation(["dashboards"]);
+  const { t, i18n } = useTranslation(["kkmnow-home", "dashboards"]);
   const { data, setData } = useData({
     minmax: [0, timeseries.data.x.length - 1],
   });
@@ -119,7 +119,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
       {
         icon: <BuildingOffice2Icon className="h-6 w-6" />,
         title: "stats.util_icu",
-        url: routes.FACILITIES,
+        url: routes.HOSPITAL_BED_UTILISATION,
         value: numFormat(keystats.data.util_icu.callout, "compact", 1),
         data_as_of: toDate(keystats.data.util_icu.data_as_of, "MMM yyyy", i18n.language),
       },
@@ -154,8 +154,8 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         background="gray"
         category={[t("agencies:moh.full"), "text-primary"]}
         agencyBadge={<AgencyBadge agency="moh" />}
-        header={[t("common:home.category")]}
-        description={[t("common:home.description")]}
+        header={[t("header")]}
+        description={[t("description")]}
         className="relative"
         last_updated={last_updated}
         action={
@@ -163,7 +163,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
             <At className="btn-primary shadow-button text-sm" href="/data-catalogue" enableIcon>
               {t("common:nav.catalogue")}
             </At>
-            <div className="absolute right-0 bottom-0 lg:-bottom-2.5 lg:right-6 pointer-events-none">
+            <div className="absolute right-0 bottom-0 lg:right-6 pointer-events-none">
               <Image
                 src="/static/images/kkm-hand-logo.png"
                 className="opacity-10"
