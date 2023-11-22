@@ -1,14 +1,5 @@
 import { AgencyBadge, At, Container, Hero, Section, Slider } from "datagovmy-ui/components";
-import {
-  ArrowTrendingUpIcon,
-  ArrowUpRightIcon,
-  BriefcaseIcon,
-  BuildingOffice2Icon,
-  CreditCardIcon,
-  FireIcon,
-  HeartIcon,
-  UsersIcon,
-} from "@heroicons/react/24/solid";
+import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, ReactNode, useMemo } from "react";
 import Image from "next/image";
@@ -18,6 +9,15 @@ import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import {
+  BloodDropIcon,
+  HeartIcon,
+  VirusIcon,
+  VentilatorIcon,
+  MedicalCardIcon,
+  InjectionIcon,
+  HospitalBedIcon,
+} from "datagovmy-ui/icons/kkmnow";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -88,61 +88,53 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   const STATS = useMemo<StatProps[]>(
     () => [
       {
-        icon: <UsersIcon className="h-6 w-6" />,
+        icon: <VirusIcon className="h-6 w-6" />,
         title: "stats.covid",
         url: routes.COVID_19,
-        value: numFormat(keystats.data.covid.callout, "compact", 1, "long", i18n.language, true),
-        data_as_of: toDate(
-          keystats.data.covid.data_as_of,
-          `${i18n.language === "ms-MY" ? "'ST'" : ""}q${i18n.language === "ms-MY" ? "" : "Q"} yyyy`,
-          i18n.language
-        ),
+        value: numFormat(keystats.data.covid.callout, "standard", 0, "long", i18n.language, true),
+        data_as_of: toDate(keystats.data.covid.data_as_of, `dd MMM`, i18n.language),
       },
       {
-        icon: <ArrowTrendingUpIcon className="h-6 w-6" />,
+        icon: <InjectionIcon className="h-6 w-6" />,
         title: "stats.covid_vax",
         url: routes.COVID_VACCINATION,
-        value: numFormat(keystats.data.covid_vax.callout, "compact", 1),
-        data_as_of: toDate(
-          keystats.data.covid_vax.data_as_of,
-          `${i18n.language === "ms-MY" ? "'ST'" : ""}q${i18n.language === "ms-MY" ? "" : "Q"} yyyy`,
-          i18n.language
-        ),
+        value: numFormat(keystats.data.covid_vax.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.covid_vax.data_as_of, `dd MMM`, i18n.language),
       },
       {
-        icon: <BriefcaseIcon className="h-6 w-6" />,
+        icon: <HospitalBedIcon className="h-6 w-6" />,
         title: "stats.util_bed",
         url: routes.HOSPITAL_BED_UTILISATION,
-        value: numFormat(keystats.data.util_bed.callout, "compact", 1),
-        data_as_of: toDate(keystats.data.util_bed.data_as_of, "MMM yyyy", i18n.language),
+        value: numFormat(keystats.data.util_bed.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.data.util_bed.data_as_of, "dd MMM", i18n.language),
       },
       {
-        icon: <BuildingOffice2Icon className="h-6 w-6" />,
+        icon: <VentilatorIcon className="h-6 w-6" />,
         title: "stats.util_icu",
         url: routes.HOSPITAL_BED_UTILISATION,
-        value: numFormat(keystats.data.util_icu.callout, "compact", 1),
-        data_as_of: toDate(keystats.data.util_icu.data_as_of, "MMM yyyy", i18n.language),
+        value: numFormat(keystats.data.util_icu.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.data.util_icu.data_as_of, "dd MMM", i18n.language),
       },
       {
-        icon: <FireIcon className="h-6 w-6" />,
+        icon: <BloodDropIcon className="h-6 w-6" />,
         title: "stats.blood",
         url: routes.BLOOD_DONATION,
-        value: numFormat(keystats.data.blood.callout, "compact", 1),
-        data_as_of: toDate(keystats.data.blood.data_as_of, "MMM yyyy", i18n.language),
+        value: numFormat(keystats.data.blood.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.blood.data_as_of, "dd MMM", i18n.language),
       },
       {
         icon: <HeartIcon className="h-6 w-6" />,
         title: "stats.organ",
         url: routes.ORGAN_DONATION,
-        value: numFormat(keystats.data.organ.callout, "compact", 1),
-        data_as_of: toDate(keystats.data.organ.data_as_of, "MMM yyyy", i18n.language),
+        value: numFormat(keystats.data.organ.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.organ.data_as_of, "dd MMM", i18n.language),
       },
       {
-        icon: <CreditCardIcon className="h-6 w-6" />,
+        icon: <MedicalCardIcon className="h-6 w-6" />,
         title: "stats.pekab40",
         url: routes.PEKA_B40,
-        value: numFormat(keystats.data.pekab40.callout, "compact", 1),
-        data_as_of: toDate(keystats.data.pekab40.data_as_of, "MMM yyyy", i18n.language),
+        value: numFormat(keystats.data.pekab40.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.pekab40.data_as_of, "dd MMM", i18n.language),
       },
     ],
     [i18n.language]
@@ -157,7 +149,6 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         className="relative"
-        last_updated={last_updated}
         action={
           <div className="flex flex-wrap gap-3">
             <At className="btn-primary shadow-button text-sm" href="/data-catalogue" enableIcon>
