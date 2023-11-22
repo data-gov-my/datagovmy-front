@@ -5,6 +5,8 @@ import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
 
+export type SiteName = "opendosm" | "kkmnow" | "datagovmy";
+
 export type AppPropsLayout = AppProps & {
   Component: Page;
 };
