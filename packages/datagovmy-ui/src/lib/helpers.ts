@@ -376,6 +376,35 @@ export const parseCookies = (cookie: string) => {
   return parsedCookies;
 };
 
+/**
+ * Take key and value parameter to create key-value array extracted from a dataset.
+ * @param {string} key The key string
+ * @param {string | string[]} value The value, in string or string[]
+ * @param {Record<string, any>[]} dataset The dataset to extract from
+ * @returns {(string | any[])[][]} Array with key-value array element
+ */
+export const recurDataMapping = (
+  key: string,
+  value: string | string[],
+  dataset: Record<string, any>[]
+) => {
+  const set = [];
+
+  if (Array.isArray(value)) {
+    value.map((val, index) => {
+      const res = recurDataMapping(`${key}${index + 1}`, val, dataset);
+      set.push(...res);
+    });
+  } else {
+    if (key === "date") {
+      set.push([key, dataset.map(item => DateTime.fromISO(item[value]).toSeconds())]);
+    }
+    set.push([key, dataset.map(item => item[value])]);
+  }
+
+  return set;
+};
+
 export const enumify = <T extends string>(strings: T[]): KeyValueType<T> => {
   const keyValuePair = {} as KeyValueType<T>;
   for (const str of strings) {

@@ -15,6 +15,7 @@
     "./constants": "./src/lib/constants.ts",
     "./contexts/*": "./src/contexts/*.tsx",
     "./dc-charts/*": "./src/charts/partials/*.tsx",
+    "./data-catalogue": "./src/data-catalogue/index.ts",
     "./decorators": "./src/lib/decorators.ts",
     "./geojson/district": "./src/lib/geojson/district/index.ts",
     "./geojson/district/*": "./src/lib/geojson/district/*.ts",
@@ -55,6 +56,9 @@
       ],
       "dc-charts/*": [
         "./src/charts/partials/*.tsx"
+      ],
+      "data-catalogue": [
+        "./types/data-catalogue.d.ts"
       ],
       "i18n": [
         "./types/i18n.d.ts"

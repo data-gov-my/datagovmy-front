@@ -5,39 +5,31 @@ import { FunctionComponent } from "react";
 const KKMNOWFooter: FunctionComponent = () => {
   const { t } = useTranslation(["common", "agencies"]);
   return (
-    <Footer
-      title={
-        <>
-          <p>{t("agencies:moh.full")}</p>
-          <p>{t("agencies:dosm.full")}</p>
-        </>
-      }
-    >
-      {/* OPEN SOURCE REPOS */}
+    <Footer title={t("agencies:moh.full")}>
+      {/* OPEN SOURCE CODE */}
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
-        <p className="font-bold">{t("nav.open_source")}</p>
+        <p className="font-bold">{t("common:nav.open_source")}</p>
 
-        <At className="link-dim" external href="https://github.com/MoH-Malaysia/kkmnow-front">
-          {t("nav.frontend")}
+        <At className="link-dim" external href="https://github.com/data-gov-my/datagovmy-front">
+          {t("common:nav.frontend")}
         </At>
-        <At className="link-dim" external href="https://github.com/MoH-Malaysia/kkmnow-back">
-          {t("nav.backend")}
+        <At className="link-dim" external href="https://github.com/data-gov-my/datagovmy-back">
+          {t("common:nav.backend")}
+        </At>
+        <At className="link-dim" external href="https://github.com/data-gov-my/datagovmy-ai">
+          {t("common:nav.ai")}
+        </At>
+        <At className="link-dim" external href="https://www.figma.com/file/6iNojR8hO5bWvH0c3rvGD4">
+          {t("common:nav.uiux")}
         </At>
       </div>
 
-      {/* OPEN DATA */}
+      {/* OPEN SOURCE DATA */}
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
-        <p className="font-bold">{t("nav.open_data")}</p>
+        <p className="font-bold">{t("common:nav.open_data")}</p>
 
-        <At className="link-dim" external href="https://github.com/MoH-Malaysia/">
-          Github
-        </At>
-        <At
-          className="link-dim"
-          external
-          href="https://github.com/MoH-Malaysia/kkmnow-data/blob/main/README.md#larger-datasets-made-available-via-google-cloud"
-        >
-          Google Cloud
+        <At className="link-dim" external href="https://open.dosm.gov.my">
+          OpenDOSM
         </At>
       </div>
     </Footer>

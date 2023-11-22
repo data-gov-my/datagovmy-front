@@ -1,4 +1,5 @@
 import COVIDVaccinationTrends from "./vaccine-trends";
+import COVIDVaccinationTable from "./table";
 import { routes } from "@lib/routes";
 import {
   AgencyBadge,
@@ -17,19 +18,52 @@ import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { MOHIcon } from "datagovmy-ui/icons/agency";
 import dynamic from "next/dynamic";
 import { FunctionComponent, ReactNode } from "react";
+import { DashboardPeriod, OptionType, WithData } from "datagovmy-ui/types";
 
 /**
  * COVID Vaccination Dashboard
  * @overview Status: In-development
  */
 
+type WaffleData = {
+  total: number;
+  daily: number;
+  perc: number;
+  data: Array<OptionType & { id: string }>;
+};
+
+type VaccineKeys = "booster1" | "booster2" | "dose1" | "dose2";
+
 interface COVIDVaccinationProps {
   last_updated: string;
   params: { state: string };
-  timeseries: Record<string, any>;
-  statistics: Record<string, any>;
-  barmeter: Record<string, any>;
-  waffle: Record<string, any>;
+  timeseries: WithData<
+    Record<
+      DashboardPeriod,
+      Record<
+        "x" | "y" | "primary" | "booster" | "booster2" | "adult" | "adol" | "child",
+        Array<number>
+      >
+    >
+  >;
+  statistics: WithData<
+    Record<
+      "daily" | "daily_adol" | "daily_adult" | "daily_booster" | "daily_booster2" | "daily_primary",
+      Record<"latest" | "total", number>
+    >
+  >;
+  barmeter: WithData<Record<VaccineKeys, Array<{ x: string; y: number }>>>;
+  waffle: WithData<
+    Record<"adolescent" | "adult" | "child" | "elderly" | "total", Record<VaccineKeys, WaffleData>>
+  >;
+  table: WithData<
+    Array<
+      Record<
+        "adol" | "adult" | "child" | "total",
+        Record<"perc_booster1" | "perc_booster2" | "perc_dose1" | "perc_dose2", number>
+      >
+    >
+  >;
 }
 
 const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: false });
@@ -42,6 +76,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   statistics,
   barmeter,
   waffle,
+  table,
 }) => {
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
   const currentState = params.state;
@@ -220,6 +255,9 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
           timeseries={timeseries}
           statistics={statistics}
         />
+
+        {/* Which states are best vaccinated against COVID-19? */}
+        <COVIDVaccinationTable table={table} />
       </Container>
     </>
   );

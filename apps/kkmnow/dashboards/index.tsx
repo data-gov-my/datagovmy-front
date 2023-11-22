@@ -1,151 +1,290 @@
-import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
+import { AgencyBadge, At, Container, Hero, Section, Slider } from "datagovmy-ui/components";
+import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
+import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
+import { FunctionComponent, ReactNode, useMemo } from "react";
+import Image from "next/image";
+import { WithData } from "datagovmy-ui/types";
+import { routes } from "@lib/routes";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
+import {
+  BloodDropIcon,
+  HeartIcon,
+  VirusIcon,
+  VentilatorIcon,
+  MedicalCardIcon,
+  InjectionIcon,
+  HospitalBedIcon,
+} from "datagovmy-ui/icons/kkmnow";
 
-import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useData, useTranslation } from "datagovmy-ui/hooks";
-
-import { numFormat } from "datagovmy-ui/helpers";
-import { FunctionComponent, useMemo } from "react";
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
+  ssr: false,
+});
 
 /**
  * Dashboard Index
  * @overview Status: Live
  */
 
+interface StatProps {
+  icon: ReactNode;
+  title: string;
+  url: string;
+  value: string;
+  data_as_of: string;
+}
+
 type Dashboard = {
+  id: string;
   name: string;
-  agency: string;
+  division: string;
   route: string;
 };
 
 interface DashboardIndexProps {
-  dashboards: Record<string, Dashboard[]>;
+  last_updated: string;
+  dashboards: WithData<Array<Dashboard>>;
+  keystats: WithData<Record<string, { callout: number; data_as_of: string }>>;
+  timeseries: WithData<
+    Record<"x" | "views" | "line_views" | "downloads" | "line_downloads", Array<number>>
+  >;
+  timeseries_callout: WithData<
+    Record<"downloads" | "views", { callout1: number; callout2: number }>
+  >;
 }
 
-const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) => {
-  const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
+const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
+  last_updated,
+  dashboards,
+  keystats,
+  timeseries,
+  timeseries_callout,
+}) => {
+  const { t, i18n } = useTranslation(["kkmnow-home", "dashboards"]);
+  const { data, setData } = useData({
+    minmax: [0, timeseries.data.x.length - 1],
+  });
+  const { coordinate } = useSlice(timeseries.data, data.minmax);
 
-  const { data, setData } = useData({ search: "" });
+  const yieldPrefix = (value: number) => (value >= 0 ? "+" : "");
 
-  // for ALL dashboards
-  const _collection = useMemo<Dashboard[]>(() => {
-    return dashboards.data.filter(d => {
-      return (
-        !data.search ||
-        t(`dashboards.${d.name}.name`).toLowerCase().includes(data.search.toLowerCase())
-      );
-    });
-    // .sort((a, b) => b.views - a.views);
-  }, [data.search]);
+  const yieldCallout = (key: "downloads" | "views") => {
+    return [
+      {
+        title: t("daily"),
+        value:
+          yieldPrefix(timeseries_callout.data[key].callout1) +
+          numFormat(timeseries_callout.data[key].callout1, "standard"),
+      },
+      {
+        title: t("total"),
+        value: numFormat(timeseries_callout.data[key].callout2, "standard"),
+      },
+    ];
+  };
+
+  const STATS = useMemo<StatProps[]>(
+    () => [
+      {
+        icon: <VirusIcon className="h-6 w-6" />,
+        title: "stats.covid",
+        url: routes.COVID_19,
+        value: numFormat(keystats.data.covid.callout, "standard", 0, "long", i18n.language, true),
+        data_as_of: toDate(keystats.data.covid.data_as_of, `dd MMM`, i18n.language),
+      },
+      {
+        icon: <InjectionIcon className="h-6 w-6" />,
+        title: "stats.covid_vax",
+        url: routes.COVID_VACCINATION,
+        value: numFormat(keystats.data.covid_vax.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.covid_vax.data_as_of, `dd MMM`, i18n.language),
+      },
+      {
+        icon: <HospitalBedIcon className="h-6 w-6" />,
+        title: "stats.util_bed",
+        url: routes.HOSPITAL_BED_UTILISATION,
+        value: numFormat(keystats.data.util_bed.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.data.util_bed.data_as_of, "dd MMM", i18n.language),
+      },
+      {
+        icon: <VentilatorIcon className="h-6 w-6" />,
+        title: "stats.util_icu",
+        url: routes.HOSPITAL_BED_UTILISATION,
+        value: numFormat(keystats.data.util_icu.callout, "compact", 1) + "%",
+        data_as_of: toDate(keystats.data.util_icu.data_as_of, "dd MMM", i18n.language),
+      },
+      {
+        icon: <BloodDropIcon className="h-6 w-6" />,
+        title: "stats.blood",
+        url: routes.BLOOD_DONATION,
+        value: numFormat(keystats.data.blood.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.blood.data_as_of, "dd MMM", i18n.language),
+      },
+      {
+        icon: <HeartIcon className="h-6 w-6" />,
+        title: "stats.organ",
+        url: routes.ORGAN_DONATION,
+        value: numFormat(keystats.data.organ.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.organ.data_as_of, "dd MMM", i18n.language),
+      },
+      {
+        icon: <MedicalCardIcon className="h-6 w-6" />,
+        title: "stats.pekab40",
+        url: routes.PEKA_B40,
+        value: numFormat(keystats.data.pekab40.callout, "standard", 0),
+        data_as_of: toDate(keystats.data.pekab40.data_as_of, "dd MMM", i18n.language),
+      },
+    ],
+    [i18n.language]
+  );
 
   return (
     <>
       <Hero
         background="gray"
-        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
-        header={[`KKMNOW: ${t("header")}`]}
-        description={[t("description", { agency: "", context: "" })]}
-        // TODO: Add when @lenny updated datagovmy-ui
-        // agencyBadge={<AgencyBadge agency="govt" />}
-      />
-      <DashboardFilter
-        data={{
-          search: data.search,
-        }}
-        onSearch={value => setData("search", value)}
+        category={[t("agencies:moh.full"), "text-primary"]}
+        agencyBadge={<AgencyBadge agency="moh" />}
+        header={[t("header")]}
+        description={[t("description")]}
+        className="relative"
+        action={
+          <div className="flex flex-wrap gap-3">
+            <At className="btn-primary shadow-button text-sm" href="/data-catalogue" enableIcon>
+              {t("common:nav.catalogue")}
+            </At>
+            <div className="absolute right-0 bottom-0 lg:right-6 pointer-events-none">
+              <Image
+                src="/static/images/kkm-hand-logo.png"
+                className="opacity-10"
+                width={250}
+                height={250}
+                alt="KKM hand logo"
+              />
+            </div>
+          </div>
+        }
       />
       <Container className="min-h-screen">
-        <Section title={t("section2_title")}>
-          <Ranking ranks={_collection} />
+        <Section title={t("at_a_glance")}>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {STATS.map(({ data_as_of, icon, title, value, url }: StatProps) => (
+              <div className="flex items-center gap-3" key={url}>
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-outline dark:bg-washed-dark">
+                  {icon}
+                </div>
+                <div className="space-y-0.5">
+                  <At
+                    href={url}
+                    className="relative flex flex-wrap items-start gap-1.5 text-sm font-medium uppercase text-dim transition-all [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white"
+                  >
+                    <span>{t(title)}</span>
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                  </At>
+                  <span className="flex items-baseline gap-1.5">
+                    <p className="text-2xl font-medium">{value}</p>
+                    <p className="text-sm text-dim">{`(${data_as_of})`}</p>
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section>
+          <div className="flex flex-col gap-8">
+            <h4 className="">{t("common:nav.dashboards")}</h4>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {dashboards.data.map((item, i) => (
+                <DashboardCard item={item} key={i} />
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        <Section title={t("usage")} date={timeseries.data_as_of}>
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+            <Timeseries
+              className="h-[300px] w-full"
+              title={t("views")}
+              data={{
+                labels: coordinate.x,
+                datasets: [
+                  {
+                    type: "line",
+                    data: coordinate.views,
+                    borderColor: AKSARA_COLOR.PRIMARY,
+                    label: t("views") as string,
+                    borderWidth: 1.5,
+                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                    fill: true,
+                  },
+                ],
+              }}
+              stats={yieldCallout("views")}
+            />
+            <Timeseries
+              className="h-[300px] w-full"
+              title={t("downloads")}
+              data={{
+                labels: coordinate.x,
+                datasets: [
+                  {
+                    type: "line",
+                    data: coordinate.downloads,
+                    borderColor: AKSARA_COLOR.PRIMARY,
+                    label: t("downloads") as string,
+                    backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                    fill: true,
+                    borderWidth: 1.5,
+                  },
+                ],
+              }}
+              stats={yieldCallout("downloads")}
+            />
+          </div>
+
+          <Slider
+            type="range"
+            value={data.minmax}
+            data={timeseries.data.x}
+            onChange={(e: any) => setData("minmax", e)}
+          />
         </Section>
       </Container>
     </>
   );
 };
 
-/**
- * Dashboard Filter Component
- */
-interface DashboardFilterProps {
-  data: {
-    search: string;
-  };
-  onSearch: (value: string) => void;
-}
-
-const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({ data, onSearch }) => {
-  const { t } = useTranslation(["dashboards", "agencies", "common"]);
-  const reset = () => onSearch("");
+const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
+  const { t, i18n } = useTranslation(["dashboards"]);
 
   return (
-    <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
-      <Container>
-        <div className="flex flex-row items-center gap-x-3">
-          <Search
-            className="w-full border-0"
-            placeholder={t("search_placeholder")}
-            query={data.search}
-            onChange={e => typeof e === "string" && onSearch(e)}
-          />
-          {data.search && (
-            <Button
-              className="btn-ghost text-dim max-md:rounded-full max-md:p-2"
-              icon={<XMarkIcon className="h-5 w-5" />}
-              onClick={reset}
-            >
-              <p className="hidden md:block">{t("common:common.clear")}</p>
-            </Button>
-          )}
+    <At href={item.route} locale={i18n.language} prefetch={false}>
+      <div className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
+        <div className="relative flex items-center gap-3">
+          <p className="text-dim font-medium text-sm">{t(`agencies:${item.division}.abbr`)}</p>
+          <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-100 lg:opacity-0 transition-transform group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transform-none" />
         </div>
-      </Container>
-    </div>
-  );
-};
-
-DashboardFilter.displayName = "DashboardFilter";
-
-interface RankingProps {
-  ranks: Dashboard[];
-}
-
-const Ranking = ({ ranks }: RankingProps) => {
-  const { t, i18n } = useTranslation(["dashboards", "agencies", "common"]);
-
-  return (
-    <>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-        {ranks.map((item, i) => (
-          <At href={item.route} locale={i18n.language} key={i} prefetch={false}>
-            <div className="border-outline hover:border-primary hover:bg-primary/5 dark:border-washed-dark dark:hover:border-outlineHover-dark group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
-              <div className="relative flex items-center gap-3">
-                <span className="text-primary text-sm font-bold">#{i + 1}</span>
-                <p className="text-dim text-sm">{t(`agencies:${item.agency}.abbr`)}</p>
-                <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
-              </div>
-              <div className="flex grow flex-col items-start gap-3 overflow-hidden">
-                <div className="grow space-y-3">
-                  <p className="truncate text-lg font-bold dark:text-white" title={item.name}>
-                    {t(`dashboards.${item.name}.name`)}
-                  </p>
-                  <p className="text-sm dark:text-white" title={item.name}>
-                    {t(`dashboards.${item.name}.description`)}
-                  </p>
-                </div>
-                <div className="relative w-full">
-                  <p className="text-dim transition-transform group-hover:translate-y-6">
-                    {`${numFormat(100, "compact")} ${t("common:common.views", {
-                      count: 100,
-                    })}`}
-                  </p>
-                  <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6">
-                    {t("common:components.click_to_explore")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </At>
-        ))}
+        <div className="flex grow flex-col items-start gap-3 overflow-hidden">
+          <div className="grow space-y-3">
+            <p className="truncate text-lg font-bold dark:text-white" title={item.name}>
+              {t(`dashboards.${item.name}.name`)}
+            </p>
+            <p className="text-sm dark:text-white" title={item.name}>
+              {t(`dashboards.${item.name}.description`)}
+            </p>
+          </div>
+          <div className="relative w-full">
+            <p className="text-dim transition-transform group-hover:translate-y-6 h-6 motion-reduce:transform-none"></p>
+            <p className="text-primary dark:text-primary-dark absolute bottom-0 lg:-bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
+              {t("common:components.click_to_explore")}
+            </p>
+          </div>
+        </div>
       </div>
-    </>
+    </At>
   );
 };
 

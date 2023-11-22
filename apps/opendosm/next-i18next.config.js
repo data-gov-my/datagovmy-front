@@ -30,6 +30,7 @@ const namespaces = [
   "dashboard-exchange-rates",
   "dashboard-external-trade",
   "dashboard-wellbeing",
+  "gui-opendosm-pub",
 ];
 
 module.exports = defineConfig(namespaces, ["common", "agencies", "division", "dashboards"]);

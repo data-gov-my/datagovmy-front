@@ -21,7 +21,7 @@ const GUILayout: FunctionComponent<GUILayoutProps> = ({ children }) => {
 
   useEffect(() => {
     if (pathname === "/gui") {
-      router.replace("/gui/opendosm-pub", undefined, { shallow: true });
+      router.replace("/gui/catalogue", undefined, { shallow: true });
     }
   }, []);
 

@@ -94,7 +94,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
           title={t("timeseries_header", {
             state: CountryAndStates[currentState],
           })}
-          description={t("timeseries_description")}
+          description={t("timeseries_desc")}
           date={timeseries.data_as_of}
         >
           <SliderProvider>
@@ -171,7 +171,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
                   </div>
                   <p className="text-dim whitespace-pre-line">{t("choro_desc")}</p>
                   <p className="border-outline dark:border-washed-dark border-t pb-3 pt-6 font-bold">
-                    {t("common:common.rank_count", { count: choropleth.data.x.length })}
+                    {t("common:common.ranking", { count: choropleth.data.x.length })}
                   </p>
                 </div>
                 <div className="space-y-3 overflow-auto">

@@ -20,6 +20,13 @@ import { ChartTypeRegistry } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { GeoChoroplethRef } from "../charts/geochoropleth";
 
+export type DatasetType = {
+  type: DCChartKeys;
+  chart: any;
+  table: Record<string, any>[];
+  meta: { title: string; desc: string; unique_id: string };
+};
+
 interface CatalogueContextProps {
   bind: {
     chartjs: Dispatch<
@@ -27,22 +34,12 @@ interface CatalogueContextProps {
     >;
     leaflet: MutableRefObject<GeoChoroplethRef | null>;
   };
-  dataset: {
-    type: DCChartKeys;
-    chart: any;
-    table: Record<string, any>[];
-    meta: { title: string; desc: string; unique_id: string };
-  };
+  dataset: DatasetType;
   downloads: DownloadOptions;
 }
 
 interface CatalogueProviderProps {
-  dataset: {
-    type: DCChartKeys;
-    chart: any;
-    table: Record<string, any>[];
-    meta: { title: string; desc: string; unique_id: string };
-  };
+  dataset: DatasetType;
   urls: {
     [key: string]: string;
   };
@@ -84,7 +81,7 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
         const numOfValidItems: Array<number> = [];
         const chart = Object.entries(dataset.chart)
           .filter(([key, _]) => key !== "x")
-          .map(([key, y]) => [key, (y as number[]).filter(item => Boolean(item))]);
+          .map(([key, y]) => [key, (y as number[]).filter(item => item !== null)]);
 
         chart.forEach(([key, y]) => {
           numOfValidItems.push((y as number[]).length);

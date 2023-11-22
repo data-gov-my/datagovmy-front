@@ -19,7 +19,7 @@ const GUICatalogue: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticPr
 
 export const getStaticProps: GetStaticProps = withi18n("gui-opendosm-pub", async () => {
   return {
-    notFound: false,
+    notFound: true,
     props: {
       meta: {
         id: "gui",
