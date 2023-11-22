@@ -17,7 +17,7 @@ const CatalogueIndex: Page = ({
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <DataCatalogue query={query} collection={collection} sources={[]} />
+      <DataCatalogue query={query} collection={collection} sources={[]} site="opendosm" />
     </>
   );
 };

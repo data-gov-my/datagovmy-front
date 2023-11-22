@@ -5,7 +5,7 @@ import { FunctionComponent } from "react";
 const KKMNOWFooter: FunctionComponent = () => {
   const { t } = useTranslation(["common", "agencies"]);
   return (
-    <Footer title={t("agencies:moh.full")}>
+    <Footer title={t("agencies:moh.full")} site="kkmnow">
       {/* OPEN SOURCE CODE */}
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("common:nav.open_source")}</p>
@@ -28,6 +28,9 @@ const KKMNOWFooter: FunctionComponent = () => {
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("common:nav.open_data")}</p>
 
+        <At className="link-dim" external href="https://data.gov.my">
+          data.gov.my
+        </At>
         <At className="link-dim" external href="https://open.dosm.gov.my">
           OpenDOSM
         </At>
