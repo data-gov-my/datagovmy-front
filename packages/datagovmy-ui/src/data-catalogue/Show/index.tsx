@@ -175,7 +175,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             translations={translations}
             config={{
               precision: selectedViz?.chart_filters.precision ?? config.precision,
-              range: filter?.range?.value || "INTRADAY",
+              range: filter?.range?.value || "DAILY",
             }}
           />
         );
@@ -484,11 +484,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
               {dataviz && dataviz.length > 0 && (
                 <Section>
-                  <div className="relative flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
-                    <div className="static left-0 top-0 flex h-full w-[calc(100%_/_1.5-_0.5rem)] flex-col justify-start gap-2 rounded-xl lg:sticky lg:w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]">
+                  <div className="relative flex h-full w-full items-stretch gap-[0.5rem] overflow-x-scroll">
+                    <div className="sticky left-0 top-0 flex h-full w-[200px] max-w-[200px] flex-1 flex-col justify-start gap-2 lg:sticky lg:w-[calc(100%_/_5.5)] lg:flex-initial">
                       <Card
                         className={clx(
-                          "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] min-w-[calc(100%_/_1.5_-_0.5rem)] overflow-hidden p-2 transition-colors lg:min-w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]",
+                          "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-full max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_5.5)]",
                           selectedViz === undefined && "border-outlineHover"
                         )}
                         onClick={() => {
@@ -500,22 +500,24 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           <TableCellsIcon className="text-outlineHover-dark h-24 w-24 stroke-[0.5px]" />
                         </div>
                       </Card>
-                      <p className=" text-center text-xs">Table</p>
+                      <p className="h-full text-center text-xs">Table</p>
                     </div>
-                    {dataviz.map(viz => {
-                      return (
-                        <CataloguePreview
-                          dataviz={viz}
-                          dataset={dataset}
-                          urls={urls}
-                          translations={translations}
-                          config={config}
-                          selectedViz={selectedViz}
-                          setSelectedViz={setSelectedViz}
-                          scrollToChart={scrollToChart}
-                        />
-                      );
-                    })}
+                    <div className="hide-scrollbar flex flex-1 gap-[0.5rem] overflow-x-auto pb-4">
+                      {dataviz.map(viz => {
+                        return (
+                          <CataloguePreview
+                            dataviz={viz}
+                            dataset={dataset}
+                            urls={urls}
+                            translations={translations}
+                            config={config}
+                            selectedViz={selectedViz}
+                            setSelectedViz={setSelectedViz}
+                            scrollToChart={scrollToChart}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
                 </Section>
               )}
