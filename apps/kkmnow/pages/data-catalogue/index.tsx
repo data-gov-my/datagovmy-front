@@ -17,7 +17,7 @@ const CatalogueIndex: Page = ({
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <DataCatalogue query={query} collection={collection} sources={[]} agency="moh" />
+      <DataCatalogue query={query} collection={collection} sources={[]} site="kkmnow" />
     </>
   );
 };

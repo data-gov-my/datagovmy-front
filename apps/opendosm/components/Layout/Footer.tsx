@@ -5,7 +5,7 @@ import { FunctionComponent } from "react";
 const OpenDOSMFooter: FunctionComponent = () => {
   const { t } = useTranslation(["common", "agencies"]);
   return (
-    <Footer title={<p>{t("agencies:dosm.full")}</p>}>
+    <Footer title={<p>{t("agencies:dosm.full")}</p>} site="opendosm">
       {/* OPEN SOURCE REPOS */}
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("nav.open_source")}</p>

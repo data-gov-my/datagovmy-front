@@ -5,7 +5,7 @@ const DGMYFooter = () => {
   const { t } = useTranslation();
 
   return (
-    <Footer title={t("common:nav.gov")}>
+    <Footer title={t("common:nav.gov")} site="datagovmy">
       {/* OPEN SOURCE CODE */}
       <div className="flex w-full flex-col gap-2 md:w-[200px]">
         <p className="font-bold">{t("common:nav.open_source")}</p>

@@ -17,7 +17,7 @@ import {
 import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
-import { Agency, OptionType } from "datagovmy-ui/types";
+import { Agency, OptionType, SiteName } from "datagovmy-ui/types";
 import {
   FunctionComponent,
   useMemo,
@@ -47,14 +47,14 @@ interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
   sources: string[];
-  agency?: Agency;
+  site: SiteName;
 }
 
 const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   query,
   collection,
   sources,
-  agency = "govt",
+  site,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
@@ -76,18 +76,60 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
     return resultCollection;
   }, [collection]);
 
+  const getHeaderText = (
+    site: SiteName
+  ): { category: string; description: string; agency: Agency } => {
+    switch (site) {
+      case "datagovmy":
+        return {
+          category: t("header_category_govt"),
+          description: t("description", {
+            agency: query.source ?? "",
+            context: query.source ? "agency" : "",
+          }),
+          agency: "govt",
+        };
+      case "opendosm":
+        return {
+          category: t("header_category_agency", {
+            agency: t("agencies:dosm.abbr"),
+          }),
+          description: t("description_opendosm"),
+          agency: "dosm",
+        };
+      case "kkmnow":
+        return {
+          category: t("header_category_agency", {
+            agency: t("agencies:moh.abbr"),
+          }),
+          description: t("description", {
+            agency: t("agencies:moh.abbr"),
+            context: "agency",
+          }),
+          agency: "moh",
+        };
+
+      default:
+        return {
+          category: t("header_category_govt"),
+          description: t("description", {
+            agency: query.source ?? "",
+            context: query.source ? "agency" : "",
+          }),
+          agency: "govt",
+        };
+    }
+  };
+
+  const text = getHeaderText(site);
+
   return (
     <>
       <Hero
         background="blue"
-        category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
+        category={[text.category, "text-primary dark:text-primary-dark"]}
         header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
-        description={[
-          t("description", {
-            agency: query.source ?? "",
-            context: query.source ? "agency" : "",
-          }),
-        ]}
+        description={[text.description]}
         action={
           sourceOptions.length > 0 && (
             <Dropdown
@@ -104,7 +146,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           )
         }
         agencyBadge={
-          <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : agency} />
+          <AgencyBadge
+            agency={query.source ? (query.source.toLowerCase() as Agency) : text.agency}
+          />
         }
       />
 
