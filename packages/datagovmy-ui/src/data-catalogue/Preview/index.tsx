@@ -140,11 +140,11 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
 
   return (
     <CatalogueProvider dataset={_dataset} urls={urls}>
-      <div className="flex w-[calc(100%_/_1.5-_0.5rem)] flex-col justify-start gap-2 lg:w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]">
+      <div className="flex w-[200px] max-w-[200px] flex-col justify-start gap-2 lg:w-[calc(100%_/_4.5)]">
         <Card
           key={`${dataviz.translation_key}`}
           className={clx(
-            "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-w-[calc(100%_/_1.5-_0.5rem)]  p-2 transition-colors lg:min-w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]",
+            "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-w-full  max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_4.5)]",
             selectedViz?.translation_key === dataviz.translation_key && "border-outlineHover"
           )}
           onClick={() => {
