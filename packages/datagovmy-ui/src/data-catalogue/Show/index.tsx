@@ -482,7 +482,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 </span>
               </p>
 
-              {dataviz && dataviz.length > 1 && (
+              {dataviz && dataviz.length > 0 && (
                 <Section>
                   <div className="relative flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
                     <div className="static left-0 top-0 flex h-full w-[calc(100%_/_1.5-_0.5rem)] flex-col justify-start gap-2 rounded-xl lg:sticky lg:w-[calc(100%_/_5.5-_0.5rem)] lg:max-w-[200px]">
