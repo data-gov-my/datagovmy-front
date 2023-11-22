@@ -108,7 +108,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
             state: CountryAndStates[params.state],
           })}
           description={t("timeseries_desc")}
-          date={timeseries.date_as_of}
+          date={timeseries.data_as_of}
         >
           <SliderProvider>
             {play => (
@@ -227,7 +227,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
               onChange={index => setData("tab3_index", index)}
             />
           }
-          date={t(barchart_variables.date_as_of)}
+          date={barchart_variables.data_as_of}
         >
           <Tabs hidden current={data.tab3_index}>
             {KEY_VARIABLES_SCHEMA.map(({ name, data }) => {
@@ -291,7 +291,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
             state: CountryAndStates[params.state],
           })}
           description={t("bar1_description")}
-          date={barchart_time.date_as_of}
+          date={barchart_time.data_as_of}
         >
           <div className="grid w-full grid-cols-1 gap-12 xl:grid-cols-2">
             <div>

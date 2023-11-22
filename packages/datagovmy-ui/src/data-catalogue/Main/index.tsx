@@ -47,9 +47,15 @@ interface CatalogueIndexProps {
   query: Record<string, string>;
   collection: Record<string, any>;
   sources: string[];
+  agency?: Agency;
 }
 
-const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collection, sources }) => {
+const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
+  query,
+  collection,
+  sources,
+  agency = "govt",
+}) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
@@ -98,7 +104,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({ query, collect
           )
         }
         agencyBadge={
-          <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : "govt"} />
+          <AgencyBadge agency={query.source ? (query.source.toLowerCase() as Agency) : agency} />
         }
       />
 
