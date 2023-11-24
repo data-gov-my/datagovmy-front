@@ -2,6 +2,7 @@ import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
 import { Button } from "datagovmy-ui/components";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
+import { DateTime } from "luxon";
 import { FunctionComponent } from "react";
 
 export type Publication = {
@@ -20,6 +21,7 @@ interface PublicationCardProps {
 
 const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, publication }) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
+  const diffInDays = DateTime.now().diff(DateTime.fromISO(publication.release_date), ["days"]);
 
   return (
     <Button
@@ -32,8 +34,8 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, pub
         <p className="text-dim text-sm font-medium uppercase">
           {toDate(publication.release_date, "dd MMM yyyy", i18n.language)}
         </p>
-        {/* If release date is less than 14 days from today */}
-        {Date.now() - Date.parse(publication.release_date) < 1180200000 && (
+        {/* If release date is within 1 week from today */}
+        {diffInDays.days < 8 && (
           <div className="bg-danger flex items-center gap-1.5 rounded-full px-1.5 py-0.5 text-xs text-white transition-transform group-hover:-translate-x-7 group-hover:duration-300">
             <span className="h-2 w-2 rounded-full bg-white" />
             {t("new")}!
