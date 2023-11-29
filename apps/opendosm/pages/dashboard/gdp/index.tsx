@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-gdp", async ()
         category: "economy",
         agency: "DOSM",
       },
-      last_updated: new Date().valueOf(),
+      last_updated: data.data_last_updated,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },
