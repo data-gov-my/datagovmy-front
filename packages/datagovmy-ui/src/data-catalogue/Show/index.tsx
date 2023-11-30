@@ -134,7 +134,8 @@ export interface IDataViz {
   chart_variables: {
     parents: Array<string>;
     operation: string;
-    format: { x: string; y: Array<string> };
+    format: { x: string; y: Array<string> | string };
+    config?: Record<string, unknown>;
   };
 }
 
@@ -188,7 +189,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           </WindowProvider>
         );
       case "CHOROPLETH":
-        return <CatalogueChoropleth config={config} />;
+        return <CatalogueChoropleth config={selectedViz?.chart_variables.config} />;
       case "GEOCHOROPLETH":
         return <CatalogueGeoChoropleth config={config} />;
       case "GEOPOINT":

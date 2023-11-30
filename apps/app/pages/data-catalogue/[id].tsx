@@ -156,6 +156,227 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       config.options =
         data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
 
+      // DELETE THIS LATER
+      let manualDataViz: Array<IDataViz> = [];
+      if (params?.id === "hies_hies_state") {
+        manualDataViz = [
+          {
+            translation_key: "income_mean",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 0,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "state",
+                y: "income_mean",
+              },
+              config: {
+                color: "blues",
+                geojson: "state",
+                precision: 0,
+              },
+            },
+          },
+          {
+            translation_key: "income_median",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 0,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "state",
+                y: "income_median",
+              },
+              config: {
+                color: "blues",
+                geojson: "state",
+                precision: 0,
+              },
+            },
+          },
+          {
+            translation_key: "expenditure_mean",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 0,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "state",
+                y: "expenditure_mean",
+              },
+              config: {
+                color: "purples",
+                geojson: "state",
+                precision: 0,
+              },
+            },
+          },
+          {
+            translation_key: "gini",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 3,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "state",
+                y: "gini",
+              },
+              config: {
+                color: "reds",
+                geojson: "state",
+                precision: 3,
+              },
+            },
+          },
+          {
+            translation_key: "poverty",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 1,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "state",
+                y: "poverty",
+              },
+              config: {
+                color: "reds",
+                geojson: "state",
+                precision: 1,
+              },
+            },
+          },
+        ];
+      }
+      if (params?.id === "hies_hies_district") {
+        manualDataViz = [
+          {
+            translation_key: "income_mean",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 0,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "district",
+                y: "income_mean",
+              },
+              config: {
+                color: "blues",
+                geojson: "district",
+                precision: 0,
+              },
+            },
+          },
+          {
+            translation_key: "income_median",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 0,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "district",
+                y: "income_median",
+              },
+              config: {
+                color: "blues",
+                geojson: "district",
+                precision: 0,
+              },
+            },
+          },
+          {
+            translation_key: "expenditure_mean",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 0,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "district",
+                y: "expenditure_mean",
+              },
+              config: {
+                color: "purples",
+                geojson: "district",
+                precision: 0,
+              },
+            },
+          },
+          {
+            translation_key: "gini",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 3,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "district",
+                y: "gini",
+              },
+              config: {
+                color: "reds",
+                geojson: "district",
+                precision: 3,
+              },
+            },
+          },
+          {
+            translation_key: "poverty",
+            chart_type: "CHOROPLETH",
+            chart_filters: {
+              SLICE_BY: [],
+              precision: 1,
+            },
+            chart_variables: {
+              parents: [],
+              operation: "SUM",
+              format: {
+                x: "district",
+                y: "poverty",
+              },
+              config: {
+                color: "reds",
+                geojson: "district",
+                precision: 1,
+              },
+            },
+          },
+        ];
+      }
+
       return {
         props: {
           meta: {
@@ -188,7 +409,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             source: data.metadata.data_source,
             definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
           },
-          dataviz: data.dataviz,
+          dataviz: [...data.dataviz, ...manualDataViz],
           urls: data.downloads ?? {},
           translations: data.translations ?? {},
           catalogueId: data.openapi_id ?? "",

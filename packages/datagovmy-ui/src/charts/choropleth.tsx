@@ -29,6 +29,7 @@ type ChoroplethProps = ChartHeaderProps & {
   precision?: number | [number, number];
   enableOutline?: boolean;
   enableZoom?: boolean;
+  enableTooltip?: boolean;
   type?: Geotype;
   color?: Color;
   onReady?: (status: boolean) => void;
@@ -49,6 +50,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   color,
   enableOutline = true,
   enableZoom = true,
+  enableTooltip = true,
   onReady,
   _ref,
 }) => {
@@ -84,7 +86,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
         display: false,
       },
       tooltip: {
-        enabled: true,
+        enabled: enableTooltip,
         bodyFont: {
           family: "Inter",
         },

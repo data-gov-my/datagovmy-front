@@ -96,8 +96,14 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
       //       <CatalogueBar config={config} translations={translations} />
       //     </WindowProvider>
       //   );
-      // case "CHOROPLETH":
-      //   return <CatalogueChoropleth config={config} />;
+      case "CHOROPLETH":
+        return (
+          <CatalogueChoropleth
+            className={"h-[94px] w-full"}
+            isPreview={true}
+            config={dataviz?.chart_variables.config}
+          />
+        );
       // case "GEOCHOROPLETH":
       //   return <CatalogueGeoChoropleth config={config} />;
       // case "GEOPOINT":
