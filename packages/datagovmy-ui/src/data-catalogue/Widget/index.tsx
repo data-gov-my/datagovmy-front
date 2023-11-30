@@ -13,6 +13,7 @@ import { DCChartKeys, DCConfig, OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { IDataViz } from "../Show";
 
 /**
  * Catalogue Show
@@ -84,6 +85,7 @@ interface CatalogueWidgetProps {
   translations: {
     [key: string]: string;
   };
+  selectedViz: IDataViz | undefined;
 }
 
 const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
@@ -92,6 +94,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   dataset,
   metadata,
   translations,
+  selectedViz,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { filter, setFilter } = useFilter(config.context, {
@@ -132,8 +135,8 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CatalogueTimeseries
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={{
-              precision: config.precision,
-              range: filter?.range?.value ?? "INTRADAY",
+              precision: selectedViz?.chart_filters.precision ?? config.precision,
+              range: filter?.range?.value ?? "DAILY",
             }}
             translations={translations}
           />
@@ -142,7 +145,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
         return (
           <CatalogueChoropleth
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
-            config={config}
+            config={selectedViz?.chart_variables.config}
           />
         );
       case "GEOCHOROPLETH":

@@ -84,7 +84,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
             isPreview={true}
             config={{
               precision: dataviz?.chart_filters.precision ?? config.precision,
-              range: "WEEKLY" || "INTRADAY",
+              range: "DAILY",
             }}
           />
         );
@@ -96,8 +96,14 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
       //       <CatalogueBar config={config} translations={translations} />
       //     </WindowProvider>
       //   );
-      // case "CHOROPLETH":
-      //   return <CatalogueChoropleth config={config} />;
+      case "CHOROPLETH":
+        return (
+          <CatalogueChoropleth
+            className={"h-[94px] w-full"}
+            isPreview={true}
+            config={dataviz?.chart_variables.config}
+          />
+        );
       // case "GEOCHOROPLETH":
       //   return <CatalogueGeoChoropleth config={config} />;
       // case "GEOPOINT":
@@ -145,7 +151,8 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
           key={`${dataviz.translation_key}`}
           className={clx(
             "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-w-full  max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_4.5)]",
-            selectedViz?.translation_key === dataviz.translation_key && "border-outlineHover"
+            selectedViz?.translation_key === dataviz.translation_key &&
+              "border-primary dark:border-primary-dark"
           )}
           onClick={() => {
             setSelectedViz(dataviz);

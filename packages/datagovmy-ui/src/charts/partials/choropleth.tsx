@@ -9,11 +9,13 @@ const Choropleth = dynamic(() => import("../choropleth"), {
 interface CatalogueChoroplethProps {
   className?: string;
   config: any;
+  isPreview?: boolean;
 }
 
 const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
   className = "h-[350px] w-full lg:h-[450px]",
   config,
+  isPreview = false,
 }) => {
   const { bind, dataset } = useContext(CatalogueContext);
 
@@ -21,10 +23,12 @@ const CatalogueChoropleth: FunctionComponent<CatalogueChoroplethProps> = ({
     <Choropleth
       _ref={_ref => bind.chartjs(_ref)}
       className={className}
+      enableTooltip={isPreview ? false : true}
       data={{
         labels: dataset.chart.x,
         values: dataset.chart.y,
       }}
+      precision={config.precision}
       color={config.color}
       type={config.geojson}
     />
