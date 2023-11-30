@@ -16,6 +16,13 @@ const KKMNOWHeader: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
           <>
             <Nav.Item title={t("common:nav.home")} link="/" onClick={close} />
             <Nav.Item title={t("common:nav.catalogue")} link="/data-catalogue" onClick={close} />
+            <Nav.Item
+              title={t("common:nav.moh_github")}
+              key="/legacy"
+              link="https://github.com/MoH-Malaysia/"
+              onClick={close}
+              external
+            />
           </>
         )}
       </Nav>
