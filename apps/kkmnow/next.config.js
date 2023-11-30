@@ -18,7 +18,7 @@ const nextConfig = {
   },
   publicRuntimeConfig: {
     APP_NAME: "KKMNOW",
-    META_AUTHOR: "Ministry of Health & Department of Statistics Malaysia",
+    META_AUTHOR: "Ministry of Health",
     META_THEME: "#13293D",
     META_KEYWORDS:
       "kkmnow kementerian data kesihatan covidnow statistics malaysia blood organ donation vaccination vaccine b40 health ",
