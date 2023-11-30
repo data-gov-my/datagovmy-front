@@ -490,7 +490,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       <Card
                         className={clx(
                           "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-full max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_5.5)]",
-                          selectedViz === undefined && "border-outlineHover"
+                          selectedViz === undefined && "border-primary dark:border-primary-dark"
                         )}
                         onClick={() => {
                           setSelectedViz(undefined);

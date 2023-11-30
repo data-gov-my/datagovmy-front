@@ -64,6 +64,9 @@ const CatalogueEmbed: Page = ({
             metadata={metadata}
             urls={urls}
             translations={translations}
+            selectedViz={dataviz.find(
+              (item: IDataViz) => item.translation_key === params.currentVisual
+            )}
           />
         </CatalogueProvider>
       </WindowProvider>
