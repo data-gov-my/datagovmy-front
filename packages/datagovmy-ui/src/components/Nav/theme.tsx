@@ -3,9 +3,20 @@ import { Transition } from "@headlessui/react";
 import MoonIcon from "@heroicons/react/20/solid/MoonIcon";
 import SunIcon from "@heroicons/react/20/solid/SunIcon";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 const ThemeToggle = () => {
+  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+
+  // useEffect only runs on the client, so now we can safely show the UI
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>
@@ -15,10 +26,10 @@ const ThemeToggle = () => {
       >
         <Transition
           show={theme === "light"}
-          enter="delay-200 transition ease-out duration-150"
+          enter="delay-200 transition ease-out duration-300"
           enterFrom="opacity-0 translate-y-1"
           enterTo="opacity-100 translate-y-0"
-          leave="duration-150"
+          leave="duration-300"
           leaveFrom="absolute opacity-100 translate-y-0"
           leaveTo="absolute opacity-0 translate-y-1"
         >
@@ -26,10 +37,10 @@ const ThemeToggle = () => {
         </Transition>
         <Transition
           show={theme !== "light"}
-          enter="delay-200 transition ease-out duration-150"
+          enter="delay-200 transition ease-out duration-300"
           enterFrom="opacity-0 translate-y-1"
           enterTo="opacity-100 translate-y-0"
-          leave="duration-150"
+          leave="duration-300"
           leaveFrom="absolute opacity-100 translate-y-0"
           leaveTo="absolute opacity-0 translate-y-1"
         >
