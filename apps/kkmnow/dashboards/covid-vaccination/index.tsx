@@ -158,7 +158,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
       <Hero
         background="green"
         category={[t("common:categories.healthcare"), "text-green-600"]}
-        header={[t("header")]}
+        header={[t("page_title")]}
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
         last_updated={last_updated}

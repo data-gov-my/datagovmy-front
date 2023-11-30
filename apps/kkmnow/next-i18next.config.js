@@ -13,4 +13,10 @@ const namespaces = [
   "dashboard-peka-b40",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "division"]);
+module.exports = defineConfig(namespaces, [
+  "common",
+  "agencies",
+  "dashboards",
+  "division",
+  "kkmnow-home",
+]);

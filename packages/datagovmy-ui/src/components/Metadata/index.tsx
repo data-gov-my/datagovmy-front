@@ -10,7 +10,7 @@ interface MetadataProps {
 }
 
 const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywords = "" }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(["kkmnow-home"]);
   const {
     publicRuntimeConfig: {
       APP_NAME,
@@ -26,7 +26,11 @@ const Metadata: FunctionComponent<MetadataProps> = ({ title, description, keywor
   const META = {
     title: title ? title.concat(" | ", APP_NAME) : APP_NAME,
     icon: "/favicon.ico",
-    description: description ? description : t("common:site.description"),
+    description: description
+      ? description
+      : APP_NAME === "KKMNOW"
+      ? t("kkmnow-home:site.description")
+      : t("common:site.description"),
     author: META_AUTHOR,
     themeColor: META_THEME,
     keywords: keywords.concat(META_KEYWORDS),

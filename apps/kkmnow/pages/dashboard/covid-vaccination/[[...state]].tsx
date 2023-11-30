@@ -30,7 +30,7 @@ const CovidVaccinationState: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
-        title={[t("header"), "·", CountryAndStates[params.state]].join(" ")}
+        title={[t("page_title"), "·", CountryAndStates[params.state]].join(" ")}
         description={t("description")}
         keywords=""
       />
