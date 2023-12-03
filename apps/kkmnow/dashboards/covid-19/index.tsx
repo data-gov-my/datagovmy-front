@@ -275,7 +275,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           header: "Per 100K",
           subheader: t("past14d"),
           accessorKey: "cases.cases_100k",
-          cell: ({ getValue }) => (getValue() ? `${numFormat(getValue(), "standard", 1)}%` : "-"),
+          cell: ({ getValue }) => (getValue() ? `${numFormat(getValue(), "standard", 1)}` : "-"),
         },
         {
           id: "cases.cases_posrate",
