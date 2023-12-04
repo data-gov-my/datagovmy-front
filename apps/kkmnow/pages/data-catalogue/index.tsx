@@ -54,7 +54,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
 
     const { data } = await get("/data-catalogue/", {
       lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
-      source: "DOSM",
+      source: "MoH",
       kkm: true,
       ...query,
     });
