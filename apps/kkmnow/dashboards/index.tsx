@@ -64,7 +64,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["kkmnow-home", "dashboards"]);
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - 63, timeseries.data.x.length - 1],
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
 

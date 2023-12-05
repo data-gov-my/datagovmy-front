@@ -31,7 +31,7 @@ const Home: Page = ({
   const { t } = useTranslation();
 
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - 63, timeseries.data.x.length - 1],
     tabs_section_1: 0,
     tabs_section_2: 0,
   });
