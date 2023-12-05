@@ -61,8 +61,8 @@ const OdinSidebar: FunctionComponent = () => {
       onSelect={selected => {
         scrollRef.current[selected]?.scrollIntoView({
           behavior: "smooth",
-          block: "center",
-          inline: "end",
+          block: "start",
+          inline: "nearest",
         });
       }}
       sidebarTitle=""
