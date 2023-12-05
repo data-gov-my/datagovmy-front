@@ -4,6 +4,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useTranslation, useSlice, useData } from "datagovmy-ui/hooks";
 import { TimeseriesOption } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -26,8 +27,20 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
 }) => {
   const { t } = useTranslation(["dashboard-covid-vaccination", "common"]);
 
+  const sixMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000)
+        .minus({ months: 6 })
+        .startOf("month")
+        .diff(
+          DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000),
+          ["days"]
+        ).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - sixMonths, timeseries.data.daily.x.length - 1],
     period: "auto",
     periodly: "daily_7d",
     tab_index: 0,
@@ -82,7 +95,7 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
                   }}
                 />
               }
-              interval={data.period}
+              // interval={data.period}
               enableAnimation={!play}
               data={{
                 labels: coordinate.x,

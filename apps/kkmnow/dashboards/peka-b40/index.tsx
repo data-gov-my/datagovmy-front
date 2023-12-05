@@ -14,6 +14,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useTranslation, useData, useSlice } from "datagovmy-ui/hooks";
 import { TimeseriesOption } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -40,8 +41,21 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-peka-b40", "common"]);
   const currentState = params.state;
+
+  const sixMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000)
+        .minus({ months: 6 })
+        .startOf("month")
+        .diff(
+          DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000),
+          ["days"]
+        ).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - sixMonths, timeseries.data.daily.x.length - 1],
     period: "auto",
     periodly: "daily_7d",
     tab_index: 0,

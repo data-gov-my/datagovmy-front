@@ -15,6 +15,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { DashboardPeriod, OptionType, TimeseriesOption, WithData } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent } from "react";
@@ -126,6 +127,18 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     { label: "Deaths", value: "deaths" },
   ];
 
+  const sixMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000)
+        .minus({ months: 6 })
+        .startOf("month")
+        .diff(
+          DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000),
+          ["days"]
+        ).days
+    )
+  );
+
   const { data, setData } = useData({
     show_indicator: {
       label: t(`opt_${filterCaseDeath[0].value}`),
@@ -134,7 +147,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     filter_death: 0,
     filter_state: 0,
     filter_cases: 0,
-    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - sixMonths, timeseries.data.daily.x.length - 1],
     period: "auto",
     periodly: "daily_7d",
     tab_index: 0,
