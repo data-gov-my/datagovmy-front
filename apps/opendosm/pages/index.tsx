@@ -33,6 +33,7 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { ReactNode, useMemo } from "react";
 import DivisionIcon, { Division } from "@icons/division";
+import { DateTime } from "luxon";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -46,8 +47,20 @@ const Home: Page = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t, i18n } = useTranslation("opendosm-home");
   const { theme } = useTheme();
+
+  const twoMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000)
+        .minus({ months: 2 })
+        .startOf("month")
+        .diff(DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000), [
+          "days",
+        ]).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [timeseries.data.x.length - 63, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - twoMonths, timeseries.data.x.length - 1],
     tabs_section_1: 0,
     tabs_section_2: 0,
   });

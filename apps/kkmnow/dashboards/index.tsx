@@ -18,6 +18,7 @@ import {
   InjectionIcon,
   HospitalBedIcon,
 } from "datagovmy-ui/icons/kkmnow";
+import { DateTime } from "luxon";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -63,8 +64,20 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["kkmnow-home", "dashboards"]);
+
+  const twoMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000)
+        .minus({ months: 2 })
+        .startOf("month")
+        .diff(DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000), [
+          "days",
+        ]).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [timeseries.data.x.length - 63, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - twoMonths, timeseries.data.x.length - 1],
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
 
