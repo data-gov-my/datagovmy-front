@@ -82,7 +82,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   const todayISO = new Date(thisYear, thisMonth, today.getDate(), 8, 0, 0)
     .toISOString()
     .split("T")[0];
-  const daysInWeek: string[] = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const daysInWeek: string[] = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
   const getMonthAndYear = (isoDate: string): [month: number, year: number] => {
     const dates = isoDate.split("-");
@@ -127,15 +127,15 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       return date.toISOString().split("T")[0]; // get date in yyyy-mm-dd
     };
 
-    setFilter("start", toDate(new Date(data.year, data.month, -firstDay + 1, 8, 0, 0)));
+    setFilter("start", toDate(new Date(data.year, data.month, -firstDay + 2, 8, 0, 0)));
     setFilter("end", toDate(new Date(data.year, data.month + 1, remaining, 8, 0, 0)));
 
     // for desktop only, prev month
-    for (let i = firstDay - 1; i >= 0; i--) {
-      const date = toDate(new Date(data.year, data.month - 1, daysInLastMonth - i, 8, 0, 0));
+    for (let i = firstDay - 1; i > 0; i--) {
+      const date = toDate(new Date(data.year, data.month - 1, daysInLastMonth - i + 1, 8, 0, 0));
       desktop.push({
         date: date, // to match for publications
-        day: daysInLastMonth - i, // to display day in calendar
+        day: daysInLastMonth - i + 1, // to display day in calendar
         month: data.month - 1, // to match for current month
       });
     }
