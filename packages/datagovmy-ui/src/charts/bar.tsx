@@ -29,6 +29,8 @@ interface BarProps extends ChartHeaderProps {
   prefixY?: string;
   minY?: number;
   maxY?: number;
+  minX?: number;
+  maxX?: number;
   suggestedMaxY?: number;
   precision?: [number, number] | number;
   formatX?: (key: string) => string | string[];
@@ -67,6 +69,8 @@ const Bar: FunctionComponent<BarProps> = ({
   enableGridX = true,
   enableGridY = true,
   forcedTheme,
+  minX,
+  maxX,
   minY,
   maxY,
   suggestedMaxY,
@@ -154,6 +158,8 @@ const Bar: FunctionComponent<BarProps> = ({
           drawTicks: true,
           drawBorder: true,
         },
+        min: minX,
+        max: maxX,
         ticks: {
           font: {
             family: "Inter",
