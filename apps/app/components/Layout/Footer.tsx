@@ -38,6 +38,12 @@ const DGMYFooter = () => {
         <At className="link-dim" external href="https://open.dosm.gov.my">
           OpenDOSM
         </At>
+        <At className="link-dim" external href="https://data.moh.gov.my">
+          KKMNOW
+        </At>
+        <At className="link-dim" external href="https://www.jc3malaysia.com/data-catalogue">
+          {t("common:nav.jc3_climate")}
+        </At>
       </div>
     </Footer>
   );
