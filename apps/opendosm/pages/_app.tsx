@@ -12,12 +12,21 @@ import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { useEffect, ReactNode } from "react";
 import { AppPropsLayout } from "datagovmy-ui/types";
+import { useTranslation } from "datagovmy-ui/hooks";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
+  const { t } = useTranslation();
   const layout =
     Component.layout ||
-    ((page: ReactNode) => <Layout className={clx(body.variable, "font-sans")}>{page}</Layout>);
+    ((page: ReactNode) => (
+      <Layout
+        className={clx(body.variable, "font-sans")}
+        useBanner={Boolean(t("common:common.banner")) ? true : false}
+      >
+        {page}
+      </Layout>
+    ));
   const router = useRouter();
 
   useEffect(() => {
