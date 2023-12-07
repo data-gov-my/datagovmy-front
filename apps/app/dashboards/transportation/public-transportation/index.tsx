@@ -4,6 +4,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { TimeseriesOption, WithData } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -28,10 +29,10 @@ export const TIMESERIESDATA = [
   "komuter_utara",
   "ets",
   "intercity",
-  "tebrau",
   "bus_rkl",
   "bus_rpn",
   "bus_rkn",
+  "tebrau",
 ] as const;
 
 export type TimeseriesData = (typeof TIMESERIESDATA)[number];
@@ -74,8 +75,60 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
     },
   };
 
+  const diffFromJan22 = (periodly: TimeseriesOption["periodly"]) => {
+    switch (periodly) {
+      case "daily":
+      case "daily_7d":
+        return Math.ceil(
+          Math.abs(
+            DateTime.fromSQL("2022-01-01")
+              .startOf("month")
+              .diff(
+                DateTime.fromSeconds(
+                  timeseries.data[periodly].x[timeseries.data[periodly].x.length - 1] / 1000
+                ),
+                ["days"]
+              ).days
+          )
+        );
+
+      case "monthly":
+        return Math.ceil(
+          Math.abs(
+            DateTime.fromSQL("2022-01-01")
+              .startOf("month")
+              .diff(
+                DateTime.fromSeconds(
+                  timeseries.data["monthly"].x[timeseries.data["monthly"].x.length - 1] / 1000
+                ),
+                ["months"]
+              ).months
+          )
+        );
+      case "yearly":
+        return timeseries.data["monthly"].x.length;
+
+      default:
+        return Math.ceil(
+          Math.abs(
+            DateTime.fromSQL("2022-01-01")
+              .startOf("month")
+              .diff(
+                DateTime.fromSeconds(
+                  timeseries.data["daily"].x[timeseries.data["daily"].x.length - 1] / 1000
+                ),
+                ["days"]
+              ).days
+          )
+        );
+    }
+  };
+
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.daily.x.length - 1],
+    minmax: [
+      timeseries.data.daily.x.length - diffFromJan22("daily"),
+      timeseries.data.daily.x.length - 1,
+    ],
     index: 0,
     period: "auto",
     periodly: "daily_7d",
@@ -106,7 +159,11 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
               current={data.index}
               onChange={index => {
                 setData("index", index);
-                setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
+                setData("minmax", [
+                  timeseries.data[config[index].periodly].x.length -
+                    diffFromJan22(config[index].periodly),
+                  timeseries.data[config[index].periodly].x.length - 1,
+                ]);
                 setData("period", config[index].period);
                 setData("periodly", config[index].periodly);
               }}
