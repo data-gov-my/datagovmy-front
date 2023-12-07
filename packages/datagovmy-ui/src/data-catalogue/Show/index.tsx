@@ -312,6 +312,31 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     onChange={e => setShow(e)}
                   /> */}
                   <Dropdown
+                    className={"flex lg:hidden"}
+                    width="w-fit"
+                    anchor="left"
+                    sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}
+                    placeholder={t("download")}
+                    options={_downloads
+                      .map(item => ({
+                        label: item.title as string,
+                        value: item.id,
+                      }))
+                      .concat({ label: t("embed"), value: "embed" })}
+                    onChange={e => {
+                      // embed
+                      if (e.value === "embed") {
+                        embedRef.current?.open();
+                        return;
+                      }
+                      // downloads
+                      const action = _downloads.find(({ id }) => e.value === id);
+                      if (!action) return;
+                      return action.href();
+                    }}
+                  />
+                  <Dropdown
+                    className={"hidden lg:flex"}
                     width="w-fit"
                     anchor="right"
                     sublabel={<DocumentArrowDownIcon className="h-4 w-4" />}

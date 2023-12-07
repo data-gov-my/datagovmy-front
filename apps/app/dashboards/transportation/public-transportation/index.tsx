@@ -3,21 +3,51 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { TimeseriesOption } from "datagovmy-ui/types";
+import { TimeseriesOption, WithData } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
+
+const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 /**
  * Public Transportation Dashboard
  * @overview Status: Live
  */
 
-const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
+export const TIMESERIESDATA = [
+  "x",
+  "overall",
+  "bus",
+  "rail",
+  "lrt_ampang",
+  "lrt_kj",
+  "mrt_kajang",
+  "mrt_pjy",
+  "monorail",
+  "komuter",
+  "komuter_utara",
+  "ets",
+  "intercity",
+  "bus_rkl",
+  "bus_rpn",
+  "bus_rkn",
+  "tebrau",
+] as const;
+
+export type TimeseriesData = (typeof TIMESERIESDATA)[number];
+export type TimeseriesOptions = Record<TimeseriesData, number[]>;
+
+export const TIMESERIESCALLOUT = ["daily", "growth_mom", "growth_wow"] as const;
+
+export type TimeseriesCallout = (typeof TIMESERIESCALLOUT)[number];
 
 interface PublicTransportationProps {
   last_updated: string;
-  timeseries: any;
-  timeseries_callout: any;
+  timeseries: WithData<Record<TimeseriesOption["periodly"], TimeseriesOptions>>;
+  timeseries_callout: WithData<
+    Record<TimeseriesData, Record<TimeseriesCallout, { value: number }>>
+  >;
 }
 
 const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
@@ -45,13 +75,67 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
     },
   };
 
+  const diffFromJan22 = (periodly: TimeseriesOption["periodly"]) => {
+    switch (periodly) {
+      case "daily":
+      case "daily_7d":
+        return Math.ceil(
+          Math.abs(
+            DateTime.fromSQL("2022-01-01")
+              .startOf("month")
+              .diff(
+                DateTime.fromSeconds(
+                  timeseries.data[periodly].x[timeseries.data[periodly].x.length - 1] / 1000
+                ),
+                ["days"]
+              ).days
+          )
+        );
+
+      case "monthly":
+        return Math.ceil(
+          Math.abs(
+            DateTime.fromSQL("2022-01-01")
+              .startOf("month")
+              .diff(
+                DateTime.fromSeconds(
+                  timeseries.data["monthly"].x[timeseries.data["monthly"].x.length - 1] / 1000
+                ),
+                ["months"]
+              ).months
+          )
+        );
+      case "yearly":
+        return timeseries.data["monthly"].x.length;
+
+      default:
+        return Math.ceil(
+          Math.abs(
+            DateTime.fromSQL("2022-01-01")
+              .startOf("month")
+              .diff(
+                DateTime.fromSeconds(
+                  timeseries.data["daily"].x[timeseries.data["daily"].x.length - 1] / 1000
+                ),
+                ["days"]
+              ).days
+          )
+        );
+    }
+  };
+
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.daily.x.length - 1],
+    minmax: [
+      timeseries.data.daily.x.length - diffFromJan22("daily"),
+      timeseries.data.daily.x.length - 1,
+    ],
     index: 0,
     period: "auto",
     periodly: "daily_7d",
   });
-  const { coordinate } = useSlice(timeseries.data[data.periodly], data.minmax);
+
+  const periodly = data.periodly as TimeseriesOption["periodly"];
+  const { coordinate } = useSlice(timeseries.data[periodly], data.minmax);
 
   return (
     <>
@@ -75,7 +159,11 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
               current={data.index}
               onChange={index => {
                 setData("index", index);
-                setData("minmax", [0, timeseries.data[config[index].periodly].x.length - 1]);
+                setData("minmax", [
+                  timeseries.data[config[index].periodly].x.length -
+                    diffFromJan22(config[index].periodly),
+                  timeseries.data[config[index].periodly].x.length - 1,
+                ]);
                 setData("period", config[index].period);
                 setData("periodly", config[index].periodly);
               }}
@@ -146,63 +234,162 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                   period={data.period}
                   value={data.minmax}
                   onChange={e => setData("minmax", e)}
-                  data={timeseries.data[data.periodly].x}
+                  data={timeseries.data[periodly].x}
                 />
+                <div className="grid grid-cols-1 gap-12 pt-12 lg:grid-cols-2">
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("ridership_rail")}
+                    enableAnimation={!play}
+                    interval={data.period}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: coordinate.x.length === 1 ? "bar" : "line",
+                          data: coordinate.rail,
+                          label: t(`common:time.${data.periodly}`),
+                          fill: true,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
+                          barThickness: 12,
+                        },
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:time.daily"),
+                        value: `+${numFormat(
+                          timeseries_callout.data.rail.daily.value,
+                          "standard"
+                        )}`,
+                      },
+                      {
+                        title: t("trend_weekly"),
+                        value:
+                          (timeseries_callout.data.rail.growth_wow.value > 0 ? "+" : "") +
+                          `${numFormat(
+                            timeseries_callout.data.rail.growth_wow.value,
+                            "standard",
+                            [1, 1]
+                          )}%`,
+                      },
+                      {
+                        title: t("trend_monthly"),
+                        value:
+                          (timeseries_callout.data.rail.growth_mom.value > 0 ? "+" : "") +
+                          `${numFormat(
+                            timeseries_callout.data.rail.growth_mom.value,
+                            "standard",
+                            [1, 1]
+                          )}%`,
+                      },
+                    ]}
+                  />
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("ridership_bus")}
+                    enableAnimation={!play}
+                    interval={data.period}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: coordinate.x.length === 1 ? "bar" : "line",
+                          data: coordinate.bus,
+                          label: t(`common:time.${data.periodly}`),
+                          fill: true,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
+                          barThickness: 12,
+                        },
+                      ],
+                    }}
+                    stats={[
+                      {
+                        title: t("common:time.daily"),
+                        value: `+${numFormat(timeseries_callout.data.bus.daily.value, "standard")}`,
+                      },
+                      {
+                        title: t("trend_weekly"),
+                        value:
+                          (timeseries_callout.data.bus.growth_wow.value > 0 ? "+" : "") +
+                          `${numFormat(
+                            timeseries_callout.data.bus.growth_wow.value,
+                            "standard",
+                            [1, 1]
+                          )}%`,
+                      },
+                      {
+                        title: t("trend_monthly"),
+                        value:
+                          (timeseries_callout.data.bus.growth_mom.value > 0 ? "+" : "") +
+                          `${numFormat(
+                            timeseries_callout.data.bus.growth_mom.value,
+                            "standard",
+                            [1, 1]
+                          )}%`,
+                      },
+                    ]}
+                  />
+                </div>
                 <div className="grid grid-cols-1 gap-12 pt-12 lg:grid-cols-2 xl:grid-cols-3">
-                  {["rapid_rail", "rapid_bus", "tebrau", "ets", "intercity", "komuter"].map(
-                    (key: string) => (
-                      <Timeseries
-                        className="h-[300px] w-full"
-                        title={t(`ridership_${key}`)}
-                        enableAnimation={!play}
-                        interval={data.period}
-                        data={{
-                          labels: coordinate.x,
-                          datasets: [
-                            {
-                              type: coordinate.x.length === 1 ? "bar" : "line",
-                              data: coordinate[key],
-                              label: t(`common:time.${data.periodly}`),
-                              fill: true,
-                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                              borderColor: AKSARA_COLOR.PRIMARY,
-                              borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
-                              barThickness: 12,
-                            },
-                          ],
-                        }}
-                        stats={[
+                  {TIMESERIESDATA.filter(
+                    item => item !== "x" && item !== "bus" && item !== "rail" && item !== "overall"
+                  ).map(key => (
+                    <Timeseries
+                      className="h-[300px] w-full"
+                      title={t(`ridership_${key}`)}
+                      enableAnimation={!play}
+                      interval={data.period}
+                      data={{
+                        labels: coordinate.x,
+                        datasets: [
                           {
-                            title: t("common:time.daily"),
-                            value: `+${numFormat(
-                              timeseries_callout.data[key].daily.value,
-                              "standard"
-                            )}`,
+                            type: coordinate.x.length === 1 ? "bar" : "line",
+                            data: coordinate[key],
+                            label: t(`common:time.${data.periodly}`),
+                            fill: true,
+                            backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                            borderColor: AKSARA_COLOR.PRIMARY,
+                            borderWidth: coordinate.x.length > 200 ? 1.0 : 1.5,
+                            barThickness: 12,
                           },
-                          {
-                            title: t("trend_weekly"),
-                            value:
-                              (timeseries_callout.data[key].growth_wow.value > 0 ? "+" : "") +
-                              `${numFormat(
-                                timeseries_callout.data[key].growth_wow.value,
-                                "standard",
-                                [1, 1]
-                              )}%`,
-                          },
-                          {
-                            title: t("trend_monthly"),
-                            value:
-                              (timeseries_callout.data[key].growth_mom.value > 0 ? "+" : "") +
-                              `${numFormat(
-                                timeseries_callout.data[key].growth_mom.value,
-                                "standard",
-                                [1, 1]
-                              )}%`,
-                          },
-                        ]}
-                      />
-                    )
-                  )}
+                        ],
+                      }}
+                      stats={[
+                        {
+                          title: t("common:time.daily"),
+                          value: `+${numFormat(
+                            timeseries_callout.data[key].daily.value,
+                            "standard"
+                          )}`,
+                        },
+                        {
+                          title: t("trend_weekly"),
+                          value:
+                            (timeseries_callout.data[key].growth_wow.value > 0 ? "+" : "") +
+                            `${numFormat(
+                              timeseries_callout.data[key].growth_wow.value,
+                              "standard",
+                              [1, 1]
+                            )}%`,
+                        },
+                        {
+                          title: t("trend_monthly"),
+                          value:
+                            (timeseries_callout.data[key].growth_mom.value > 0 ? "+" : "") +
+                            `${numFormat(
+                              timeseries_callout.data[key].growth_mom.value,
+                              "standard",
+                              [1, 1]
+                            )}%`,
+                        },
+                      ]}
+                    />
+                  ))}
                 </div>
               </>
             )}
