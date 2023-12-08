@@ -10,7 +10,7 @@ import {
 } from "datagovmy-ui/components";
 import { useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { DataRequestItem, DataRequestStatus } from "pages/data-request";
-import { FunctionComponent, useEffect } from "react";
+import { FunctionComponent, useCallback, useEffect } from "react";
 import {
   TicketIcon,
   MagnifyingGlassIcon,
@@ -25,6 +25,7 @@ import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { clx } from "datagovmy-ui/helpers";
 import { PublishedDataModal, RequestDataModal } from "./modal";
 import { useRouter } from "next/router";
+import { debounce } from "lodash";
 
 interface DataRequestDashboardProps {
   query: any;
@@ -69,7 +70,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     show_request: false,
     show_published: false,
     published_data: [], // TODO: add them later. using dummy for now.
-    search_query: "",
+    search_query: query.ticket_id ? `id: ${query.ticket_id}` : query.query ? query.query : "",
     page: 1,
     tab: query.status ? STATUS_OPTIONS.findIndex(item => item.value === query.status) : 0,
   });
@@ -96,6 +97,8 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
 
   const { filter, setFilter } = useFilter({
     status: query.status ? STATUS_OPTIONS.find(item => item.value === query.status) : undefined,
+    query: query.query ? query.query : undefined,
+    ticket_id: query.ticket_id ? query.ticket_id : undefined,
   });
 
   const tableConfig: TableConfig<DataRequestItem>[] = [
@@ -195,6 +198,49 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     }
   };
 
+  const handleSearch = useCallback(
+    debounce((query: string) => {
+      // Checking whether the query contain ":"
+      const containSeperator = query.includes(":");
+      if (containSeperator) {
+        // Split the query by the seperator and create trimmed array
+        const splitSearch = query.split(":").map(str => str.trim());
+        // Fallback: Not valid ticket_id search. Search query as is.
+        if (splitSearch.length > 2) {
+          setFilter("query", query.trim());
+          setFilter("ticket_id", "");
+        } else {
+          // Checking whether the first seperator is 'id'
+          if (splitSearch[0] === "id") {
+            // Check whether the value is valid number
+            const isValidId =
+              typeof splitSearch[1] === "string" &&
+              splitSearch[1].trim() !== "" &&
+              splitSearch[1].trim().match(/^\d+$/) !== null;
+
+            // Perform ticket_id query to the endpoint
+            if (isValidId) {
+              setFilter("ticket_id", splitSearch[1]);
+              setFilter("query", "");
+            } else {
+              // Fallback: Not valid ticket_id search. Search query as is.
+              setFilter("query", query.trim());
+              setFilter("ticket_id", "");
+            }
+          } else {
+            // Fallback: Not valid ticket_id search. Search query as is.
+            setFilter("query", query.trim());
+            setFilter("ticket_id", "");
+          }
+        }
+      } else {
+        setFilter("query", query.trim());
+        setFilter("ticket_id", "");
+      }
+    }, 500),
+    []
+  );
+
   return (
     <>
       <Container
@@ -234,8 +280,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 value={data.search_query}
                 className="w-[300px] sm:w-[420px]"
                 placeholder={t("search_query_placeholder")}
-                onChange={value => {
-                  setData("search_query", value);
+                onChange={query => {
+                  setData("search_query", query);
+                  handleSearch(query);
                 }}
               />
             }
