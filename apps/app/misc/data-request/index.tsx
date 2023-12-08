@@ -5,11 +5,12 @@ import {
   NumberedPagination,
   Panel,
   Section,
+  Spinner,
   Tabs,
 } from "datagovmy-ui/components";
-import { useData, useTranslation, useWatch } from "datagovmy-ui/hooks";
+import { useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { DataRequestItem, DataRequestStatus } from "pages/data-request";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useEffect } from "react";
 import {
   TicketIcon,
   MagnifyingGlassIcon,
@@ -23,7 +24,7 @@ import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { clx } from "datagovmy-ui/helpers";
 import { PublishedDataModal, RequestDataModal } from "./modal";
-import { matchSorter } from "match-sorter";
+import { useRouter } from "next/router";
 
 interface DataRequestDashboardProps {
   query: any;
@@ -37,35 +38,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   items,
 }) => {
   const { t, i18n } = useTranslation(["data-request", "catalogue", "agencies"]);
-  const { data, setData } = useData({
-    loading: false,
-    modal_loading: false,
-    show_request: false,
-    show_published: false,
-    published_data: [], // TODO: add them later. using dummy for now.
-    search_query: "",
-    status: "all",
-    page: 1,
-    tab: 0,
-  });
-  const baseClass = "text-sm font-normal";
-
-  const filteredStatus = useMemo(() => {
-    if (data.status === "all") return items;
-
-    return items.filter(item => item.status === data.status);
-  }, [data.status]);
-
-  const filteredRes = useMemo(
-    () => matchSorter(filteredStatus, data.search_query, { keys: ["title", "data_owner"] }),
-    [filteredStatus, data.search_query]
-  );
-
-  useWatch(() => {
-    data.show_request || data.show_published
-      ? (document.body.style.overflow = "hidden")
-      : (document.body.style.overflow = "unset");
-  }, [data.show_request, data.show_published]);
 
   const STATUS_OPTIONS: OptionType[] = [
     {
@@ -90,6 +62,42 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     },
   ];
 
+  const { events } = useRouter();
+  const { data, setData } = useData({
+    loading: false,
+    modal_loading: false,
+    show_request: false,
+    show_published: false,
+    published_data: [], // TODO: add them later. using dummy for now.
+    search_query: "",
+    page: 1,
+    tab: query.status ? STATUS_OPTIONS.findIndex(item => item.value === query.status) : 0,
+  });
+  const baseClass = "text-sm font-normal";
+
+  useWatch(() => {
+    data.show_request || data.show_published
+      ? (document.body.style.overflow = "hidden")
+      : (document.body.style.overflow = "unset");
+  }, [data.show_request, data.show_published]);
+
+  useEffect(() => {
+    events.on("routeChangeComplete", () => {
+      setData("loading", false);
+      setData("modal_loading", false);
+    });
+    return () => {
+      events.off("routeChangeComplete", () => {
+        setData("loading", false);
+        setData("modal_loading", false);
+      });
+    };
+  }, []);
+
+  const { filter, setFilter } = useFilter({
+    status: query.status ? STATUS_OPTIONS.find(item => item.value === query.status) : undefined,
+  });
+
   const tableConfig: TableConfig<DataRequestItem>[] = [
     {
       accessorKey: "status",
@@ -98,9 +106,10 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       cell: ({ row, getValue }) => <>{renderStatus(getValue())}</>,
     },
     {
-      accessorKey: "title",
-      id: "title",
+      accessorKey: "dataset_title",
+      id: "dataset_title",
       header: t("table.title"),
+      className: "max-sm:max-w-[300px] md:max-w-[150px] truncate",
       cell: ({ row, getValue }) => {
         const underline = "underline underline-offset-4";
 
@@ -116,7 +125,13 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 : () => null
             }
           >
-            <p className={clx(baseClass, row.original.status === "published" && underline)}>
+            <p
+              className={clx(
+                baseClass,
+                "max-w-[220px] truncate",
+                row.original.status === "published" && underline
+              )}
+            >
               {getValue()}
             </p>
             {row.original.status === "published" && (
@@ -127,17 +142,17 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       },
     },
     {
-      accessorKey: "description",
-      id: "description",
-      className: "max-sm:max-w-[300px] md:max-w-[500px] truncate",
+      accessorKey: "dataset_description",
+      id: "dataset_description",
+      className: "max-sm:max-w-[300px] md:max-w-[400px] truncate",
       header: t("table.description"),
     },
     {
-      accessorKey: "data_owner",
-      id: "data_owner",
+      accessorKey: "agency",
+      id: "agency",
       header: t("data-request:table.data_owner"),
-      accessorFn({ data_owner }) {
-        return t(`agencies:${data_owner}.abbr`);
+      accessorFn({ agency }) {
+        return t(`agencies:${agency.toLowerCase()}.abbr`);
       },
     },
   ];
@@ -227,24 +242,35 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             current={data.tab}
             onChange={index => {
               setData("tab", index);
-              setData("status", STATUS_OPTIONS[index].value);
+              setData("loading", true);
+              if (STATUS_OPTIONS[index].value === "all") {
+                setFilter("status", "");
+              } else {
+                setFilter("status", STATUS_OPTIONS[index].value);
+              }
             }}
           >
             {STATUS_OPTIONS.map(option => (
               <Panel name={t(option.label)} key={option.value}>
-                <Table
-                  className="mb-12 mt-8 md:mx-auto md:w-4/5 lg:w-full"
-                  data={filteredRes}
-                  enablePagination={10}
-                  pagination={(currentPage, totalPage, setPage) => (
-                    <NumberedPagination
-                      currentPage={currentPage}
-                      totalPage={totalPage}
-                      setPage={newPage => setPage(newPage - 1)}
-                    />
-                  )}
-                  config={tableConfig}
-                />
+                {data.loading ? (
+                  <div className="flex h-60 w-full items-center justify-center">
+                    <Spinner loading={true} />
+                  </div>
+                ) : (
+                  <Table
+                    className="mb-12 mt-8 md:mx-auto md:w-4/5 lg:w-full"
+                    data={items}
+                    enablePagination={10}
+                    pagination={(currentPage, totalPage, setPage) => (
+                      <NumberedPagination
+                        currentPage={currentPage}
+                        totalPage={totalPage}
+                        setPage={newPage => setPage(newPage - 1)}
+                      />
+                    )}
+                    config={tableConfig}
+                  />
+                )}
               </Panel>
             ))}
           </Tabs>
