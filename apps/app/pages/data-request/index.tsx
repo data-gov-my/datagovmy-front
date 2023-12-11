@@ -8,7 +8,7 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { Agency, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export type DataRequestStatus = "under_review" | "rejected" | "in_progress" | "published";
+export type DataRequestStatus = "under_review" | "rejected" | "in_progress" | "data_published";
 
 export type DataRequestItem = {
   ticket_id: number;

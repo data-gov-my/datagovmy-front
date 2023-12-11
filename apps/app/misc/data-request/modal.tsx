@@ -1,9 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { post } from "datagovmy-ui/api";
 import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
-import { AgencyLink } from "datagovmy-ui/constants";
+import { AgencyLink, SHORT_LANG } from "datagovmy-ui/constants";
 import { Catalogue, CatalogueCard } from "datagovmy-ui/data-catalogue";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -140,23 +141,17 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
     dataset_title: "",
     dataset_description: "",
     agency: "",
-    purpose: "",
+    purpose_of_request: "",
   });
 
   const { data: validation, setData: setValidation } = useData(
-    Object.fromEntries(Object.entries(data).map(([key]) => [key, key === "resources" ? [] : false]))
+    Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
 
   const agencies: OptionType[] = Object.keys(AgencyLink).map(agency => ({
     label: t(`agencies:${agency}.abbr`),
     value: agency,
   }));
-  // TODO: to set up actual list for the dropdown
-  const purposes: OptionType[] = [
-    { label: t("catalogue:filter_options.monthly"), value: "MONTHLY" },
-    { label: t("catalogue:filter_options.quarterly"), value: "QUARTERLY" },
-    { label: t("catalogue:filter_options.yearly"), value: "YEARLY" },
-  ];
 
   const validateInput = async () =>
     new Promise((resolve, reject) => {
@@ -281,6 +276,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                           </div>
                           <div className="flex">
                             <Input
+                              required
                               type="text"
                               name="institution"
                               className="w-full"
@@ -296,6 +292,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                           </div>
                           <div className="flex">
                             <Input
+                              required
                               type="text"
                               name="dataset_title"
                               className="w-full"
@@ -306,15 +303,17 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                                 setData("dataset_title", e);
                                 setValidation("dataset_title", false);
                               }}
-                              validation={validation.institution}
+                              validation={validation.dataset_title}
                             />
                           </div>
                           <div className="flex w-full flex-col gap-2">
                             <Label
+                              required
                               name="dataset_description"
                               label={t("forms.dataset_description")}
                             />
                             <Textarea
+                              required
                               placeholder={t("forms.dataset_description_placeholder")}
                               rows={2}
                               className={
@@ -332,7 +331,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                           </div>
 
                           <div className="flex flex-col gap-2">
-                            <Label label={t("forms.agency")} />
+                            <Label required label={t("forms.agency")} />
                             <Dropdown
                               anchor="left"
                               width="w-full"
@@ -347,21 +346,23 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                             />
                             <p className="text-danger text-xs">{validation.agency}</p>
                           </div>
-                          <div className="flex flex-col gap-2">
-                            <Label label={t("forms.purpose")} />
-                            <Dropdown
-                              anchor="left"
-                              width="w-full"
-                              className={validation.purpose ? "border-danger border-2" : ""}
-                              options={purposes}
-                              placeholder={t("forms.purpose")}
-                              selected={purposes.find(e => e.value === data.purpose) ?? undefined}
+                          <div className="flex w-full flex-col gap-2">
+                            <Label required name="purpose_of_request" label={t("forms.purpose")} />
+                            <Textarea
+                              placeholder={t("forms.purpose_placeholder")}
+                              rows={2}
+                              className={
+                                validation.purpose_of_request
+                                  ? "border-danger border-2"
+                                  : "border-outline"
+                              }
+                              value={data.purpose_of_request}
                               onChange={e => {
-                                setData("purpose", e.value);
-                                setValidation("purpose", false);
+                                setData("purpose_of_request", e.target.value);
+                                setValidation("purpose_of_request", false);
                               }}
                             />
-                            <p className="text-danger text-xs">{validation.purpose}</p>
+                            <p className="text-danger text-xs">{validation.purpose_of_request}</p>
                           </div>
 
                           <Button
@@ -374,11 +375,16 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                                   message: string;
                                 };
                                 if (isValid.ok) {
-                                  setTimeout(() => {
-                                    setLoading(false);
-                                    setModalState("SUCCESS");
-                                    reset();
-                                  }, 500);
+                                  const response = await post(
+                                    `/data-request/?language=${
+                                      SHORT_LANG[i18n.language as keyof typeof SHORT_LANG]
+                                    }`,
+                                    data
+                                  );
+
+                                  setLoading(false);
+                                  setModalState("SUCCESS");
+                                  reset();
                                 }
                               } catch (error) {
                                 setLoading(false);

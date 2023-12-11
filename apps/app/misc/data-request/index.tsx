@@ -55,7 +55,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     },
     {
       label: t("status.published"),
-      value: "published",
+      value: "data_published",
     },
     {
       label: t("status.rejected"),
@@ -120,10 +120,10 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
           <div
             className={clx(
               "group flex items-center gap-1",
-              row.original.status === "published" && "hover:cursor-pointer"
+              row.original.status === "data_published" && "hover:cursor-pointer"
             )}
             onClick={
-              row.original.status === "published"
+              row.original.status === "data_published"
                 ? () => setData("show_published", true)
                 : () => null
             }
@@ -132,12 +132,12 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
               className={clx(
                 baseClass,
                 "max-w-[220px] truncate",
-                row.original.status === "published" && underline
+                row.original.status === "data_published" && underline
               )}
             >
               {getValue()}
             </p>
-            {row.original.status === "published" && (
+            {row.original.status === "data_published" && (
               <ArrowUpRightIcon className="h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none" />
             )}
           </div>
@@ -186,7 +186,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             <p className={`text-outlineHover`}>{t("status.under_review")}</p>
           </>
         );
-      case "published":
+      case "data_published":
         return base(
           <>
             <CheckCircleIcon color={AKSARA_COLOR.GREEN} className="h-5 w-5" />
