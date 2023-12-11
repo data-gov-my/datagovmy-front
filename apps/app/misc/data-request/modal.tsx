@@ -73,7 +73,7 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
           </Transition.Child>
 
           <div className="fixed inset-0">
-            <div className="flex min-h-full items-center justify-center py-2 text-center">
+            <div className="flex h-screen items-center justify-center p-1 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -85,7 +85,7 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
               >
                 <Dialog.Panel
                   className={
-                    "border-outline shadow-floating dark:border-outlineHover-dark w-full max-w-xl transform overflow-hidden rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
+                    "border-outline shadow-floating  dark:border-outlineHover-dark flex h-full max-h-[600px] w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black"
                   }
                 >
                   <Dialog.Title
@@ -106,9 +106,9 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
                     </Button>
                   </Dialog.Title>
 
-                  <div className="mt-3 flex flex-col gap-3">
+                  <div className="flex flex-1 flex-col gap-3 overflow-hidden">
                     <p className="text-base font-medium">{t("success_modal.subtitle")}</p>
-                    <div className="bg-washed dark:bg-washed-dark hide-scrollbar flex h-[80vh] flex-col gap-2 overflow-y-scroll rounded-xl p-3">
+                    <div className="bg-washed dark:bg-washed-dark hide-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto rounded-xl p-3">
                       {items.map((dataset, index) => (
                         <CatalogueCard key={index} dataset={dataset} index={index} />
                       ))}
@@ -201,7 +201,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
           </Transition.Child>
 
           <div className="over fixed inset-0">
-            <div className="flex min-h-full items-center justify-center py-2 text-center">
+            <div className="flex h-screen items-center justify-center p-1 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -212,9 +212,10 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel
-                  className={
-                    "border-outline shadow-floating dark:border-outlineHover-dark w-full max-w-xl transform overflow-hidden rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
-                  }
+                  className={clx(
+                    "border-outline shadow-floating dark:border-outlineHover-dark flex w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black",
+                    modalState === "SUCCESS" ? "h-60" : "h-full max-h-[800px]"
+                  )}
                 >
                   {modalState === "FORM" && (
                     <>
@@ -236,10 +237,10 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                         </Button>
                       </Dialog.Title>
 
-                      <div className="mt-3 flex flex-col gap-3">
+                      <div className="flex flex-1 flex-col gap-3 overflow-hidden">
                         <p className="text-base font-medium">{t("request_modal.subtitle")}</p>
                         <form
-                          className="hide-scrollbar flex h-[70vh] flex-col gap-3 overflow-y-scroll text-sm font-medium"
+                          className="hide-scrollbar flex flex-1 flex-col gap-3 overflow-y-scroll text-sm font-medium"
                           method="post"
                         >
                           <div className="flex">
@@ -422,7 +423,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                         </Button>
                       </Dialog.Title>
 
-                      <div className="mt-2 flex flex-col items-center justify-center gap-3 pb-8">
+                      <div className="flex flex-col items-center justify-center gap-3 pb-8 text-center">
                         <CheckCircleIcon className="text-primary h-11 w-11" />
                         <p className="text-lg font-bold">{t("request_modal.success_title")}</p>
                         <p className="text-dim text-base font-medium">

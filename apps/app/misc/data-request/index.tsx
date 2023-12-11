@@ -2,6 +2,7 @@ import {
   Button,
   Container,
   Input,
+  Modal,
   NumberedPagination,
   Panel,
   Section,
@@ -114,32 +115,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       header: t("table.title"),
       className: "max-sm:max-w-[300px] md:max-w-[150px] truncate",
       cell: ({ row, getValue }) => {
-        const underline = "underline underline-offset-4";
-
         return (
-          <div
-            className={clx(
-              "group flex items-center gap-1",
-              row.original.status === "data_published" && "hover:cursor-pointer"
-            )}
-            onClick={
-              row.original.status === "data_published"
-                ? () => setData("show_published", true)
-                : () => null
-            }
-          >
-            <p
-              className={clx(
-                baseClass,
-                "max-w-[220px] truncate",
-                row.original.status === "data_published" && underline
-              )}
-            >
-              {getValue()}
-            </p>
-            {row.original.status === "data_published" && (
-              <ArrowUpRightIcon className="h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none" />
-            )}
+          <div className={clx("flex items-center gap-1")}>
+            <p className={clx(baseClass, "max-w-[220px] truncate")}>{getValue()}</p>
           </div>
         );
       },
@@ -162,7 +140,34 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
 
   const renderStatus = (status: DataRequestStatus) => {
     const base = (content: JSX.Element) => {
-      return <div className={clx("flex items-center gap-1", baseClass)}>{content}</div>;
+      return (
+        <>
+          <Modal
+            className="max-w-screen-sm"
+            title={t(`status.${status}`)}
+            trigger={open => (
+              <div
+                className={clx(
+                  "flex w-fit items-center gap-1",
+                  status !== "under_review" && "hover:cursor-pointer",
+                  baseClass
+                )}
+                onClick={
+                  status === "data_published" ? () => setData("show_published", true) : () => open()
+                }
+              >
+                {content}
+              </div>
+            )}
+          >
+            {close => (
+              <div className="h-20 bg-white p-3">
+                <p>{t(`status.${status}`)}</p>
+              </div>
+            )}
+          </Modal>
+        </>
+      );
     };
     switch (status) {
       case "in_progress":
@@ -170,6 +175,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
           <>
             <ClockIcon color={AKSARA_COLOR.ORANGE} className="h-5 w-5" />
             <p className={`text-[${AKSARA_COLOR.ORANGE}]`}>{t("status.in_progress")}</p>
+            <ArrowUpRightIcon className={`h-5 w-5 text-[${AKSARA_COLOR.ORANGE}]`} />
           </>
         );
       case "rejected":
@@ -177,6 +183,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
           <>
             <XCircleIcon className="text-danger h-5 w-5" />
             <p className={`text-danger`}>{t("status.rejected")}</p>
+            <ArrowUpRightIcon className="text-danger h-5 w-5" />
           </>
         );
       case "under_review":
@@ -190,7 +197,8 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
         return base(
           <>
             <CheckCircleIcon color={AKSARA_COLOR.GREEN} className="h-5 w-5" />
-            <p className={`text-[${AKSARA_COLOR.GREEN}]`}>{t("status.published")}</p>
+            <p className={`text-[${AKSARA_COLOR.GREEN}]`}>{t("status.data_published")}</p>
+            <ArrowUpRightIcon className={`h-5 w-5 text-[${AKSARA_COLOR.GREEN}]`} />
           </>
         );
       default:
