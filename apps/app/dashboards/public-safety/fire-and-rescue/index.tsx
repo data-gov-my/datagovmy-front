@@ -30,6 +30,7 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 interface FireandRescueProps {
   choropleth: any;
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   timeseries_callout: any;
@@ -38,6 +39,7 @@ interface FireandRescueProps {
 const FireandRescue: FunctionComponent<FireandRescueProps> = ({
   choropleth,
   last_updated,
+  next_update,
   params,
   timeseries,
   timeseries_callout,
@@ -88,6 +90,7 @@ const FireandRescue: FunctionComponent<FireandRescueProps> = ({
         description={[t("description"), "whitespace-pre-line"]}
         action={<StateDropdown url={routes.FIRE_RESCUE} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="bomba" />}
       />
 

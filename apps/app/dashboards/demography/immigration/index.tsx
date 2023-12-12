@@ -11,6 +11,7 @@ import ForeignerDemography, { ForeignerDemographyProps } from "./foreigner-demog
 
 interface ImmigrationProps extends EntranceAndDepartureProps, ForeignerDemographyProps {
   last_updated: string;
+  next_update: string;
   params?: {
     country: string;
   };
@@ -19,6 +20,7 @@ interface ImmigrationProps extends EntranceAndDepartureProps, ForeignerDemograph
 const Immigration: FunctionComponent<ImmigrationProps> = ({
   countries,
   last_updated,
+  next_update,
   params,
   timeseries,
   timeseries_callout,
@@ -34,6 +36,7 @@ const Immigration: FunctionComponent<ImmigrationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="imigresen" />}
       />
 

@@ -44,6 +44,7 @@ interface HouseholdIncomeExpenditureProps {
     WithData<{ x: string[]; y: Record<FilterKeys, number[]> }>
   >;
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: WithData<Record<"x" | StatsKeys, number[]>>;
   timeseries_callout: WithData<Record<StatsKeys, Record<"latest" | "cagr", number | null>>>;
@@ -52,6 +53,7 @@ interface HouseholdIncomeExpenditureProps {
 const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditureProps> = ({
   choropleth,
   last_updated,
+  next_update,
   params,
   timeseries,
   timeseries_callout,
@@ -109,6 +111,7 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         action={
           <StateDropdown url={routes.HOUSEHOLD_INCOME_EXPENDITURE} currentState={params.state} />
         }

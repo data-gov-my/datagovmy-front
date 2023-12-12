@@ -50,6 +50,7 @@ type ConsumerPriceKeys =
 
 interface ConsumerPricesDashboardProps {
   last_updated: string;
+  next_update: string;
   bar: WithData<{
     mom: Record<string, { x: string[]; y: number[] }>;
     yoy: Record<string, { x: string[]; y: number[] }>;
@@ -83,6 +84,7 @@ interface ConsumerPricesDashboardProps {
 
 const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> = ({
   last_updated,
+  next_update,
   bar,
   timeseries,
   timeseries_callouts,
@@ -202,6 +204,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
         }

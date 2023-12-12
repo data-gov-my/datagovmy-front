@@ -20,13 +20,15 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
 });
 
 interface WholesaleRetailDashboardProps {
-  last_updated: number;
+  last_updated: string;
+  next_update: string;
   timeseries: any;
   timeseries_callouts: any;
 }
 
 const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }) => {
@@ -134,6 +136,7 @@ const WholesaleRetailDashboard: FunctionComponent<WholesaleRetailDashboardProps>
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bpp.full")} icon={<CustomerServiceIcon />} isDivision />
         }

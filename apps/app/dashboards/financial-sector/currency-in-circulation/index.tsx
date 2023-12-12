@@ -24,6 +24,7 @@ const BarMeter = dynamic(() => import("datagovmy-ui/charts/bar-meter"), { ssr: f
 
 interface CurrencyInCirculationDashboardProps {
   last_updated: string;
+  next_update: string;
   bar: any;
   timeseries: any;
   timeseries_callouts: any;
@@ -31,6 +32,7 @@ interface CurrencyInCirculationDashboardProps {
 
 const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDashboardProps> = ({
   last_updated,
+  next_update,
   bar,
   timeseries,
   timeseries_callouts,
@@ -151,6 +153,7 @@ const CurrencyInCirculationDashboard: FunctionComponent<CurrencyInCirculationDas
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="bnm" />}
       />
 

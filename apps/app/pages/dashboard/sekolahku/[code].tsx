@@ -17,6 +17,7 @@ const Sekolahku: Page = ({
   meta,
   dropdown_data,
   last_updated,
+  next_update,
   total_schools,
   sekolahku_info,
   sekolahku_barmeter,
@@ -32,6 +33,7 @@ const Sekolahku: Page = ({
       <SekolahkuDashboard
         dropdown_data={dropdown_data}
         last_updated={last_updated}
+        next_update={next_update}
         total_schools={total_schools}
         sekolahku_info={sekolahku_info}
         sekolahku_barmeter={sekolahku_barmeter}
@@ -84,6 +86,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           },
           dropdown_data: dropdown.data.data,
           last_updated: school.data.data_last_updated,
+          next_update: school.data.data_next_update,
           total_schools: dropdown.data.info.total,
           sekolahku_info: school.data.sekolahku_info.data,
           sekolahku_barmeter: school.data.sekolahku_barmeter.data,

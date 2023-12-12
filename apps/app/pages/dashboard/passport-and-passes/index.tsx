@@ -17,6 +17,7 @@ const Immigration: Page = ({
   meta,
   choropleth,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -28,6 +29,7 @@ const Immigration: Page = ({
       <PassportAndPassesDashboard
         choropleth={choropleth}
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
@@ -50,6 +52,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "imigresen",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         choropleth: data.choropleth,
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,

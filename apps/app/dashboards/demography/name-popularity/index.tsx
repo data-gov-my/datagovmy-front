@@ -33,6 +33,7 @@ const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface NamePopularityDashboardProps {
   last_updated: string;
+  next_update: string;
   top_names: Record<string, any>;
   yearDropdown: number[];
   ethnicityDropdown: string[];
@@ -40,6 +41,7 @@ interface NamePopularityDashboardProps {
 
 const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> = ({
   last_updated,
+  next_update,
   top_names,
   yearDropdown,
   ethnicityDropdown,
@@ -256,6 +258,7 @@ const NamePopularityDashboard: FunctionComponent<NamePopularityDashboardProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container>

@@ -8,6 +8,7 @@ import { GetStaticProps, InferGetServerSidePropsType } from "next";
 
 const GDP = ({
   last_updated,
+  next_update,
   meta,
   timeseries,
   timeseries_callouts,
@@ -19,6 +20,7 @@ const GDP = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GDPDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
@@ -38,6 +40,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-gdp", async ()
         agency: "DOSM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },

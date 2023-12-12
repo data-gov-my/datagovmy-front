@@ -29,6 +29,7 @@ interface RefugeeSituationProps {
   barmeter: any;
   choropleth: any;
   last_updated: string;
+  next_update: string;
   timeseries: any;
   timeseries_callout: any;
 }
@@ -37,6 +38,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
   barmeter,
   choropleth,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -69,6 +71,7 @@ const RefugeeSituation: FunctionComponent<RefugeeSituationProps> = ({
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="unhcr" />}
         last_updated={last_updated}
+        next_update={next_update}
       />
 
       <Container className="min-h-screen">

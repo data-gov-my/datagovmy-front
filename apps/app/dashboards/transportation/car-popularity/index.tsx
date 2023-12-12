@@ -26,6 +26,7 @@ type Vehicle = "bus" | "car" | "lorry" | "motorcycle" | "other" | "van";
 
 interface CarPopularityProps {
   last_updated: string;
+  next_update: string;
   model: WithData<Record<"x" | "cars", number[]>>;
   queryOptions: Record<string, any>;
   tableData: Record<string, any>;
@@ -37,6 +38,7 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 
 const CarPopularity: FunctionComponent<CarPopularityProps> = ({
   last_updated,
+  next_update,
   model,
   queryOptions,
   tableData,
@@ -151,6 +153,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="jpj" />}
       />
       <Container className="min-h-screen">

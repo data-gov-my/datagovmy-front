@@ -31,6 +31,7 @@ interface PovertyProps {
   choropleth: any;
   heatmap: any;
   last_updated: string;
+  next_update: string;
   timeseries: any;
   timeseries_callout: any;
 }
@@ -39,6 +40,7 @@ const Poverty: FunctionComponent<PovertyProps> = ({
   choropleth,
   heatmap,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -78,6 +80,8 @@ const Poverty: FunctionComponent<PovertyProps> = ({
         category={[t("common:categories.economy"), "text-black dark:text-white"]}
         header={[t("header")]}
         description={[t("description")]}
+        last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="icu-jpm" />}
       />
 

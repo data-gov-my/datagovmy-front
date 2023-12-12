@@ -10,6 +10,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 
 const CarPopularity: Page = ({
   last_updated,
+  next_update,
   meta,
   model,
   queryOptions,
@@ -24,6 +25,7 @@ const CarPopularity: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <CarPopularityDashboard
         last_updated={last_updated}
+        next_update={next_update}
         model={model}
         queryOptions={queryOptions}
         tableData={tableData}
@@ -61,6 +63,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
           agency: "JPJ",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         model: model,
         queryOptions: dropdown.data,
         tableData: data,

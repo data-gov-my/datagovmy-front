@@ -52,12 +52,14 @@ interface TimeseriesCalloutOptions {
 
 interface HouseholdDebtProp {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<Record<TimeseriesType, TimeseriesOptions>>;
   timeseries_callout: WithData<Record<TimeseriesType, TimeseriesCalloutOptions>>;
 }
 
 const HouseholdDebtDashboard: FunctionComponent<HouseholdDebtProp> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -238,6 +240,7 @@ const HouseholdDebtDashboard: FunctionComponent<HouseholdDebtProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="bnm" />}
       />
       <Container className="min-h-screen">

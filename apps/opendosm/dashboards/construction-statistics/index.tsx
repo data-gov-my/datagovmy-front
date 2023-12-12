@@ -25,6 +25,7 @@ export type Callout = { latest: number };
 interface ConstructionStatisticsDashboardProps
   extends Pick<ProjectOwnerProps, "project" | "project_callout"> {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<{
     actual: Record<StatKeys | "x" | "recession", number[]>;
     growth_qoq: Record<StatKeys | "x" | "recession", number[]>;
@@ -39,6 +40,7 @@ interface ConstructionStatisticsDashboardProps
 
 const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
   project,
@@ -120,6 +122,7 @@ const ConstructionStatisticsDashboard: FunctionComponent<ConstructionStatisticsD
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge icon={<ToolsIcon />} name={t(`division:bppib.full`)} isDivision />
         }

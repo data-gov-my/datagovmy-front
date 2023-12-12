@@ -19,6 +19,7 @@ import { sortMsiaFirst } from "datagovmy-ui/helpers";
 const CovidVaccinationState: Page = ({
   meta,
   last_updated,
+  next_update,
   params,
   waffle,
   barmeter,
@@ -36,6 +37,7 @@ const CovidVaccinationState: Page = ({
       />
       <CovidVaccinationDashboard
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         waffle={waffle}
         barmeter={barmeter}
@@ -89,6 +91,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         params: { state },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         waffle: data.waffle,
         barmeter: data.bar_chart,
         timeseries: data.timeseries,

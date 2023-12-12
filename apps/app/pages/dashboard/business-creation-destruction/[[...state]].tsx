@@ -15,6 +15,7 @@ import { CountryAndStates } from "datagovmy-ui/constants";
 
 const BusinessCreationDestruction: Page = ({
   last_updated,
+  next_update,
   meta,
   timeseries,
   timeseries_callout,
@@ -32,6 +33,7 @@ const BusinessCreationDestruction: Page = ({
       />
       <BusinessCreationDestructionDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
         params={params}
@@ -83,6 +85,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "SSM",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state: state },
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,

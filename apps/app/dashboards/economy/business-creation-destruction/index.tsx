@@ -50,6 +50,7 @@ type TimeseriesType = DashboardPeriod;
 
 interface BusinessCreationDestructionProp {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: WithData<Record<TimeseriesType, Record<TimeseriesData, number[]>>>;
   timeseries_callout: WithData<Record<Exclude<TimeseriesData, "x">, { this_year: number }>>;
@@ -57,6 +58,7 @@ interface BusinessCreationDestructionProp {
 
 const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDestructionProp> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
   params,
@@ -212,6 +214,7 @@ const BusinessCreationDestructionDashboard: FunctionComponent<BusinessCreationDe
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="ssm" />}
         action={
           <StateDropdown url={routes.BUSINESS_CREATION_DESTRUCTION} currentState={params.state} />

@@ -10,6 +10,7 @@ import { WindowProvider } from "datagovmy-ui/contexts/window";
 const BirthdayExplorer = ({
   meta,
   last_updated,
+  next_update,
   timeseries,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
@@ -17,7 +18,11 @@ const BirthdayExplorer = ({
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WindowProvider>
-        <BirthdayExplorerDashboard last_updated={last_updated} timeseries={timeseries} />
+        <BirthdayExplorerDashboard
+          last_updated={last_updated}
+          timeseries={timeseries}
+          next_update={next_update}
+        />
       </WindowProvider>
     </AnalyticsProvider>
   );
@@ -30,6 +35,7 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       props: {
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update ?? null,
         meta: {
           id: "dashboard-birthday-explorer",
           type: "dashboard",
