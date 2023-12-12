@@ -46,8 +46,6 @@ const HouseholdIncomeExpenditure: Page = ({
 };
 
 HouseholdIncomeExpenditure.layout = (page, props) => {
-  const { t } = useTranslation();
-
   return (
     <WindowProvider>
       <Layout
@@ -60,7 +58,6 @@ HouseholdIncomeExpenditure.layout = (page, props) => {
             hideOnScroll
           />
         }
-        useBanner={Boolean(t("common:common.banner"))}
       >
         <StateModal state={props.params.state} url={routes.HOUSEHOLD_INCOME_EXPENDITURE} />
         {page}

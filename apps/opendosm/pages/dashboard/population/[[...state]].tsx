@@ -47,7 +47,6 @@ const PopulationPage: Page = ({
 };
 
 PopulationPage.layout = (page, props) => {
-  const { t } = useTranslation();
   return (
     <WindowProvider>
       <Layout
@@ -60,7 +59,6 @@ PopulationPage.layout = (page, props) => {
             hideOnScroll
           />
         }
-        useBanner={Boolean(t("common:common.banner"))}
       >
         <StateModal state={props.params.state} url={routes.POPULATION} />
         {page}
