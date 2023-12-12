@@ -29,12 +29,14 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 
 interface ManufacturingStatisticsProps {
   last_updated: string;
+  next_update: string;
   timeseries: any;
   timeseries_callout: any;
 }
 
 const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -123,6 +125,7 @@ const ManufacturingStatistics: FunctionComponent<ManufacturingStatisticsProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bppib.full")} icon={<ToolsIcon />} isDivision />
         }

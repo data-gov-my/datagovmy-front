@@ -26,6 +26,7 @@ const TimeseriesData = ["x", "salary"];
 
 interface FormalSectorWagesProp {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<Record<string, Record<(typeof TimeseriesData)[number], number[]>>>;
   timeseries_callout: WithData<Record<string, Record<(typeof TimeseriesData)[number], number>>>;
   bar_bracket: WithData<Record<string, BarChartData>>;
@@ -36,6 +37,7 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
   timeseries,
   timeseries_callout,
   last_updated,
+  next_update,
   bar_bracket,
   bar_percentile,
 }) => {
@@ -67,6 +69,7 @@ const FormalSectorWages: FunctionComponent<FormalSectorWagesProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:mbls.full")} icon={<WorkerIcon />} isDivision />
         }

@@ -33,6 +33,7 @@ type IndustrialProductionKeys =
 
 interface IndustrialProductionDashboardProps {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<{
     growth_momsa: Record<IndustrialProductionKeys | "x" | "recession", number[]>;
     growth_yoy: Record<IndustrialProductionKeys | "x" | "recession", number[]>;
@@ -44,6 +45,7 @@ interface IndustrialProductionDashboardProps {
 
 const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }) => {
@@ -129,6 +131,7 @@ const IndustrialProductionDashboard: FunctionComponent<IndustrialProductionDashb
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bppib.full")} icon={<ToolsIcon />} isDivision />
         }

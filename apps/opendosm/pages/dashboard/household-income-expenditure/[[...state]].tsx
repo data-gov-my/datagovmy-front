@@ -45,24 +45,29 @@ const HouseholdIncomeExpenditure: Page = ({
   );
 };
 
-HouseholdIncomeExpenditure.layout = (page, props) => (
-  <WindowProvider>
-    <Layout
-      className={clx(body.variable, "font-sans")}
-      stateSelector={
-        <StateDropdown
-          width="w-max xl:w-64"
-          url={routes.HOUSEHOLD_INCOME_EXPENDITURE}
-          currentState={props.params.state}
-          hideOnScroll
-        />
-      }
-    >
-      <StateModal state={props.params.state} url={routes.HOUSEHOLD_INCOME_EXPENDITURE} />
-      {page}
-    </Layout>
-  </WindowProvider>
-);
+HouseholdIncomeExpenditure.layout = (page, props) => {
+  const { t } = useTranslation();
+
+  return (
+    <WindowProvider>
+      <Layout
+        className={clx(body.variable, "font-sans")}
+        stateSelector={
+          <StateDropdown
+            width="w-max xl:w-64"
+            url={routes.HOUSEHOLD_INCOME_EXPENDITURE}
+            currentState={props.params.state}
+            hideOnScroll
+          />
+        }
+        useBanner={Boolean(t("common:common.banner"))}
+      >
+        <StateModal state={props.params.state} url={routes.HOUSEHOLD_INCOME_EXPENDITURE} />
+        {page}
+      </Layout>
+    </WindowProvider>
+  );
+};
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {

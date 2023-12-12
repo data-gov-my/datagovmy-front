@@ -10,6 +10,7 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 const ConstructionStatistics: Page = ({
   meta,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
   project,
@@ -22,6 +23,7 @@ const ConstructionStatistics: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ConstructionStatisticsDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
         project={project}
@@ -45,6 +47,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "DOSM",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,
         project: data.timeseries_projowner,

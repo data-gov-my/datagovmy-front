@@ -51,6 +51,7 @@ type ServiceCallout = "employees" | "recession" | "revenue" | "wages";
 
 interface ServicesStatisticsProps {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<
     Record<(typeof ServiceType)[number], Record<ServiceTrend, Record<ServiceMetric, number[]>>>
   >;
@@ -65,6 +66,7 @@ interface ServicesStatisticsProps {
 
 const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -160,6 +162,7 @@ const ServicesStatistics: FunctionComponent<ServicesStatisticsProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bpp.full")} icon={<CustomerServiceIcon />} isDivision />
         }
