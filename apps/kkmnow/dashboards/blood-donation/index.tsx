@@ -28,6 +28,7 @@ const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr
 
 interface BloodDonationDashboardProps {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   barchart_age: any;
@@ -38,6 +39,7 @@ interface BloodDonationDashboardProps {
 
 const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = ({
   last_updated,
+  next_update,
   params,
   timeseries,
   barchart_age,
@@ -113,6 +115,7 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         description={[t("description"), "text-dim"]}
         action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="pdn" />}
       />
       <Container className="min-h-screen">

@@ -30,6 +30,7 @@ const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface OrganDonationProps {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   choropleth: any;
@@ -39,6 +40,7 @@ interface OrganDonationProps {
 
 const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   last_updated,
+  next_update,
   params,
   timeseries,
   choropleth,
@@ -99,6 +101,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="ntrc" />}
       />
       <Container className="min-h-screen">

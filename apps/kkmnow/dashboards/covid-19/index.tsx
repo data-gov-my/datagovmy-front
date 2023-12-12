@@ -54,6 +54,7 @@ type TableData = {
 interface COVID19Props {
   params: Record<string, any>;
   last_updated: string;
+  next_update: string;
   snapshot_bar: WithData<
     Record<"cases" | "deaths" | "util_hosp" | "util_icu" | "util_vent", Array<BarMeterData>>
   >;
@@ -113,6 +114,7 @@ interface COVID19Props {
 const COVID19: FunctionComponent<COVID19Props> = ({
   params,
   last_updated,
+  next_update,
   snapshot_bar,
   snapshot_graphic,
   snapshot_table,
@@ -370,6 +372,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="moh" />}
       />
 

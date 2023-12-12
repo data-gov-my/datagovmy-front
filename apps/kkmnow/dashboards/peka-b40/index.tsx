@@ -28,6 +28,7 @@ const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr
 
 interface PekaB40Props {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   choropleth: any;
@@ -36,6 +37,7 @@ interface PekaB40Props {
 const PekaB40: FunctionComponent<PekaB40Props> = ({
   params,
   last_updated,
+  next_update,
   timeseries,
   choropleth,
 }) => {
@@ -92,6 +94,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="phcorp" />}
       />
 
