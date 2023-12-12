@@ -33,6 +33,7 @@ type DemographyKeys = "educ" | "salary_range" | "sex";
 interface JoblessClaimsProps {
   barmeter: Record<DemographyKeys, BarMeterData[]>;
   last_updated: string;
+  next_update: string;
   params: { state: string };
   pyramid: WithData<Record<"x" | "female" | "male", number[]>>;
   timeseries: WithData<Record<DashboardPeriod, Record<"x" | "losses", number[]>>>;
@@ -42,6 +43,7 @@ interface JoblessClaimsProps {
 const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
   barmeter,
   last_updated,
+  next_update,
   params,
   pyramid,
   timeseries,
@@ -83,6 +85,7 @@ const JoblessClaims: FunctionComponent<JoblessClaimsProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         action={<StateDropdown url={routes.JOBLESS_CLAIMS} currentState={params.state} />}
         agencyBadge={<AgencyBadge agency="perkeso" />}
       />

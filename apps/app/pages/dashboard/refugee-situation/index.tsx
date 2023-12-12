@@ -13,6 +13,7 @@ const RefugeeSituation: Page = ({
   barmeter,
   choropleth,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -25,6 +26,7 @@ const RefugeeSituation: Page = ({
         barmeter={barmeter}
         choropleth={choropleth}
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
@@ -47,6 +49,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-refugee-situat
       barmeter: data.barmeter,
       choropleth: data.choropleth,
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
     },

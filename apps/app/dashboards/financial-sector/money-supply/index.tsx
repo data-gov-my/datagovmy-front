@@ -45,6 +45,7 @@ interface TableSummary {
 
 interface MoneySupplyDashboardProps {
   last_updated: string;
+  next_update: string;
   table_summary: TableSummary;
   timeseries: any;
   timeseries_callouts: any;
@@ -52,6 +53,7 @@ interface MoneySupplyDashboardProps {
 
 const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
   last_updated,
+  next_update,
   table_summary,
   timeseries,
   timeseries_callouts,
@@ -224,6 +226,7 @@ const MoneySupplyDashboard: FunctionComponent<MoneySupplyDashboardProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="bnm" />}
       />
 

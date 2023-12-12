@@ -9,6 +9,7 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const NamePopularity: Page = ({
   last_updated,
+  next_update,
   meta,
   top_names,
   yearDropdown,
@@ -21,6 +22,7 @@ const NamePopularity: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <NamePopularityDashboard
         last_updated={last_updated}
+        next_update={next_update}
         top_names={top_names}
         yearDropdown={yearDropdown}
         ethnicityDropdown={ethnicityDropdown}
@@ -43,6 +45,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-name-popularit
         agency: "JPN",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       top_names: data.top_names.data,
       yearDropdown: data.year_dropdown.data.data,
       ethnicityDropdown: data.ethnicity_dropdown.data.data,
