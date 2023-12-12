@@ -10,6 +10,7 @@ import WellbeingDashboard from "@dashboards/wellbeing";
 
 const Wellbeing: Page = ({
   last_updated,
+  next_update,
   meta,
   timeseries,
   timeseries_callout,
@@ -21,6 +22,7 @@ const Wellbeing: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WellbeingDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
@@ -35,6 +37,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-wellbeing", as
     notFound: false,
     props: {
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       meta: {
         id: "dashboard-wellbeing",
         type: "dashboard",

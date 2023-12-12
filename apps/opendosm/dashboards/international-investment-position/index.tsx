@@ -27,12 +27,14 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 
 interface IIPProps {
   last_updated: string;
+  next_update: string;
   timeseries: any;
   timeseries_callout: any;
 }
 
 const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -141,6 +143,7 @@ const InternationalInvestmentPosition: FunctionComponent<IIPProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge name={t("division:bpip.full")} icon={<GlobeIcon />} isDivision />}
       />
 

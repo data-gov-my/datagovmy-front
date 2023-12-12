@@ -15,6 +15,7 @@ import { CountryAndStates } from "datagovmy-ui/constants";
 
 const PopulationPage: Page = ({
   last_updated,
+  next_update,
   meta,
   population_timeseries,
   vitalstats_timeseries,
@@ -34,6 +35,7 @@ const PopulationPage: Page = ({
       />
       <PopulationDashboard
         last_updated={last_updated}
+        next_update={next_update}
         population_timeseries={population_timeseries}
         population_timeseries_callout={population_timeseries_callout}
         vitalstats_timeseries={vitalstats_timeseries}
@@ -45,6 +47,7 @@ const PopulationPage: Page = ({
 };
 
 PopulationPage.layout = (page, props) => {
+  const { t } = useTranslation();
   return (
     <WindowProvider>
       <Layout
@@ -57,6 +60,7 @@ PopulationPage.layout = (page, props) => {
             hideOnScroll
           />
         }
+        useBanner={Boolean(t("common:common.banner"))}
       >
         <StateModal state={props.params.state} url={routes.POPULATION} />
         {page}
@@ -87,6 +91,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "DOSM",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state: state },
         population_timeseries: data.population_timeseries,
         vitalstats_timeseries: data.vitalstats_timeseries,

@@ -16,6 +16,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 const HouseholdIncomeExpenditure: Page = ({
   choropleth,
   last_updated,
+  next_update,
   meta,
   params,
   timeseries,
@@ -35,6 +36,7 @@ const HouseholdIncomeExpenditure: Page = ({
       <HouseholdIncomeExpenditureDashboard
         choropleth={choropleth}
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
@@ -85,6 +87,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         choropleth: { state: data.choropleth_state, district: data.choropleth_district },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state: state },
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout,

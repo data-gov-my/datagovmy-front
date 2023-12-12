@@ -9,6 +9,7 @@ import ExternalTradeDashboard from "@dashboards/external-trades";
 
 const ExternalTrade: Page = ({
   last_updated,
+  next_update,
   meta,
   timeseries,
   indices_timeseries,
@@ -21,6 +22,7 @@ const ExternalTrade: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ExternalTradeDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
         indices_timeseries={indices_timeseries}
@@ -42,6 +44,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-external-trade
         agency: "DOSM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       indices_timeseries: data.indices_timeseries,
       timeseries_callout: data.timeseries_callout,
