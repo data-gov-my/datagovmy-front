@@ -17,7 +17,7 @@ const Layout: FunctionComponent<LayoutProps> = ({
   className,
   children,
   stateSelector,
-  useBanner = true,
+  useBanner = false,
 }) => {
   const { t } = useTranslation();
   return (

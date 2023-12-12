@@ -9,6 +9,7 @@ import { GetStaticProps, InferGetServerSidePropsType } from "next";
 const IndustrialProduction = ({
   meta,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
@@ -19,6 +20,7 @@ const IndustrialProduction = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <IndustrialProductionDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
@@ -40,6 +42,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "DOSM",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         timeseries: data.timeseries,
         timeseries_callouts: data.statistics,
       },

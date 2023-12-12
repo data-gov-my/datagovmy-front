@@ -17,6 +17,7 @@ const DrugAddiction: Page = ({
   barmeter,
   barmeter_data_as_of,
   last_updated,
+  next_update,
   meta,
   params,
   timeseries,
@@ -37,6 +38,7 @@ const DrugAddiction: Page = ({
         barmeter={barmeter}
         barmeter_data_as_of={barmeter_data_as_of}
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         timeseries_data_as_of={timeseries_data_as_of}
@@ -89,6 +91,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         barmeter: data.barmeter.data[state],
         barmeter_data_as_of: data.barmeter.data_as_of,
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state },
         timeseries: data.timeseries.data[state],
         timeseries_data_as_of: data.timeseries.data_as_of,

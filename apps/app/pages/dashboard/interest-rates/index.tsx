@@ -9,6 +9,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const InterestRates = ({
   meta,
   last_updated,
+  next_update,
   timeseries,
   timeseries_opr,
   timeseries_callouts,
@@ -20,6 +21,7 @@ const InterestRates = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InterestRatesDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_opr={timeseries_opr}
         timeseries_callouts={timeseries_callouts}
@@ -110,6 +112,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-interest-rates
         agency: "BNM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
       timeseries_opr: data.timeseries_opr,

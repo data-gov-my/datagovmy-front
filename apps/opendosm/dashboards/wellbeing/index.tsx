@@ -64,12 +64,14 @@ export type TimeseriesOptions = Record<TimeseriesData, number[]>;
 
 interface WellbeingProps {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<Record<TimeseriesType, TimeseriesOptions>>;
   timeseries_callout: WithData<Record<TimeseriesData, Record<TimeseriesType, number>>>;
 }
 
 const Wellbeing: FunctionComponent<WellbeingProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -293,6 +295,7 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bptms.full")} icon={<SocietyIcon />} isDivision />
         }

@@ -11,6 +11,7 @@ import BalanceOfPaymentsLayout from "@dashboards/balance-of-payments/layout";
 
 const BalanceOfPayments: Page = ({
   last_updated,
+  next_update,
   meta,
   timeseries,
   timeseries_callout,
@@ -21,7 +22,7 @@ const BalanceOfPayments: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <BalanceOfPaymentsLayout last_updated={last_updated}>
+      <BalanceOfPaymentsLayout last_updated={last_updated} next_update={next_update}>
         {tab_index => (
           <>
             {
@@ -55,6 +56,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-bop", async ()
         agency: "DOSM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
       bop_snapshot: data.bop_snapshot,

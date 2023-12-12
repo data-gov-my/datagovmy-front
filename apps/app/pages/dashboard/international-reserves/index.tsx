@@ -11,6 +11,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const InternationalReserves: Page = ({
   meta,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -21,6 +22,7 @@ const InternationalReserves: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternationalReservesDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
@@ -43,6 +45,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "BNM",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         timeseries: data.timeseries,
         timeseries_callouts: data.statistics,
       },

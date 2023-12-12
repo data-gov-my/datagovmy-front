@@ -32,6 +32,7 @@ type CompositeIndexValues = {
 
 interface CompositeIndexDashboardProps {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<{
     growth_mom: Record<
       CompositeIndexKeys | "x" | "flag_recession_business" | "flag_recession_growth",
@@ -51,6 +52,7 @@ interface CompositeIndexDashboardProps {
 
 const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }) => {
@@ -129,6 +131,7 @@ const CompositeIndexDashboard: FunctionComponent<CompositeIndexDashboardProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bpe.full")} icon={<LineChartIcon />} isDivision />
         }

@@ -52,6 +52,7 @@ interface LabourProductivityOptionsCallout {
 
 interface ServicesPPIProp {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<LabourProductivityOptions>;
   timeseries_callout: WithData<LabourProductivityOptionsCallout>;
 }
@@ -60,6 +61,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
   timeseries,
   timeseries_callout,
   last_updated,
+  next_update,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-services-producer-prices", "agencies", "common"]);
   const { theme } = useTheme();
@@ -198,6 +200,7 @@ const ServicesProducerPrices: FunctionComponent<ServicesPPIProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
         }

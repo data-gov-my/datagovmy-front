@@ -55,6 +55,7 @@ interface LabourProductivityOptionsCallout {
 
 interface LabourProductivityProp {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<LabourProductivityOptions>;
   timeseries_callout: WithData<LabourProductivityOptionsCallout>;
 }
@@ -63,6 +64,7 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
   timeseries,
   timeseries_callout,
   last_updated,
+  next_update,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-labour-productivity", "agencies", "common"]);
   const { theme } = useTheme();
@@ -231,6 +233,7 @@ const LaborProductivity: FunctionComponent<LabourProductivityProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:mbls.full")} icon={<WorkerIcon />} isDivision />
         }

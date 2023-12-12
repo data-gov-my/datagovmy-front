@@ -16,6 +16,7 @@ const COVID19: Page = ({
   meta,
   params,
   last_updated,
+  next_update,
   snapshot_bar,
   snapshot_graphic,
   snapshot_table,
@@ -34,6 +35,7 @@ const COVID19: Page = ({
       <COVID19Dashboard
         params={params}
         last_updated={last_updated}
+        next_update={next_update}
         snapshot_bar={snapshot_bar}
         snapshot_graphic={snapshot_graphic}
         snapshot_table={snapshot_table}
@@ -90,6 +92,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         params: { state },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         snapshot_bar: data.snapshot_bar,
         snapshot_graphic: data.snapshot_graphic,
         snapshot_table: data.snapshot_table,

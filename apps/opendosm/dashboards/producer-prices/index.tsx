@@ -39,6 +39,7 @@ type ProducerPricesKeys =
 
 interface ProducerPricesDashboardProps {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<{
     growth_mom: Record<ProducerPricesKeys | "x" | "recession", number[]>;
     growth_yoy: Record<ProducerPricesKeys | "x" | "recession", number[]>;
@@ -48,6 +49,7 @@ interface ProducerPricesDashboardProps {
 }
 const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }) => {
@@ -137,6 +139,7 @@ const ProducerPricesDashboard: FunctionComponent<ProducerPricesDashboardProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bphpp.full")} icon={<PricesIncomeIcon />} isDivision />
         }

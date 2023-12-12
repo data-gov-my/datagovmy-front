@@ -10,6 +10,7 @@ import ElectronicPaymentsTimeseries from "@dashboards/financial-sector/electroni
 
 const ElectronicPayments: Page = ({
   last_updated,
+  next_update,
   meta,
   epayment_systems_timeseries,
   epayment_systems_timeseries_callout,
@@ -23,7 +24,7 @@ const ElectronicPayments: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ElectronicPaymentsLayout last_updated={last_updated}>
+      <ElectronicPaymentsLayout last_updated={last_updated} next_update={next_update}>
         {tab_index => (
           <>
             {
@@ -73,6 +74,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "BNM",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         epayment_systems_timeseries: data.epayment_systems_timeseries,
         epayment_systems_timeseries_callout: data.epayment_systems_timeseries_callout,
         epayment_channels_timeseries: data.epayment_channels_timeseries,

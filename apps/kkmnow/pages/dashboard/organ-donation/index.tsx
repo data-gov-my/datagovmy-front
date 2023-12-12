@@ -14,6 +14,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const OrganDonation: Page = ({
   meta,
   last_updated,
+  next_update,
   params,
   timeseries,
   choropleth,
@@ -27,6 +28,7 @@ const OrganDonation: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <OrganDonationDashboard
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         choropleth={choropleth}
@@ -76,6 +78,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "NTRC",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state: "mys" },
         timeseries: data.timeseries,
         choropleth: data.choropleth_malaysia,

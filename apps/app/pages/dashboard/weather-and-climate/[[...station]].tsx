@@ -10,6 +10,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 const WeatherandClimate: Page = ({
   dropdown,
   last_updated,
+  next_update,
   meta,
   params,
   timeseries,
@@ -27,6 +28,7 @@ const WeatherandClimate: Page = ({
       <WeatherandClimateDashboard
         dropdown={dropdown}
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
@@ -70,6 +72,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           },
           dropdown: dropdown.data,
           last_updated: data.data_last_updated,
+          next_update: data.data_next_update,
           params: station_info ?? {},
           timeseries: data.timeseries,
           timeseries_callout: data.timeseries_callout,

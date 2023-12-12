@@ -44,6 +44,7 @@ export type TimeseriesCallout = (typeof TIMESERIESCALLOUT)[number];
 
 interface PublicTransportationProps {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<Record<TimeseriesOption["periodly"], TimeseriesOptions>>;
   timeseries_callout: WithData<
     Record<TimeseriesData, Record<TimeseriesCallout, { value: number }>>
@@ -52,6 +53,7 @@ interface PublicTransportationProps {
 
 const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }) => {
@@ -145,6 +147,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="mot" />}
       />
 

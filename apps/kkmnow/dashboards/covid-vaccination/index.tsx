@@ -36,6 +36,7 @@ type VaccineKeys = "booster1" | "booster2" | "dose1" | "dose2";
 
 interface COVIDVaccinationProps {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: WithData<
     Record<
@@ -72,6 +73,7 @@ const Waffle = dynamic(() => import("datagovmy-ui/charts/waffle"), { ssr: false 
 const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
   params,
   last_updated,
+  next_update,
   timeseries,
   statistics,
   barmeter,
@@ -162,6 +164,7 @@ const COVIDVaccination: FunctionComponent<COVIDVaccinationProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID_VACCINATION} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge
             agency="moh"

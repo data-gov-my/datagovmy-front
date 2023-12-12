@@ -11,6 +11,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const ExchangeRates: Page = ({
   meta,
   last_updated,
+  next_update,
   bar,
   timeseries,
   timeseries_callouts,
@@ -22,6 +23,7 @@ const ExchangeRates: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ExchangeRatesDashboard
         last_updated={last_updated}
+        next_update={next_update}
         bar={bar}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
@@ -42,6 +44,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-exchange-rates
         agency: "DOSM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       bar: data.bar_chart,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

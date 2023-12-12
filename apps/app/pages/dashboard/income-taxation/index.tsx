@@ -10,6 +10,7 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const IncomeTaxation: Page = ({
   last_updated,
+  next_update,
   meta,
   stacked_bar,
   timeseries,
@@ -24,6 +25,7 @@ const IncomeTaxation: Page = ({
       <WindowProvider>
         <IncomeTaxationDashboard
           last_updated={last_updated}
+          next_update={next_update}
           stacked_bar={stacked_bar}
           timeseries={timeseries}
           timeseries_callout={timeseries_callout}
@@ -54,6 +56,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-income-taxatio
       },
       year: Number(data.tax_percentile.data_as_of.substring(0, 4)) - 1,
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       stacked_bar: data.stacked_bar,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,

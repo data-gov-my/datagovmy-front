@@ -18,12 +18,14 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 
 interface InternationalReservesDashboardProps {
   last_updated: string;
+  next_update: string;
   timeseries: any;
   timeseries_callouts: any;
 }
 
 const InternationalReservesDashboard: FunctionComponent<InternationalReservesDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }) => {
@@ -70,6 +72,7 @@ const InternationalReservesDashboard: FunctionComponent<InternationalReservesDas
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="bnm" />}
       />
 

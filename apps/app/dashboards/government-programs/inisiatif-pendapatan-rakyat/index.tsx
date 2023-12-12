@@ -29,6 +29,7 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 interface IPRProps {
   choropleth: any;
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   timeseries_callout: any;
@@ -37,6 +38,7 @@ interface IPRProps {
 const IPR: FunctionComponent<IPRProps> = ({
   choropleth,
   last_updated,
+  next_update,
   params,
   timeseries,
   timeseries_callout,
@@ -96,6 +98,7 @@ const IPR: FunctionComponent<IPRProps> = ({
           <StateDropdown url={routes.INISIATIF_PENDAPATAN_RAKYAT} currentState={params.state} />
         }
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="epu" />}
       />
 
