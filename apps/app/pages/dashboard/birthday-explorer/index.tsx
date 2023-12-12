@@ -35,7 +35,7 @@ export const getStaticProps: GetStaticProps = withi18n(
     return {
       props: {
         last_updated: data.data_last_updated,
-        next_update: data.data_next_update,
+        next_update: data.data_next_update ?? null,
         meta: {
           id: "dashboard-birthday-explorer",
           type: "dashboard",
