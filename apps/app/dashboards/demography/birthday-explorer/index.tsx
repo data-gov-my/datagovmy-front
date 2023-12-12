@@ -30,11 +30,13 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 
 interface BirthdayExplorerDashboardProps {
   last_updated: string;
+  next_update: string;
   timeseries: { x: number[]; y: number[]; data_as_of: string };
 }
 
 const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-birthday-explorer", "common", "catalogue"]);
@@ -161,6 +163,7 @@ const BirthdayExplorerDashboard: FunctionComponent<BirthdayExplorerDashboardProp
         header={[t("header")]}
         description={[t("description", { quote: t("quote") })]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="jpn" />}
       />
       <Container className="min-h-screen">
