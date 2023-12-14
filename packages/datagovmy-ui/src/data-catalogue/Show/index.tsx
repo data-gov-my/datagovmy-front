@@ -42,6 +42,7 @@ import {
 } from "react";
 import CataloguePreview from "../Preview";
 import CatalogueCard from "../Card";
+import DCMethodology from "./methodology";
 
 /**
  * Catalogue Show
@@ -80,7 +81,7 @@ const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
   ssr: false,
 });
 
-interface CatalogueShowProps {
+export interface CatalogueShowProps {
   options: string[];
   params: {
     id: string;
@@ -291,7 +292,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   i18n.language === "en-GB" ? "Table & Charts" : "Jadual & Carta"
                 ] = ref)
               }
-              title={<h4 data-testid="catalogue-title">{dataset.meta.title}</h4>}
+              title={
+                <h4
+                  className="select-none"
+                  onDoubleClick={() => console.log("yeah")}
+                  data-testid="catalogue-title"
+                >
+                  {dataset.meta.title}
+                </h4>
+              }
               description={
                 <p
                   className="text-dim whitespace-pre-line text-base"
@@ -510,128 +519,45 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               </p>
 
               {dataviz && dataviz.length > 0 && (
-                <Section>
-                  <div className="relative flex h-full w-full items-stretch gap-[0.5rem] overflow-x-scroll">
-                    <div className="sticky left-0 top-0 flex h-full w-[200px] max-w-[200px] flex-1 flex-col justify-start gap-2 lg:sticky lg:w-[calc(100%_/_5.5)] lg:flex-initial">
-                      <Card
-                        className={clx(
-                          "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-full max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_5.5)]",
-                          selectedViz === undefined && "border-primary dark:border-primary-dark"
-                        )}
-                        onClick={() => {
-                          setSelectedViz(undefined);
-                          scrollToChart();
-                        }}
-                      >
-                        <div className="flex h-full w-full items-center justify-center">
-                          <TableCellsIcon className="text-outlineHover-dark h-24 w-24 stroke-[0.5px]" />
-                        </div>
-                      </Card>
-                      <p className="h-full text-center text-xs">Table</p>
-                    </div>
-                    <div className="hide-scrollbar flex flex-1 gap-[0.5rem] overflow-x-auto pb-4">
-                      {dataviz.map(viz => {
-                        return (
-                          <CataloguePreview
-                            dataviz={viz}
-                            dataset={dataset}
-                            urls={urls}
-                            translations={translations}
-                            config={config}
-                            selectedViz={selectedViz}
-                            setSelectedViz={setSelectedViz}
-                            scrollToChart={scrollToChart}
-                          />
-                        );
-                      })}
-                    </div>
+                <div className="hide-scrollbar relative flex h-full w-full items-stretch gap-[0.5rem] overflow-x-scroll">
+                  <div className="sticky left-0 top-0 flex h-full w-[200px] max-w-[200px] flex-1 flex-col justify-start gap-2 lg:sticky lg:w-[calc(100%_/_5.5)] lg:flex-initial">
+                    <Card
+                      className={clx(
+                        "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-full max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_5.5)]",
+                        selectedViz === undefined && "border-primary dark:border-primary-dark"
+                      )}
+                      onClick={() => {
+                        setSelectedViz(undefined);
+                        scrollToChart();
+                      }}
+                    >
+                      <div className="flex h-full w-full items-center justify-center">
+                        <TableCellsIcon className="text-outlineHover-dark h-24 w-24 stroke-[0.5px]" />
+                      </div>
+                    </Card>
+                    <p className="h-full text-center text-xs">Table</p>
                   </div>
-                </Section>
+                  <div className="flex flex-1 gap-[0.5rem] overflow-x-auto pb-4">
+                    {[...dataviz, ...dataviz].map(viz => {
+                      return (
+                        <CataloguePreview
+                          dataviz={viz}
+                          dataset={dataset}
+                          urls={urls}
+                          translations={translations}
+                          config={config}
+                          selectedViz={selectedViz}
+                          setSelectedViz={setSelectedViz}
+                          scrollToChart={scrollToChart}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               )}
             </Section>
 
-            <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-8 lg:py-12">
-              {/* How is this data produced? */}
-              <Section
-                title={t("header_1")}
-                ref={ref =>
-                  (scrollRef.current[
-                    i18n.language === "en-GB" ? "Metadata: Methodology" : "Metadata: Metodologi"
-                  ] = ref)
-                }
-                className=""
-                description={
-                  <Markdown className="markdown" data-testid="catalogue-methodology">
-                    {explanation.methodology}
-                  </Markdown>
-                }
-              />
-
-              {/* What caveats I should bear in mind when using this data? */}
-              <Section
-                title={t("header_2")}
-                ref={ref =>
-                  (scrollRef.current[
-                    i18n.language === "en-GB" ? "Metadata: Caveats" : "Metadata: Kaveat"
-                  ] = ref)
-                }
-                className=""
-                description={
-                  <Markdown className="markdown" data-testid="catalogue-methodology">
-                    {explanation.caveat}
-                  </Markdown>
-                }
-              />
-
-              {/* Publication(s) using this data */}
-              {Boolean(explanation.publication) && (
-                <Section
-                  title={t("header_3")}
-                  ref={ref =>
-                    (scrollRef.current[
-                      i18n.language === "en-GB" ? "Metadata: Publications" : "Metadata: Penerbitan"
-                    ] = ref)
-                  }
-                  className=""
-                  description={
-                    <Markdown className="markdown" data-testid="catalogue-publication">
-                      {explanation.publication!}
-                    </Markdown>
-                  }
-                />
-              )}
-
-              {/* Related Datasets */}
-              {Boolean(explanation.related_datasets.length) && (
-                <Section
-                  title={t("header_4")}
-                  ref={ref =>
-                    (scrollRef.current[
-                      i18n.language === "en-GB"
-                        ? "Metadata: Related Datasets"
-                        : "Metadata: Dataset Berkaitan"
-                    ] = ref)
-                  }
-                  className=""
-                >
-                  <div className="flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">
-                    {explanation.related_datasets.map((item, index) => (
-                      <CatalogueCard
-                        key={index}
-                        dataset={{
-                          id: item.id,
-                          catalog_name: item.title,
-                          description: item.description,
-                        }}
-                        index={index}
-                        alternateStyle={true}
-                        width="md:min-w-[calc(100%_/_3.25-0.5rem)] md:w-[calc(100%_/_3.25-0.5rem)] w-full"
-                      />
-                    ))}
-                  </div>
-                </Section>
-              )}
-            </div>
+            <DCMethodology explanation={explanation} isGUI={true} />
 
             {/* Metadata */}
             <Section
