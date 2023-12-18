@@ -89,7 +89,10 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                 </div>
               </>
             ) : (
-              <Markdown className="markdown" data-testid="catalogue-methodology">
+              <Markdown
+                className="markdown hover:cursor-pointer"
+                data-testid="catalogue-methodology"
+              >
                 {explanation.methodology || "[Double Click Here To Add Methodology]"}
               </Markdown>
             )}
@@ -148,7 +151,10 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                 </div>
               </>
             ) : (
-              <Markdown className="markdown" data-testid="catalogue-methodology">
+              <Markdown
+                className="markdown hover:cursor-pointer"
+                data-testid="catalogue-methodology"
+              >
                 {explanation.caveat || "[Double Click Here To Add Caveat]"}
               </Markdown>
             )}
@@ -209,7 +215,10 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                   </div>
                 </>
               ) : (
-                <Markdown className="markdown" data-testid="catalogue-publication">
+                <Markdown
+                  className="markdown hover:cursor-pointer"
+                  data-testid="catalogue-publication"
+                >
                   {explanation.publication! || "[Double Click Here To Add Publication]"}
                 </Markdown>
               )}
