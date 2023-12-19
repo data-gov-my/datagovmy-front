@@ -122,6 +122,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         barchart_variables: data.barchart_key_variables,
         choropleth: data.choropleth_malaysia,
       },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
   }
 );
