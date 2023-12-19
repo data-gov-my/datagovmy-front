@@ -113,7 +113,13 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description"), "text-dim"]}
-        action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
+        action={
+          <StateDropdown
+            url={routes.BLOOD_DONATION}
+            currentState={params.state}
+            exclude={["pjy", "pls", "lbn"]}
+          />
+        }
         last_updated={last_updated}
         next_update={next_update}
         agencyBadge={<AgencyBadge agency="pdn" />}
