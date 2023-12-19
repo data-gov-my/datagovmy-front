@@ -557,6 +557,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               )}
             </Section>
 
+            {/* Methodology */}
             <DCMethodology explanation={explanation} isGUI={false} scrollRef={scrollRef} />
 
             {/* Metadata */}
