@@ -55,7 +55,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       value: "in_progress",
     },
     {
-      label: t("status.published"),
+      label: t("status.data_published"),
       value: "data_published",
     },
     {
@@ -70,7 +70,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     modal_loading: false,
     show_request: false,
     show_published: false,
-    published_data: [], // TODO: add them later. using dummy for now.
+    published_data: [],
     search_query: query.ticket_id ? `id: ${query.ticket_id}` : query.query ? query.query : "",
     page: 1,
     tab: query.status ? STATUS_OPTIONS.findIndex(item => item.value === query.status) : 0,
@@ -107,7 +107,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       accessorKey: "status",
       id: "status",
       header: t("table.status"),
-      cell: ({ row, getValue }) => <>{renderStatus(getValue())}</>,
+      cell: ({ row, getValue }) => <>{renderStatus(getValue(), row)}</>,
     },
     {
       accessorKey: "dataset_title",
@@ -138,7 +138,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     },
   ];
 
-  const renderStatus = (status: DataRequestStatus) => {
+  const renderStatus = (status: DataRequestStatus, row: any) => {
     const base = (content: JSX.Element) => {
       return (
         <>
@@ -153,7 +153,14 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                   baseClass
                 )}
                 onClick={
-                  status === "data_published" ? () => setData("show_published", true) : () => open()
+                  status === "data_published"
+                    ? () => {
+                        setData("show_published", true);
+                        setData("published_data", row.original.published_data);
+                      }
+                    : status === "under_review"
+                    ? () => {}
+                    : () => open()
                 }
               >
                 {content}
@@ -161,8 +168,16 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             )}
           >
             {close => (
-              <div className="h-20 bg-white p-3">
-                <p>{t(`status.${status}`)}</p>
+              <div className="min-h-[100px] bg-white p-3 dark:bg-black">
+                {status === "rejected" && row.original.rejection_reason && (
+                  <>
+                    <h6 className="capitalize text-black">
+                      {t(`status.${status}`, { context: "modal" })}:
+                    </h6>
+                    <p>{row.original.rejection_reason}</p>
+                  </>
+                )}
+                {status === "in_progress" && <p>{t(`status.${status}`, { context: "modal" })}</p>}
               </div>
             )}
           </Modal>
@@ -337,6 +352,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       <PublishedDataModal
         show={data.show_published}
         hide={() => setData("show_published", false)}
+        items={data.published_data}
       />
     </>
   );
