@@ -12,6 +12,7 @@ const LifeExpectancy: Page = ({
   choropleth,
   heatmap,
   last_updated,
+  next_update,
   meta,
   timeseries,
   timeseries_callout,
@@ -23,6 +24,7 @@ const LifeExpectancy: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <LifeExpectancyDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
         choropleth={choropleth}
@@ -39,6 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-life-expectanc
     notFound: false,
     props: {
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       meta: {
         id: "dashboard-life-expectancy",
         type: "dashboard",

@@ -10,6 +10,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const HospitalBedUtilisation: Page = ({
   meta,
   last_updated,
+  next_update,
   choropleth,
   dropdown,
   hospital,
@@ -23,6 +24,7 @@ const HospitalBedUtilisation: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <HospitalBedUtilisationDashboard
         last_updated={last_updated}
+        next_update={next_update}
         choropleth={choropleth}
         dropdown={dropdown}
         hospital={hospital}
@@ -63,6 +65,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "KKM",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         choropleth: data.choropleth_malaysia,
         dropdown: data.timeseries_dropdown.data.data,
         hospital,

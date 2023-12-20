@@ -15,6 +15,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const OrganDonationState: Page = ({
   meta,
   last_updated,
+  next_update,
   params,
   timeseries,
   choropleth,
@@ -32,6 +33,7 @@ const OrganDonationState: Page = ({
       />
       <OrganDonationDashboard
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         choropleth={choropleth}
@@ -87,12 +89,14 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "NTRC",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: params,
         timeseries: data.timeseries,
         choropleth: data.choropleth_malaysia,
         barchart_age: data.barchart_age,
         barchart_time: data.barchart_time,
       },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
   }
 );

@@ -39,6 +39,7 @@ type Weather = "rainfall" | "temperature";
 interface WeatherandClimateProps {
   dropdown: Station[];
   last_updated: string;
+  next_update: string;
   params: Station;
   timeseries: WithData<Record<DashboardPeriod, Record<"x" | Weather, number[]>>>;
   timeseries_callout: WithData<Record<Weather, number>>;
@@ -47,6 +48,7 @@ interface WeatherandClimateProps {
 const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({
   dropdown,
   last_updated,
+  next_update,
   params,
   timeseries,
   timeseries_callout,
@@ -115,6 +117,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="met" />}
       />
 

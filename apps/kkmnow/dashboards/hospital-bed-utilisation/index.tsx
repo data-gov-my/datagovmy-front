@@ -47,6 +47,7 @@ type TableData = {
 
 interface HospitalBedUtilisationProps {
   last_updated: string;
+  next_update: string;
   choropleth: WithData<{
     x: string[];
     y: {
@@ -69,6 +70,7 @@ interface HospitalBedUtilisationProps {
 
 const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = ({
   last_updated,
+  next_update,
   choropleth,
   dropdown,
   hospital,
@@ -139,6 +141,7 @@ const HospitalBedUtilisation: FunctionComponent<HospitalBedUtilisationProps> = (
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="moh" />}
         last_updated={last_updated}
+        next_update={next_update}
       />
       <Container className="min-h-screen">
         {/* How does hospital bed utilisation vary nationally? */}

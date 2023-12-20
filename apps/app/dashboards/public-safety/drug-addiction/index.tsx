@@ -30,6 +30,7 @@ interface DrugAddictionDashboardProps {
   barmeter: Record<BarMeterKeys, BarMeterData[]>;
   barmeter_data_as_of: string;
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: Record<"x" | DemographyKeys, number[]>;
   timeseries_data_as_of: string;
@@ -39,6 +40,7 @@ const DrugAddictionDashboard: FunctionComponent<DrugAddictionDashboardProps> = (
   barmeter,
   barmeter_data_as_of,
   last_updated,
+  next_update,
   params,
   timeseries,
   timeseries_data_as_of,
@@ -57,6 +59,7 @@ const DrugAddictionDashboard: FunctionComponent<DrugAddictionDashboardProps> = (
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         action={<StateDropdown url={routes.DRUG_ADDICTION} currentState={params.state} />}
         agencyBadge={
           <AgencyBadge agency="aadk" icon={<NTRCIcon fillColor={AKSARA_COLOR.DANGER} />} />

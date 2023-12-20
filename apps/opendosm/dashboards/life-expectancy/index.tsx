@@ -42,6 +42,7 @@ export type ChoroplethOptions = {
 
 interface LifeExpectancyProps {
   last_updated: string;
+  next_update: string;
   choropleth: Record<ChoroplethArea, WithData<ChoroplethOptions>>;
   heatmap: WithData<HeatmapData>;
   timeseries: WithData<Record<TimeseriesType, TimeseriesOptions>>;
@@ -50,6 +51,7 @@ interface LifeExpectancyProps {
 
 const LifeExpectancy: FunctionComponent<LifeExpectancyProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
   heatmap,
@@ -65,6 +67,7 @@ const LifeExpectancy: FunctionComponent<LifeExpectancyProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bppd.full")} icon={<PeopleIcon />} isDivision />
         }

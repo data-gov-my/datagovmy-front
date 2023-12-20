@@ -22,6 +22,7 @@ type PassportKeys = "x" | "passport" | "expatriate" | "visit" | "entry";
 
 interface PassportAndPassesProps {
   last_updated: string;
+  next_update: string;
   choropleth: WithData<{
     absolute: {
       x: string[];
@@ -39,6 +40,7 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 
 const PassportAndPasses: FunctionComponent<PassportAndPassesProps> = ({
   last_updated,
+  next_update,
   choropleth,
   timeseries,
   timeseries_callout,
@@ -130,6 +132,7 @@ const PassportAndPasses: FunctionComponent<PassportAndPassesProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="imigresen" />}
       />
 

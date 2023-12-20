@@ -68,6 +68,7 @@ interface VitalStatsTimeseriesOptionsCallout {
 
 interface PopulationDashboardProp {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   population_timeseries: WithData<PopulationTimeseriesOptions>;
   vitalstats_timeseries: WithData<VitalStatsTimeseriesOptions>;
@@ -81,6 +82,7 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
   population_timeseries_callout,
   vitalstats_timeseries_callout,
   last_updated,
+  next_update,
   params,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-population", "agencies", "common"]);
@@ -265,6 +267,7 @@ const PopulationDashboard: FunctionComponent<PopulationDashboardProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         action={<StateDropdown url={routes.POPULATION} currentState={params.state} />}
         agencyBadge={
           <AgencyBadge name={t("division:bppd.full")} icon={<PeopleIcon />} isDivision />

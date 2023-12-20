@@ -9,6 +9,7 @@ import InternationalInvestmentPositionDashboard from "@dashboards/international-
 
 const InternationalInvestmentPosition: Page = ({
   last_updated,
+  next_update,
   meta,
   timeseries,
   timeseries_callout,
@@ -19,6 +20,7 @@ const InternationalInvestmentPosition: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternationalInvestmentPositionDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
@@ -39,6 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-iip", async ()
         agency: "DOSM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
     },

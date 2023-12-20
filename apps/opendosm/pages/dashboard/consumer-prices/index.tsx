@@ -9,6 +9,7 @@ import { GetStaticProps, InferGetServerSidePropsType } from "next";
 const ConsumerPrices = ({
   meta,
   last_updated,
+  next_update,
   bar,
   timeseries,
   timeseries_callouts,
@@ -21,6 +22,7 @@ const ConsumerPrices = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ConsumerPricesDashboard
         last_updated={last_updated}
+        next_update={next_update}
         bar={bar}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
@@ -42,6 +44,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-consumer-price
         agency: "DOSM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       bar: data.bar_chart,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

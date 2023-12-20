@@ -11,6 +11,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const InternetPenetration: Page = ({
   meta,
   last_updated,
+  next_update,
   traffic_timeseries,
   traffic_timeseries_callout,
   penetration_timeseries,
@@ -23,6 +24,7 @@ const InternetPenetration: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <InternetPenetrationDashboard
         last_updated={last_updated}
+        next_update={next_update}
         traffic_timeseries={traffic_timeseries}
         traffic_timeseries_callout={traffic_timeseries_callout}
         penetration_timeseries={penetration_timeseries}
@@ -47,6 +49,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "MCMC",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         traffic_timeseries: data.traffic_timeseries,
         traffic_timeseries_callout: data.traffic_timeseries_callout,
         penetration_timeseries: data.penetration_timeseries,

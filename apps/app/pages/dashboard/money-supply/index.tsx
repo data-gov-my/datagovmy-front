@@ -9,6 +9,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const MoneySupply = ({
   meta,
   last_updated,
+  next_update,
   table_summary,
   timeseries,
   timeseries_callouts,
@@ -20,6 +21,7 @@ const MoneySupply = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <MoneySupplyDashboard
         last_updated={last_updated}
+        next_update={next_update}
         table_summary={table_summary}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
@@ -41,6 +43,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-money-supply",
         agency: "BNM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       table_summary: data.table_summary,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,

@@ -373,7 +373,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   {config?.options?.map((item: FilterDefault, index: number) => (
                     <Dropdown
                       key={item.key}
-                      width="w-fit"
+                      width="w-full md:w-fit min-w-[120px]"
                       anchor={index > 0 ? "right" : "left"}
                       options={item.options.map(option => ({
                         label: translations[option] ?? option,
@@ -381,6 +381,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       }))}
                       selected={filter[item.key]}
                       onChange={e => setFilter(item.key, e)}
+                      enableSearch={item.options.length > 20}
                     />
                   ))}
                 </div>

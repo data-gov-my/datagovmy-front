@@ -15,6 +15,7 @@ const KTMBExplorer: Page = ({
   B_to_A_callout,
   dropdown,
   last_updated,
+  next_update,
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("dashboard-ktmb-explorer");
@@ -29,6 +30,7 @@ const KTMBExplorer: Page = ({
         B_to_A_callout={B_to_A_callout}
         dropdown={dropdown}
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
       />
     </AnalyticsProvider>
@@ -93,6 +95,7 @@ export const getStaticProps: GetStaticProps = withi18n(
             : null,
         dropdown: dropdown,
         last_updated: A_to_B.data_last_updated,
+        next_update: A_to_B.data_next_update ?? null,
         params: params?.service ? { service, origin, destination } : {},
       },
       revalidate: 60 * 60 * 24, // 1 day (in seconds)

@@ -17,6 +17,7 @@ const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface ExchangeRatesDashboardProps {
   last_updated: string;
+  next_update: string;
   bar: any;
   timeseries: any;
   timeseries_callouts: any;
@@ -24,6 +25,7 @@ interface ExchangeRatesDashboardProps {
 
 const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = ({
   last_updated,
+  next_update,
   bar,
   timeseries,
   timeseries_callouts,
@@ -69,6 +71,7 @@ const ExchangeRatesDashboard: FunctionComponent<ExchangeRatesDashboardProps> = (
         header={[t("header"), "dark:text-white"]}
         description={[t("description"), "dark:text-white"]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bipd.full")} icon={<IntegrationDataIcon />} isDivision />
         }

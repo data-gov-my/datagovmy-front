@@ -9,6 +9,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const HouseholdDebt = ({
   meta,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -19,6 +20,7 @@ const HouseholdDebt = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <HouseholdDebtDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
@@ -38,6 +40,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-household-debt
         agency: "BNM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       timeseries_callout: data.timeseries_callout,
     },

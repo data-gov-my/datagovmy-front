@@ -16,6 +16,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 const JoblessClaims: Page = ({
   barmeter,
   last_updated,
+  next_update,
   meta,
   params,
   pyramid,
@@ -36,6 +37,7 @@ const JoblessClaims: Page = ({
       <JoblessClaimsDashboard
         barmeter={barmeter}
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         pyramid={pyramid}
         timeseries={timeseries}
@@ -88,6 +90,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         barmeter: data.barmeter.data,
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state },
         pyramid: data.pyramid_data,
         timeseries: data.timeseries,

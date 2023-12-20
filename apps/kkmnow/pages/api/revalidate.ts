@@ -59,16 +59,16 @@ const validate = (route: string): Promise<string> =>
 const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
   new Promise(async (resolve, reject) => {
     switch (route) {
-      case all_routes.BLOOD_DONATION:
       case all_routes.COVID_19:
       case all_routes.COVID_VACCINATION:
-      case all_routes.PEKA_B40:
-      case all_routes.ORGAN_DONATION:
-      case `/ms-MY${all_routes.BLOOD_DONATION}`:
+      // case all_routes.BLOOD_DONATION:
+      // case all_routes.ORGAN_DONATION:
+      // case all_routes.PEKA_B40:
+      // case `/ms-MY${all_routes.BLOOD_DONATION}`:
+      // case `/ms-MY${all_routes.ORGAN_DONATION}`:
+      // case `/ms-MY${all_routes.PEKA_B40}`:
       case `/ms-MY${all_routes.COVID_19}`:
       case `/ms-MY${all_routes.COVID_VACCINATION}`:
-      case `/ms-MY${all_routes.PEKA_B40}`:
-      case `/ms-MY${all_routes.ORGAN_DONATION}`:
         await res.revalidate(route);
         const result = revalidateWithStates(res, route);
         routes.push.apply(routes, result);
