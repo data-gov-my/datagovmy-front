@@ -12,44 +12,17 @@ import { OptionType } from "datagovmy-ui/types";
 import { Fragment, FunctionComponent, useState } from "react";
 
 type PublishedDataModalProps = {
-  items?: Array<Catalogue>;
+  items: Array<Catalogue> | string;
   show: boolean;
   hide: () => void;
 };
 
-const dummyPublished: Array<Catalogue> = [
-  {
-    id: "commodities_fuelprice_master",
-    catalog_name: "Fuel Price Table",
-    data_as_of: "2023-09-07 00:01:00",
-    description:
-      "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
-    data_source: ["MOF"],
-  },
-  {
-    id: "commodities_fuelprice_master",
-    catalog_name: "Fuel Price Table",
-    data_as_of: "2023-09-07 00:01:00",
-    description:
-      "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
-    data_source: ["MOF"],
-  },
-  {
-    id: "commodities_fuelprice_master",
-    catalog_name: "Fuel Price Table",
-    data_as_of: "2023-09-07 00:01:00",
-    description:
-      "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
-    data_source: ["MOF"],
-  },
-];
-
 export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
-  items = [...dummyPublished, ...dummyPublished],
+  items,
   show,
   hide,
 }) => {
-  const { t, i18n } = useTranslation(["data-request"]);
+  const { t } = useTranslation(["data-request"]);
   return (
     <>
       <Transition show={show} as={Fragment}>
@@ -107,12 +80,23 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
                   </Dialog.Title>
 
                   <div className="flex flex-1 flex-col gap-3 overflow-hidden">
-                    <p className="text-base font-medium">{t("success_modal.subtitle")}</p>
-                    <div className="bg-washed dark:bg-washed-dark hide-scrollbar flex flex-1 flex-col gap-2 overflow-y-auto rounded-xl p-3">
-                      {items.map((dataset, index) => (
-                        <CatalogueCard key={index} dataset={dataset} index={index} />
-                      ))}
-                    </div>
+                    {Array.isArray(items) && Boolean(items.length) ? (
+                      <>
+                        <p className="text-base font-medium">{t("success_modal.subtitle")}</p>
+                        <div className="bg-washed dark:bg-washed-dark hide-scrollbar flex flex-col gap-2 overflow-y-auto rounded-xl p-3">
+                          {items.map((dataset, index) => (
+                            <CatalogueCard key={index} dataset={dataset} index={index} />
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      typeof items === "string" && (
+                        <div className="text-sm">
+                          <p className="">Remark:</p>
+                          <p className="">{items}</p>
+                        </div>
+                      )
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -158,6 +142,10 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
       setLoading(true);
       const updatedValidation = Object.entries(data).map(([key, value]) => {
         if (typeof value === "string") {
+          if (key === "institution") {
+            setValidation(key, false);
+            return [key, true];
+          }
           if (value) {
             setValidation(key, false);
             return [key, true];
@@ -277,7 +265,6 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                           </div>
                           <div className="flex">
                             <Input
-                              required
                               type="text"
                               name="institution"
                               className="w-full"

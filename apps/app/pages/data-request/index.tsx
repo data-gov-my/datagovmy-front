@@ -3,15 +3,19 @@ import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
+import { Catalogue } from "datagovmy-ui/data-catalogue";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Agency, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export type DataRequestStatus = "under_review" | "rejected" | "in_progress" | "data_published";
+export type DataRequestStatus = "under_review" | "rejected" | "data_published";
 
 export type DataRequestItem = {
   ticket_id: number;
+  date_submitted: string;
+  date_under_review: string | null;
+  date_completed: string | null;
   name: string;
   email: string;
   institution: string;
@@ -20,6 +24,8 @@ export type DataRequestItem = {
   agency: Agency;
   purpose_of_request: string;
   status: DataRequestStatus;
+  remark: string;
+  published_data: Array<Catalogue>;
 };
 
 const DataRequest: Page = ({
@@ -32,7 +38,7 @@ const DataRequest: Page = ({
 
   return (
     <>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata title={t("site.title")} description={t("site.description")} keywords={""} />
       <WindowProvider>
         <DataRequestDashboard query={query} total_requests={total_requests} items={items} />
       </WindowProvider>

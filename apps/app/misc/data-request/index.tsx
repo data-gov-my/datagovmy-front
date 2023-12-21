@@ -19,6 +19,7 @@ import {
   XCircleIcon,
   CheckCircleIcon,
   ArrowUpRightIcon,
+  BellAlertIcon,
 } from "@heroicons/react/20/solid";
 import { OptionType } from "datagovmy-ui/types";
 import Table, { TableConfig } from "datagovmy-ui/charts/table";
@@ -27,6 +28,7 @@ import { clx } from "datagovmy-ui/helpers";
 import { PublishedDataModal, RequestDataModal } from "./modal";
 import { useRouter } from "next/router";
 import { debounce } from "lodash";
+import { DateTime } from "luxon";
 
 interface DataRequestDashboardProps {
   query: any;
@@ -39,7 +41,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   total_requests,
   items,
 }) => {
-  const { t, i18n } = useTranslation(["data-request", "catalogue", "agencies"]);
+  const { t } = useTranslation(["data-request", "catalogue", "agencies"]);
 
   const STATUS_OPTIONS: OptionType[] = [
     {
@@ -49,10 +51,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     {
       label: t("status.under_review"),
       value: "under_review",
-    },
-    {
-      label: t("status.in_progress"),
-      value: "in_progress",
     },
     {
       label: t("status.data_published"),
@@ -125,6 +123,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     {
       accessorKey: "dataset_description",
       id: "dataset_description",
+      enableSorting: false,
       className: "max-sm:max-w-[300px] md:max-w-[400px] truncate",
       header: t("table.description"),
     },
@@ -134,6 +133,41 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       header: t("data-request:table.data_owner"),
       accessorFn({ agency }) {
         return t(`agencies:${agency.toLowerCase()}.abbr`);
+      },
+    },
+    {
+      accessorKey: "date_submitted",
+      id: "date_submitted",
+      header: t("data-request:table.date_created"),
+      accessorFn({ date_submitted }) {
+        return DateTime.fromISO(date_submitted, { locale: "en-MY" }).toFormat("D");
+      },
+    },
+    {
+      id: "subscribe",
+      enableSorting: false,
+      header: t("data-request:table.subscribe"),
+      className: "flex flex-col items-center",
+      cell: ({ row, getValue }) => {
+        return (
+          <>
+            {row.original.status === "under_review" ? (
+              <Button variant="primary" className={clx("flex w-fit items-center gap-1")}>
+                <BellAlertIcon className="h-4 w-4" />
+                <p>Follow</p>
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                className={clx(
+                  "flex items-center gap-1 hover:cursor-default hover:bg-transparent dark:hover:bg-transparent"
+                )}
+              >
+                <BellAlertIcon className="h-4 w-4 text-transparent" />
+              </Button>
+            )}
+          </>
+        );
       },
     },
   ];
@@ -147,19 +181,17 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             title={t(`status.${status}`)}
             trigger={open => (
               <div
-                className={clx(
-                  "flex w-fit items-center gap-1",
-                  status !== "under_review" && "hover:cursor-pointer",
-                  baseClass
-                )}
+                className={clx("flex w-fit items-center gap-1", "hover:cursor-pointer", baseClass)}
                 onClick={
                   status === "data_published"
                     ? () => {
                         setData("show_published", true);
-                        setData("published_data", row.original.published_data);
+                        if (row.original.published_data.length) {
+                          setData("published_data", row.original.published_data);
+                        } else {
+                          setData("published_data", row.original.remark);
+                        }
                       }
-                    : status === "under_review"
-                    ? () => {}
                     : () => open()
                 }
               >
@@ -168,16 +200,22 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             )}
           >
             {close => (
-              <div className="min-h-[100px] bg-white p-3 dark:bg-black">
-                {status === "rejected" && row.original.rejection_reason && (
+              <div className=" bg-white p-3 dark:bg-black">
+                {status === "rejected" && row.original.remark && (
                   <>
-                    <h6 className="capitalize text-black">
-                      {t(`status.${status}`, { context: "modal" })}:
-                    </h6>
-                    <p>{row.original.rejection_reason}</p>
+                    <p className="text-sm">{t(`status.${status}`, { context: "modal" })}:</p>
+                    <p className="text-sm">{row.original.remark}</p>
                   </>
                 )}
-                {status === "in_progress" && <p>{t(`status.${status}`, { context: "modal" })}</p>}
+                {status === "under_review" && (
+                  <div className="flex flex-col gap-3 text-sm">
+                    <p>{t(`status.${status}`, { context: "modal" })}</p>
+                    <div>
+                      <p>Remark:</p>
+                      <p>{row.original.remark}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </Modal>
@@ -185,14 +223,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       );
     };
     switch (status) {
-      case "in_progress":
-        return base(
-          <>
-            <ClockIcon color={AKSARA_COLOR.ORANGE} className="h-5 w-5" />
-            <p className={`text-[${AKSARA_COLOR.ORANGE}]`}>{t("status.in_progress")}</p>
-            <ArrowUpRightIcon className={`h-5 w-5 text-[${AKSARA_COLOR.ORANGE}]`} />
-          </>
-        );
       case "rejected":
         return base(
           <>
@@ -206,6 +236,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
           <>
             <ClockIcon className="text-outlineHover h-5 w-5" />
             <p className={`text-outlineHover`}>{t("status.under_review")}</p>
+            <ArrowUpRightIcon className="text-outlineHover h-5 w-5" />
           </>
         );
       case "data_published":
