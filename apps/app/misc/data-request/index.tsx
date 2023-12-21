@@ -68,6 +68,8 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     modal_loading: false,
     show_request: false,
     show_published: false,
+    show_subscribe: false,
+    subscribe_ticket_id: null,
     published_data: [],
     search_query: query.ticket_id ? `id: ${query.ticket_id}` : query.query ? query.query : "",
     page: 1,
@@ -152,7 +154,14 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
         return (
           <>
             {row.original.status === "under_review" ? (
-              <Button variant="primary" className={clx("flex w-fit items-center gap-1")}>
+              <Button
+                onClick={() => {
+                  setData("show_subscribe", true);
+                  setData("subscribe_ticket_id", row.original.ticket_id);
+                }}
+                variant="primary"
+                className={clx("flex w-fit items-center gap-1")}
+              >
                 <BellAlertIcon className="h-4 w-4" />
                 <p>Follow</p>
               </Button>
@@ -378,7 +387,20 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
         </Section>
       </Container>
 
-      <RequestDataModal show={data.show_request} hide={() => setData("show_request", false)} />
+      <RequestDataModal
+        show={data.show_request}
+        hide={() => setData("show_request", false)}
+        type="REQUEST_DATA"
+      />
+      <RequestDataModal
+        show={data.show_subscribe}
+        hide={() => {
+          setData("show_subscribe", false);
+          setData("subscribe_ticket_id", null);
+        }}
+        type="SUBSCRIBE_TICKET"
+        ticket_id={data.subscribe_ticket_id}
+      />
 
       <PublishedDataModal
         show={data.show_published}

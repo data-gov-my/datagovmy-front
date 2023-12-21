@@ -108,12 +108,27 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
   );
 };
 
+type ConditionalRequestDataModalProps =
+  | {
+      type: "REQUEST_DATA";
+      ticket_id?: never;
+    }
+  | {
+      type: "SUBSCRIBE_TICKET";
+      ticket_id: number;
+    };
+
 type RequestDataModalProps = {
   show: boolean;
   hide: () => void;
-};
+} & ConditionalRequestDataModalProps;
 
-export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ show, hide }) => {
+export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
+  show,
+  hide,
+  type,
+  ticket_id,
+}) => {
   const { t, i18n } = useTranslation(["data-request", "agencies"]);
   const [modalState, setModalState] = useState<"FORM" | "SUCCESS">("FORM");
   const [submissionLoading, setLoading] = useState(false);
@@ -122,10 +137,14 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
     name: "",
     email: "",
     institution: "",
-    dataset_title: "",
-    dataset_description: "",
-    agency: "",
-    purpose_of_request: "",
+    ...(type === "REQUEST_DATA"
+      ? {
+          dataset_title: "",
+          dataset_description: "",
+          agency: "",
+          purpose_of_request: "",
+        }
+      : {}),
   });
 
   const { data: validation, setData: setValidation } = useData(
@@ -202,7 +221,10 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                 <Dialog.Panel
                   className={clx(
                     "border-outline shadow-floating dark:border-outlineHover-dark flex w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black",
-                    modalState === "SUCCESS" ? "h-60" : "h-full max-h-[800px]"
+                    type === "REQUEST_DATA" && modalState === "SUCCESS"
+                      ? "h-60"
+                      : "h-full max-h-[800px]",
+                    type === "SUBSCRIBE_TICKET" && "h-fit"
                   )}
                 >
                   {modalState === "FORM" && (
@@ -212,7 +234,11 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                         className="border-outline flex items-start text-black dark:text-white"
                       >
                         <div className="flex flex-1 flex-col gap-1.5">
-                          <p className="text-lg font-bold">{t("request_modal.title")}</p>
+                          <p className="text-lg font-bold">
+                            {type === "REQUEST_DATA" && t("request_modal.title")}
+                            {type === "SUBSCRIBE_TICKET" &&
+                              t("request_modal.title", { context: "subscribe" })}
+                          </p>
                         </div>
                         <Button
                           variant="reset"
@@ -226,7 +252,11 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                       </Dialog.Title>
 
                       <div className="flex flex-1 flex-col gap-3 overflow-hidden">
-                        <p className="text-base font-medium">{t("request_modal.subtitle")}</p>
+                        <p className="text-base font-medium">
+                          {type === "REQUEST_DATA" && t("request_modal.subtitle")}
+                          {type === "SUBSCRIBE_TICKET" &&
+                            t("request_modal.subtitle", { context: "subscribe" })}
+                        </p>
                         <form
                           className="hide-scrollbar flex flex-1 flex-col gap-3 overflow-y-scroll text-sm font-medium"
                           method="post"
@@ -278,80 +308,96 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                               validation={validation.institution}
                             />
                           </div>
-                          <div className="flex">
-                            <Input
-                              required
-                              type="text"
-                              name="dataset_title"
-                              className="w-full"
-                              label={t("forms.dataset_title")}
-                              placeholder={t("forms.dataset_title")}
-                              value={data.dataset_title}
-                              onChange={e => {
-                                setData("dataset_title", e);
-                                setValidation("dataset_title", false);
-                              }}
-                              validation={validation.dataset_title}
-                            />
-                          </div>
-                          <div className="flex w-full flex-col gap-2">
-                            <Label
-                              required
-                              name="dataset_description"
-                              label={t("forms.dataset_description")}
-                            />
-                            <Textarea
-                              required
-                              placeholder={t("forms.dataset_description_placeholder")}
-                              rows={2}
-                              className={
-                                validation.dataset_description
-                                  ? "border-danger border-2"
-                                  : "border-outline"
-                              }
-                              value={data.dataset_description}
-                              onChange={e => {
-                                setData("dataset_description", e.target.value);
-                                setValidation("dataset_description", false);
-                              }}
-                            />
-                            <p className="text-danger text-xs">{validation.dataset_description}</p>
-                          </div>
 
-                          <div className="flex flex-col gap-2">
-                            <Label required label={t("forms.agency")} />
-                            <Dropdown
-                              anchor="left"
-                              width="w-full"
-                              className={validation.agency ? "border-danger border-2" : ""}
-                              options={agencies}
-                              placeholder={t("forms.agency")}
-                              selected={agencies.find(e => e.value === data.agency) ?? undefined}
-                              onChange={e => {
-                                setData("agency", e.value);
-                                setValidation("agency", false);
-                              }}
-                            />
-                            <p className="text-danger text-xs">{validation.agency}</p>
-                          </div>
-                          <div className="flex w-full flex-col gap-2">
-                            <Label required name="purpose_of_request" label={t("forms.purpose")} />
-                            <Textarea
-                              placeholder={t("forms.purpose_placeholder")}
-                              rows={2}
-                              className={
-                                validation.purpose_of_request
-                                  ? "border-danger border-2"
-                                  : "border-outline"
-                              }
-                              value={data.purpose_of_request}
-                              onChange={e => {
-                                setData("purpose_of_request", e.target.value);
-                                setValidation("purpose_of_request", false);
-                              }}
-                            />
-                            <p className="text-danger text-xs">{validation.purpose_of_request}</p>
-                          </div>
+                          {type === "REQUEST_DATA" && (
+                            <>
+                              <div className="flex">
+                                <Input
+                                  required
+                                  type="text"
+                                  name="dataset_title"
+                                  className="w-full"
+                                  label={t("forms.dataset_title")}
+                                  placeholder={t("forms.dataset_title")}
+                                  value={data.dataset_title}
+                                  onChange={e => {
+                                    setData("dataset_title", e);
+                                    setValidation("dataset_title", false);
+                                  }}
+                                  validation={validation.dataset_title}
+                                />
+                              </div>
+                              <div className="flex w-full flex-col gap-2">
+                                <Label
+                                  required
+                                  name="dataset_description"
+                                  label={t("forms.dataset_description")}
+                                />
+                                <Textarea
+                                  required
+                                  placeholder={t("forms.dataset_description_placeholder")}
+                                  rows={2}
+                                  className={
+                                    validation.dataset_description
+                                      ? "border-danger border-2"
+                                      : "border-outline"
+                                  }
+                                  value={data.dataset_description}
+                                  onChange={e => {
+                                    setData("dataset_description", e.target.value);
+                                    setValidation("dataset_description", false);
+                                  }}
+                                />
+                                <p className="text-danger text-xs">
+                                  {validation.dataset_description}
+                                </p>
+                              </div>
+
+                              <div className="flex flex-col gap-2">
+                                <Label required label={t("forms.agency")} />
+                                <Dropdown
+                                  enableSearch={true}
+                                  anchor="left"
+                                  width="w-full"
+                                  className={validation.agency ? "border-danger border-2" : ""}
+                                  options={agencies}
+                                  placeholder={t("forms.agency")}
+                                  selected={
+                                    agencies.find(e => e.value === data.agency) ?? undefined
+                                  }
+                                  onChange={e => {
+                                    setData("agency", e.value);
+                                    setValidation("agency", false);
+                                  }}
+                                />
+                                <p className="text-danger text-xs">{validation.agency}</p>
+                              </div>
+                              <div className="flex w-full flex-col gap-2">
+                                <Label
+                                  required
+                                  name="purpose_of_request"
+                                  label={t("forms.purpose")}
+                                />
+                                <Textarea
+                                  placeholder={t("forms.purpose_placeholder")}
+                                  rows={2}
+                                  className={
+                                    validation.purpose_of_request
+                                      ? "border-danger border-2"
+                                      : "border-outline"
+                                  }
+                                  value={data.purpose_of_request}
+                                  onChange={e => {
+                                    setData("purpose_of_request", e.target.value);
+                                    setValidation("purpose_of_request", false);
+                                  }}
+                                />
+                                <p className="text-danger text-xs">
+                                  {validation.purpose_of_request}
+                                </p>
+                              </div>
+                            </>
+                          )}
 
                           <Button
                             variant="primary"
@@ -363,16 +409,24 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                                   message: string;
                                 };
                                 if (isValid.ok) {
-                                  const response = await post(
-                                    `/data-request/?language=${
-                                      SHORT_LANG[i18n.language as keyof typeof SHORT_LANG]
-                                    }`,
-                                    data
-                                  );
+                                  if (type === "REQUEST_DATA") {
+                                    const response = await post(
+                                      `/data-request/?language=${
+                                        SHORT_LANG[i18n.language as keyof typeof SHORT_LANG]
+                                      }`,
+                                      data
+                                    );
 
-                                  setLoading(false);
-                                  setModalState("SUCCESS");
-                                  reset();
+                                    setLoading(false);
+                                    setModalState("SUCCESS");
+                                    reset();
+                                  }
+
+                                  if (type === "SUBSCRIBE_TICKET") {
+                                    setLoading(false);
+                                    setModalState("SUCCESS");
+                                    reset();
+                                  }
                                 }
                               } catch (error) {
                                 setLoading(false);
@@ -412,9 +466,15 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
 
                       <div className="flex flex-col items-center justify-center gap-3 pb-8 text-center">
                         <CheckCircleIcon className="text-primary h-11 w-11" />
-                        <p className="text-lg font-bold">{t("request_modal.success_title")}</p>
+                        <p className="text-lg font-bold">
+                          {type === "REQUEST_DATA" && t("request_modal.success_title")}
+                          {type === "SUBSCRIBE_TICKET" &&
+                            t("request_modal.success_title", { context: "subscribe" })}
+                        </p>
                         <p className="text-dim text-base font-medium">
-                          {t("request_modal.success_description")}
+                          {type === "REQUEST_DATA" && t("request_modal.success_description")}
+                          {type === "SUBSCRIBE_TICKET" &&
+                            t("request_modal.success_description", { context: "subscribe" })}
                         </p>
                       </div>
                     </>
