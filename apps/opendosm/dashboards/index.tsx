@@ -21,6 +21,7 @@ type Dashboard = {
 
 type View = {
   id: string;
+  type: "dashboard";
   view_count: number;
 };
 
