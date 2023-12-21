@@ -312,7 +312,7 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
             </p>
           </div>
           <div className="relative w-full">
-            <p className="h-6 text-dim transition-transform group-hover:translate-y-6 motion-reduce:transform">
+            <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
               {`${numFormat(views.find(e => e.id === item.id)?.view_count ?? 0, "compact")} ${t(
                 "common:common.views",
                 {
@@ -320,7 +320,7 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
                 }
               )}`}
             </p>
-            <p className="text-primary dark:text-primary-dark absolute bottom-0 lg:-bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
+            <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
               {t("common:components.click_to_explore")}
             </p>
           </div>
