@@ -34,12 +34,14 @@ interface DataRequestDashboardProps {
   query: any;
   total_requests: number;
   items: Array<DataRequestItem>;
+  dropdown: Array<{ acronym: string; name: string }>;
 }
 
 const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   query,
   total_requests,
   items,
+  dropdown,
 }) => {
   const { t } = useTranslation(["data-request", "catalogue", "agencies"]);
 
@@ -388,6 +390,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
         show={data.show_request}
         hide={() => setData("show_request", false)}
         type="REQUEST_DATA"
+        dropdown={dropdown}
       />
       <RequestDataModal
         show={data.show_subscribe}

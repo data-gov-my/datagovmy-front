@@ -33,6 +33,7 @@ const DataRequest: Page = ({
   items,
   query,
   total_requests,
+  dropdown,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["data-request"]);
 
@@ -40,7 +41,12 @@ const DataRequest: Page = ({
     <>
       <Metadata title={t("site.title")} description={t("site.description")} keywords={""} />
       <WindowProvider>
-        <DataRequestDashboard query={query} total_requests={total_requests} items={items} />
+        <DataRequestDashboard
+          query={query}
+          total_requests={total_requests}
+          items={items}
+          dropdown={dropdown}
+        />
       </WindowProvider>
     </>
   );
@@ -55,6 +61,10 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         ...query,
       });
 
+      const { data: dropdown } = await get("data-request/agencies/list", {
+        language: SHORT_LANG[locale as keyof typeof SHORT_LANG],
+      });
+
       return {
         notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
         props: {
@@ -66,6 +76,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           },
           items: data,
           query: query ?? {},
+          dropdown: dropdown,
           total_requests: data.length,
         },
       };

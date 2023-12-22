@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 import { post } from "datagovmy-ui/api";
 import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
-import { AgencyLink, SHORT_LANG } from "datagovmy-ui/constants";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { Catalogue, CatalogueCard } from "datagovmy-ui/data-catalogue";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -113,10 +113,12 @@ type ConditionalRequestDataModalProps =
   | {
       type: "REQUEST_DATA";
       ticket_id?: never;
+      dropdown: Array<{ acronym: string; name: string }>;
     }
   | {
       type: "SUBSCRIBE_TICKET";
       ticket_id: number;
+      dropdown?: never;
     };
 
 type RequestDataModalProps = {
@@ -124,16 +126,12 @@ type RequestDataModalProps = {
   hide: () => void;
 } & ConditionalRequestDataModalProps;
 
-type ErrorType = {
-  detail?: string;
-  email?: string;
-};
-
 export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
   show,
   hide,
   type,
   ticket_id,
+  dropdown,
 }) => {
   const { t, i18n } = useTranslation(["data-request", "agencies"]);
   const [modalState, setModalState] = useState<"FORM" | "SUCCESS">("FORM");
@@ -162,10 +160,12 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
     Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
 
-  const agencies: OptionType[] = Object.keys(AgencyLink).map(agency => ({
-    label: t(`agencies:${agency}.abbr`),
-    value: agency,
-  }));
+  const agencies: OptionType[] = dropdown
+    ? dropdown?.map(item => ({
+        label: `${item.name} (${item.acronym})`,
+        value: item.acronym,
+      }))
+    : [];
 
   const validateInput = async () =>
     new Promise((resolve, reject) => {
