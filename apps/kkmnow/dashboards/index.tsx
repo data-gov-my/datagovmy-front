@@ -1,9 +1,9 @@
 import { AgencyBadge, At, Container, Hero, Section, Slider } from "datagovmy-ui/components";
 import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { FunctionComponent, ReactNode, useMemo } from "react";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { WithData } from "datagovmy-ui/types";
+import { Agency, WithData } from "datagovmy-ui/types";
 import { routes } from "@lib/routes";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
@@ -19,6 +19,8 @@ import {
   HospitalBedIcon,
 } from "datagovmy-ui/icons/kkmnow";
 import { DateTime } from "luxon";
+import { get } from "datagovmy-ui/api";
+import AgencyIcon from "datagovmy-ui/icons/agency";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -40,8 +42,14 @@ interface StatProps {
 type Dashboard = {
   id: string;
   name: string;
-  division: string;
+  agency: Agency;
   route: string;
+};
+
+type View = {
+  id: string;
+  type: "dashboard";
+  view_count: number;
 };
 
 interface DashboardIndexProps {
@@ -272,12 +280,26 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
 
 const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
   const { t, i18n } = useTranslation(["dashboards"]);
+  const [views, setViews] = useState<View[]>([]);
+
+  useEffect(() => {
+    const fetchViews = () =>
+      get("/view-count/", { type: "dashboard", views_only: true }).then(({ data }) =>
+        setViews(data)
+      );
+    fetchViews();
+  }, []);
 
   return (
     <At href={item.route} locale={i18n.language} prefetch={false}>
       <div className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
         <div className="relative flex items-center gap-3">
-          <p className="text-dim font-medium text-sm">{t(`agencies:${item.division}.abbr`)}</p>
+          <AgencyIcon
+            agency={item.agency}
+            className="h-6 w-6"
+            fillColor={item.id === "dashboard-covid-vaccination" ? AKSARA_COLOR.GREEN : undefined}
+          />
+          <p className="text-dim font-medium text-sm">{t(`agencies:${item.agency}.abbr`)}</p>
           <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-100 lg:opacity-0 transition-transform group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transform-none" />
         </div>
         <div className="flex grow flex-col items-start gap-3 overflow-hidden">
@@ -290,8 +312,15 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
             </p>
           </div>
           <div className="relative w-full">
-            <p className="text-dim transition-transform group-hover:translate-y-6 h-6 motion-reduce:transform-none"></p>
-            <p className="text-primary dark:text-primary-dark absolute bottom-0 lg:-bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
+            <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
+              {`${numFormat(views.find(e => e.id === item.id)?.view_count ?? 0, "compact")} ${t(
+                "common:common.views",
+                {
+                  count: views.find(e => e.id === item.id)?.view_count ?? 0,
+                }
+              )}`}
+            </p>
+            <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
               {t("common:components.click_to_explore")}
             </p>
           </div>
