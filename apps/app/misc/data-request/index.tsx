@@ -133,9 +133,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       accessorKey: "agency",
       id: "agency",
       header: t("data-request:table.data_owner"),
-      accessorFn({ agency }) {
-        return t(`agencies:${agency.toLowerCase()}.abbr`);
-      },
     },
     {
       accessorKey: "date_submitted",

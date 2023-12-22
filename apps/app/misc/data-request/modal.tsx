@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { AxiosError } from "axios";
 import { post } from "datagovmy-ui/api";
 import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
@@ -123,6 +124,11 @@ type RequestDataModalProps = {
   hide: () => void;
 } & ConditionalRequestDataModalProps;
 
+type ErrorType = {
+  detail?: string;
+  email?: string;
+};
+
 export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
   show,
   hide,
@@ -147,6 +153,11 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
       : {}),
   });
 
+  const { data: errorData, setData: setError } = useData({
+    message: "",
+    code: "",
+  });
+
   const { data: validation, setData: setValidation } = useData(
     Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
@@ -159,6 +170,8 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
   const validateInput = async () =>
     new Promise((resolve, reject) => {
       setLoading(true);
+      setError("code", "");
+      setError("message", "");
       const updatedValidation = Object.entries(data).map(([key, value]) => {
         if (typeof value === "string") {
           if (key === "institution") {
@@ -423,12 +436,36 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
                                   }
 
                                   if (type === "SUBSCRIBE_TICKET") {
+                                    const response = await post(
+                                      `data-request/${ticket_id}/subscription/`,
+                                      {
+                                        ...data,
+                                        language: i18n.language,
+                                      }
+                                    );
+
                                     setLoading(false);
                                     setModalState("SUCCESS");
                                     reset();
                                   }
                                 }
                               } catch (error) {
+                                if (error instanceof AxiosError) {
+                                  setError("code", error.code);
+                                  setError(
+                                    "message",
+                                    "Something went wrong with the submission. Please try again later."
+                                  );
+                                } else {
+                                  setError("code", "");
+                                  if ((error as ErrorType).detail) {
+                                    setError("message", (error as ErrorType).detail);
+                                  }
+                                  if ((error as ErrorType).email) {
+                                    setError("message", (error as ErrorType).email);
+                                  }
+                                }
+
                                 setLoading(false);
                               }
                             }}
@@ -440,6 +477,9 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
                               <ChevronRightIcon className="w-4.5 h-4.5 text-white" />
                             )}
                           </Button>
+                          {errorData.message && (
+                            <p className="text-danger text-sm">{errorData.message}</p>
+                          )}
                         </form>
                       </div>
                     </>
