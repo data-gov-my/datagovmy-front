@@ -19,9 +19,7 @@ const instance = (base: BaseURL, headers: Record<string, string> = {}) => {
   };
   const BROWSER_RUNTIME = typeof window !== "undefined";
 
-  const authorization = !BROWSER_RUNTIME
-    ? process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN
-    : parseCookies(document.cookie).rolling_token;
+  const authorization = process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN;
 
   const config: AxiosRequestConfig = {
     baseURL: urls[base] || base,

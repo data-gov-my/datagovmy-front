@@ -451,18 +451,18 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
                                 }
                               } catch (error) {
                                 if (error instanceof AxiosError) {
-                                  setError("code", error.code);
-                                  setError(
-                                    "message",
-                                    "Something went wrong with the submission. Please try again later."
-                                  );
-                                } else {
-                                  setError("code", "");
-                                  if ((error as ErrorType).detail) {
-                                    setError("message", (error as ErrorType).detail);
-                                  }
-                                  if ((error as ErrorType).email) {
-                                    setError("message", (error as ErrorType).email);
+                                  if (error.response?.data.detail) {
+                                    setError("code", error.response?.status);
+                                    setError("message", error.response?.data.detail);
+                                  } else if (error.response?.data.email) {
+                                    setError("code", error.response?.status);
+                                    setError("message", error.response?.data.email);
+                                  } else {
+                                    setError("code", error.code);
+                                    setError(
+                                      "message",
+                                      "Something went wrong with the submission. Please try again later."
+                                    );
                                   }
                                 }
 
