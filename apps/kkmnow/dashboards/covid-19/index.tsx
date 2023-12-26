@@ -402,6 +402,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       value: snapshot_graphic.data.cases_local,
                       delta: snapshot_graphic.data.cases_local_annot,
                       inverse: true,
+                      precision: 0,
                       icon: (
                         <Image
                           src="/static/images/stages/virus.svg"
@@ -416,6 +417,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       value: snapshot_graphic.data.cases_import,
                       delta: snapshot_graphic.data.cases_import_annot,
                       inverse: true,
+                      precision: 0,
                     },
                   ],
                   col_2: [
@@ -495,6 +497,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       name: t("col3_title1"),
                       value: snapshot_graphic.data.cases_recovered,
                       delta: snapshot_graphic.data.cases_recovered_annot,
+                      precision: 0,
                       icon: (
                         <Image
                           src="/static/images/stages/recovered.svg"
@@ -508,6 +511,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       name: t("col3_title2"),
                       value: snapshot_graphic.data.deaths,
                       delta: snapshot_graphic.data.deaths_annot,
+                      precision: 0,
                       inverse: true,
                       icon: (
                         <Image
@@ -522,6 +526,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       name: t("col3_title3"),
                       value: snapshot_graphic.data.deaths_bid,
                       delta: snapshot_graphic.data.deaths_bid_annot,
+                      precision: 0,
                       inverse: true,
                     },
                   ],
@@ -817,6 +822,10 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     <Table
                       className="text-sm text-right table-sticky-first"
                       data={snapshot_table.data}
+                      enableRowPin={true}
+                      defaultRowPin={{
+                        top: ["0"],
+                      }}
                       config={menu.config}
                       freeze={["state"]}
                       precision={{

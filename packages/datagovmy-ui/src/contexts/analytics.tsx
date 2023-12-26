@@ -1,6 +1,7 @@
 import { post } from "../lib/api";
 import { MetaPage } from "../../types";
 import { FunctionComponent, ReactNode, createContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 /**
  * Realtime view count for dashboard & data-catalogue.
@@ -51,9 +52,16 @@ export const AnalyticsContext = createContext<
 
 export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, children }) => {
   const [data, setData] = useState<AnalyticsResult<"dashboard" | "data-catalogue"> | undefined>();
+  const router = useRouter();
   // auto-increment view count for id
   useEffect(() => {
-    track(meta.id, meta.type, "view_count");
+    const handleRouteChange = (url: string) => {
+      track(meta.id, meta.type, "view_count");
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
   }, []);
 
   // increment activity count
