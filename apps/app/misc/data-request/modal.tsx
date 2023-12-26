@@ -59,7 +59,7 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
               >
                 <Dialog.Panel
                   className={
-                    "border-outline shadow-floating  dark:border-outlineHover-dark flex h-full max-h-[600px] w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black"
+                    "border-outline shadow-floating  dark:border-outlineHover-dark flex max-h-[600px] w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black"
                   }
                 >
                   <Dialog.Title
