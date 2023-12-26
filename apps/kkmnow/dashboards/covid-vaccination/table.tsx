@@ -217,6 +217,10 @@ const COVIDVaccinationTrends: FunctionComponent<COVIDVaccinationTrendsProps> = (
                     className="text-sm text-right table-sticky-first"
                     data={table.data}
                     config={menu.config}
+                    enableRowPin={true}
+                    defaultRowPin={{
+                      top: ["0"],
+                    }}
                     freeze={["state"]}
                   />
                 </Panel>
