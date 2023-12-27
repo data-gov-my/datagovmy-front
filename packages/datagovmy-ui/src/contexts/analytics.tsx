@@ -1,7 +1,7 @@
-import { post } from "../lib/api";
 import { MetaPage } from "../../types";
 import { FunctionComponent, ReactNode, createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { DateTime } from "luxon";
 
 /**
  * Realtime view count for dashboard & data-catalogue.
@@ -26,7 +26,7 @@ export type Meta = Omit<MetaPage["meta"], "type"> & { type: "dashboard" | "data-
 type AnalyticsResult<T extends "dashboard" | "data-catalogue"> = {
   id: string;
   type: T;
-  view_count: number;
+  total_views: number;
   download_csv: T extends "dashboard" ? never : number;
   download_parquet: T extends "dashboard" ? never : number;
   download_png: T extends "dashboard" ? never : number;
@@ -62,13 +62,48 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, []);
+  }, [router.events, meta]);
 
   // increment activity count
-  const track = (id: string, type: Meta["type"], metric: MetricType) => {
-    post(`/view-count/?id=${id}&type=${type}&metric=${metric}`, null, "api")
-      .then(response => setData(response.data))
-      .catch(e => console.error(e));
+  const track = async (id: string, type: Meta["type"], metric: MetricType) => {
+    try {
+      const response = await fetch(
+        `https://api.tinybird.co/v0/events?name=${
+          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
+        }_dgmy_views`,
+        {
+          method: "POST",
+          headers: {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+          },
+          body: JSON.stringify({
+            id: id,
+            timestamp: DateTime.now().toSQL({ includeOffset: false }),
+            type: type,
+          }),
+        }
+      );
+
+      // Get updated view-count after POST request completed
+      const updateResponse = await fetch(
+        `https://api.tinybird.co/v0/pipes/${
+          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
+        }_dgmy_views_id_pipe.json?page_id=${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+          },
+        }
+      );
+      const { data } = await updateResponse.json();
+      setData(data.find((item: any) => item.id === id && item.type === type));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
