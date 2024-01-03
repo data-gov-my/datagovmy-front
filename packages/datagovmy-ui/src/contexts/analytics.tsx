@@ -68,7 +68,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=${
           process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-        }_dgmy_views`,
+        }_dgmy_views&wait=true`,
         {
           method: "POST",
           headers: {
