@@ -59,14 +59,8 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
   const router = useRouter();
   // auto-increment view count for id
   useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      track(meta.id, meta.type, "view_count");
-    };
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, []);
+    track(meta.id, meta.type, "view_count");
+  }, [router.asPath]);
 
   // Tinybird increment view count
   const track = async (id: string, type: Meta["type"], metric: MetricType) => {
