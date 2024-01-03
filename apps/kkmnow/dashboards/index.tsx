@@ -285,7 +285,7 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
     const fetchViews = async () => {
       try {
         const response = await fetch(
-          `https://api.tinybird.co/v0/pipes/${
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
             process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
           }_dgmy_views_id_pipe.json`,
           {

@@ -56,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           ...query,
         }),
         fetch(
-          `https://api.tinybird.co/v0/pipes/${
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
             process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
           }_opendosm_pub_downloads_pipe.json`,
           {

@@ -72,7 +72,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
   const track = async (id: string, type: Meta["type"], metric: MetricType) => {
     try {
       const response = await fetch(
-        `https://api.tinybird.co/v0/events?name=${
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=${
           process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
         }_dgmy_views`,
         {
@@ -92,7 +92,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
       // Get updated view-count after POST request completed
       const updatedResponse = await fetch(
-        `https://api.tinybird.co/v0/pipes/${
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
           process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
         }_dgmy_views_id_pipe.json?page_id=${id}`,
         {
@@ -107,7 +107,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
       if (type === "data-catalogue") {
         const downloadsResponse = await fetch(
-          `https://api.tinybird.co/v0/pipes/${
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
             process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
           }_dgmy_dc_downlaods_id_pipe.json?catalogue_id=${id}`,
           {
@@ -159,7 +159,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
   const updateDownloadCount = async (id: string, format: DownloadFileFormat) => {
     try {
       const response = await fetch(
-        `https://api.tinybird.co/v0/events?name=${
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=${
           process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
         }_dgmy_dc_downloads`,
         {
