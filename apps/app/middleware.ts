@@ -3,7 +3,14 @@ import { get } from "@vercel/edge-config";
 
 // Triggers on relevant pages. Authentication to be removed at launch
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/data-catalogue/:path*", "/community", "/helpdesk"],
+  matcher: [
+    "/",
+    "/dashboard/:path*",
+    "/data-catalogue/:path*",
+    "/community",
+    "/helpdesk",
+    "/data-request",
+  ],
 };
 
 export async function middleware(request: NextRequest) {
