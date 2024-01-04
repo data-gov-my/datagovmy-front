@@ -55,22 +55,25 @@ const Stages: FunctionComponent<StagesProps> = ({
         <div className="mt-6 grid h-full grid-cols-1 lg:grid-cols-3">
           {/* Col-1 */}
           <ul className="m-auto space-y-10">
-            {data?.col_1.map(({ name, icon, value, delta, unit, inverse }: StatsProps) => {
-              return (
-                value && (
-                  <li key={name}>
-                    <Stats
-                      name={name}
-                      value={value}
-                      delta={delta}
-                      icon={icon}
-                      unit={unit}
-                      inverse={inverse}
-                    />
-                  </li>
-                )
-              );
-            })}
+            {data?.col_1.map(
+              ({ name, icon, value, delta, unit, inverse, precision }: StatsProps) => {
+                return (
+                  value && (
+                    <li key={name}>
+                      <Stats
+                        name={name}
+                        value={value}
+                        delta={delta}
+                        icon={icon}
+                        unit={unit}
+                        inverse={inverse}
+                        precision={precision}
+                      />
+                    </li>
+                  )
+                );
+              }
+            )}
           </ul>
           {/* Col-2 */}
           <div className="flex flex-col justify-center lg:flex-row">
@@ -83,23 +86,26 @@ const Stages: FunctionComponent<StagesProps> = ({
             />
             <div className="w-full lg:flex-grow">
               <ul className="flex flex-row flex-wrap justify-evenly gap-12 py-7 lg:mx-auto lg:block lg:w-fit lg:gap-0 lg:space-y-10 lg:py-0">
-                {data?.col_2.map(({ name, icon, value, delta, unit, inverse }: StatsProps) => {
-                  return (
-                    value !== null && (
-                      <li key={name}>
-                        <Stats
-                          name={name}
-                          value={value}
-                          delta={delta}
-                          icon={icon}
-                          unit={unit}
-                          iconPlacement="left"
-                          inverse={inverse}
-                        />
-                      </li>
-                    )
-                  );
-                })}
+                {data?.col_2.map(
+                  ({ name, icon, value, delta, unit, inverse, precision }: StatsProps) => {
+                    return (
+                      value !== null && (
+                        <li key={name}>
+                          <Stats
+                            name={name}
+                            value={value}
+                            delta={delta}
+                            icon={icon}
+                            unit={unit}
+                            iconPlacement="left"
+                            inverse={inverse}
+                            precision={precision}
+                          />
+                        </li>
+                      )
+                    );
+                  }
+                )}
               </ul>
             </div>
             <Bracket
@@ -114,22 +120,25 @@ const Stages: FunctionComponent<StagesProps> = ({
           </div>
           {/* Col-3 */}
           <ul className="m-auto space-y-10">
-            {data?.col_3.map(({ name, icon, value, delta, unit, inverse }: StatsProps) => {
-              return (
-                value && (
-                  <li key={name}>
-                    <Stats
-                      name={name}
-                      value={value}
-                      delta={delta}
-                      icon={icon}
-                      unit={unit}
-                      inverse={inverse}
-                    />
-                  </li>
-                )
-              );
-            })}
+            {data?.col_3.map(
+              ({ name, icon, value, delta, unit, inverse, precision }: StatsProps) => {
+                return (
+                  value && (
+                    <li key={name}>
+                      <Stats
+                        name={name}
+                        value={value}
+                        delta={delta}
+                        icon={icon}
+                        unit={unit}
+                        inverse={inverse}
+                        precision={precision}
+                      />
+                    </li>
+                  )
+                );
+              }
+            )}
           </ul>
         </div>
       </div>
@@ -150,6 +159,7 @@ interface StatsProps {
   delta: number;
   unit?: string;
   inverse?: boolean;
+  precision?: number;
 }
 
 const Stats: FunctionComponent<StatsProps> = ({
@@ -161,6 +171,7 @@ const Stats: FunctionComponent<StatsProps> = ({
   delta = 0,
   unit = undefined,
   inverse = false,
+  precision,
 }) => {
   return (
     <div
@@ -191,7 +202,12 @@ const Stats: FunctionComponent<StatsProps> = ({
             )}
           >
             {!unit && appendPlusMinus(delta)}
-            {delta && numFormat(delta, "standard", 1)}
+            {delta &&
+              numFormat(
+                delta,
+                "standard",
+                precision !== undefined && typeof precision === "number" ? precision : 1
+              )}
             {unit}
           </small>
         </div>
