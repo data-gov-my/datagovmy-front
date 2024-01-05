@@ -1,11 +1,10 @@
 import { useTheme } from "next-themes";
-import { Precision } from "../../../types";
 import { CatalogueContext } from "../../contexts/catalogue";
 import { CATALOGUE_COLORS } from "../../lib/constants";
-import { numFormat } from "../../lib/helpers";
 import { ChartDataset } from "chart.js";
 import { default as dynamic } from "next/dynamic";
 import { FunctionComponent, useContext, useMemo } from "react";
+import { Precision } from "../../../types/data-catalogue";
 
 const Line = dynamic(() => import("../line"), { ssr: false });
 interface CatalogueLineProps {

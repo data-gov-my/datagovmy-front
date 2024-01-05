@@ -6,8 +6,8 @@ export { default as CatalogueMethodology } from "./Show/methodology";
 export { default as CatalogueWidget } from "./Widget";
 
 // Type export
-export type { Catalogue } from "./Main";
+export type {} from "./Main";
 export type {} from "./Card";
 export type {} from "./Preview";
-export type { IDataViz } from "./Show";
+export type {} from "./Show";
 export type {} from "./Widget";

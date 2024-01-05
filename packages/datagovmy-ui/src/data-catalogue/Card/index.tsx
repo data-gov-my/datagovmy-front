@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useRef, useState } from "react";
-import { Catalogue } from "../Main";
+import { Catalogue } from "../../../types/data-catalogue";
 import { At, Card, Tooltip } from "datagovmy-ui/components";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
 import { clx, toDate } from "datagovmy-ui/helpers";
@@ -50,14 +50,14 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
       >
         <div className="flex flex-col gap-1.5">
           {isTruncated && !alternateStyle ? (
-            <Tooltip tip={dataset.catalog_name}>
+            <Tooltip tip={dataset.title}>
               {() => (
                 <p
                   ref={titleRef}
                   className="truncate text-lg font-bold text-black dark:text-white"
-                  title={dataset.catalog_name}
+                  title={dataset.title}
                 >
-                  {dataset.catalog_name}
+                  {dataset.title}
                 </p>
               )}
             </Tooltip>
@@ -65,9 +65,9 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
             <p
               ref={titleRef}
               className="truncate text-lg font-bold text-black dark:text-white"
-              title={dataset.catalog_name}
+              title={dataset.title}
             >
-              {dataset.catalog_name}
+              {dataset.title}
             </p>
           )}
 

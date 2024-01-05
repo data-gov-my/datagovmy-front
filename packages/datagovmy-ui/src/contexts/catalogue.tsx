@@ -1,4 +1,4 @@
-import { DCChartKeys, DownloadOptions } from "../../types";
+import { DownloadOptions } from "../../types";
 import { toast } from "../components/Toast";
 import { useAnalytics, useExport, useTranslation } from "../hooks";
 import { download, exportAs } from "../lib/helpers";
@@ -19,6 +19,7 @@ import { CloudArrowDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/o
 import { ChartTypeRegistry } from "chart.js";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { GeoChoroplethRef } from "../charts/geochoropleth";
+import { DCChartKeys } from "../../types/data-catalogue";
 
 export type DatasetType = {
   type: DCChartKeys;

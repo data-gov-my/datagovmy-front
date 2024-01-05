@@ -1,4 +1,3 @@
-import { FilterDefault } from "../../../types";
 import { OptionType, isOptionType } from "./types";
 import { CodeBlock, Dropdown, Modal, ModalInterface, Panel, Tabs } from "../../components";
 import { useData, useTranslation, useWatch } from "../../hooks";
@@ -13,6 +12,7 @@ import {
   useState,
 } from "react";
 import { get } from "../../lib/api";
+import { DCFilter, FilterDefault } from "../../../types/data-catalogue";
 
 export interface EmbedInterface {
   open: () => void;
@@ -20,10 +20,10 @@ export interface EmbedInterface {
 
 interface CatalogueEmbedProps {
   uid: string;
-  options?: FilterDefault[] | null;
+  options?: DCFilter[] | null;
   defaultOption?: any;
   translations?: any;
-  selectedVizKey?: string | undefined;
+  selectedVizKey: string;
   ref: ForwardedRef<EmbedInterface>;
 }
 
@@ -32,7 +32,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
     const modalRef = useRef<ModalInterface>(null);
     const { t, i18n } = useTranslation(["catalogue"]);
     const { data, setData } = useData(defaultOption);
-    const [filters, setFilters] = useState<FilterDefault[] | null | undefined>(options);
+    const [filters, setFilters] = useState<DCFilter[] | null | undefined>(options);
     const [language, setLanguage] = useState<OptionType | undefined>(
       languages.find(item => item.value === i18n.language)
     );
@@ -51,7 +51,7 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
             if (isOptionType(value)) return [key, value.value];
             return [key, value as string];
           }),
-        ["currViz", selectedVizKey ?? ""],
+        ["visual", selectedVizKey ?? ""],
       ]);
 
       embed.search = search_params.toString();
@@ -129,19 +129,19 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
                       options={languages}
                     />
                   </div>
-                  {filters?.map((item: FilterDefault, index: number) => (
-                    <div className="flex w-full items-center justify-between" key={item.key}>
-                      <p className="font-mono text-sm">{item.key}</p>
+                  {filters?.map((item, index: number) => (
+                    <div className="flex w-full items-center justify-between" key={item.name}>
+                      <p className="font-mono text-sm">{item.name}</p>
                       <Dropdown
-                        key={item.key}
+                        key={item.name}
                         width="w-fit"
                         anchor="right"
                         options={item.options.map(option => ({
                           label: translations[option] ?? option,
                           value: option,
                         }))}
-                        selected={data[item.key]}
-                        onChange={e => _setData(item.key, e)}
+                        selected={data[item.name]}
+                        onChange={e => _setData(item.name, e)}
                       />
                     </div>
                   ))}

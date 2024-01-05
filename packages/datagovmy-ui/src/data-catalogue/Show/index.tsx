@@ -1,4 +1,4 @@
-import { DocumentArrowDownIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { DocumentArrowDownIcon } from "@heroicons/react/24/solid";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
 import CatalogueCode from "datagovmy-ui/charts/partials/code";
 import { SampleCode } from "datagovmy-ui/charts/partials/code";
@@ -8,26 +8,21 @@ import {
   Card,
   Container,
   Dropdown,
-  Markdown,
+  Metadata,
   Search,
   Section,
   Sidebar,
-  Slider,
   Tooltip,
 } from "datagovmy-ui/components";
-import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
-import { CatalogueContext, DatasetType } from "datagovmy-ui/contexts/catalogue";
+import { useRouter } from "next/router";
+import { SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
+import { CatalogueContext, CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
-import { clx, interpolate, numFormat, toDate } from "datagovmy-ui/helpers";
+import { clx, interpolate, numFormat, recurDataMapping, toDate } from "datagovmy-ui/helpers";
 import { useAnalytics, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
-import {
-  DCChartKeys,
-  DCConfig,
-  DownloadOption,
-  FilterDefault,
-  OptionType,
-} from "datagovmy-ui/types";
+import { DCVariable, DCDataViz } from "../../../types/data-catalogue";
+import { DownloadOption } from "datagovmy-ui/types";
 import sum from "lodash/sum";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -37,12 +32,13 @@ import {
   ReactNode,
   SetStateAction,
   useContext,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import CataloguePreview from "../Preview";
-import CatalogueCard from "../Card";
 import DCMethodology from "./methodology";
+import { AnalyticsProvider, Meta } from "../../contexts/analytics";
 
 /**
  * Catalogue Show
@@ -81,89 +77,121 @@ const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
   ssr: false,
 });
 
+type CatalogueShowWrapperProps = {
+  meta: Meta;
+  params: {
+    id: string;
+    visual?: string;
+  };
+  data: DCVariable;
+  query: any;
+};
+
+const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
+  params,
+  data,
+  meta,
+  query,
+}) => {
+  const [selectedViz, setSelectedViz] = useState<DCDataViz>(
+    data.dataviz_set.find(item => item.dataviz_id === query.visual) ?? data.dataviz_set[0]
+  );
+  const router = useRouter();
+
+  const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
+    const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
+      recurDataMapping(key, value, table_data)
+    );
+    return {
+      ...Object.fromEntries(set.map(array => [array[0][0], array[0][1]])),
+    };
+  };
+
+  const dataset: DatasetType = useMemo(() => {
+    return {
+      type: selectedViz.chart_type,
+      chart: selectedViz.chart_type !== "TABLE" ? extractChartDataset(data.data, selectedViz) : {},
+      table: data.data,
+      meta: {
+        unique_id: data.id,
+        title: data.title,
+        desc: data.description,
+      },
+    };
+  }, [selectedViz, query]);
+
+  return (
+    <AnalyticsProvider meta={meta}>
+      <Metadata
+        title={selectedViz.chart_type !== "TABLE" ? selectedViz.title : dataset.meta.title}
+        description={dataset.meta.desc.replace(/^(.*?)]/, "")}
+        keywords={""}
+      />
+      <CatalogueProvider
+        dataset={dataset}
+        urls={{
+          csv: data.link_csv,
+          parquet: data.link_parquet,
+        }}
+      >
+        <CatalogueShow
+          key={router.asPath}
+          params={params}
+          query={query}
+          data={data}
+          selectedViz={selectedViz}
+          setSelectedViz={setSelectedViz}
+        />
+      </CatalogueProvider>
+    </AnalyticsProvider>
+  );
+};
+
 export interface CatalogueShowProps {
-  options: string[];
   params: {
     id: string;
   };
-  config: DCConfig;
-  dataset: DatasetType;
-  explanation: {
-    caveat: string;
-    methodology: string;
-    publication?: string;
-    related_datasets: Array<{ id: string; title: string; description: string }>;
-  };
-  metadata: {
-    data_as_of: string;
-    url: {
-      csv?: string;
-      parquet?: string;
-      [key: string]: string | undefined;
-    };
-    source: string[];
-    definitions: Array<{
-      id: number;
-      unique_id?: string;
-      name: string;
-      desc: string;
-      title: string;
-    }>;
-    next_update: string;
-    description: string;
-    last_updated: string;
-  };
-  urls: {
-    [key: string]: string;
-  };
-  translations: {
-    [key: string]: string;
-  };
-  catalogueId?: string;
-  dataviz: Array<IDataViz>;
-  selectedViz: IDataViz | undefined;
-  setSelectedViz: Dispatch<SetStateAction<undefined | IDataViz>>;
-}
-
-export interface IDataViz {
-  translation_key: string;
-  chart_type: DCChartKeys;
-  chart_filters: {
-    SLICE_BY: Array<string>;
-    precision: number;
-  };
-  chart_variables: {
-    parents: Array<string>;
-    operation: string;
-    format: { x: string; y: Array<string> | string };
-    config?: Record<string, unknown>;
-  };
+  data: DCVariable;
+  selectedViz: DCDataViz;
+  setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
+  query: any;
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
-  options,
   params,
-  config,
-  dataset,
-  explanation,
-  metadata,
-  urls,
-  translations,
-  catalogueId,
-  dataviz,
+  data,
   selectedViz,
   setSelectedViz,
+  query,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const availableOptions: OptionType[] = options.map(value => ({
-    label: t(value),
-    value: value,
-  }));
-  const [show, setShow] = useState<OptionType>(availableOptions[0]);
+  const { config, ...viz } = selectedViz;
   const embedRef = useRef<EmbedInterface>(null);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
-  const { filter, setFilter } = useFilter(config.context, { id: params.id }, true);
-  const { downloads } = useContext(CatalogueContext);
+  const { filter, setFilter } = useFilter(
+    Object.fromEntries(
+      data.dropdown.map(item => [
+        item.name,
+        query[item.name]
+          ? item.options.find(opt => query[item.name] === opt)
+            ? {
+                value: query[item.name],
+                label: data.translations[query[item.name]] ?? query[item.name],
+              }
+            : {
+                value: item.options[0],
+                label: data.translations[item.options[0]] ?? item.options[0],
+              }
+          : {
+              value: item.selected,
+              label: data.translations[item.selected] ?? item.selected,
+            },
+      ])
+    ),
+    { id: params.id },
+    true
+  );
+  const { downloads, dataset } = useContext(CatalogueContext);
   const _downloads = Object.values(downloads).flatMap(option => option);
   const { result, track } = useAnalytics(dataset);
 
@@ -174,10 +202,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "INTRADAY":
         return (
           <CatalogueTimeseries
-            translations={translations}
+            translations={data.translations}
             config={{
-              precision: selectedViz?.chart_filters.precision ?? config.precision,
-              range: filter?.range?.value || "DAILY",
+              precision: config.precision,
+              range: config?.range || "DAILY",
             }}
           />
         );
@@ -186,11 +214,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "STACKED_BAR":
         return (
           <WindowProvider>
-            <CatalogueBar config={config} translations={translations} />
+            <CatalogueBar config={config} translations={data.translations} />
           </WindowProvider>
         );
       case "CHOROPLETH":
-        return <CatalogueChoropleth config={selectedViz?.chart_variables.config} />;
+        return <CatalogueChoropleth config={selectedViz?.config} />;
       case "GEOCHOROPLETH":
         return <CatalogueGeoChoropleth config={config} />;
       case "GEOPOINT":
@@ -198,18 +226,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       case "GEOJSON":
         return <CatalogueGeojson config={config} />;
       case "PYRAMID":
-        return <CataloguePyramid config={config} translations={translations} />;
+        return <CataloguePyramid config={config} translations={data.translations} />;
       case "HEATTABLE":
-        return <CatalogueHeatmap config={config} translations={translations} />;
+        return <CatalogueHeatmap config={config} translations={data.translations} />;
       case "SCATTER":
         return (
           <CatalogueScatter
             className="mx-auto aspect-square w-full lg:h-[512px] lg:w-1/2"
-            translations={translations}
+            translations={data.translations}
           />
         );
       case "LINE":
-        return <CatalogueLine config={config} translations={translations} />;
+        return <CatalogueLine config={config} translations={data.translations} />;
       default:
         break;
     }
@@ -221,35 +249,45 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     switch (dataset.type) {
       case "TIMESERIES":
       case "STACKED_AREA":
-        return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze, (item, key) => {
-          if (key === "x")
-            return toDate(
-              item[key],
-              SHORT_PERIOD_FORMAT[filter.range.value as keyof typeof SHORT_PERIOD_FORMAT],
-              i18n.language
-            );
-          else return item[key];
-        });
+        return UNIVERSAL_TABLE_SCHEMA(
+          columns,
+          data.translations,
+          config.freeze_columns,
+          (item, key) => {
+            if (key === "x")
+              return toDate(
+                item[key],
+                SHORT_PERIOD_FORMAT[config.range as keyof typeof SHORT_PERIOD_FORMAT],
+                i18n.language
+              );
+            else return item[key];
+          }
+        );
       case "INTRADAY":
-        return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze, (item, key) => {
-          if (key === "x")
-            return toDate(
-              item[key],
-              SHORT_PERIOD_FORMAT["INTRADAY" as keyof typeof SHORT_PERIOD_FORMAT],
-              i18n.language
-            );
-          else return item[key];
-        });
+        return UNIVERSAL_TABLE_SCHEMA(
+          columns,
+          data.translations,
+          config.freeze_columns,
+          (item, key) => {
+            if (key === "x")
+              return toDate(
+                item[key],
+                SHORT_PERIOD_FORMAT["INTRADAY" as keyof typeof SHORT_PERIOD_FORMAT],
+                i18n.language
+              );
+            else return item[key];
+          }
+        );
       case "GEOPOINT":
       case "TABLE":
         return UNIVERSAL_TABLE_SCHEMA(
           columns,
-          translations,
-          config.freeze,
+          data.translations,
+          config.freeze_columns,
           (item, key) => item[key]
         );
       default:
-        return UNIVERSAL_TABLE_SCHEMA(columns, translations, config.freeze);
+        return UNIVERSAL_TABLE_SCHEMA(columns, data.translations, config.freeze_columns);
     }
   };
 
@@ -263,14 +301,19 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     ]?.scrollIntoView(scrollOptions);
   };
 
+  const urls = {
+    csv: data.link_csv,
+    parquet: data.link_parquet,
+  };
+
   return (
     <div>
       <Container className="minh-screen max-w-full">
         <Sidebar
           categories={Object.entries(
             getSideBarCollection({
-              publications: Boolean(explanation.publication),
-              related_datasets: Boolean(explanation.related_datasets.length),
+              publications: Boolean(data.publication),
+              related_datasets: Boolean(data.related_datasets.length),
             })[i18n.language]
           ).map(([category, subcategory]) => [category, Object.keys(subcategory)])}
           onSelect={selected => {
@@ -292,15 +335,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   i18n.language === "en-GB" ? "Table & Charts" : "Jadual & Carta"
                 ] = ref)
               }
-              title={
-                <h4
-                  className="select-none"
-                  onDoubleClick={() => console.log("yeah")}
-                  data-testid="catalogue-title"
-                >
-                  {dataset.meta.title}
-                </h4>
-              }
+              title={<h4 data-testid="catalogue-title">{dataset.meta.title}</h4>}
               description={
                 <p
                   className="text-dim whitespace-pre-line text-base"
@@ -310,16 +345,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 </p>
               }
               className=""
-              date={metadata.data_as_of}
+              date={data.data_as_of}
               menu={
                 <>
-                  {/* <Dropdown
-                    width="w-fit"
-                    sublabel={<EyeIcon className="h-4 w-4" />}
-                    selected={availableOptions.find(e => e.value === show.value)}
-                    options={availableOptions}
-                    onChange={e => setShow(e)}
-                  /> */}
                   <Dropdown
                     className={"flex lg:hidden"}
                     width="w-fit"
@@ -375,21 +403,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               <div
                 className={clx(
                   "flex gap-3 pb-3",
-                  config.options !== null ? "justify-between" : "justify-end"
+                  Boolean(data.dropdown.length) ? "justify-between" : "justify-end"
                 )}
               >
                 <div className={clx("flex gap-2")}>
-                  {config?.options?.map((item: FilterDefault, index: number) => (
+                  {data.dropdown.map((item, index) => (
                     <Dropdown
-                      key={item.key}
+                      key={item.name}
                       width="w-full md:w-fit min-w-[120px]"
                       anchor={index > 0 ? "right" : "left"}
                       options={item.options.map(option => ({
-                        label: translations[option] ?? option,
+                        label: data.translations[option] ?? option,
                         value: option,
                       }))}
-                      selected={filter[item.key]}
-                      onChange={e => setFilter(item.key, e)}
+                      selected={filter[item.name]}
+                      onChange={e => setFilter(item.name, e)}
                       enableSearch={item.options.length > 20}
                     />
                   ))}
@@ -407,7 +435,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                     className={clx("table-stripe table-default table-sticky-header")}
                     responsive={dataset.type === "TABLE"}
                     data={dataset.table}
-                    freeze={config.freeze}
+                    freeze={config.freeze_columns}
                     precision={config.precision}
                     search={
                       dataset.type === "TABLE"
@@ -429,64 +457,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 </div>
               </div>
 
-              {/* Chart */}
-              {/* <div className={clx(show.value === "chart" ? "block" : "hidden", "space-y-2")}>
-                {renderChart()}
-              </div> */}
-
-              {/* Table */}
-              {/* {dataset.table && (
-                <div
-                  className={clx(
-                    dataset.type !== "TABLE" && "mx-auto max-h-[500px] overflow-auto",
-                    show.value === "table" ? "block" : "hidden"
-                  )}
-                >
-                  <Table
-                    className={clx("table-stripe table-default table-sticky-header")}
-                    responsive={dataset.type === "TABLE"}
-                    data={dataset.table}
-                    freeze={config.freeze}
-                    precision={config.precision}
-                    search={
-                      dataset.type === "TABLE"
-                        ? onSearch => (
-                            <Search
-                              className="w-full border-b lg:w-auto"
-                              onChange={query => onSearch(query ?? "")}
-                            />
-                          )
-                        : undefined
-                    }
-                    config={generateTableSchema()}
-                    enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 15 : false}
-                    data-testid="catalogue-table"
-                  />
-                </div>
-              )} */}
-
-              {/* Date Slider (optional) */}
-              {/* {config.dates !== null && (
-                <Slider
-                  type="single"
-                  value={config.dates?.options.indexOf(
-                    config.context[config.dates.key]?.value || config.dates.default
-                  )}
-                  data={config.dates.options}
-                  period={SHORT_PERIOD[config.dates.interval]}
-                  onChange={e =>
-                    config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
-                  }
-                />
-              )} */}
-
               <CatalogueEmbed
                 uid={dataset.meta.unique_id}
                 ref={embedRef}
-                options={config.options}
+                options={data.dropdown}
                 defaultOption={filter}
-                translations={translations}
-                selectedVizKey={selectedViz?.translation_key}
+                translations={data.translations}
+                selectedVizKey={selectedViz.dataviz_id}
               />
 
               {/* Views / download count*/}
@@ -518,47 +495,63 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 </span>
               </p>
 
-              {dataviz && dataviz.length > 0 && (
-                <div className="hide-scrollbar relative flex h-full w-full items-stretch gap-[0.5rem] overflow-x-scroll">
-                  <div className="sticky left-0 top-0 flex h-full w-[200px] max-w-[200px] flex-1 flex-col justify-start gap-2 lg:sticky lg:w-[calc(100%_/_5.5)] lg:flex-initial">
-                    <Card
-                      className={clx(
-                        "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-full max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_5.5)]",
-                        selectedViz === undefined && "border-primary dark:border-primary-dark"
-                      )}
-                      onClick={() => {
-                        setSelectedViz(undefined);
-                        scrollToChart();
-                      }}
-                    >
-                      <div className="flex h-full w-full items-center justify-center">
-                        <TableCellsIcon className="text-outlineHover-dark h-24 w-24 stroke-[0.5px]" />
-                      </div>
-                    </Card>
-                    <p className="h-full text-center text-xs">Table</p>
+              {data.dataviz_set && data.dataviz_set.length > 1 && (
+                <Section>
+                  <div className="relative flex h-full w-full items-stretch gap-[0.5rem] overflow-x-scroll">
+                    <div className="sticky left-0 top-0 flex h-full w-[200px] max-w-[200px] flex-1 flex-col justify-start gap-2 lg:sticky lg:w-[calc(100%_/_5.5)] lg:flex-initial">
+                      <Card
+                        className={clx(
+                          "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-h-[110px] w-full max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_5.5)]",
+                          selectedViz.chart_type === "TABLE" &&
+                            "border-primary dark:border-primary-dark"
+                        )}
+                        onClick={() => {
+                          setSelectedViz(
+                            data.dataviz_set.find(item => item.chart_type === "TABLE") ??
+                              data.dataviz_set[0]
+                          );
+                          scrollToChart();
+                        }}
+                      >
+                        <div className="flex h-full w-full items-center justify-center">
+                          <TableCellsIcon className="text-outlineHover-dark h-24 w-24 stroke-[0.5px]" />
+                        </div>
+                      </Card>
+                      <p className="h-full text-center text-xs">Table</p>
+                    </div>
+                    <div className="hide-scrollbar flex flex-1 gap-[0.5rem] overflow-x-auto pb-4">
+                      {data.dataviz_set
+                        .filter(viz => viz.chart_type !== "TABLE")
+                        .map(viz => {
+                          return (
+                            <CataloguePreview
+                              dataviz={viz}
+                              dataset={dataset}
+                              urls={urls}
+                              translations={data.translations}
+                              selectedViz={selectedViz}
+                              setSelectedViz={setSelectedViz}
+                              scrollToChart={scrollToChart}
+                            />
+                          );
+                        })}
+                    </div>
                   </div>
-                  <div className="flex flex-1 gap-[0.5rem] overflow-x-auto pb-4">
-                    {[...dataviz, ...dataviz].map(viz => {
-                      return (
-                        <CataloguePreview
-                          dataviz={viz}
-                          dataset={dataset}
-                          urls={urls}
-                          translations={translations}
-                          config={config}
-                          selectedViz={selectedViz}
-                          setSelectedViz={setSelectedViz}
-                          scrollToChart={scrollToChart}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
+                </Section>
               )}
             </Section>
 
             {/* Methodology */}
-            <DCMethodology explanation={explanation} isGUI={false} scrollRef={scrollRef} />
+            <DCMethodology
+              explanation={{
+                methodology: data.methodology,
+                caveat: data.caveat,
+                publication: data.publication,
+                related_datasets: data.related_datasets,
+              }}
+              isGUI={false}
+              scrollRef={scrollRef}
+            />
 
             {/* Metadata */}
             <Section
@@ -575,23 +568,19 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   {/* Dataset description */}
                   <div className="space-y-3">
                     <h5>{t("meta_desc")}</h5>
-                    <p className="text-dim leading-relaxed">{interpolate(metadata.description)}</p>
+                    <p className="text-dim leading-relaxed">{interpolate(data.description)}</p>
                   </div>
                   <div className="space-y-3">
                     {/* Variable definitions */}
                     <h5>{t("meta_def")}</h5>
-                    {metadata.definitions?.length > 0 && (
+                    {data.fields?.length > 0 && (
                       <>
                         <ul className="text-dim ml-6 list-outside list-disc md:hidden">
-                          {metadata.definitions?.map(item => (
+                          {data.fields?.map(item => (
                             <li key={item.title}>
                               <span className="flex gap-x-1">
-                                {Boolean(item.unique_id) ? (
-                                  <At href={`/data-catalogue/${item.unique_id}`}>{item.title}</At>
-                                ) : (
-                                  item.title
-                                )}
-                                <Tooltip tip={interpolate(item.desc)} />
+                                {item.title}
+                                <Tooltip tip={interpolate(item.description)} />
                               </span>
                             </li>
                           ))}
@@ -599,23 +588,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                         <div className="hidden md:block">
                           <Table
                             className="table-slate table-default-slate md:w-full"
-                            data={metadata.definitions.map((item: any) => {
-                              const raw = item.desc;
+                            data={data.fields.map(item => {
+                              const raw = item.description;
                               const [type, definition] = [
                                 raw.substring(raw.indexOf("[") + 1, raw.indexOf("]")),
                                 raw.substring(raw.indexOf("]") + 1),
                               ];
 
                               return {
-                                id: item.id,
-                                uid: item.unique_id,
                                 variable: item.name,
                                 variable_name: item.title,
                                 data_type: type,
                                 definition: interpolate(definition),
                               };
                             })}
-                            config={METADATA_TABLE_SCHEMA(t, dataset.type === "TABLE")}
+                            config={METADATA_TABLE_SCHEMA(t, true)}
                           />
                         </div>
                       </>
@@ -628,7 +615,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       className="text-dim whitespace-pre-line"
                       data-testid="catalogue-last-updated"
                     >
-                      {toDate(metadata.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
+                      {toDate(data.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
                     </p>
                   </div>
                   {/* Next update */}
@@ -644,14 +631,14 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   >
                     <h5>{t("common:common.next_update", { date: "" })}</h5>
                     <p className="text-dim" data-testid="catalogue-next-update">
-                      {toDate(metadata.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
+                      {toDate(data.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
                     </p>
                   </div>
                   {/* Data Source */}
                   <div className="space-y-3">
                     <h5>{t("meta_source")}</h5>
                     <ul className="text-dim ml-6 list-outside list-disc">
-                      {metadata.source?.map(source => (
+                      {data.data_source?.map(source => (
                         <li key={source}>{source}</li>
                       ))}
                     </ul>
@@ -660,15 +647,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   <div className="space-y-3">
                     <h5>{t("meta_url")}</h5>
                     <ul className="text-dim ml-6 list-outside list-disc">
-                      {Object.entries(metadata.url).map(([key, url]: [string, unknown]) =>
+                      {Object.entries({
+                        csv: data.link_csv,
+                        parquet: data.link_parquet,
+                      }).map(([key, url]: [string, unknown]) =>
                         url ? (
                           <li key={url as string}>
                             <a
                               href={url as string}
                               className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
-                              onClick={() =>
-                                track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
-                              }
+                              // onClick={() =>
+                              //   track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
+                              // }
                             >
                               {url as string}
                             </a>
@@ -762,12 +752,12 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             >
               <CatalogueCode
                 type={dataset.type}
-                url={urls?.parquet || urls[Object.keys(urls)[0]]}
+                url={urls.parquet || urls[Object.keys(urls)[0] as "csv" | "parquet"]}
               />
             </Section>
 
             {/* API Request Code */}
-            {config.exclude_openapi ? (
+            {data.exclude_openapi ? (
               <Section
                 title={t("sample_query.section_title")}
                 ref={ref =>
@@ -807,8 +797,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 className="mx-auto w-full py-12"
               >
                 <SampleCode
-                  catalogueId={catalogueId}
-                  url={urls?.parquet || urls[Object.keys(urls)[0]]}
+                  catalogueId={data.id}
+                  url={urls.parquet || urls[Object.keys(urls)[0] as "csv" | "parquet"]}
                   route="data-catalogue"
                 />
               </Section>
@@ -910,4 +900,4 @@ const getSideBarCollection: (
   };
 };
 
-export default CatalogueShow;
+export default CatalogueShowWrapper;

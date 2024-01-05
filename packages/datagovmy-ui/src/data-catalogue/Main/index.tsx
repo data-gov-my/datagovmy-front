@@ -29,19 +29,12 @@ import {
   useContext,
 } from "react";
 import CatalogueCard from "../Card";
+import { Catalogue } from "../../../types/data-catalogue";
 
 /**
  * Catalogue Index
  * @overview Status: Live
  */
-
-export type Catalogue = {
-  id: string;
-  catalog_name: string;
-  description?: string;
-  data_as_of?: string;
-  data_source?: Array<string>;
-};
 
 interface CatalogueIndexProps {
   query: Record<string, string>;
@@ -56,7 +49,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   sources,
   site,
 }) => {
-  const { t, i18n } = useTranslation(["catalogue", "common"]);
+  const { t } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { size } = useContext(WindowContext);

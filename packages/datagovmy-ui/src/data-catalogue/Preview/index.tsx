@@ -1,11 +1,10 @@
 import { Dispatch, FunctionComponent, ReactNode, SetStateAction } from "react";
-import { IDataViz } from "../Show";
 import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { Card } from "datagovmy-ui/components";
 import dynamic from "next/dynamic";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, recurDataMapping } from "datagovmy-ui/helpers";
-import { DCConfig } from "datagovmy-ui/types";
+import { DCConfig, DCDataViz } from "../../../types/data-catalogue";
 
 /**
  * Catalogue Preview
@@ -46,15 +45,14 @@ const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
 });
 
 interface CataloguePreviewProps {
-  dataviz: undefined | IDataViz;
+  dataviz: undefined | DCDataViz;
   dataset: DatasetType;
   urls: {
     [key: string]: string;
   };
   translations: Record<string, string>;
-  config: DCConfig;
-  selectedViz: IDataViz | undefined;
-  setSelectedViz: Dispatch<SetStateAction<undefined | IDataViz>>;
+  selectedViz: DCDataViz;
+  setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
   scrollToChart: () => void;
 }
 
@@ -65,7 +63,6 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   selectedViz,
   setSelectedViz,
   translations,
-  config,
   scrollToChart,
 }) => {
   if (!dataviz) {
@@ -83,7 +80,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
             className={"h-[94px] w-full"}
             isPreview={true}
             config={{
-              precision: dataviz?.chart_filters.precision ?? config.precision,
+              precision: dataviz?.config.precision,
               range: "DAILY",
             }}
           />
@@ -101,7 +98,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
           <CatalogueChoropleth
             className={"h-[94px] w-full"}
             isPreview={true}
-            config={dataviz?.chart_variables.config}
+            config={dataviz.config}
           />
         );
       // case "GEOCHOROPLETH":
@@ -128,8 +125,8 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
     }
   };
 
-  const extractChartDataset = (table_data: Record<string, any>[], currentViz: IDataViz) => {
-    const set = Object.entries(currentViz?.chart_variables.format).map(([key, value]) =>
+  const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
+    const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
       recurDataMapping(key, value, table_data)
     );
     return {
@@ -148,10 +145,10 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
     <CatalogueProvider dataset={_dataset} urls={urls}>
       <div className="flex w-[200px] max-w-[200px] flex-col justify-start gap-2 lg:w-[calc(100%_/_4.5)]">
         <Card
-          key={`${dataviz.translation_key}`}
+          key={`${dataviz.dataviz_id}`}
           className={clx(
             "border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 h-[110px] min-w-full  max-w-[200px] p-2 transition-colors lg:min-w-[calc(100%_/_4.5)]",
-            selectedViz?.translation_key === dataviz.translation_key &&
+            selectedViz?.dataviz_id === dataviz.dataviz_id &&
               "border-primary dark:border-primary-dark"
           )}
           onClick={() => {
@@ -161,9 +158,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
         >
           {renderChart()}
         </Card>
-        <p className="text-center text-xs">
-          {dataviz.translation_key ? translations[dataviz.translation_key] : ""}
-        </p>
+        <p className="text-center text-xs">{dataviz.title}</p>
       </div>
     </CatalogueProvider>
   );

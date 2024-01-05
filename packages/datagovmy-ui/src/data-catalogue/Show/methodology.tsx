@@ -1,9 +1,9 @@
 import { FunctionComponent, MutableRefObject } from "react";
 import { Button, Markdown, Section, Textarea } from "../../components";
 import { useData, useTranslation } from "../../hooks";
-import { CatalogueShowProps } from ".";
 import CatalogueCard from "../Card";
 import { clx } from "../../lib/helpers";
+import { DCVariable } from "../../../types/data-catalogue";
 
 type MethodologyGUI =
   | {
@@ -19,7 +19,9 @@ type MethodologyDefault = {
   setMethodology?: never;
 };
 
-type MethodologyProps = MethodologyGUI & Pick<CatalogueShowProps, "explanation">;
+type MethodologyProps = MethodologyGUI & {
+  explanation: Pick<DCVariable, "methodology" | "caveat" | "publication" | "related_datasets">;
+};
 
 const DCMethodology: FunctionComponent<MethodologyProps> = ({
   scrollRef,
@@ -247,7 +249,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                 key={index}
                 dataset={{
                   id: item.id,
-                  catalog_name: item.title,
+                  title: item.title,
                   description: item.description,
                 }}
                 index={index}
