@@ -1,4 +1,9 @@
-import { IDataViz, CatalogueWidget as DataCatalogueWidget } from "datagovmy-ui/data-catalogue";
+import {
+  CatalogueWidget as DataCatalogueWidget,
+  DCVariable,
+  DCDataViz,
+  DCChartKeys,
+} from "datagovmy-ui/data-catalogue";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { SHORT_LANG } from "datagovmy-ui/constants";
@@ -7,22 +12,22 @@ import { CatalogueProvider } from "datagovmy-ui/contexts/catalogue";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import { recurDataMapping } from "datagovmy-ui/helpers";
-import { DCConfig, DCFilter, FilterDate, Page } from "datagovmy-ui/types";
+import { Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo } from "react";
+import { AxiosResponse } from "axios";
 
 const CatalogueEmbed: Page = ({
-  meta,
   params,
-  config,
-  dataset,
-  metadata,
-  urls,
-  translations,
-  dataviz,
+  meta,
+  query,
+  ...variable
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const extractChartDataset = (table_data: Record<string, any>[], currentViz: IDataViz) => {
-    const set = Object.entries(currentViz?.chart_variables.format).map(([key, value]) =>
+  const data = variable as DCVariable;
+  console.log("huh", query);
+
+  const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
+    const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
       recurDataMapping(key, value, table_data)
     );
     return {
@@ -31,42 +36,57 @@ const CatalogueEmbed: Page = ({
   };
 
   const selectedDataset = useMemo(() => {
-    if (!params.currentVisual) {
-      // TODO: ask BE to provide this range value to use for timeseries
-      return dataset;
+    const selectedViz = data.dataviz_set.find(item => item.dataviz_id === query.visual);
+
+    if (selectedViz) {
+      return {
+        type: selectedViz.chart_type,
+        chart:
+          selectedViz.chart_type !== "TABLE" ? extractChartDataset(data.data, selectedViz) : {},
+        table: data.data,
+        meta: {
+          unique_id: data.id,
+          title: data.title,
+          desc: data.description,
+        },
+      };
+    } else {
+      return {
+        type: "TABLE" as DCChartKeys,
+        chart: {} as any,
+        table: data.data,
+        meta: {
+          unique_id: data.id,
+          title: data.title,
+          desc: data.description,
+        },
+      };
     }
-
-    const selectedViz = dataviz.find(
-      (item: IDataViz) => item.translation_key === params.currentVisual
-    );
-
-    return {
-      type: selectedViz.chart_type,
-      chart: extractChartDataset(dataset.table, selectedViz),
-      table: dataset.table,
-      meta: dataset.meta,
-    };
-  }, [params.currentVisual]);
+  }, [params.currentVisual, query]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata
-        title={dataset.meta.title}
-        description={dataset.meta.desc.replace(/^(.*?)]/, "")}
+        title={selectedDataset.meta.title}
+        description={selectedDataset.meta.desc.replace(/^(.*?)]/, "")}
         keywords={""}
       />
       <WindowProvider>
-        <CatalogueProvider dataset={selectedDataset} urls={urls}>
+        <CatalogueProvider
+          dataset={selectedDataset}
+          urls={{
+            csv: data.link_csv,
+            parquet: data.link_parquet,
+          }}
+        >
           <DataCatalogueWidget
             params={params}
-            config={config}
-            dataset={selectedDataset}
-            metadata={metadata}
-            urls={urls}
-            translations={translations}
-            selectedViz={dataviz.find(
-              (item: IDataViz) => item.translation_key === params.currentVisual
-            )}
+            data={data}
+            selectedViz={
+              data.dataviz_set.find(item => item.dataviz_id === params.currentVisual) ??
+              data.dataviz_set[0]
+            }
+            query={query}
           />
         </CatalogueProvider>
       </WindowProvider>
@@ -80,101 +100,24 @@ CatalogueEmbed.theme = "light";
 export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query, params }) => {
+    const { theme, ...qs } = query;
     try {
-      const { theme, ...qs } = query;
-      // OLD DC variable query
-      // const { data } = await get("/data-variable/", {
-      //   id: params!.id,
-      //   lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
-      //   ...qs,
-      // });
-      const { data } = await get("/data-catalogue-variable/", {
-        id: params!.id,
-        lang: SHORT_LANG[locale as keyof typeof SHORT_LANG],
+      const { data } = (await get(`/data-catalogue2/${params?.id}`, {
+        language: SHORT_LANG[locale as keyof typeof SHORT_LANG],
         ...qs,
-      });
-      const config: DCConfig = {
-        context: {},
-        dates: null,
-        options: null,
-        precision: data.API.precision ?? null,
-        freeze: data.API.freeze ?? null,
-        color: data.API.colour ?? "blues",
-        geojson: data.API.file_json ?? null,
-        line_variables: data.API.line_variables ?? null,
-        exclude_openapi: data.exclude_openapi,
-      };
-
-      const hasTranslations = data.translations && Object.keys(data.translations).length;
-      const hasQuery = query && Object.keys(query).length > 1;
-
-      const assignContext = (item: DCFilter) => {
-        let [label, value] = ["", ""];
-        if (item.key === "date_slider") {
-          label = (query[item.key] as string) ?? item.default;
-          value = (query[item.key] as string) ?? item.default;
-        } else if (!hasTranslations && !hasQuery) {
-          label = item.default;
-          value = item.default;
-        } else if (!hasTranslations && hasQuery) {
-          label = query[item.key] as string;
-          value = query[item.key] as string;
-        } else if (hasTranslations && !hasQuery) {
-          label = (data.translations[item.default] as string) ?? item.default;
-          value = item.default;
-        } else {
-          label = data.translations[query[item.key] as string] ?? query[item.key] ?? item.default;
-          value = (query[item.key] as string) ?? item.default;
-        }
-
-        Object.assign(config.context, { [item.key]: { label, value } });
-      };
-
-      data.API.filters?.forEach((item: DCFilter) => {
-        if (item.key === "date_slider") config.dates = item as FilterDate;
-        assignContext(item);
-      });
-      config.options =
-        data.API.filters?.filter((item: DCFilter) => item.key !== "date_slider") ?? null;
+      })) as AxiosResponse<DCVariable>;
 
       return {
         props: {
           meta: {
-            id: data.chart_details.intro.unique_id,
+            id: data.id,
             type: "data-catalogue",
             category: null,
-            agency: Array.isArray(data.metadata.data_source)
-              ? data.metadata.data_source.join(",")
-              : "",
+            agency: Array.isArray(data.data_source) ? data.data_source.join(",") : "",
           },
-          config,
-          params: {
-            id: params?.id ?? null,
-            theme: theme ?? "light",
-            currentVisual: query.currViz ?? null,
-          },
-          dataset: {
-            type: data.API.chart_type,
-            chart: data.chart_details.chart_data ?? {},
-            table: data.chart_details.table_data ?? null,
-            meta: data.chart_details.intro,
-          },
-          metadata: {
-            url: {
-              csv: data.metadata.url.csv ?? null,
-              parquet: data.metadata.url.parquet ?? null,
-              link_geojson: data.metadata.url.link_geojson ?? null,
-            },
-            data_as_of: data.metadata.data_as_of,
-            last_updated: data.metadata.last_updated,
-            next_update: data.metadata.next_update,
-            description: data.metadata.dataset_desc,
-            source: data.metadata.data_source,
-            definitions: data.metadata.out_dataset.concat(data.metadata?.in_dataset ?? []),
-          },
-          urls: data.downloads ?? {},
-          dataviz: data.dataviz,
-          translations: data.translations ?? {},
+          params: { ...params },
+          query: query,
+          ...data,
         },
       };
     } catch (error) {
