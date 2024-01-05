@@ -1,9 +1,11 @@
-import { FunctionComponent, MutableRefObject } from "react";
-import { At, Card, Section, Tooltip } from "../../components";
-import { useTranslation } from "../../hooks";
+import { FunctionComponent, MutableRefObject, useContext } from "react";
+import { Card, Section, Tooltip } from "../../components";
+import { useAnalytics, useTranslation } from "../../hooks";
 import { interpolate, toDate } from "../../lib/helpers";
 import Table from "../../charts/table";
 import { METADATA_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
+import { DCVariable } from "../../../types/data-catalogue";
+import { CatalogueContext } from "../../contexts/catalogue";
 
 type MetadataGUI =
   | {
@@ -19,10 +21,28 @@ type MetadataDefault = {
   setMetadata?: never;
 };
 
-type MetadataProps = MetadataGUI;
+type MetadataProps = MetadataGUI & {
+  metadata: Pick<
+    DCVariable,
+    | "description"
+    | "fields"
+    | "last_updated"
+    | "next_update"
+    | "data_source"
+    | "link_csv"
+    | "link_parquet"
+  >;
+};
 
-const DCMetadata: FunctionComponent<MetadataProps> = ({ isGUI, scrollRef, setMetadata }) => {
+const DCMetadata: FunctionComponent<MetadataProps> = ({
+  isGUI,
+  scrollRef,
+  setMetadata,
+  metadata,
+}) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
+  const { dataset } = useContext(CatalogueContext);
+  const { track } = useAnalytics(dataset);
 
   return (
     <>
@@ -46,18 +66,14 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({ isGUI, scrollRef, setMet
             <div className="space-y-3">
               {/* Variable definitions */}
               <h5>{t("meta_def")}</h5>
-              {metadata.definitions?.length > 0 && (
+              {metadata.fields?.length > 0 && (
                 <>
                   <ul className="text-dim ml-6 list-outside list-disc md:hidden">
-                    {metadata.definitions?.map(item => (
+                    {metadata.fields?.map(item => (
                       <li key={item.title}>
                         <span className="flex gap-x-1">
-                          {Boolean(item.unique_id) ? (
-                            <At href={`/data-catalogue/${item.unique_id}`}>{item.title}</At>
-                          ) : (
-                            item.title
-                          )}
-                          <Tooltip tip={interpolate(item.desc)} />
+                          {item.title}
+                          <Tooltip tip={interpolate(item.description)} />
                         </span>
                       </li>
                     ))}
@@ -65,23 +81,21 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({ isGUI, scrollRef, setMet
                   <div className="hidden md:block">
                     <Table
                       className="table-slate table-default-slate md:w-full"
-                      data={metadata.definitions.map((item: any) => {
-                        const raw = item.desc;
+                      data={metadata.fields.map(item => {
+                        const raw = item.description;
                         const [type, definition] = [
                           raw.substring(raw.indexOf("[") + 1, raw.indexOf("]")),
                           raw.substring(raw.indexOf("]") + 1),
                         ];
 
                         return {
-                          id: item.id,
-                          uid: item.unique_id,
                           variable: item.name,
                           variable_name: item.title,
                           data_type: type,
                           definition: interpolate(definition),
                         };
                       })}
-                      config={METADATA_TABLE_SCHEMA(t, dataset.type === "TABLE")}
+                      config={METADATA_TABLE_SCHEMA(t, true)}
                     />
                   </div>
                 </>
@@ -115,7 +129,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({ isGUI, scrollRef, setMet
             <div className="space-y-3">
               <h5>{t("meta_source")}</h5>
               <ul className="text-dim ml-6 list-outside list-disc">
-                {metadata.source?.map(source => (
+                {metadata.data_source.map(source => (
                   <li key={source}>{source}</li>
                 ))}
               </ul>
@@ -124,7 +138,10 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({ isGUI, scrollRef, setMet
             <div className="space-y-3">
               <h5>{t("meta_url")}</h5>
               <ul className="text-dim ml-6 list-outside list-disc">
-                {Object.entries(metadata.url).map(([key, url]: [string, unknown]) =>
+                {Object.entries({
+                  csv: metadata.link_csv,
+                  parquet: metadata.link_parquet,
+                }).map(([key, url]: [string, unknown]) =>
                   url ? (
                     <li key={url as string}>
                       <a

@@ -12,7 +12,6 @@ import {
   Search,
   Section,
   Sidebar,
-  Tooltip,
 } from "datagovmy-ui/components";
 import { useRouter } from "next/router";
 import { SHORT_PERIOD_FORMAT } from "datagovmy-ui/constants";
@@ -20,12 +19,10 @@ import { CatalogueContext, CatalogueProvider, DatasetType } from "datagovmy-ui/c
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, interpolate, numFormat, recurDataMapping, toDate } from "datagovmy-ui/helpers";
 import { useAnalytics, useFilter, useTranslation } from "datagovmy-ui/hooks";
-import { METADATA_TABLE_SCHEMA, UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
+import { UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
 import { DCVariable, DCDataViz } from "../../../types/data-catalogue";
-import { DownloadOption } from "datagovmy-ui/types";
 import sum from "lodash/sum";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import {
   Dispatch,
   FunctionComponent,
@@ -39,6 +36,8 @@ import {
 import CataloguePreview from "../Preview";
 import DCMethodology from "./methodology";
 import { AnalyticsProvider, Meta } from "../../contexts/analytics";
+import { DownloadCard } from "../Card";
+import DCMetadata from "./metadata";
 
 /**
  * Catalogue Show
@@ -554,145 +553,19 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             />
 
             {/* Metadata */}
-            <Section
-              title={"Metadata"}
-              ref={ref =>
-                (scrollRef.current[
-                  i18n.language === "en-GB" ? "Metadata: Variables" : "Metadata: Pembolehubah"
-                ] = ref)
-              }
-              className="dark:border-b-outlineHover-dark mx-auto border-b py-8 lg:py-12"
-            >
-              <Card className="bg-background dark:border-outlineHover-dark dark:bg-washed-dark p-6">
-                <div className="space-y-6">
-                  {/* Dataset description */}
-                  <div className="space-y-3">
-                    <h5>{t("meta_desc")}</h5>
-                    <p className="text-dim leading-relaxed">{interpolate(data.description)}</p>
-                  </div>
-                  <div className="space-y-3">
-                    {/* Variable definitions */}
-                    <h5>{t("meta_def")}</h5>
-                    {data.fields?.length > 0 && (
-                      <>
-                        <ul className="text-dim ml-6 list-outside list-disc md:hidden">
-                          {data.fields?.map(item => (
-                            <li key={item.title}>
-                              <span className="flex gap-x-1">
-                                {item.title}
-                                <Tooltip tip={interpolate(item.description)} />
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="hidden md:block">
-                          <Table
-                            className="table-slate table-default-slate md:w-full"
-                            data={data.fields.map(item => {
-                              const raw = item.description;
-                              const [type, definition] = [
-                                raw.substring(raw.indexOf("[") + 1, raw.indexOf("]")),
-                                raw.substring(raw.indexOf("]") + 1),
-                              ];
-
-                              return {
-                                variable: item.name,
-                                variable_name: item.title,
-                                data_type: type,
-                                definition: interpolate(definition),
-                              };
-                            })}
-                            config={METADATA_TABLE_SCHEMA(t, true)}
-                          />
-                        </div>
-                      </>
-                    )}
-                  </div>
-                  {/* Last updated */}
-                  <div className="space-y-3">
-                    <h5>{t("common:common.last_updated", { date: "" })}</h5>
-                    <p
-                      className="text-dim whitespace-pre-line"
-                      data-testid="catalogue-last-updated"
-                    >
-                      {toDate(data.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
-                    </p>
-                  </div>
-                  {/* Next update */}
-                  <div
-                    className="space-y-3"
-                    ref={ref =>
-                      (scrollRef.current[
-                        i18n.language === "en-GB"
-                          ? "Metadata: Next update"
-                          : "Metadata: Kemaskini seterusnya"
-                      ] = ref)
-                    }
-                  >
-                    <h5>{t("common:common.next_update", { date: "" })}</h5>
-                    <p className="text-dim" data-testid="catalogue-next-update">
-                      {toDate(data.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
-                    </p>
-                  </div>
-                  {/* Data Source */}
-                  <div className="space-y-3">
-                    <h5>{t("meta_source")}</h5>
-                    <ul className="text-dim ml-6 list-outside list-disc">
-                      {data.data_source?.map(source => (
-                        <li key={source}>{source}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  {/* URLs to dataset */}
-                  <div className="space-y-3">
-                    <h5>{t("meta_url")}</h5>
-                    <ul className="text-dim ml-6 list-outside list-disc">
-                      {Object.entries({
-                        csv: data.link_csv,
-                        parquet: data.link_parquet,
-                      }).map(([key, url]: [string, unknown]) =>
-                        url ? (
-                          <li key={url as string}>
-                            <a
-                              href={url as string}
-                              className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
-                              // onClick={() =>
-                              //   track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
-                              // }
-                            >
-                              {url as string}
-                            </a>
-                          </li>
-                        ) : undefined
-                      )}
-                    </ul>
-                  </div>
-                  {/* License */}
-                  <div
-                    className="space-y-3"
-                    ref={ref =>
-                      (scrollRef.current[
-                        i18n.language === "en-GB" ? "Metadata: License" : "Metadata: Lesen"
-                      ] = ref)
-                    }
-                  >
-                    <h5>{t("meta_license")}</h5>
-                    <p className="text-dim">
-                      {t("license_text")}{" "}
-                      <a
-                        className="text-primary dark:text-primary-dark lowercase [text-underline-position:from-font] hover:underline"
-                        target="_blank"
-                        rel="noopener"
-                        href="https://creativecommons.org/licenses/by/4.0/"
-                      >
-                        {t("common:common.here")}.
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </Section>
-
+            <DCMetadata
+              isGUI={false}
+              scrollRef={scrollRef}
+              metadata={{
+                description: data.description,
+                fields: data.fields,
+                last_updated: data.last_updated,
+                next_update: data.next_update,
+                data_source: data.data_source,
+                link_csv: data.link_csv,
+                link_parquet: data.link_parquet,
+              }}
+            />
             {/* Download */}
             <Section
               title={t("download")}
@@ -807,55 +680,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
         </Sidebar>
       </Container>
     </div>
-  );
-};
-interface DownloadCard extends DownloadOption {
-  views?: number;
-}
-
-const DownloadCard: FunctionComponent<DownloadCard> = ({
-  href,
-  image,
-  title,
-  description,
-  icon,
-  id,
-  views,
-}) => {
-  return (
-    <Card
-      onClick={href}
-      className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
-    >
-      <div className="gap-4.5 flex items-center">
-        {["svg", "png"].includes(id) ? (
-          <Image
-            src={image || ""}
-            className="dark:border-dim aspect-video h-14 rounded border bg-white object-cover dark:bg-black lg:h-16"
-            width={128}
-            height={64}
-            alt={title as string}
-          />
-        ) : (
-          <Image
-            height={64}
-            width={64}
-            src={image || ""}
-            className="object-contain"
-            alt={title as string}
-          />
-        )}
-        <div className="block flex-grow">
-          <p className="font-bold">{title}</p>
-          {description && <p className="text-dim text-sm">{description}</p>}
-        </div>
-
-        <div className="space-y-1">
-          {icon}
-          <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact")}</p>
-        </div>
-      </div>
-    </Card>
   );
 };
 
