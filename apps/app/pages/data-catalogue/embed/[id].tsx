@@ -24,7 +24,6 @@ const CatalogueEmbed: Page = ({
   ...variable
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const data = variable as DCVariable;
-  console.log("huh", query);
 
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
     const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
