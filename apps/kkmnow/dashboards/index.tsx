@@ -19,7 +19,6 @@ import {
   HospitalBedIcon,
 } from "datagovmy-ui/icons/kkmnow";
 import { DateTime } from "luxon";
-import { get } from "datagovmy-ui/api";
 import AgencyIcon from "datagovmy-ui/icons/agency";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
@@ -49,7 +48,7 @@ type Dashboard = {
 type View = {
   id: string;
   type: "dashboard";
-  view_count: number;
+  total_views: number;
 };
 
 interface DashboardIndexProps {
@@ -191,7 +190,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         <Section title={t("at_a_glance")}>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
             {STATS.map(({ data_as_of, icon, title, value, url }: StatProps) => (
-              <div className="flex items-center gap-3" key={url}>
+              <div className="flex items-center gap-3" key={url + title}>
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-outline dark:bg-washed-dark">
                   {icon}
                 </div>
@@ -283,10 +282,26 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
   const [views, setViews] = useState<View[]>([]);
 
   useEffect(() => {
-    const fetchViews = () =>
-      get("/view-count/", { type: "dashboard", views_only: true }).then(({ data }) =>
-        setViews(data)
-      );
+    const fetchViews = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
+            process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
+          }_dgmy_views_id_pipe.json`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+            },
+          }
+        );
+        const { data } = await response.json();
+        setViews(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchViews();
   }, []);
 
@@ -313,10 +328,10 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
           </div>
           <div className="relative w-full">
             <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
-              {`${numFormat(views.find(e => e.id === item.id)?.view_count ?? 0, "compact")} ${t(
+              {`${numFormat(views.find(e => e.id === item.id)?.total_views ?? 0, "compact")} ${t(
                 "common:common.views",
                 {
-                  count: views.find(e => e.id === item.id)?.view_count ?? 0,
+                  count: views.find(e => e.id === item.id)?.total_views ?? 0,
                 }
               )}`}
             </p>
