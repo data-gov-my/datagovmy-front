@@ -285,9 +285,7 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
     const fetchViews = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
-            process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-          }_dgmy_views_id_pipe.json`,
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_total_views_by_id.json`,
           {
             method: "GET",
             headers: {
