@@ -55,18 +55,13 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           language: locale,
           ...query,
         }),
-        fetch(
-          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
-            process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-          }_opendosm_pub_downloads_pipe.json`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
-            },
-          }
-        ),
+        fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_pub_dls_by_pub_resource.json`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+          },
+        }),
       ]).catch(e => {
         throw new Error("Invalid filter. Message: " + e);
       });

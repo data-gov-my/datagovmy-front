@@ -333,22 +333,8 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
           </span>
           <span>&middot;</span>
           <span>
-            {`${numFormat(
-              sum([
-                result?.download_csv,
-                result?.download_parquet,
-                result?.download_png,
-                result?.download_svg,
-              ]) ?? 0,
-              "compact"
-            )} ${t("common:common.downloads", {
-              count:
-                sum([
-                  result?.download_csv,
-                  result?.download_parquet,
-                  result?.download_png,
-                  result?.download_svg,
-                ]) ?? 0,
+            {`${numFormat(result?.total_downloads ?? 0, "compact")} ${t("common:common.downloads", {
+              count: result?.total_downloads ?? 0,
             })}`}
           </span>
         </p>

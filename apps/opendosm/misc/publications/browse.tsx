@@ -203,9 +203,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   const postDownload = async (resource_id: number) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=${
-          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-        }_opendosm_pub_downloads`,
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=dgmy_pub_dls`,
         {
           method: "POST",
           headers: {

@@ -29,6 +29,7 @@ type AnalyticsResult<T extends "dashboard" | "data-catalogue"> = {
   id: string;
   type: T;
   total_views: number;
+  total_downloads: T extends "dashboard" ? never : number;
   download_csv: T extends "dashboard" ? never : number;
   download_parquet: T extends "dashboard" ? never : number;
   download_png: T extends "dashboard" ? never : number;
@@ -66,9 +67,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
   const track = async (id: string, type: Meta["type"], metric: MetricType) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=${
-          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-        }_dgmy_views&wait=true`,
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=dgmy_views&wait=true`,
         {
           method: "POST",
           headers: {
@@ -86,9 +85,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
       // Get updated view-count after POST request completed
       const updatedResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
-          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-        }_dgmy_views_id_pipe.json?page_id=${id}`,
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_total_views_by_id.json?page_id=${id}&page_type=${type}`,
         {
           method: "GET",
           headers: {
@@ -101,9 +98,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
       if (type === "data-catalogue") {
         const downloadsResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/${
-            process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-          }_dgmy_dc_downlaods_id_pipe.json?catalogue_id=${id}`,
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_dc_analytics.json?catalogue_id=${id}`,
           {
             method: "GET",
             headers: {
@@ -114,21 +109,18 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
         );
         if (downloadsResponse.ok) {
           const { data: download_count } = await downloadsResponse.json();
-          const download_data = {
-            download_csv:
-              download_count.find((list: any) => list.format === "csv")?.total_downloads ?? 0,
-            download_parquet:
-              download_count.find((list: any) => list.format === "parquet")?.total_downloads ?? 0,
-            download_png:
-              download_count.find((list: any) => list.format === "png")?.total_downloads ?? 0,
-            download_svg:
-              download_count.find((list: any) => list.format === "svg")?.total_downloads ?? 0,
-          };
+          const download_data = Object.assign(
+            {},
+            ...download_count.map((count: any) => {
+              if (count.type === "total_views" || count.type === "total_downloads") {
+                return { [count.type]: count.count };
+              } else {
+                return { [`download_${count.type}`]: count.count };
+              }
+            })
+          );
 
-          setData({
-            ...data.find((item: any) => item.id === id && item.type === type),
-            ...download_data,
-          });
+          setData(download_data);
         } else {
           const download_data = {
             download_csv: 0,
@@ -153,9 +145,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
   const updateDownloadCount = async (id: string, format: DownloadFileFormat) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=${
-          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "prod" : "staging"
-        }_dgmy_dc_downloads`,
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=dgmy_dc_dls`,
         {
           method: "POST",
           headers: {
@@ -175,7 +165,8 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
         setData(
           data && {
             ...data,
-            [`download_${format}`]: data[`download_${format}`] + 1,
+            [`download_${format}`]: data[`download_${format}`] ? data[`download_${format}`] + 1 : 1,
+            [`total_downloads`]: data[`total_downloads`] ? data[`total_downloads`] + 1 : 1,
           }
         );
       }
