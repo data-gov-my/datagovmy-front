@@ -115,7 +115,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         },
       };
     } catch (e: any) {
-      console.log(e);
       console.error(e.message);
       return { notFound: true };
     }
