@@ -134,7 +134,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   ["gui-opendosm-pub", "catalogue"],
   async () => {
     return {
-      notFound: false,
+      notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
         meta: {
           id: "gui",
