@@ -51,7 +51,6 @@ const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRe
             if (isOptionType(value)) return [key, value.value];
             return [key, value as string];
           }),
-        ["visual", selectedVizKey ?? ""],
       ]);
 
       embed.search = search_params.toString();

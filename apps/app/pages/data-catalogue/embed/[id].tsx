@@ -61,7 +61,7 @@ const CatalogueEmbed: Page = ({
         },
       };
     }
-  }, [params.currentVisual, query]);
+  }, [query]);
 
   return (
     <AnalyticsProvider meta={meta}>
@@ -82,8 +82,7 @@ const CatalogueEmbed: Page = ({
             params={params}
             data={data}
             selectedViz={
-              data.dataviz_set.find(item => item.dataviz_id === params.currentVisual) ??
-              data.dataviz_set[0]
+              data.dataviz_set.find(item => item.dataviz_id === query.visual) ?? data.dataviz_set[0]
             }
             query={query}
           />
