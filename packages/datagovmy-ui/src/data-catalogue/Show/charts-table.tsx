@@ -19,7 +19,6 @@ import { DCDataViz, DCVariable } from "../../../types/data-catalogue";
 import dynamic from "next/dynamic";
 import { UNIVERSAL_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { SHORT_PERIOD_FORMAT } from "../../lib/constants";
-import { sum } from "lodash";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
@@ -353,6 +352,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                       data.dataviz_set.find(item => item.chart_type === "TABLE") ??
                         data.dataviz_set[0]
                     );
+                    setFilter("visual", "table");
                     scrollToChart();
                   }}
                 >
@@ -375,6 +375,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                         selectedViz={selectedViz}
                         setSelectedViz={setSelectedViz}
                         scrollToChart={scrollToChart}
+                        setFilter={setFilter}
                       />
                     );
                   })}

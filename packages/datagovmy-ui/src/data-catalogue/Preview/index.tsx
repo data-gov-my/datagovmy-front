@@ -4,7 +4,8 @@ import { Card } from "datagovmy-ui/components";
 import dynamic from "next/dynamic";
 import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, recurDataMapping } from "datagovmy-ui/helpers";
-import { DCConfig, DCDataViz } from "../../../types/data-catalogue";
+import { DCDataViz } from "../../../types/data-catalogue";
+import { useRouter } from "next/router";
 
 /**
  * Catalogue Preview
@@ -54,6 +55,7 @@ interface CataloguePreviewProps {
   selectedViz: DCDataViz;
   setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
   scrollToChart: () => void;
+  setFilter: (key: string, value: any) => void;
 }
 
 const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
@@ -64,10 +66,12 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   setSelectedViz,
   translations,
   scrollToChart,
+  setFilter,
 }) => {
   if (!dataviz) {
     return null;
   }
+  const router = useRouter();
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataviz.chart_type) {
@@ -153,6 +157,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
           )}
           onClick={() => {
             setSelectedViz(dataviz);
+            setFilter("visual", dataviz.dataviz_id);
             scrollToChart();
           }}
         >

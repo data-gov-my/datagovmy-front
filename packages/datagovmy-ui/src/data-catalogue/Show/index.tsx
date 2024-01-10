@@ -30,7 +30,6 @@ type CatalogueShowWrapperProps = {
   meta: Meta;
   params: {
     id: string;
-    visual?: string;
   };
   data: DCVariable;
   query: any;
@@ -117,8 +116,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const { config, ...viz } = selectedViz;
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const { filter, setFilter } = useFilter(
-    Object.fromEntries(
-      data.dropdown.map(item => [
+    Object.fromEntries([
+      ...data.dropdown.map(item => [
         item.name,
         query[item.name]
           ? item.options.find(opt => query[item.name] === opt)
@@ -134,8 +133,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               value: item.selected,
               label: data.translations[item.selected] ?? item.selected,
             },
-      ])
-    ),
+      ]),
+      ["visual", { value: selectedViz.dataviz_id, label: selectedViz.dataviz_id }],
+    ]),
     { id: params.id },
     true
   );
