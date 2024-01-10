@@ -205,7 +205,7 @@ interface CatalogueFilterRef {
 const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forwardRef(
   ({ query, sources }, ref) => {
     const { t } = useTranslation(["catalogue", "common"]);
-    const periods: OptionType[] = [
+    const frequencies: OptionType[] = [
       { label: t("filter_options.daily"), value: "DAILY" },
       { label: t("filter_options.weekly"), value: "WEEKLY" },
       { label: t("filter_options.monthly"), value: "MONTHLY" },
@@ -241,7 +241,9 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         .map((year, index) => ({ label: `${year + index}`, value: `${year + index}` }));
 
     const { filter, setFilter, actives } = useFilter({
-      period: query.period ? periods.find(item => item.value === query.period) : undefined,
+      frequency: query.frequency
+        ? frequencies.find(item => item.value === query.frequency)
+        : undefined,
       geography: query.geography
         ? geographies.filter(item => query.geography.split(",").includes(item.value))
         : [],
@@ -260,7 +262,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
 
     const reset = () => {
       setFilter("search", "");
-      setFilter("period", undefined);
+      setFilter("frequency", undefined);
       setFilter("geography", []);
       setFilter("demography", []);
       setFilter("begin", undefined);
@@ -309,11 +311,11 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
               <div className="px-4.5 pb-4.5 dark:divide-washed-dark mb-[84px] flex h-max flex-col divide-y overflow-y-auto bg-white dark:bg-black">
                 <div className="py-3">
                   <Radio
-                    name="period"
-                    label={t("period")}
-                    options={periods}
-                    value={filter.period}
-                    onChange={e => setFilter("period", e)}
+                    name="frequency"
+                    label={t("frequency")}
+                    options={frequencies}
+                    value={filter.frequency}
+                    onChange={e => setFilter("frequency", e)}
                   />
                 </div>
                 <div className="py-3">
@@ -387,10 +389,10 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
             </Button>
           )}
           <Dropdown
-            options={periods}
-            placeholder={t("period")}
-            selected={periods.find(item => item.value === filter.period?.value) ?? undefined}
-            onChange={e => setFilter("period", e)}
+            options={frequencies}
+            placeholder={t("frequency")}
+            selected={frequencies.find(item => item.value === filter.frequency?.value) ?? undefined}
+            onChange={e => setFilter("frequency", e)}
           />
           <Dropdown
             multiple

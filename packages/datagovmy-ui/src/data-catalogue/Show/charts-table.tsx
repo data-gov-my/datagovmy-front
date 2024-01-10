@@ -341,7 +341,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
 
         {data.dataviz_set && data.dataviz_set.length > 1 && (
           <Section>
-            <div className="relative flex h-full w-full items-stretch gap-[0.5rem] overflow-x-scroll">
+            <div className="hide-scrollbar relative flex h-full w-full items-stretch gap-[0.5rem] overflow-x-scroll">
               <div className="sticky left-0 top-0 flex h-full w-[200px] max-w-[200px] flex-1 flex-col justify-start gap-2 lg:sticky lg:w-[calc(100%_/_5.5)] lg:flex-initial">
                 <Card
                   className={clx(
@@ -362,7 +362,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                 </Card>
                 <p className="h-full text-center text-xs">Table</p>
               </div>
-              <div className="hide-scrollbar flex flex-1 gap-[0.5rem] overflow-x-auto pb-4">
+              <div className="flex flex-1 gap-[0.5rem] overflow-x-auto pb-4">
                 {data.dataviz_set
                   .filter(viz => viz.chart_type !== "TABLE")
                   .map(viz => {
