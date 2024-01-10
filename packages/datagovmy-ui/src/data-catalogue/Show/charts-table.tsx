@@ -7,6 +7,7 @@ import {
   useContext,
   useRef,
 } from "react";
+import { useRouter } from "next/router";
 import { Card, Dropdown, Search, Section } from "../../components";
 import { useAnalytics, useTranslation } from "../../hooks";
 import { clx, interpolate, numFormat, toDate } from "../../lib/helpers";
@@ -76,6 +77,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
   const embedRef = useRef<EmbedInterface>(null);
   const _downloads = Object.values(downloads).flatMap(option => option);
   const { config, ...viz } = selectedViz;
+  const router = useRouter();
 
   const renderChart = (): ReactNode | undefined => {
     switch (dataset.type) {
@@ -352,7 +354,13 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                       data.dataviz_set.find(item => item.chart_type === "TABLE") ??
                         data.dataviz_set[0]
                     );
-                    setFilter("visual", "table");
+                    router.replace(
+                      {
+                        query: { ...router.query, visual: "table" },
+                      },
+                      undefined,
+                      { shallow: true }
+                    );
                     scrollToChart();
                   }}
                 >
@@ -375,7 +383,6 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                         selectedViz={selectedViz}
                         setSelectedViz={setSelectedViz}
                         scrollToChart={scrollToChart}
-                        setFilter={setFilter}
                       />
                     );
                   })}

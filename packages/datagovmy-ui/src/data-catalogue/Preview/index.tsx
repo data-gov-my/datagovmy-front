@@ -55,7 +55,6 @@ interface CataloguePreviewProps {
   selectedViz: DCDataViz;
   setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
   scrollToChart: () => void;
-  setFilter: (key: string, value: any) => void;
 }
 
 const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
@@ -66,7 +65,6 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   setSelectedViz,
   translations,
   scrollToChart,
-  setFilter,
 }) => {
   if (!dataviz) {
     return null;
@@ -157,7 +155,13 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
           )}
           onClick={() => {
             setSelectedViz(dataviz);
-            setFilter("visual", dataviz.dataviz_id);
+            router.replace(
+              {
+                query: { ...router.query, visual: dataviz.dataviz_id },
+              },
+              undefined,
+              { shallow: true }
+            );
             scrollToChart();
           }}
         >
