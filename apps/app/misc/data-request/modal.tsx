@@ -19,7 +19,7 @@ type PublishedDataModalProps = {
 const dummyPublished: Array<Catalogue> = [
   {
     id: "commodities_fuelprice_master",
-    catalog_name: "Fuel Price Table",
+    title: "Fuel Price Table",
     data_as_of: "2023-09-07 00:01:00",
     description:
       "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
@@ -27,7 +27,7 @@ const dummyPublished: Array<Catalogue> = [
   },
   {
     id: "commodities_fuelprice_master",
-    catalog_name: "Fuel Price Table",
+    title: "Fuel Price Table",
     data_as_of: "2023-09-07 00:01:00",
     description:
       "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
@@ -35,7 +35,7 @@ const dummyPublished: Array<Catalogue> = [
   },
   {
     id: "commodities_fuelprice_master",
-    catalog_name: "Fuel Price Table",
+    title: "Fuel Price Table",
     data_as_of: "2023-09-07 00:01:00",
     description:
       "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",

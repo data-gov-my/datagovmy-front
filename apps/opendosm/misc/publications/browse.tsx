@@ -200,32 +200,38 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     };
   }, [pub]);
 
-  const postDownload = (resource_id: number) => {
-    post(
-      "/publication-resource/download/",
-      {
-        publication_id: params.pub_id,
-        resource_id,
-      },
-      "api",
-      { "Content-Type": "multipart/form-data" }
-    )
-      .then(({ data: res }) => {
-        setData("pub", {
-          ...data.pub,
-          resources: data.pub.resources.map((pub: Resource) => {
-            if (pub.resource_id === resource_id) {
-              return {
-                ...pub,
-                downloads: res.download,
-              };
-            } else return pub;
+  const postDownload = async (resource_id: number) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=dgmy_pub_dls`,
+        {
+          method: "POST",
+          headers: {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+          },
+          body: JSON.stringify({
+            publication_id: params.pub_id,
+            resource_id: resource_id,
           }),
-        });
-      })
-      .catch(e => {
-        console.error(e);
+        }
+      );
+
+      setData("pub", {
+        ...data.pub,
+        resources: data.pub.resources.map((pub: Resource) => {
+          if (pub.resource_id === resource_id) {
+            return {
+              ...pub,
+              downloads: pub.downloads + 1,
+            };
+          } else return pub;
+        }),
       });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

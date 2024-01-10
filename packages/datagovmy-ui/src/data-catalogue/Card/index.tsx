@@ -1,9 +1,11 @@
 import { FunctionComponent, useEffect, useRef, useState } from "react";
-import { Catalogue } from "../Main";
+import { Catalogue } from "../../../types/data-catalogue";
 import { At, Card, Tooltip } from "datagovmy-ui/components";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
-import { clx, toDate } from "datagovmy-ui/helpers";
+import { clx, toDate, numFormat } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
+import { DownloadOption } from "../../../types";
+import Image from "next/image";
 
 interface CatalogueCardProps {
   dataset: Catalogue;
@@ -50,14 +52,14 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
       >
         <div className="flex flex-col gap-1.5">
           {isTruncated && !alternateStyle ? (
-            <Tooltip tip={dataset.catalog_name}>
+            <Tooltip tip={dataset.title}>
               {() => (
                 <p
                   ref={titleRef}
                   className="truncate text-lg font-bold text-black dark:text-white"
-                  title={dataset.catalog_name}
+                  title={dataset.title}
                 >
-                  {dataset.catalog_name}
+                  {dataset.title}
                 </p>
               )}
             </Tooltip>
@@ -65,9 +67,9 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
             <p
               ref={titleRef}
               className="truncate text-lg font-bold text-black dark:text-white"
-              title={dataset.catalog_name}
+              title={dataset.title}
             >
-              {dataset.catalog_name}
+              {dataset.title}
             </p>
           )}
 
@@ -99,3 +101,53 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
 };
 
 export default CatalogueCard;
+
+interface DownloadCard extends DownloadOption {
+  views?: number;
+}
+
+export const DownloadCard: FunctionComponent<DownloadCard> = ({
+  href,
+  image,
+  title,
+  description,
+  icon,
+  id,
+  views,
+}) => {
+  return (
+    <Card
+      onClick={href}
+      className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
+    >
+      <div className="gap-4.5 flex items-center">
+        {["svg", "png"].includes(id) ? (
+          <Image
+            src={image || ""}
+            className="dark:border-dim aspect-video h-14 rounded border bg-white object-cover dark:bg-black lg:h-16"
+            width={128}
+            height={64}
+            alt={title as string}
+          />
+        ) : (
+          <Image
+            height={64}
+            width={64}
+            src={image || ""}
+            className="object-contain"
+            alt={title as string}
+          />
+        )}
+        <div className="block flex-grow">
+          <p className="font-bold">{title}</p>
+          {description && <p className="text-dim text-sm">{description}</p>}
+        </div>
+
+        <div className="space-y-1">
+          {icon}
+          <p className="text-dim text-center text-xs">{numFormat(views ?? 0, "compact")}</p>
+        </div>
+      </div>
+    </Card>
+  );
+};

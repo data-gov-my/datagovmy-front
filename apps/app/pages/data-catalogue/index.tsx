@@ -24,7 +24,7 @@ const CatalogueIndex: Page = ({
 };
 
 const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
-  if (Array.isArray(data)) return sortAlpha(data, "catalog_name");
+  if (Array.isArray(data)) return sortAlpha(data, "title");
 
   return Object.fromEntries(
     Object.entries(data)
@@ -40,14 +40,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query }) => {
     try {
-      // const { data } = await get("/data-catalog/", {
-      //   lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
-      //   opendosm: false,
-      //   ...query,
-      // });
-      const { data } = await get("/data-catalogue/", {
-        lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
-        opendosm: false,
+      const { data } = await get("/data-catalogue2", {
+        language: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+        site: "datagovmy",
         ...query,
       });
 

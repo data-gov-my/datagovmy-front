@@ -2,18 +2,18 @@ import {
   ArrowTopRightOnSquareIcon as ExternalLinkIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/outline";
-import { Chips, Slider, Tooltip } from "datagovmy-ui/components";
-import { BREAKPOINTS, SHORT_PERIOD } from "datagovmy-ui/constants";
-import { DatasetType } from "datagovmy-ui/contexts/catalogue";
+import { Chips, Tooltip } from "datagovmy-ui/components";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
 import { WindowContext, WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
-import { DCChartKeys, DCConfig, OptionType } from "datagovmy-ui/types";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent, ReactNode, useContext, useEffect, useMemo, useState } from "react";
-import { IDataViz } from "../Show";
+import { DCDataViz, DCVariable } from "../../../types/data-catalogue";
 
 /**
  * Catalogue Show
@@ -58,50 +58,46 @@ interface CatalogueWidgetProps {
     theme: string;
     currentVisual: string;
   };
-  config: DCConfig;
-  dataset: DatasetType;
-  metadata: {
-    data_as_of: string;
-    url: {
-      csv?: string;
-      parquet?: string;
-      [key: string]: string | undefined;
-    };
-    source: string[];
-    definitions: Array<{
-      id: number;
-      unique_id?: string;
-      name: string;
-      desc: string;
-      title: string;
-    }>;
-    next_update: string;
-    description: string;
-    last_updated: string;
-  };
-  urls: {
-    [key: string]: string;
-  };
-  translations: {
-    [key: string]: string;
-  };
-  selectedViz: IDataViz | undefined;
+  data: DCVariable;
+  selectedViz: DCDataViz;
+  query: any;
 }
 
-const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
+const CatalogueWidget: FunctionComponent<CatalogueWidgetProps> = ({
   params,
-  config,
-  dataset,
-  metadata,
-  translations,
+  data,
+  query,
   selectedViz,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-  const { filter, setFilter } = useFilter(config.context, {
-    id: params.id,
-    theme: params.theme,
-    currViz: params.currentVisual,
-  });
+  const { config, ...viz } = selectedViz;
+  const { filter, setFilter } = useFilter(
+    Object.fromEntries(
+      data.dropdown.map(item => [
+        item.name,
+        query[item.name]
+          ? item.options.find(opt => query[item.name] === opt)
+            ? {
+                value: query[item.name],
+                label: data.translations[query[item.name]] ?? query[item.name],
+              }
+            : {
+                value: item.options[0],
+                label: data.translations[item.options[0]] ?? item.options[0],
+              }
+          : {
+              value: item.selected,
+              label: data.translations[item.selected] ?? item.selected,
+            },
+      ])
+    ),
+    {
+      id: params.id,
+      theme: params.theme,
+      visual: query.visual,
+    }
+  );
+  const { dataset } = useContext(CatalogueContext);
   const { size } = useContext(WindowContext);
   const chips = useMemo<OptionType[]>(
     () =>
@@ -135,17 +131,17 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CatalogueTimeseries
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={{
-              precision: selectedViz?.chart_filters.precision ?? config.precision,
-              range: filter?.range?.value ?? "DAILY",
+              precision: config.precision,
+              range: config.range ?? "DAILY",
             }}
-            translations={translations}
+            translations={data.translations}
           />
         );
       case "CHOROPLETH":
         return (
           <CatalogueChoropleth
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
-            config={selectedViz?.chart_variables.config}
+            config={selectedViz?.config}
           />
         );
       case "GEOCHOROPLETH":
@@ -174,7 +170,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
             <CatalogueBar
               className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
               config={config}
-              translations={translations}
+              translations={data.translations}
             />
           </WindowProvider>
         );
@@ -183,7 +179,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CataloguePyramid
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={config}
-            translations={translations}
+            translations={data.translations}
           />
         );
       case "HEATTABLE":
@@ -191,14 +187,14 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CatalogueHeatmap
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={config}
-            translations={translations}
+            translations={data.translations}
           />
         );
       case "SCATTER":
         return (
           <CatalogueScatter
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "mx-auto aspect-square")}
-            translations={translations}
+            translations={data.translations}
           />
         );
       case "LINE":
@@ -206,7 +202,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <CatalogueLine
             className={clx(chips.length ? "h-[75vh]" : "h-[80vh]", "w-full")}
             config={config}
-            translations={translations}
+            translations={data.translations}
           />
         );
       case "TABLE":
@@ -216,11 +212,11 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
               className="table-stripe table-default table-sticky-header grow"
               responsive={true}
               data={dataset.table}
-              freeze={config.freeze}
+              freeze={config.freeze_columns}
               config={UNIVERSAL_TABLE_SCHEMA(
                 Object.keys(dataset.table[0]),
-                translations,
-                config.freeze,
+                data.translations,
+                config.freeze_columns,
                 (item, key) => item[key]
               )}
               enablePagination={rows}
@@ -231,7 +227,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   };
 
   return (
-    <div className="flex h-[100vh] flex-col gap-3 p-2 lg:p-3">
+    <div className="flex flex-col gap-3 overflow-scroll p-4 pb-8">
       <div className="space-y-1">
         <div className="flex flex-row items-center justify-start gap-2 md:justify-between">
           <h4 className="inline-block truncate" data-testid="catalogue-title">
@@ -241,7 +237,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
           <div>
             <Tooltip
               tip={t("common:common.data_of", {
-                date: toDate(metadata.data_as_of, "dd MMM yyyy", i18n.language),
+                date: toDate(data.data_as_of, "dd MMM yyyy", i18n.language),
               })}
             >
               {open => (
@@ -255,7 +251,7 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
             </Tooltip>
             <span className="text-dim hidden text-right text-sm md:block">
               {t("common:common.data_of", {
-                date: toDate(metadata.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+                date: toDate(data.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
               })}
             </span>
           </div>
@@ -264,25 +260,9 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
       </div>
 
       {/* Chart */}
-      <div className="grow">
-        {renderChart()}
-        {config.dates !== null && (
-          <Slider
-            className="pt-4"
-            type="single"
-            value={config.dates?.options.indexOf(
-              filter[config.dates.key].value ?? config.dates.default
-            )}
-            data={config.dates.options}
-            period={SHORT_PERIOD[config.dates.interval]}
-            onChange={e =>
-              config.dates !== null && setFilter(config.dates.key, config.dates.options[e])
-            }
-          />
-        )}
-      </div>
+      <div className="grow">{renderChart()}</div>
 
-      <div className="bg-washed fixed bottom-0 left-0 flex w-full gap-2 px-3 py-1">
+      <div className="bg-washed h- fixed bottom-0 left-0 flex w-full gap-2 px-3 py-1">
         <Image src="/static/images/logo.png" width={16} height={14} alt="datagovmy logo" />
         <small className="text-dim space-x-2 ">
           <a
@@ -305,4 +285,4 @@ const CatalogueShow: FunctionComponent<CatalogueWidgetProps> = ({
   );
 };
 
-export default CatalogueShow;
+export default CatalogueWidget;
