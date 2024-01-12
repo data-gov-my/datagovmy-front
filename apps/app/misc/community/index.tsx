@@ -70,6 +70,7 @@ const CommunityDashboard: FunctionComponent = () => {
         });
       } else {
         reject({
+          type: "VALIDATION_ERROR",
           expertise_area: !data.expertise_area && t("area_required"),
           name: !data.name && t("name_required"),
           email: !data.email
@@ -200,11 +201,19 @@ const CommunityDashboard: FunctionComponent = () => {
                       </div>
                       <Button
                         className="btn-primary w-full justify-center"
-                        onClick={() =>
-                          validate()
-                            .then((resp: any) => {
-                              setData("loading", true);
-                              post(
+                        onClick={async () => {
+                          try {
+                            const resp = (await validate()) as {
+                              expertise_area: string;
+                              name: string;
+                              email: string;
+                              institution: string;
+                              experience: string;
+                            };
+                            setData("loading", true);
+
+                            if (resp) {
+                              const response = await post(
                                 "/forms/mods",
                                 {
                                   expertise_area: resp.expertise_area,
@@ -216,29 +225,36 @@ const CommunityDashboard: FunctionComponent = () => {
                                 },
                                 "api",
                                 { "Content-Type": "multipart/form-data" }
-                              )
-                                .then(({ data }) => {
-                                  if (data["Email Status"] === "sent") {
-                                    setData("sent", true);
-                                  }
-                                })
-                                .catch(e => {
-                                  toast.error(
-                                    t("common:error.toast.form_submission_failure"),
-                                    t("common:error.toast.reach_support")
-                                  );
-                                  console.error(e);
-                                });
+                              );
+
                               setData("loading", false);
-                            })
-                            .catch(err => {
-                              setData("valid_area", err.expertise_area);
-                              setData("valid_name", err.name);
-                              setData("valid_email", err.email);
-                              setData("valid_inst", err.institution);
-                              setData("valid_exp", err.experience);
-                            })
-                        }
+                              setData("sent", true);
+                            }
+                          } catch (err) {
+                            const error = err as {
+                              type: "VALIDATION_ERROR";
+                              expertise_area: string;
+                              name: string;
+                              email: string;
+                              institution: string;
+                              experience: string;
+                            };
+                            if (error.type === "VALIDATION_ERROR") {
+                              setData("valid_area", error.expertise_area);
+                              setData("valid_name", error.name);
+                              setData("valid_email", error.email);
+                              setData("valid_inst", error.institution);
+                              setData("valid_exp", error.experience);
+                            } else {
+                              toast.error(
+                                t("common:error.toast.form_submission_failure"),
+                                t("common:error.toast.reach_support")
+                              );
+                              console.error(error);
+                              setData("loading", false);
+                            }
+                          }
+                        }}
                       >
                         {t("cta")}
                         <ChevronRightIcon className="h-5 w-5 text-white" />
