@@ -13,7 +13,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
     const { id, lang, ...query } = req.query;
-    const { data } = (await get(`/data-catalogue2/${id}`, {
+    const { data } = (await get(`/data-catalogue/${id}`, {
       language: SHORT_LANG[lang as keyof typeof SHORT_LANG],
       ...query,
     })) as AxiosResponse<DCVariable>;
