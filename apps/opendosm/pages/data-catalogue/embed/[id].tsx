@@ -100,7 +100,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   async ({ locale, query, params }) => {
     const { theme, ...qs } = query;
     try {
-      const { data } = (await get(`/data-catalogue2/${params?.id}`, {
+      const { data } = (await get(`/data-catalogue/${params?.id}`, {
         language: SHORT_LANG[locale as keyof typeof SHORT_LANG],
         ...qs,
       })) as AxiosResponse<DCVariable>;

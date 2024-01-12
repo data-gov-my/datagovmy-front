@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "catalogue",
   async ({ locale, query }) => {
     try {
-      const { data } = await get("/data-catalogue2", {
+      const { data } = await get("/data-catalogue", {
         language: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
         site: "datagovmy",
         ...query,
