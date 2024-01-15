@@ -13,6 +13,7 @@ import { Button, Container, Input, Section, Spinner, toast } from "datagovmy-ui/
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { useRouter } from "next/router";
 import { FunctionComponent, useEffect, useState } from "react";
+import { DateTime } from "luxon";
 
 /**
  * Technical Notes
@@ -63,6 +64,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
           body: JSON.stringify({
             publication_id: params.pub_id,
             resource_id: resource_id,
+            timestamp: DateTime.now().toSQL({ includeOffset: false }),
           }),
         }
       );
