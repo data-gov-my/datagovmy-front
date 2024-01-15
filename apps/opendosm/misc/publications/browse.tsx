@@ -31,6 +31,7 @@ import { matchSorter } from "match-sorter";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { DateTime } from "luxon";
 
 /**
  * Publications
@@ -214,6 +215,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
           body: JSON.stringify({
             publication_id: params.pub_id,
             resource_id: resource_id,
+            timestamp: DateTime.now().toSQL({ includeOffset: false }),
           }),
         }
       );
