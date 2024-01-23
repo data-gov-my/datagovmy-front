@@ -9,9 +9,19 @@ import {
   Spinner,
   Tabs,
 } from "datagovmy-ui/components";
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+  useHover,
+  useRole,
+  useInteractions,
+} from "@floating-ui/react";
 import { useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { DataRequestItem, DataRequestStatus } from "pages/data-request";
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback, useEffect, useRef, useState } from "react";
 import {
   TicketIcon,
   MagnifyingGlassIcon,
@@ -107,6 +117,12 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
 
   const tableConfig: TableConfig<DataRequestItem>[] = [
     {
+      accessorKey: "ticket_id",
+      id: "ticket_id",
+      header: t("table.ticket_id"),
+      className: "w-fit text-center",
+    },
+    {
       accessorKey: "status",
       id: "status",
       header: t("table.status"),
@@ -116,11 +132,32 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       accessorKey: "dataset_title",
       id: "dataset_title",
       header: t("table.title"),
-      className: "max-sm:max-w-[300px] md:max-w-[150px] truncate",
+      className: "max-sm:max-w-[300px] md:max-w-[220px] truncate",
       cell: ({ row, getValue }) => {
+        const titleRef = useRef<HTMLParagraphElement | null>(null);
+        const [isTruncated, setIsTruncated] = useState(false);
+        const isEllipsisActive = (e: HTMLElement | null) => {
+          if (e) {
+            return e.offsetWidth < e.scrollWidth;
+          }
+          return false;
+        };
+
+        useEffect(() => {
+          if (titleRef.current) {
+            setIsTruncated(isEllipsisActive(titleRef.current));
+          }
+        }, [titleRef.current]);
+
         return (
           <div className={clx("flex items-center gap-1")}>
-            <p className={clx(baseClass, "max-w-[220px] truncate")}>{getValue()}</p>
+            {isTruncated ? (
+              <Tooltip text={getValue()} />
+            ) : (
+              <p ref={titleRef} className={clx(baseClass, "max-w-[220px] truncate")}>
+                {getValue()}
+              </p>
+            )}
           </div>
         );
       },
@@ -131,6 +168,34 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       enableSorting: false,
       className: "max-sm:max-w-[300px] md:max-w-[400px] truncate",
       header: t("table.description"),
+      cell: ({ row, getValue }) => {
+        const titleRef = useRef<HTMLParagraphElement | null>(null);
+        const [isTruncated, setIsTruncated] = useState(false);
+        const isEllipsisActive = (e: HTMLElement | null) => {
+          if (e) {
+            return e.offsetWidth < e.scrollWidth;
+          }
+          return false;
+        };
+
+        useEffect(() => {
+          if (titleRef.current) {
+            setIsTruncated(isEllipsisActive(titleRef.current));
+          }
+        }, [titleRef.current]);
+
+        return (
+          <div className={clx("flex items-center gap-1")}>
+            {isTruncated ? (
+              <Tooltip text={getValue()} className="w-[400px]" />
+            ) : (
+              <p ref={titleRef} className={clx(baseClass, "max-w-[400px] truncate")}>
+                {getValue()}
+              </p>
+            )}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "agency",
@@ -426,3 +491,48 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
 };
 
 export default DataRequestDashboard;
+
+const Tooltip: FunctionComponent<{ text: string; className?: string }> = ({ text, className }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  useFloating;
+  const [maxHeight, setMaxHeight] = useState(null);
+
+  const { refs, floatingStyles, context } = useFloating({
+    open: isOpen,
+    onOpenChange: setIsOpen,
+    placement: "top",
+    middleware: [offset({ mainAxis: 10 }), flip(), shift()],
+    whileElementsMounted: autoUpdate,
+  });
+
+  const hover = useHover(context, { move: false });
+  const role = useRole(context, {
+    // If your reference element has its own label (text).
+    role: "tooltip",
+  });
+
+  // Merge all the interactions into prop getters
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, role]);
+
+  return (
+    <>
+      <button
+        className={clx("w-[220px] truncate", className)}
+        ref={refs.setReference}
+        {...getReferenceProps()}
+      >
+        {text}
+      </button>
+      {isOpen && (
+        <div
+          className="dark:text-dim h-fit w-[300px] overflow-scroll rounded-md bg-black p-4 text-white lg:w-fit"
+          ref={refs.setFloating}
+          style={floatingStyles}
+          {...getFloatingProps()}
+        >
+          {text}
+        </div>
+      )}
+    </>
+  );
+};
