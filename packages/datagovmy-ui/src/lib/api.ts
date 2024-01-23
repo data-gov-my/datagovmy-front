@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { parseCookies } from "./helpers";
+import { getRollingToken } from "./api-edge";
 
 type BaseURL = "api" | "app" | string;
 
@@ -74,7 +75,22 @@ export const post = (
     instance(base, headers)
       .post(route, payload)
       .then((response: AxiosResponse) => resolve(response))
-      .catch((err: AxiosError) => reject(err));
+      .catch(async (err: AxiosError<{ status: number; message: string }>) => {
+        // If gotten unauthorized status, reattempt on making the request, after fetching rolling token from edge
+        if (err.response?.data.status === 401 && typeof window !== "undefined") {
+          const edgeResponse = await getRollingToken();
+          if (edgeResponse) {
+            const { token } = await edgeResponse.json();
+            return instance(base, { ...headers, Authorization: `Bearer ${token}` })
+              .post(route, payload)
+              .then((response: AxiosResponse) => resolve(response))
+              .catch((err: AxiosError) => reject(err));
+          } else {
+            reject(err);
+          }
+        }
+        reject(err);
+      });
   });
 };
 

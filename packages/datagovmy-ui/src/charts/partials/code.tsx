@@ -1,4 +1,4 @@
-import { DCChartKeys } from "../../../types";
+import { DCChartKeys } from "../../../types/data-catalogue";
 import { CodeBlock, Language } from "../../components";
 import { useTranslation } from "../../hooks";
 import { FunctionComponent, useMemo } from "react";

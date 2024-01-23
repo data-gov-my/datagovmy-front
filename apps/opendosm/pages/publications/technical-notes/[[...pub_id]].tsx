@@ -43,7 +43,19 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   ["publications"],
   async ({ locale, params, query }) => {
     const pub_id = params.pub_id ? params.pub_id[0] : "";
-    const { data } = await get("/pub-docs/technical-note", { language: locale, ...query });
+    const [{ data }, response] = await Promise.all([
+      get("/pub-docs/technical-note", { language: locale, ...query }),
+      fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_pub_dls_by_pub_resource.json`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+        },
+      }),
+    ]);
+
+    const { meta, data: total_downloads } = await response.json();
+
     const pub = pub_id
       ? await get(`/pub-docs-resource/${pub_id}`, {
           language: locale,
@@ -59,12 +71,31 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           category: null,
           agency: "DOSM",
         },
-        pub: pub ? pub.data : null,
+        pub: pub
+          ? {
+              ...pub.data,
+              resources: pub.data.resources.map(resource => ({
+                ...resource,
+                downloads:
+                  total_downloads.find(
+                    list =>
+                      list.publication_id === pub_id && list.resource_id === resource.resource_id
+                  )?.total_downloads ?? 0,
+              })),
+            }
+          : null,
         publications:
-          data.results.sort(
-            (a: Publication, b: Publication) =>
-              Date.parse(b.release_date) - Date.parse(a.release_date)
-          ) ?? [],
+          data.results
+            .map((item: Publication) => ({
+              ...item,
+              total_downloads: total_downloads
+                .filter(list => list.publication_id === item.publication_id)
+                .reduce((prev, curr) => prev + curr.total_downloads, 0),
+            }))
+            .sort(
+              (a: Publication, b: Publication) =>
+                Date.parse(b.release_date) - Date.parse(a.release_date)
+            ) ?? [],
         params: { pub_id },
         query: query ?? {},
         total_pubs: data.count,
