@@ -3,7 +3,7 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { AxiosError } from "axios";
 import { post } from "datagovmy-ui/api";
-import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
+import { Button, Dropdown, Input, Label, Radio, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
 import { SHORT_LANG } from "datagovmy-ui/constants";
 import { Catalogue, CatalogueCard } from "datagovmy-ui/data-catalogue";
@@ -151,6 +151,15 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
       : {}),
   });
 
+  const {
+    data: radio,
+    setData: setRadio,
+    reset: resetRadio,
+  } = useData({
+    useInput: false,
+    input_value: "",
+  });
+
   const { data: errorData, setData: setError } = useData({
     message: "",
     code: "",
@@ -166,6 +175,14 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
         value: item.acronym,
       }))
     : [];
+
+  const PURPOSES: Array<OptionType> = [
+    { label: t("forms.radio.research"), value: "research" },
+    { label: t("forms.radio.learning"), value: "learning" },
+    { label: t("forms.radio.product_development"), value: "product_development" },
+    { label: t("forms.radio.general_knowledge"), value: "general_knowledge" },
+    { label: t("forms.radio.others"), value: "others" },
+  ];
 
   const validateInput = async () =>
     new Promise((resolve, reject) => {
@@ -184,6 +201,26 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
           } else {
             setValidation(key, "Required");
             return [key, false];
+          }
+        }
+        if (key === "purpose_of_request") {
+          if (radio.useInput) {
+            if (radio.input_value) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, "Required");
+              return [key, false];
+            }
+          } else {
+            const purpose = value as { value: string; label: string };
+            if (purpose && purpose.label) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, "Required");
+              return [key, false];
+            }
           }
         }
       });
@@ -391,21 +428,33 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
                                   name="purpose_of_request"
                                   label={t("forms.purpose")}
                                 />
-                                <Textarea
-                                  placeholder={t("forms.purpose_placeholder")}
-                                  rows={2}
-                                  className={
-                                    validation.purpose_of_request
-                                      ? "border-danger border-2"
-                                      : "border-outline"
-                                  }
+                                <Radio
+                                  name="purpose_of_request"
+                                  className="flex flex-col gap-3 pl-2"
+                                  options={PURPOSES}
+                                  required={true}
                                   value={data.purpose_of_request}
                                   onChange={e => {
-                                    setData("purpose_of_request", e.target.value);
+                                    setData("purpose_of_request", e);
+                                    if (e.value === "others") {
+                                      setRadio("useInput", true);
+                                    } else {
+                                      setRadio("useInput", false);
+                                      setValidation("purpose_of_request", false);
+                                    }
+                                  }}
+                                />
+                                <Textarea
+                                  placeholder={t("forms.purpose_placeholder")}
+                                  rows={1}
+                                  className={clx("ml-8", "border-outline")}
+                                  value={radio.input_value}
+                                  onChange={e => {
+                                    setRadio("input_value", e.target.value);
                                     setValidation("purpose_of_request", false);
                                   }}
                                 />
-                                <p className="text-danger text-xs">
+                                <p className="text-danger ml-8 text-xs">
                                   {validation.purpose_of_request}
                                 </p>
                               </div>
@@ -427,12 +476,18 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
                                       `/data-request/?language=${
                                         SHORT_LANG[i18n.language as keyof typeof SHORT_LANG]
                                       }`,
-                                      data
+                                      {
+                                        ...data,
+                                        purpose_of_request: radio.useInput
+                                          ? radio.input_value
+                                          : data.purpose_of_request.label,
+                                      }
                                     );
 
                                     setLoading(false);
                                     setModalState("SUCCESS");
                                     reset();
+                                    resetRadio();
                                   }
 
                                   if (type === "SUBSCRIBE_TICKET") {
