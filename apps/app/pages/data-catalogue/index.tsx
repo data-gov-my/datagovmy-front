@@ -46,7 +46,8 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         ...query,
       });
 
-      const collection = recurSort(data.dataset);
+      // const collection = recurSort(data.dataset);
+      const collection = data.dataset;
 
       return {
         props: {
