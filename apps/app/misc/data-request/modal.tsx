@@ -257,7 +257,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
             <div className="fixed inset-0 bg-black bg-opacity-50" />
           </Transition.Child>
 
-          <div className="over fixed inset-0">
+          <div className="fixed inset-0">
             <div className="flex h-screen items-center justify-center p-1 text-center">
               <Transition.Child
                 as={Fragment}
