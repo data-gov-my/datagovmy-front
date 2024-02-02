@@ -2,11 +2,13 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { post } from "datagovmy-ui/api";
-import { Button, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
+import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { Fragment, FunctionComponent, useState } from "react";
+import { product_type } from ".";
+import { OptionType } from "datagovmy-ui/types";
 
 type RequestFeatureModalProps = {
   show: boolean;
@@ -21,11 +23,18 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
   const [submissionLoading, setLoading] = useState(false);
   const [modalState, setModalState] = useState<"FORM" | "SUCCESS">("FORM");
 
+  const PRODUCT_TYPE: OptionType[] = product_type.map(type => ({
+    label: t(`product_type.${type}`),
+    value: type,
+  }));
+
   const { data, setData, reset } = useData({
     name: "",
     email: "",
     institution: "",
     product_name: "",
+    product_type: "",
+    product_year: "",
     product_description: "",
     link_to_product: "",
     dataset_used: "",
@@ -200,6 +209,40 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
                                 setValidation("product_name", false);
                               }}
                               validation={validation.product_name}
+                            />
+                          </div>
+                          <div className="flex gap-3">
+                            <div className="flex w-full flex-col gap-2">
+                              <Label required label={t("request_feature_modal.product_type")} />
+                              <Dropdown
+                                anchor="left"
+                                width="w-full"
+                                className={validation.product_type ? "border-danger border-2" : ""}
+                                options={PRODUCT_TYPE}
+                                placeholder={t("request_feature_modal.product_type")}
+                                selected={
+                                  PRODUCT_TYPE.find(e => e.value === data.product_type) ?? undefined
+                                }
+                                onChange={e => {
+                                  setData("product_type", e.value);
+                                  setValidation("product_type", false);
+                                }}
+                              />
+                              <p className="text-danger text-xs">{validation.product_type}</p>
+                            </div>
+                            <Input
+                              required
+                              type="text"
+                              name="product_year"
+                              className="w-full"
+                              label={t("request_feature_modal.product_year")}
+                              placeholder={t("request_feature_modal.product_year_placeholder")}
+                              value={data.product_year}
+                              onChange={e => {
+                                setData("product_year", e);
+                                setValidation("product_year", false);
+                              }}
+                              validation={validation.product_year}
                             />
                           </div>
                           <div className="flex w-full flex-col gap-2">

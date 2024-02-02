@@ -22,6 +22,16 @@ import { useRouter } from "next/router";
 import { routes } from "@lib/routes";
 import { RequestFeatureModal } from "./request-feature-modal";
 
+export const product_type: string[] = [
+  "web_app",
+  "mobile_app",
+  "dashboard",
+  "academic_work",
+  "ml_product",
+  "analytics",
+  "publications",
+];
+
 interface CommunityProductsDashboardProps {
   params: any;
   query: any;
@@ -37,7 +47,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
   product,
   products,
 }) => {
-  const { t, i18n } = useTranslation(["community-products", "catalogue"]);
+  const { t } = useTranslation(["community-products", "catalogue"]);
   const { push, events } = useRouter();
 
   const { data, setData } = useData({
@@ -56,7 +66,11 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
     value: e.id.toString(),
   }));
 
-  const PRODUCT_TYPE: OptionType[] = [{ label: "App", value: "app" }];
+  const PRODUCT_TYPE: OptionType[] = product_type.map(type => ({
+    label: t(`product_type.${type}`),
+    value: type,
+  }));
+
   const PRODUCT_YEAR: OptionType[] = [
     { label: "2023", value: "2023" },
     { label: "2022", value: "2022" },
