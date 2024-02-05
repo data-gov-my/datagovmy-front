@@ -133,7 +133,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
   ticket_id,
   dropdown,
 }) => {
-  const { t, i18n } = useTranslation(["data-request", "agencies"]);
+  const { t, i18n } = useTranslation(["data-request", "agencies", "validations"]);
   const [modalState, setModalState] = useState<"FORM" | "SUCCESS">("FORM");
   const [submissionLoading, setLoading] = useState(false);
 
@@ -199,7 +199,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
             setValidation(key, false);
             return [key, true];
           } else {
-            setValidation(key, "Required");
+            setValidation(key, t("validations:required"));
             return [key, false];
           }
         }
@@ -209,7 +209,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
               setValidation(key, false);
               return [key, true];
             } else {
-              setValidation(key, "Required");
+              setValidation(key, t("validations:required"));
               return [key, false];
             }
           } else {
@@ -218,7 +218,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
               setValidation(key, false);
               return [key, true];
             } else {
-              setValidation(key, "Required");
+              setValidation(key, t("validations:required"));
               return [key, false];
             }
           }
@@ -446,7 +446,7 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
                                 />
                                 <Textarea
                                   placeholder={t("forms.purpose_placeholder")}
-                                  rows={1}
+                                  rows={2}
                                   className={clx("ml-8", "border-outline")}
                                   value={radio.input_value}
                                   onChange={e => {

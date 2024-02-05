@@ -19,7 +19,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
   show,
   hide,
 }) => {
-  const { t, i18n } = useTranslation(["community-products"]);
+  const { t, i18n } = useTranslation(["community-products", "validations"]);
   const [submissionLoading, setLoading] = useState(false);
   const [modalState, setModalState] = useState<"FORM" | "SUCCESS">("FORM");
 
@@ -68,7 +68,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
               setValidation(key, false);
               return [key, true];
             } else {
-              setValidation(key, "Enter valid email");
+              setValidation(key, t("validations:invalid_email"));
               return [key, false];
             }
           }
@@ -79,7 +79,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
               setValidation(key, false);
               return [key, true];
             } else {
-              setValidation(key, "Enter valid year");
+              setValidation(key, t("validations:invalid_year"));
               return [key, false];
             }
           }
@@ -88,7 +88,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
               setValidation(key, false);
               return [key, true];
             } else {
-              setValidation(key, "Enter valid URL");
+              setValidation(key, t("validations:invalid_url"));
               return [key, false];
             }
           }
@@ -107,7 +107,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
               setValidation(key, false);
               return [key, true];
             } else {
-              setValidation(key, "Invalid URL in one or more links");
+              setValidation(key, t("validations:invalid_url_multiple"));
               return [key, false];
             }
           }
@@ -115,7 +115,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
             setValidation(key, false);
             return [key, true];
           } else {
-            setValidation(key, "Required");
+            setValidation(key, t("validations:required"));
             return [key, false];
           }
         }
