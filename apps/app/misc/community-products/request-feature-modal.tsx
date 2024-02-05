@@ -4,7 +4,7 @@ import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { post } from "datagovmy-ui/api";
 import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
-import { clx } from "datagovmy-ui/helpers";
+import { clx, isValidURL } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { Fragment, FunctionComponent, useState } from "react";
 import { product_type } from ".";
@@ -36,7 +36,9 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
     product_type: "",
     product_year: "",
     product_description: "",
-    link_to_product: "",
+    problem_statement: "",
+    solutions_developed: "",
+    product_link: "",
     dataset_used: "",
   });
 
@@ -59,6 +61,55 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
           if (key === "institution") {
             setValidation(key, false);
             return [key, true];
+          }
+          if (key === "email") {
+            const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            if (emailRegex.test(value)) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, "Enter valid email");
+              return [key, false];
+            }
+          }
+          if (key === "product_year") {
+            // Valid year: 1900 - 2099
+            const yearRegex = /^(19|20)\d{2}$/;
+            if (yearRegex.test(value)) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, "Enter valid year");
+              return [key, false];
+            }
+          }
+          if (key === "product_link") {
+            if (isValidURL(value)) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, "Enter valid URL");
+              return [key, false];
+            }
+          }
+          if (key === "dataset_used") {
+            const links = value.split(",");
+            const validateLink = links.map(link => {
+              const trimmed = link.trim();
+              if (isValidURL(trimmed)) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+
+            if (validateLink.every(el => el === true)) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, "Invalid URL in one or more links");
+              return [key, false];
+            }
           }
           if (value) {
             setValidation(key, false);
@@ -217,7 +268,9 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
                               <Dropdown
                                 anchor="left"
                                 width="w-full"
-                                className={validation.product_type ? "border-danger border-2" : ""}
+                                className={
+                                  validation.product_type ? "border-danger h-10 border-2" : "h-10"
+                                }
                                 options={PRODUCT_TYPE}
                                 placeholder={t("request_feature_modal.product_type")}
                                 selected={
@@ -253,8 +306,10 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
                             />
                             <Textarea
                               required
-                              placeholder={t("request_feature_modal.product_description")}
-                              rows={5}
+                              placeholder={t(
+                                "request_feature_modal.product_description_placeholder"
+                              )}
+                              rows={3}
                               className={
                                 validation.product_description
                                   ? "border-danger border-2"
@@ -267,45 +322,101 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
                               }}
                             />
                             <p className="text-danger text-xs">{validation.product_description}</p>
-                            <p className="text-dim text-xs">
-                              {t("request_feature_modal.product_description_note")}
-                            </p>
+                          </div>
+                          <div className="flex w-full flex-col gap-2">
+                            <Label
+                              required
+                              name="problem_statement"
+                              label={t("request_feature_modal.problem_statement")}
+                            />
+                            <Textarea
+                              required
+                              placeholder={t("request_feature_modal.problem_statement_placeholder")}
+                              rows={3}
+                              className={
+                                validation.problem_statement
+                                  ? "border-danger border-2"
+                                  : "border-outline"
+                              }
+                              value={data.problem_statement}
+                              onChange={e => {
+                                setData("problem_statement", e.target.value);
+                                setValidation("problem_statement", false);
+                              }}
+                            />
+                            <p className="text-danger text-xs">{validation.problem_statement}</p>
+                          </div>
+                          <div className="flex w-full flex-col gap-2">
+                            <Label
+                              required
+                              name="solutions_developed"
+                              label={t("request_feature_modal.solutions_developed")}
+                            />
+                            <Textarea
+                              required
+                              placeholder={t(
+                                "request_feature_modal.solutions_developed_placeholder"
+                              )}
+                              rows={3}
+                              className={
+                                validation.solutions_developed
+                                  ? "border-danger border-2"
+                                  : "border-outline"
+                              }
+                              value={data.solutions_developed}
+                              onChange={e => {
+                                setData("solutions_developed", e.target.value);
+                                setValidation("solutions_developed", false);
+                              }}
+                            />
+                            <p className="text-danger text-xs">{validation.solutions_developed}</p>
                           </div>
 
                           <div className="flex w-full flex-col gap-2">
                             <Input
                               required
                               type="text"
-                              name="link_to_product"
+                              name="product_link"
                               className="w-full"
-                              label={t("request_feature_modal.link_to_product")}
-                              placeholder={t("request_feature_modal.link_to_product")}
-                              value={data.link_to_product}
+                              label={t("request_feature_modal.product_link")}
+                              placeholder={t("request_feature_modal.product_link")}
+                              value={data.product_link}
                               onChange={e => {
-                                setData("link_to_product", e);
-                                setValidation("link_to_product", false);
+                                setData("product_link", e);
+                                setValidation("product_link", false);
                               }}
-                              validation={validation.link_to_product}
+                              validation={validation.product_link}
                             />
                             <p className="text-dim text-xs">
-                              {t("request_feature_modal.link_to_product_note")}
+                              {t("request_feature_modal.product_link_note")}
                             </p>
                           </div>
-                          <div className="flex">
-                            <Input
+                          <div className="flex w-full flex-col gap-2">
+                            <Label
                               required
-                              type="text"
                               name="dataset_used"
-                              className="w-full"
                               label={t("request_feature_modal.dataset_used")}
+                            />
+
+                            <Textarea
+                              required
                               placeholder={t("request_feature_modal.dataset_used")}
+                              rows={3}
+                              className={
+                                validation.dataset_used
+                                  ? "border-danger border-2"
+                                  : "border-outline"
+                              }
                               value={data.dataset_used}
                               onChange={e => {
-                                setData("dataset_used", e);
+                                setData("dataset_used", e.target.value);
                                 setValidation("dataset_used", false);
                               }}
-                              validation={validation.dataset_used}
                             />
+                            <p className="text-danger text-xs">{validation.dataset_used}</p>
+                            <p className="text-dim text-xs">
+                              {t("request_feature_modal.dataset_used_note")}
+                            </p>
                           </div>
 
                           <Button

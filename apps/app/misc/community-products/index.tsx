@@ -23,13 +23,12 @@ import { routes } from "@lib/routes";
 import { RequestFeatureModal } from "./request-feature-modal";
 
 export const product_type: string[] = [
-  "web_app",
-  "mobile_app",
+  "web_application",
+  "mobile_application",
   "dashboard",
-  "academic_work",
-  "ml_product",
+  "academic_publication",
+  "machine_learning",
   "analytics",
-  "publications",
 ];
 
 interface CommunityProductsDashboardProps {
