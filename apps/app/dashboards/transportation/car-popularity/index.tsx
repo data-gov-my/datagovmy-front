@@ -266,7 +266,10 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                 width="w-full sm:w-[200px]"
                 options={filterMakers}
                 selected={query.maker}
-                onChange={selected => setQuery("maker", selected)}
+                onChange={selected => {
+                  setQuery("maker", selected);
+                  setQuery("model", "");
+                }}
                 enableSearch
               />
               <Dropdown
