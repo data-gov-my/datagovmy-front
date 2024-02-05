@@ -61,7 +61,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
   });
 
   const PRODUCTS_OPTIONS: OptionType[] = products.map(e => ({
-    label: e.title,
+    label: e.name,
     value: e.id.toString(),
   }));
 
@@ -285,8 +285,8 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                         setData("show", true);
                         setData("modal_loading", true);
                         push(
-                          routes.COMMUNITY_PRODUCTS.concat("/", item.id),
-                          routes.COMMUNITY_PRODUCTS.concat("/", item.id),
+                          routes.COMMUNITY_PRODUCTS.concat("/", item.id.toString()),
+                          routes.COMMUNITY_PRODUCTS.concat("/", item.id.toString()),
                           { scroll: false }
                         );
                       }}

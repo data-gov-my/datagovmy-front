@@ -9,6 +9,7 @@ import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { Fragment, FunctionComponent, useState } from "react";
 import { product_type } from ".";
 import { OptionType } from "datagovmy-ui/types";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 
 type RequestFeatureModalProps = {
   show: boolean;
@@ -429,17 +430,12 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
                                   message: string;
                                 };
                                 if (isValid.ok) {
-                                  // const response = await post(
-                                  //   `/data-request/?language=${
-                                  //     SHORT_LANG[i18n.language as keyof typeof SHORT_LANG]
-                                  //   }`,
-                                  //   {
-                                  //     ...data,
-                                  //     purpose_of_request: radio.useInput
-                                  //       ? radio.input_value
-                                  //       : data.purpose_of_request.label,
-                                  //   }
-                                  // );
+                                  const response = await post(
+                                    `/community-product/?language=${
+                                      SHORT_LANG[i18n.language as keyof typeof SHORT_LANG]
+                                    }`,
+                                    data
+                                  );
 
                                   setLoading(false);
                                   setModalState("SUCCESS");
