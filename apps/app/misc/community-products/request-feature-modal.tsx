@@ -94,6 +94,11 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
             }
           }
           if (key === "dataset_used") {
+            if (!value) {
+              setValidation(key, t("validations:required"));
+              return [key, false];
+            }
+
             const links = value.split(",");
             const validateLink = links.map(link => {
               const trimmed = link.trim();

@@ -197,7 +197,7 @@ const PageNumber = ({
       onClick={() => setPage(page)}
       className={clx(
         "flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium hover:cursor-pointer",
-        isActive && "bg-outline"
+        isActive && "bg-outline dark:bg-outlineHover-dark"
       )}
     >
       {page}

@@ -67,8 +67,12 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
 
   const { filter, setFilter, actives, reset } = useFilter({
     search: query.search ? query.search : "",
-    product_type: query.product_type ? query.product_type : undefined,
-    product_year: query.product_year ? query.product_year : undefined,
+    product_type: query.product_type
+      ? { label: t(`product_type.${query.product_type}`), value: query.product_type }
+      : undefined,
+    product_year: query.product_year
+      ? { label: query.product_year, value: query.product_year }
+      : undefined,
     page: query.page ?? "1",
   });
 
@@ -163,7 +167,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                 <Button onClick={open} variant="default" className="shadow-floating">
                   <span>{t("catalogue:filter")}</span>
                   <span className="w-4.5 bg-primary dark:bg-primary-dark h-5 rounded-md text-center text-white">
-                    {/* {actives.filter(e => !e.includes("page")).length} */}0
+                    {actives.filter(e => !(e.includes("page") || e.includes("search"))).length}
                   </span>
                   <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
                 </Button>
@@ -177,12 +181,11 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                       name="type"
                       label={"Product Type"}
                       options={PRODUCT_TYPE}
-                      value={data.type}
+                      value={filter.product_type}
                       onChange={e => {
-                        // setData("loading", true);
-                        setData("type", e.value);
-                        // setFilter("frequency", e);
-                        // setFilter("page", "1");
+                        setData("loading", true);
+                        setFilter("product_type", e);
+                        setFilter("page", "1");
                       }}
                     />
                   </div>
@@ -191,12 +194,11 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                       name="year"
                       label={"Year"}
                       options={PRODUCT_YEAR}
-                      value={data.year}
+                      value={filter.product_year}
                       onChange={e => {
-                        // setData("loading", true);
-                        setData("year", e.value);
-                        // setFilter("frequency", e);
-                        // setFilter("page", "1");
+                        setData("loading", true);
+                        setFilter("product_year", e);
+                        setFilter("page", "1");
                       }}
                     />
                   </div>
@@ -204,12 +206,12 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                     <Button
                       variant="primary"
                       className="w-full justify-center"
-                      // disabled={!actives.filter(e => !e.includes("page")).length}
-                      disabled={true}
-                      // onClick={() => {
-                      //   setData("loading", true);
-                      //   reset();
-                      // }}
+                      disabled={!actives.filter(e => !e.includes("page")).length}
+                      onClick={() => {
+                        setData("loading", true);
+                        setFilter("product_year", undefined);
+                        setFilter("product_type", undefined);
+                      }}
                     >
                       {t("common:common.reset")}
                     </Button>
@@ -230,10 +232,10 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
               width="w-fit"
               options={PRODUCT_TYPE}
               placeholder={"Product type"}
-              selected={PRODUCT_TYPE.find(e => e.value === filter.product_type) ?? undefined}
+              selected={PRODUCT_TYPE.find(e => e.value === filter.product_type?.value) ?? undefined}
               onChange={e => {
                 setData("loading", true);
-                setFilter("product_type", e.value);
+                setFilter("product_type", e);
                 setFilter("page", "1");
               }}
             />
@@ -242,10 +244,10 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
               width="w-fit"
               placeholder={"Year"}
               options={PRODUCT_YEAR}
-              selected={PRODUCT_YEAR.find(e => e.value === filter.product_year) ?? undefined}
+              selected={PRODUCT_YEAR.find(e => e.value === filter.product_year?.value) ?? undefined}
               onChange={e => {
                 setData("loading", true);
-                setFilter("product_year", e.value);
+                setFilter("product_year", e);
                 setFilter("page", "1");
               }}
             />
@@ -308,6 +310,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                     currentPage={Number(filter.page)}
                     totalPage={Math.ceil(total_products / 9)}
                     setPage={newPage => {
+                      setData("loading", true);
                       setFilter("page", newPage.toString());
                     }}
                   />
