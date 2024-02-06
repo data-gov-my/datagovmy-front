@@ -65,7 +65,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
     search_query: query.search ? query.search : "",
   });
 
-  const { filter, setFilter, actives, reset } = useFilter({
+  const { filter, setFilter, actives, queries } = useFilter({
     search: query.search ? query.search : "",
     product_type: query.product_type
       ? { label: t(`product_type.${query.product_type}`), value: query.product_type }
@@ -334,9 +334,13 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                   loading={data.loading}
                   hide={() => {
                     setData("show", false);
-                    push(routes.COMMUNITY_PRODUCTS, undefined, {
-                      scroll: false,
-                    });
+                    push(
+                      routes.COMMUNITY_PRODUCTS.concat(actives.length ? queries : ""),
+                      undefined,
+                      {
+                        scroll: false,
+                      }
+                    );
                   }}
                   product={product}
                 />

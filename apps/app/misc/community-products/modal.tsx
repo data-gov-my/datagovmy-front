@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { At, Button, Spinner } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
-import { clx, toDate } from "datagovmy-ui/helpers";
+import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DateTime } from "luxon";
 import Image from "next/image";
@@ -15,29 +15,6 @@ interface CommunityProductsModalProps {
   show: boolean;
   product: CommunityProductsItem;
 }
-
-type ApplicationData = {
-  title: string;
-  purpose: string;
-  problem_statement: string;
-  solution_developed: string;
-  source: string;
-  website: string;
-  email: string;
-};
-
-const dummyApplication: ApplicationData = {
-  title: "Mobile Trainer",
-  purpose:
-    "Aplikasi yang berfungsi sebagai pelatih kecergasan untuk kegunaan orang ramai. Berfungsi sebagai trainer maya yang mengingatkan anda tentang rancangan untuk menurunkan berat badan serta mengesyorkan diet, restoran dan gim berdekatan serta latihan fizikal yang berkesan.",
-  problem_statement:
-    "The cases of people becoming underweight, overweight and obesity is on the rise everywhere as most people don't have personal trainers or the willpower to get in shape.",
-  solution_developed:
-    "An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.",
-  source: "KKM",
-  website: "www.website.com/hello",
-  email: "marsyam83@gmail.com",
-};
 
 const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = ({
   hide,
@@ -73,7 +50,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
             </Transition.Child>
 
             <div className="fixed inset-0">
-              <div className="flex min-h-full items-center justify-center py-2 text-center">
+              <div className="flex h-screen items-center justify-center p-4 text-center">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -85,7 +62,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                 >
                   <Dialog.Panel
                     className={
-                      "border-outline shadow-floating dark:border-outlineHover-dark max-h-[100vh] w-full max-w-4xl transform overflow-hidden rounded-xl border bg-white text-left align-middle font-sans transition-all dark:bg-black sm:max-h-[90vh]"
+                      "border-outline shadow-floating dark:border-outlineHover-dark flex h-full max-h-[800px] w-full max-w-4xl transform flex-col gap-3 rounded-xl border bg-white text-left font-sans transition-all dark:bg-black"
                     }
                   >
                     {loading ? (
@@ -136,8 +113,8 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                         </Dialog.Title>
 
                         {/* Content */}
-                        <div className="hide-scrollbar flex h-[85vh] flex-col gap-8 overflow-scroll p-6 sm:h-full sm:flex-row">
-                          <div className="gap-4.5 flex flex-col">
+                        <div className="hide-scrollbar flex flex-1 flex-col gap-8 overflow-hidden p-6 sm:h-full sm:flex-row">
+                          <div className="gap-4.5 hide-scrollbar flex flex-col overflow-y-visible sm:overflow-y-scroll">
                             <div className="bg-background border-outline relative flex h-full w-full items-center rounded-lg border sm:h-[300px] sm:w-[300px]">
                               <Image
                                 src={product.image || "/static/images/og_en-GB.png"}
@@ -170,7 +147,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               }
                             })}
                           </div>
-                          <div className="hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:h-[70vh] sm:overflow-y-scroll">
+                          <div className="hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:overflow-y-scroll">
                             {Object.entries(product).map(([key, value]) => {
                               if (
                                 key !== "product_name" &&
