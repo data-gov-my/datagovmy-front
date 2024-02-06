@@ -23,6 +23,7 @@ export type CommunityProductsItem = {
   dataset_used: string;
   status: string;
   created_at: string;
+  image?: string;
 };
 
 type CPResults = {
@@ -68,8 +69,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     try {
       const product_id = params && params.product_id ? params.product_id[0] : "";
 
-      // Fetch data from BE here later
-      // const data = dummy;
       const { data } = (await get("community-product/list", {
         language: SHORT_LANG[locale as keyof typeof SHORT_LANG],
         ...query,

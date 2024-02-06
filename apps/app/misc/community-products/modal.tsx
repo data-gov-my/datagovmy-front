@@ -45,8 +45,8 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
   show,
   product,
 }) => {
-  const { t, i18n } = useTranslation(["community-products"]);
-  const diffInDays = product && DateTime.now().diff(DateTime.fromISO(product.date), ["days"]);
+  const { t } = useTranslation(["community-products"]);
+  const diffInDays = product && DateTime.now().diff(DateTime.fromISO(product.created_at), ["days"]);
 
   return (
     <>
@@ -98,7 +98,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                           className="border-outline flex items-start border-b p-6 pb-6 text-black dark:text-white"
                         >
                           <div className="flex flex-1 flex-col gap-1.5">
-                            <p className="text-lg font-bold">{product.title}</p>
+                            <p className="text-lg font-bold">{product.product_name}</p>
                             <div className="flex items-center gap-1.5 text-sm font-medium">
                               <p
                                 className={clx(
@@ -111,11 +111,13 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               {diffInDays.days < 14 && (
                                 <div className="bg-dim h-1 w-1 rounded-full" />
                               )}
-                              <p className="text-dim capitalize">{product.type}</p>
+                              <p className="text-dim capitalize">
+                                {t(`product_type.${product.product_type}`)}
+                              </p>
                               <div className="bg-dim h-1 w-1 rounded-full" />
                               <p className="text-dim">
                                 {" "}
-                                {toDate(product.date, "dd MMM yyyy", i18n.language)}
+                                {DateTime.fromISO(product.created_at).toFormat("dd MMM yyyy")}
                               </p>
                             </div>
                           </div>
@@ -135,14 +137,14 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                           <div className="gap-4.5 flex flex-col">
                             <div className="bg-background border-outline relative flex h-full w-full items-center rounded-lg border sm:h-[300px] sm:w-[300px]">
                               <Image
-                                src={product.image}
+                                src={product.image || "/static/images/og_en-GB.png"}
                                 width={600}
                                 height={600}
-                                alt={product.title}
+                                alt={product.product_name}
                               />
                             </div>
-                            {Object.entries(dummyApplication).map(([key, value]) => {
-                              if (key === "email" || key === "website") {
+                            {Object.entries(product).map(([key, value]) => {
+                              if (key === "email" || key === "product_link") {
                                 return (
                                   <div className="flex flex-col gap-1 text-base text-black">
                                     <p className="font-bold">{t(key)}:</p>
@@ -150,9 +152,9 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                       passHref={true}
                                       external={true}
                                       href={
-                                        key === "email"
+                                        key === "email" && typeof value === "string"
                                           ? `mailto:${value}`
-                                          : value.startsWith("http")
+                                          : typeof value === "string" && value.startsWith("http")
                                           ? value
                                           : `https://${value}`
                                       }
@@ -166,8 +168,15 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                             })}
                           </div>
                           <div className="hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:h-[70vh] sm:overflow-y-scroll">
-                            {Object.entries(dummyApplication).map(([key, value]) => {
-                              if (key === "email" || key === "website") {
+                            {Object.entries(product).map(([key, value]) => {
+                              if (
+                                key !== "product_name" &&
+                                key !== "product_year" &&
+                                key !== "product_description" &&
+                                key !== "problem_statement" &&
+                                key !== "solutions_developed" &&
+                                key !== "dataset_used"
+                              ) {
                                 return null;
                               }
                               return (
