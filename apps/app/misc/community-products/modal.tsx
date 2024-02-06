@@ -46,7 +46,8 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
   product,
 }) => {
   const { t } = useTranslation(["community-products"]);
-  const diffInDays = product && DateTime.now().diff(DateTime.fromISO(product.created_at), ["days"]);
+  const diffInDays =
+    product && DateTime.now().diff(DateTime.fromISO(product.date_approved), ["days"]);
 
   return (
     <>
@@ -117,7 +118,9 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               <div className="bg-dim h-1 w-1 rounded-full" />
                               <p className="text-dim">
                                 {" "}
-                                {DateTime.fromISO(product.created_at).toFormat("dd MMM yyyy")}
+                                {DateTime.fromISO(product.date_approved).toFormat(
+                                  "dd MMM yyyy hh:mm a"
+                                )}
                               </p>
                             </div>
                           </div>

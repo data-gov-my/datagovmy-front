@@ -278,6 +278,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                   {products.map(item => (
                     <CommunityProductsCard
+                      key={item.id}
                       item={item}
                       onClick={() => {
                         setData("show", true);

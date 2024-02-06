@@ -23,6 +23,7 @@ export type CommunityProductsItem = {
   dataset_used: string;
   status: string;
   created_at: string;
+  date_approved: string;
   image?: string;
 };
 
@@ -75,7 +76,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       })) as { data: CPResults };
 
       const product = product_id
-        ? data.results.find(item => item.id.toString() === product_id)
+        ? await get(`/community-product/${product_id}`, {
+            language: locale,
+          })
         : null;
 
       return {
@@ -88,7 +91,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             agency: null,
           },
           products: data.results,
-          product: product,
+          product: product ? product.data : null,
           params: { product_id },
           query: query ?? {},
           total_products: data.count,
