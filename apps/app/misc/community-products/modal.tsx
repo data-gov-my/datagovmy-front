@@ -1,13 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { At, Button, Spinner } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
 import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import { CommunityProductsItem } from "pages/community-products/[[...product_id]]";
-import { Fragment, FunctionComponent } from "react";
+import { Fragment, FunctionComponent, useContext, useState } from "react";
 
 interface CommunityProductsModalProps {
   hide: () => void;
@@ -25,6 +28,8 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
   const { t } = useTranslation(["community-products"]);
   const diffInDays =
     product && DateTime.now().diff(DateTime.fromISO(product.date_approved), ["days"]);
+  const [expandImage, setExpandImage] = useState(false);
+  const { size } = useContext(WindowContext);
 
   return (
     <>
@@ -35,6 +40,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
             className={clx(header.variable, body.variable, "relative z-30 font-sans")}
             onClose={() => {
               hide();
+              setExpandImage(false);
             }}
           >
             <Transition.Child
@@ -50,7 +56,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
             </Transition.Child>
 
             <div className="fixed inset-0">
-              <div className="flex h-screen items-center justify-center p-4 text-center">
+              <div className="flex h-screen justify-center p-4 text-center sm:items-center">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -62,7 +68,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                 >
                   <Dialog.Panel
                     className={
-                      "border-outline shadow-floating dark:border-outlineHover-dark flex h-full max-h-[800px] w-full max-w-4xl transform flex-col gap-3 rounded-xl border bg-white text-left font-sans transition-all dark:bg-black"
+                      "border-outline shadow-floating dark:border-outlineHover-dark flex h-[85vh] max-h-[800px] w-full max-w-4xl transform flex-col gap-3 rounded-xl border bg-white text-left font-sans transition-all dark:bg-black sm:h-full"
                     }
                   >
                     {loading ? (
@@ -77,7 +83,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                         >
                           <div className="flex flex-1 flex-col gap-1.5">
                             <p className="text-lg font-bold">{product.product_name}</p>
-                            <div className="flex items-center gap-1.5 text-sm font-medium">
+                            <div className="flex flex-col items-start text-sm font-medium sm:flex-row sm:items-center sm:gap-1.5">
                               <p
                                 className={clx(
                                   "text-primary",
@@ -87,12 +93,12 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                 {t("new")}
                               </p>
                               {diffInDays.days < 14 && (
-                                <div className="bg-dim h-1 w-1 rounded-full" />
+                                <div className="bg-dim hidden h-1 w-1 rounded-full sm:block" />
                               )}
                               <p className="text-dim capitalize">
                                 {t(`product_type.${product.product_type}`)}
                               </p>
-                              <div className="bg-dim h-1 w-1 rounded-full" />
+                              <div className="bg-dim hidden h-1 w-1 rounded-full sm:block" />
                               <p className="text-dim">
                                 {" "}
                                 {DateTime.fromISO(product.date_approved).toFormat(
@@ -113,41 +119,71 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                         </Dialog.Title>
 
                         {/* Content */}
-                        <div className="hide-scrollbar flex flex-1 flex-col gap-8 overflow-hidden p-6 sm:h-full sm:flex-row">
-                          <div className="gap-4.5 hide-scrollbar flex flex-col overflow-y-visible sm:overflow-y-scroll">
-                            <div className="bg-background border-outline relative flex h-full w-full items-center rounded-lg border sm:h-[300px] sm:w-[300px]">
+                        <div className="hide-scrollbar flex flex-1 flex-col gap-8 overflow-scroll p-6 sm:h-full sm:flex-row sm:overflow-hidden">
+                          <div
+                            className={clx(
+                              "gap-4.5 hide-scrollbar flex flex-col overflow-y-visible sm:overflow-y-scroll",
+                              expandImage && "w-full transition-all"
+                            )}
+                          >
+                            <div
+                              className={clx(
+                                "bg-background border-outline group relative flex h-full w-full items-center rounded-lg border transition-all ease-in hover:cursor-pointer sm:h-[300px] sm:w-[300px]",
+                                expandImage && "flex-1  sm:w-full"
+                              )}
+                              onClick={() =>
+                                size.width > BREAKPOINTS.SM && setExpandImage(prev => !prev)
+                              }
+                            >
                               <Image
                                 src={product.thumbnail || "/static/images/og_en-GB.png"}
-                                width={600}
-                                height={600}
+                                width={1000}
+                                height={1000}
+                                // fill={true}
                                 alt={product.product_name}
                               />
+                              <p className="text-dim absolute bottom-0 left-1/2 hidden -translate-x-1/2 items-center gap-1 text-xs group-hover:flex">
+                                {expandImage ? (
+                                  <MagnifyingGlassMinusIcon className="h-3 w-3" />
+                                ) : (
+                                  <MagnifyingGlassPlusIcon className="h-3 w-3" />
+                                )}
+                                {expandImage ? "Close" : "Expand"}
+                              </p>
                             </div>
-                            {Object.entries(product).map(([key, value]) => {
-                              if (key === "email" || key === "product_link") {
-                                return (
-                                  <div className="flex flex-col gap-1 text-base text-black">
-                                    <p className="font-bold">{t(key)}:</p>
-                                    <At
-                                      passHref={true}
-                                      external={true}
-                                      href={
-                                        key === "email" && typeof value === "string"
-                                          ? `mailto:${value}`
-                                          : typeof value === "string" && value.startsWith("http")
-                                          ? value
-                                          : `https://${value}`
-                                      }
-                                      className="group"
-                                    >
-                                      <p className="text-primary group-hover:underline">{value}</p>
-                                    </At>
-                                  </div>
-                                );
-                              }
-                            })}
+                            {!expandImage &&
+                              Object.entries(product).map(([key, value]) => {
+                                if (key === "email" || key === "product_link") {
+                                  return (
+                                    <div className="flex flex-col gap-1 text-base text-black">
+                                      <p className="font-bold">{t(key)}:</p>
+                                      <At
+                                        passHref={true}
+                                        external={true}
+                                        href={
+                                          key === "email" && typeof value === "string"
+                                            ? `mailto:${value}`
+                                            : typeof value === "string" && value.startsWith("http")
+                                            ? value
+                                            : `https://${value}`
+                                        }
+                                        className="group"
+                                      >
+                                        <p className="text-primary group-hover:underline">
+                                          {value}
+                                        </p>
+                                      </At>
+                                    </div>
+                                  );
+                                }
+                              })}
                           </div>
-                          <div className="hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:overflow-y-scroll">
+                          <div
+                            className={clx(
+                              "hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:overflow-y-scroll",
+                              expandImage && "hidden"
+                            )}
+                          >
                             {Object.entries(product).map(([key, value]) => {
                               if (
                                 key !== "product_name" &&

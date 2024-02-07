@@ -17,7 +17,11 @@ const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({
   const diffInDays = DateTime.now().diff(DateTime.fromISO(item.created_at), ["days"]);
 
   return (
-    <div className="gap-4.5 flex w-full hover:cursor-pointer" key={item.id} onClick={onClick}>
+    <div
+      className="gap-4.5 hover:bg-washed dark:hover:bg-washed-dark flex w-full rounded-md hover:cursor-pointer"
+      key={item.id}
+      onClick={onClick}
+    >
       <div className="bg-background dark:bg-washed-dark border-outline dark:border-outlineHover-dark flex h-[150px] w-[150px] items-center rounded-lg border">
         <Image
           src={item.thumbnail || "/static/images/og_en-GB.png"}
