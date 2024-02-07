@@ -117,7 +117,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                           <div className="gap-4.5 hide-scrollbar flex flex-col overflow-y-visible sm:overflow-y-scroll">
                             <div className="bg-background border-outline relative flex h-full w-full items-center rounded-lg border sm:h-[300px] sm:w-[300px]">
                               <Image
-                                src={product.image || "/static/images/og_en-GB.png"}
+                                src={product.thumbnail || "/static/images/og_en-GB.png"}
                                 width={600}
                                 height={600}
                                 alt={product.product_name}

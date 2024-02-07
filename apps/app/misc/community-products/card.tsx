@@ -20,7 +20,7 @@ const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({
     <div className="gap-4.5 flex w-full hover:cursor-pointer" key={item.id} onClick={onClick}>
       <div className="bg-background dark:bg-washed-dark border-outline dark:border-outlineHover-dark flex h-[150px] w-[150px] items-center rounded-lg border">
         <Image
-          src={item.image || "/static/images/og_en-GB.png"}
+          src={item.thumbnail || "/static/images/og_en-GB.png"}
           width={150}
           height={150}
           alt={item.product_name}

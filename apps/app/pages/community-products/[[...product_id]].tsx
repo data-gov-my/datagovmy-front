@@ -24,7 +24,7 @@ export type CommunityProductsItem = {
   status: string;
   created_at: string;
   date_approved: string;
-  image?: string;
+  thumbnail?: string;
 };
 
 type CPResults = {
