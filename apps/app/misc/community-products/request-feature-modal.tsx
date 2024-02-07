@@ -160,7 +160,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
           </Transition.Child>
 
           <div className="fixed inset-0">
-            <div className="flex h-screen items-center justify-center py-2 text-center">
+            <div className="flex h-screen justify-center p-4 text-center sm:items-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -172,7 +172,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
               >
                 <Dialog.Panel
                   className={clx(
-                    "border-outline shadow-floating dark:border-outlineHover-dark flex w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black",
+                    "border-outline shadow-floating dark:border-outlineHover-dark flex h-[85vh] w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black",
                     modalState === "SUCCESS" ? "h-60" : "h-full max-h-[800px]"
                   )}
                 >
@@ -196,7 +196,7 @@ export const RequestFeatureModal: FunctionComponent<RequestFeatureModalProps> = 
                         </Button>
                       </Dialog.Title>
 
-                      <div className="flex flex-1 flex-col gap-3 overflow-hidden">
+                      <div className="flex flex-1 flex-col gap-3 overflow-hidden sm:h-full">
                         <p className="text-base font-medium">
                           {t("request_feature_modal.subtitle")}
                         </p>

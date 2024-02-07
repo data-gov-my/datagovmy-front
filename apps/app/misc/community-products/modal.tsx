@@ -79,7 +79,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                       <>
                         <Dialog.Title
                           as="div"
-                          className="border-outline flex items-start border-b p-6 pb-6 text-black dark:text-white"
+                          className="border-outline flex items-start border-b p-6 text-black dark:text-white"
                         >
                           <div className="flex flex-1 flex-col gap-1.5">
                             <p className="text-lg font-bold">{product.product_name}</p>
