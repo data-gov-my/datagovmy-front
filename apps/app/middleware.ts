@@ -10,6 +10,7 @@ export const config = {
     "/community",
     "/helpdesk",
     "/data-request",
+    "/community-products",
   ],
 };
 
