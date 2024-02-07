@@ -56,7 +56,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
             </Transition.Child>
 
             <div className="fixed inset-0">
-              <div className="flex h-screen justify-center p-4 text-center sm:items-center">
+              <div className="flex h-full items-center justify-center p-4 text-center">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -68,7 +68,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                 >
                   <Dialog.Panel
                     className={
-                      "border-outline shadow-floating dark:border-outlineHover-dark flex h-[85vh] max-h-[800px] w-full max-w-4xl transform flex-col gap-3 rounded-xl border bg-white text-left font-sans transition-all dark:bg-black sm:h-full"
+                      "border-outline shadow-floating dark:border-outlineHover-dark flex h-full max-h-[800px] w-full max-w-4xl transform flex-col gap-3 rounded-xl border bg-white text-left font-sans transition-all dark:bg-black"
                     }
                   >
                     {loading ? (
