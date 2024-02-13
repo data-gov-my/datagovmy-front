@@ -108,7 +108,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
           )
         );
       case "yearly":
-        return timeseries.data["monthly"].x.length;
+        return timeseries.data["yearly"].x.length;
 
       default:
         return Math.ceil(
@@ -128,7 +128,9 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
 
   const { data, setData } = useData({
     minmax: [
-      timeseries.data.daily.x.length - diffFromJan22("daily"),
+      timeseries.data.daily.x.length - diffFromJan22("daily") > 0
+        ? timeseries.data.daily.x.length - diffFromJan22("daily")
+        : 0,
       timeseries.data.daily.x.length - 1,
     ],
     index: 0,
@@ -164,7 +166,11 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                 setData("index", index);
                 setData("minmax", [
                   timeseries.data[config[index].periodly].x.length -
-                    diffFromJan22(config[index].periodly),
+                    diffFromJan22(config[index].periodly) >
+                  0
+                    ? timeseries.data[config[index].periodly].x.length -
+                      diffFromJan22(config[index].periodly)
+                    : 0,
                   timeseries.data[config[index].periodly].x.length - 1,
                 ]);
                 setData("period", config[index].period);
