@@ -89,7 +89,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
             translations={data.translations}
             config={{
               precision: config.precision,
-              range: config?.range || "DAILY",
+              range: data.frequency || "DAILY",
             }}
           />
         );
@@ -141,7 +141,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
             if (key === "x")
               return toDate(
                 item[key],
-                SHORT_PERIOD_FORMAT[config.range as keyof typeof SHORT_PERIOD_FORMAT],
+                SHORT_PERIOD_FORMAT[data.frequency as keyof typeof SHORT_PERIOD_FORMAT],
                 i18n.language
               );
             else return item[key];
