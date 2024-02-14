@@ -132,7 +132,7 @@ const CatalogueWidget: FunctionComponent<CatalogueWidgetProps> = ({
             className={clx(chips.length ? "h-[70vh]" : "h-[75vh]", "w-full")}
             config={{
               precision: config.precision,
-              range: config.range ?? "DAILY",
+              range: data.frequency ?? "DAILY",
             }}
             translations={data.translations}
           />
