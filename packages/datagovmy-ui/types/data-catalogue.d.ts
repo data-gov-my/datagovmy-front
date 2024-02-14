@@ -72,6 +72,7 @@ export type DCVariable = {
   link_parquet: string;
   link_csv: string;
   link_preview: string;
+  frequency: keyof typeof SHORT_PERIOD;
   data_source: Array<string>;
   fields: Array<DCField>;
   data_as_of: string;
@@ -105,7 +106,6 @@ export type DCDataViz = {
     operation?: string;
     colors?: string;
     geojson?: string;
-    range?: keyof typeof SHORT_PERIOD;
   };
 };
 
