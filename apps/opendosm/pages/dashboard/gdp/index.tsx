@@ -29,7 +29,7 @@ const GDP = ({
 };
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-gdp", async () => {
-  const { data } = await get("/dashboard", { dashboard: "gross_domestic_product" });
+  const { data } = await get("/dashboard", { dashboard: "gdp" });
 
   return {
     props: {
